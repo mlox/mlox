@@ -1,25 +1,4 @@
 
-[[statistics]]
-Statistics
-
-[[messages]]
-Messages
-
-[[current_load_order]]
-Current Load Order
-
-[[new_load_order]]
-Proposed Load Order Sorted by mlox
-
-[[quit]]
-Quit
-
-[[update]]
-Update Load Order
-
-[[requiresPython25]]
-This program requires Python version 2.5 or later.
-
 [[usage]]
 Usage: mlox [OPTIONS]
 
@@ -52,3 +31,25 @@ Note: if you use Wrye Mash's "lock times" feature and you want mlox to
 update your load order, you need to run Mash first and turn it off.
 Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
+
+[[statistics]]
+Statistics
+
+[[messages]]
+Messages
+
+[[current_load_order]]
+Current Load Order
+
+[[new_load_order]]
+Proposed Load Order Sorted by mlox
+
+[[quit]]
+Quit
+
+[[update]]
+Update Load Order
+
+[[requiresPython25]]
+This program requires Python version 2.5 or later.
+

@@ -1,7 +1,7 @@
 Name: mlox
 Version: 0.17
-by John Moonsugar <john.moonsugar@gmail.com>
-License: This project is released in the public domain
+Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
+License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
 mlox - the elder scrolls Mod Load Order eXpert
 ----------------------------------------------------------------------
@@ -39,17 +39,17 @@ The Alpha release is intended to answer (at least) these questions:
 
 - Is a load order sorting and annotation tool useful for Morrowind?
 - Does the mlox implementation provide a good solution?
-- The rulebase currently contains information I've gleaned from mod
+- The rule-base currently contains information I've gleaned from mod
 Readmes, web pages and forum postings. In some cases information will
-become obsolete quickly. Will the rulebase be able to keep up? Will
+become obsolete quickly. Will the rule-base be able to keep up? Will
 its advice be "reliable enough" to make it worth the effort to
 maintain it?
-- Is the rulebase maintainable into the future? Is it too complicated?
+- Is the rule-base maintainable into the future? Is it too complicated?
 Too error-prone? Is it something that multiple maintainers can work
 on?
 - Suggestions for distribution and installation will be kindly
 entertained. And I'd like to find a good public place to host the
-rulebase where multiple editors could work on it at the same time, if
+rule-base where multiple editors could work on it at the same time, if
 things happen to work out that way.
 - Feel free to comment on any aspect of the design or implementation.
 
@@ -75,40 +75,52 @@ somewhere in the Internets :)
 ------------------------------------------------------------
 o Installation and quick start
 
-- mlox.py has 2 modes, gui and command line. When executed with no
-  command line switches it starts in gui mode, when executed with
+- mlox.py has 2 modes, GUI and command line. When executed with no
+  command line switches it starts in GUI mode, when executed with
   the switch -h, it displays command line usage help.
-- mlox.py is written in Python 2.5. For windows, soon there will be a
-  standalone executable that does not require Python. You do need to
-  install Python and wxWidgetsif you wish to run the script form of
-  the program. For Windows:
-  http://www.python.org/ftp/python/2.5/python-2.5.msi  and 
+
+- mlox.py is written using Python 2.5 and wxWidgets, just like Wrye
+  Mash. (For Windows, soon there will be a standalone executable that
+  does not require these pre-requisites). You do need to install Python
+  and wxWidgets if you wish to run the script form of the program. 
+  For Windows you should install the following two packages:
+
+  http://www.python.org/ftp/python/2.5/python-2.5.msi
   http://prdownloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.0.1-py25.exe
-- Unpack the mlox archive somewhere under your game directory. If you
-  don't have a place decided, I suggest you unpack in the Morrowind
-  directory. A new directory called "mlox" will be created containing
-  all the files.
-- Windows users can put the file "lo.bat" in their "Data Files"
-  directory if they want. It's just a simple batch file that lets you
-  view your current load order when run in your plugins directory. It
-  has no dependencies and will work without the rest of the mlox stuff.
-- On Windows, try the batch file "locheck.bat". This won't make any 
-  changes, but you'll find out if mlox.py runs ok.
-  On Linux, run: mlox.py
-- mlox.py always assumes that the rulebase files (mlox_base.txt and
-  mlox_user.txt) are in the current working directory (the directory
-  where you run mlox.py) so you should run mlox in the directory
-  where those two files live.
+
+- Unpack the mlox appication archive somewhere under your game
+  directory. If you don't have a place decided, I suggest you unpack in
+  the Morrowind directory. A new directory called "mlox" will be
+  created containing all the files.
+
+- The rule-base is released as a separate archive (mlox-data_DATE.7z),
+  unpack this archve in the mlox directory created when you unpacked the
+  application.
+
+- A quick explanation of the included batch files for Windows (unless
+  otherwise specified, run these batch files from the mlox directory):
+
+  mlox - run mlox in GUI mode. This is the one you normally use.
+  locheck - run mlox in command-line mode to check (not update).
+  lofix - run mlox in command-line mode to update your load order.
+  lo - (run this in "Data Files") just prints your current load order.
+
+- On Windows, run mlox.bat. On Linux, run: mlox.py
+
+- mlox.py always assumes that the rule-base files (mlox_base.txt and
+  mlox_user.txt, if you have created one) are in the current working
+  directory (the directory where you run mlox) so you should run mlox in
+  the directory where those two files live.
 
 ------------------------------------------------------------
 o Introduction - Why mlox?
 
 mlox runs on a little rule-based engine that takes rules from 2 input
 files: mlox_base.txt, which contains general community knowledge, and
-mlox_user.txt, which you can edit to contain local knowledge of your
-personal load order situation. You may completely ignore
-mlox_user.txt if you don't want to be bothered with it. It's main
-audience will be the "power user".
+mlox_user.txt (if you have created one), which you can edit to contain
+local knowledge of your personal load order situation. You may
+completely ignore mlox_user.txt if you don't want to be bothered with
+it. It's main audience will be the "power user".
 
 Why mlox? Well, because getting your load order "sorted" (also in the
 sense of "working correctly") can be a tedious, error-prone job. So
@@ -139,7 +151,7 @@ tell them to run mlox, and post the output.
 
 So mlox is potentially for everybody.
 
-That's the theory. Of course, before it really starts to deliver on
+That's the theory. Of course, before mlox really starts to deliver on
 its promise, significant effort will be required to add enough rules
 to provide comprehensive coverage of at least popular mods. If mlox
 succeeds, it will be due to the effort of many. No one person could do
@@ -157,7 +169,7 @@ these situations.
 o Origins of mlox
 
 mlox is inspired by Random007's BOSS (formerly FCOMhelper) project,
-(see: http://www.bethsoft.com/bgsforums/index.php?showtopic=890589)
+(see: http://www.bethsoft.com/bgsforums/index.php?showtopic=890589 )
 BOSS (Better Oblivion Sorting Software) is truly invaluable for
 Oblivion, because Oblivion is particularly susceptible to crashing if
 the load order isn't correct, and some mod projects, notably FCOM,
@@ -219,9 +231,9 @@ on what you want to see in your game.
 [NOTE] warnings print information that may be of use to you. They may
 tell you that a particular plugin is known to have evil GMSTs, or
 whether or not it is a good idea to include it in "Merged Objects.esp"
-if you have that. They are like annotations for all your plugins. You
-can always turn off the printing of NOTEs with the (-q) command
-line option if you don't want to see them.
+if you have that. They are like annotations for all your plugins. In
+command-line mode, you can always turn off the printing of NOTEs with
+the (-q) command line option if you don't want to see them.
 
 ------------------------------------------------------------
 o Testing
@@ -233,14 +245,8 @@ choose "Load" -> "Save List...", and enter a name for your saved load
 order so that you can revert back to it later should you decide that
 you do not like the results you get from mlox.
 
-You can also tell mlox to NOT update your load order by using the
-(-n) command line option, in this case, mlox will just give warnings
-and tell you what it would have done to your load order.
-
-You can also get a quick idea of what mlox thinks of your load order
-by running it on your Morrowind.ini, like this:
-
-mlox.py -f ../Morrowind.ini
+mlox only updates your load order in GUI mode if you press the
+update button, or in command-line mode if you use the -u switch.
 
 ------------------------------------------------------------
 o Note to Wrye Mash users
@@ -257,15 +263,8 @@ o Usage
 On Windows, run the batch file: mlox.bat
 On Linux, run the python script: mlox.py
 
-These commands will start mlox in GUI mode. The large text area will
-show any warnings and notes mlox has discovered about your plugins.
-You can view the load order displayed there to see if it is
-acceptable. If it is, activate the "Update Load Order" button.
-
-Another little batch file for Windows is provided for your convenience
-which just prints your current load order: "lo.bat" and saves it to a
-file "load_order.out". Put lo.bat in your plugins directory and run it
-there, if you wish to use it.
+These commands will start mlox in GUI mode. If the proposed load order
+looks good to you, press the "Update Load Order" button.
 
 Here is the full usage of mlox from "mlox -h":
 
@@ -488,14 +487,16 @@ plugin-1.esp, plugin-2.esp, ... plugin-N.esp are present."
 
 
 Note: the following 4 rules [ReqAll], [ReqAny], [AllReq], [AnyReq] all
-describe situations where some dependent plugins are missing some
-required plugins. The format of the names is supposed to give a hint
-on the structure of the arguments. When the logical qualifier "All" or
-"Any" follows "Req", that means that there is one dependent plugin and
-a list of all or any plugins that follow. When the logical qualifier
-precedes "Req" that means that some all or any list of dependant
-plugins precede a single required plugin. Hopefully, this will become
-clear from the explanation of the rules below.
+describe situations where some dependent plugin(s) are missing some
+required plugin(s). The format of the names is supposed to give a hint
+on the structure of the arguments. The plugins are always listed with
+dependent(s) followed by requirement(s). The logical qualifiers "All"
+and "Any" indicate a list of things. So when these qualifiers appear
+at the start of the name, that means we have a list of dependents,
+followed by one requirement. And when the qualifier appears at the end
+of a name it means there is a single dependent followed by a list of
+requirements. Hopefully, this will become clear from the explanation
+of the rules below.
 
 * The [ReqAll] rule specifies that when the dependant plugin is
 present, that ALL of the following plugins are also required.
@@ -563,38 +564,20 @@ This rule is read: "If any of the dependent plugins (dependant-1.esp
 
 ==================================================
 
-The [Order] rules specify a Partial Order over the set of known
-plugins. This allows us to sort the current list of plugins using a
-topological sort. Topological sort requires a DAG (directed acyclic
-graph) as input. Since we don't know ahead of time if the graph
-defined by our rules is acyclic, we check for cycles every time we add
-an edge (rule), and throw out any edge that would cause a cycle. This
-also allows us give priority to the input rules: when two rules
-conflict by causing a cycle, the first rule wins and the second is
-chucked. So we take rules first from the highest priority source
-(mlox_user.txt), and if any subsequent rules from a lower priority
-(mlox_base.txt) come along that would cause a cycle, we throw them
-out.
-
-Since there are often many solutions to a partial order, we would
-prefer a solution that doesn't change the starting load order much, as
-long as the result still obeys all the specified [ORDER] rules. So
-this program treats the current load order as a third set of input
-"pseudo-rules", with lower priority than the rules specified by
-mlox_user.txt and mlox_base.txt.
-
-==================================================
-
 o ChangeLog
 
-Version 0.13 - 2000/12/07
+Version 0.19 - 2008/12/
+	* mlox now hosted on googlecode, so I put it under the liberal
+	MIT License.
+
+Version 0.13 - 2008/12/07
 	* runs with a GUI when run without any command line parameters.
 	* use the new switch -u to update load order, and -c to just
 	check the load order in command line mode. old switch -n removed. 
 	* now comes with an .exe version for Windows that does not
 	require Python
 
-Version 0.12 - 2000/12/06
+Version 0.12 - 2008/12/06
 	* new strategy for making pseudo-rules from current load
 	order. Now if adding an edge fails during this process due to
 	cycle detection, we re-try with a few of the forefather nodes.

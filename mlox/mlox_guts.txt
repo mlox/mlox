@@ -1,43 +1,78 @@
+mlox guts - Inside mlox
+
 ------------------------------------------------------------
 o What mlox does, operational details
 
-[TBD - this section is in the midst of being re-written]
 TBD - explain why I always redate all plugins. 
 
-You can skip this section if the nitty gritty details are not of
+You can skip this document if the nitty gritty details are not of
 interest. :)
+
+o Introduction
+
+The following is a brief summary of how mlox does what it does. Some
+unfamiliar terms may be used, but they will all be explained in detail
+further on.
+
+The [Order] rules specify a Partial Order over the set of known
+plugins. This allows us to sort your plugins using a topological sort.
+Topological sort requires a DAG (directed acyclic graph) as input.
+Since we don't know ahead of time if the graph defined by our rules is
+acyclic, we check for cycles every time we add an edge (rule), and
+throw out any edge that would cause a cycle.
+
+This process automatically gives precedence to the rules that come
+first: when two rules conflict by causing a cycle, the first rule wins
+and the second is chucked. So we take rules first from the highest
+priority source (mlox_user.txt), and if any subsequent rules from a
+lower priority (mlox_base.txt) come along that would cause a cycle, we
+throw them out.
+
+Since there are often many solutions to a partial order, we would
+prefer a solution that doesn't change the starting load order much, as
+long as the result still obeys all the specified [Order] rules. So
+mlox treats the current load order as a tertiary set of input
+"pseudo-rules", with lower priority than the rules specified by
+mlox_user.txt and mlox_base.txt.
+
+==================================================
+
+And now, in detail:
 
 mlox does two main things, which are outlined here and explained
 below:
 
-1) mlox sorts your load order, based on the observation that
+1) mlox sorts your load order, based on the observation that:
 * orderings for plugins make up a partially ordered set.
 * A partially ordered set can be sorted by a topological sort.
 * A topological sort requires a DAG (Directed Acyclic Graph).
 ** So we need to avoid putting cycles in our graph.
 * A topological sort can have many valid solutions. 
 ** So we try to pick the solution we'd most like to see.
-*** by root picking (nearstart, nearend)
+*** by root picking (the [NearStart] and [NearEnd] rules)
 *** maintaining previous order (pseudo-rules)
 
 2) mlox gives warnings
 ** about plugin conflicts
 ** and missing requirements
 
+3) and notes
+
 -----
 
-1) mlox sorts your load order, based on the observation that
+1) mlox sorts your load order, based on the observation that:
 * orderings for plugins make up a partially ordered set.
 
 Let's say we have plugins A, B and C. We may know that A needs to
 precede B. But A and B have nothing to do with C, so it doesn't matter
 if A and B come before or after C. This is the essence of a partial
 ordering. And we can represent the ordering relationships in a graph,
-where "->" is called an "edge" and A -> B means that "A comes before
-B".
+where "->" is called an "edge" and A -> B means: "A comes before B".
 
 * A partially ordered set can be sorted by a topological sort.
 
+The topological sort is a well known solution to sorting a partially
+ordered set.
 (See: http://en.wikipedia.org/wiki/Topological_sorting)
 
 * A topological sort requires a DAG (Directed Acyclic Graph).
@@ -54,36 +89,63 @@ back to your starting point.
 To avoid cycles, all we have to do while building our graph from the
 input rules is to check before we add an edge to see if it will
 produce a cycle, and if so, we discard it. When mlox does its
-add_edge(X, Y) function (which adds X -> Y), it first checks to see if
-we can already reach Y from X (i.e. that some path of edges exists,
-such that Y -> ... -> X) using a depth first search. If so, adding X
+add_edge(X, Y) function (which adds X -> Y), it first checks via a
+depth first search to see if we can already reach Y from X (i.e. that
+some path of edges exists, such that Y -> ... -> X). If so, adding X
 -> Y would produce a cycle, and so that edge is discarded.
 
 * A topological sort can have many valid solutions. 
 
-Back to our example, if we know the ordering:
-A -> B
+If you have a set of A, B and C, and you know that A comes before B
+which comes before C, then you have a "total ordering". If you have
+the same set, but only know that A -> B (A comes before B, a partial
+ordering), then the following results of a sort are valid:
 
-and we sort the set of A,B,C by topological sort, the following
-solutions are valid:
-
-Solution 1: C, A, B
+Solution 1: A, B, C
 Solution 2: A, C, B
-Solution 3: A, B, C
+Solution 3: C, A, B
+
+because in all three solutions, A comes before B, in contrast with a
+total ordering, where there is only one solution.
 
 ** So we try to pick the solution we'd most like to see.
 
 Well, it turns out that human beings dislike change :) so since the
 user of mlox is a human being, we want to ensure that the sorted load
-order differs no more from the original sort order than is necessarily
-dictated by the ordering rules in our rule-base.
+order differs no more from the original order than is dictated by the
+ordering rules in our rule-base.
+
+*** by root picking (nearstart, nearend)
+
+A root is a node in the graph that has no incoming edges. In our
+example, A and C are roots. B is not a root because we know the
+ordering: A -> B. B is a child of A, and it has an incoming edge.
+
+We allow some control over the topological sort by allowing the user
+to specify nodes (plugins) that they would prefer to see near the
+start of the sorted order. I call this "root-picking", because the
+first step of the topological sort is to collect all the root nodes of
+the graph in a list. In a standard topological sort there is no
+priority of one root over another. But by introducing the [NearStart]
+and [NearEnd] rules, we can let the user choose roots that should be
+near the start of the sorted order or near the end.
+
+In our example, the user could have said that B was a [NearStart]. So
+what mlox does is it finds root of the subgraph that B belongs to (in
+this case, that would be root A). and it chooses that root as the
+first root.
+
+*** maintaining previous order (pseudo-rules)
+
+We also try to pick the most desirable solution by maintaining as best
+we can, the initial sorted order.
 
 Returning to our example, if the original order was: B, A, C, and our
 ordering rule is: A -> B, then a nice result would be: A, B, C, even
 though the other solutions we enumerate above are just as valid.
 
 mlox tries to achieve this by using the original order as a set of
-"pseudo-rules", which, for our example would be: A -> B, and B -> C.
+"pseudo-rules", which, for our example would be: B -> A, and A -> C.
 
 So, putting it all together, what mlox does is:
 
@@ -107,41 +169,41 @@ pseudo-rule:
 A -> B
 B -> C
 
+And that's okay, no cycle detected.
 And if we apply those to the set B, A, C, we end up with:
 
 A, B, C
 
-*** by root picking (nearstart, nearend)
-*** maintaining previous order (pseudo-rules)
-
 2) mlox gives warnings
 ** about plugin conflicts
+
+Some fairly common conflicts are those between mods, and even between
+alternate versions of plugins within a mod. Often the Readme for a mod
+will tell you about these conflicts, but in some cases they don't,
+particularly for inter-mod conflicts. mlox can help out in this
+situation because the ruleset lets us express plugin conflicts. So
+it's easy to tell a user they have accidentally activated 2 versions
+of the same plugin, whereas they are supposed to only activate one or
+the other. And it's easy to express conflicts between mods too.
+
 ** and missing requirements
 
-The design of mlox's load order sorting feature follows as a natural
-consequence of these observations, 
-The sorting that mlox does is based on the notion of "partially
-ordered sets". 
+mlox can also check to see if a plugin is missing a dependency, which
+is another fairly common occurrence. This situation can easily happen
+when a mod offers compatability patch plugins for other mods, and the
+user installs the patch, but does not have the other mod. And
+sometimes mods are themselves dependent on other mods, and if they are
+missing, they will not work. mlox's ruleset can express these
+dependency relationships easily, and so help the user by catching
+missing dependencies that have been overlooked.
 
------
-(we'll represent this as a graph,
-like this A -> B -> C, where "->" is called an "edge")
------
+3) and notes
 
-If you have a set of A, B and C, and you know that A
-comes before B which comes before C, then you have a "total ordering".
-If you have the same set, but only know that A -> C, then the
-following results of a sort are valid:
+Lastly, sometimes there may be some information about a plugin,
+perhaps some known limitation or whether it should or should not be
+merged in a "Merged Objects.esp" (with TESTOOL), that it is good to be
+reminded about, and mlox can express these situations as well.
 
-Solution 1: A, B, C
-Solution 2: A, C, B
-Solution 3: B, A, C
 
-because in all three solutions, A comes before C. In contrast, with a
-total ordering, there is only one solution.
-
-In this small example, A and B are called "roots". This is because
-they have no incoming edges in the graph.
-
------
-
+That concludes our tour around the guts of mlox. I hope you enjoyed
+our little ride. Please have a safe trip home.

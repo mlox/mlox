@@ -19,7 +19,8 @@ update-version:
 	@perl -p -i -e "s/^Version = \"(?:\d+\.\d+)\"/Version = \"$(VERSION)\"/" mlox/mlox.py
 
 dist/$(MLOXARC): dist/mlox
-	@rsync -uva mlox/ dist/mlox/ > /dev/null 2>&1
+	@rsync -uvaC mlox/ dist/mlox/ > /dev/null 2>&1
+	@cp License.txt dist/mlox
 	@echo "Adding DOS line endings to .bat and .txt files in staging directory"
 	@for i in dist/mlox/*.bat dist/mlox/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
 	@echo "Creating distibution archive for mlox: $@"

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- mode: python -*-
-# by John Moonsugar <john.moonsugar@gmail.com>
-# License: this project is released in the Public Domain.
+# Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
+# License: MIT License (see the file: License.txt)
 Version = "0.17"
 
 import sys
@@ -19,24 +19,22 @@ import wx
 
 Message = {}
 
-class options:
-    def __init__(self):
-        self.options = {}
-    def get(self, key):
-        return(self.options[key])
-    def set(self, key, val):
-        self.options[key] = val
+class dynopt(dict):
+    def __getattr__(self, item):
+        return self.__getitem__(item)
+    def __setattr__(self, item, value):
+        self.__setitem__(item, value)
 
-Opt = options()
+Opt = dynopt()
 
 # command line options
-Opt.set("GUI", False)
-Opt.set("DBG", False)
-Opt.set("FromFile", False)
-Opt.set("Update", False)
-Opt.set("Quiet", False)
-Opt.set("GetAll", False)
-Opt.set("WarningsOnly", False)
+Opt.GUI = False
+Opt.DBG = False
+Opt.FromFile = False
+Opt.Update = False
+Opt.Quiet = False
+Opt.GetAll = False
+Opt.WarningsOnly = False
 
 # re_rule matches the start of a rule. We use a general pattern,
 # instead of specifically testing each of the allowed commands, so the
@@ -67,7 +65,7 @@ class logger:
 
     def add(self, message):
         self.log.append(message)
-        if self.prints and Opt.get("GUI") == False:
+        if self.prints and Opt.GUI == False:
             print message
 
     def get(self):
@@ -183,18 +181,18 @@ class pluggraph:
             # this case because they do not matter. 
             # (where != "") when it is an edge from a rules file, and in
             # that case we do want to see cycle errors.
-            if Opt.get("DBG") or where != "":
+            if Opt.DBG or where != "":
                 Warn.add("Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2)))
             return False
         self.nodes.setdefault(plug1, [])
         if plug2 in self.nodes[plug1]: # edge already exists
-            if Opt.get("DBG"):
+            if Opt.DBG:
                 Warn.add("DBG: %s: Dup Edge: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2)))
             return True
         # add plug2 to the graph as a child of plug1
         self.nodes[plug1].append(plug2)
         self.incoming_count[plug2] = self.incoming_count.setdefault(plug2, 0) + 1
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("DBG: adding edge: %s -> %s" % (plug1, plug2))
         return(True)
 
@@ -218,7 +216,7 @@ class pluggraph:
 
         # find the roots of the graph
         roots = [node for node in self.nodes if self.incoming_count.get(node, 0) == 0]
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("\n========== BEGIN TOPOLOGICAL SORT DEBUG INFO ==========")
             self.dump("DBG: graph before sort (node: children)")
             Warn.add("\nDBG: roots:\n  %s" % ("\n  ".join(roots)))
@@ -229,14 +227,14 @@ class pluggraph:
             (bottom_roots, roots) = remove_roots(roots, self.nearend)
             middle_roots = roots        # any leftovers go in the middle
             roots = top_roots + middle_roots + bottom_roots
-            if Opt.get("DBG"):
+            if Opt.DBG:
                 Warn.add("DBG: nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
                 Warn.add("DBG: top roots:\n  %s" % ("\n  ".join(top_roots)))
                 Warn.add("DBG: nearend:\n  %s" % ("\n  ".join(self.nearend)))
                 Warn.add("DBG: bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
                 Warn.add("DBG: middle roots:\n  %s" % ("\n  ".join(middle_roots)))
                 Warn.add("DBG: newroots:\n  %s" % ("\n  ".join(roots)))
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
         # now do the actual topological sort
         roots.reverse()
@@ -329,7 +327,7 @@ class loadorder:
                 self.game = "None"
                 self.datadir = caseless_dirlist(".")
                 self.gamedir = caseless_dirlist("..")
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("plugin directory: \"%s\"" % self.datadir.dirpath())
 
     def get_active_plugins(self):
@@ -416,7 +414,7 @@ class loadorder:
         respectively"""
         if len(self.order) < 2:
             return
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("DBG: ADDING RULES CURRENT ORDER")
         prev_i = 0
         self.graph.nodes.setdefault(self.order[0], [])
@@ -570,7 +568,7 @@ class loadorder:
     def read_rules(self, rule_file):
         """Read rules from rule files (mlox_user.txt or mlox_base.txt), and add order rules
         to graph."""
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("DBG: READING RULES FROM: \"%s\"" % rule_file)
 
         def check_plugin_name(name):
@@ -632,7 +630,7 @@ class loadorder:
         try:
             rules = open(rule_file, 'r')
         except IOError, (errno, strerror):
-            if Opt.get("DBG"):
+            if Opt.DBG:
                 Warn.add("Error opening \"%s\" for input (%s)" % (rule_file, strerror))
             return False
 
@@ -714,7 +712,7 @@ class loadorder:
         Stats.flush()
         New.flush()
         Old.flush()
-        if Opt.get("FromFile"):
+        if Opt.FromFile:
             self.read_from_file(fromfile)
             if len(self.order) == 0:
                 Warn.add("No plugins detected. mlox.py understands lists of plugins in the format")
@@ -723,12 +721,12 @@ class loadorder:
         else:
             self.find_game_dirs()
             self.get_data_files()
-            if not Opt.get("GetAll"):
+            if not Opt.GetAll:
                 self.get_active_plugins()
             if len(self.order) == 0:
                 Warn.add("No plugins detected! mlox needs to run somewhere under where the game is installed.")
                 return
-        if Opt.get("DBG"):
+        if Opt.DBG:
             Warn.add("DBG: initial load order")
             for p in self.order:
                 Warn.add(p)
@@ -761,7 +759,7 @@ class loadorder:
         self.check_anyreq()
         # print out detected conflicts
         self.check_conflicts()
-        if not Opt.get("Quiet"):
+        if not Opt.Quiet:
             # print out applicable messages
             self.check_msg_any()
             self.check_msg_all()
@@ -770,21 +768,21 @@ class loadorder:
         loadorder_files = [C.truename(p) for p in esm_files + esp_files]
         if len(loadorder_files) != len(self.order):
             Warn.add("Program Error: sanity check: len(loadorder_files %d) != len(self.order %d)" % (len(loadorder_files), len(self.order)))
-        if not Opt.get("FromFile"):
+        if not Opt.FromFile:
             # these are things we do not want to do if just testing a load
             # order from a file (FromFile)
-            if Opt.get("Update"):
+            if Opt.Update:
                 self.update_mod_times(loadorder_files)
                 Warn.add("[LOAD ORDER UPDATED!]")
             else:
-                if not Opt.get("GUI"):
+                if not Opt.GUI:
                     Warn.add("[Load Order NOT updated.]")
             # save the load orders to file for future reference
             self.save_order(old_loadorder_output, self.order, "current")
             self.save_order(new_loadorder_output, loadorder_files, "mlox sorted")
-        if not Opt.get("WarningsOnly"):
-            if Opt.get("GUI") == False:
-                if Opt.get("Update"):
+        if not Opt.WarningsOnly:
+            if Opt.GUI == False:
+                if Opt.Update:
                     Warn.add("\n[UPDATED] New Load Order:\n---------------")
                 else:
                     Warn.add("\n[Proposed] New Load Order:\n---------------")
@@ -883,7 +881,7 @@ class mlox_gui(wx.App):
     def on_update(self, e):
         if not self.can_update:
             return
-        Opt.set("Update", True)
+        Opt.Update = True
         loadorder().update(None)
         self.frame.txt_stats.SetValue(Stats.get())
         self.frame.txt_msg.SetValue(Warn.get())
@@ -925,33 +923,33 @@ if __name__ == "__main__":
         usage(2)                # exits
     for opt, arg in opts:
         if opt in   ("-a", "--all"):
-            Opt.set("GetAll", True)
+            Opt.GetAll = True
         elif opt in ("-c", "--check"):
-            Opt.set("Update", False)
+            Opt.Update = False
         elif opt in ("-d", "--debug"):
-            Opt.set("DBG", True)
+            Opt.DBG = True
         elif opt in ("-f", "--fromfile"):
-            Opt.set("FromFile", True)
+            Opt.FromFile = True
         elif opt in ("-h", "--help"):
             usage(0)            # exits
         elif opt in ("-q", "--quiet"):
-            Opt.set("Quiet", True)
+            Opt.Quiet = True
         elif opt in ("-u", "--update"):
-            Opt.set("Update", True)
+            Opt.Update = True
         elif opt in ("-v", "--version"):
             print "mlox Version: %s" % Version
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
-            Opt.set("WarningsOnly", True)
+            Opt.WarningsOnly = True
 
-    if Opt.get("FromFile"):
+    if Opt.FromFile:
         if len(args) == 0:
             print "Error: -f specified, but no files on command line."
             usage(2)            # exits
         for file in args:
             loadorder().update(file)
     elif len(sys.argv) == 1:
-        Opt.set("GUI", True)
+        Opt.GUI = True
         # run with gui
         mlox_gui().start()
     else:
