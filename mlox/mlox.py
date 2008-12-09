@@ -421,18 +421,16 @@ class loadorder:
         prev_i = 0
         self.graph.nodes.setdefault(self.order[0], [])
         for curr_i in range(1, len(self.order)):
-            if (self.order[prev_i] in self.graph.nearstart or
-                self.order[curr_i] in self.graph.nearstart or
-                self.order[prev_i] in self.graph.nearend or
-                self.order[curr_i] in self.graph.nearend):
-                # just add a node
-                self.graph.nodes.setdefault(self.order[curr_i], [])
-            else:
+            self.graph.nodes.setdefault(self.order[curr_i], [])
+            if not (self.order[prev_i] in self.graph.nearstart or
+                    self.order[curr_i] in self.graph.nearstart or
+                    self.order[prev_i] in self.graph.nearend or
+                    self.order[curr_i] in self.graph.nearend):
                 # add an edge, on any failure due to cycle detection, we try
                 # to make an edge between the current plugin and the previous
                 # "parent"
                 for i in range(prev_i, prev_i - 5, -1):
-                    if i < 1:
+                    if i < 0:
                         break
                     if self.graph.add_edge("", self.order[i], self.order[curr_i]):
                         break
@@ -771,7 +769,7 @@ class loadorder:
         (esm_files, esp_files) = self.partition_esps_and_esms(sorted_datafiles)
         loadorder_files = [C.truename(p) for p in esm_files + esp_files]
         if len(loadorder_files) != len(self.order):
-            Warn.add("Program Error: failed sanity check: len(loadorder_files) != len(self.order)")
+            Warn.add("Program Error: sanity check: len(loadorder_files %d) != len(self.order %d)" % (len(loadorder_files), len(self.order)))
         if not Opt.get("FromFile"):
             # these are things we do not want to do if just testing a load
             # order from a file (FromFile)
