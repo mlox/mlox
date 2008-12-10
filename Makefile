@@ -13,26 +13,24 @@ all: mlox-dist data-dist test-dist
 
 mlox-dist: dist/$(MLOXARC)
 
-update-version:
+dist/$(MLOXARC): dist/mlox $(wildcard mlox/*)
 	@echo "Updating mlox with latest Version number: $(VERSION)"
 	@perl -p -i -e "s/^Version: (?:\d+\.\d+)/Version: $(VERSION)/" mlox/mlox_readme.txt
 	@perl -p -i -e "s/^Version = \"(?:\d+\.\d+)\"/Version = \"$(VERSION)\"/" mlox/mlox.py
-
-dist/$(MLOXARC): dist/mlox
 	@rsync -uvaC mlox/ dist/mlox/ > /dev/null 2>&1
 	@cp License.txt dist/mlox
 	@echo "Adding DOS line endings to .bat and .txt files in staging directory"
 	@for i in dist/mlox/*.bat dist/mlox/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
-	@echo "Creating distibution archive for mlox: $@"
 	@(cd dist && 7z a $(MLOXARC) mlox) > /dev/null 2>&1
+	@echo "CREATED distibution archive for mlox: $@"
 
 data-dist: dist dist/$(DATAARC) stats
 
 dist/$(DATAARC): data/mlox_base.txt
 	@echo "Updating Release date in: $<"
 	@perl -p -i -e "s/^# Release Date: .*/# Release Date: $(RELDATE)/" $<
-	@echo "Creating distibution archive for mlox rule-base: $@"
 	@(cd data ; 7z a ../$@ $(<F)) > /dev/null 2>&1
+	@echo "CREATED distibution archive for mlox rule-base: $@"
 
 dist/mlox:
 	@echo "Creating $@"

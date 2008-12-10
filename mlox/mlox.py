@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.17"
+Version = "0.20"
 
 import sys
 
@@ -610,7 +610,7 @@ class loadorder:
                     self.msg_any[p] = indent(message)
             elif curr_rule == "PATCHXY":
                 if len(plugins) < 3:
-                    Warn.add("Warning: %s: PatchXY rule needs at least 3 plugin arguments" % where_rule)
+                    Warn.add("Warning: %s: PatchXY rule needs at least 3 plugin arguments" % where)
                     return
                 self.patchxy.append((msg, plugins))
             elif curr_rule == "REQALL":
