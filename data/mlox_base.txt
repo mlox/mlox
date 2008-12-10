@@ -8,7 +8,7 @@
 
 ##################################################
 # Morrowind mlox_base.txt
-# Release Date: 2008-12-09 10:26:55
+# Release Date: 2008-12-10 16:41:48
 # This file needs to live in the directory where mlox.py runs
 ##################################################
 # This file is intended as a repository of community 
@@ -167,6 +167,18 @@ abotGuarsTribunal.esp
 Tribunal.esm
 
 ##################################################
+# @Adventurers TC Beta 1
+
+[PatchXY]
+ (Ref: "readme_advTC.html")
+AdvTC_TribunalAddon.esp
+AdventurersTC_beta1.esp
+Tribunal.esm
+
+# what is this?:
+#time_2x.esp
+
+##################################################
 # @Ald Vendras v31
 
 # Recommended load order for Ald Vendras with popular mods:
@@ -222,7 +234,7 @@ Ald-Vendras_V31-LoKKen-SC.esp
 
 [MsgAny]
  An upgraded version (v3.1) of Ald Vendras is available:
- [url="http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3523"]http://planetelderscrolls.gamespy.com/View...ail&id=3523[/url]
+ http://planetelderscrolls.gamespy.com/View...ail&id=3523
 Ald-Vendras_V3.esp
 Ald-Vendras_V3-LoKKen.esp
 Ald-Vendras_V3-LoKKen-SC.esp
@@ -455,15 +467,16 @@ Better Clothes_v1.0.esp
 ##################################################
 # @Better Heads
 
-[Order]
-Bloodmoon.esm
-Better Heads Bloodmoon addon.esm
-Better Heads.esm
+# Order within the Better Heads plugins does not actually matter,
+# since they do not use any of the same objects. But they should
+# all come after their respective Master.
+# (checked with TESPCD - JMS)
 
 [Order]
-Tribunal.esm
-Better Heads Tribunal addon.esm
+Bloodmoon.esm
 Better Heads.esm
+Better Heads Tribunal addon.esm
+Better Heads Bloodmoon addon.esm
 
 [ReqAll]
 Better Heads Bloodmoon addon.esm
@@ -589,6 +602,228 @@ Siege at Firemoth.esp
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Clean Black Queen Chronicles Ver 2.5.esp
 Castlevania.esp
+
+
+##################################################
+# @Blood and Gore [TheLys]
+
+[Order]
+Blood and Gore.esp
+Blood and Gore Adventurer's TC add-on.esp
+Blood and Gore BM add-on.esp
+Blood and Gore Cait Critters add-on.esp
+Blood and Gore CoN 2 add-on.esp
+Blood and Gore Combat Moves add-on.esp
+Blood and Gore Deadite add-on.esp
+Blood and Gore Fire damage.esp
+Blood and Gore GIANTS add-on.esp
+Blood and Gore Hunting Isle add-on.esp
+Blood and Gore MW Additions Rev add-on.esp
+Blood and Gore MW Advanced add-on.esp
+Blood and Gore MW-TB-VGreetings add-on.esp
+Blood and Gore Mephisto CP11 add-on.esp
+Blood and Gore Morrowind alone add-on.esp
+Blood and Gore Morrowind-Tribunal add-on.esp
+Blood and Gore Petshop add-on.esp
+Blood and Gore TEMPLATE add-on.esp
+Blood and Gore Wilderness add-on.esp
+Blood and Gore patch for GIANTS Trib.esp
+
+[ReqAny]
+ THE MOD DOES *NOT* WORK IF YOU USE *NO* ADD-ON.
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore.esp
+Blood and Gore Adventurer's TC add-on.esp
+Blood and Gore BM add-on.esp
+Blood and Gore Cait Critters add-on.esp
+Blood and Gore CoN 2 add-on.esp
+Blood and Gore Combat Moves add-on.esp
+Blood and Gore Deadite add-on.esp
+Blood and Gore GIANTS add-on.esp
+Blood and Gore Hunting Isle add-on.esp
+Blood and Gore MW Additions Rev add-on.esp
+Blood and Gore MW Advanced add-on.esp
+Blood and Gore MW-TB-VGreetings add-on.esp
+Blood and Gore Mephisto CP11 add-on.esp
+Blood and Gore Morrowind alone add-on.esp
+Blood and Gore Morrowind-Tribunal add-on.esp
+Blood and Gore Petshop add-on.esp
+Blood and Gore TEMPLATE add-on.esp
+Blood and Gore Wilderness add-on.esp
+
+[ConflictAny]
+ Use "Blood and Gore Morrowind alone add-on.esp" only if you do NOT
+ have Tribunal, otherwise use "Blood and Gore Morrowind-Tribunal add-on.esp"
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Morrowind alone add-on.esp
+Tribunal.esm
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ If you do not have Tribunal, Bloodmoon, or VGreetings, use:
+ "Blood and Gore Morrowind alone add-on.esp"
+ If you do have Tribunal, but NOT VGreetings, use:
+ "Blood and Gore Morrowind-Tribunal add-on.esp"
+ If you have Tribunal AND VGreetings, use:
+ "Blood and Gore MW-TB-VGreetings add-on.esp"
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Morrowind alone add-on.esp
+Blood and Gore Morrowind-Tribunal add-on.esp
+Blood and Gore MW-TB-VGreetings add-on.esp
+
+[PatchXY]
+ "Blood and Gore Morrowind-Tribunal add-on.esp" is for Morrowind AND
+ Tribunal creatures.
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Morrowind-Tribunal add-on.esp
+Blood and Gore.esp
+Tribunal.esm
+
+[Conflict]
+ "Blood and Gore MW-TB-VGreetings add-on.esp" is for 
+ Morrowind AND Tribunal creatures, adds TheOtherFelix' VGreetings mod
+ Hit section voice features (you don't need to activate this part of
+ VGreetings).  You still need the other parts (non hits) of VGreetings
+ 0.9.4 to have the full VGreetings mod.
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore MW-TB-VGreetings add-on.esp
+VGreetings-Hit.esp
+
+[PatchXY]
+ "Blood and Gore MW-TB-VGreetings add-on.esp" is for 
+ Morrowind AND Tribunal creatures, adds TheOtherFelix' VGreetings mod
+ Hit section voice features (you don't need to activate this part of
+ VGreetings).  You still need the other parts (non hits) of VGreetings
+ 0.9.4 to have the full VGreetings mod.
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore MW-TB-VGreetings add-on.esp
+Blood and Gore.esp
+VGreetings.esp
+
+[PatchXY]
+ Use "Blood and Gore BM add-on.esp" if you have Bloodmoon.
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore BM add-on.esp
+Blood and Gore.esp
+Bloodmoon.esm
+
+[PatchXY]
+ Use "Blood and Gore Adventurer's TC add-on.esp' for Adventurer's TC (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Adventurer's TC add-on.esp
+Blood and Gore.esp
+AdventurersTC_beta1.esp
+
+[PatchXY]
+ for Cait's Critters Unleashed 2.0 by HogHead
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Cait Critters add-on.esp
+Blood and Gore.esp
+Cait's Critters Unleashed 2.0.esp
+Cait's Critters Unleashed 2.0 (Tribunal).esp
+
+[PatchXY]
+ for Children of the Night part 2 by J. Barbosa (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore CoN 2 add-on.esp
+Blood and Gore.esp
+C0N2 v1.01.esp
+
+[PatchXY]
+ for Deadite race (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Deadite add-on.esp
+Blood and Gore.esp
+io_deadite_race-1.4b.esp
+
+## Patch was made for Giants Tribunal, will it work with Giants Ultimate?
+#[PatchXY]
+# for GIANTS Tribunal 2.6 by PumaMan
+# *If you want GIANTS creatures to use B&G effects TOO, use this add-on
+# *If not, use the patch for GIANTS
+# *Don't forget that you MUST use the patch OR the add-on if you use GIANTS
+# *or you won't have gore effects at all
+# For GIANTS Tribunal, the GIANTS add-on ALSO contains all the changes
+# included in the GIANTS patch released with Blood & Gore
+# (Ref: "blood_gore_manual.htm")
+#Blood and Gore GIANTS add-on.esp
+#Blood and Gore.esp
+#GIANTS.esm
+
+[PatchXY]
+ for making GhanBuriGhan's Combat Moves mod applied to ALL creatures/NPC using B&G effects
+ you need to activate the complete Combat Moves mod to use this add-on
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Combat Moves add-on.esp
+Blood and Gore.esp
+Combat Moves.esp
+
+[PatchXY]
+ for Hunting Isle by Jdooby (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Hunting Isle add-on.esp
+Blood and Gore.esp
+Clean Hunting_mod_v.1.0.esp
+
+[PatchXY]
+ for Creature Pack 1.1 by Mephisto
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Mephisto CP11 add-on.esp
+Blood and Gore.esp
+Creature Pack 1.1.esp
+
+[PatchXY]
+ for Morrowind Additions Revamped by M6N6M6, Brewu4 & Harlequin (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore MW Additions Rev add-on.esp
+Blood and Gore.esp
+Additions_Revamped__clean_.esp
+
+[PatchXY]
+ for Morrowind Advanced by WormGod (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore MW Advanced add-on.esp
+Blood and Gore.esp
+Morrowind Advanced.esm
+
+[PatchXY]
+ for Petshop 4.2 by Jdooby (V)
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Petshop add-on.esp
+Blood and Gore.esp
+Petshop_4.1.esp
+
+[PatchXY]
+ for Wilderness 1.1 by PumaMan
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Wilderness add-on.esp
+Blood and Gore.esp
+The Wilderness Mod 2.0.esm
+The Wilderness Mod 2.0 T & B.esm
+
+## Patch was made for Giants Tribunal, will it work with Giants Ultimate?
+#[PatchXY]
+# for GIANTS tribunal compatibility (and ONLY compatibility - see above for the add-on)
+# (Ref: "blood_gore_manual.htm")
+#Blood and Gore patch for GIANTS Trib.esp
+#Blood and Gore.esp
+#GIANTS.esm
+
+# makes (original) fire sources of Morrowind/Tribunal/Bloodmoon (like brasiers) really do FIRE damage
+# *based on Sisco's mod "Fire hurts" idea*
+# *Modifies the fire sources so is incompatible with any other mod doing so*
+# *DOES NOT REQUIRE TRIBUNAL OR BLOODMOON BUT WILL WORK WITH THEM*
+# (Ref: "blood_gore_manual.htm")
+#Blood and Gore Fire damage.esp
+# JMS - so it's probably incompatible with NOM
+
+##################################################
+# @Bloodmoon Landscape Overhaul 1.0
+
+[Order]
+Bloodmoon.esm
+Bloodmoon Landscape Overhaul 1.0.esm
+
 
 ##################################################
 # @Bones 1.1 [James Fraser]
@@ -737,6 +972,24 @@ Sris_Alchemy_BM.esp
 
 
 ##################################################
+# @Cait's Critters Unleashed 2.0
+
+[ConflictAny]
+ If you have Tribunal, you should use
+ "Cait's Critters Unleashed 2.0 (Tribunal).esp", otherwise use
+ "Cait's Critters Unleashed 2.0.esp"
+ (Ref: "Cait's Criiter's Unleashed Readme.txt")
+Cait's Critters Unleashed 2.0.esp
+Cait's Critters Unleashed 2.0 (Tribunal).esp
+Tribunal.esm
+
+[ReqAll]
+ (Ref: "Cait's Criiter's Unleashed Readme.txt")
+Cait's Critters Unleashed 2.0 (Tribunal).esp
+Tribunal.esm
+
+
+##################################################
 # @Children of the Night 2
 
 [MsgAny]
@@ -756,6 +1009,58 @@ C0N2 v1.01.esp
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 NOM 2.13.esp
+
+
+##################################################
+# @Combat Moves
+
+[ReqAll]
+Combat Moves.esp
+Tribunal.esm
+
+
+##################################################
+# @Complete Morrowind
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ The replacer version is if you want to be able to cut down trees for
+ logs and mine ore, but it has higher potential for conflicts.
+ (Ref: "Readme - Complete Morrowind.txt")
+Complete Morrowind - Replacer.esp
+Complete Morrowind.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ The replacer version is if you want to be able to cut down trees for
+ logs and mine ore, but it has higher potential for conflicts.
+ (Ref: "Readme - Complete Morrowind TB & BM.txt")
+Complete Morrowind - Tribunal & Bloodmoon.esp
+Complete Morrowind TB & BM - Replacer.esp
+
+[ConflictAny]
+ You should only use "Complete Morrowind.esp" if you do not have
+ Tribunal or Bloodmoon.
+Complete Morrowind.esp
+Complete Morrowind - Tribunal & Bloodmoon.esp
+Complete Morrowind TB & BM - Replacer.esp
+
+[ConflictAny]
+ You should only use "Complete Morrowind - Replacer.esp" if you do not
+ have Tribunal or Bloodmoon.
+Complete Morrowind - Replacer.esp
+Complete Morrowind - Tribunal & Bloodmoon.esp
+Complete Morrowind TB & BM - Replacer.esp
+
+[ReqAll]
+Complete Morrowind - Tribunal & Bloodmoon.esp
+Bloodmoon.esm
+Tribunal.esm
+
+[ReqAll]
+Complete Morrowind TB & BM - Replacer.esp
+Bloodmoon.esm
+Tribunal.esm
 
 
 ##################################################
@@ -860,10 +1165,12 @@ Dagoth Ur Voice Addon v1.0.esp
 DN-GDRv1.esp
 DN-GDRv1_NOM.esp
 
-[ReqAll]
+[PatchXY]
+ If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
  (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1_NOM.esp
 GDR_MasterFile.esm
+NOM 2.13.esp
 
 [ReqAll]
  (Ref: DNGDRv1.zip/"readme.htm")
@@ -896,6 +1203,15 @@ dh_furn.esp
  (Ref: "readme-daedra_manor18.txt")
 trylo_daedra_manor.esp
 Sheikizza_Daedric_Armour_Collection_0.1.0.esp
+
+
+##################################################
+# @Deadite Race Plugin v1.4b
+
+[ReqAll]
+ (Ref: "readme_deadite_race-1.4.txt")
+io_evil_altstart-1.2b.esp
+io_deadite_race-1.4b.esp
 
 
 ##################################################
@@ -1177,7 +1493,7 @@ _Legends_of_Ydumea_v2.esp
 # @Go To Jail
 
 [Conflict]
- Choose one of the following plugins:
+ Choose ONLY ONE of these plugins.
  "Go To Jail 3.5 - T.esp" - If you only have Tribunal
  "Go To Jail 3.5 - B.esp" - If you only have Bloodmoon
  "Go To Jail 3.5 - T B.esp" - If you have Bloodmoon and Tribunal
@@ -1326,6 +1642,22 @@ Altmer Town.esp
 Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
 Illuminated Order v1.0.esp
 Bloodmoon.esm
+
+
+##################################################
+# @Improved Inns [taddeus]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Improved Inns.esp" if you have both Tribunal and Bloodmoon
+ "Improved Inns TB.esp" if you don't have Bloodmoon
+ "Improved Inns BM.esp" if you don't have Tribunal
+ "Improved Inns MW.esp" if you have Morrowind only
+ (Ref: "ImprovedInns-Readme.txt")
+Improved Inns.esp
+Improved Inns TB.esp
+Improved Inns BM.esp
+Improved Inns MW.esp
 
 
 ##################################################
@@ -1738,7 +2070,7 @@ Passive_Healthy_Wildlife.esp
 # @Morrowind Enhanced
 [MsgAny]
  Ensure you are using the latest version of Morrowind Enhanced, v1.6
- [url="http://planetelderscrolls.gamespy.com/View.php?view=Utilities.Detail&id=8"]http://planetelderscrolls.gamespy.com/View...Detail&id=8[/url]
+ http://planetelderscrolls.gamespy.com/View...Detail&id=8
 MWE_Combat.esp
 Enhanced_Stealth.esp
 MWE_Journal.esp
@@ -1939,6 +2271,22 @@ Mokbar.esp
 
 
 ##################################################
+# @The Moldy Horker [Grumpy]
+
+[Conflict]
+ BM_S_Inn.esp is the newer version of the Moldy Horker
+BM_S_Inn.esp
+S_Inn_th.esp
+
+[MsgAll]
+ S_Inn_th.esp is the older version of the Moldy Horker.
+ Seek out the newer version that contains an exterior sign by Nigedo:
+ http://lovkullen.net/Emma/Apartement.htm#MoldyHorker
+ http://emma.ufrealms.net/index.php?dir=&file=BM_S_Inn.zip
+S_Inn_th.esp
+
+
+##################################################
 # @TES: Morrowind Sound Enhancement Plugin Version 1.5
 
 [MsgAny]
@@ -2003,9 +2351,20 @@ Bloodmoon.esm
 ##################################################
 # @Necessities of Morrowind (NOM)
 
+# The Readme specifies that NOM should appear near the end of the load
+# order. I'm actually loathe to add NearStart or NearEnd rules for mods,
+# as this could be taken as implying preference by mlox, and mlox
+# should try to be impartial. On the other hand, if a user has loaded
+# NOM, they obviously expect it to work, and the best way to do that
+# is to load it last to ensure the fewest conflicts. So we'll try that
+# for now and see how it goes.
+# - JMS
+[NearEnd]
+NOM 2.12.esp
+
 [MsgAny]
  Latest version of Necessities of Morrowind (NOM) is 2.13
- (Ref: [url="http://wrye.ufrealms.net/#TeamMods)"]http://wrye.ufrealms.net/#TeamMods)[/url]
+ (Ref: http://wrye.ufrealms.net/#TeamMods )
 Necessities of Morrowind 2.0.esp
 Necessities of Morrowind 2.1.esp
 NOM 2.12.esp
@@ -2016,6 +2375,38 @@ NOM 2.12.esp
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 NOM 2.13.esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
+
+[ConflictAny]
+ Nom already contains "The Moldy Horker" by Grumpy
+ (Ref: "NOM 2.13.txt")
+NOM 2.13.esp
+BM_S_Inn.esp
+S_Inn_th.esp
+
+[Conflict]
+ Nom already contains Beds for Rent by Havokk
+ (Ref: "NOM 2.13.txt")
+NOM 2.13.esp
+Beds4Rent.esp
+
+[ConflictAny]
+ Nom already contains Improved Inns by Taddeus
+ (Ref: "NOM 2.13.txt")
+NOM 2.13.esp
+Improved Inns BM.esp
+Improved Inns MW.esp
+Improved Inns TB.esp
+Improved Inns.esp
+
+
+[Conflict]
+ conflicts with part 1 of the Complete Morrowind mod, the cooking one.
+ (Ref: "NOM 2.13.txt")
+NOM 2.13.esp
+Complete Morrowind P1.esp
+
+
+# Mods modifying fires (Lights 300, ):** All the fires in game have a script attached to allow you to cook. If you use another mod modifying fires you'll lose the ability to cook near them (if you load Necessities before it) or the changes made by the other mod (if you load Necessities after it).
 
 
 ##################################################
@@ -3213,6 +3604,23 @@ vn_goldweight.esp
 
 
 ##################################################
+# @VGreetings [felix]
+# (Ref: "readme_VGreetings.txt")
+# "VGreetings.esp"  - changes affecting the Hello Voice section
+#                     (requires Tribunal) 
+# "VGreetings-Attack.esp" - changes affecting the Attack Voice
+#                           section (requires Tribunal & Bloodmoon) 
+# "VGreetings-Flee.esp" - changes affecting the Flee Voice section
+#                         (requires Tribunal & Bloodmoon) 
+# "VGreetings-Hit.esp" - changes affecting the Hit Voice section
+#                        (requires Tribunal)
+# "VGreetings-Idle.esp" - changes affecting the Idle Voice section
+#                         (requires Tribunal & Bloodmoon)
+# "VGreetings-Thief.esp" - changes affecting the Thief Voice
+#                          section (requires Tribunal)
+
+
+##################################################
 # @Vivec Outdoor Mall
 
 # The NoM documentation indicates that the NoM plugin should be loaded
@@ -3381,6 +3789,41 @@ Wilderness Mod.esm
 The Wilderness Mod 2.0 T & B.esm
 Wilderness Mod.esm
 
+[ReqAll]
+ "The Wilderness Mod 2.0.esm" uses deprecated AddToLev* function
+ to modify Bethsoft leveled lists. For an explanation of why the
+ functions AddToLev*/RemoveFromLev* are deprecated, please see:
+ http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists 
+ You can download abot's patch from that link.
+The Wilderness Mod 2.0.esm
+ab01Wilderness2.1patch.esp
+
+[ReqAll]
+ "The Wilderness Mod 2.0 T & B.esm" uses deprecated AddToLev* function
+ to modify Bethsoft leveled lists. For an explanation of why the
+ functions AddToLev*/RemoveFromLev* are deprecated, please see:
+ http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists 
+ You can download abot's patch from that link.
+The Wilderness Mod 2.0 T & B.esm
+ab01Wilderness2.1patch.esp
+
+[PatchXY]
+ (Optional) To update "Giants: Ultimate" install Wilderness 2.1 and
+ then check GIANTS_Ultimate_Official_Fixes.esp while using GIANTS.esm
+ (Tribunal or Bloodmoon required.)
+ (Ref: "Wilderness Mod 2.1.doc")
+GIANTS_Ultimate_Official_Fixes.esp
+The Wilderness Mod 2.0 T & B.esm
+GIANTS.esm
+
+[PatchXY]
+ (Optional) To update "Giants: Ultimate" install Wilderness 2.1 and
+ then check GIANTS_Ultimate_Official_Fixes.esp while using GIANTS.esm
+ (Tribunal or Bloodmoon required.)
+ (Ref: "Wilderness Mod 2.1.doc")
+GIANTS_Ultimate_Official_Fixes.esp
+The Wilderness Mod 2.0.esm
+GIANTS.esm
 
 ##################################################
 # @Wilderness Sounds
