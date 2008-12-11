@@ -18,7 +18,7 @@ done
 cp ../$TEST.data/*.txt .
 ../lo > lo0			# initial load order
 echo "$TEST Running $PROG ..."
-$PROG -d > mlox.out
+$PROG -d > mlox.out 2>&1
 if [ $? -ne 0 ] ; then echo "FAILED $TEST: Program Error" ; exit 1 ; fi
 echo "$TEST Finished"
 ../lo > lo1			# new load order

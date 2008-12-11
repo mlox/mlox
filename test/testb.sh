@@ -26,7 +26,7 @@ for i in 0 1 2 3 4 ; do
 	for k in 0 1 2 3 4 5 6 7 8 9 ; do
 	    if [ "$k" = "0" ] ; then echo -n "$dots${j}0" ; fi
 	    ../scrambledates
-	    $PROG -d > mlox.out
+	    $PROG -d > mlox.out 2>&1
 	    if [ $? -ne 0 ] ; then echo "FAILED $TEST: Program Error" ; exit 1 ; fi
 	    ../lo > lo1
 	    if ! diff lo0 lo1 ; then

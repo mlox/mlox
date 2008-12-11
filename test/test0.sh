@@ -13,5 +13,5 @@ cd $TEST.tmp
 echo "$TEST Setup"
 #cp ../$TEST.data/*.txt .
 echo "$TEST Running $PROG ... (CTRL-C to interrupt if hung)"
-$PROG -u > mlox.out
+$PROG -u > mlox.out 2>&1
 echo "PASSED $TEST"

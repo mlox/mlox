@@ -8,7 +8,7 @@
 
 ##################################################
 # Morrowind mlox_base.txt
-# Release Date: 2008-12-10 16:41:48
+# Release Date: 2008-12-11 16:56:47
 # This file needs to live in the directory where mlox.py runs
 ##################################################
 # This file is intended as a repository of community 
@@ -2361,6 +2361,7 @@ Bloodmoon.esm
 # - JMS
 [NearEnd]
 NOM 2.12.esp
+NOM 2.13.esp
 
 [MsgAny]
  Latest version of Necessities of Morrowind (NOM) is 2.13
@@ -2492,6 +2493,49 @@ New Khuul - MO.esp
  Contains evil GMSTs.
  (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 New Npc Replacer 3.50.esm
+
+
+##################################################
+# @New Suran Extended 1.52 [Nicholiathan]
+
+[Conflict]
+ Choose ONLY ONE of these plugins. They all include the NSE base.
+ "New Suran Expanded.esp", original loot, no childern
+ "Balanced NSE.esp", less loot, no childern
+ "New Suran Expanded CoM.esp", original loot & Childern of Morrowind
+ "Balanced NSE.esp", less loot & Childern of Morrowind
+ (Ref: "New Suran Extended - readme.txt")
+New Suran Expanded.esp
+Balanced NSE.esp
+New Suran Expanded CoM.esp
+Balanced NSE.esp
+
+[ReqAll]
+ (Ref: "New Suran Extended - readme.txt")
+New Suran Expanded CoM.esp
+MW_Children_1_0.esm
+
+[ReqAll]
+ (Ref: "New Suran Extended - readme.txt")
+Balanced NSE.esp
+MW_Children_1_0.esm
+
+# mlox can't really handle these sorts of drop-in replacements:
+# need to implement hash checking or something for that:
+#This is a drop-in replacement for the original farmer mod
+#Farmer Mod v4.3 NSE.esp
+#This is a drop-in replacement for the original archery store mod
+#Suran Archery Store_v3.0 NSE.esp
+
+[ConflictAny]
+ "New Suran Extended NoM.esp" is no longer needed if you install the
+ new version 1.52: (NSE152patch.7z)
+ (Ref: "New Suran Extended - readme.txt")
+New Suran Extended NoM.esp
+New Suran Expanded.esp
+Balanced NSE.esp
+New Suran Expanded CoM.esp
+Balanced NSE.esp
 
 
 ##################################################

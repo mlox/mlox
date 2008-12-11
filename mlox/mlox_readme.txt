@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.20
+Version: 0.21
 Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -566,7 +566,12 @@ This rule is read: "If any of the dependent plugins (dependant-1.esp
 
 o ChangeLog
 
-Version 0.19 - 2008/12/
+Version 0.21 - 2008/12/11
+	* New GUI features: right click on the current load order for
+	options menu: options are paste in from clipboard, read input
+	from file, select all, or generate a debug output.
+
+Version 0.19 - 2008/12/10
 	* mlox now hosted on googlecode, so I put it under the liberal
 	MIT License.
 

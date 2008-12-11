@@ -53,3 +53,8 @@ Update Load Order
 [[requiresPython25]]
 This program requires Python version 2.5 or later.
 
+[[close]]
+close
+
+[[click for options]]
+[Right click in this pane for options]

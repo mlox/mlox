@@ -51,7 +51,7 @@ cp ../$TEST.data/*.txt .
 cp ../$TEST.data/*.es[mp] .
 cp ../$TEST.data/lo0 .		# expected load order
 echo "$TEST Running $PROG ..."
-$PROG > mlox.out
+$PROG > mlox.out 2>&1
 if [ $? -ne 0 ] ; then echo "FAILED $TEST: Program Error" ; exit 1 ; fi
 echo "$TEST Finished"
 ../lo > lo1			# new load order
