@@ -1,2 +1,85 @@
-- allow mod authors to publish rules files in Data Files/mlox/*.txt
+- windows svn clients: RapidSVN, or TortoiseSVN
+
+- maybe, maybe allow mod authors to publish rules files in Data
+  Files/mlox/*.txt Tricky, potential for rules filename collisions.
+
+========================================
+Implementing a full boolean language:
+
+- macros (???)
+
+- Parser
+- PrettyPrinter
+- message and plugin names: (readstring function)
+
+- check version number from filename or plugin header doc string?
+Version Check:
+(version < N ...)
+
+plugin names: assume they mean (active plugin.esp) unless 
+otherwise noted.
+
+--------------------
+New: [REQUIRES comment] a [AND b, c, d]
+
+Means: a REQUIRES b AND c AND d
+Read: "If aaa is active then bbb, ccc, ddd must also be active."
+
+--------------------
+New: [REQUIRES comment] a [OR b, c, d]
+
+Means: a REQUIRES b OR c OR d
+Read: "If a is active then one of b, c, d must be active."
+
+--------------------
+New: [REQUIRES comment] [AND a, b, c] d
+
+Means: a AND b AND c REQUIRE d
+Read: "If a, b, c are active then d must also be active."
+
+--------------------------------------------------
+Illegal Characters in Windows: ? [ ] / \ = + < > : ; " * | (and ^ if FAT)
+
+BOOLEAN expressions:
+
+a (means plugin "a" is active)
+[AND a, b, c]  -> a AND b AND c
+[OR a, b, c]   -> a OR b OR c
+[NOT a, b]  -> (NOT a) AND (NOT b) -> (NOT (a OR b))
+
+OTHER FUNCTIONS:
+
+[DOC pattern plugin] is true if the doc-string in header of plugin
+matches pattern
+
+[VER [>|<|=|>=|<=] N plugin] true if the version comparison is true
+for the given plugin, the version is taken from the plugin name by
+regexp or from the docstring by regexp.
+
+STATEMENTS (RULES):
+* statement starts with "^\[(REQUIRES|CONFLICT|NOTE|PATCH|ORDER|NEARSTART|NEAREND)"
+
+[REQUIRES comment] cond1 cond2 (REQUIRES IF cond1 THEN cond2 must be true)
+If cond1, then cond2 must be true, otherwise print missing req error
+[REQUIRES comment] a [AND b, c, d]
+[REQUIRES comment] a [OR b, c, d]
+[REQUIRES comment] [AND a, b, c] d
+[REQUIRES
+ comment
+ comment]
+ [AND a, b, c] d
+
+[CONFLICT] cond1 cond2... condN (CONFLICT IF ANYTWO cond ARE TRUE)
+IF any two cond, then print conflict error
+[CONFLICT comment] a,b,c
+[CONFLICT comment] a,b [OR c,d]
+
+[NOTE] cond1 (NOTE IF cond)
+If cond then print note
+[NOTE comment] a
+[NOTE comment] [AND a,b]
+
+[PATCH] cond1 cond2 (PATCH IF cond1 THEN cond2 AND IF cond2 THEN cond1)
+if cond1 then cond2 must be true
+and if cond2 is true, then cond1 must be true
 

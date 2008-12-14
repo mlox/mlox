@@ -1,20 +1,28 @@
 Getting list of plugins from plugin directory      (  9 plugins)
-Reading rules from: "mlox_user.txt"                (  1 rules)
-Warning: mlox_base.txt:17: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp"
-Reading rules from: "mlox_base.txt"                ( 10 rules)
-[Plugins already in sorted order. No sorting needed!
-REQALL["aaaaa.esp"]: requires all of the following:
- > ggggg.esp
-CONFLICT["ddddd.esp" <-> "eeeee.esp"]:
- | These plugins conflict because they modify the same GMST.
-CONFLICT["ccccc.esp" <-> "ddddd.esp"]
-NOTE["bbbbb.esp"]
+Read rules from: "mlox_user.txt"                   (  1 rules)
+Warning: mlox_base.txt:24: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp"
+[NOTE]
+ > bbbbb.esp
  | This esp is obsolete, you should be using bbbbX.esp instead
-NOTE["aaaaa.esp"]
+[NOTE]
+ > aaaaa.esp
  | It is HIGHLY recommended that you use Wrye Mash
  | to merge leveled lists if you use this mod!!!
-NOTE["aaaaa.esp"]
+[NOTE]
+ > aaaaa.esp
  | Second message for aaaaa.esp
+[CONFLICT]
+ > ddddd.esp
+ > ccccc.esp
+[REQUIRES]
+ aaaaa.esp Requires:
+ > MISSING(ggggg.esp)
+[CONFLICT]
+ > ddddd.esp
+ > eeeee.esp
+ | These plugins conflict because they modify the same GMST.
+Read rules from: "mlox_base.txt"                   ( 10 rules)
+[Plugins already in sorted order. No sorting needed!
 [LOAD ORDER UPDATED!]
 current saved to: current_loadorder.out
 mlox sorted saved to: mlox_new_loadorder.out

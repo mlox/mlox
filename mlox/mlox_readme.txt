@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.21
+Version: 0.22
 Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -17,6 +17,7 @@ Contents
 o Alpha Request For Comments
 o Features
 o Installation and quick start
+0 Support
 o Introduction - Why mlox?
 o Origins of mlox
 o What mlox does, operational details
@@ -29,7 +30,6 @@ o How Rules work
 o The Rules
 oo Ordering Rules
 oo Warning Rules
-o A couple things of technical note
 o ChangeLog
 
 ------------------------------------------------------------
@@ -75,9 +75,7 @@ somewhere in the Internets :)
 ------------------------------------------------------------
 o Installation and quick start
 
-- mlox.py has 2 modes, GUI and command line. When executed with no
-  command line switches it starts in GUI mode, when executed with
-  the switch -h, it displays command line usage help.
+oo Requirements
 
 - mlox.py is written using Python 2.5 and wxWidgets, just like Wrye
   Mash. (For Windows, soon there will be a standalone executable that
@@ -87,6 +85,18 @@ o Installation and quick start
 
   http://www.python.org/ftp/python/2.5/python-2.5.msi
   http://prdownloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.0.1-py25.exe
+
+- It is strongly recommended that you install Hrnchamd's MCP
+  ("Morrowind Code Patch"):
+  http://www.tesnexus.com/downloads/file.php?id=19510
+  The MCP makes it safer to change your load order in an existing
+  savegame, amongst many other wonderful things it fixes.
+  You are also encouraged to use Wrye Mash to manage your plugins:
+  http://wrye.ufrealms.net/Wrye Mash.html
+
+- mlox.py has 2 modes, GUI and command line. When executed with no
+  command line switches it starts in GUI mode, when executed with
+  the switch -h, it displays command line usage help.
 
 - Unpack the mlox appication archive somewhere under your game
   directory. If you don't have a place decided, I suggest you unpack in
@@ -111,6 +121,14 @@ o Installation and quick start
   mlox_user.txt, if you have created one) are in the current working
   directory (the directory where you run mlox) so you should run mlox in
   the directory where those two files live.
+
+------------------------------------------------------------
+o Support
+
+If you run into a problem with mlox, the best thing to do to get help
+is to post on the BethSoft forums:
+http://www.bethsoft.com/bgsforums/index.php?showforum=12
+
 
 ------------------------------------------------------------
 o Introduction - Why mlox?
@@ -328,13 +346,18 @@ starts, or at the end of file.
 All filename comparisons are caseless, so you do not have to worry
 about capitalization of plugin names when entering rules.
 
-Comments begin with '#'. When mlox.py reads rules, comments are first
+Comments begin with ';'. When mlox.py reads rules, comments are first
 stripped, and then blank lines are ignored.
 
 Message text in rules may be multi-line. All message lines must begin
 with whitespace.
 
 Note that listed plugins must not begin with whitespace.
+
+In mlox_base.txt, most rules are grouped into "sections", which begin
+with "@" followed by the section name, and each section corresponds
+more or less to one "Mod". This is only a convention to help keep
+order in the file, and to generate some meaningless statistics.
 
 ------------------------------------------------------------
 o The Rules
@@ -565,6 +588,9 @@ This rule is read: "If any of the dependent plugins (dependant-1.esp
 ==================================================
 
 o ChangeLog
+
+Version 0.22 - 2008/12/
+	* changed comment character from '#' to ';'.
 
 Version 0.21 - 2008/12/11
 	* New GUI features: right click on the current load order for

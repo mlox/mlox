@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.21"
+Version = "0.22"
 
 import sys
 
@@ -10,12 +10,13 @@ import sys
 mlox - elder scrolls mod load order eXpert
 """
 
-import getopt
 import os
 import re
-import time
-import pprint
 import wx
+from pprint import PrettyPrinter
+from getopt import getopt
+from time import time
+from fnmatch import fnmatch
 
 Message = {}
 
@@ -36,11 +37,12 @@ Opt.Quiet = False
 Opt.GetAll = False
 Opt.WarningsOnly = False
 
-# re_rule matches the start of a rule. We use a general pattern,
-# instead of specifically testing each of the allowed commands, so the
-# construction of the previous rule will still stop at the recognition
-# of a new rule, even if it is misspelled.
-re_rule = re.compile(r'\[([a-z]+)\]\s*$', re.IGNORECASE)
+# the character used to start a comment.
+start_comment_char = ';'
+#
+
+# re_rule matches the start of a rule.
+re_rule = re.compile(r'^\[(order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.*)?)\](.*)$', re.IGNORECASE)
 # re_ignore matches lines that we ignore, like blank lines
 re_ignore = re.compile(r'^\s*$')
 # line for multiline messages
@@ -50,9 +52,19 @@ re_gamefile = re.compile(r'GameFile\d+=([^\r\n]*)', re.IGNORECASE)
 # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
 # this may be too sloppy, we could also look for the same prefix pattern,
 # and remove that if present on all lines.
-re_sloppy_plugin = re.compile(r'^(?:GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp])', re.IGNORECASE)
+re_sloppy_plugin = re.compile(r'^(?:[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
-re_plugin = re.compile(r'^\S.*\.es[mp]$', re.IGNORECASE)
+re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
+# set of characters that are not allowed to occur in plugin names.
+# (we allow '*' and '?' for filename matching).
+re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
+# for recognizing our boolean functions:
+re_start_bool_fun = re.compile(r'^\[(AND|OR|NOT)\s*', re.IGNORECASE)
+re_end_bool_fun = re.compile(r'^\]\s*')
+# for cleaning up pretty printer
+re_comma = re.compile(r", ")
+re_single_quote = re.compile(r"'")
+re_indented = re.compile(r'^', re.MULTILINE)
 
 # output file for new load order
 clip_file = "mlox_clip.txt"
@@ -61,14 +73,14 @@ new_loadorder_output = "mlox_new_loadorder.out"
 debug_output = "mlox_debug.out"
 
 class logger:
-    def __init__(self, prints, *cohorts):
+    def __init__(self, prints, *cohort):
         self.log = []
         self.prints = prints
-        self.cohorts = cohorts
+        self.cohort = cohort
 
     def add(self, message):
         self.log.append(message)
-        for c in self.cohorts:
+        for c in self.cohort:
             c.add(message)
         if self.prints and Opt.GUI == False:
             print message
@@ -79,7 +91,19 @@ class logger:
     def flush(self):
         self.log = []
 
-Dbg = logger(False)             # debug output
+class debug_logger(logger):
+    def __init__(self):
+        logger.__init__(self, False)
+
+    def add(self, message):
+        if Opt.DBG:
+            msg = "DBG: " + message
+            if Opt.GUI:
+                self.log.append(msg)
+            else:
+                print >> sys.stderr, msg
+
+Dbg = debug_logger()            # debug output
 New = logger(True, Dbg)         # new sorted loadorder
 Old = logger(False)             # old original loadorder
 Stats = logger(True, Dbg)       # stats output
@@ -136,6 +160,278 @@ class caseless_dirlist:
     def filelist(self):
         return(self.files.values())
 
+
+def myopen_file(filename, mode):
+    try:
+        return(open(filename, mode))
+    except IOError, (errno, strerror):
+        if Opt.DBG:
+            mode_str = "input" if mode == 'r' else "output"
+            Dbg.add("Error opening \"%s\" for %s (%s)" % (filename, mode_str, strerror))
+    return(None)
+
+
+class rule_parser:
+    """A simple parser for rules based using recursive descent to evaluate
+    boolean expressions."""
+    def __init__(self, active, graph):
+        self.active = active
+        self.graph = graph
+        self.line_num = 0
+        self.rule_file = None
+        self.input_handle = None
+        self.buffer = ""
+        self.message = []
+        self.curr_rule = ""
+
+    def readline(self):
+        if self.input_handle == None:
+            return(False)
+        try:
+            while True:
+                line = self.input_handle.next()
+                self.line_num += 1
+                line = line.split(start_comment_char)[0] # remove all comments
+                line = line.rstrip() # strip whitespace from end of line, include CRLF
+                if line != "":
+                    self.buffer = line
+                    Dbg.add("readline returns: %s" % line)
+                    return(True)
+        except StopIteration:
+            Dbg.add("EOF")
+            self.buffer = ""
+            self.input_handle.close()
+            self.input_handle = None
+            return(False)
+
+    def where(self):
+        return("%s:%d" % (self.rule_file, self.line_num))
+
+    def parse_error(self, what):
+        Msg.add("%s: Parse Error(%s), %s" % (self.where(), self.curr_rule, what))
+
+    def parse_message_block(self):
+        while self.readline():
+            if re_message.match(self.buffer):
+                self.message.append(self.buffer)
+            else:
+                return
+
+    def check_plugin_name(self, name):
+        if not re_plugin.match(name):
+            self.parse_error("expected a plugin name: %s" % name)
+            return(None)
+        if re_plugin_illegal.match(name):
+            self.parse_error("illegal characters in plugin name: %s" % name)
+            return(None)
+        return(C.cname(name))
+
+    def parse_ordering(self, rule):
+        prev = None
+        n_order = 0
+        while self.readline():
+            if re_rule.match(self.buffer):
+                return
+            p = self.check_plugin_name(self.buffer)
+            if p == None:
+                continue
+            n_order += 1
+            if rule == "ORDER":
+                if prev != None:
+                    self.graph.add_edge(self.where(), prev, p)
+                prev = p
+            elif rule == "NEARSTART":
+                self.graph.nearstart.append(p)
+                self.graph.nodes.setdefault(p, [])
+            elif rule == "NEAREND":
+                self.graph.nearend.append(p)
+                self.graph.nodes.setdefault(p, [])
+        if rule == "ORDER":
+            if n_order == 0:
+                Msg.add("Warning: %s: ORDER rule has no entries" % (self.where()))
+            elif n_order == 1:
+                Msg.add("Warning: %s: ORDER rule skipped because it only has one entry: %s" % (self.where(), C.truename(prev)))
+
+    def parse_plugin_name(self):
+        buff = self.buffer.strip()
+        Dbg.add("parse_plugin_name buff=%s" % buff)
+        plugin_match = re_plugin.match(buff)
+        if plugin_match:
+            plugin_name = C.cname(plugin_match.group(1))
+            Dbg.add("parse_plugin_name name=%s" % plugin_name)
+            # skip possible comma separator and whitespace after plugin name
+            pos = plugin_match.span(2)[1]
+            self.buffer = buff[pos:].lstrip()
+            Dbg.add("parse_plugin_name new buff=\"%s\"" % self.buffer)
+            expr = C.truename(plugin_name)
+            # TBD change to dictionary lookup for speed?
+            exists = plugin_name in self.active
+            if not exists:
+                expr = "MISSING(%s)" % expr
+            return(exists, expr)
+        else:
+            self.parse_error("expected a plugin name: \"%s\"" % buff)
+            self.buffer = ""
+            return(None, None)
+
+    def parse_expression(self):
+        self.buffer = self.buffer.strip()
+        if self.buffer == "":
+            if self.readline():
+                if re_rule.match(self.buffer):
+                    Dbg.add("parse_expression new line started new rule")
+                    return(None, None)
+                self.buffer = self.buffer.strip()
+            else:
+                return(None, None)
+        match = re_start_bool_fun.match(self.buffer)
+        if match:
+            Dbg.add("parse_expression parsing expression: \"%s\"" % self.buffer)
+            bool_fun = match.group(1).upper()
+            p = match.span(0)[1]
+            self.buffer = self.buffer[p:]
+            Dbg.add("bool_fun = %s" % bool_fun)
+            vals = []
+            exprs = []
+            bool_end = re_end_bool_fun.match(self.buffer)
+            Dbg.add("self.buffer 1 =\"%s\"" % self.buffer)
+            while not bool_end:
+                (bool, expr) = self.parse_expression()
+                exprs.append(expr)
+                vals.append(bool)
+                Dbg.add("self.buffer 2 =\"%s\"" % self.buffer)
+                bool_end = re_end_bool_fun.match(self.buffer)
+            pos = bool_end.span(0)[1]
+            self.buffer = self.buffer[pos:]
+            Dbg.add("self.buffer 3 =\"%s\"" % self.buffer)
+            if bool_fun == "AND":
+                return(all(vals), exprs)
+            if bool_fun == "OR":
+                return(any(vals), "?OR?".join(exprs).split("?"))
+            if bool_fun == "NOT":
+                return(not(all(vals)), ["NOT"] + exprs)
+            else:
+                # should not be reached due to match on re_start_bool_fun
+                Msg.add("Program Error: %s: expected Boolean function (AND, OR, NOT): \"%s\"" % (self.where(), buff))
+                return(None, None)
+        else:
+            Dbg.add("parse_expression parsing plugin: \"%s\"" % self.buffer)
+            return(self.parse_plugin_name())
+
+    def pprint(self, expr, prefix):
+        formatted = PrettyPrinter(indent=2).pformat(expr)
+        formatted = re_comma.sub(" ", formatted)
+        formatted = re_single_quote.sub("", formatted)
+        return(re_indented.sub(prefix, formatted))
+
+    def parse_predicate(self, rule, msg, expr):
+        Dbg.add("parse_predicate(%s, %s, %s)" % (rule, msg, expr))
+        expr = expr.strip()
+        if msg == "":
+            if expr == "":
+                self.parse_message_block()
+                expr = self.buffer
+        else:
+            self.message = [msg]
+        if expr == "":
+            if not self.readline():
+                return
+        else:
+            self.buffer = expr
+        msg = "" if self.message == [] else " |" + "\n |".join(self.message) # no ending LF
+        if rule == "CONFLICT":  # takes any number of exprs
+            exprs = []
+            Dbg.add("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
+            (bool, expr) = self.parse_expression()
+            while bool != None:
+                if bool:
+                    exprs.append(expr)
+                (bool, expr) = self.parse_expression()
+            if len(exprs) > 1:
+                Msg.add("[CONFLICT]")
+                for e in exprs:
+                    Msg.add(self.pprint(e, " > "))
+                if msg != "": Msg.add(msg)
+        elif rule == "NOTE":    # takes any number of exprs
+            Dbg.add("function NOTE: %s" % msg)
+            exprs = []
+            (bool, expr) = self.parse_expression()
+            while bool != None:
+                if bool:
+                    exprs.append(expr)
+                (bool, expr) = self.parse_expression()
+            if not Opt.Quiet and len(exprs) > 0:
+                Msg.add("[NOTE]")
+                for e in exprs:
+                    Msg.add(self.pprint(e, " > "))
+                if msg != "": Msg.add(msg)
+        elif rule == "PATCH":   # takes 2 exprs
+            (bool1, expr1) = self.parse_expression()
+            if bool1 != None:
+                (bool2, expr2) = self.parse_expression()
+            if bool2 == None:
+                Msg.add("Warning: %s: PATCH rule must have 2 conditions" % (self.where()))
+                return
+            if bool1 and not bool2:
+                # case where the patch is present but the thing to be patched is missing
+                Msg.add("[PATCH]\n%s is missing some pre-requisites:\n%s" %
+                        (self.pprint(expr1, " "), self.pprint(expr2, " ")))
+                if msg != "": Msg.add(msg)
+            if bool2 and not bool1:
+                # case where the patch is missing for the thing to be patched
+                Msg.add("[PATCH]\n%s for:\n%s" %
+                        (self.pprint(expr1, " "), self.pprint(expr2, " ")))
+                if msg != "": Msg.add(msg)
+        elif rule == "REQUIRES": # takes 2 exprs
+            (bool1, expr1) = self.parse_expression()
+            if bool1 != None:
+                (bool2, expr2) = self.parse_expression()
+                Dbg.add("REQ expr2 == %s" % expr2)
+                if bool2 == None:
+                    self.parse_error("REQUIRES rule must have 2 conditions")
+                    return
+            if bool1 and not bool2:
+                Msg.add("[REQUIRES]\n%s Requires:\n%s" %
+                        (self.pprint(expr1, " "), self.pprint(expr2, " > ")))
+                if msg != "": Msg.add(msg)
+
+    def loadup_msg(self, msg, count, what):
+        Stats.add("%-50s (%3d %s)" % (msg, count, what))
+
+    def read_rules(self, rule_file):
+        """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
+        add order rules to graph, and print warnings."""
+        self.rule_file = rule_file
+        Dbg.add("READING RULES FROM: \"%s\"" % self.rule_file)
+        self.input_handle = myopen_file(self.rule_file, 'r')
+        if self.input_handle == None:
+            return False
+        self.line_num = 0
+        n_rules = 0
+        while True:
+            if self.buffer == "":
+                if not self.readline():
+                    break
+            new_rule = re_rule.match(self.buffer)
+            if new_rule:        # start a new rule
+                n_rules += 1
+                self.curr_rule = new_rule.group(1).upper()
+                self.message = []
+                if self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
+                    self.parse_ordering(self.curr_rule)
+                elif self.curr_rule in ("CONFLICT", "NOTE", "PATCH", "REQUIRES"):
+                    self.parse_predicate(self.curr_rule, new_rule.group(2), new_rule.group(3))
+                else:
+                    # we should never reach here, since re_rule only matches known rules
+                    self.parse_error("read_rules failed sanity check, unknown rule %s" % self.buffer)
+                    self.buffer = ""
+            else:
+                self.parse_error("expected start of rule: \"%s\"" % self.buffer)
+                self.buffer = ""
+        self.loadup_msg("Read rules from: \"%s\"" % self.rule_file, n_rules, "rules")
+        return True
+
+
 class pluggraph:
     """A graph structure built from ordering rules which specify plugin load (partial) order"""
     def __init__(self):
@@ -183,26 +479,23 @@ class pluggraph:
         if self.can_reach(plug2, plug1):
             # (where == "") when adding edges from psuedo-rules we
             # create from our current plugin list, We ignore cycles in
-            # this case because they do not matter. 
+            # this case because they do not matter.
             # (where != "") when it is an edge from a rules file, and in
             # that case we do want to see cycle errors.
             cycle_detected = "Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2))
             if where == "":
-                if Opt.DBG:
-                    Dbg.add(cycle_detected)
+                Dbg.add(cycle_detected)
             else:
                 Msg.add(cycle_detected)
             return False
         self.nodes.setdefault(plug1, [])
         if plug2 in self.nodes[plug1]: # edge already exists
-            if Opt.DBG:
-                Dbg.add("DBG: %s: Dup Edge: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2)))
+            Dbg.add("%s: Dup Edge: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2)))
             return True
         # add plug2 to the graph as a child of plug1
         self.nodes[plug1].append(plug2)
         self.incoming_count[plug2] = self.incoming_count.setdefault(plug2, 0) + 1
-        if Opt.DBG:
-            Dbg.add("DBG: adding edge: %s -> %s" % (plug1, plug2))
+        Dbg.add("adding edge: %s -> %s" % (plug1, plug2))
         return(True)
 
     def topo_sort(self):
@@ -227,8 +520,8 @@ class pluggraph:
         roots = [node for node in self.nodes if self.incoming_count.get(node, 0) == 0]
         if Opt.DBG:
             Dbg.add("\n========== BEGIN TOPOLOGICAL SORT DEBUG INFO ==========")
-            Dbg.add("DBG: graph before sort (node: children)")
-            Dbg.add(pprint.PrettyPrinter(indent=4).pformat(self.nodes))
+            Dbg.add("graph before sort (node: children)")
+            Dbg.add(PrettyPrinter(indent=4).pformat(self.nodes))
             Dbg.add("\nDBG: roots:\n  %s" % ("\n  ".join(roots)))
         if len(roots) > 0:
             # use the nearstart information to pull preferred plugins to top of load order
@@ -238,14 +531,13 @@ class pluggraph:
             middle_roots = roots        # any leftovers go in the middle
             roots = top_roots + middle_roots + bottom_roots
             if Opt.DBG:
-                Dbg.add("DBG: nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
-                Dbg.add("DBG: top roots:\n  %s" % ("\n  ".join(top_roots)))
-                Dbg.add("DBG: nearend:\n  %s" % ("\n  ".join(self.nearend)))
-                Dbg.add("DBG: bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
-                Dbg.add("DBG: middle roots:\n  %s" % ("\n  ".join(middle_roots)))
-                Dbg.add("DBG: newroots:\n  %s" % ("\n  ".join(roots)))
-        if Opt.DBG:
-            Dbg.add("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
+                Dbg.add("nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
+                Dbg.add("top roots:\n  %s" % ("\n  ".join(top_roots)))
+                Dbg.add("nearend:\n  %s" % ("\n  ".join(self.nearend)))
+                Dbg.add("bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
+                Dbg.add("middle roots:\n  %s" % ("\n  ".join(middle_roots)))
+                Dbg.add("newroots:\n  %s" % ("\n  ".join(roots)))
+        Dbg.add("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
         # now do the actual topological sort
         roots.reverse()
         sorted = []
@@ -261,8 +553,7 @@ class pluggraph:
             del self.nodes[root]
         if len(self.nodes.items()) != 0:
             Msg.add("Error: Topological Sort Failed!")
-            if Opt.DBG:
-                Dbg.add(pprint.PrettyPrinter(indent=4).pformat(self.nodes.items()))
+            Dbg.add(PrettyPrinter(indent=4).pformat(self.nodes.items()))
             return None
         return sorted
 
@@ -305,9 +596,6 @@ class loadorder:
                 esm_files.append(filename)
         return(esm_files, esp_files)
 
-    def loadup_msg(self, msg, count, what):
-        Stats.add("%-50s (%3d %s)" % (msg, count, what))
-
     def find_parent_dir(self, file):
         """return the caseless_dirlist of the directory that contains file,
         starting from cwd and working back towards root."""
@@ -335,8 +623,10 @@ class loadorder:
                 self.game = "None"
                 self.datadir = caseless_dirlist(".")
                 self.gamedir = caseless_dirlist("..")
-        if Opt.DBG:
-            Dbg.add("plugin directory: \"%s\"" % self.datadir.dirpath())
+        Dbg.add("plugin directory: \"%s\"" % self.datadir.dirpath())
+
+    def loadup_msg(self, msg, count, what):
+        Stats.add("%-50s (%3d %s)" % (msg, count, what))
 
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates
@@ -350,10 +640,8 @@ class loadorder:
             if ini_path == None:
                 Msg.add("[%s not found, assuming running outside Morrowind directory]" % source)
                 return
-            try:
-                ini = open(ini_path, 'r')
-            except IOError, (errno, strerror):
-                Msg.add("Error opening \"%s\" for input (%s)" % (source, strerror))
+            ini = myopen_file(ini_path, 'r')
+            if ini == None:
                 return
             for line in ini.readlines():
                 line.rstrip()
@@ -398,10 +686,8 @@ class loadorder:
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
         others debug their load order."""
-        try:
-            file = open(fromfile, 'r')
-        except IOError, (errno, strerror):
-            Msg.add("Error opening \"%s\" for input (%s)" % (fromfile, strerror))
+        file = myopen_file(fromfile, 'r')
+        if fromfile == None:
             return
         for line in file.readlines():
             plugin_match = re_sloppy_plugin.match(line)
@@ -426,8 +712,7 @@ class loadorder:
         respectively"""
         if len(self.order) < 2:
             return
-        if Opt.DBG:
-            Dbg.add("DBG: adding edges from CURRENT ORDER")
+        Dbg.add("adding edges from CURRENT ORDER")
         prev_i = 0
         self.graph.nodes.setdefault(self.order[prev_i], [])
         for curr_i in range(1, len(self.order)):
@@ -444,253 +729,6 @@ class loadorder:
                             break
             prev_i = curr_i
 
-    def add_conflicts(self, message, conflicts):
-        """Add new conflict rule information."""
-        conflicts.sort()
-        con2 = conflicts[:]
-        for p1 in conflicts[:-1]:
-            con2.pop(0)
-            self.conflicts.setdefault(p1, {})
-            for p2 in con2:
-                if p1 != p2:
-                    self.conflicts[p1][p2] = message
-
-    def add_conflictsany(self, message, conflicts):
-        """Add new conflict rule information."""
-        p1 = conflicts[0]
-        self.conflicts.setdefault(p1, {})
-        for p2 in conflicts[1:]:
-            self.conflicts[p1][p2] = message
-
-    def check_conflicts(self):
-        """Check for and print out known conflicts in active plugins."""
-        for p1 in self.active:
-            if p1 in self.conflicts:
-                for (p2, msg) in self.conflicts[p1].items():
-                    if p2 in self.active:
-                        Msg.add("CONFLICT[\"%s\" <-> \"%s\"]%s" % (C.truename(p1), C.truename(p2),
-                                                                   ":\n"+msg if msg != "" else ""))
-
-    def check_reqall(self):
-        """Check for and print out known missing pre-requisites for active plugins."""
-        for (msg, p_reqs) in self.reqall:
-            p = p_reqs.pop(0)
-            if p in self.active:
-                missing_reqs = [r for r in p_reqs if not r in self.active]
-                if len(missing_reqs) == 0:
-                    return
-                Msg.add("REQALL[\"%s\"]: requires all of the following:" % C.truename(p))
-                for r in missing_reqs:
-                    Msg.add(" > %s" % C.truename(r))
-                if msg != "":
-                    Msg.add(msg)
-
-    def check_reqany(self):
-        """Check for and print out known missing pre-requisites for active plugins."""
-        for (msg, p_reqs) in self.reqany:
-            p = p_reqs.pop(0)
-            if p in self.active:
-                missing_reqs = [r for r in p_reqs if not r in self.active]
-                if len(p_reqs) != len(missing_reqs):
-                    return
-                Msg.add("REQANY[\"%s\"]: requires at least one of the following:" % C.truename(p))
-                for r in missing_reqs:
-                    Msg.add(" > %s" % C.truename(r))
-                if msg != "":
-                    Msg.add(msg)
-
-    def check_allreq(self):
-        """Check for and print out known missing pre-requisites for active plugins."""
-        for (msg, deps) in self.allreq:
-            req = deps.pop()
-            if all(p in self.active for p in deps):
-                if not req in self.active:
-                    plural = "" if len(deps) == 1 else "s"
-                    Msg.add("ALLREQ[\"%s\"]: is required due to the following dependent%s:" % (C.truename(req), plural))
-                    for r in deps:
-                        Msg.add(" > %s" % C.truename(r))
-                    if msg != "":
-                        Msg.add(msg)
-
-    def check_anyreq(self):
-        """Check for and print out known missing pre-requisites for active plugins."""
-        for (msg, deps) in self.anyreq:
-            req = deps.pop()
-            if any(p in self.active for p in deps):
-                if not req in self.active:
-                    plural = "" if len(deps) == 1 else "s"
-                    Msg.add("ANYREQ[\"%s\"]: is required due to the following dependent%s:" % (C.truename(req), plural))
-                    for r in deps:
-                        if r in self.active:
-                            Msg.add(" > %s" % C.truename(r))
-                    if msg != "":
-                        Msg.add(msg)
-
-    def check_patchxy(self):
-        """Check for and print out known missing pre-requisites for active plugins."""
-        for (msg, plugins) in self.patchxy:
-            # plugins is [ patch, plug_A, plug_B1, ... plug_BN ]
-            patch = plugins[0]
-            have_patch = patch in self.active
-            plugA = plugins[1]
-            have_plugA = plugA in self.active
-            plugsB = plugins[2:]
-            have_plugsB = any(p in self.active for p in plugsB)
-            sufficient_reqs = have_plugA and have_plugsB
-            #Msg.add("DBG: patch=%s(%s)  plugA=%s(%s)  plugsB=%s(%s)" % (patch, "T" if have_patch else "F", plugA, "T" if have_plugA else "F", ", ".join(plugsB), "T" if have_plugsB else "F"))
-            if have_patch and not sufficient_reqs:
-                Msg.add("PATCHXY[\"%s\"]: is missing some pre-requisites:" % C.truename(patch))
-                if not have_plugA:
-                    Msg.add(" > %s" % C.truename(plugA))
-                if not have_plugsB:
-                    if not have_plugA and len(plugsB) > 1:
-                        Msg.add(" And any of these:")
-                    for r in plugsB:
-                        Msg.add(" > %s" % C.truename(r))
-            if sufficient_reqs and not have_patch:
-                Msg.add("PATCHXY[\"%s\"]: patch missing for these plugins:" % C.truename(patch))
-                Msg.add(" > %s" % C.truename(plugA))
-                for r in [p for p in plugsB if p in self.active]:
-                    Msg.add(" > %s" % C.truename(r))
-
-    def check_msg_any(self):
-        """Check for and print out messages for active plugins."""
-        for p in self.active:
-            if p in self.msg_any:
-                Msg.add("NOTE[\"%s\"]:\n%s" % (C.truename(p), self.msg_any[p]))
-
-    def check_msg_all(self):
-        """Check for and print out messages for groups of plugins in active plugins."""
-        def addlen(x, y): return(x + len(y))
-        for (msg, plist) in self.msg_all:
-            if all (p in self.active for p in plist):
-                if reduce(addlen, plist, 0) < 70:
-                    Msg.add("NOTE[\"%s\"]\n%s" % ("\", \"".join([C.truename(p) for p in plist]), msg))
-                else:
-                    p = plist.pop(0)
-                    note = "NOTE[\"%s\"" % C.truename(p)
-                    while len(plist) > 0:
-                        p = plist.pop(0)
-                        note += (",\n     \"%s\"" % C.truename(p))
-                    note += ("]\n%s" % msg)
-                    Msg.add(note)
-
-    def read_rules(self, rule_file):
-        """Read rules from rule files (mlox_user.txt or mlox_base.txt), and add order rules
-        to graph."""
-        if Opt.DBG:
-            Dbg.add("DBG: READING RULES FROM: \"%s\"" % rule_file)
-
-        def check_plugin_name(name):
-            if not re_plugin.match(name):
-                Msg.add("Error: %s, expected a plugin name: %s" % (where, name))
-                return(name)
-            else:
-                return(C.cname(name))
-
-        def indent(msg):
-            return("" if msg == [] else " |" + "\n |".join(msg))
-
-        plugins = []
-        curr_rule = None
-        message = []
-        n_order = 0
-        prev = ""
-        where = ""
-        # check_end_conditions() is a closure over the preceding variables
-        # and is merely used to avoid code duplication as it is used twice
-        # below since a rule ends when a new one starts or at EOF
-        def check_end_conditions():
-            msg = indent(message)
-            if (curr_rule in ("MSGALL", "MSGANY") and len(plugins) == 0):
-                Msg.add("Warning: %s: %s rule needs at least 2 plugin arguments" % (where, curr_rule))
-                return
-            if (curr_rule in ("CONFLICT", "CONFLICTANY", "REQALL", "REQANY", "ALLREQ", "ANYREQ") and
-                len(plugins) < 2):
-                Msg.add("Warning: %s: %s rule needs at least 2 plugin arguments" % (where, curr_rule))
-                return
-            if curr_rule == "CONFLICT":
-                self.add_conflicts(msg, plugins)
-            elif curr_rule == "CONFLICTANY":
-                self.add_conflictsany(msg, plugins)
-            elif curr_rule == "MSGALL":
-                self.msg_all.append((msg, plugins))
-            elif curr_rule == "MSGANY":
-                for p in plugins:
-                    self.msg_any[p] = indent(message)
-            elif curr_rule == "PATCHXY":
-                if len(plugins) < 3:
-                    Msg.add("Warning: %s: PatchXY rule needs at least 3 plugin arguments" % where)
-                    return
-                self.patchxy.append((msg, plugins))
-            elif curr_rule == "REQALL":
-                self.reqall.append((msg, plugins))
-            elif curr_rule == "REQANY":
-                self.reqany.append((msg, plugins))
-            elif curr_rule == "ALLREQ":
-                self.allreq.append((msg, plugins))
-            elif curr_rule == "ANYREQ":
-                self.anyreq.append((msg, plugins))
-            elif curr_rule == "ORDER":
-                if n_order == 0:
-                    Msg.add("Warning: %s: ORDER rule has no entries" % (where))
-                elif n_order == 1:
-                    Msg.add("Warning: %s: ORDER rule skipped because it only has one entry: %s" % (where, C.truename(prev)))
-
-        try:
-            rules = open(rule_file, 'r')
-        except IOError, (errno, strerror):
-            if Opt.DBG:
-                Dbg.add("Error opening \"%s\" for input (%s)" % (rule_file, strerror))
-            return False
-
-        line_num = 0
-        n_rules = 0
-        for line in rules.readlines():
-            line = line.split('#')[0] # remove all comments
-            line = line.rstrip()
-            line_num += 1
-            if re_ignore.match(line):
-                continue        # next line
-            new_rule = re_rule.match(line)
-            if new_rule:        # start a new rule
-                check_end_conditions()
-                n_rules += 1
-                where = ("%s:%d" % (rule_file, line_num))
-                plugins = []
-                curr_rule = new_rule.group(1).upper()
-                message = []
-                n_order = 0
-                prev = ""
-                if not curr_rule in ("CONFLICT", "CONFLICTANY", "MSGALL", "MSGANY",
-                                     "ORDER", "NEAREND", "NEARSTART", "PATCHXY",
-                                     "REQALL", "REQANY", "ANYREQ", "ALLREQ", ):
-                    Msg.add("Error: %s, unknown rule: %s" % (where, line))
-                continue        # next line
-            if curr_rule == "ORDER":
-                n_order += 1
-                cn = check_plugin_name(line)
-                if prev != "":
-                    self.graph.add_edge(where, prev, cn)
-                prev = cn
-            elif curr_rule == "NEARSTART":
-                p = check_plugin_name(line)
-                self.graph.nearstart.append(p)
-                self.graph.nodes.setdefault(p, [])
-            elif curr_rule == "NEAREND":
-                p = check_plugin_name(line)
-                self.graph.nearend.append(p)
-                self.graph.nodes.setdefault(p, [])
-            elif curr_rule in ("REQALL", "REQANY", "ALLREQ", "ANYREQ", "PATCHXY", "MSGALL", "MSGANY", "CONFLICT", "CONFLICTANY"):
-                if re_message.match(line):
-                    message.append(line)
-                else:
-                    plugins.append(check_plugin_name(line))
-        check_end_conditions()
-        rules.close()
-        self.loadup_msg("Reading rules from: \"%s\"" % rule_file, n_rules, "rules")
-        return True             # read_rules()
-
     def update_mod_times(self, files):
         """change the modification times of files to be in order of file list,
         oldest to newest"""
@@ -699,7 +737,7 @@ class loadorder:
         else: # self.game == Oblivion
             mtime_first = 1165600070 # Oblivion.esm
         if len(files) > 1:
-            mtime_last = int(time.time()) # today
+            mtime_last = int(time()) # today
             # sanity check
             if mtime_last < 1228683562: # Sun Dec  7 14:59:56 CST 2008
                 mtime_last = 1228683562
@@ -710,14 +748,12 @@ class loadorder:
                 mtime += loadorder_mtime_increment
 
     def save_order(self, filename, order, what):
-        try:
-            out = open(filename, 'w')
-            for p in order:
-                print >> out, p
-            out.close()
-        except IOError, (errno, strerror):
-            Msg.add("Error opening \"%s\" for output (%s)" % (filename, strerror))
+        out = myopen_file(filename, 'w')
+        if out == None:
             return
+        for p in order:
+            print >> out, p
+        out.close()
         Msg.add("%s saved to: %s" % (what, filename))
 
     def update(self, fromfile):
@@ -741,16 +777,19 @@ class loadorder:
                 Msg.add("No plugins detected! mlox needs to run somewhere under where the game is installed.")
                 return(self)
         if Opt.DBG:
-            Dbg.add("DBG: initial load order")
+            Dbg.add("initial load order")
             for p in self.order:
                 Dbg.add(p)
         # read rules from 3 sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        self.read_rules("mlox_user.txt")  # primary rules are from mlox_user.txt
-        if not self.read_rules("mlox_base.txt"):  # secondary rules from mlox_base.txt
+        # primary rules are from mlox_user.txt
+        parser = rule_parser(self.active, self.graph)
+        parser.read_rules("mlox_user.txt")
+        # secondary rules from mlox_base.txt
+        if not parser.read_rules("mlox_base.txt"):
             Msg.add("Error: unable to open mlox_base.txt. You must run mlox in the directory where mlox_base.txt lives.")
             return(self)
-        self.add_current_order()       # tertiary rules from current load order
+        self.add_current_order()       # tertiary order "pseudo-rules" from current load order
         # now do the topological sort of all known plugins (rules + load order)
         sorted = self.graph.topo_sort()
         # the "sorted" list will be a superset of all known plugin files,
@@ -773,18 +812,6 @@ class loadorder:
             Msg.add("[Plugins already in sorted order. No sorting needed!")
             self.sorted = True
 
-        # print out detected missing requisites
-        self.check_patchxy()
-        self.check_reqall()
-        self.check_reqany()
-        self.check_allreq()
-        self.check_anyreq()
-        # print out detected conflicts
-        self.check_conflicts()
-        if not Opt.Quiet:
-            # print out applicable messages
-            self.check_msg_any()
-            self.check_msg_all()
         # print out the new load order
         if len(new_order_cname) != len(self.order):
             Msg.add("Program Error: sanity check: len(new_order_truename %d) != len(self.order %d)" % (len(new_order_truename), len(self.order)))
@@ -929,13 +956,11 @@ class mlox_gui(wx.App):
         self.on_quit(e)
 
     def bugdump(self):
-        try:
-            out = open(debug_output, 'w')
-            print >> out, Dbg.get()
-            out.close()
-        except IOError, (errno, strerror):
-            print >> sys.stderr, "Error opening \"%s\" for output (%s)" % (debug_output, strerror)
+        out = myopen_file(debug_output, 'w')
+        if out == None:
             return
+        print >> out, Dbg.get()
+        out.close()
 
     def right_click_handler(self, e):
         menu = wx.Menu()
@@ -956,16 +981,17 @@ class mlox_gui(wx.App):
     def menu_paste_handler(self, e):
         self.can_update = False
         if wx.TheClipboard.Open():
-            wx.TheClipboard.UsePrimarySelection(True) 
+            wx.TheClipboard.UsePrimarySelection(True)
             if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
                 data = wx.TextDataObject()
                 if wx.TheClipboard.GetData(data):
-                    out = open(clip_file, 'w')
-                    # sometimes some unicode muck can get in there, as when pasting from web pages.
-                    out.write(data.GetText().encode("utf-8"))
-                    out.close()
-                    Opt.FromFile = True
-                    self.analyze_loadorder(clip_file)
+                    out = myopen_file(clip_file, 'w')
+                    if out != None:
+                        # sometimes some unicode muck can get in there, as when pasting from web pages.
+                        out.write(data.GetText().encode("utf-8"))
+                        out.close()
+                        Opt.FromFile = True
+                        self.analyze_loadorder(clip_file)
             wx.TheClipboard.Close()
 
     def menu_open_file_handler(self, e):
@@ -1023,10 +1049,10 @@ if __name__ == "__main__":
     # process command line arguments
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "acdfhquvw",
-                                   ["all", "check", "debug", "fromfile", "help",
-                                    "quiet", "update", "version", "warningsonly"])
-    except getopt.GetoptError, err:
+        opts, args = getopt(sys.argv[1:], "acdfhquvw",
+                            ["all", "check", "debug", "fromfile", "help",
+                             "quiet", "update", "version", "warningsonly"])
+    except GetoptError, err:
         print str(err)
         usage(2)                # exits
     for opt, arg in opts:
@@ -1063,5 +1089,3 @@ if __name__ == "__main__":
     else:
         # run with command line arguments
         loadorder().update(None)
-    if Opt.DBG and not Opt.GUI:
-        print >> sys.stderr, Dbg.get()

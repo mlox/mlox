@@ -1,6 +1,7 @@
-################################################################################
-#			TEST ORDER
-################################################################################
+; -*- mode: emacs-lisp -*-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;			TEST ORDER
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [NearStart]
 Morrowind.esm
@@ -19,7 +20,7 @@ ccccc.esp
 aaaaa.esp
 bbbbb.esp
 
-[MsgAll]
+[Note]
  This esp is obsolete, you should be using bbbbX.esp instead.
  The reason is that we need to add this long message to test
  multi-line messages and it's hard to think up something
@@ -33,13 +34,22 @@ ddddd.esp
 eeeee.esp
 fffff.esp
 
-[ReqAll]
-ccccc.esp
+[Requires]
+ccccc.esp [AND
 ploppy.esp
 squishy.esp
-fnord.esp
+fnord.esp]
 
-# This section is for the ordering for the color plugins
+[Requires] blue.esp
+[AND green.esp chartreuse.esp]
+
+[Requires]
+yellow.esp
+[AND mauve.esp chartreuse.esp]
+
+[Requires] red.esp [and blue.esp ColorPatch.esp]
+
+; This section is for the ordering for the color plugins
 [Order]
 red.esp
 orange.esp
@@ -57,19 +67,4 @@ violet.esp
 
 [NearEnd]
 Mashed Lists.esp
-
-[ReqAny]
-blue.esp
-green.esp
-chartreuse.esp
-
-[ReqAny]
-yellow.esp
-mauve.esp
-chartreuse.esp
-
-[AllReq]
-red.esp
-blue.esp
-ColorPatch.esp
 

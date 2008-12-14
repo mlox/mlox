@@ -1,35 +1,46 @@
 Getting list of plugins from plugin directory      ( 26 plugins)
-Warning: mlox_user.txt:12: ORDER rule skipped because it only has one entry: skipmemamma.esp
-Reading rules from: "mlox_user.txt"                (  3 rules)
-Warning: mlox_base.txt:14: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp"
-Reading rules from: "mlox_base.txt"                ( 26 rules)
-PATCHXY["persimmon-fruitcake-pat.esp"]: is missing some pre-requisites:
- > persimmon.esp
- And any of these:
- > fruitcake.esp
- > bananabread.esp
-PATCHXY["ap-ban-pat.esp"]: patch missing for these plugins:
- > apple.esp
- > banana.esp
-REQALL["ccccc.esp"]: requires all of the following:
- > ploppy.esp
- > squishy.esp
- > fnord.esp
-REQALL["papaya.esp"]: requires all of the following:
- > grapes.esp
-ALLREQ["ColorPatch.esp"]: is required due to the following dependents:
- > red.esp
- > blue.esp
-ANYREQ["sugar.esp"]: is required due to the following dependents:
- > kumquat.esp
-CONFLICT["ddddd.esp" <-> "eeeee.esp"]:
- | These plugins conflict because they modify the same GMST.
-NOTE["bbbbb.esp"]
+Warning: mlox_user.txt:15: ORDER rule skipped because it only has one entry: skipmemamma.esp
+Read rules from: "mlox_user.txt"                   (  3 rules)
+Warning: mlox_base.txt:21: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp"
+[NOTE]
+ > bbbbb.esp
  | This esp is obsolete, you should be using bbbbX.esp instead.
  | The reason is that we need to add this long message to test
  | multi-line messages and it's hard to think up something
  | worthy to put here. Not worthy, not worthy. Just wordy. Lo
  | our modern life is fraught with popsicles. I mean obstacles.
+[CONFLICT]
+ > ddddd.esp
+ > eeeee.esp
+ | These plugins conflict because they modify the same GMST.
+[REQUIRES]
+ ccccc.esp Requires:
+ > [MISSING(ploppy.esp) MISSING(squishy.esp) MISSING(fnord.esp)]
+[REQUIRES]
+ blue.esp Requires:
+ > [green.esp MISSING(chartreuse.esp)]
+[REQUIRES]
+ yellow.esp Requires:
+ > [MISSING(mauve.esp) MISSING(chartreuse.esp)]
+[REQUIRES]
+ red.esp Requires:
+ > [blue.esp MISSING(ColorPatch.esp)]
+[PATCH]
+ persimmon-fruitcake-pat.esp is missing some pre-requisites:
+ [ MISSING(persimmon.esp),
+   [MISSING(fruitcake.esp) OR MISSING(bananabread.esp)]]
+ | (expect missing persimmon/fruitcake/bananabread)
+[PATCH]
+ MISSING(ap-ban-pat.esp) for:
+ [apple.esp banana.esp]
+ | (expect missing patch)
+[REQUIRES]
+ papaya.esp Requires:
+ > [pomegranate.esp jalapeno.esp MISSING(grapes.esp)]
+[REQUIRES]
+ [MISSING(grapes.esp) OR MISSING(peanut.esp) OR kumquat.esp] Requires:
+ > MISSING(sugar.esp)
+Read rules from: "mlox_base.txt"                   ( 26 rules)
 [LOAD ORDER UPDATED!]
 current saved to: current_loadorder.out
 mlox sorted saved to: mlox_new_loadorder.out
