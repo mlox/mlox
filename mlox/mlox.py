@@ -955,11 +955,7 @@ class mlox_gui(wx.App):
         if not self.can_update:
             return
         Opt.Update = True
-        loadorder().update(None)
-        self.txt_stats.SetValue(Stats.get())
-        self.txt_msg.SetValue(Msg.get())
-        self.txt_new.SetValue(New.get())
-        self.highlight_moved(self.txt_new)
+        self.analyze_loadorder(None)
         self.can_update = False
         self.btn_update.Disable()
 
