@@ -1,0 +1,299 @@
+----------------------------------------------------------------------
+mlox_rules_guide.txt - A Guide to reading/writing rules for the rule-base
+----------------------------------------------------------------------
+Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
+License: MIT License (see the file: License.txt)
+----------------------------------------------------------------------
+This is mlox_rules_guide.txt which describes how to user the rules and
+the rule-base. 
+See mlox_readme.txt for a basic information on what mlox is and how
+to use it.
+See mlox_guts.txt for a discussion of mlox's inner workings.
+----------------------------------------------------------------------
+
+o Note about Line Endings
+o How Rules work
+o Ordering Rules
+oo The Order Rule
+oo The NearStart Rule
+oo The NearEnd Rule
+o Warning Rules
+oo Messages
+oo Boolean Expressions
+oo The Note Rule
+oo The Requires Rule
+oo The Conflict Rule
+oo The Patch Rule
+
+------------------------------------------------------------
+o Note about Line Endings
+
+mlox is developed on Linux and using standard Unix line endings (LF).
+If you edit the main rule-base with an editor that introduces DOS line
+endings (CRLF), and check it into svn, you will be killed.
+
+
+------------------------------------------------------------
+o How Rules work
+
+Multiple instances of rules are allowed.
+
+Rules from mlox_user.txt take precedence over those in mlox_base.txt.
+The user is encouraged to use mlox_user.txt to customize their load
+order, while mlox_base.txt serves as a repository of community
+knowledge about plugin order, conflicts, notes and such.
+
+A rule starts with a label, like "[Order]", and ends when a new rule
+starts, or at the end of file.
+
+All filename comparisons are caseless, so you do not have to worry
+about capitalization of plugin names when entering rules.
+
+Comments begin with ';'. When mlox reads rules, comments are first
+stripped, and then blank lines are ignored.
+
+In mlox_base.txt, most rules are grouped into "sections", which begin
+with "@" followed by the section name, and each section corresponds
+more or less to one "Mod". This is only a convention to help keep
+order in the file, and to generate some happy statistics.
+
+Filenames do not need to be quoted. The parser is smart enough to
+figure out where the names start and end.
+
+------------------------------------------------------------
+o Ordering Rules
+
+
+------------------------------------------------------------
+oo The Order Rule
+
+* The [Order] rule specifies the order of plugins. (In the following
+example, plugin-1.esm comes before plugin-2.esp which comes before
+plugin-N.esp, and so on). If two orderings conflict, the first one
+encountered wins. Order conflicts are called "cycles", and an example
+would be if we have one rule that puts aaa.esp before bbb.esp, and
+another rule that puts bbb.esp before aaa.esp. Whenever we encounter a
+rule that would cause a cycle, it is discarded.
+
+[Order]
+plugin-1.esm
+plugin-2.esp
+  .
+  .
+plugin-N.esp
+
+This rule is read: "plugin-1.esm precedes plugin-2.esp which precedes
+plugin-N.esp". It means that plugin-1.esm must precede plugin-2.esp
+AND plugin-2.esp must precede plugin-N.esp in the load order. This
+relationship is transitive, so plugin-1 must also precede plugin-N.
+
+
+------------------------------------------------------------
+oo The NearStart Rule
+
+* The [NearStart] rule specifies that one or more plugins should
+appear as near as possible to the Start of the load order.
+
+[NearStart]
+plugin-1.esp
+plugin-2.esp
+  .
+  .
+plugin-N.esp
+
+Normally there will be only one [NearStart] rule, for the main master
+file, (Morrowind.esm). It is not a good idea to write lots of
+[NearStart] rules. If you think you have to, we should talk. Use
+[Order] rules to place plugins in relationship to each other.
+
+
+------------------------------------------------------------
+oo The NearEnd Rule
+
+* The [NearEnd] rule specifies that one or more plugins should appear
+as near as possible to the End of the load order.
+
+[NearEnd]
+plugin-1.esp
+plugin-2.esp
+  .
+  .
+plugin-N.esp
+
+Normally only a few plugins will appear in [NearEnd] rules, like
+"Mashed Lists.esp". Abuse of the [NearEnd] rule is frowned upon.
+
+
+------------------------------------------------------------
+o Warning Rules
+
+Note: Warnings are normally only given for "active" plugins (i.e., any
+plugin listed in the [Game Files] section of Morrowind.ini). The set
+of active plugins is often a subset of all plugins installed in your
+data directory. If you wish to see warnings for all installed plugins,
+use the "mlox.py -a" command.
+
+
+------------------------------------------------------------
+oo Messages
+
+Rules may be accompanied by a text message. There are 2 styles. The
+first style has the message appear in the brackets that surround the
+name of the rule. For example:
+
+[CONFLICT don't use these together] A.esp B.esp
+
+In this style, the message may not contain a right-bracket. 
+The second style is a block (multi-line) message, in which the message
+must follow on the line after the rule name, and all message lines
+must begin with whitespace. For example:
+
+[CONFLICT]
+ Do not use
+ A.esp and B.esp together
+A.esp
+B.esp
+
+
+------------------------------------------------------------
+oo Boolean Expressions
+
+The Warning rules are expressed in terms of the usual Boolean logical
+operators: AND, OR, NOT. You can nest mlox's Boolean expressions using
+brackets "[]". Here's an example:
+
+[NOTE "Whee!"] [AND A.esp [OR B1.esp B2.esp]]
+
+This rule says to print the message "Whee!" if you have A.esp active
+in your plugins list, along with either B1.esp or B2.esp.
+
+The operators have to operate on something, and that something is
+called a "predicate". This is the basic mlox predicate:
+
+    A.esp
+
+It simply means the plugin "A.esp" is in your active load order.
+
+We can make more expressions, or compound predicates from the basic
+predicates and the boolean operators:
+
+    [AND A.esp B.esp C.esp]
+
+This predicate states that A.esp, B.esp, and C.esp are all active in
+your load order at the same time.
+
+Expressions can nest, so we could say:
+
+    [AND A.esp B.esp [OR C.esp D.esp]]
+
+This means that A.esp, B.esp, and either C.esp or D.esp are all active
+in your load order at the same time.
+
+The parser is fairly flexible. So all of the following variations of
+the same rule are equivalent:
+
+    [NOTE "Whee!"] [AND A.esp [OR B1.esp B2.esp]]
+
+    [NOTE]
+     "Whee!"
+    [AND A.esp [OR B1.esp B2.esp]]
+
+    [NOTE "Whee!"]
+    [AND A.esp 
+        [OR B1.esp B2.esp]]
+
+    [NOTE "Whee!"]
+    [AND A.esp
+        [OR B1.esp
+            B2.esp]]
+
+----------------------------------------------------------------------
+oo The Note Rule
+
+The [Note] rule prints the given message when any of the following
+expressions is true.
+
+Here's how to print a message if any of A.esp, B.esp, C.esp are active:
+
+[Note message] A.esp B.esp C.esp
+
+This could also be expressed in its longer form:
+
+[Note message]
+A.esp
+B.esp
+C.esp
+
+And any of the plugins can actually be a full Boolean expression:
+
+[Note message]
+[AND A.esp [NOT X.esp]]
+[OR B.esp 7.esp]
+[AND C.esp elephant.esp potato.esp]
+
+Note: from now on, we'll use the abbreviation <expr> to mean any
+Boolean expression.
+
+The [Note] rule is just a handy general rule that can be used for almost
+any situation.
+
+----------------------------------------------------------------------
+oo The Requires Rule
+
+The [Requires] rule specifies that when the dependant expression is
+true, that the consequent expression must be true.
+
+[Requires message] <expr-1> <expr-2>
+
+This rule is naturally used to express the depencies often described
+in mod Readmes.
+
+Here's an example:
+
+[Requires]
+ "Assassins Armory - Arrows.esp" requires the Area Effect Arrows
+ plugin to be present
+ (Ref: "Assassin's Armory readme.doc")
+Assassins Armory - Arrows.esp
+[OR AreaEffectArrows XB Edition.esp
+    AreaEffectArrows.esp]
+
+Since there are a couple versions of the AreaEffectArrows plugin, we
+make an [OR] expression for them, since we could use either one. So
+this rule says: "Assassins Armory - Arrows.esp" requires that either
+"AreaEffectArrows XB Edition.esp" or "AreaEffectArrows.esp" must be
+active. If not, you get a warning and the message.
+
+The bit in the block message that start with "(Ref:" is just a
+convention used to point you to the source of information where the
+rule was taken from.
+
+----------------------------------------------------------------------
+oo The Conflict Rule
+
+* The [Conflict] rule specifies that if any two of the following
+expressions are true, then we print out the given message indicating a
+conflict problem.
+
+[Conflict message] <expr-1> <expr-2> .. <expr-N>
+
+----------------------------------------------------------------------
+oo The Patch Rule
+
+* The [Patch] rule specifies a mutual dependency as in the case of a
+patch plugin that modifies another plugin, or that glues two more
+plugins together. We use it to say that we wouldn't want the patch
+without the thing it is supposed to patch, and we wouldn't want the
+things it is supposed to patch to go unpatched.
+
+Here's how we can say that one plugin has a patch:
+
+[Patch message] patch.esp original.esp
+
+Here's how we can say that a glue patch is necessary for two separate
+plugins:
+
+[Patch message] glue.esp [AND plugin-X.esp plugin-Y.esp]
+
+----------------------------------------------------------------------
+

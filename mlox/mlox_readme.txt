@@ -3,21 +3,18 @@ Version: 0.22
 Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
-mlox - the elder scrolls Mod Load Order eXpert
+        mlox - the elder scrolls Mod Load Order eXpert
+----------------------------------------------------------------------
+This is mlox_readme.txt, which gives basic information on what mlox is
+and how to use it.
+See mlox_rules_guide.txt for a description of the rules and rule-base.
+See mlox_guts.txt for a discussion of mlox's inner workings.
 ----------------------------------------------------------------------
 
-======================================================================
-Alpha Note: the initial release of mlox will be an Alpha release.
-This means that virtually all aspects of the program may change, based
-on feedback. So please read the section: "Alpha request for Comments"
-======================================================================
-
-
 Contents
-o Alpha Request For Comments
 o Features
 o Installation and quick start
-0 Support
+o Support
 o Introduction - Why mlox?
 o Origins of mlox
 o What mlox does, operational details
@@ -26,34 +23,7 @@ o Testing
 o Note to Wrye Mash users
 o Usage
 oo The mlox GUI
-o How Rules work
-o The Rules
-oo Ordering Rules
-oo Warning Rules
 o ChangeLog
-
-------------------------------------------------------------
-o Alpha Request For Comments
-
-The Alpha release is intended to answer (at least) these questions:
-
-- Is a load order sorting and annotation tool useful for Morrowind?
-- Does the mlox implementation provide a good solution?
-- The rule-base currently contains information I've gleaned from mod
-Readmes, web pages and forum postings. In some cases information will
-become obsolete quickly. Will the rule-base be able to keep up? Will
-its advice be "reliable enough" to make it worth the effort to
-maintain it?
-- Is the rule-base maintainable into the future? Is it too complicated?
-Too error-prone? Is it something that multiple maintainers can work
-on?
-- Suggestions for distribution and installation will be kindly
-entertained. And I'd like to find a good public place to host the
-rule-base where multiple editors could work on it at the same time, if
-things happen to work out that way.
-- Feel free to comment on any aspect of the design or implementation.
-
-Your feedback will be appreciated.
 
 ------------------------------------------------------------
 o Features
@@ -330,270 +300,20 @@ highlighted in the mlox sorted order.
 To update your load order to the new sorted order, simply press the
 button labeled: "Update Load Order".
 
-------------------------------------------------------------
-o How Rules work
-
-Multiple instances of rules are allowed.
-
-Rules from mlox_user.txt take precedence over those in mlox_base.txt.
-The user is encouraged to use mlox_user.txt to customize their load
-order, while mlox_base.txt serves as a repository of community
-knowledge about plugin order, conflicts, notes and such.
-
-A rule starts with a label, like "[Order]", and ends when a new rule
-starts, or at the end of file.
-
-All filename comparisons are caseless, so you do not have to worry
-about capitalization of plugin names when entering rules.
-
-Comments begin with ';'. When mlox.py reads rules, comments are first
-stripped, and then blank lines are ignored.
-
-Message text in rules may be multi-line. All message lines must begin
-with whitespace.
-
-Note that listed plugins must not begin with whitespace.
-
-In mlox_base.txt, most rules are grouped into "sections", which begin
-with "@" followed by the section name, and each section corresponds
-more or less to one "Mod". This is only a convention to help keep
-order in the file, and to generate some meaningless statistics.
-
-------------------------------------------------------------
-o The Rules
-
-oo Ordering Rules
-
-* The [Order] rule specifies the order of plugins. (In the following
-example, plugin-1.esm comes before plugin-2.esp which comes before
-plugin-N.esp, and so on). If two orderings conflict, the first one
-encountered wins. Order conflicts are called "cycles", and an example
-would be if we have one rule that puts aaa.esp before bbb.esp, and
-another rule that puts bbb.esp before aaa.esp. Whenever we encounter a
-rule that would cause a cycle, it is discarded.
-
-[Order]
-plugin-1.esm
-plugin-2.esp
-  .
-  .
-plugin-N.esp
-
-This rule is read: "plugin-1.esm precedes plugin-2.esp which precedes
-plugin-N.esp". It means that plugin-1.esm must precede plugin-2.esp
-AND plugin-2.esp must precede plugin-N.esp in the load order. This
-relationship is transitive, so plugin-1 must also precede plugin-N.
-
-
-* The [NearStart] rule specifies that one or more plugins should
-appear as near as possible to the Start of the load order.
-
-[NearStart]
-plugin-1.esp
-plugin-2.esp
-  .
-  .
-plugin-N.esp
-
-Normally there will be only one [NearStart] rule, for the main master
-file, (Morrowind.esm). It is not a good idea to write lots of
-[NearStart] rules. If you think you have to, we should talk. Use
-[Order] rules to place plugins in relationship to each other.
-
-
-* The [NearEnd] rule specifies that one or more plugins should appear
-as near as possible to the End of the load order.
-
-[NearEnd]
-plugin-1.esp
-plugin-2.esp
-  .
-  .
-plugin-N.esp
-
-Normally only a few plugins will appear in [NearEnd] rules, like
-"Mashed Lists.esp".
-
-
-oo Warning Rules
-
-Note: Warnings are normally only given for "active" plugins (i.e., any
-plugin listed in the [Game Files] section of Morrowind.ini). The set
-of active plugins is often a subset of all plugins installed in your
-data directory. If you wish to see warnings for all installed plugins,
-use the "mlox.py -a" command.
-
-* The [Conflict] rule specifies that if any two of the following
-plugins are found, then we print out the given message indicating a
-conflict problem.
-
-[Conflict]
- This message is printed when any 2 of the following plugins are found
- (multi-line messages are possible with continuation lines starting 
- with whitespace)
-plugin-1.esp
-plugin-2.esp
-  .
-  .
-plugin-N.esp
-
-This rule is read: "Print the conflict message when any 2 plugins from
-the set of plugin-1.esp, plugin-2.esp, ... plugin-N.esp are present at
-the same time."
-
-
-* The [ConflictAny] rule specifies that when the first plugin and any
-of the following plugins are found, we print out the given message.
-
-[ConflictAny]
- This message is printed when the first plugin conflicts with any of
- the following plugins
-plugin-X.esp
-plugin-1.esp
-  .
-  .
-plugin-N.esp
-
-This rule is read: "Print the conflict message when plugin-X.esp
-is present along with any plugin from the rest of the list".
-
-
-* The [PatchXY] rule prints out the given message when it detects that
-a patch for some plugins is missing, or that some of the plugins a
-patch is supposed to patch are missing. patch.esp depends on
-plugin-X.esp and one of plugin-Y*.esp. This rule is used to cover the
-common case where a compatibility patch exists for "gluing" two mods
-together.
-
-[PatchXY]
- Message
-patch.esp
-plugin-X.esp
-plugin-Y1.esp
-  .
-  .
-plugin-YN.esp
-
-This rule is read: "Print a missing pre-requisite message if patch.esp
-is present and plugin-X.esp is missing or if one of plugin-Y*.esp is
-missing. And print a missing patch message if plugin-X.esp is present
-along with one of plugin-Y*.esp, but patch.esp is not present."
-
-* The [MsgAny] rule prints the given message when any of the following
-plugins is present in your data files directory.
-
-[MsgAny]
- Message printed when any of the following plugins are detected.
-plugin-1.esp
-plugin-2.esp
-  .
-  .
-plugin-N.esp
-
-This rule is read: "Print the message if any plugin in the set
-plugin-1.esp, plugin-2.esp, ... plugin-N.esp is present."
-
-
-* The [MsgAll] rule prints the given message when all of the following
-plugins are present in your data files directory.
-
-[MsgAll]
- Message printed if all of the following plugins are detected.
-plugin-1.esp
-plugin-2.esp
-  .
-  .
-plugin-N.esp
-
-This rule is read: "Print the message if all plugins in the set
-plugin-1.esp, plugin-2.esp, ... plugin-N.esp are present."
-
-
-Note: the following 4 rules [ReqAll], [ReqAny], [AllReq], [AnyReq] all
-describe situations where some dependent plugin(s) are missing some
-required plugin(s). The format of the names is supposed to give a hint
-on the structure of the arguments. The plugins are always listed with
-dependent(s) followed by requirement(s). The logical qualifiers "All"
-and "Any" indicate a list of things. So when these qualifiers appear
-at the start of the name, that means we have a list of dependents,
-followed by one requirement. And when the qualifier appears at the end
-of a name it means there is a single dependent followed by a list of
-requirements. Hopefully, this will become clear from the explanation
-of the rules below.
-
-* The [ReqAll] rule specifies that when the dependant plugin is
-present, that ALL of the following plugins are also required.
-
-[ReqAll]
- Optional message
-dependant-plugin.esp
-required-1.esp
-  .
-  .
-required-N.esp
-
-This rule is read: "If the one dependent plugin (dependant-plugin.esp)
-is present, then all the required plugins (required-1.esp ..
-required-N.esp) must be present, otherwise print an error."
-
-
-* The [ReqAny] rule specifies that when the dependant plugin is
-present, that ANY of the following plugins is also required. As long
-as one of the required plugins is present, no warning is printed.
-
-[ReqAny]
- Optional message
-dependant-plugin.esp
-required-1.esp
-  .
-  .
-required-N.esp
-
-This rule is read: "If the one dependent plugin (dependant-plugin.esp)
-is present, then any one of the required plugins (required-1.esp ..
-required-N.esp) must also be present, otherwise print an error."
-
-
-* The [AllReq] rule specifies that if all the dependant plugins are
-present, that the last plugin is also required. (Note that this rule
-is rarely needed since [PatchXY] rule subsumes it in most cases).
-
-[AllReq]
- Optional message
-dependant-1.esp
-  .
-  .
-dependant-N.esp
-required-plugin.esp
-
-This rule is read: "If all the dependent plugins (dependant-1.esp ..
-dependant-N.esp) are present, then the one required plugin
-(required-plugin.esp) must also be present, otherwise print an error."
-
-* The [AnyReq] rule specifies that if any of the dependant plugins
-are present, then the last plugin is also required. 
-
-[AnyReq]
- Optional message
-dependant-1.esp
-  .
-  .
-dependant-N.esp
-required-plugin.esp
-
-This rule is read: "If any of the dependent plugins (dependant-1.esp
-.. dependant-N.esp) are present, then the one required plugin
-(required-plugin.esp) must also be present, otherwise print an error."
-
 ==================================================
 
 o ChangeLog
 
-Version 0.22 - 2008/12/
+Version 0.22 - 2008/12/14
+	* fixed bug where mlox was taking the plugin list from the
+	plugins in the Data Directory, instead of Morrowind.ini.
+	* added ability to use filename wildcard characters: '*' and '?'
+	* replaced the rule engine, now the warnings rules support
+ 	full boolean expressions
 	* changed comment character from '#' to ';'.
 
 Version 0.21 - 2008/12/11
-	* New GUI features: right click on the current load order for
+	* new GUI features: right click on the current load order for
 	options menu: options are paste in from clipboard, read input
 	from file, select all, or generate a debug output.
 

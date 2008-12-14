@@ -1,37 +1,39 @@
 ;; -*- mode: emacs-lisp -*-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; WARNING - the rules in this file are ALPHA!
-;; they may give incorrect advice on conflicts and pre-requisites
-;; they may hose up your load order
-;; read mlox_readme.txt for safe testing procedures
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; WARNING - the rules in this file are ALPHA! they may give incorrect
+;; advice on conflicts and pre-requisites they may hose up your load
+;; order read mlox_readme.txt for safe testing procedures
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
 ;; Release Date: 2008-12-11 16:56:47
 ;; This file needs to live in the directory where mlox.py runs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This file is intended as a repository of community 
-;; knowledge about how plugins should be ordered, what
-;; dependencies they have, where they conflict, and such.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This file is intended as a repository of community knowledge about
+;; how plugins should be ordered, what dependencies they have, where
+;; they conflict, and such.
 ;;
-;; Generally speaking, you do not want to edit this file.
-;; Instead, use mlox_user.txt, which will override this
-;; file, if present.
+;; Generally speaking, you do not want to edit this file. Instead, use
+;; mlox_user.txt, which will override this file, if present.
 
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Note:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note for Editors:
 ;; most rules are grouped into "sections", which begin with "@"
-;; followed by the section name, and each section corresponds
-;; more or less to one "Mod". This is only a convention to help
-;; keep order in the file, and to generate some meaningless
-;; statistics.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; followed by the section name, and each section corresponds more or
+;; less to one "Mod". This is only a convention to help keep order in
+;; the file, and to generate some happy statistics.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+;; mlox is developed on Linux using standard Unix line endings (LF).
+;; If you edit the main rule-base with an editor that introduces DOS
+;; line endings (CRLF), and check it into svn, you will be killed.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bethsoft
 
 [NearStart]
@@ -43,7 +45,7 @@ Tribunal.esm
 Bloodmoon.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Plugins using Deprecated Leveled List Functions on Bethsoft lists
 
 [Note]
@@ -70,7 +72,7 @@ NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wrye Mash
 
 [NearEnd]
@@ -84,7 +86,7 @@ Mashed Lists.esp
 Merged_Leveled_Lists.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TESTOOL
 
 [Note]
@@ -105,7 +107,7 @@ Merged_Objects.esp
 Merged_Leveled_Lists.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @A good place to stay, Ver 1,8
 
 [Requires]
@@ -113,7 +115,7 @@ A good place to stay, Teleport Addon.esp
 A good place to stay, Ver 1,8.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Abigail's Petshop v5.5
 
 [Conflict]
@@ -137,7 +139,7 @@ Clean Abigail's Petshop_v5.5_NG.esp
 Clean Abigail's Petshop_v5.5_SN_E.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @abotGuards
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -157,7 +159,7 @@ Bloodmoon.esm
 
 [Conflict]
  "abotGuarsBloodmoon.esp" should be used if you have Bloodmoon.esm only loaded
- (ref: "abotGuars.txt)
+ (ref: "abotGuars.txt")
 abotGuarsBloodmoon.esp
 Tribunal.esm
 
@@ -176,7 +178,7 @@ Bloodmoon.esm
 abotGuarsTribunal.esp
 Tribunal.esm
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurers TC Beta 1
 
 [Patch]
@@ -187,7 +189,7 @@ AdvTC_TribunalAddon.esp
 ;; what is this?:
 ;;time_2x.esp
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ald Vendras v31
 
 ;; Recommended load order for Ald Vendras with popular mods:
@@ -267,7 +269,7 @@ Ald-Vendras_V3-LoKKen-SC.esp
 Castle_Dragonfall.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alice's Garden 1.2
 
 [Conflict]
@@ -278,7 +280,7 @@ Alice.esp
 Nevena's Assistants & Apprentices 1.0.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Annastia v3.3
 
 ;; Load before Balmora Expansion to prevent cell conflict.
@@ -288,7 +290,7 @@ Annastia V3.3.esp
 Balmora Expansion V1.4.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Antares' Big Mod 2.8.5.esp
 
 [Note]
@@ -297,7 +299,7 @@ Balmora Expansion V1.4.esp
 Antares' Big Mod 2.8.5.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Area Effect Arrows [Bethesda/etc]
 
 [Conflict]
@@ -307,7 +309,7 @@ Area Effect Arrows.esp ; ???
 AreaEffectArrows.esp ; [Bethesda]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Assassins Armory
 
 [Order]
@@ -318,7 +320,7 @@ Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
 
 [Requires]
- Assassins Armory - Arrows requires the Area Effect Arrows
+ "Assassins Armory - Arrows.esp" requires the Area Effect Arrows
  plugin to be present
  (Ref: "Assassin's Armory readme.doc")
 Assassins Armory - Arrows.esp
@@ -326,7 +328,7 @@ Assassins Armory - Arrows.esp
     AreaEffectArrows XB Edition.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Atmospheric Sound Effects (ASE 3.0)
 
 [Conflict]
@@ -346,7 +348,7 @@ AtmosphericSoundEffects-3.0-Tribunal.esp
 Tribunal.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Authentic Signs: Inns and Taverns 1.1
 
 ;; "Load this one after Unique Banners and Signs below if you want to use both."
@@ -356,7 +358,7 @@ Unique Banners and Signs.esp
 Authentic Signs IT 1.1.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Expansion
 
 [Requires]
@@ -370,7 +372,7 @@ Balmora Expansion v1.4.esp
 Vality's Balmora Addon.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Baron's Partners
 
 [Conflict]
@@ -384,7 +386,7 @@ CM_Partners_3.0.esp
 ;;3.Known conflicts:  Wakim's Game Improvements, Twin Lamps, Nevenna's Exslaves and Partners, Nevenna's Club and Courtiers, and Friends and Rivals.
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BEER! 
 
 [Requires]
@@ -433,7 +435,7 @@ Indybank.esp
 Balmora Expansion V1.4.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Beryl's Head Replacer v1.0
 
 [Order]
@@ -450,7 +452,7 @@ Slof's Better Beasts b.esp
 Slof's Civilised Beasts.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Clothes
 
 [Order]
@@ -474,7 +476,7 @@ Better Clothes_v1.1_nac.esp
 Better Clothes_v1.0.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Heads
 
 ;; Order within the Better Heads plugins does not actually matter,
@@ -497,7 +499,7 @@ Better Heads Tribunal addon.esm
 [AND Tribunal.esm Better Heads.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @bigmod/bigmod2 by xereau
 
 [Note]
@@ -513,7 +515,7 @@ BigMod 2.2.esp
 BigMod2 v2.0 RELEASE.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @blacklight
 
 [Note]
@@ -534,7 +536,7 @@ blacklightv1.34.esp
 Havish.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Black Mill 1.1
 
 [Conflict]
@@ -587,7 +589,7 @@ TheBlackMill11.esp
 Beyond YsGramor v2.5.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Black Queen Chronicles Ver 2.5
 
 ;; Beyond Ysgramor - damages mountain outside Seyda Neen.
@@ -611,7 +613,7 @@ Clean Black Queen Chronicles Ver 2.5.esp
 Castlevania.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Blood and Gore [TheLys]
 
 [Order]
@@ -824,7 +826,7 @@ Blood and Gore Wilderness add-on.esp
 ;;Blood and Gore Fire damage.esp
 ;; JMS - so it's probably incompatible with NOM
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon Landscape Overhaul 1.0
 
 [Order]
@@ -832,7 +834,7 @@ Bloodmoon.esm
 Bloodmoon Landscape Overhaul 1.0.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bones 1.1 [James Fraser]
 
 [Note]
@@ -849,7 +851,7 @@ Bones11.esp
 Bones11-tb-bm.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Book Jackets Morrowind/Tribunal/Bloodmoon
 
 [Requires]
@@ -890,7 +892,7 @@ Book Jackets - Bloodmoon - BookRotate.esp
 Book Jackets - Bloodmoon.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Book Rotate
 
 [Order]
@@ -923,7 +925,7 @@ Book Rotate - Morrowind v1.1.esp
     Book Rotate - Bloodmoon v5.3.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Brother Juniper's Twin Lamps
 
 ;; TBD. This needs confirmation, as the wiki is ambiguous
@@ -946,7 +948,7 @@ Guard-Remover.esp
 Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BUUG - Building Up Uvirith's Grave
 
 ;; "If you wish to use the alchemy sorters for expansion packs or
@@ -977,7 +979,7 @@ BUUG Alchemy- Srikandi.esp
 Sris_Alchemy_BM.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Cait's Critters Unleashed 2.0
 
 [Conflict]
@@ -995,7 +997,7 @@ Cait's Critters Unleashed 2.0 (Tribunal).esp
 Tribunal.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Children of the Night 2
 
 [Note]
@@ -1004,7 +1006,7 @@ Tribunal.esm
 C0N2 v1.01.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Clothiers of Vvardenfell Version 1.1
 
 ;; "A couple items from NOM (Neccesities of Morrowind) have been included.
@@ -1017,7 +1019,7 @@ BB_Clothiers_of_Vvardenfell_v1.1.esp
 NOM 2.13.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Combat Moves
 
 [Requires]
@@ -1025,7 +1027,7 @@ Combat Moves.esp
 Tribunal.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Complete Morrowind
 
 [Conflict]
@@ -1067,7 +1069,7 @@ Complete Morrowind TB & BM - Replacer.esp
 [AND Bloodmoon.esm Tribunal.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Contact Hits
 
 [Note]
@@ -1078,7 +1080,7 @@ Complete Morrowind TB & BM - Replacer.esp
 Contact hits.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Creatures X [PirateLord]
 
 [Note]
@@ -1112,7 +1114,7 @@ Creatures 6th House Patch.esp
      Creatures.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Creeper Plugin 
 
 [Note]
@@ -1121,7 +1123,7 @@ Creatures 6th House Patch.esp
 CreeperPlugin.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @DNGDR - Darknut's Greater Dwemer Ruins
 
 [Order]
@@ -1180,7 +1182,7 @@ DN-GDRv1.esp
 GDR_MasterFile.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dave Humphrey's Furniture mod 2.1
 
 [Order]
@@ -1198,7 +1200,7 @@ dh_thriftshop.esp
 dh_furn.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Daedra Manor [Trylobit]
 
 [Requires]
@@ -1207,7 +1209,7 @@ trylo_daedra_manor.esp
 Sheikizza_Daedric_Armour_Collection_0.1.0.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Deadite Race Plugin v1.4b
 
 [Requires]
@@ -1216,7 +1218,7 @@ io_evil_altstart-1.2b.esp
 io_deadite_race-1.4b.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Doom_Door (Ver.1.0, 14 February 2004) by Oldie
 
 ;; However, if you have any of the following five mods installed, it is
@@ -1234,7 +1236,7 @@ Doom_Door_01.esp
 C0N2 v1.01.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Expanded Birthsigns for Purists [Tyrthyllanos]
 
 [Conflict]
@@ -1247,7 +1249,7 @@ ExpandedBirthsigns4Purists.esp
 GCD better balanced birthsigns.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Felsaad Revamped
 
 [Conflict]
@@ -1260,7 +1262,7 @@ LOCH_Felsaad_Revamped.esp
     Skaal Forest 1.0.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Flying Carpet v1.3
 
 [Note]
@@ -1270,7 +1272,7 @@ Flying Carpet.esp
 Trial.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Forgotten Shields - Artifacts
 [Conflict]
  Only install one plugin: "TheForgottenShields - Artifacts_VN.esp" if you do NOT use a
@@ -1280,7 +1282,7 @@ TheForgottenShields - Artifacts_VN.esp
 TheForgottenShields - Artifacts_NG.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @FPS Optimizer 2.0
 [Note]
  Warning. Whilst nothing definitive is available, enough anecdotal evidence exists to suggest that using the plugins
@@ -1290,7 +1292,7 @@ FPSOpt2 - Custom Intervention.esp
 FPSOpt2 - Custom Mark.esp
 FPSOpt2 - Multimark.esp
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Galsiahs Character Development 1.08 (GCD)
 
 [Order]
@@ -1435,7 +1437,7 @@ GCD_BigMod2_patch.esp
      BigMod2 v2.0 RELEASE.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ghostgate v1.3 [Princess Stomper]
 
 [Note]
@@ -1451,7 +1453,7 @@ Clean Ghostgate COM.esp
 MW_Children_1_0.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Glory Road [Kathryn & Tommy Khajiit]
 
 [Conflict]
@@ -1490,7 +1492,7 @@ TheGloryRoad.esm
 _Legends_of_Ydumea_v2.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Go To Jail
 
 [Conflict]
@@ -1555,7 +1557,7 @@ Go To Jail 3.5 - T B - MCA - NOM.esp
 [AND Bloodmoon.esm Tribunal.esm MCA.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Havish
 
 [Conflict]
@@ -1572,7 +1574,7 @@ Havish.esm
 morrowind4fishBETA.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Hazaeki Shapeshifter Race v. 1.2
 
 [Requires]
@@ -1592,7 +1594,7 @@ Scripted_Spells.esp
 SG_ hazaeki_race-1_2.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism Redux 1.12a [Mode_Locrian]
 
 [Order]
@@ -1625,9 +1627,17 @@ Herbalism Redux ES Patch.esp
 ;;use either
 ;;uumpp + hr bloated or
 ;;uumpp + hr bloated + bloated mw + uump bloated patch
+[Note]
+ You can replace these 4 plugins with just the following 2:
+ "Morrowind Patch v1.6.4 (WIP).esm"
+ "Herbalism Redux 1.12a - Bloated MW.esp"
+[AND Morrowind Patch v1.6.4 (WIP).esm
+     Herbalism Redux 1.12a - Bloated MW.esp
+     Bloated Morrowind.esp
+     UUMPP Bloated Morrowind Patch v1.6.4.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @IceNioLiv_RobeReplacer
 
 [Conflict]
@@ -1640,7 +1650,7 @@ IceNioLivRobeReplacerBM.esp
 IceNioLivRobeReplacerPLUS.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Iliandria, an Altmer Town [PirateLord]
 
 [Note]
@@ -1665,7 +1675,7 @@ NoM 2.12-03a with BEER!.esp
 Altmer Town.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Illuminated Order v1.0
 
 [Requires]
@@ -1676,7 +1686,7 @@ Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
  Bloodmoon.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Inns [taddeus]
 
 [Conflict]
@@ -1692,7 +1702,7 @@ Improved Inns BM.esp
 Improved Inns MW.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Julan Ashlander Companion 1.3 [Kateri]
 
 [Conflict]
@@ -1716,7 +1726,7 @@ KS_Julan_Ashlander Companion_1.3.esp
 Armingers_at_Ghostgate.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Korobal Island v1.2
 
 [Conflict]
@@ -1726,7 +1736,7 @@ LBS_Full v1.4(trib).esp
 LBS_Lite v1.4(trib).esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Laura Craft Romance and Adventure mod ver 2.2 [Emma]
 ;; TBD
 ;;recommended load order:
@@ -1737,7 +1747,7 @@ LBS_Lite v1.4(trib).esp
 ;;Ebony_fix.esp 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LCV (Living Cities of Vvardenfell
 
 ;; LCV Schedule Markers
@@ -1759,7 +1769,7 @@ LCV MCA 4.1 Patch.esp
 NPC LCV Schedules 03.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LGNPC
 
 ;; "IMPORTANT: LGNPC NoLore must load before any other LGNPC mod!"
@@ -1788,7 +1798,7 @@ LGNPC_VivecRedoran_v1_40.esp
 LGNPC_PaxRedoran_v1_11.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Lost Artifacts of Morrowind (April 15th, 2006)
 
 [Note]
@@ -1804,7 +1814,7 @@ Clean The Lost Artifacts of Morrowind.esm
 Clean The Lost Artifacts of Morrowind.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Librarian
 
 [Conflict]
@@ -1824,8 +1834,8 @@ Book Rotate.esm
  'If already installed then uncheck the book jacket .esps.'
  (Ref: Librarian 104 readme.txt)
 Librarian with Jackets & Rotate BM Trib.esp
-Book Jackets - Morrowind - BookRotate.esp
-[OR Book Jackets - Morrowind.esp
+[OR Book Jackets - Morrowind - BookRotate.esp
+    Book Jackets - Morrowind.esp
     Book Jackets - Bloodmoon - BookRotate.esp
     Book Jackets - Bloodmoon.esp
     Book Jackets - Tribunal - BookRotate.esp
@@ -1835,15 +1845,15 @@ Book Jackets - Morrowind - BookRotate.esp
  'If already installed then uncheck the book jacket .esps.'
  (Ref: Librarian 104 readme.txt)
 Librarian with Jackets BM Trib.esp
-Book Jackets - Morrowind - BookRotate.esp
-[OR Book Jackets - Morrowind.esp
+[OR Book Jackets - Morrowind - BookRotate.esp
+    Book Jackets - Morrowind.esp
     Book Jackets - Bloodmoon - BookRotate.esp
     Book Jackets - Bloodmoon.esp
     Book Jackets - Tribunal - BookRotate.esp
     Book Jackets - Tribunal.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Louis' Beauty Shop (Rin's BeautyShop ver. 1.5)
 
 [Requires]
@@ -1851,7 +1861,7 @@ Unofficial_Expansion_for_Louis'_BeautyShop.esp
 Louis_BeautyShop_v1.5.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Madd Leveler
 
 ;; ALL PLUGINS REQUIRE THE MADD LEVELER - BASE.ESP TO BE INSTALLED AND LOADED FIRST!
@@ -1957,7 +1967,7 @@ Madd Leveler - Base.esp
     CapRemover 1.1c.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Marksman mod
 
 [Order]
@@ -1971,7 +1981,7 @@ newarrows.esp
 newarrowsLITE.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MGE Distant activators Fix
 [Note]
  There is no need to activate these mods in your game.
@@ -1993,7 +2003,7 @@ Pov_Distant_Activator_Fix_TR1_Waterfalls.esp
 Pov_Distant_Activator_Fix_Vivec.esp
 Pov_Distant_Activator_Fix_Waterfalls.esp
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCP (Morrowind Code Patch) [Hrnchamd]
 
 ;; rules for mods obsoleted by the MCP
@@ -2024,7 +2034,7 @@ Unarmored_Corrector_V01_BM.esp
 Unarmored_Corrector_V01_TRIB.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More trees and foliage [ayse, updated by Skyfire76]
 
 [Conflict]
@@ -2036,7 +2046,7 @@ More trees and foliage v1-1.esp
 More trees and foliage autumn v1-1.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowland - From Hell to Heaven
 
 [Note]
@@ -2051,7 +2061,7 @@ From Hell To Heaven.esm
  From Hell To Heaven part 3.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Advanced
 
 [Note]
@@ -2098,7 +2108,7 @@ MW_Adv_PHW.esp
      Passive_Healthy_Wildlife.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Enhanced
 [Note]
  Ensure you are using the latest version of Morrowind Enhanced, v1.6
@@ -2257,7 +2267,7 @@ MWE_Combat.esp
 ACE_Subtitles.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA - Morrowind Comes Alive
 
 [Note]
@@ -2290,7 +2300,7 @@ MCA.esm
 Morrowind Comes Alive.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mokbar
 
 [Note]
@@ -2299,7 +2309,7 @@ Morrowind Comes Alive.esm
 Mokbar.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Moldy Horker [Grumpy]
 
 [Conflict]
@@ -2315,7 +2325,7 @@ S_Inn_th.esp
 S_Inn_th.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TES: Morrowind Sound Enhancement Plugin Version 1.5
 
 [Note]
@@ -2324,7 +2334,7 @@ S_Inn_th.esp
 Sound Enhancements.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MTT (Magical Trinkets of Tamriel)
 
 [Conflict]
@@ -2343,7 +2353,7 @@ MTT IV Master.esp
 MTT IV Master.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MultiMark (multipleteleportmarking2.2)
 
 ;; (Ref: MultipleTeleportMarking.txt)
@@ -2374,7 +2384,7 @@ MultiMark.esp
 [OR Tribunal.esm Bloodmoon.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities of Morrowind (NOM)
 
 ;; The Readme specifies that NOM should appear near the end of the load
@@ -2436,7 +2446,7 @@ Complete Morrowind P1.esp
 ;; Mods modifying fires (Lights 300, ):** All the fires in game have a script attached to allow you to cook. If you use another mod modifying fires you'll lose the ability to cook near them (if you load Necessities before it) or the changes made by the other mod (if you load Necessities after it).
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nerevar Say Nerevar [Blake]
 
 [Patch]
@@ -2454,7 +2464,7 @@ Clean Nerevar Say Nerevar Again_v1.01.esp
      MCA.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NEDE - New Elemental Damage Effects
 
 ;; "you must reorder your mod so that NEDE WGI patch would be loaded after
@@ -2480,7 +2490,7 @@ NEDE v1.2.esp
 NEDE WGI patch.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Khuul
 
 [Conflict]
@@ -2512,7 +2522,7 @@ Korobal v1.2.esp
     New Khuul - MO.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Npc Replacer 3.50 [ZeroTheHero]
 
 [Note]
@@ -2521,7 +2531,7 @@ Korobal v1.2.esp
 New Npc Replacer 3.50.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Suran Extended 1.52 [Nicholiathan]
 
 [Conflict]
@@ -2564,7 +2574,7 @@ New Suran Expanded CoM.esp
 Balanced NSE.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ordinator Armour Replacer v1.2 [VagabondAngel]
 
 [Conflict]
@@ -2573,7 +2583,7 @@ VA_OrdReplace_closedhelm1.0.esp
 VA_OrdReplace_openhelm1.0.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Pegas Horse Ranch
 
 [Conflict]
@@ -2583,7 +2593,7 @@ Pegas Horse Ranch v3.1.esm
 Pegas Horse Ranch v3.1.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Piratelords Trade Enhancements 3.2
 
 [Order]
@@ -2602,7 +2612,7 @@ PTE - BC Patch.esp
 	 Better Clothes_v1.1_nac.esp]]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Protective Guards
 [Note]
  If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
@@ -2611,7 +2621,7 @@ PTE - BC Patch.esp
      MCA - Guards patch.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @QuarraClan v1.1
 
 [Note]
@@ -2620,7 +2630,7 @@ PTE - BC Patch.esp
 quarraclan.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Regionally Known Criminals
 
 [Conflict]
@@ -2648,7 +2658,7 @@ RKCriminals TR&BM.esp
 [AND Morrowind.esm Tribunal.esm Bloodmoon.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @RKWerewolves - Regionally Known Werewolves
 
 [Requires]
@@ -2668,7 +2678,7 @@ RKWerewolf.esp
 RKWerewolf-NoTrib.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @RTS-HealingFaeries
 
 [Order]
@@ -2680,7 +2690,7 @@ RTS_FaeriesSeydaNeen.esp
 RTS_HealingFaeries.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @RealFurnitureV1.0
 
 [Requires]
@@ -2688,7 +2698,7 @@ RF - Bethesda Furniture.esp
 RF - Furniture shop.esm
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Regulars 2.02
 
 [Note]
@@ -2697,7 +2707,7 @@ RF - Furniture shop.esm
 The regulars - Sitting NPC's v2.02.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ring Texture Fix
 
 [Conflict]
@@ -2708,7 +2718,7 @@ Ring Texture Fix.esp
     Morrowind Patch v1.6.4 (WIP).esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sabregirl's Morrowind Ecology
 
 [Requires]
@@ -2759,7 +2769,7 @@ Passive_Healthy_Wildlife.esp
     SG-MW-ecology-carnivore-plugin.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sea of Destiny
 
 [Requires]
@@ -2780,7 +2790,7 @@ Sea-of-Destiny.esm
 The Runaway ver 1 2.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Seyda Neen Docks and Haldershore
 
 [Conflict]
@@ -2790,7 +2800,7 @@ Seyda Neen Docks and Haldershore Tribunal V1.1.esp
 Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silgrad Tower
 
 [Note]
@@ -2815,7 +2825,7 @@ silgrad_tower_internal_release_1-4_6.6.esp
 Texture Fix - Silgrad Tower 1.0.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Slof's Better Beasts 1.1  by AlienSlof
 
 [Conflict]
@@ -2838,7 +2848,7 @@ Slof's BB neck fix.esp
 	 Slof's Civilised Beasts.esp]]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Special Slave Companions ver.2
 
 [Order]
@@ -2858,7 +2868,7 @@ SSlave_Companions.esp
 SSlave_Comp_censored_addon.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sri's Alchemy
 
 [Order]
@@ -2875,7 +2885,7 @@ Sri Alchemy BM List Patch.esp
 Sris_Alchemy_BM.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @ss_DBNRDZ [Silver Sorrow]
 
 [Conflict]
@@ -2886,7 +2896,7 @@ ss_DBNRDZ.esp
 ss_DBNRDZ_NV.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Super Adventurer's 3.02
 
 [Note]
@@ -2895,7 +2905,7 @@ ss_DBNRDZ_NV.esp
 super_adventurers302.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Suran Underworld 2.5
 
 ;; Suran Underworld v2.5 conflicts with Necessities of Morrowind - in
@@ -2914,7 +2924,7 @@ NOM 2.13.esp
 Suran_Underworld_2.5.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Syc's Herbalism for Purists
 
 ;; (Ref: "Readme - Herbalism for Purists.txt")
@@ -2968,7 +2978,7 @@ Syc_HerbalismforPurists.esp
 Flora Glow 1.0.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TR - Tamriel Rebuilt (Maps 1 and 2)
 
 [Order]
@@ -3010,7 +3020,7 @@ TR_Map2.esm
     Wizards Islands - Scourge of the Frost Bringer.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TarMar
 
 [Conflict]
@@ -3019,7 +3029,7 @@ Beyond YsGramor v2.5.esm
 TarMar.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TLM - The Lighting Mod (Modular + Complete)
 ;; (Ref: "TLM - ~Readme.htm")
 
@@ -3146,7 +3156,7 @@ TLM - Sneak Modifiers (Code).esp
 True_Lights_And_Darkness_0.5.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tombs Expanded
 [Note]
  "Tombs Expanded - The Undead Addon" was made for The Undead v2.2, you have a later version and so
@@ -3163,7 +3173,7 @@ True_Lights_And_Darkness_0.5.esp
      MCA.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Traveling Merchants
 [Note]
  Do not use quick-save [F5] while in the vicinity of a running travel script.  
@@ -3196,7 +3206,7 @@ TravelingMerchants-1.2_BETA.esp
 TravelingMerchants_v2.2.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tree of Life
 
 [Note]
@@ -3205,7 +3215,7 @@ TravelingMerchants_v2.2.esp
 Tree_of_Life.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @True Lights and Darkness 0.5 [Cool Demon]
 
 [Note]
@@ -3214,7 +3224,7 @@ Tree_of_Life.esp
 True_Lights_And_Darkness_0.5.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @UUMPP
 
 [Order]
@@ -3273,10 +3283,12 @@ Book Placement Fix - Tribunal.esp
      Tribunal.esm
      Bloodmoon.esm]
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;
 ;; START UUMPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
 ;; http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;
 
 [Conflict]
  The UUMPP obsoletes BM Armor Fix v1.0 [Misty Moon].
@@ -3495,16 +3507,19 @@ Brittlewind Fix.esp
 Morrowind Patch v1.6.4 (WIP).esm
 Bloated Morrowind.esp
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;
 ;; END UUMPP Conflicts reported by "abyssmal terror"
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End of UUMPP section
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vality's Grass Mods
 
 [Note]
@@ -3517,7 +3532,7 @@ Grass Beta_West Gash.esp
 Grass Beta_Tamriel rebuilt.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Load Order - based on Yacoby's web page
 ;; (Ref: http://yacoby.silgrad.com/MW/Modlists/Loadorder.htm )
 
@@ -3546,7 +3561,7 @@ vampiric_regeneration.esp
 vampiric_mist.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Realism II
 
 ;; Vampire Realism II comes after "Blood Lines" and before
@@ -3611,7 +3626,7 @@ Vampire Realism II - VE Patch.esp
      Vampire_Embrace.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampiric Hunger III v1.2
 
 ;; Vampiric Hunger Base wants to override some of GCDs globals, so it
@@ -3639,7 +3654,7 @@ Vampiric Hunger - BL.esp
 	 Blood Lines I_Tribunal.esp]]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @VariedVampiricVisages
 
 [Note]
@@ -3659,7 +3674,7 @@ Varied Vampiric Visages.esp
     Blood Lines I_Tribunal.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Venombyte's GoldWeight Plug-in V 1.2
 
 ;; GoldWeight - Must load after Reflective Gold
@@ -3669,7 +3684,7 @@ Reflective Gold.esp
 vn_goldweight.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @VGreetings [felix]
 ;; (Ref: "readme_VGreetings.txt")
 ;; "VGreetings.esp"  - changes affecting the Hello Voice section
@@ -3686,7 +3701,7 @@ vn_goldweight.esp
 ;;                          section (requires Tribunal)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vivec Outdoor Mall
 
 ;; The NoM documentation indicates that the NoM plugin should be loaded
@@ -3714,7 +3729,7 @@ Vivec Outdoor Mall CoM_v2.esp
 [OR Chateau Nerevarine Estate.esp
     Clean SECRET GARDEN V2.esp]
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wakim's Game Improvments 9 (WGI)
 
 [Conflict]
@@ -3738,7 +3753,7 @@ Weapon Range Balance.esp
     Wakim's Game Improvement 9.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Water Life
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
@@ -3746,7 +3761,7 @@ abotWaterLifeTRaddon.esp
 [AND abotWaterLife.esm TR_Data.esm]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Westly's Headpacks
 
 [Conflict]
@@ -3767,7 +3782,7 @@ Westly's Master Headpack X.esp
     Westly's Redguard Male Headpack (Weight Fix).esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Westly Presents-Mog Head Pack & BB Mogs
 
 ;; (Ref: "Westly's Mog Head Pack and BB Mog README.txt")
@@ -3779,7 +3794,7 @@ Westly's Mog Head Pack.esp
 _Mog_Race_v4b.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @White Wolf of Lokken [Emma]
 
 ;; If you play with a female char, you should use the KISS-patch
@@ -3814,7 +3829,7 @@ Inn Whisp Wood BM.esp
     BT_Whitewolf_2_0.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Wilderness Mod
 
 [Conflict]
@@ -3889,7 +3904,7 @@ GIANTS_Ultimate_Official_Fixes.esp
 [AND The Wilderness Mod 2.0.esm
      GIANTS.esm]
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wilderness Sounds
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -3954,7 +3969,7 @@ Wilderness Sounds Tribunal.esp
 Wilderness Sounds.esp
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wizards Islands 1.05 - Scourge of the Frost Bringer
 
 [Requires]

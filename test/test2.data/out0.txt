@@ -2,34 +2,34 @@ Getting list of plugins from plugin directory      ( 10 plugins)
 Read rules from: "mlox_user.txt"                   (  1 rules)
 Warning: mlox_base.txt:23: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp"
 [NOTE]
- > bbbbb.esp
+ > 'bbbbb.esp'
  | This esp is obsolete, you should be using bbbbX.esp instead
 [NOTE]
- > aaaaa.esp
+ > 'aaaaa.esp'
  | It is HIGHLY recommended that you use Wrye Mash
  | to merge leveled lists if you use this mod!!!
 [NOTE]
- > aaaaa.esp
+ > 'aaaaa.esp'
  | Second message for aaaaa.esp
 [PATCH]
- MISSING(abpat.esp) for:
- [aaaaa.esp bbbbb.esp]
+ 'MISSING(abpat.esp)' for:
+ ['aaaaa.esp', 'bbbbb.esp']
  | abpat.esp is recommended for gluing aaaaa and bbbbb together
 [PATCH]
- dkpat.esp is missing some pre-requisites:
- [ddddd.esp MISSING(kkkkk.esp)]
+ 'dkpat.esp' is missing some pre-requisites:
+ ['ddddd.esp', 'MISSING(kkkkk.esp)']
  | dkpat.esp recommended for gluing these two plugins together
 [REQUIRES]
- aaaaa.esp Requires:
- > MISSING(ggggg.esp)
+ 'aaaaa.esp' Requires:
+ > 'MISSING(ggggg.esp)'
  | ggggg must always follow aaaaa, because the readme done sez so.
 [CONFLICT]
- > ddddd.esp
- > eeeee.esp
+ > 'ddddd.esp'
+ > 'eeeee.esp'
  | These plugins conflict because they modify the same GMST.
 [REQUIRES]
- ccccc.esp Requires:
- > [NOT ddddd.esp]
+ 'ccccc.esp' Requires:
+ > ['NOT', 'ddddd.esp']
 Read rules from: "mlox_base.txt"                   ( 13 rules)
 [LOAD ORDER UPDATED!]
 current saved to: current_loadorder.out
