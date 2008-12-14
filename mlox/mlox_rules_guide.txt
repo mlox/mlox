@@ -20,6 +20,7 @@ oo The NearEnd Rule
 o Warning Rules
 oo Messages
 oo Boolean Expressions
+ooo The Desc predicate
 oo The Note Rule
 oo The Requires Rule
 oo The Conflict Rule
@@ -208,6 +209,35 @@ the same rule are equivalent:
     [ALL A.esp
          [ANY B1.esp
               B2.esp]]
+
+
+----------------------------------------------------------------------
+ooo The Desc predicate
+
+The Desc predicate is a special predicate that matches strings in the
+header of a plugin with regular expressions.
+
+The form is:
+
+[DESC /regex/ A.esp]
+
+It must all be on one line. The regex should be any normal Python
+regular expression pattern:
+http://docs.python.org/library/re.html#re-syntax
+
+This predicate means plugin A.esp exists and the Description field of
+the plugin header contains the regular expression /regex/. Here's an
+example:
+
+[Note]
+ uses deprecated AddToLev* see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+[DESC /v. 1.1109/ Sris_Alchemy_BM.esp]
+
+In this case, the note will only print out if the header of
+Sris_Alchemy_BM.esp contains the pattern "v. 1.1109".
+
+You can use a [DESC] predicate in any warning rule, just like any
+other expression.
 
 ----------------------------------------------------------------------
 oo The Note Rule

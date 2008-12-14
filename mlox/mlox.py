@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.22"
+Version = "0.23"
 
 import sys
 
@@ -41,7 +41,7 @@ Opt.WarningsOnly = False
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
 # re_rule matches the start of a rule.
-re_rule = re.compile(r'^\[(order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.*)?)\](.*)$', re.IGNORECASE)
+re_rule = re.compile(r'^\[(order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.[^\]]*)?)\](.*)$', re.IGNORECASE)
 # line for multiline messages
 re_message = re.compile(r'^\s')
 # pattern matching a plugin in Morrowind.ini
@@ -56,9 +56,11 @@ re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # (we allow '*' and '?' for filename matching).
 re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
 re_plugin_meta = re.compile(r'([*?])')
-# for recognizing our boolean functions:
-re_start_bool_fun = re.compile(r'^\[(ALL|ANY|NOT)\s*', re.IGNORECASE)
-re_end_bool_fun = re.compile(r'^\]\s*')
+# for recognizing our functions:
+re_start_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC)\s*', re.IGNORECASE)
+re_end_fun = re.compile(r'^\]\s*')
+re_desc = re.compile(r'\[DESC\s*/([^/]+)/\s*(.*)\]', re.IGNORECASE)
+
 # for cleaning up pretty printer
 re_notstr = re.compile(r"\s*'NOT',")
 re_anystr = re.compile(r"\s*'ANY',")
@@ -186,14 +188,21 @@ def myopen_file(filename, mode):
             Dbg.add("Error opening \"%s\" for %s (%s)" % (filename, mode_str, strerror))
     return(None)
 
+def plugin_description(plugin):
+    pinp = myopen_file(plugin, 'r')
+    pinp.seek(64,0)
+    desc = pinp.read(260)
+    pinp.close()
+    return(desc[0:desc.find("\x00")])
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating nested boolean expressions."""
-    def __init__(self, active, graph):
+    def __init__(self, active, graph, datadir):
         self.active = {}
         for p in active:
             self.active[p] = True
         self.graph = graph
+        self.datadir = datadir
         self.line_num = 0
         self.rule_file = None
         self.input_handle = None
@@ -305,34 +314,55 @@ class rule_parser:
                 self.buffer = self.buffer.strip()
             else:
                 return(None, None)
-        match = re_start_bool_fun.match(self.buffer)
+        ParseDbg.add("parse_expression, start buffer: \"%s\"" % self.buffer)
+        match = re_start_fun.match(self.buffer)
         if match:
+            fun = match.group(1).upper()
+            if fun == "DESC":
+                match = re_desc.match(self.buffer)
+                if match:
+                    p = match.span(0)[1]
+                    self.buffer = self.buffer[p:]
+                    pat = match.group(1)
+                    plugin = C.cname(match.group(2))
+                    expr = "[DESC /%s/ %s]" % (pat, plugin)
+                    ParseDbg.add("parse_expression, expr=%s" % expr)
+                    if not plugin in self.active:
+                        ParseDbg.add("parse_expression [DESC] \"%s\" not active" % plugin)
+                        return(False, expr)
+                    re_pat = re.compile(pat)
+                    desc = plugin_description(self.datadir.find_path(plugin))
+                    bool = re_pat.search(desc)
+                    ParseDbg.add("parse_expression [DESC] returning: (%s, %s)" % ("True" if bool else "False", expr))
+                    return(bool, expr)
+                self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
+                return(None, None)
+            # otherwise it's a boolean function ...
             ParseDbg.add("parse_expression parsing expression: \"%s\"" % self.buffer)
-            bool_fun = match.group(1).upper()
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            ParseDbg.add("bool_fun = %s" % bool_fun)
+            ParseDbg.add("fun = %s" % fun)
             vals = []
-            exprs = [bool_fun]
-            bool_end = re_end_bool_fun.match(self.buffer)
+            exprs = [fun]
+            bool_end = re_end_fun.match(self.buffer)
             ParseDbg.add("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
                 (bool, expr) = self.parse_expression()
                 exprs.append(expr)
                 vals.append(bool)
                 ParseDbg.add("self.buffer 2 =\"%s\"" % self.buffer)
-                bool_end = re_end_bool_fun.match(self.buffer)
+                bool_end = re_end_fun.match(self.buffer)
             pos = bool_end.span(0)[1]
             self.buffer = self.buffer[pos:]
             ParseDbg.add("self.buffer 3 =\"%s\"" % self.buffer)
-            if bool_fun == "ALL":
+            if fun == "ALL":
                 return(all(vals), exprs)
-            if bool_fun == "ANY":
+            if fun == "ANY":
                 return(any(vals), exprs)
-            if bool_fun == "NOT":
+            if fun == "NOT":
                 return(not(all(vals)), exprs)
             else:
-                # should not be reached due to match on re_start_bool_fun
+                # should not be reached due to match on re_start_fun
                 Msg.add("Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\"" % (self.where(), buff))
                 return(None, None)
         else:
@@ -810,7 +840,7 @@ class loadorder:
         # read rules from 3 sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
-        parser = rule_parser(self.active, self.graph)
+        parser = rule_parser(self.active, self.graph, self.datadir)
         parser.read_rules("mlox_user.txt")
         # secondary rules from mlox_base.txt
         if not parser.read_rules("mlox_base.txt"):
