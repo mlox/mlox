@@ -14,7 +14,7 @@ import os
 import re
 import wx
 from pprint import PrettyPrinter
-from getopt import getopt
+from getopt import getopt, GetoptError
 from time import time
 
 Message = {}
@@ -30,6 +30,7 @@ Opt = dynopt()
 # command line options
 Opt.GUI = False
 Opt.DBG = False
+Opt.Explain = None
 Opt.ParseDBG = False
 Opt.FromFile = False
 Opt.Update = False
@@ -520,6 +521,23 @@ class pluggraph:
         Dbg.add("adding edge: %s -> %s" % (plug1, plug2))
         return(True)
 
+    def explain(self, what, active_list):
+        active = {}
+        for p in active_list:
+            active[p] = True
+        seen = {}
+        print "Ordering Explanation for:\n\n%s" % what
+        def explain_rec(indent, n):
+            if n in seen:
+                return
+            seen[n] = True
+            if n in self.nodes:
+                for child in self.nodes[n]:
+                    prefix = indent.replace(" ", "+") if child in active else indent.replace(" ", "=")
+                    print "%s%s" % (prefix, C.truename(child))
+                    explain_rec(" " + indent, child)
+        explain_rec(" ", what.lower())
+
     def topo_sort(self):
         """topological sort, based on http://www.bitformation.com/art/python_toposort.html"""
 
@@ -800,7 +818,11 @@ class loadorder:
             return(self)
         self.add_current_order()       # tertiary order "pseudo-rules" from current load order
         # now do the topological sort of all known plugins (rules + load order)
-        sorted = self.graph.topo_sort()
+        if Opt.Explain == None:
+            sorted = self.graph.topo_sort()
+        else:
+            self.graph.explain(Opt.Explain, self.active)
+            sys.exit(0)
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
         # but we only want to update plugins that are in our current "Data Files"
@@ -1056,9 +1078,9 @@ if __name__ == "__main__":
     # process command line arguments
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
-        opts, args = getopt(sys.argv[1:], "acdfhpquvw",
-                            ["all", "check", "debug", "fromfile", "help", "parsedebug",
-                             "quiet", "update", "version", "warningsonly"])
+        opts, args = getopt(sys.argv[1:], "acde:fhpquvw",
+                            ["all", "check", "debug", "explain", "fromfile", "help", 
+                             "parsedebug", "quiet", "update", "version", "warningsonly"])
     except GetoptError, err:
         print str(err)
         usage(2)                # exits
@@ -1069,6 +1091,10 @@ if __name__ == "__main__":
             Opt.Update = False
         elif opt in ("-d", "--debug"):
             Opt.DBG = True
+        elif opt in ("-e", "--explain"):
+            Opt.Explain = arg
+            Msg.prints = False
+            Stats.prints = False
         elif opt in ("-f", "--fromfile"):
             Opt.FromFile = True
         elif opt in ("-h", "--help"):
