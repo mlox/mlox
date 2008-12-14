@@ -878,7 +878,7 @@ class mlox_gui(wx.App):
         self.label_cur_bottom = wx.StaticText(self.frame, -1, Message["click for options"])
         self.label_new = wx.StaticText(self.frame, -1, Message["new_load_order"])
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
-        self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
+        self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
         self.btn_update = wx.Button(self.frame, -1, Message["update"], size=(90,60))
         self.btn_quit = wx.Button(self.frame, -1, Message["quit"], size=(90,60))
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
