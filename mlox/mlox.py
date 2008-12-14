@@ -37,14 +37,10 @@ Opt.Quiet = False
 Opt.GetAll = False
 Opt.WarningsOnly = False
 
-# the character used to start a comment.
-start_comment_char = ';'
-#
-
+# comments start with ';'
+re_comment = re.compile(r'(?:^|\s);.*$')
 # re_rule matches the start of a rule.
 re_rule = re.compile(r'^\[(order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.*)?)\](.*)$', re.IGNORECASE)
-# re_ignore matches lines that we ignore, like blank lines
-re_ignore = re.compile(r'^\s*$')
 # line for multiline messages
 re_message = re.compile(r'^\s')
 # pattern matching a plugin in Morrowind.ini
@@ -60,16 +56,16 @@ re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
 re_plugin_meta = re.compile(r'([*?])')
 # for recognizing our boolean functions:
-re_start_bool_fun = re.compile(r'^\[(AND|OR|NOT)\s*', re.IGNORECASE)
+re_start_bool_fun = re.compile(r'^\[(ALL|ANY|NOT)\s*', re.IGNORECASE)
 re_end_bool_fun = re.compile(r'^\]\s*')
 # for cleaning up pretty printer
-re_OR = re.compile(r",?\s*'OR',")
-re_comma = re.compile(r",\s+")
-re_single_quote = re.compile(r"'")
+re_notstr = re.compile(r"\s*'NOT',")
+re_anystr = re.compile(r"\s*'ANY',")
+re_allstr = re.compile(r"\s*'ALL',")
 re_indented = re.compile(r'^', re.MULTILINE)
 
 # output file for new load order
-clip_file = "mlox_clip.txt"
+clip_file = "mlox_clipboard.txt"
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
 debug_output = "mlox_debug.out"
@@ -212,7 +208,7 @@ class rule_parser:
             while True:
                 line = self.input_handle.next()
                 self.line_num += 1
-                line = line.split(start_comment_char)[0] # remove all comments
+                line = re_comment.sub('', line) # remove comments
                 line = line.rstrip() # strip whitespace from end of line, include CRLF
                 if line != "":
                     self.buffer = line
@@ -316,7 +312,7 @@ class rule_parser:
             self.buffer = self.buffer[p:]
             ParseDbg.add("bool_fun = %s" % bool_fun)
             vals = []
-            exprs = []
+            exprs = [bool_fun]
             bool_end = re_end_bool_fun.match(self.buffer)
             ParseDbg.add("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
@@ -328,27 +324,28 @@ class rule_parser:
             pos = bool_end.span(0)[1]
             self.buffer = self.buffer[pos:]
             ParseDbg.add("self.buffer 3 =\"%s\"" % self.buffer)
-            if bool_fun == "AND":
+            if bool_fun == "ALL":
                 return(all(vals), exprs)
-            if bool_fun == "OR":
-                return(any(vals), "?OR?".join(exprs).split("?"))
+            if bool_fun == "ANY":
+                return(any(vals), exprs)
             if bool_fun == "NOT":
-                return(not(all(vals)), ["NOT"] + exprs)
+                return(not(all(vals)), exprs)
             else:
                 # should not be reached due to match on re_start_bool_fun
-                Msg.add("Program Error: %s: expected Boolean function (AND, OR, NOT): \"%s\"" % (self.where(), buff))
+                Msg.add("Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\"" % (self.where(), buff))
                 return(None, None)
         else:
             ParseDbg.add("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
-            expr = C.truename(p) if exists else ("MISSING(%s)" % C.truename(p))
-            return(exists, expr)
+            if exists != None and p != None:
+                p = C.truename(p) if exists else ("MISSING(%s)" % C.truename(p))
+            return(exists, p)
 
     def pprint(self, expr, prefix):
         formatted = PrettyPrinter(indent=2).pformat(expr)
-        formatted = re_OR.sub(" OR", formatted)
-#        formatted = re_comma.sub(" ", formatted)
-#        formatted = re_single_quote.sub("", formatted)
+        formatted = re_notstr.sub("NOT", formatted)
+        formatted = re_anystr.sub("ANY", formatted)
+        formatted = re_allstr.sub("ALL", formatted)
         return(re_indented.sub(prefix, formatted))
 
     def parse_predicate(self, rule, msg, expr):
@@ -594,6 +591,7 @@ class loadorder:
         self.datadir = None                # where plugins live
         self.graph = pluggraph()
         self.sorted = False
+        self.origin = None      # where plugins came from (active, installed, file)
 
     def sort_by_date(self, plugin_files):
         """Sort input list of plugin files by modification date."""
@@ -681,6 +679,7 @@ class loadorder:
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
         loadup_msg("Getting active plugins from: \"%s\"" % source, len(plugins), "plugins")
         self.active = plugins
+        self.origin = "Active Plugins"
 
     def get_data_files(self):
         """Get the list of plugins from the data files directory. Updates self.active.
@@ -691,6 +690,7 @@ class loadorder:
         # sort the plugins into load order by modification date
         self.active = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
         loadup_msg("Getting list of plugins from plugin directory", len(self.active), "plugins")
+        self.origin = "Installed Plugins"
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
@@ -705,6 +705,7 @@ class loadorder:
                 p = plugin_match.group(1)
                 self.active.append(C.cname(p))
         Stats.add("%-50s (%3d plugins)" % ("\nReading plugins from file: \"%s\"" % fromfile, len(self.active)))
+        self.origin = "Plugin List from %s" % fromfile
 
     def add_current_order(self):
         """We treat the current load order as a sort of preferred order in
@@ -930,7 +931,8 @@ class mlox_gui(wx.App):
             if text[start] == '*': txt.SetStyle(start, end, highlight)
 
     def analyze_loadorder(self, fromfile):
-        if loadorder().update(fromfile).sorted:
+        lo = loadorder().update(fromfile)
+        if lo.sorted:
             self.can_update = False
         if not self.can_update:
             self.btn_update.Disable()
@@ -938,6 +940,7 @@ class mlox_gui(wx.App):
         self.txt_msg.SetValue(Msg.get())
         self.txt_cur.SetValue(Old.get())
         self.txt_new.SetValue(New.get())
+        self.label_cur.SetLabel(lo.origin)
         self.highlight_moved(self.txt_new)
 
     def start(self):
@@ -952,7 +955,6 @@ class mlox_gui(wx.App):
         if not self.can_update:
             return
         Opt.Update = True
-        loadorder().update(None)
         self.txt_stats.SetValue(Stats.get())
         self.txt_msg.SetValue(Msg.get())
         self.txt_new.SetValue(New.get())

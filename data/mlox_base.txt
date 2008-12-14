@@ -34,10 +34,38 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Bethsoft
+;; Ordering Preferences
+;; Put all the NearStart/NearEnd rules here to keep track of them.
+;; The items are listed in priority order, the first has highest priority.
+;; So "Mashed Lists.esp" should always be the first in the NearEnd
+;; rule in order to ensure it loads very near the end of the load order.
+;;
+;; Note: overuse of NearStart/NearEnd will render them meaningless.
+;; They are intended to be use only for very special circumstances.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [NearStart]
 Morrowind.esm
+
+[NearEnd]
+Mashed Lists.esp
+Merged_Dialogs.esp
+Merged_Objects.esp
+Merged_Leveled_Lists.esp
+;; The Readme specifies that NOM should appear near the end of the load
+;; order. I'm actually loathe to add NearStart or NearEnd rules for mods,
+;; as this could be taken as implying preference by mlox, and mlox
+;; should try to be impartial. On the other hand, if a user has loaded
+;; NOM, they obviously expect it to work, and the best way to do that
+;; is to load it last to ensure the fewest conflicts. So we'll try that
+;; for now and see how it goes.
+;; - JMS
+NOM 2.12.esp
+NOM 2.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bethsoft
 
 [Order]
 Morrowind.esm
@@ -53,7 +81,7 @@ Bloodmoon.esm
  For an explanation of why the functions AddToLev*/RemoveFromLev* are
  deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
  Some patches may be available at that link.
-BMExtras.esp 
+BMExtras.esp
 Clean Black Queen Chronicles Ver 2.5.esp
 EcoAdj(Sri+Ingredients).esp
 GIANTS.esm
@@ -75,13 +103,10 @@ NoM 2.12-03a with BEER!.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wrye Mash
 
-[NearEnd]
-Mashed Lists.esp
-
 [Conflict]
  These files contain merged leveled lists, you should use only use one
  at a time. Wrye Mash's "Mashed Lists.esp" is the recommended way to
- merge leveled lists. 
+ merge leveled lists.
 Mashed Lists.esp
 Merged_Leveled_Lists.esp
 
@@ -99,11 +124,6 @@ Merged_Dialogs.esp
  calculate all merged lists. It is recommended that you also use the
  Leveled List Sequencer tool after creating Merged_Leveled_Lists.esp,
  or better yet, just use "Wrye Mash" to create "Mashed Lists.esp".
-Merged_Leveled_Lists.esp
-
-[NearEnd]
-Merged_Dialogs.esp
-Merged_Objects.esp
 Merged_Leveled_Lists.esp
 
 
@@ -129,7 +149,7 @@ Clean Abigail's Petshop_v5.5_NG.esp
 Clean Abigail's Petshop_v5.5_SN_E.esp
 
 ;; Load Abigail's Petshop after Seyda Neen Docks & Haldenshore with the
-;; Better Seyda Neen Lighthouse. 
+;; Better Seyda Neen Lighthouse.
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [Order]
 Seyda Neen Docks and Haldershore Tribunal V1.1.esp
@@ -145,7 +165,7 @@ Clean Abigail's Petshop_v5.5_SN_E.esp
  Choose ONLY ONE of these plugins.
  "abotGuars.esp" if you have both Tribunal.esm and Bloodmoon.esm loaded
  "abotGuarsTribunal.esp" if you have Tribunal.esm only loaded
- "abotGuarsBloodmoon.esp" if you have Bloodmoon.esm only loaded. 
+ "abotGuarsBloodmoon.esp" if you have Bloodmoon.esm only loaded.
  (ref: "abotGuars.txt")
 abotGuars.esp
 abotGuarsTribunal.esp
@@ -166,7 +186,8 @@ Tribunal.esm
 [Requires]
  (ref: "abotGuars.txt")
 abotGuars.esp
-[AND Bloodmoon.esm Tribunal.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 [Requires]
  (ref: "abotGuars.txt")
@@ -178,13 +199,15 @@ Bloodmoon.esm
 abotGuarsTribunal.esp
 Tribunal.esm
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurers TC Beta 1
 
 [Patch]
  (Ref: "readme_advTC.html")
 AdvTC_TribunalAddon.esp
-[AND AdventurersTC_beta1.esp Tribunal.esm]
+[ALL AdventurersTC_beta1.esp
+     Tribunal.esm]
 
 ;; what is this?:
 ;;time_2x.esp
@@ -197,7 +220,7 @@ AdvTC_TribunalAddon.esp
 ;; and "Korobal Island" as long as you keep Ald-Vendras V3.1 loaded last
 ;; If you are running "The white wolf of LoKKen" and "Solstheim
 ;; Castle"-plugin "Ald-Vendras V3.1" must also be loaded after them to
-;; avoid heavy landscape conflicts.  
+;; avoid heavy landscape conflicts.
 ;; (Ref: "Ald-Vendras_V3_readme.txt")
 [Order]
 Illuminated Order v1.0.esp
@@ -219,29 +242,30 @@ Ald-Vendras_V31-LoKKen-SC.esp
 
 [Requires]
 Ald-Vendras_V31-LoKKen-SC.esp
-Clean Solstheim_Castle_v1.1.esp
-[Requires]
-Ald-Vendras_V31-LoKKen-SC.esp
-BT_Whitewolf_2_0.esp
+[ALL Clean Solstheim_Castle_v1.1.esp
+     [ANY BT_Whitewolf_2_0.esp
+	  BT_Whitewolf_2_0.esm]]
+
 [Requires]
 Ald-Vendras_V31-LoKKen.esp
-BT_Whitewolf_2_0.esp
+[ANY BT_Whitewolf_2_0.esp
+     BT_Whitewolf_2_0.esm]
 
 [Conflict]
  Ald Vendras conflicts with Doom Door
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Doom_Door_01.esp
-[OR Ald-Vendras_V31.esp
-    Ald-Vendras_V31-LoKKen.esp
-    Ald-Vendras_V31-LoKKen-SC.esp]
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
 
 [Conflict]
  Ald Vendras conflicts with Legends of Ydumea
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 _Legends_of_Ydumea_v2.esp
-[OR Ald-Vendras_V31.esp
-    Ald-Vendras_V31-LoKKen.esp
-    Ald-Vendras_V31-LoKKen-SC.esp]
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
 
 [Note]
  An upgraded version (v3.1) of Ald Vendras is available:
@@ -253,12 +277,12 @@ Ald-Vendras_V3-LoKKen-SC.esp
 [Requires]
  (Ref: "Castle_Dragonfall_readme.txt")
 Castle_Dragonfall.esp
-[OR Ald-Vendras_V31.esp
-    Ald-Vendras_V31-LoKKen.esp
-    Ald-Vendras_V31-LoKKen-SC.esp
-    Ald-Vendras_V3.esp
-    Ald-Vendras_V3-LoKKen.esp
-    Ald-Vendras_V3-LoKKen-SC.esp]
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp
+     Ald-Vendras_V3.esp
+     Ald-Vendras_V3-LoKKen.esp
+     Ald-Vendras_V3-LoKKen-SC.esp]
 [Order]
 Ald-Vendras_V31.esp
 Ald-Vendras_V31-LoKKen.esp
@@ -320,12 +344,11 @@ Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
 
 [Requires]
- "Assassins Armory - Arrows.esp" requires the Area Effect Arrows
- plugin to be present
+ "Assassins Armory - Arrows.esp" requires the AreaEffectArrows plugin
  (Ref: "Assassin's Armory readme.doc")
 Assassins Armory - Arrows.esp
-[OR AreaEffectArrows.esp
-    AreaEffectArrows XB Edition.esp]
+[ANY AreaEffectArrows.esp
+     AreaEffectArrows XB Edition.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -376,7 +399,7 @@ Vality's Balmora Addon.esp
 ;; @Baron's Partners
 
 [Conflict]
- Barons_Partners30.esp is based on CM_Partners_3.0.esp, you should
+ Barons_Partners30.esp is derived from CM_Partners_3.0.esp, you should
  only run one of these.
 Barons_Partners30.esp
 CM_Partners_3.0.esp
@@ -387,21 +410,21 @@ CM_Partners_3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @BEER! 
+;; @BEER!
 
 [Requires]
  BEER! requires ASE
  (Ref: "Readme - BEER!.rtf")
-[OR BEER! Combo v1.12-03a (PR esm v2.4fix).esp
-    BEER! Combo v1.12-03a (PR esp v2.4fix).esp
-    BEER! Combo v1.12-03a.esp
-    BEER! Combo.esp
-    BEER! with MCA.esp
-    BEER!.esp
-    NoM 2.1 with BEER!.esp
-    NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
-    NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
-    NoM 2.12-03a with BEER!.esp]
+[ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+     BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+     BEER! Combo v1.12-03a.esp
+     BEER! Combo.esp
+     BEER! with MCA.esp
+     BEER!.esp
+     NoM 2.1 with BEER!.esp
+     NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
+     NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
+     NoM 2.12-03a with BEER!.esp]
 AtmosphericSoundEffects-3.0.esp
 
 [Conflict]
@@ -447,9 +470,9 @@ Beryl's_Head_Replacer_v1.0.esm
  "Remove Argonian and Khajiit IDs from Beryl's Head Replacer to fix it."
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Beryl's_Head_Replacer_v1.0.esm
-Slof's Better Beasts a.esp
-Slof's Better Beasts b.esp
-Slof's Civilised Beasts.esp
+[ANY Slof's Better Beasts a.esp
+     Slof's Better Beasts b.esp
+     Slof's Civilised Beasts.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -459,14 +482,14 @@ Slof's Civilised Beasts.esp
 Better Clothes_v1.1.esp
 Better Clothes_v1.1_nac.esp
 BetterClothes_Patch.esp
+
 [Requires]
 BetterClothes_Patch.esp
-[OR 
- Better Clothes_v1.1.esp
- Better Clothes_v1.1_nac.esp]
+[ANY Better Clothes_v1.1.esp
+     Better Clothes_v1.1_nac.esp]
 
 [Conflict]
- Use only one of these mods. NAC stands for "non-Argonian Change
+ Use only one of these mods. NAC stands for "non-Argonian Change"
  (Ref: betterclothes.txt)
 Better Clothes_v1.1.esp
 Better Clothes_v1.1_nac.esp
@@ -492,11 +515,13 @@ Better Heads Bloodmoon addon.esm
 
 [Requires]
 Better Heads Bloodmoon addon.esm
-[AND Bloodmoon.esm Better Heads.esm]
+[ALL Bloodmoon.esm
+     Better Heads.esm]
 
 [Requires]
 Better Heads Tribunal addon.esm
-[AND Tribunal.esm Better Heads.esm]
+[ALL Tribunal.esm
+     Better Heads.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -509,10 +534,10 @@ Better Heads Tribunal addon.esm
 BigMod 2.2.esp
 
 [Conflict]
- "BigMod2 v2.0.esp" is a later version of "BigMod 2.2.esp", you should
- remove "BigMod 2.2.esp".
-BigMod 2.2.esp
+ "BigMod2 v2.0 RELEASE.esp" is a later version of "BigMod 2.2.esp",
+ you should remove "BigMod 2.2.esp".
 BigMod2 v2.0 RELEASE.esp
+BigMod 2.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -526,7 +551,8 @@ BlackRose.esp
 
 [Requires]
  (Ref: blacklightreadme.txt)
-[OR blacklightv1.34.esp BlackRose.esp]
+[ANY blacklightv1.34.esp
+     BlackRose.esp]
 Silgrad_Tower_internal_build_1-4_3.esp
 
 [Conflict]
@@ -555,13 +581,13 @@ MultiMark_TheBlackMill.esp
 TheBlackMill11.esp
 
 [Patch]
- If you're using Better Bodies, you should use acsSunsiBBShirt
- together with The Black Mill. 
+ When using Better Bodies together with The Black Mill, you
+ should use acsSunsiBBShirt
  (Ref: "Readme acsSunsiBBShirt.txt")
 acsSunsiBBShirt.esp
-[AND Better Bodies.esp
-     [OR TheBlackMill11.esp
-	 TheBlackMill.esp]]
+[ALL Better Bodies.esp
+     [ANY TheBlackMill11.esp
+	  TheBlackMill.esp]]
 
 [Conflict]
  landmass conflict.
@@ -579,8 +605,8 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
  "Seyda Neen Docks and Haldershore conflicts with house added in Black Mill."
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 TheBlackMill11.esp
-[OR Seyda Neen Docks and Haldershore Tribunal V1.1.esp
-    Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp]
+[ANY Seyda Neen Docks and Haldershore Tribunal V1.1.esp
+     Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp]
 
 [Conflict]
  These 2 mods have at least 1 cell conflict east of Sadrith Mora.
@@ -639,26 +665,26 @@ Blood and Gore Wilderness add-on.esp
 Blood and Gore patch for GIANTS Trib.esp
 
 [Requires]
- THE MOD DOES *NOT* WORK IF YOU USE *NO* ADD-ON.
+ "THE MOD DOES *NOT* WORK IF YOU USE *NO* ADD-ON."
  (Ref: "blood_gore_manual.htm")
 Blood and Gore.esp
-[OR Blood and Gore Adventurer's TC add-on.esp
-    Blood and Gore BM add-on.esp
-    Blood and Gore Cait Critters add-on.esp
-    Blood and Gore CoN 2 add-on.esp
-    Blood and Gore Combat Moves add-on.esp
-    Blood and Gore Deadite add-on.esp
-    Blood and Gore GIANTS add-on.esp
-    Blood and Gore Hunting Isle add-on.esp
-    Blood and Gore MW Additions Rev add-on.esp
-    Blood and Gore MW Advanced add-on.esp
-    Blood and Gore MW-TB-VGreetings add-on.esp
-    Blood and Gore Mephisto CP11 add-on.esp
-    Blood and Gore Morrowind alone add-on.esp
-    Blood and Gore Morrowind-Tribunal add-on.esp
-    Blood and Gore Petshop add-on.esp
-    Blood and Gore TEMPLATE add-on.esp
-    Blood and Gore Wilderness add-on.esp]
+[ANY Blood and Gore Adventurer's TC add-on.esp
+     Blood and Gore BM add-on.esp
+     Blood and Gore Cait Critters add-on.esp
+     Blood and Gore CoN 2 add-on.esp
+     Blood and Gore Combat Moves add-on.esp
+     Blood and Gore Deadite add-on.esp
+     Blood and Gore GIANTS add-on.esp
+     Blood and Gore Hunting Isle add-on.esp
+     Blood and Gore MW Additions Rev add-on.esp
+     Blood and Gore MW Advanced add-on.esp
+     Blood and Gore MW-TB-VGreetings add-on.esp
+     Blood and Gore Mephisto CP11 add-on.esp
+     Blood and Gore Morrowind alone add-on.esp
+     Blood and Gore Morrowind-Tribunal add-on.esp
+     Blood and Gore Petshop add-on.esp
+     Blood and Gore TEMPLATE add-on.esp
+     Blood and Gore Wilderness add-on.esp]
 
 [Conflict]
  Use "Blood and Gore Morrowind alone add-on.esp" only if you do NOT
@@ -685,11 +711,11 @@ Blood and Gore MW-TB-VGreetings add-on.esp
  Tribunal creatures.
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Morrowind-Tribunal add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Tribunal.esm]
 
 [Conflict]
- "Blood and Gore MW-TB-VGreetings add-on.esp" is for 
+ "Blood and Gore MW-TB-VGreetings add-on.esp" is for
  Morrowind AND Tribunal creatures, adds TheOtherFelix' VGreetings mod
  Hit section voice features (you don't need to activate this part of
  VGreetings).  You still need the other parts (non hits) of VGreetings
@@ -699,53 +725,53 @@ Blood and Gore MW-TB-VGreetings add-on.esp
 VGreetings-Hit.esp
 
 [Patch]
- "Blood and Gore MW-TB-VGreetings add-on.esp" is for 
+ "Blood and Gore MW-TB-VGreetings add-on.esp" is for
  Morrowind AND Tribunal creatures, adds TheOtherFelix' VGreetings mod
  Hit section voice features (you don't need to activate this part of
  VGreetings).  You still need the other parts (non hits) of VGreetings
  0.9.4 to have the full VGreetings mod.
  (Ref: "blood_gore_manual.htm")
 Blood and Gore MW-TB-VGreetings add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      VGreetings.esp]
 
 [Patch]
  Use "Blood and Gore BM add-on.esp" if you have Bloodmoon.
  (Ref: "blood_gore_manual.htm")
 Blood and Gore BM add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Bloodmoon.esm]
 
 [Patch]
  Use "Blood and Gore Adventurer's TC add-on.esp" for Adventurer's TC (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Adventurer's TC add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      AdventurersTC_beta1.esp]
 
 [Patch]
  for Cait's Critters Unleashed 2.0 by HogHead
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Cait Critters add-on.esp
-[AND Blood and Gore.esp
-     [OR Cait's Critters Unleashed 2.0.esp
-	 Cait's Critters Unleashed 2.0 (Tribunal).esp]]
+[ALL Blood and Gore.esp
+     [ANY Cait's Critters Unleashed 2.0.esp
+	  Cait's Critters Unleashed 2.0 (Tribunal).esp]]
 
 [Patch]
  for Children of the Night part 2 by J. Barbosa (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore CoN 2 add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      C0N2 v1.01.esp]
 
 [Patch]
  for Deadite race (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Deadite add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      io_deadite_race-1.4b.esp]
 
-;;; Patch was made for Giants Tribunal, will it work with Giants Ultimate?
+;;; Add-on was made for Giants Tribunal, will it work with Giants Ultimate?
 ;;[Patch]
 ;; for GIANTS Tribunal 2.6 by PumaMan
 ;; *If you want GIANTS creatures to use B&G effects TOO, use this add-on
@@ -756,7 +782,15 @@ Blood and Gore Deadite add-on.esp
 ;; included in the GIANTS patch released with Blood & Gore
 ;; (Ref: "blood_gore_manual.htm")
 ;;Blood and Gore GIANTS add-on.esp
-;;[AND Blood and Gore.esp
+;;[ALL Blood and Gore.esp
+;;     GIANTS.esm]
+
+;;; Patch was made for Giants Tribunal, will it work with Giants Ultimate?
+;;[Patch]
+;; for GIANTS tribunal compatibility (and ONLY compatibility - see above for the add-on)
+;; (Ref: "blood_gore_manual.htm")
+;;Blood and Gore patch for GIANTS Trib.esp
+;;[ALL Blood and Gore.esp
 ;;     GIANTS.esm]
 
 [Patch]
@@ -764,67 +798,51 @@ Blood and Gore Deadite add-on.esp
  you need to activate the complete Combat Moves mod to use this add-on
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Combat Moves add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Combat Moves.esp]
 
 [Patch]
  for Hunting Isle by Jdooby (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Hunting Isle add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Clean Hunting_mod_v.1.0.esp]
 
 [Patch]
  for Creature Pack 1.1 by Mephisto
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Mephisto CP11 add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Creature Pack 1.1.esp]
 
 [Patch]
  for Morrowind Additions Revamped by M6N6M6, Brewu4 & Harlequin (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore MW Additions Rev add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Additions_Revamped__clean_.esp]
 
 [Patch]
  for Morrowind Advanced by WormGod (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore MW Advanced add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Morrowind Advanced.esm]
 
 [Patch]
  for Petshop 4.2 by Jdooby (V)
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Petshop add-on.esp
-[AND Blood and Gore.esp
+[ALL Blood and Gore.esp
      Petshop_4.1.esp]
 
 [Patch]
  for Wilderness 1.1 by PumaMan
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Wilderness add-on.esp
-[AND Blood and Gore.esp
-     [OR The Wilderness Mod 2.0.esm
-	 The Wilderness Mod 2.0 T & B.esm]]
-
-;;; Patch was made for Giants Tribunal, will it work with Giants Ultimate?
-;;[Patch]
-;; for GIANTS tribunal compatibility (and ONLY compatibility - see above for the add-on)
-;; (Ref: "blood_gore_manual.htm")
-;;Blood and Gore patch for GIANTS Trib.esp
-;;[AND Blood and Gore.esp
-;;     GIANTS.esm]
-
-;; makes (original) fire sources of Morrowind/Tribunal/Bloodmoon (like brasiers) really do FIRE damage
-;; *based on Sisco's mod "Fire hurts" idea*
-;; *Modifies the fire sources so is incompatible with any other mod doing so*
-;; *DOES NOT REQUIRE TRIBUNAL OR BLOODMOON BUT WILL WORK WITH THEM*
-;; (Ref: "blood_gore_manual.htm")
-;;Blood and Gore Fire damage.esp
-;; JMS - so it's probably incompatible with NOM
+[ALL Blood and Gore.esp
+     [ANY The Wilderness Mod 2.0.esm
+	  The Wilderness Mod 2.0 T & B.esm]]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon Landscape Overhaul 1.0
@@ -845,7 +863,7 @@ Bones11.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- "The TB-BM version is for use with both expansions." 
+ "The TB-BM version is for use with both expansions."
  (Ref: "Bones Readme.txt")
 Bones11.esp
 Bones11-tb-bm.esp
@@ -856,18 +874,18 @@ Bones11-tb-bm.esp
 
 [Requires]
 Book Jackets - Morrowind - BookRotate.esp
-[OR Book Rotate.esm
-    Book Rotate - Morrowind v1.1.esp]
+[ANY Book Rotate.esm
+     Book Rotate - Morrowind v1.1.esp]
 
 [Requires]
-[OR Book Jackets - Tribunal - BookRotate.esp
-    Book Jackets - Bloodmoon - BookRotate.esp]
+[ANY Book Jackets - Tribunal - BookRotate.esp
+     Book Jackets - Bloodmoon - BookRotate.esp]
 Book Rotate.esm
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- 'If you are using BookRotate, be sure to select the ESP called 
-  "Book Jackets - Morrowind - BookRotate.esp". If you're not, select 
+ 'If you are using BookRotate, be sure to select the ESP called
+  "Book Jackets - Morrowind - BookRotate.esp". If you're not, select
   "Book Jackets - Morrowind.esp".'
  (Ref: "Readme Book Jackets - Morrowind.txt")
 Book Jackets - Morrowind - BookRotate.esp
@@ -875,8 +893,8 @@ Book Jackets - Morrowind.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- 'If you are using BookRotate, be sure to select the ESP called 
-  "Book Jackets - Tribunal - BookRotate.esp". If you're not, select 
+ 'If you are using BookRotate, be sure to select the ESP called
+  "Book Jackets - Tribunal - BookRotate.esp". If you're not, select
   "Book Jackets - Tribunal.esp".'
  (Ref: "Readme Book Jackets - Tribunal.txt")
 Book Jackets - Tribunal - BookRotate.esp
@@ -884,8 +902,8 @@ Book Jackets - Tribunal.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- 'If you are using BookRotate, be sure to select the ESP called 
-  "Book Jackets - Bloodmoon - BookRotate.esp". If you're not, select 
+ 'If you are using BookRotate, be sure to select the ESP called
+  "Book Jackets - Bloodmoon - BookRotate.esp". If you're not, select
   "Book Jackets - Bloodmoon.esp".'
  (Ref: "Readme Book Jackets - Bloodmoon.txt")
 Book Jackets - Bloodmoon - BookRotate.esp
@@ -903,7 +921,8 @@ Book Rotate - Bloodmoon v5.3.esp
 
 [Requires]
 Book Rotate.esm
-[OR Tribunal.esm Bloodmoon.esm]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 [Requires]
 Book Rotate - Tribunal v5.3.esp
@@ -920,9 +939,9 @@ Bloodmoon.esm
  If you have Bloodmoon, use "Book Rotate - Bloodmoon v5.3.esp"
  (Ref: BookRotate5.3.txt)
 Book Rotate - Morrowind v1.1.esp
-[OR Book Rotate.esm
-    Book Rotate - Tribunal v5.3.esp
-    Book Rotate - Bloodmoon v5.3.esp]
+[ANY Book Rotate.esm
+     Book Rotate - Tribunal v5.3.esp
+     Book Rotate - Bloodmoon v5.3.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -974,6 +993,7 @@ Bloodmoon.esm
 [Order]
 Sris_Alchemy_BM.esp
 BUUG Alchemy- Srikandi.esp
+
 [Requires]
 BUUG Alchemy- Srikandi.esp
 Sris_Alchemy_BM.esp
@@ -988,8 +1008,8 @@ Sris_Alchemy_BM.esp
  "Cait's Critters Unleashed 2.0.esp"
  (Ref: "Cait's Criiter's Unleashed Readme.txt")
 Cait's Critters Unleashed 2.0.esp
-[OR Cait's Critters Unleashed 2.0 (Tribunal).esp
-    Tribunal.esm]
+[ANY Cait's Critters Unleashed 2.0 (Tribunal).esp
+     Tribunal.esm]
 
 [Requires]
  (Ref: "Cait's Criiter's Unleashed Readme.txt")
@@ -1048,25 +1068,27 @@ Complete Morrowind TB & BM - Replacer.esp
 
 [Conflict]
  You should only use "Complete Morrowind.esp" if you do not have
- Tribunal or Bloodmoon.
+ Tribunal and Bloodmoon.
 Complete Morrowind.esp
-[OR Complete Morrowind - Tribunal & Bloodmoon.esp
-    Complete Morrowind TB & BM - Replacer.esp]
+[ANY Complete Morrowind - Tribunal & Bloodmoon.esp
+     Complete Morrowind TB & BM - Replacer.esp
+     [ALL Bloodmoon.esm
+	  Tribunal.esm]]
 
 [Conflict]
  You should only use "Complete Morrowind - Replacer.esp" if you do not
  have Tribunal or Bloodmoon.
 Complete Morrowind - Replacer.esp
-[OR Complete Morrowind - Tribunal & Bloodmoon.esp
-    Complete Morrowind TB & BM - Replacer.esp]
+[ANY Complete Morrowind - Tribunal & Bloodmoon.esp
+     Complete Morrowind TB & BM - Replacer.esp
+     [ALL Bloodmoon.esm
+	  Tribunal.esm]]
 
 [Requires]
-Complete Morrowind - Tribunal & Bloodmoon.esp
-[AND Bloodmoon.esm Tribunal.esm]
-
-[Requires]
-Complete Morrowind TB & BM - Replacer.esp
-[AND Bloodmoon.esm Tribunal.esm]
+[ANY Complete Morrowind - Tribunal & Bloodmoon.esp
+     Complete Morrowind TB & BM - Replacer.esp]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1075,7 +1097,7 @@ Complete Morrowind TB & BM - Replacer.esp
 [Note]
  Note that while the Contact Hits works, it sets your agility to zero,
  which will prevent you from advancing in some factions.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl= 
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
   and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
 Contact hits.esp
 
@@ -1089,7 +1111,8 @@ Contact hits.esp
  the scripts go really screwy, and a common side effect is
  massive herds of Guars.
  (Ref: "Creatures X Readme.txt")
-[AND Creatures.esp Merged Objects.esp]
+[ALL Creatures.esp
+     Merged Objects.esp]
 
 [Order]
 Creatures.esp
@@ -1101,21 +1124,24 @@ Creatures Great House Dagoth Patch.esp
  creatures passive to you."
  (Ref: "Creatures X Readme.txt")
 Creatures Great House Dagoth Patch.esp
-[AND Creatures.esp
+[ALL Creatures.esp
      Great House Dagoth.esp]
 
 [Order]
 Creatures.esp
 Sixth House.esp
 Creatures 6th House Patch.esp
+
 [Patch]
+ When using Creatures with Sixth House, you should use
+ Creatures 6th House Patch.esp
 Creatures 6th House Patch.esp
-[AND Sixth House.esp
+[ALL Sixth House.esp
      Creatures.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Creeper Plugin 
+;; @Creeper Plugin
 
 [Note]
  Contains evil GMSTs.
@@ -1136,16 +1162,17 @@ DN-GDRv1.esp
 [Note]
  If you use TESTOOL's "Merged Objects.esp", it is recommended to omit
  this plugin from the merge.
-[AND DN-GDRv1.esp Merged Objects.esp]
+[ALL DN-GDRv1.esp
+     Merged Objects.esp]
 
 [Conflict]
- DN-GDRv1 is not compatible with Princess Stomper's Ghostgate 
+ DN-GDRv1 is not compatible with Princess Stomper's Ghostgate
  (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1.esp
 Clean Ghostgate.esp
 
 [Conflict]
- DN-GDRv1 is not compatible with Sabregirls' Tougher Sixth House 
+ DN-GDRv1 is not compatible with Sabregirls' Tougher Sixth House
  (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1.esp
 SG-toughersixth.esp
@@ -1173,7 +1200,7 @@ DN-GDRv1_NOM.esp
  If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
  (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1_NOM.esp
-[AND GDR_MasterFile.esm
+[ALL GDR_MasterFile.esm
      NOM 2.13.esp]
 
 [Requires]
@@ -1257,9 +1284,9 @@ GCD better balanced birthsigns.esp
  "Fortified_Thirsk_1.1.esp" and "Skaal Forest 1.0.esp".
  (Ref: felsaad_Revamped_README.txt)
 LOCH_Felsaad_Revamped.esp
-[OR LOCH_Cliffs_Of_Fjalding.esp
-    Fortified_Thirsk_1.1.esp
-    Skaal Forest 1.0.esp]
+[ANY LOCH_Cliffs_Of_Fjalding.esp
+     Fortified_Thirsk_1.1.esp
+     Skaal Forest 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1286,11 +1313,12 @@ TheForgottenShields - Artifacts_NG.esp
 ;; @FPS Optimizer 2.0
 [Note]
  Warning. Whilst nothing definitive is available, enough anecdotal evidence exists to suggest that using the plugins
- that come with FPS Optimiser 2.0 can cause save game corruption. Consider Multiple Teleport Marking or, for those 
+ that come with FPS Optimiser 2.0 can cause save game corruption. Consider Multiple Teleport Marking or, for those
  with MWSE, Improved Teleportation
 FPSOpt2 - Custom Intervention.esp
 FPSOpt2 - Custom Mark.esp
 FPSOpt2 - Multimark.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Galsiahs Character Development 1.08 (GCD)
@@ -1322,14 +1350,16 @@ GCD settings hard.esp
 
 [Requires]
 GCD StartScript for Trib or Bloodmoon.esp
-[OR Tribunal.esm Bloodmoon.esm]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 [Order]
 CharGen_Revamped_v14.esp
 CharGen Revamped delay2.esp
+
 [Patch]
 CharGen Revamped delay2.esp
-[AND CharGen_Revamped_v14.esp
+[ALL CharGen_Revamped_v14.esp
      Galsiahs Character Development.esp]
 
 ;; GCD TEO compatibility patch.esp:
@@ -1340,25 +1370,28 @@ CharGen Revamped delay2.esp
 [Order]
 Stealth Enhancements-LD 1.5b (Tribunal).esp
 GCD TEO compatibility patch.esp
+
 [Order]
 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 GCD TEO compatibility patch.esp
+
 [Patch]
  (Ref: "GCD Readme first 107c.txt")
 GCD TEO compatibility patch.esp
-[AND Galsiahs Character Development.esp
-     [OR Stealth Enhancements-LD 1.5b (Tribunal).esp
-	 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp]]
+[ALL Galsiahs Character Development.esp
+     [ANY Stealth Enhancements-LD 1.5b (Tribunal).esp
+	  Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp]]
 
 ;; GCD - Cult of the clouds patch
 ;; "Use only with CoC. Should be after CoC in the load order."
 [Order]
 MW_CultOfTheClouds_v10.esp
 GCD - Cult of the Clouds patch.esp
+
 [Patch]
  (Ref: "GCD Readme first 107c.txt")
 GCD - Cult of the Clouds patch.esp
-[AND Galsiahs Character Development.esp
+[ALL Galsiahs Character Development.esp
      MW_CultOfTheClouds_v10.esp]
 
 ;; Havish patch
@@ -1369,10 +1402,11 @@ GCD - Cult of the Clouds patch.esp
 Bloodmoon.esm
 Havish.esm
 GCD_Havish_patch.esp
+
 [Patch]
  (Ref: "GCD Readme first 107c.txt")
 GCD_Havish_patch.esp
-[AND Galsiahs Character Development.esp
+[ALL Galsiahs Character Development.esp
      Havish.esm]
 
 ;; GCD_SS_patch
@@ -1382,10 +1416,11 @@ GCD_Havish_patch.esp
 [Order]
 Scripted_Spells.esp
 GCD_SS_patch.esp
+
 [Patch]
  (Ref: "GCD Readme first 107c.txt")
 GCD_SS_patch.esp
-[AND Galsiahs Character Development.esp
+[ALL Galsiahs Character Development.esp
      Scripted_Spells.esp]
 
 ;; GCD_VH_patch2
@@ -1395,10 +1430,11 @@ GCD_SS_patch.esp
 [Order]
 Vampiric Hunger Base.esp
 GCD_VH_patch2.esp
+
 [Patch]
  (Ref: "GCD Readme first 107c.txt")
 GCD_VH_patch2.esp
-[AND Galsiahs Character Development.esp
+[ALL Galsiahs Character Development.esp
      Vampiric Hunger Base.esp]
 
 ;; Note: Brittlewind fix is included in UUMPP, see UUMPP rules
@@ -1409,10 +1445,16 @@ GCD_VH_patch2.esp
 ;; trigger this bug, so if you use Bloodmoon, then you should use this
 ;; fix esp (unless you enjoy getting frozen to death repeatedly)."
 ;; (Ref: "GCD Readme first 107c.txt")
-;;[Requires]
-;; (Ref: "GCD Readme first 107c.txt")
-;;Brittlewind fix.esp
-;;Bloodmoon.esm
+[Requires]
+ (Ref: "GCD Readme first 107c.txt")
+Brittlewind fix.esp
+Bloodmoon.esm
+
+[Note]
+ The UUMPP (Unofficial Unoffical Morrowind Patch Project) includes
+ the Brittlewind fix, and it is recommended you use that instead.
+[ALL Brittlewind fix.esp
+     [NOT Morrowind Patch v1.6.4 (WIP).esm]]
 
 ;; GCD_WE_patch
 ;; "Load order shouldn't matter for this patch."
@@ -1422,10 +1464,11 @@ GCD_VH_patch2.esp
 [Order]
 Werewolf_Evolution.esp
 GCD_WE_patch.esp
+
 [Patch]
  (Ref: "GCD Readme first 107c.txt")
 GCD_WE_patch.esp
-[AND Galsiahs Character Development.esp
+[ALL Galsiahs Character Development.esp
      Werewolf_Evolution.esp]
 
 [Patch]
@@ -1433,7 +1476,7 @@ GCD_WE_patch.esp
  http://upload.worldofplayers.de/files/1wPmrGCD_BigMod2_patch.rar
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=913903&st=0&p=13269662&;entry13269662 )
 GCD_BigMod2_patch.esp
-[AND Galsiahs Character Development.esp
+[ALL Galsiahs Character Development.esp
      BigMod2 v2.0 RELEASE.esp]
 
 
@@ -1472,14 +1515,14 @@ FrontierTradePost.esp
 
 [Conflict]
  The Glory Road conflicts with Havish, you should probably use only
- one or the other. 
+ one or the other.
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
 Havish.esm
 
 [Conflict]
  The Glory Road conflicts with Illuminated Order, you should probably
- use only one or the other. 
+ use only one or the other.
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
 Illuminated Order v1.0.esp
@@ -1514,29 +1557,33 @@ Go To Jail 3.5 - T B - NOM.esp
 Go To Jail 3.5 - T B - MCA.esp
 Go To Jail 3.5 - T B - MCA - NOM.esp
 
-[Conflict]
+[Requires]
  Go To Jail 3.5 - T.esp should only be loaded when you
  have Tribunal, but not Bloodmoon
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T.esp
-Bloodmoon.esm
+[ALL Tribunal.esm
+     [NOT Bloodmoon.esm]]
 
-[Conflict]
+[Requires]
  Go To Jail 3.5 - B.esp should only be loaded when you
  have Bloodmoon, but not Tribunal
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - B.esp
-Tribunal.esm
+[ALL Bloodmoon.esm
+     [NOT Tribunal.esm]]
 
 [Requires]
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T B.esp
-[AND Bloodmoon.esm Tribunal.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 [Requires]
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T B - NOM.esp
-[AND Bloodmoon.esm Tribunal.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 [Note]
  "Go To Jail 3.5 - T B - NOM.esp" requires Necessities of Morrowind
@@ -1547,14 +1594,18 @@ Go To Jail 3.5 - T B - NOM.esp
  "Go To Jail 3.5 - T B - MCA.esp" requires Morrowind Comes Alive
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T B - MCA.esp
-[AND Bloodmoon.esm Tribunal.esm MCA.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     MCA.esm]
 
 [Requires]
  "Go To Jail 3.5 - T B - MCA - NOM.esp" requires Necessities of Morrowind
  and Morrowind Comes Alive
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T B - MCA - NOM.esp
-[AND Bloodmoon.esm Tribunal.esm MCA.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     MCA.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1582,12 +1633,11 @@ morrowind4fishBETA.esm
  installed but not necessarily activated.
  (Ref: "readme_Hazaeki_1_2.txt")
 SG_ hazaeki_race-1_2.esp
-[AND
- Scripted_Spells.esp
- Better Bodies.esp
- Better Heads.esm]
+[ALL Scripted_Spells.esp
+     Better Bodies.esp
+     Better Heads.esm]
 
-;; Scripted Spells (MUST load BEFORE the Hazaeki race esp): 
+;; Scripted Spells (MUST load BEFORE the Hazaeki race esp):
 ;; (Ref: http://planetelderscrolls.gamespy.com/View.php?view=mods.detail&id=5911 )
 [Order]
 Scripted_Spells.esp
@@ -1604,8 +1654,11 @@ Herbalism Redux 1.12a.esp
 Herbalism Redux ES Patch.esp
 
 [Conflict]
- Choose ONLY ONE of these plugins.
+ Choose ONLY ONE of these Herbalism Redux plugins.
  (Ref: "Herbalism Redux 1.12a readme.txt")
+ Recommended, use these 2 together:
+ "Morrowind Patch v1.6.4 (WIP).esm" (includes Bloated Morrowind)
+ "Herbalism Redux 1.12a - Bloated MW.esp"
 Herbalism Redux 1.12a - Bloated MW.esp
 Herbalism Redux 1.12a.esp
 
@@ -1613,7 +1666,11 @@ Herbalism Redux 1.12a.esp
  When using "Bloated Morrowind.esp", you should use
  "Herbalism Redux 1.12a - Bloated MW.esp" instead.
  (Ref: "Herbalism Redux 1.12a readme.txt")
-Herbalism Redux 1.12a.esp
+ Or even better, just use these 2:
+ "Morrowind Patch v1.6.4 (WIP).esm" (includes Bloated Morrowind)
+ "Herbalism Redux 1.12a - Bloated MW.esp"
+[ALL Herbalism Redux 1.12a.esp
+     [NOT Herbalism Redux 1.12a - Bloated MW.esp]]
 Bloated Morrowind.esp
 
 [Patch]
@@ -1621,17 +1678,15 @@ Bloated Morrowind.esp
  Herbalism Redux with Expanded Sounds.
  (Ref: HerbReduxES.zip/"Readme.txt")
 Herbalism Redux ES Patch.esp
-[AND Herbalism Redux 1.12a.esp
+[ALL [ANY Herbalism Redux 1.12a.esp
+	  Herbalism Redux 1.12a - Bloated MW.esp]
      Expanded Sounds.esp]
 
-;;use either
-;;uumpp + hr bloated or
-;;uumpp + hr bloated + bloated mw + uump bloated patch
 [Note]
  You can replace these 4 plugins with just the following 2:
  "Morrowind Patch v1.6.4 (WIP).esm"
  "Herbalism Redux 1.12a - Bloated MW.esp"
-[AND Morrowind Patch v1.6.4 (WIP).esm
+[ALL Morrowind Patch v1.6.4 (WIP).esm
      Herbalism Redux 1.12a - Bloated MW.esp
      Bloated Morrowind.esp
      UUMPP Bloated Morrowind Patch v1.6.4.esp]
@@ -1658,8 +1713,8 @@ IceNioLivRobeReplacerPLUS.esp
  (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Altmer Town.esp
 
-;; Iliandria, an Altmer Town conflicts with BEER! - cell conflict. 
-;; Load after BEER! 
+;; Iliandria, an Altmer Town conflicts with BEER! - cell conflict.
+;; Load after BEER!
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [Order]
 BEER! Combo v1.12-03a (PR esm v2.4fix).esp
@@ -1681,9 +1736,8 @@ Altmer Town.esp
 [Requires]
  (Ref: IlluminatedOrder_readme.rtf)
 Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
-[AND
- Illuminated Order v1.0.esp
- Bloodmoon.esm]
+[ALL Illuminated Order v1.0.esp
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1744,14 +1798,14 @@ LBS_Lite v1.4(trib).esp
 ;;Taddeus Balanced Armour
 ;;Tribun_Laura_3_0.esp
 ;;Merged_Objects.esp
-;;Ebony_fix.esp 
+;;Ebony_fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LCV (Living Cities of Vvardenfell
 
 ;; LCV Schedule Markers
-;; Note: This esp must load BEFORE LCV Schedules.esp! 
+;; Note: This esp must load BEFORE LCV Schedules.esp!
 ;; (Ref: http://wrye.ufrealms.net/LCV.html )
 [Order]
 LCV Schedule Markers.esp
@@ -1764,6 +1818,7 @@ NPC LCV Locks.esp
  MCA 4.1 (it does not work with the newer MCA 5.0, so far as I know.)"
  (Ref: http://wrye.ufrealms.net/LCV.html )
 LCV MCA 4.1 Patch.esp
+
 [Requires]
 LCV MCA 4.1 Patch.esp
 NPC LCV Schedules 03.esp
@@ -1834,23 +1889,23 @@ Book Rotate.esm
  'If already installed then uncheck the book jacket .esps.'
  (Ref: Librarian 104 readme.txt)
 Librarian with Jackets & Rotate BM Trib.esp
-[OR Book Jackets - Morrowind - BookRotate.esp
-    Book Jackets - Morrowind.esp
-    Book Jackets - Bloodmoon - BookRotate.esp
-    Book Jackets - Bloodmoon.esp
-    Book Jackets - Tribunal - BookRotate.esp
-    Book Jackets - Tribunal.esp]
+[ANY Book Jackets - Morrowind - BookRotate.esp
+     Book Jackets - Morrowind.esp
+     Book Jackets - Bloodmoon - BookRotate.esp
+     Book Jackets - Bloodmoon.esp
+     Book Jackets - Tribunal - BookRotate.esp
+     Book Jackets - Tribunal.esp]
 
 [Conflict]
  'If already installed then uncheck the book jacket .esps.'
  (Ref: Librarian 104 readme.txt)
 Librarian with Jackets BM Trib.esp
-[OR Book Jackets - Morrowind - BookRotate.esp
-    Book Jackets - Morrowind.esp
-    Book Jackets - Bloodmoon - BookRotate.esp
-    Book Jackets - Bloodmoon.esp
-    Book Jackets - Tribunal - BookRotate.esp
-    Book Jackets - Tribunal.esp]
+[ANY Book Jackets - Morrowind - BookRotate.esp
+     Book Jackets - Morrowind.esp
+     Book Jackets - Bloodmoon - BookRotate.esp
+     Book Jackets - Bloodmoon.esp
+     Book Jackets - Tribunal - BookRotate.esp
+     Book Jackets - Tribunal.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1897,7 +1952,7 @@ Madd Leveler - Cap Remover.esp
 [Conflict]
  "This esp will NOT work with the default Cap Remover esp, because of
  the one ability point per every four skill points feature.  If you
- want to uncap this esp, please edit it as described in the guide." 
+ want to uncap this esp, please edit it as described in the guide."
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Sederien Skills.esp
 Madd Leveler - Cap Remover.esp
@@ -1915,14 +1970,14 @@ Madd Leveler - Madd Skills.esp
  mods are required)"
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Assassin's Armory Fix.esp
-[AND Madd Leveler - Base.esp
+[ALL Madd Leveler - Base.esp
      Assassins Armory.esm]
 
 [Patch]
  "Makes the Madd Leveler compatible with Illuminated Order 1.0C"
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Illuminated Order Fix.esp
-[AND Madd Leveler - Base.esp
+[ALL Madd Leveler - Base.esp
      Illuminated Order v1.0.esp]
 
 [Note]
@@ -1932,7 +1987,7 @@ Madd Leveler - Illuminated Order Fix.esp
 	-Sheogorath's Blessing
 	-Pearl's Legacy"
  (Ref: "Madd Leveler Readme.txt")
-[AND Madd Leveler - Illuminated Order Fix.esp
+[ALL Madd Leveler - Illuminated Order Fix.esp
      Madd Leveler - Base.esp
      Illuminated Order v1.0.esp]
 
@@ -1940,7 +1995,7 @@ Madd Leveler - Illuminated Order Fix.esp
  "Makes the Madd Leveler compatible with Lichcraft 1.0."
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Lichcraft Fix.esp
-[AND Madd Leveler - Base.esp
+[ALL Madd Leveler - Base.esp
      Lichcraft.esp]
 
 [Note]
@@ -1956,15 +2011,15 @@ Madd Leveler - Lichcraft Fix.esp
  and Lichcraft Fixes."
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Illuminated Order And Lichcraft Fix.esp
-[AND Madd Leveler - Lichcraft Fix.esp
+[ALL Madd Leveler - Lichcraft Fix.esp
      Madd Leveler - Illuminated Order Fix.esp]
 
 [Conflict]
  Conflicts with Mephisto's Cap Remover (both remove caps)
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Base.esp
-[OR CapRemover 1.2 alpha.esp
-    CapRemover 1.1c.esp]
+[ANY CapRemover 1.2 alpha.esp
+     CapRemover 1.1c.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2003,11 +2058,11 @@ Pov_Distant_Activator_Fix_TR1_Waterfalls.esp
 Pov_Distant_Activator_Fix_Vivec.esp
 Pov_Distant_Activator_Fix_Waterfalls.esp
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCP (Morrowind Code Patch) [Hrnchamd]
 
 ;; rules for mods obsoleted by the MCP
-
 [Note]
  The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
  the problem of merchants wearing items sold to them (and much more).
@@ -2056,9 +2111,8 @@ From Hell To Heaven.esm
 
 [Requires]
 From Hell To Heaven.esm
-[AND
- From Hell To Heaven part 2.esp
- From Hell To Heaven part 3.esp]
+[ALL From Hell To Heaven part 2.esp
+     From Hell To Heaven part 3.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2075,25 +2129,24 @@ MW_A01.esp
 [Order]
 Morrowind Patch v1.6.3.esm
 Morrowind Advanced.esm
+
 [Order]
 Morrowind Patch v1.6.4 (WIP).esm
 Morrowind Advanced.esm
-[Order]
-Morrowind Advanced.esm
-MW_Adv_Required.esp
 
 ;; Note that you will still need to run "MW_Adv_Required.esp" after the
 ;; .esp version of Morrowind Advanced
 ;; (Ref: "readme_mw_advanced.txt")
 [Order]
+Morrowind Advanced.esm
 Morrowind Advanced.esp
 MW_Adv_Required.esp
 
 [Requires]
  (Ref: "readme_mw_advanced.txt")
 MW_Adv_Required.esp
-[OR Morrowind Advanced.esm
-    Morrowind Advanced.esp]
+[ANY Morrowind Advanced.esm
+     Morrowind Advanced.esp]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -2104,7 +2157,7 @@ Morrowind Advanced.esp
 [Patch]
  (Ref: "readme_mw_advanced.txt")
 MW_Adv_PHW.esp
-[AND MW_Adv_Required.esp
+[ALL MW_Adv_Required.esp
      Passive_Healthy_Wildlife.esp]
 
 
@@ -2150,10 +2203,12 @@ MWE_Base.esp
  (Ref: "Morrowind Enhanced Manual.mht")
 MWE_Crime - Stealth.esp
 MWE_Base.esp
+
 [Requires]
  (Ref: "Morrowind Enhanced Manual.mht")
 MWE_Crime - Stealing Bugfix.esp
 MWE_Base.esp
+
 [Requires]
  (Ref: "Morrowind Enhanced Manual.mht")
 MWE_Crime - Less Annoying Guards.esp
@@ -2212,7 +2267,9 @@ Bloodmoon.esm
 [Requires]
  (Ref: "readme - NPC Enhanced v12.txt")
 HoratioNPCEnhanced12-VE.esp
-[AND Vampire_Embrace.esp Bloodmoon.esm Tribunal.esm]
+[ALL Vampire_Embrace.esp
+     Bloodmoon.esm
+     Tribunal.esm]
 
 [Order]
 Vampire_Embrace.esp
@@ -2282,15 +2339,18 @@ The Undead - MCA5.2 Compatibility Patch.esp
  If you use TESTOOL's "Merged Objects.esp", it is recommended to omit
  this plugin from the merge.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=868942&view=findpost&p=12668875 )
-[AND MCA - COV Addon.esp Merged Objects.esp]
+[ALL MCA - COV Addon.esp
+     Merged Objects.esp]
 
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 MCA - COV Addon.esp
+
 [Patch]
  MCA - COV Addon.esp is recommended when you have both MCA and COV
+ It adds nice COV clothes to the MCA NPCs.
 MCA - COV Addon.esp
-[AND BB_Clothiers_of_Vvardenfell_v1.1.esp
+[ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
      MCA.esm]
 
 [Conflict]
@@ -2371,33 +2431,24 @@ MultiMark.esp
 [Requires]
  (Ref: MultipleTeleportMarking.txt)
 MultiMark_TribunalPlugin.esp
-[AND MultiMark.esp Tribunal.esm]
+[ALL MultiMark.esp
+     Tribunal.esm]
 
 [Requires]
  (Ref: MultipleTeleportMarking.txt)
 MultiMark_BloodmoonPlugin.esp
-[AND MultiMark.esp Bloodmoon.esm]
+[ALL MultiMark.esp
+     Bloodmoon.esm]
 
 [Requires]
  (Ref: MultipleTeleportMarking.txt)
 MultiMark.esp
-[OR Tribunal.esm Bloodmoon.esm]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities of Morrowind (NOM)
-
-;; The Readme specifies that NOM should appear near the end of the load
-;; order. I'm actually loathe to add NearStart or NearEnd rules for mods,
-;; as this could be taken as implying preference by mlox, and mlox
-;; should try to be impartial. On the other hand, if a user has loaded
-;; NOM, they obviously expect it to work, and the best way to do that
-;; is to load it last to ensure the fewest conflicts. So we'll try that
-;; for now and see how it goes.
-;; - JMS
-[NearEnd]
-NOM 2.12.esp
-NOM 2.13.esp
 
 [Note]
  Latest version of Necessities of Morrowind (NOM) is 2.13
@@ -2408,7 +2459,7 @@ NOM 2.12.esp
 
 [Conflict]
  NOM conflicts with "Nevana's Twin Lamps and Slave Hunters" - NoM Food
- Store moves landscape, leaving slaver tower floating. 
+ Store moves landscape, leaving slaver tower floating.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 NOM 2.13.esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
@@ -2417,8 +2468,8 @@ Nevena's Twin Lamps & Slave Hunters 1.5.esp
  Nom already contains "The Moldy Horker" by Grumpy
  (Ref: "NOM 2.13.txt")
 NOM 2.13.esp
-[OR BM_S_Inn.esp
-    S_Inn_th.esp]
+[ANY BM_S_Inn.esp
+     S_Inn_th.esp]
 
 [Conflict]
  Nom already contains Beds for Rent by Havokk
@@ -2430,11 +2481,10 @@ Beds4Rent.esp
  Nom already contains Improved Inns by Taddeus
  (Ref: "NOM 2.13.txt")
 NOM 2.13.esp
-[OR Improved Inns BM.esp
-    Improved Inns MW.esp
-    Improved Inns TB.esp
-    Improved Inns.esp]
-
+[ANY Improved Inns BM.esp
+     Improved Inns MW.esp
+     Improved Inns TB.esp
+     Improved Inns.esp]
 
 [Conflict]
  conflicts with part 1 of the Complete Morrowind mod, the cooking one.
@@ -2442,8 +2492,19 @@ NOM 2.13.esp
 NOM 2.13.esp
 Complete Morrowind P1.esp
 
-
+;; NOM is also incompatible with:
 ;; Mods modifying fires (Lights 300, ):** All the fires in game have a script attached to allow you to cook. If you use another mod modifying fires you'll lose the ability to cook near them (if you load Necessities before it) or the changes made by the other mod (if you load Necessities after it).
+
+; TBD, could add more NOM/fire conflicts here
+[Conflict]
+ "Blood and Gore Fire damage.esp" modifies the fire sources so is
+ incompatible with any other mod doing so such as NOM.
+ (Ref: "blood_gore_manual.htm")
+Blood and Gore Fire damage.esp
+[ANY NOM 2.13.esp
+     Necessities of Morrowind 2.0.esp
+     Necessities of Morrowind 2.1.esp
+     NOM 2.12.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2453,14 +2514,14 @@ Complete Morrowind P1.esp
  MW_CHILDREN_NSN_PATCH.esp is a compatibility patch for these two mods.
  (Ref: "Readme - Nerevar Say Nerevar.txt")
 Clean Nerevar Say Nerevar Again_v1.01.esp
-[AND MW_CHILDREN_NSN_PATCH.esp
+[ALL MW_CHILDREN_NSN_PATCH.esp
      MW_Children_1_0.esm]
 
 [Patch]
  MCA_NSN_Patch.esp is a compatibility patch for these two mods.
  (Ref: "Readme - Nerevar Say Nerevar.txt")
 Clean Nerevar Say Nerevar Again_v1.01.esp
-[AND MCA_NSN_Patch.esp
+[ALL MCA_NSN_Patch.esp
      MCA.esm]
 
 
@@ -2476,18 +2537,19 @@ Clean Nerevar Say Nerevar Again_v1.01.esp
 Wakim's Game Improvement 9.esp
 NEDE v1.2.esp
 NEDE WGI patch.esp
-[Patch]
- (Ref: "Readme New Elemental Damage Effects v1.2.txt")
-NEDE WGI patch.esp
-[AND NEDE v1.2.esp
-     [OR Wakim's Game Improvement 9.esp
-	 Balance - Magic Effects.esp]]  ; WGI 9 Modular
 
 ;; for the modular WGI
 [Order]
 Balance - Magic Effects.esp
 NEDE v1.2.esp
 NEDE WGI patch.esp
+
+[Patch]
+ (Ref: "Readme New Elemental Damage Effects v1.2.txt")
+NEDE WGI patch.esp
+[ALL NEDE v1.2.esp
+     [ANY Wakim's Game Improvement 9.esp
+	  Balance - Magic Effects.esp]]	; WGI 9 Modular
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2497,16 +2559,16 @@ NEDE WGI patch.esp
  Choose ONLY ONE of these plugins.
  - if you're using regular Morrowind with Bloodmoon, or regular
  Morrowind with Bloodmoon and you have 'Green Morrowind' installed,
- use the file labeled "New Khuul - BM". 
+ use the file labeled "New Khuul - BM".
  - if you're using regular Morrowind with Bloodmoon AND you have either
  'Leafy Morrowind' or 'Forested Morrowind' installed, use the file
- labeled "New Khuul - LB". 
+ labeled "New Khuul - LB".
  - if you're using regular Morrowind without Bloodmoon AND you have
  either 'Leafy Morrowind' or 'Forested Morrowind' installed, use the
- file labeled "New Khuul - LM". 
+ file labeled "New Khuul - LM".
  - if you're using regular Morrowind without Bloodmoon, or regular
  Morrowind without Bloodmoon and you have 'Green Morrowind' installed,
- use the file labeled "New Khuul - MO". 
+ use the file labeled "New Khuul - MO".
  (Ref: "readme - new khuul.txt")
 New Khuul - BM.esp
 New Khuul - LB.esp
@@ -2516,10 +2578,10 @@ New Khuul - MO.esp
 [Conflict]
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Korobal v1.2.esp
-[OR New Khuul - BM.esp
-    New Khuul - LB.esp
-    New Khuul - LM.esp
-    New Khuul - MO.esp]
+[ANY New Khuul - BM.esp
+     New Khuul - LB.esp
+     New Khuul - LM.esp
+     New Khuul - MO.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2607,9 +2669,9 @@ PTE - BC Patch.esp
  by merged objects process."
  (Ref: "PTE Readme.txt")
 PTE - BC Patch.esp
-[AND Piratelords Trade Enhancements.esp
-     [OR Better Clothes_v1.1.esp
-	 Better Clothes_v1.1_nac.esp]]
+[ALL Piratelords Trade Enhancements.esp
+     [ANY Better Clothes_v1.1.esp
+	  Better Clothes_v1.1_nac.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2617,7 +2679,7 @@ PTE - BC Patch.esp
 [Note]
  If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
  (Ref: http://www.bethsoft.com/bgsforums/index.ph...amp;p=13377858 )
-[AND Protective Guards.esp
+[ALL Protective Guards.esp
      MCA - Guards patch.esp]
 
 
@@ -2641,21 +2703,25 @@ quarraclan.esp
  "RKCriminals TR&BM.esp" if you have Morrowind, Tribunal and Bloodmoon.
  (Ref: Readme_RKC.htm)
 RKCriminals MW.esp
-[OR RKCriminals TR.esp
-    RKCriminals BM.esp
-    RKCriminals TR&BM.esp]
+RKCriminals TR.esp
+RKCriminals BM.esp
+RKCriminals TR&BM.esp
 
 [Requires]
 RKCriminals TR.esp
-[AND Morrowind.esm Tribunal.esm]
+[ALL Morrowind.esm
+     Tribunal.esm]
 
 [Requires]
 RKCriminals BM.esp
-[AND Morrowind.esm Bloodmoon.esm]
+[ALL Morrowind.esm
+     Bloodmoon.esm]
 
 [Requires]
 RKCriminals TR&BM.esp
-[AND Morrowind.esm Tribunal.esm Bloodmoon.esm]
+[ALL Morrowind.esm
+     Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2663,7 +2729,8 @@ RKCriminals TR&BM.esp
 
 [Requires]
 RKWerewolf.esp
-[AND Tribunal.esm Bloodmoon.esm]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
 
 [Requires]
 RKWerewolf-NoTrib.esp
@@ -2684,6 +2751,7 @@ RKWerewolf-NoTrib.esp
 [Order]
 RTS_HealingFaeries.esp
 RTS_FaeriesSeydaNeen.esp
+
 [Requires]
  (Ref: "RTS Healing Faeries Ver1 - readme.rtf")
 RTS_FaeriesSeydaNeen.esp
@@ -2714,33 +2782,24 @@ The regulars - Sitting NPC's v2.02.esp
  The Unofficial Patch includes Ring Texture Fix
  (Ref: "Morrowind patch changes.htm")
 Ring Texture Fix.esp
-[OR Morrowind Patch v1.6.3.esm
-    Morrowind Patch v1.6.4 (WIP).esm]
+[ANY Morrowind Patch v1.6.3.esm
+     Morrowind Patch v1.6.4 (WIP).esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sabregirl's Morrowind Ecology
 
-[Requires]
+[Patch]
 SG-MW-ecology-BM-plugin.esp
 SG-MW-ecology-BM.esm
-[Requires]
-SG-MW-ecology-BM.esm
-SG-MW-ecology-BM-plugin.esp
 
-[Requires]
+[Patch]
 SG-MW-ecology-carnivore-plugin.esp
 SG-MW-ecology-carnivore.esm
-[Requires]
-SG-MW-ecology-carnivore.esm
-SG-MW-ecology-carnivore-plugin.esp
 
-[Requires]
+[Patch]
 SG-MW-ecology-WW-plugin.esp
 SG-MW-ecology-WW.esm
-[Requires]
-SG-MW-ecology-WW.esm
-SG-MW-ecology-WW-plugin.esp
 
 [Conflict]
  Pick ONE of the following: (PICK ONE ESM and select the corresponding esp)
@@ -2748,12 +2807,12 @@ SG-MW-ecology-WW-plugin.esp
  	This plugin "balances" Morrowind wildlife according to ecological rules.
  	This is what most people will want to use.
  2. SG-MW-ecology-carnivore.esm AND SG-MW-ecology-carnivore-plugin.esp
- 	This plugin does the same as the above AND forces the player 
- 	to become carnivorous and must hunt creatures to live. It also adds meat 
+ 	This plugin does the same as the above AND forces the player
+ 	to become carnivorous and must hunt creatures to live. It also adds meat
  	items to all of the creatures. See specific read-me for more info.
  3. SG-MW-ecology-WW.esm AND SG-MW-ecology-WW-plugin.esp
  	This plugin does the same thing as the MW ecology mod but adds the ability
- 	for bloodmoon werewolf characters to "feed" on the new creatures. 
+ 	for bloodmoon werewolf characters to "feed" on the new creatures.
  	See specific read-me for more info.
  (Ref: "readme_mw_ecology.txt")
 SG-MW-ecology-BM-plugin.esp
@@ -2764,20 +2823,17 @@ SG-MW-ecology-carnivore-plugin.esp
  Passive Healthy Wildlife is not needed if you use Sabregirl's
  ecology, as they both do the same thing.
 Passive_Healthy_Wildlife.esp
-[OR SG-MW-ecology-BM-plugin.esp
-    SG-MW-ecology-WW-plugin.esp
-    SG-MW-ecology-carnivore-plugin.esp]
+[ANY SG-MW-ecology-BM-plugin.esp
+     SG-MW-ecology-WW-plugin.esp
+     SG-MW-ecology-carnivore-plugin.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sea of Destiny
 
-[Requires]
+[Patch]
 sodpatch1.esp
 Sea-of-Destiny.esm
-[Requires]
-Sea-of-Destiny.esm
-sodpatch1.esp
 
 [Requires]
 SoD Frost Fall.esp
@@ -2839,13 +2895,13 @@ Slof's Civilised Beasts.esp
  Slof's BB neck fix.esp - use this one in addition to Better Beasts
  but ONLY if you also use Better Heads - this fixes the weird neck
  problem that is present in the BH esm file, and will display the
- correct neck type. 
+ correct neck type.
  (Ref: "BetterBeasts.txt")
 Slof's BB neck fix.esp
-[AND Better Heads.esm
-     [OR Slof's Better Beasts a.esp
-	 Slof's Better Beasts b.esp
-	 Slof's Civilised Beasts.esp]]
+[ALL Better Heads.esm
+     [ANY Slof's Better Beasts a.esp
+	  Slof's Better Beasts b.esp
+	  Slof's Civilised Beasts.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2858,9 +2914,9 @@ SSlave_Comp_NOM_addon.esp
 
 [Patch]
 SSlave_Comp_NOM_addon.esp
-[AND NOM 2.13.esp
-     [OR SSlave_Companions.esp
-	 SSlave_Comp_censored_addon.esp]]
+[ALL NOM 2.13.esp
+     [ANY SSlave_Companions.esp
+	  SSlave_Comp_censored_addon.esp]]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -2874,13 +2930,13 @@ SSlave_Comp_censored_addon.esp
 [Order]
 Sris_Alchemy_BM.esp
 Sri Alchemy BM List Patch.esp
-;; Note: the ordering of Requires rules is intentional
-;; Sris_Alchemy_BM.esp should not be used without the
-;; patch to fix the AddToLev* usage.
-[Requires]
-Sris_Alchemy_BM.esp
-Sri Alchemy BM List Patch.esp
-[Requires]
+
+[Patch]
+ "Sris_Alchemy_BM.esp"
+ uses deprecated AddToLev* function to modify Bethsoft leveled lists.
+ For an explanation of why the functions AddToLev*/RemoveFromLev* are
+ deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ Some patches may be available at that link.
 Sri Alchemy BM List Patch.esp
 Sris_Alchemy_BM.esp
 
@@ -2958,9 +3014,11 @@ Syc_HerbalismforPurists_TB.esp
 Tribunal.esm
 
 [Patch]
+ "Syc_Herbalism ES Patch.esp" is required to make
+ Herbalism for Purists work with Expanded Sounds.
  (Ref: "Readme - Herbalism for Purists.txt")
 Syc_Herbalism ES Patch.esp
-[and Syc_HerbalismforPurists.esp
+[ALL Syc_HerbalismforPurists.esp
      Expanded Sounds.esp]
 
 [Conflict]
@@ -2977,6 +3035,13 @@ Bloated Morrowind.esp
 Syc_HerbalismforPurists.esp
 Flora Glow 1.0.esp
 
+[Conflict]
+ When using Herbalism for Purists and the UUMPP together, you should use
+ "UUMPP Bloated Morrowind Patch v1.6.4.esp" to avoid doubling your bloats.
+Syc_HerbalismforPurists.esp
+[ALL Morrowind Patch v1.6.4 (WIP).esm
+     [NOT UUMPP Bloated Morrowind Patch v1.6.4.esp]]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TR - Tamriel Rebuilt (Maps 1 and 2)
@@ -2989,9 +3054,11 @@ TR_Map2.esm
 [Requires]
 TR_Map1.esm
 TR_Data.esm
+
 [Requires]
 TR_Map2.esm
-[AND TR_Data.esm TR_Map1.esm]
+[ALL TR_Data.esm
+     TR_Map1.esm]
 
 [Conflict]
  Landmass conflict.
@@ -2999,12 +3066,12 @@ TR_Map2.esm
  http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg
  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610 )
 TR_Map1.esm
-[OR The Goblin Lab v1.1.esp
-    tusar_v1.2.1.esp
-    Clean hawkfir_island.esp
-    Tree_of_Life.esp
-    Inferno's Island Revisited.esp
-    Wizards Islands - Scourge of the Frost Bringer.esm]
+[ANY The Goblin Lab v1.1.esp
+     tusar_v1.2.1.esp
+     Clean hawkfir_island.esp
+     Tree_of_Life.esp
+     Inferno's Island Revisited.esp
+     Wizards Islands - Scourge of the Frost Bringer.esm]
 
 [Conflict]
  Landmass conflict.
@@ -3012,12 +3079,12 @@ TR_Map1.esm
  http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg
  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610 )
 TR_Map2.esm
-[OR TheBlackMill.esp
-    Korobal v1.2.esp
-    Moons_Spawn_V1.3.3_Non_Patched.esp
-    Booty.esp
-    From Hell To Heaven.esm		; Morrowland
-    Wizards Islands - Scourge of the Frost Bringer.esm]
+[ANY TheBlackMill.esp
+     Korobal v1.2.esp
+     Moons_Spawn_V1.3.3_Non_Patched.esp
+     Booty.esp
+     From Hell To Heaven.esm		; Morrowland
+     Wizards Islands - Scourge of the Frost Bringer.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3056,14 +3123,14 @@ TLM - Light Sources (Clearer Lighting).esp
  You only need "TLM - Complete.esp" by itself.
  (Ref: "TLM - ~Readme.htm")
 TLM - Complete.esp
-[OR TLM - Light Sources (Natural Water).esp
-    TLM - Ambient Light + Fog Update.esp
-    TLM - NPC Light Sources.esp
-    TLM - External Lights Ownership.esp
-    TLM - Sneak Modifiers (Locations).esp
-    TLM - Sneak Modifiers (Code).esp
-    TLM - Light Sources (Lanterns).esp
-    TLM - Light Sources (Clearer Lighting).esp]
+[ANY TLM - Light Sources (Natural Water).esp
+     TLM - Ambient Light + Fog Update.esp
+     TLM - NPC Light Sources.esp
+     TLM - External Lights Ownership.esp
+     TLM - Sneak Modifiers (Locations).esp
+     TLM - Sneak Modifiers (Code).esp
+     TLM - Light Sources (Lanterns).esp
+     TLM - Light Sources (Clearer Lighting).esp]
 
 [Requires]
  TLM - External Lights Ownership: requires TLM - Light Sources (Lanterns)
@@ -3086,7 +3153,7 @@ TLM - Sneak Modifiers (Code).esp
 [Patch]
  (Ref: "TLM - ~Readme.htm")
 TLM - AdjMod - Siege At Firemoth.esp
-[AND TLM - Ambient Light + Fog Update.esp
+[ALL TLM - Ambient Light + Fog Update.esp
      Siege at Firemoth.esp]
 
 [Order]
@@ -3096,7 +3163,7 @@ TLM - AdjMod - Siege At Firemoth.esp
 [Patch]
  (Ref: "TLM - ~Readme.htm")
 TLM - AdjMod - Gladiator.esp
-[AND TLM - Ambient Light + Fog Update.esp
+[ALL TLM - Ambient Light + Fog Update.esp
      Gladiator.esp]
 
 [Order]
@@ -3106,10 +3173,10 @@ TLM - AdjMod - Gladiator.esp
 [Patch]
  (Ref: "TLM - ~Readme.htm")
 TLM - AdjMod - Bank 2.2.esp
-[and TLM - Ambient Light + Fog Update.esp
-     [or Indybank.esp
-	 Indybank-NoHouses.esp
-	 IndybankWC.esp]]
+[ALL TLM - Ambient Light + Fog Update.esp
+     [ANY Indybank.esp
+	  Indybank-NoHouses.esp
+	  IndybankWC.esp]]
 
 [Order]
 Indybank.esp
@@ -3136,8 +3203,8 @@ TLM - AdjMod - Spuzzum's Interior Daylight.esp
  applies to mods such as LDones & WDog's Armor Effects-LD"
  (Ref: "TLM - ~Readme.htm")
 TLM - Sneak Modifiers (Code).esp
-[OR Armor Effects-LD 2.0-WD.esp
-    Armor Effects-LD 2.0-WD (No Agility Penalty).esp]
+[ANY Armor Effects-LD 2.0-WD.esp
+     Armor Effects-LD 2.0-WD (No Agility Penalty).esp]
 
 [Conflict]
  "any mod that provides armor or weather penalties and bonuses will be
@@ -3145,8 +3212,8 @@ TLM - Sneak Modifiers (Code).esp
  applies to mods such as Vanhikes' Light Based Sneaking"
  (Ref: "TLM - ~Readme.htm")
 TLM - Sneak Modifiers (Code).esp
-[OR LBS_Full v1.4(trib).esp
-    LBS_Lite v1.4(trib).esp]
+[ANY LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp]
 
 [Conflict]
  "any other lighting alteration mod will be made impotent by installing
@@ -3162,22 +3229,22 @@ True_Lights_And_Darkness_0.5.esp
  "Tombs Expanded - The Undead Addon" was made for The Undead v2.2, you have a later version and so
  the Addon will not work.
  (Ref: "readme_Tombs_Expanded_Addon.txt")
-[AND Tombs Expanded - The Undead Addon.esp
+[ALL Tombs Expanded - The Undead Addon.esp
      The Undead.esm]
 
 [Note]
  "Tombs Expanded - The Undead Addon" was made for The Undead v2.2, you have a later version and so
  the Addon will not work.
  (Ref: "readme_Tombs_Expanded_Addon.txt")
-[AND Tombs Expanded - The Undead Addon.esp
+[ALL Tombs Expanded - The Undead Addon.esp
      MCA.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Traveling Merchants
 [Note]
- Do not use quick-save [F5] while in the vicinity of a running travel script.  
- This habit is associated with corrupted saved games that can be very difficult 
+ Do not use quick-save [F5] while in the vicinity of a running travel script.
+ This habit is associated with corrupted saved games that can be very difficult
  to repair.
  (Ref: "TM22Readme.txt")
 TravelingMerchants_v2.2.esp
@@ -3263,15 +3330,9 @@ Morrowind Patch v1.6.3.esm
 [Conflict]
  The UUMPP contains Daleth's Book Placement Fix
 Morrowind Patch v1.6.4 (WIP).esm
-Book Placement Fix - Bloodmoon.esp
-[Conflict]
- The UUMPP contains Daleth's Book Placement Fix
-Morrowind Patch v1.6.4 (WIP).esm
-Book Placement Fix - Morrowind.esp
-[Conflict]
- The UUMPP contains Daleth's Book Placement Fix
-Morrowind Patch v1.6.4 (WIP).esm
-Book Placement Fix - Tribunal.esp
+[ANY Book Placement Fix - Bloodmoon.esp
+     Book Placement Fix - Morrowind.esp
+     Book Placement Fix - Tribunal.esp]
 
 [Note]
  Morrowind Patch v1.2.2.esm is old and should only be run by people
@@ -3279,16 +3340,14 @@ Book Placement Fix - Tribunal.esp
  Bloodmoon, it is highly recommended that you upgrade to the UUMPP!
  (Unofficial 'Unofficial Morrowind Patch' Project by quorn)
  (See: http://www.bethsoft.com/bgsforums/index.php?showtopic=899830 )
-[AND Morrowind Patch v1.2.2.esm
+[ALL Morrowind Patch v1.2.2.esm
      Tribunal.esm
      Bloodmoon.esm]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;
 ;; START UUMPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
-;; http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 
+;; http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;
 
 [Conflict]
  The UUMPP obsoletes BM Armor Fix v1.0 [Misty Moon].
@@ -3355,21 +3414,25 @@ Ebony Armor Fixes.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 Crusader Class Fix.esp
+
 [Conflict]
  The UUMPP obsoletes Eisenfaust's "Ebonheart Warehouse Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 Ebonheart Warehouse Fix.esp
+
 [Conflict]
  The UUMPP obsoletes Eisenfaust's "Pieces of the Blade Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 Pieces of the Blade Fix.esp
+
 [Conflict]
  The UUMPP obsoletes Eisenfaust's "St Llothis Fix.esp"
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 St Llothis Fix.esp
+
 [Conflict]
  The UUMPP obsoletes Eisenfaust's "Telvanni Guard Fix.esp".
  "abyssmal terror" reports that the UUMPP fix is a little different,
@@ -3387,7 +3450,7 @@ Telvanni Guard Fix.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 Factor_fix.esp
- 
+
 [Conflict]
  The UUMPP obsoletes Hasphat's Books v1.0 [Monica21].
  "abyssmal terror" reports: the UUMPP changes hasphat's note, it says
@@ -3413,7 +3476,7 @@ NoLore Solstheim.esp
 [Conflict]
  The UUMPP does something similar to Solstheim Undialog [SeekerVI].
  "abyssmal terror" reports: Solstheim Undialog integrates the topic
- into morrowind better, and should be used if preferred. 
+ into morrowind better, and should be used if preferred.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 Solstien_undialog.esp
@@ -3447,21 +3510,25 @@ UupseFix.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 lfx_rare_heartwood.esp
+
 [Conflict]
  The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 lfx_rare_holly.esp
+
 [Conflict]
  The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 lfx_rare_hornlily.esp
+
 [Conflict]
  The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 lfx_rare_ingredients.esp
+
 [Conflict]
  The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
@@ -3473,7 +3540,7 @@ lfx_rare_merged.esp
  "abyssmal terror" reports: the UUMPP adds nolore to the unfiltered
  topics, Almalexia Undialog filters those dialog to temple members, so
  it's removed from more NPCs. Use the Almalexia Undialog to get rid of
- the tribunal almalexia dialog from most NPCs. 
+ the tribunal almalexia dialog from most NPCs.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4 (WIP).esm
 Almalexia_undialog.esp
@@ -3508,10 +3575,8 @@ Morrowind Patch v1.6.4 (WIP).esm
 Bloated Morrowind.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;
 ;; END UUMPP Conflicts reported by "abyssmal terror"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End of UUMPP section
@@ -3591,13 +3656,13 @@ Seyda Neen Docks and Haldershore Tribunal V1.1.esp
 [Patch]
  (Ref: "Vampire Realism II Manual/Installation.htm")
 Vampire Realism II - TB Add-On.esp
-[AND Vampire Realism II.esp
+[ALL Vampire Realism II.esp
      Tribunal.esm]
 
 [Patch]
  (Ref: "Vampire Realism II Manual/Installation.htm")
 Vampire Realism II - BM Add-On.esp
-[AND Vampire Realism II.esp
+[ALL Vampire Realism II.esp
      Bloodmoon.esm]
 
 [Patch]
@@ -3606,12 +3671,12 @@ Vampire Realism II - BM Add-On.esp
  as many seem to think. It fixes a small conflict between Vampire
  Realism and Bloodlines to do with Vampire Realism's changes to sun
  damage and Bloodlines' sun damage-reducing Nasgiel armor. If you use
- Bloodlines you must use this patch file. 
+ Bloodlines you must use this patch file.
  (Ref: "Vampire Realism II Manual/Installation.htm")
 Vampire Realism II - BL Patch.esp
-[AND Vampire Realism II.esp
-     [OR Blood Lines I_BloodMoon.esp
-	 Blood Lines I_Tribunal.esp]]
+[ALL Vampire Realism II.esp
+     [ANY Blood Lines I_BloodMoon.esp
+	  Blood Lines I_Tribunal.esp]]
 
 [Patch]
  "Vampire Realism II - VE Patch.esp" is the patch file for Vampire
@@ -3619,10 +3684,10 @@ Vampire Realism II - BL Patch.esp
  Embrace that has to do with VR's staking system and VE's
  combat-feeding system. It also makes VR's hunger recognize VE feeding,
  both dialogue and combat. If you use Vampire Embrace you must use this
- patch file. 
+ patch file.
  (Ref: "Vampire Realism II Manual/Installation.htm")
 Vampire Realism II - VE Patch.esp
-[AND Vampire Realism II.esp
+[ALL Vampire Realism II.esp
      Vampire_Embrace.esp]
 
 
@@ -3642,16 +3707,16 @@ Vampiric Hunger MGE Addon for MGE 1.11+.esp
  Patch required by Vampiric Hunger III for Suran Underworld
  (Ref: VampiricHunger3v12.zip/"Readme_VH.htm")
 Vampiric Hunger - SU.esp
-[AND Vampiric Hunger Base.esp
+[ALL Vampiric Hunger Base.esp
      Suran_Underworld_2.5.esp]
 
 [Patch]
  Patch required by Vampiric Hunger III for "Blood Lines"
  (Ref: VampiricHunger3v12.zip/"Readme_VH.htm")
 Vampiric Hunger - BL.esp
-[AND Vampiric Hunger Base.esp
-     [OR Blood Lines I_BloodMoon.esp
-	 Blood Lines I_Tribunal.esp]]
+[ALL Vampiric Hunger Base.esp
+     [ANY Blood Lines I_BloodMoon.esp
+	  Blood Lines I_Tribunal.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3665,13 +3730,14 @@ Varied Vampiric Visages - ND.esp
 [Requires]
  (Ref: Varied Vampires Readme.txt)
 Varied Vampiric Visages.esp
-[AND Vampire_Embrace.esp Vampire Realism II.esp]
+[ALL Vampire_Embrace.esp
+     Vampire Realism II.esp]
 
 [Requires]
  (Ref: Varied Vampires Readme.txt)
 Varied Vampiric Visages.esp
-[OR Blood Lines I_BloodMoon.esp
-    Blood Lines I_Tribunal.esp]
+[ANY Blood Lines I_BloodMoon.esp
+     Blood Lines I_Tribunal.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3688,11 +3754,11 @@ vn_goldweight.esp
 ;; @VGreetings [felix]
 ;; (Ref: "readme_VGreetings.txt")
 ;; "VGreetings.esp"  - changes affecting the Hello Voice section
-;;                     (requires Tribunal) 
+;;                     (requires Tribunal)
 ;; "VGreetings-Attack.esp" - changes affecting the Attack Voice
-;;                           section (requires Tribunal & Bloodmoon) 
+;;                           section (requires Tribunal & Bloodmoon)
 ;; "VGreetings-Flee.esp" - changes affecting the Flee Voice section
-;;                         (requires Tribunal & Bloodmoon) 
+;;                         (requires Tribunal & Bloodmoon)
 ;; "VGreetings-Hit.esp" - changes affecting the Hit Voice section
 ;;                        (requires Tribunal)
 ;; "VGreetings-Idle.esp" - changes affecting the Idle Voice section
@@ -3713,21 +3779,21 @@ vn_goldweight.esp
  Choose ONLY ONE of these plugins.
  "Vivec Outdoor Mall CoM_v2.esp" if you have Children of
  Morrowind installed, otherwise use "Vivec Outdoor Mall_v2.esp"
- (Ref: "Vivec Outdoor Mall Readme.txt") 
+ (Ref: "Vivec Outdoor Mall Readme.txt")
 Vivec Outdoor Mall CoM_v2.esp
 Vivec Outdoor Mall_v2.esp
 
 [Conflict]
- (Ref: "Vivec Outdoor Mall Readme.txt") 
+ (Ref: "Vivec Outdoor Mall Readme.txt")
 Vivec Outdoor Mall_v2.esp
-[OR Chateau Nerevarine Estate.esp
-    Clean SECRET GARDEN V2.esp]
+[ANY Chateau Nerevarine Estate.esp
+     Clean SECRET GARDEN V2.esp]
 
 [Conflict]
- (Ref: "Vivec Outdoor Mall Readme.txt") 
+ (Ref: "Vivec Outdoor Mall Readme.txt")
 Vivec Outdoor Mall CoM_v2.esp
-[OR Chateau Nerevarine Estate.esp
-    Clean SECRET GARDEN V2.esp]
+[ANY Chateau Nerevarine Estate.esp
+     Clean SECRET GARDEN V2.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wakim's Game Improvments 9 (WGI)
@@ -3736,21 +3802,21 @@ Vivec Outdoor Mall CoM_v2.esp
  "Wakim's Game Improvement 9.esp" combines all of the modular WGI
  plugins, so you should only run one or the other.
 Wakim's Game Improvement 9.esp
-[OR Balance - Character.esp
-    Balance - Magic Effects.esp
-    Balance - NPC Spellcasting.esp
-    Balance - game settings.esp
-    Balance - items.esp
-    Balance - spells.esp
-    Gameplay - Dialogue.esp
-    Gameplay - Faction.esp]
+[ANY Balance - Character.esp
+     Balance - Magic Effects.esp
+     Balance - NPC Spellcasting.esp
+     Balance - game settings.esp
+     Balance - items.esp
+     Balance - spells.esp
+     Gameplay - Dialogue.esp
+     Gameplay - Faction.esp]
 
 [Conflict]
  Changes the same values.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Weapon Range Balance.esp
-[OR Balance - items.esp
-    Wakim's Game Improvement 9.esp]
+[ANY Balance - items.esp
+     Wakim's Game Improvement 9.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3758,7 +3824,8 @@ Weapon Range Balance.esp
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
 abotWaterLifeTRaddon.esp
-[AND abotWaterLife.esm TR_Data.esm]
+[ALL abotWaterLife.esm
+     TR_Data.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3768,18 +3835,18 @@ abotWaterLifeTRaddon.esp
  Westly's individual headpacks are already included in Westly's Master Headpack
  (Ref: "Westly's Master Headpack v1 README.txt")
 Westly's Master Headpack X.esp
-[OR Westly's Female Headpack - Elves and Orcs.esp
-    Westly's Female Head Pack-Humans.esp
-    Westly's High Elf Male Headpack.esp
-    Westly's Breton Male Headpack.esp
-    Westly's Imperial Male Headpack.esp
-    Westly's Wood Elf Male Headpack.esp
-    Westly's Nord Male Headpack.esp
-    Westly's Orc Male Headpack.esp
-    Westly's Redguard Male Headpack.esp
-    Westly's Redguard Male Headpack (Weight Fix).esp
-    Westly's Young Male Mystic Headpack.esp
-    Westly's Redguard Male Headpack (Weight Fix).esp]
+[ANY Westly's Female Headpack - Elves and Orcs.esp
+     Westly's Female Head Pack-Humans.esp
+     Westly's High Elf Male Headpack.esp
+     Westly's Breton Male Headpack.esp
+     Westly's Imperial Male Headpack.esp
+     Westly's Wood Elf Male Headpack.esp
+     Westly's Nord Male Headpack.esp
+     Westly's Orc Male Headpack.esp
+     Westly's Redguard Male Headpack.esp
+     Westly's Redguard Male Headpack (Weight Fix).esp
+     Westly's Young Male Mystic Headpack.esp
+     Westly's Redguard Male Headpack (Weight Fix).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3789,6 +3856,7 @@ Westly's Master Headpack X.esp
 [Requires]
 Westly Presents-BB Mog.esp
 _Mog_Race_v4b.esp
+
 [Requires]
 Westly's Mog Head Pack.esp
 _Mog_Race_v4b.esp
@@ -3813,7 +3881,8 @@ BT_WWLokpatch1.esp
 
 [Requires]
 BT_WWLokpatch1.esp
-[OR BT_Whitewolf_2_0.esp BT_Whitewolf_2_0.esm]
+[ANY BT_Whitewolf_2_0.esp
+     BT_Whitewolf_2_0.esm]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -3825,8 +3894,8 @@ BT_Whitewolf_2_0.esm
  White Wolf of Lokken conflicts with Inn of the Whispering Wood
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Inn Whisp Wood BM.esp
-[OR BT_Whitewolf_2_0.esm
-    BT_Whitewolf_2_0.esp]
+[ANY BT_Whitewolf_2_0.esm
+     BT_Whitewolf_2_0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3854,7 +3923,8 @@ Bloodmoon.esm
 [Requires]
  (Ref: "Wilderness Mod 2.1.doc")
 The Wilderness Mod 2.0 T & B.esm
-[AND Bloodmoon.esm Tribunal.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 [Conflict]
  Remove "Wilderness Mod.esm" as it is an earlier version of the Wilderness Mod
@@ -3872,7 +3942,7 @@ Wilderness Mod.esm
  "The Wilderness Mod 2.0.esm" uses deprecated AddToLev* function
  to modify Bethsoft leveled lists. For an explanation of why the
  functions AddToLev*/RemoveFromLev* are deprecated, please see:
- http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists 
+ http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
  You can download abot's patch from that link.
 The Wilderness Mod 2.0.esm
 ab01Wilderness2.1patch.esp
@@ -3881,7 +3951,7 @@ ab01Wilderness2.1patch.esp
  "The Wilderness Mod 2.0 T & B.esm" uses deprecated AddToLev* function
  to modify Bethsoft leveled lists. For an explanation of why the
  functions AddToLev*/RemoveFromLev* are deprecated, please see:
- http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists 
+ http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
  You can download abot's patch from that link.
 The Wilderness Mod 2.0 T & B.esm
 ab01Wilderness2.1patch.esp
@@ -3892,17 +3962,10 @@ ab01Wilderness2.1patch.esp
  (Tribunal or Bloodmoon required.)
  (Ref: "Wilderness Mod 2.1.doc")
 GIANTS_Ultimate_Official_Fixes.esp
-[AND The Wilderness Mod 2.0 T & B.esm
+[ALL [ANY The Wilderness Mod 2.0 T & B.esm
+	  The Wilderness Mod 2.0.esm]
      GIANTS.esm]
 
-[Patch]
- (Optional) To update "Giants: Ultimate" install Wilderness 2.1 and
- then check GIANTS_Ultimate_Official_Fixes.esp while using GIANTS.esm
- (Tribunal or Bloodmoon required.)
- (Ref: "Wilderness Mod 2.1.doc")
-GIANTS_Ultimate_Official_Fixes.esp
-[AND The Wilderness Mod 2.0.esm
-     GIANTS.esm]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wilderness Sounds
@@ -3943,17 +4006,19 @@ Tribunal.esm
 [Requires]
  (Ref: "Wilderness Sounds 3.0.doc")
 Wilderness Sounds T & B.esp
-[AND Bloodmoon.esm Tribunal.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 [Conflict]
  Wilderness Sounds includes the official Bitter Coast Sounds
  and Master Index plugins
  (Ref: "Wilderness Sounds 3.0.doc")
-[OR Wilderness Sounds.esp
-    Wilderness Sounds Bloodmoon.esp
-    Wilderness Sounds Tribunal.esp
-    Wilderness Sounds T & B.esp]
-[OR bcsounds.esp master_index.esp]
+[ANY Wilderness Sounds.esp
+     Wilderness Sounds Bloodmoon.esp
+     Wilderness Sounds Tribunal.esp
+     Wilderness Sounds T & B.esp]
+[ANY bcsounds.esp
+     master_index.esp]
 
 ;; Load Wilderness Sounds after Leon "pancreas" Medado's Morrowind
 ;; Sound Enhancements and Duncann's Atmospheric Sound Effects
@@ -3972,12 +4037,9 @@ Wilderness Sounds.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wizards Islands 1.05 - Scourge of the Frost Bringer
 
-[Requires]
+[Patch]
 Wizards_Islands_SotFB_Patch.esp
 Wizards Islands - Scourge of the Frost Bringer.esm
-[Requires]
-Wizards Islands - Scourge of the Frost Bringer.esm
-Wizards_Islands_SotFB_Patch.esp
 
 [Conflict]
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )

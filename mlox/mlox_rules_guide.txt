@@ -158,14 +158,14 @@ B.esp
 ------------------------------------------------------------
 oo Boolean Expressions
 
-The Warning rules are expressed in terms of the usual Boolean logical
-operators: AND, OR, NOT. You can nest mlox's Boolean expressions using
-brackets "[]". Here's an example:
+The Warning rules are expressed in terms of the Boolean logical
+operators: ALL, ANY, NOT. You can nest mlox's Boolean expressions
+using brackets "[]". Here's an example:
 
-[NOTE "Whee!"] [AND A.esp [OR B1.esp B2.esp]]
+[NOTE "Whee!"] [ALL A.esp [ANY B1.esp B2.esp]]
 
 This rule says to print the message "Whee!" if you have A.esp active
-in your plugins list, along with either B1.esp or B2.esp.
+in your plugins list, along with any of B1.esp or B2.esp.
 
 The operators have to operate on something, and that something is
 called a "predicate". This is the basic mlox predicate:
@@ -177,35 +177,35 @@ It simply means the plugin "A.esp" is in your active load order.
 We can make more expressions, or compound predicates from the basic
 predicates and the boolean operators:
 
-    [AND A.esp B.esp C.esp]
+    [ALL A.esp B.esp C.esp]
 
 This predicate states that A.esp, B.esp, and C.esp are all active in
 your load order at the same time.
 
 Expressions can nest, so we could say:
 
-    [AND A.esp B.esp [OR C.esp D.esp]]
+    [ALL A.esp B.esp [ANY C.esp D.esp]]
 
-This means that A.esp, B.esp, and either C.esp or D.esp are all active
+This means that A.esp, B.esp, and any of C.esp or D.esp are all active
 in your load order at the same time.
 
 The parser is fairly flexible. So all of the following variations of
 the same rule are equivalent:
 
-    [NOTE "Whee!"] [AND A.esp [OR B1.esp B2.esp]]
+    [NOTE "Whee!"] [ALL A.esp [ANY B1.esp B2.esp]]
 
     [NOTE]
      "Whee!"
-    [AND A.esp [OR B1.esp B2.esp]]
+    [ALL A.esp [ANY B1.esp B2.esp]]
 
     [NOTE "Whee!"]
-    [AND A.esp 
-        [OR B1.esp B2.esp]]
+    [ALL A.esp 
+     	 [ANY B1.esp B2.esp]]
 
     [NOTE "Whee!"]
-    [AND A.esp
-        [OR B1.esp
-            B2.esp]]
+    [ALL A.esp
+         [ANY B1.esp
+              B2.esp]]
 
 ----------------------------------------------------------------------
 oo The Note Rule
@@ -227,9 +227,9 @@ C.esp
 And any of the plugins can actually be a full Boolean expression:
 
 [Note message]
-[AND A.esp [NOT X.esp]]
-[OR B.esp 7.esp]
-[AND C.esp elephant.esp potato.esp]
+[ALL A.esp [NOT X.esp]]
+[ANY B.esp 7.esp]
+[ALL C.esp elephant.esp potato.esp]
 
 Note: from now on, we'll use the abbreviation <expr> to mean any
 Boolean expression.
@@ -255,11 +255,11 @@ Here's an example:
  plugin to be present
  (Ref: "Assassin's Armory readme.doc")
 Assassins Armory - Arrows.esp
-[OR AreaEffectArrows XB Edition.esp
-    AreaEffectArrows.esp]
+[ANY AreaEffectArrows XB Edition.esp
+     AreaEffectArrows.esp]
 
 Since there are a couple versions of the AreaEffectArrows plugin, we
-make an [OR] expression for them, since we could use either one. So
+make an [ANY] expression for them, since we could any of them. So
 this rule says: "Assassins Armory - Arrows.esp" requires that either
 "AreaEffectArrows XB Edition.esp" or "AreaEffectArrows.esp" must be
 active. If not, you get a warning and the message.
@@ -293,7 +293,7 @@ Here's how we can say that one plugin has a patch:
 Here's how we can say that a glue patch is necessary for two separate
 plugins:
 
-[Patch message] glue.esp [AND plugin-X.esp plugin-Y.esp]
+[Patch message] glue.esp [ALL plugin-X.esp plugin-Y.esp]
 
 ----------------------------------------------------------------------
 
