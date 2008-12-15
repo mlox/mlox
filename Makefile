@@ -1,16 +1,23 @@
 # Makefile for mlox project
 
-.PHONY: all stats version mlox-dist data-dist test-dist
+.PHONY: all stats version mlox-dist data-dist test-dist upload
 
 README    := mlox/mlox_readme.txt
 PROGRAM   := mlox/mlox.py
 VERSION   := $(shell cat VERSION)
 MLOXARC   := mlox-$(VERSION).7z
+EXEARC    := mlox-exe-$(VERSION).7z
 ARCDATE   := $(shell date "+%Y-%m-%d")
 RELDATE   := $(shell date "+%Y-%m-%d %T")
 DATAARC   := mlox-data_$(ARCDATE).7z
+UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
 
 all: mlox-dist data-dist test-dist
+
+upload:
+	$(UPLOAD) -s "[mlox $(VERSION)] - requires Python25 and wxPython" dist/$(MLOXARC)
+	$(UPLOAD) -s "[mlox-exe $(VERSION)] - standalone executable for Windows" dist/$(EXEARC)
+	$(UPLOAD) -s "[mlox-data $(RELDATE)] - install mlox_base.txt into your mlox directory" dist/$(DATAARC)
 
 version: $(README) $(PROGRAM)
 

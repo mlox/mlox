@@ -163,7 +163,7 @@ Clean Abigail's Petshop_v5.5_SN_E.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @abotGuards
+;; @abotGuars
 [Conflict]
  Choose ONLY ONE of these plugins.
  "abotGuars.esp" if you have both Tribunal.esm and Bloodmoon.esm loaded
@@ -1145,12 +1145,12 @@ Contact hits.esp
 
 [Note]
  Important! Do not include Creatures if you are creating a
- "Merged Objects.esp" file (in TESTOOL). For some reason,
+ "Merged_Objects.esp" file (in TESTOOL). For some reason,
  the scripts go really screwy, and a common side effect is
  massive herds of Guars.
  (Ref: "Creatures X Readme.txt")
 [ALL Creatures.esp
-     Merged Objects.esp]
+     Merged_Objects.esp]
 
 [Order]
 Creatures.esp
@@ -1198,10 +1198,10 @@ DN-GDRv1_NOM.esp
 DN-GDRv1.esp
 
 [Note]
- If you use TESTOOL's "Merged Objects.esp", it is recommended to omit
+ If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit
  this plugin from the merge.
 [ALL DN-GDRv1.esp
-     Merged Objects.esp]
+     Merged_Objects.esp]
 
 [Conflict]
  DN-GDRv1 is not compatible with Princess Stomper's Ghostgate
@@ -2002,6 +2002,11 @@ NPC LCV Schedules 03.esp
 ;; "...regarding the load order of Less Lore and LGNPC NoLore relative to
 ;; each other, I would recommend having Less Lore load first." (cyrano)
 ;; (Ref: http://escf.rethan-manor.net/index.php?topic=1909.msg20857;msg20857 )
+
+;;  The order of the other installments is not critical, but LGNPC Indarys Manor,
+;;  LGNPC Tel Uvirith and LGNPC Secret Masters would do better to load later in the order.
+;;  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=883033 )
+
 [Order]
 Less Lore.esp
 LGNPC_NoLore_v0_83.esp
@@ -2546,11 +2551,11 @@ ACE_Subtitles.esp
 The Undead - MCA5.2 Compatibility Patch.esp
 
 [Note]
- If you use TESTOOL's "Merged Objects.esp", it is recommended to omit
+ If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit
  this plugin from the merge.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=868942&view=findpost&p=12668875 )
 [ALL MCA - COV Addon.esp
-     Merged Objects.esp]
+     Merged_Objects.esp]
 
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
@@ -2964,7 +2969,7 @@ Pegas Horse Ranch v3.1.esp
 ;; (Ref: "PTE Readme.txt")
 [Order]
 Piratelords Trade Enhancements.esp
-Merged Objects.esp
+Merged_Objects.esp
 PTE - BC Patch.esp
 
 [Patch]
@@ -3328,6 +3333,7 @@ Expanded Sounds.esp
 Syc_HerbalismforPurists.esp
 Syc_HerbalismforPurists_BM.esp
 Syc_HerbalismforPurists_TB.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
 Syc_Herbalism ES Patch.esp
 
 [Conflict]
@@ -3341,6 +3347,11 @@ Bloodmoon.esm
  (Ref: "Readme - Herbalism for Purists.txt")
 Syc_HerbalismforPurists.esp
 Syc_HerbalismforPurists_TB_ONLY.esp
+
+[Requires]
+ (Ref: "Readme - Herbalism for Purists.txt")
+Syc_HerbalismforPurists_TB_ONLY.esp
+Tribunal.esm
 
 [Requires]
  (Ref: "Readme - Herbalism for Purists.txt")
@@ -3440,22 +3451,20 @@ TarMar.esp
 ;; (Ref: "TLM - ~Readme.htm")
 
 [Order]
-TLM - Light Sources (Natural Water).esp
 TLM - Ambient Light + Fog Update.esp
-TLM - NPC Light Sources.esp
-TLM - External Lights Ownership.esp
-TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
-TLM - Sneak Modifiers (Locations).esp
-TLM - Sneak Modifiers (Code).esp
-TLM - AdjMod - Marksman 1.43.b2.esp
-TLM - AdjMod - Siege At Firemoth.esp
-TLM - Adjust - Ald-Ruhn, The Rat In The Pot.esp
-TLM - AdjMod - Spuzzum's Interior Daylight.esp
-TLM - AdjMod - Bank 2.2.esp
-TLM - AdjMod - Gladiator.esp
-TLM - Adjust - Arena (New Lighting).esp
-TLM - Light Sources (Lanterns).esp
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Natural Water).esp
+TLM - Light Sources (Lanterns).esp
+TLM - External Lights Ownership.esp
+TLM - NPC Light Sources.esp
+TLM - Sneak Modifiers (Code).esp
+TLM - Sneak Modifiers (Locations).esp
+
+[Note]
+ in order to retain the modified interior light settings of TLM,
+ "TLM - Ambient Light + Fog Update.esp" must load later than any mod
+  that might change a pre-existing interior cell.
+TLM - Ambient Light + Fog Update.esp
 
 [Conflict]
  "TLM - Complete.esp" includes all the modules of TLM Modular.
@@ -3505,9 +3514,18 @@ TLM - AdjMod - Gladiator.esp
 [ALL TLM - Ambient Light + Fog Update.esp
      Gladiator.esp]
 
+[Patch]
+ (Ref: "TLM - ~Readme.htm")
+TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
+[ALL TLM - Sneak Modifiers (Code).esp
+     TLM - Sneak Modifiers (Locations).esp
+     Gladiator.esp]
+
 [Order]
+TLM - Sneak Modifiers (Locations).esp
 Gladiator.esp
 TLM - AdjMod - Gladiator.esp
+TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
 
 [Patch]
  (Ref: "TLM - ~Readme.htm")
@@ -3523,10 +3541,11 @@ Indybank-NoHouses.esp
 IndybankWC.esp
 TLM - AdjMod - Bank 2.2.esp
 
-[Requires]
+[Patch]
  (Ref: "TLM - ~Readme.htm")
 TLM - AdjMod - Spuzzum's Interior Daylight.esp
-SpzInteriorDaylight.esp
+[ALL TLM - Ambient Light + Fog Update.esp
+     SpzInteriorDaylight.esp]
 
 [Order]
 SpzInteriorDaylight.esp
@@ -3609,7 +3628,7 @@ TravelingMerchants-1.2_BETA.esp
 
 [Order]
 TravelingMerchants-1.2_BETA.esp
-TravelingMerchants_v2.2.esp
+TravelingMerchants_v2.2_Update.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3682,6 +3701,11 @@ Morrowind Patch v1.6.4 (WIP).esm
 [ALL Morrowind Patch v1.2.2.esm
      Tribunal.esm
      Bloodmoon.esm]
+
+[Order]
+Morrowind.esm
+Morrowind Patch v1.2.2.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; START UUMPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
@@ -4062,7 +4086,7 @@ Vampiric Hunger - BL.esp
 ;; @VariedVampiricVisages
 
 [Note]
- Contains evil GM
+ Contains evil GMSTs.
  (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Varied Vampiric Visages - ND.esp
 
