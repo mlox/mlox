@@ -1,2 +1,2 @@
 #!/bin/bash
-mlox.py -wf userfiles/*.txt | perl -ne 's/\(\s*[0-9]* (plugins|rules)\)//;print;'
+mlox.py -wf userfiles/*.txt | perl -ne 's/\(\s*[0-9]* (plugins|rules)\)//;print;' | perl -ne 's/^\[mlox-base Version: .*//;print;'

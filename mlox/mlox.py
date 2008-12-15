@@ -42,7 +42,7 @@ Opt.WarningsOnly = False
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
 # re_rule matches the start of a rule.
-re_rule = re.compile(r'^\[(order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.[^\]]*)?)\](.*)$', re.IGNORECASE)
+re_rule = re.compile(r'^\[(version|order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.[^\]]*)?)\](.*)$', re.IGNORECASE)
 # line for multiline messages
 re_message = re.compile(r'^\s')
 # pattern matching a plugin in Morrowind.ini
@@ -50,7 +50,7 @@ re_gamefile = re.compile(r'GameFile\d+=([^\r\n]*)', re.IGNORECASE)
 # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
 # this may be too sloppy, we could also look for the same prefix pattern,
 # and remove that if present on all lines.
-re_sloppy_plugin = re.compile(r'^(?:[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
+re_sloppy_plugin = re.compile(r'^(?:[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*|DBG:\s+)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
 re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
@@ -496,7 +496,10 @@ class rule_parser:
                 n_rules += 1
                 self.curr_rule = new_rule.group(1).upper()
                 self.message = []
-                if self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
+                if self.curr_rule == "VERSION":
+                    Msg.add("[mlox-base Version: %s]" % new_rule.group(2).strip())
+                    self.buffer = ""
+                elif self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
                     self.parse_ordering(self.curr_rule)
                 elif self.curr_rule in ("CONFLICT", "NOTE", "PATCH", "REQUIRES"):
                     self.parse_statement(self.curr_rule, new_rule.group(2), new_rule.group(3))
@@ -628,17 +631,13 @@ Lines beginning with '+' are plugins you do have.\n""" % what
         if len(roots) > 0:
             # use the nearstart information to pull preferred plugins to top of load order
             (top_roots, roots) = remove_roots(roots, self.nearstart)
-            # use the nearend information to pull those plugins to bottom of load order
-            (bottom_roots, roots) = remove_roots(roots, self.nearend)
-            #bottom_roots.reverse()
-            middle_roots = roots        # any leftovers go in the middle
-            roots = top_roots + middle_roots + bottom_roots
+            bottom_roots = roots        # any leftovers go at the end
+            roots = top_roots + bottom_roots
             if Opt.DBG:
                 Dbg.add("nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
                 Dbg.add("top roots:\n  %s" % ("\n  ".join(top_roots)))
                 Dbg.add("nearend:\n  %s" % ("\n  ".join(self.nearend)))
                 Dbg.add("bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
-                Dbg.add("middle roots:\n  %s" % ("\n  ".join(middle_roots)))
                 Dbg.add("newroots:\n  %s" % ("\n  ".join(roots)))
         Dbg.add("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
         # now do the actual topological sort
@@ -800,6 +799,11 @@ class loadorder:
         if len(self.active) < 2:
             return
         Dbg.add("adding edges from CURRENT ORDER")
+        # make ordering pseudo-rules from nearend info
+        for p_end in self.graph.nearend:
+            for p in self.active:
+                self.graph.add_edge("", p, p_end)
+        # make ordering pseudo-rules from current load order.
         prev_i = 0
         self.graph.nodes.setdefault(self.active[prev_i], [])
         for curr_i in range(1, len(self.active)):
@@ -884,11 +888,11 @@ class loadorder:
             self.add_current_order() # tertiary order "pseudo-rules" from current load order
             sorted = self.graph.topo_sort()
         else:
+            # print an explanation of where the given plugin is in the graph and exit
             if not Opt.BaseOnly:
                 self.add_current_order() # tertiary order "pseudo-rules" from current load order
             self.graph.explain(Opt.Explain, self.active)
             sys.exit(0)
-        self.add_current_order()       # tertiary order "pseudo-rules" from current load order
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
         # but we only want to update plugins that are in our current "Data Files"

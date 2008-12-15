@@ -4,11 +4,12 @@
 
 README    := mlox/mlox_readme.txt
 PROGRAM   := mlox/mlox.py
+RULES     := data/mlox_base.txt
 VERSION   := $(shell cat VERSION)
 MLOXARC   := mlox-$(VERSION).7z
 EXEARC    := mlox-exe-$(VERSION).7z
-ARCDATE   := $(shell date "+%Y-%m-%d")
-RELDATE   := $(shell date "+%Y-%m-%d %T")
+ARCDATE   := $(shell date --utc "+%Y-%m-%d")
+RELDATE   := $(shell date --utc "+%Y-%m-%d %T (UTC)")
 DATAARC   := mlox-data_$(ARCDATE).7z
 UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
 
@@ -19,6 +20,7 @@ upload:
 	$(UPLOAD) -s "[mlox-data $(RELDATE)] - install mlox_base.txt into your mlox directory" dist/$(DATAARC)
 	$(UPLOAD) -s "[mlox-exe $(VERSION)] - standalone executable for Windows" dist/$(EXEARC)
 
+# update the version strings in mlox_readme.txt, mlox.py
 version: $(README) $(PROGRAM)
 
 $(README): VERSION
@@ -41,9 +43,9 @@ dist/$(MLOXARC): version dist/mlox $(wildcard mlox/*)
 
 data-dist: dist dist/$(DATAARC) stats
 
-dist/$(DATAARC): data/mlox_base.txt
-	@echo "Updating Release date in: $<"
-	@perl -p -i -e "s/^# Release Date: .*/# Release Date: $(RELDATE)/" $<
+dist/$(DATAARC): $(RULES)
+	@echo "Updating $< with latest Version date: $(RELDATE)"
+	@perl -p -i -e "s/^\[Version\s+[^\]]+\]/[Version $(RELDATE)]/" $<
 	@(cd data ; 7z a ../$@ $(<F)) > /dev/null 2>&1
 	@echo "CREATED distibution archive for mlox rule-base: $@"
 
