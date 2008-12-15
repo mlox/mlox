@@ -321,6 +321,13 @@ class rule_parser:
             if not plugin in self.active:
                 ParseDbg.add("parse_desc [DESC] \"%s\" not active" % plugin)
                 return(False, expr) # file does not exist
+            if self.datadir == None:
+                # this case is reached when doing fromfile checks,
+                # which do not have access to the datadir, and hence
+                # to the plugin header, so we always assume the test
+                # is merely for file existence, to err on the side of
+                # caution
+                return(True, expr)
             re_pat = re.compile(pat)
             desc = plugin_description(self.datadir.find_path(plugin))
             bool = re_pat.search(desc)
