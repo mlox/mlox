@@ -33,13 +33,12 @@ o Features
 (Currently the rule-base needs lots of work, of course).
 - warns about missing pre-requisites
 - warns about plugin conflicts
-- prints notes for things you might want to know about a mod, but were
-too lazy to read the Readme, or even find the info in some post
-somewhere in the Internets :)
-- user customizable via a rules file
-- can also check someone else's load list from a file:
-   mlox.py -wf Morrowind.ini someones_load_order_posting.txt
-  (it also understands output of Wrye Mash and Reorder Mods++)
+- prints notes for things you might want to know about a mod, but may
+have overlooked in the Readme, or things discussed in forum posts you
+may have missed.
+- customizable via a separate user rules file
+- can also check someone else's load list, you can paste the list into
+the mlox GUI, or load the list from a file.
 - runs on Windows or Linux :)
 
 ------------------------------------------------------------
@@ -47,11 +46,11 @@ o Installation and quick start
 
 oo Requirements
 
-- mlox.py is written using Python 2.5 and wxWidgets, just like Wrye
-  Mash. (For Windows, soon there will be a standalone executable that
-  does not require these pre-requisites). You do need to install Python
+- mlox.py is written using Python 2.5 with wxWidgets, just like Wrye
+  Mash. (For Windows, there is a standalone executable that does not
+  require these pre-requisites). You do need to install Python
   and wxWidgets if you wish to run the script form of the program. 
-  For Windows you should install the following two packages:
+  You can do this Windows if you install the following two packages:
 
   http://www.python.org/ftp/python/2.5/python-2.5.msi
   http://prdownloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.0.1-py25.exe
@@ -60,9 +59,9 @@ oo Requirements
   ("Morrowind Code Patch"):
   http://www.tesnexus.com/downloads/file.php?id=19510
   The MCP makes it safer to change your load order in an existing
-  savegame, amongst many other wonderful things it fixes.
+  savegame, amongst many other wonderful fixes it does.
   You are also encouraged to use Wrye Mash to manage your plugins:
-  http://wrye.ufrealms.net/Wrye Mash.html
+  http://wrye.ufrealms.net/Wrye%20Mash.html
 
 - mlox.py has 2 modes, GUI and command line. When executed with no
   command line switches it starts in GUI mode, when executed with
@@ -85,9 +84,9 @@ oo Requirements
   lofix - run mlox in command-line mode to update your load order.
   lo - (run this in "Data Files") just prints your current load order.
 
-- On Windows, run mlox.bat. On Linux, run: mlox.py
+- On Windows, run mlox.exe or mlox.bat. On Linux, run: mlox.py
 
-- mlox.py always assumes that the rule-base files (mlox_base.txt and
+- mlox always assumes that the rule-base files (mlox_base.txt and
   mlox_user.txt, if you have created one) are in the current working
   directory (the directory where you run mlox) so you should run mlox in
   the directory where those two files live.
@@ -117,9 +116,9 @@ why not automate it? mlox can help in a variety of situations:
 - It's not rare that a user will post on a TES forum asking for load
 order help, and it is readily apparent that they have not read the
 Readmes for the mods they are using. For example, sometimes a Readme
-will say to activate only one of a set of plugins, but the oblivious
-user has activated them all. Then they ask why it's not working. The
-answer is simply: "run mlox".
+will say to activate only one of a set of plugins, but they have
+inadvertently activated them all. Then they ask why it's not working.
+The answer is simply: "run mlox".
 
 - There's also the situation where a power user with hundreds of mods
 may want to re-install from scratch, but they have so many mods,
@@ -146,25 +145,25 @@ succeeds, it will be due to the effort of many. No one person could do
 it all.
 
 mlox works by matching filenames specified in rules against the
-plugins you actually have installed. If you have merged many plugins
-with the Construction Set, and no longer use the original plugin
-filenames, mlox will not know this and will not be able to order or
-tell you dependencies for your merged plugins. Of course, if you like,
-you can write rules yourself and put them in mlox_user.txt to cover
-these situations.
+plugins you actually have installed and active. If you have merged
+many plugins with the Construction Set, and no longer use the original
+plugin filenames, mlox will not know this and will not be able to
+order them or tell you dependencies for your merged plugins. Of
+course, if you like, you can write rules yourself and put them in
+mlox_user.txt to cover these situations.
 
 ------------------------------------------------------------
 o Origins of mlox
 
 mlox is inspired by Random007's BOSS (formerly FCOMhelper) project,
-(see: http://www.bethsoft.com/bgsforums/index.php?showtopic=890589 )
+(see: http://www.bethsoft.com/bgsforums/index.php?showtopic=890589 ).
 BOSS (Better Oblivion Sorting Software) is truly invaluable for
 Oblivion, because Oblivion is particularly susceptible to crashing if
 the load order isn't correct, and some mod projects, notably FCOM,
-require a very large and complicated load ordering that is difficult
-to get right. After BOSS came along, when people post about Oblivion
-load order problems, the answer to them simply became: "run BOSS".
-Hopefully, mlox will become as useful for Morrowind.
+require a very large and complicated load ordering that can be
+difficult to get right. After BOSS came along, when people post about
+Oblivion load order problems, the answer to them simply became: "run
+BOSS". Hopefully, mlox will become as useful for Morrowind.
 
 However, I decided to take a different approach in the design than the
 approach used in BOSS. BOSS uses a "total order" approach, every
@@ -182,29 +181,40 @@ know about). mlox uses your current load order as a set of
 "pseudo-rules", so plugin orderings that are unknown by the rule-base
 are filled in by what mlox knows about your current order. If that's
 too confusing, I'll put it this way, mlox normally only has one step,
-you don't need to do any manual reordering afterwards. If you don't
-like the order mlox produces, you can add new rules in the
+and you don't need to do any manual reordering afterwards. If you
+don't like the order mlox produces, you can add new rules in the
 mlox_user.txt, but this only has to be done once, from then on it's
 all automatic.
+
+Finally, I wanted to have a set of rules that could easily express
+relationships between plugins: A depends on B, X conflicts with Y, and
+so on. This would require writing a simple rule-base system.
 
 Don't take this explanation of the differences as a negative view of
 BOSS. I have used BOSS and it really has been invaluable in setting up
 a working load order for Oblivion. There's a lot to be said for the
 simple approach it takes. For example, the BOSS rule-base is trivial
 to understand, while the mlox rule-base in comparison is quite
-complicated and that can potentially lead to errors. So it's not easy
-to say which approach is better. I can just say that I prefer to be
-able to write rules to customize my load order, and to be able to
-express dependencies and conflicts, and these are things that really
-need a little rule-based engine. So that's why I wrote mlox.
+complicated and that can potentially lead to errors and behavior that
+is not understood. So it's not easy to say which approach is better. I
+can just say that I prefer to be able to write rules to customize my
+load order, and to be able to express dependencies and conflicts, and
+these are things that really need a little rule-based engine. So
+that's why I wrote mlox.
 
 ------------------------------------------------------------
 o On the Importance of the output warnings
 
-[*REQ*] warnings specify missing pre-requisites, this is usually
+[REQUIRES] warnings specify missing pre-requisites, this is usually
 very important, and normally you can consider these "errors" that
 should be fixed. But in some case, they are warnings about patches
 that are available to make two plugins work better together.
+
+[PATCH] warnings specify mutual dependencies as in the case of a patch
+plugin. where you'd like to know if the patch is missing or if the
+thing that's supposed to be patched is missing. These are usually
+pretty important warnings since proper functioning of a mod sometimes
+means getting patches properly installed.
 
 [CONFLICT] warnings specify situations where plugins conflict and
 generally speaking, these are "warnings". When 2 plugins conflict, the
@@ -235,6 +245,9 @@ you do not like the results you get from mlox.
 
 mlox only updates your load order in GUI mode if you press the
 update button, or in command-line mode if you use the -u switch.
+So you should let mlox tell you what it's going to do first, then
+decide whether or not you like the results before you actually let
+mlox update you load order.
 
 ------------------------------------------------------------
 o Note to Wrye Mash users
@@ -248,7 +261,7 @@ After you have changed your load order with mlox, then you can turn
 ------------------------------------------------------------
 o Usage
 
-On Windows, run the batch file: mlox.bat
+On Windows, run mlox.exe or the batch file: mlox.bat
 On Linux, run the python script: mlox.py
 
 These commands will start mlox in GUI mode. If the proposed load order
@@ -259,25 +272,41 @@ Here is the full usage of mlox from "mlox -h":
 Usage: mlox [OPTIONS]
 
  OPTIONS
- -a  Print warnings for all plugins, otherwise warning messages 
-     are only printed for active plugins.
- -c  check mode, do not update the load order.
- -d  turn on debug output.
- -f  file processing mode, at least one input file must follow on
-     command line, each file contains a list of plugins which is 
-     used instead of reading the list of plugins from the data file
-     directory. File formats accepted: Morrowind.ini, load order 
-     output of Wrye Mash, and Reorder Mods++.
- -h  print this help.
- -q  run more quietly (does not print out NOTEs).
- -u  update mode, updates the load order.
- -v  print version and exit.
- -w  warnings only, do not display the new load order.
+ -a|--all
+	Print warnings for all plugins, otherwise warning messages are
+	only printed for active plugins.
+ -c|--check
+	Check mode, do not update the load order.
+ -d|--debug
+	Turn on debug output.
+ -e|--explain plugin
+	Print an explanation of the dependency graph for plugin
+	this can help you understand why a plugin was moved in your
+	load order.
+ -f|--fromfile file1... fileN
+	File processing mode, at least one input file must follow on
+	command line, each file contains a list of plugins which is
+	used instead of reading the list of plugins from the data file
+	directory. File formats accepted: Morrowind.ini, load order
+	output of Wrye Mash, and Reorder Mods++.
+ -h|--help
+	print this help.
+ -p|--parsedebug
+	Turn on debugging for the rules parser. (This can generate a
+	fair amount of output).
+ -q|--quiet
+	Run more quietly (does not print out NOTEs).
+ -u|--update
+	Update mode, updates the load order.
+ -v|--version
+	Print version and exit.
+ -w|--warningsonly
+	Warnings only, do not display the new load order.
 
 when invoked with no options, mlox runs in GUI mode.
 
 mlox is intended to be run from somewhere under your game directory.
-And it should work under Windows or Linux.
+mlox runs under Windows or Linux.
 
 mlox sorts your plugin load order using rules from input files
 (mlox_base.txt and mlox_user.txt, if it exists). A copy of the
@@ -288,21 +317,47 @@ update your load order, you need to run Mash first and turn it off.
 Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
 
+
 oo The mlox GUI
 
-The mlox GUI displays 4 panes. The top text pane shows the rules files
-that have been loaded and their counts. The middle text pane shows
-messages and warnings. And the 2 lower panes that are side by side
-show the original load order on the left, and the mlox sorted load
-order to the right. Plugins that have moved up due to sorting are
+The mlox GUI displays 4 text panes. The top text pane shows the rules
+files that have been loaded and their counts. The middle text pane
+shows messages and warnings. And the 2 lower panes that are side by
+side show the original load order on the left, and the mlox sorted
+load order to the right. Plugins that have moved up due to sorting are
 highlighted in the mlox sorted order.
 
 To update your load order to the new sorted order, simply press the
 button labeled: "Update Load Order".
 
+Right click on the original load order to get a context menu for
+advanced options. These options are:
+
+- Select All: allows you to select the text of the plugin order so
+you can copy and paste it somewhere.
+
+- Paste: allows you to paste a list of plugins into mlox so you can,
+for example, analyze the plugin list posted by someone in a forum
+post. Input formats can be: Morrowind.ini [Game Files] section format,
+the format from Wrye Mash's "Copy List" function, or the output of
+Reorder Mods++.
+
+- Open File: this option allows you to input a list of plugins from
+file, instead of from pasting them. See the Paste option for input
+formats.
+
+- Debug: this will pop up a window containing a list of debugging
+output (and automatically copy the contents to a file:
+mlox_debug.out). If you run into problems with mlox, I may need you to
+send me this bugdump so I can figure out what happened.
+
 ==================================================
 
 o ChangeLog
+
+Version 0.24 - 2008/12/14
+	* added new [DESC] function that allows you check the contents
+	of the description field in a plugin header.
 
 Version 0.22 - 2008/12/14
 	* fixed bug where mlox was taking the plugin list from the

@@ -67,11 +67,12 @@ re_anystr = re.compile(r"\s*'ANY',")
 re_allstr = re.compile(r"\s*'ALL',")
 re_indented = re.compile(r'^', re.MULTILINE)
 
-# output file for new load order
-clip_file = "mlox_clipboard.txt"
+
+clip_file = "mlox_clipboard.out"
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
 debug_output = "mlox_debug.out"
+min_plugin_size = 362           # minimum size for a TES plugin
 
 class logger:
     def __init__(self, prints, *cohort):
@@ -189,7 +190,8 @@ def myopen_file(filename, mode):
     return(None)
 
 def plugin_description(plugin):
-    if os.path.getsize(plugin) < 362: # min plugin size
+    if os.path.getsize(plugin) < min_plugin_size:
+        Dbg.add("plugin_description(%s): file too short, returning NULL string" % plugin)
         return("")
     inp = myopen_file(plugin, 'r')
     inp.seek(64,0)
@@ -393,6 +395,7 @@ class rule_parser:
         ParseDbg.add("parse_expression NOTREACHED(2)")
 
     def pprint(self, expr, prefix):
+        """pretty printer for parsed expressions"""
         formatted = PrettyPrinter(indent=2).pformat(expr)
         formatted = re_notstr.sub("NOT", formatted)
         formatted = re_anystr.sub("ANY", formatted)

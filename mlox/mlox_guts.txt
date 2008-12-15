@@ -10,10 +10,6 @@ to use it.
 See mlox_rules_guide.txt for a description of the rules and rule-base.
 ----------------------------------------------------------------------
 
-o What mlox does, operational details
-
-TBD - explain why I always redate all plugins. 
-
 You can skip this document if the nitty gritty details are not of
 interest. :)
 
@@ -27,8 +23,8 @@ The [Order] rules specify a Partial Order over the set of known
 plugins. This allows us to sort your plugins using a topological sort.
 Topological sort requires a DAG (directed acyclic graph) as input.
 Since we don't know ahead of time if the graph defined by our rules is
-acyclic, we check for cycles every time we add an edge (rule), and
-throw out any edge that would cause a cycle.
+acyclic, we check for cycles every time we add an edge (order rule),
+and throw out any edge that would cause a cycle.
 
 This process automatically gives precedence to the rules that come
 first: when two rules conflict by causing a cycle, the first rule wins
@@ -44,9 +40,10 @@ mlox treats the current load order as a tertiary set of input
 "pseudo-rules", with lower priority than the rules specified by
 mlox_user.txt and mlox_base.txt.
 
+
 ==================================================
 
-And now, in detail:
+And now our story again, retold in detail:
 
 mlox does two main things, which are outlined here and explained
 below:
@@ -73,10 +70,11 @@ below:
 * orderings for plugins make up a partially ordered set.
 
 Let's say we have plugins A, B and C. We may know that A needs to
-precede B. But A and B have nothing to do with C, so it doesn't matter
-if A and B come before or after C. This is the essence of a partial
-ordering. And we can represent the ordering relationships in a graph,
-where "->" is called an "edge" and A -> B means: "A comes before B".
+precede B in the load order. But A and B have nothing to do with C, so
+it doesn't matter if A and B come before or after C. This is the
+essence of a partial ordering. And we can represent the ordering
+relationships in a graph, where "->" is called an "edge" and A -> B
+means: "A comes before B".
 
 * A partially ordered set can be sorted by a topological sort.
 
@@ -87,21 +85,21 @@ ordered set.
 * A topological sort requires a DAG (Directed Acyclic Graph).
 ** So we need to avoid putting cycles in our graph.
 
-In our example, we have:
+In our example, we have this (called a graph):
 A -> B
 C
 
-If we were to add the edge: B -> A, this would produce a cycle,
-meaning that if you follow the edges from A -> B -> A, you've come
-back to your starting point.
+If we were to add the edge: B -> A, this would produce a cycle in our
+graph, meaning that if you follow the edges from A -> B -> A, you've
+come back to your starting point.
 
 To avoid cycles, all we have to do while building our graph from the
 input rules is to check before we add an edge to see if it will
 produce a cycle, and if so, we discard it. When mlox does its
-add_edge(X, Y) function (which adds X -> Y), it first checks via a
-depth first search to see if we can already reach Y from X (i.e. that
-some path of edges exists, such that Y -> ... -> X). If so, adding X
--> Y would produce a cycle, and so that edge is discarded.
+add_edge(X, Y) function (which adds the edge: X -> Y), it first checks
+via a depth first search to see if we can already reach Y from X (i.e.
+that some path of edges exists, such that Y -> ... -> X). If so,
+adding X -> Y would produce a cycle, and so that edge is discarded.
 
 * A topological sort can have many valid solutions. 
 
@@ -127,8 +125,8 @@ ordering rules in our rule-base.
 *** by root picking (nearstart, nearend)
 
 A root is a node in the graph that has no incoming edges. In our
-example, A and C are roots. B is not a root because we know the
-ordering: A -> B. B is a child of A, and it has an incoming edge.
+example graph, A and C are roots. B is not a root because we know the
+ordering: A -> B. (B is a child of A), and it has an incoming edge.
 
 We allow some control over the topological sort by allowing the user
 to specify nodes (plugins) that they would prefer to see near the
