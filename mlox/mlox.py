@@ -28,14 +28,15 @@ class dynopt(dict):
 Opt = dynopt()
 
 # command line options
-Opt.GUI = False
+Opt.BaseOnly = False
 Opt.DBG = False
 Opt.Explain = None
-Opt.ParseDBG = False
 Opt.FromFile = False
-Opt.Update = False
-Opt.Quiet = False
+Opt.GUI = False
 Opt.GetAll = False
+Opt.ParseDBG = False
+Opt.Quiet = False
+Opt.Update = False
 Opt.WarningsOnly = False
 
 # comments start with ';'
@@ -582,7 +583,12 @@ class pluggraph:
         for p in active_list:
             active[p] = True
         seen = {}
-        print "Ordering Explanation for:\n\n%s" % what
+        print """Ordering Explanation:
+This is a picture of all the plugins mlox thinks should follow %s
+Child plugins are indented with respect to their parents
+Lines beginning with '=' are plugins you don't have.
+Lines beginning with '+' are plugins you do have.\n""" % what
+        print what
         def explain_rec(indent, n):
             if n in seen:
                 return
@@ -595,7 +601,7 @@ class pluggraph:
         explain_rec(" ", what.lower())
 
     def topo_sort(self):
-        """topological sort, based on http://www.bitformation.com/art/python_toposort.html"""
+        """topological sort"""
 
         def remove_roots(roots, which):
             """This function is used to yank roots out of the main list of graph roots to
@@ -636,6 +642,7 @@ class pluggraph:
                 Dbg.add("newroots:\n  %s" % ("\n  ".join(roots)))
         Dbg.add("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
         # now do the actual topological sort
+        # based on http://www.bitformation.com/art/python_toposort.html
         roots.reverse()
         sorted = []
         while len(roots) != 0:
@@ -872,13 +879,16 @@ class loadorder:
         if not parser.read_rules("mlox_base.txt"):
             Msg.add("Error: unable to open mlox_base.txt. You must run mlox in the directory where mlox_base.txt lives.")
             return(self)
-        self.add_current_order()       # tertiary order "pseudo-rules" from current load order
         # now do the topological sort of all known plugins (rules + load order)
         if Opt.Explain == None:
+            self.add_current_order() # tertiary order "pseudo-rules" from current load order
             sorted = self.graph.topo_sort()
         else:
+            if not Opt.BaseOnly:
+                self.add_current_order() # tertiary order "pseudo-rules" from current load order
             self.graph.explain(Opt.Explain, self.active)
             sys.exit(0)
+        self.add_current_order()       # tertiary order "pseudo-rules" from current load order
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
         # but we only want to update plugins that are in our current "Data Files"
@@ -1135,7 +1145,7 @@ if __name__ == "__main__":
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
         opts, args = getopt(sys.argv[1:], "acde:fhpquvw",
-                            ["all", "check", "debug", "explain", "fromfile", "help", 
+                            ["all", "base-only", "check", "debug", "explain", "fromfile", "help", 
                              "parsedebug", "quiet", "update", "version", "warningsonly"])
     except GetoptError, err:
         print str(err)
@@ -1145,6 +1155,8 @@ if __name__ == "__main__":
             Opt.GetAll = True
         elif opt in ("-c", "--check"):
             Opt.Update = False
+        elif opt in ("--base-only"):
+            Opt.BaseOnly = True
         elif opt in ("-d", "--debug"):
             Opt.DBG = True
         elif opt in ("-e", "--explain"):

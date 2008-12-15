@@ -6,6 +6,9 @@ Usage: mlox [OPTIONS]
  -a|--all
 	Print warnings for all plugins, otherwise warning messages are
 	only printed for active plugins.
+    --base-only
+        Use this with the --explain option to exclude the current load
+        order from the graph explanation.
  -c|--check
 	Check mode, do not update the load order.
  -d|--debug

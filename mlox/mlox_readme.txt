@@ -275,6 +275,9 @@ Usage: mlox [OPTIONS]
  -a|--all
 	Print warnings for all plugins, otherwise warning messages are
 	only printed for active plugins.
+    --base-only
+        Use this with the --explain option to exclude the current load
+        order from the graph explanation.
  -c|--check
 	Check mode, do not update the load order.
  -d|--debug
@@ -317,7 +320,15 @@ update your load order, you need to run Mash first and turn it off.
 Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
 
+Here's an example command line to get an explanation of why a plugin
+has it's position in the load order:
 
+mlox.py --explain=plugin.esp --base-only
+
+If you want to see the effect of adding in what mlox knows about your
+current load order, then leave off the --base-only switch.
+
+----------------------------------------------------------------------
 oo The mlox GUI
 
 The mlox GUI displays 4 text panes. The top text pane shows the rules
