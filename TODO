@@ -95,3 +95,19 @@ REQUIRES
 expr-2:
  remove existing from [ANY] lists
 
+----------------------------------------------------------------------
+							/foo/	!/foo/
+foo.esp exists, contains "foo" in header		True	False
+foo.esp exists, does not contain "foo" in header	False	True
+foo.esp does not exist					False	False
+
+[Conflict]
+ version 1 of foo.esp conflicts with bar.esp
+[DESC /Ver1/ foo.esp] ; foo.esp exists, and contains /Ver1/
+bar.esp
+
+[Conflict]
+ versions other than 1 of foo.esp conflict with bar.esp
+[DESC !/Ver1/ foo.esp] ; foo.esp exists, but does not contain /Ver1/
+bar.esp
+

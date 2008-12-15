@@ -220,14 +220,17 @@ header of a plugin with regular expressions.
 The form is:
 
 [DESC /regex/ A.esp]
+or
+[DESC !/regex/ A.esp]
 
 It must all be on one line. The regex should be any normal Python
 regular expression pattern:
 http://docs.python.org/library/re.html#re-syntax
 
 This predicate means plugin A.esp exists and the Description field of
-the plugin header contains the regular expression /regex/. Here's an
-example:
+the plugin header contains the regular expression /regex/. (If the
+first slash is preceded by a bang, it means the description string
+does not match the given regex). Here's an example:
 
 [Note]
  uses deprecated AddToLev* see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists

@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.23"
+Version = "0.24"
 
 import sys
 
@@ -59,7 +59,7 @@ re_plugin_meta = re.compile(r'([*?])')
 # for recognizing our functions:
 re_start_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC)\s*', re.IGNORECASE)
 re_end_fun = re.compile(r'^\]\s*')
-re_desc = re.compile(r'\[DESC\s*/([^/]+)/\s*(.*)\]', re.IGNORECASE)
+re_desc = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s*(.*)\]', re.IGNORECASE)
 
 # for cleaning up pretty printer
 re_notstr = re.compile(r"\s*'NOT',")
@@ -189,10 +189,12 @@ def myopen_file(filename, mode):
     return(None)
 
 def plugin_description(plugin):
-    pinp = myopen_file(plugin, 'r')
-    pinp.seek(64,0)
-    desc = pinp.read(260)
-    pinp.close()
+    if os.path.getsize(plugin) < 362: # min plugin size
+        return("")
+    inp = myopen_file(plugin, 'r')
+    inp.seek(64,0)
+    desc = inp.read(260)
+    inp.close()
     return(desc[0:desc.find("\x00")])
 
 class rule_parser:
@@ -304,39 +306,48 @@ class rule_parser:
             elif n_order == 1:
                 Msg.add("Warning: %s: ORDER rule skipped because it only has one entry: %s" % (self.where(), C.truename(prev)))
 
+    def parse_desc(self):
+        """match patterns against the description string in the plugin header."""
+        match = re_desc.match(self.buffer)
+        if match:
+            p = match.span(0)[1]
+            self.buffer = self.buffer[p:]
+            ParseDbg.add("parse_desc new buffer = %s" % self.buffer)
+            bang = match.group(1) # means to invert the meaning of the match
+            pat = match.group(2)
+            plugin = C.cname(match.group(3))
+            expr = "[DESC %s/%s/ %s]" % (bang, pat, plugin)
+            ParseDbg.add("parse_desc, expr=%s" % expr)
+            if not plugin in self.active:
+                ParseDbg.add("parse_desc [DESC] \"%s\" not active" % plugin)
+                return(False, expr) # file does not exist
+            re_pat = re.compile(pat)
+            desc = plugin_description(self.datadir.find_path(plugin))
+            bool = re_pat.search(desc)
+            if bang == "!": bool = not bool
+            ParseDbg.add("parse_desc [DESC] returning: (%s, %s)" % ("True" if bool else "False", expr))
+            return(bool, expr)
+        self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
+        return(None, None)
+
     def parse_expression(self):
         self.buffer = self.buffer.strip()
         if self.buffer == "":
             if self.readline():
                 if re_rule.match(self.buffer):
-                    ParseDbg.add("parse_expression new line started new rule")
+                    ParseDbg.add("parse_expression new line started new rule, returning None")
                     return(None, None)
                 self.buffer = self.buffer.strip()
             else:
+                ParseDbg.add("parse_expression EOF, returning None")
                 return(None, None)
         ParseDbg.add("parse_expression, start buffer: \"%s\"" % self.buffer)
         match = re_start_fun.match(self.buffer)
         if match:
             fun = match.group(1).upper()
             if fun == "DESC":
-                match = re_desc.match(self.buffer)
-                if match:
-                    p = match.span(0)[1]
-                    self.buffer = self.buffer[p:]
-                    pat = match.group(1)
-                    plugin = C.cname(match.group(2))
-                    expr = "[DESC /%s/ %s]" % (pat, plugin)
-                    ParseDbg.add("parse_expression, expr=%s" % expr)
-                    if not plugin in self.active:
-                        ParseDbg.add("parse_expression [DESC] \"%s\" not active" % plugin)
-                        return(False, expr)
-                    re_pat = re.compile(pat)
-                    desc = plugin_description(self.datadir.find_path(plugin))
-                    bool = re_pat.search(desc)
-                    ParseDbg.add("parse_expression [DESC] returning: (%s, %s)" % ("True" if bool else "False", expr))
-                    return(bool, expr)
-                self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
-                return(None, None)
+                ParseDbg.add("parse_expression calling parse_desc()")
+                return(self.parse_desc())
             # otherwise it's a boolean function ...
             ParseDbg.add("parse_expression parsing expression: \"%s\"" % self.buffer)
             p = match.span(0)[1]
@@ -365,12 +376,14 @@ class rule_parser:
                 # should not be reached due to match on re_start_fun
                 Msg.add("Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\"" % (self.where(), buff))
                 return(None, None)
+            ParseDbg.add("parse_expression NOTREACHED")
         else:
             ParseDbg.add("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
             if exists != None and p != None:
                 p = C.truename(p) if exists else ("MISSING(%s)" % C.truename(p))
             return(exists, p)
+        ParseDbg.add("parse_expression NOTREACHED(2)")
 
     def pprint(self, expr, prefix):
         formatted = PrettyPrinter(indent=2).pformat(expr)
@@ -379,8 +392,8 @@ class rule_parser:
         formatted = re_allstr.sub("ALL", formatted)
         return(re_indented.sub(prefix, formatted))
 
-    def parse_predicate(self, rule, msg, expr):
-        ParseDbg.add("parse_predicate(%s, %s, %s)" % (rule, msg, expr))
+    def parse_statement(self, rule, msg, expr):
+        ParseDbg.add("parse_statement(%s, %s, %s)" % (rule, msg, expr))
         expr = expr.strip()
         if msg == "":
             if expr == "":
@@ -398,10 +411,12 @@ class rule_parser:
             exprs = []
             ParseDbg.add("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
             (bool, expr) = self.parse_expression()
+            ParseDbg.add("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
             while bool != None:
                 if bool:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression()
+                ParseDbg.add("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
                 Msg.add("[CONFLICT]")
                 for e in exprs:
@@ -449,6 +464,7 @@ class rule_parser:
                 Msg.add("[REQUIRES]\n%s Requires:\n%s" %
                         (self.pprint(expr1, " "), self.pprint(expr2, " > ")))
                 if msg != "": Msg.add(msg)
+        ParseDbg.add("parse_statement RETURNING")
 
     def read_rules(self, rule_file):
         """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
@@ -472,7 +488,7 @@ class rule_parser:
                 if self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
                     self.parse_ordering(self.curr_rule)
                 elif self.curr_rule in ("CONFLICT", "NOTE", "PATCH", "REQUIRES"):
-                    self.parse_predicate(self.curr_rule, new_rule.group(2), new_rule.group(3))
+                    self.parse_statement(self.curr_rule, new_rule.group(2), new_rule.group(3))
                 else:
                     # we should never reach here, since re_rule only matches known rules
                     self.parse_error("read_rules failed sanity check, unknown rule %s" % self.buffer)

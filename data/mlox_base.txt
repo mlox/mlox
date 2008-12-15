@@ -64,6 +64,7 @@ Merged_Leveled_Lists.esp
 ;; - JMS
 NOM 2.12.esp
 NOM 2.13.esp
+GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -203,6 +204,20 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Advanced Guards
+
+[Requires]
+ (Ref: "Advanced GUARDS IV.doc")
+GUARD-Remover.esp
+ADVANCED GUARDS.esm
+
+[Order]
+ (Ref: "Advanced GUARDS IV.doc")
+GUARDS.esp
+GUARD-Remover.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurers TC Beta 1
 
 [Patch]
@@ -333,6 +348,27 @@ Antares' Big Mod 2.8.5.esp
 AreaEffectArrows XB Edition.esp ; [Xeth-Ban]
 Area Effect Arrows.esp ; ???
 AreaEffectArrows.esp ; [Bethesda]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Armor of Valshea
+
+[Conflict]
+ Use only one plugin:
+ "valshea_bloodmoon.esp" is you have Bloodmoon and Tribunal
+ "valshea_tribunal.esp" if you just have Tribunal
+ (Ref: "README_VALSHEA.TXT")
+valshea_bloodmoon.esp
+valshea_tribunal.esp
+
+[Requires]
+valshea_bloodmoon.esp
+Tribunal.esm
+Bloodmoon.esm
+
+[Requires]
+valshea_tribunal.esp
+Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1266,6 +1302,33 @@ C0N2 v1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Durzog Armor
+
+[Conflict]
+ Use only one:
+ "Dracus's Durzog Armor Tribunal V1.esp" if you have Tribunal
+ "Dracus's Durzog Armor MW V1.esp" if you do not have Tribunal
+ (Ref: "Readme - Dracus's Durzog Armor V1.txt"
+Dracus's Durzog Armor Tribunal V1.esp
+Dracus's Durzog Armor MW V1.esp
+
+[Requires]
+Dracus's Durzog Armor Tribunal V1.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "Readme - Dracus's Durzog Armor V1.1 Update.txt")
+Dracus's Durzog Armor Tribunal Update V1.1.esp
+Dracus's Durzog Armor Tribunal V1.esp
+Tribunal.esm
+
+[Order]
+ (Ref: "Readme - Dracus's Durzog Armor V1.1 Update.txt")
+Dracus's Durzog Armor Tribunal V1.esp
+Dracus's Durzog Armor Tribunal Update V1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Expanded Birthsigns for Purists [Tyrthyllanos]
 
 [Conflict]
@@ -1695,6 +1758,44 @@ Herbalism Redux ES Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Hugely Expanded Leveled Lists Ultimate Version Addition
+
+[Conflict]
+ (Ref: "Advanced GUARDS IV.doc")
+ADVANCED GUARDS.esm
+H.E.L.L.U.V.A. Guards.esp
+
+[Requires
+H.E.L.L.U.V.A. Merchant Containers.esm
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ You must have HELLUVA Merchant Containers loaded to use any of the
+ HELLUVA mods
+ (Ref: H.E.L.L.U.V.A. mod readmes)
+[ANY H.E.L.L.U.V.A. Bountiful Books.esp
+     H.E.L.L.U.V.A. Helms.esp
+     H.E.L.L.U.V.A. Shields.esp
+     H.E.L.L.U.V.A. Axes.esp
+     H.E.L.L.U.V.A. Blunt.esp
+     H.E.L.L.U.V.A. Bows.esp
+     H.E.L.L.U.V.A. Complete Weapons.esp
+     H.E.L.L.U.V.A. Longblades_1H(1).esp
+     H.E.L.L.U.V.A. Longblades_1H(2).esp
+     H.E.L.L.U.V.A. Longblades_2H.esp
+     H.E.L.L.U.V.A. Marksman.esp
+     H.E.L.L.U.V.A. Shortblades.esp
+     H.E.L.L.U.V.A. Spears.esp
+     H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp]
+H.E.L.L.U.V.A. Merchant Containers.esm
+
+[Note]
+ You are using an old version of HELLUVA Complete Weapons. Download the latest version.
+H.E.L.L.U.V.A. Wicked Weapons Complete.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @IceNioLiv_RobeReplacer
 
 [Conflict]
@@ -1783,6 +1884,74 @@ Armingers_at_Ghostgate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Kirel's Interior Weather
+
+; No mention of louder sounds in readme, checked ESPs with Enchanted Editor.
+; Dragon32
+
+[Conflict]
+ Use only one:
+ "k_weather (louder sounds).esp"
+ "k_weather.esp"
+k_weather (louder sounds).esp
+k_weather.esp
+
+[Requires]
+k_weather.esp
+Tribunal.esm
+Bloodmoon.esm
+
+[Requires]
+k_weather (louder sounds).esp
+Tribunal.esm
+Bloodmoon.esm
+
+[Note]
+ Interior Weather may cause issues with Herbalism mods
+ (Ref: "k_weather.txt")
+[ALL k_weather.esp
+     Syc_HerbalismforPurists.esp]
+
+[Note]
+ Interior Weather may cause issues with Herbalism mods
+ (Ref: "k_weather.txt")
+[ALL k_weather.esp
+     Syc_HerbalismforPurists_BM.esp]
+
+[Note]
+ Interior Weather may cause issues with Herbalism mods
+ (Ref: "k_weather.txt")
+[ALL k_weather.esp
+     Syc_HerbalismforPurists_TB.esp]
+
+[Note]
+ Interior Weather may cause issues with Herbalism mods 
+ (Ref: "k_weather.txt")
+[ALL k_weather (louder sounds).esp
+     Syc_HerbalismforPurists.esp]
+
+[Note]
+ Interior Weather may cause issues with Herbalism mods 
+ (Ref: "k_weather.txt")
+[ALL k_weather (louder sounds).esp
+     Syc_HerbalismforPurists_BM.esp]
+
+[NOTE]
+ Interior Weather may cause issues with Herbalism mods 
+ (Ref: "k_weather.txt")
+[ALL k_weather (louder sounds).esp
+     Syc_HerbalismforPurists_TB.esp]
+
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_BM.esp
+Syc_HerbalismforPurists_TB.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Korobal Island v1.2
 
 [Conflict]
@@ -1856,6 +2025,31 @@ LGNPC_PaxRedoran_v1_11.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @LGNPC Tel Uvirith
+
+[Conflict]
+ Use only one plugin:
+ "LGNPC_TelUvirith_UI_v1_10.esp" for users of Uvirith Inside
+ "LGNPC_TelUvirith_v1_10.esp" for everyone else
+ (Ref: "LGNPC_TelUvirith_Readme.txt")
+LGNPC_TelUvirith_UI_v1_10.esp
+LGNPC_TelUvirith_v1_10.esp
+
+[Requires]
+ (Ref: "LGNPC_TelUvirith_Readme.txt") 
+LGNPC_TelUvirith_UI_v1_10.esp
+Uvirith Inside.esp
+
+;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
+;; See Order notes for other LGNPC mods
+[Order]
+Less Lore.esp
+LGNPC_NoLore_v0_83.esp
+Uvirith Inside.esp
+LGNPC_TelUvirith_UI_v1_10.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Lost Artifacts of Morrowind (April 15th, 2006)
 
 [Note]
@@ -1916,6 +2110,22 @@ Librarian with Jackets BM Trib.esp
 [Requires]
 Unofficial_Expansion_for_Louis'_BeautyShop.esp
 Louis_BeautyShop_v1.5.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Luthor's Compass
+
+[Conflict]
+ Choose only one plugin, "Luthor's Compass MR1.0.esp" is a modder's resource and
+ adds nothing to the game world. "Luthor's Compass 1.0.esp" adds the compass to
+ the Suran pawnbroker.
+ (Ref: "Luthors Compass 1.0.zip/ReadMe.txt")
+Luthor's Compass 1.0.esp
+Luthor's Compass MR1.0.esp
+
+[Requires]
+Luthor's Compass 1.0.esp
+Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2600,42 +2810,135 @@ New Npc Replacer 3.50.esm
 
 [Conflict]
  Choose ONLY ONE of these plugins. They all include the NSE base.
- "New Suran Expanded.esp", original loot, no childern
- "Balanced NSE.esp", less loot, no childern
- "New Suran Expanded CoM.esp", original loot & Childern of Morrowind
- "Balanced NSE.esp", less loot & Childern of Morrowind
+ "New Suran Extended 1.5.esp", original loot, no childern
+ "Balanced NSE 1.5.esp", less loot, no childern
+ "New Suran Extended CoM 1.5.esp", original loot & Childern of Morrowind
+ "Balanced NSE CoM 1.5.esp", less loot & Childern of Morrowind
  (Ref: "New Suran Extended - readme.txt")
-New Suran Expanded.esp
-Balanced NSE.esp
-New Suran Expanded CoM.esp
-Balanced NSE.esp
+New Suran Extended 1.5.esp
+Balanced NSE 1.5.esp
+New Suran Extended CoM 1.5.esp
+Balanced NSE CoM 1.5.esp
+
+[Requires]
+ "New Suran Extended CoM 1.5.esp" requires Children of Morrowind
+ (Ref: "New Suran Extended - readme.txt")
+New Suran Extended CoM 1.5.esp
+MW_Children_1_0.esm
+Tribunal.esm
+Bloodmoon.esm
+
+[Requires]
+ "Balanced NSE CoM 1.5.esp" requires Children of Morrowind
+ (Ref: "New Suran Extended - readme.txt")
+Balanced NSE CoM 1.5.esp
+MW_Children_1_0.esm
+Tribunal.esm
+Bloodmoon.esm
 
 [Requires]
  (Ref: "New Suran Extended - readme.txt")
-New Suran Expanded CoM.esp
-MW_Children_1_0.esm
+New Suran Extended 1.5.esp
+Tribunal.esm
+Bloodmoon.esm
 
 [Requires]
  (Ref: "New Suran Extended - readme.txt")
-Balanced NSE.esp
-MW_Children_1_0.esm
+Balanced NSE 1.5.esp
+Tribunal.esm
+Bloodmoon.esm
 
-;; mlox can't really handle these sorts of drop-in replacements:
-;; need to implement hash checking or something for that:
-;;This is a drop-in replacement for the original farmer mod
-;;Farmer Mod v4.3 NSE.esp
-;;This is a drop-in replacement for the original archery store mod
-;;Suran Archery Store_v3.0 NSE.esp
+[Conflict]
+ Since you are running New Suran Extended, you should install the
+ compatible version of the Archery Store mod that comes with NSE:
+ Suran Archery Store_v3.0 NSE.esp
+[DESC !/by Nicholiatha/ Suran Archery Store_v3.0 NSE.esp]
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+
+[Conflict]
+ Since you are running New Suran Extended, you should install the
+ compatible version of the Farmer mod that comes with NSE:
+ Farmer Mod v4.3 NSE.esp
+[DESC !/by Nicholiathan/ Farmer Mod v4.3 NSE.esp]
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
 
 [Conflict]
  "New Suran Extended NoM.esp" is no longer needed if you install the
  new version 1.52: (NSE152patch.7z)
  (Ref: "New Suran Extended - readme.txt")
 New Suran Extended NoM.esp
-New Suran Expanded.esp
-Balanced NSE.esp
-New Suran Expanded CoM.esp
-Balanced NSE.esp
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+
+[Requires]
+ (Ref: "New Suran Extended - readme.txt")
+Farmers Mod v4.3 NSE.esp
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+
+[Requires]
+ (Ref: "New Suran Extended - readme.txt")
+Suran Achery Store_v3.0 NSE.esp
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+
+[Conflict]
+ Replace "Suran Achery Store_v3.0.esp" with "Suran Achery Store_v3.0 NSE.esp"
+ (Ref: "New Suran Extended - readme.txt")
+Suran Achery Store_v3.0 NSE.esp
+Suran Achery Store_v3.0.esp
+
+[Conflict]
+ Replace "Farmers Mod v4.3.esp" with "Farmers Mod v4.3 NSE.esp"
+ (Ref: "New Suran Extended - readme.txt")
+Farmers Mod v4.3 NSE.esp
+Farmers Mod v4.3.esp
+
+[Conflict]
+ Use the New Suran Extended-compatible version of Suran Archery Tradehouse.
+ (Ref: "New Suran Extended - readme.txt")
+Suran Achery Store_v3.0.esp
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+
+[Conflict]
+  Use the New Suran Extended-compatible version of Farmers Mod
+ (Ref: "New Suran Extended - readme.txt")
+Farmers Mod v4.3.esp
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+
+[Order]
+New Suran Extended 1.5.esp
+Balanced NSE 1.5.esp
+New Suran Extended CoM 1.5.esp
+Balanced NSE CoM 1.5.esp
+Suran Achery Store_v3.0 NSE.esp
+Farmers Mod v4.3 NSE.esp
+
+[Note]
+ The latest version of New Suran Extended is 1.52:
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4488
+[ANY Balanced NSE CoM.esp
+     Balanced NSE.esp
+     New Suran Extended CoM.esp
+     New Suran Extended.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2829,6 +3132,35 @@ Passive_Healthy_Wildlife.esp
 [ANY SG-MW-ecology-BM-plugin.esp
      SG-MW-ecology-WW-plugin.esp
      SG-MW-ecology-carnivore-plugin.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Scroll Upgrade
+
+[Conflict]
+ Use only one plugin:
+ "K_Scroll_Upgrade_MW.esp" if you have Morrowind only
+ "K_Scroll_Upgrade_BMoon.esp" if you have Bloodmoon
+ "K_Scroll_Upgrade_Trib.esp" if you have Tribunal
+ "K_Scroll_Upgrade_MW_Trib_Bmoon.esp" if you have both Tribunal and Bloodmoon
+ (Ref: "K_Scroll_Upgrades.txt")
+K_Scroll_Upgrade_MW.esp
+K_Scroll_Upgrade_BMoon.esp
+K_Scroll_Upgrade_Trib.esp
+K_Scroll_Upgrade_MW_Trib_Bmoon.esp
+
+[Requires]
+K_Scroll_Upgrade_BMoon.esp
+Bloodmoon.esm
+
+[Requires]
+K_Scroll_Upgrade_Trib.esp
+Tribunal.esm
+
+[Requires]
+K_Scroll_Upgrade_MW_Trib_Bmoon.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
