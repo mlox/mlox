@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.24
+Version: 0.26
 Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -18,6 +18,7 @@ o Support
 o Introduction - Why mlox?
 o Origins of mlox
 o What mlox does, operational details
+o Note to mod Authors
 o On the Importance of the output warnings
 o Testing
 o Note to Wrye Mash users
@@ -201,6 +202,39 @@ can just say that I prefer to be able to write rules to customize my
 load order, and to be able to express dependencies and conflicts, and
 these are things that really need a little rule-based engine. So
 that's why I wrote mlox.
+
+------------------------------------------------------------
+o Note to mod Authors
+
+It is my hope that the users of your mod will benefit from using mlox,
+and also that maybe mlox will help reduce mod conflicts, and support
+questions for your mod due to misconfiguration. It is a grand goal,
+and there are some things we can do together to see it happen.
+
+The first thing is versioning of your mod. If mlox can tell what
+version of your mod the user is using, it can give more accurate
+advice. mlox can get the version of a plugin from its filename or from
+a string you put in the plugin header. So, for example, this works:
+
+  Plugin_V1.0.esp
+
+Or if the filename stays the same from version to version, then if the
+description field of the plugin contains a version string:
+
+  Version: 1.0
+
+mlox will be able to use it. (Wrye Mash can report that version too,
+so it's just generally useful).
+
+The next thing is teaching mlox about your mod. If you like, you can
+ask me to add rules for you. Or you can write them yourself and email
+them to me and I'll put them in the next release of the rule-base. If
+you're adventurous and know about Subversion, you can ask for write
+access to the rule-base, and I'll let you make changes to it directly.
+(There will be directions on the mlox wiki on how to do this, so don't
+worry if it sounds too technical). I'll try to help as much as I can,
+the more mlox knows, the more useful it is, and people will have fewer
+load order problems.
 
 ------------------------------------------------------------
 o On the Importance of the output warnings

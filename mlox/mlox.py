@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.24"
+Version = "0.26"
 
 import sys
 
@@ -43,6 +43,7 @@ Opt.WarningsOnly = False
 re_comment = re.compile(r'(?:^|\s);.*$')
 # re_rule matches the start of a rule.
 re_rule = re.compile(r'^\[(version|order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.[^\]]*)?)\](.*)$', re.IGNORECASE)
+re_base_version = re.compile(r'^\[version\s+([^\]]*)\]', re.IGNORECASE)
 # line for multiline messages
 re_message = re.compile(r'^\s')
 # pattern matching a plugin in Morrowind.ini
@@ -50,7 +51,7 @@ re_gamefile = re.compile(r'GameFile\d+=([^\r\n]*)', re.IGNORECASE)
 # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
 # this may be too sloppy, we could also look for the same prefix pattern,
 # and remove that if present on all lines.
-re_sloppy_plugin = re.compile(r'^(?:[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*|DBG:\s+)?(.+\.es[mp]\b)', re.IGNORECASE)
+re_sloppy_plugin = re.compile(r'^(?:(?:DBG:\s+)?[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
 re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
@@ -203,9 +204,7 @@ def plugin_description(plugin):
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating nested boolean expressions."""
     def __init__(self, active, graph, datadir):
-        self.active = {}
-        for p in active:
-            self.active[p] = True
+        self.active = active
         self.graph = graph
         self.datadir = datadir
         self.line_num = 0
@@ -511,7 +510,6 @@ class rule_parser:
                 self.parse_error("expected start of rule: \"%s\"" % self.buffer)
                 self.buffer = ""
         loadup_msg("Read rules from: \"%s\"" % self.rule_file, n_rules, "rules")
-        self.graph.nearend.reverse()
         return True
 
 
@@ -581,10 +579,7 @@ class pluggraph:
         Dbg.add("adding edge: %s -> %s" % (plug1, plug2))
         return(True)
 
-    def explain(self, what, active_list):
-        active = {}
-        for p in active_list:
-            active[p] = True
+    def explain(self, what, active):
         seen = {}
         print """Ordering Explanation:
 This is a picture of all the plugins mlox thinks should follow %s
@@ -665,7 +660,8 @@ class loadorder:
     """Class for reading plugin mod times (load order), and updating them based on rules"""
     def __init__(self):
         # order is the list of plugins in Data Files, ordered by mtime
-        self.active = []                   # current active plugins in load order
+        self.active = {}                   # current active plugins
+        self.order = []                    # the load order
         self.game = None                   # Morrowind or Oblivion
         self.gamedir = None                # where game is installed
         self.datadir = None                # where plugins live
@@ -722,7 +718,7 @@ class loadorder:
 
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates
-        self.active and sorts in load order."""
+        self.active and self.order and sorts in load order."""
         files = []
         # we look for the list of currently active plugins
         source = "Morrowind.ini"
@@ -758,7 +754,9 @@ class loadorder:
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
         loadup_msg("Getting active plugins from: \"%s\"" % source, len(plugins), "plugins")
-        self.active = plugins
+        self.order = plugins
+        for p in self.order:
+            self.active[p] = True
         self.origin = "Active Plugins"
 
     def get_data_files(self):
@@ -768,8 +766,10 @@ class loadorder:
         files = [f for f in self.datadir.filelist() if os.path.isfile(self.datadir.find_path(f))]
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
-        self.active = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
-        loadup_msg("Getting list of plugins from plugin directory", len(self.active), "plugins")
+        self.order = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
+        loadup_msg("Getting list of plugins from plugin directory", len(self.order), "plugins")
+        for p in self.order:
+            self.active[p] = True
         self.origin = "Installed Plugins"
 
     def read_from_file(self, fromfile):
@@ -778,13 +778,15 @@ class loadorder:
         file = myopen_file(fromfile, 'r')
         if fromfile == None:
             return
-        self.active = []
+        self.order = []
         for line in file.readlines():
             plugin_match = re_sloppy_plugin.match(line)
             if plugin_match:
                 p = plugin_match.group(1)
-                self.active.append(C.cname(p))
+                self.order.append(C.cname(p))
         Stats.add("%-50s (%3d plugins)" % ("\nReading plugins from file: \"%s\"" % fromfile, len(self.active)))
+        for p in self.order:
+            self.active[p] = True
         self.origin = "Plugin List from %s" % fromfile
 
     def add_current_order(self):
@@ -796,27 +798,28 @@ class loadorder:
         the roots calculated in the topo_sort routine, depending on
         whether they show up in [NEARSTART] or [NEAREND] rules,
         respectively"""
-        if len(self.active) < 2:
+        if len(self.order) < 2:
             return
         Dbg.add("adding edges from CURRENT ORDER")
         # make ordering pseudo-rules from nearend info
-        for p_end in self.graph.nearend:
-            for p in self.active:
+        kingyo_fun = [x for x in self.graph.nearend if x in self.active]
+        for p_end in kingyo_fun:
+            for p in [x for x in self.order if x != p_end]:
                 self.graph.add_edge("", p, p_end)
         # make ordering pseudo-rules from current load order.
         prev_i = 0
-        self.graph.nodes.setdefault(self.active[prev_i], [])
-        for curr_i in range(1, len(self.active)):
-            self.graph.nodes.setdefault(self.active[curr_i], [])
-            if (self.active[curr_i] not in self.graph.nearstart and
-                self.active[curr_i] not in self.graph.nearend):
+        self.graph.nodes.setdefault(self.order[prev_i], [])
+        for curr_i in range(1, len(self.order)):
+            self.graph.nodes.setdefault(self.order[curr_i], [])
+            if (self.order[curr_i] not in self.graph.nearstart and
+                self.order[curr_i] not in self.graph.nearend):
                 # add an edge, on any failure due to cycle detection, we try
                 # to make an edge between the current plugin and the first
                 # previous ancestor we can succesfully link and edge from.
                 for i in range(prev_i, 0, -1):
-                    if (self.active[i] not in self.graph.nearstart and
-                        self.active[i] not in self.graph.nearend):
-                        if self.graph.add_edge("", self.active[i], self.active[curr_i]):
+                    if (self.order[i] not in self.graph.nearstart and
+                        self.order[i] not in self.graph.nearend):
+                        if self.graph.add_edge("", self.order[i], self.order[curr_i]):
                             break
             prev_i = curr_i
 
@@ -855,7 +858,7 @@ class loadorder:
         Old.flush()
         if Opt.FromFile:
             self.read_from_file(fromfile)
-            if len(self.active) == 0:
+            if len(self.order) == 0:
                 Msg.add("No plugins detected. mlox.py understands lists of plugins in the format")
                 Msg.add("used by Morrowind.ini or Wrye Mash. Is that what you used for input?")
                 return(self)
@@ -865,14 +868,14 @@ class loadorder:
                 self.get_data_files()
             else:
                 self.get_active_plugins()
-                if self.active == []:
+                if self.order == []:
                     self.get_data_files()
-            if len(self.active) == 0:
+            if self.order == []:
                 Msg.add("No plugins detected! mlox needs to run somewhere under where the game is installed.")
                 return(self)
         if Opt.DBG:
             Dbg.add("initial load order")
-            for p in self.active:
+            for p in self.order:
                 Dbg.add(p)
         # read rules from 3 sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
@@ -896,26 +899,24 @@ class loadorder:
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
         # but we only want to update plugins that are in our current "Data Files"
-        datafiles = {}
         n = 1
         orig_index = {}
-        for p in self.active:
-            datafiles[p] = True
+        for p in self.order:
             orig_index[p] = n
             Old.add("_%03d_ %s" % (n, C.truename(p)))
             n += 1
-        sorted_datafiles = [f for f in sorted if f in datafiles]
+        sorted_datafiles = [f for f in sorted if f in self.active]
         (esm_files, esp_files) = self.partition_esps_and_esms(sorted_datafiles)
         new_order_cname = [p for p in esm_files + esp_files]
         new_order_truename = [C.truename(p) for p in new_order_cname]
 
-        if self.active == new_order_cname:
+        if self.order == new_order_cname:
             Msg.add("[Plugins already in sorted order. No sorting needed!")
             self.sorted = True
 
         # print out the new load order
-        if len(new_order_cname) != len(self.active):
-            Msg.add("Program Error: sanity check: len(new_order_truename %d) != len(self.active %d)" % (len(new_order_truename), len(self.active)))
+        if len(new_order_cname) != len(self.order):
+            Msg.add("Program Error: sanity check: len(new_order_truename %d) != len(self.order %d)" % (len(new_order_truename), len(self.order)))
         if not Opt.FromFile:
             # these are things we do not want to do if just testing a load
             # order from a file (FromFile)
@@ -927,7 +928,7 @@ class loadorder:
                 if not Opt.GUI:
                     Msg.add("[Load Order NOT updated.]")
             # save the load orders to file for future reference
-            self.save_order(old_loadorder_output, [C.truename(p) for p in self.active], "current")
+            self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], "current")
             self.save_order(new_loadorder_output, new_order_truename, "mlox sorted")
         if not Opt.WarningsOnly:
             if Opt.GUI == False:
@@ -1121,6 +1122,17 @@ class mlox_gui(wx.App):
         self.bugdump()
 
 
+def get_mlox_base_version():
+    base = myopen_file("mlox_base.txt", 'r')
+    if base != None:
+        for line in base:
+            m = re_base_version.match(line)
+            if m:
+                base.close()
+                return(m.group(1))
+        base.close()
+    return("")
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         Opt.GUI = True
@@ -1178,7 +1190,8 @@ if __name__ == "__main__":
         elif opt in ("-u", "--update"):
             Opt.Update = True
         elif opt in ("-v", "--version"):
-            print "mlox Version: %s" % Version
+            mlox_base_version = get_mlox_base_version()
+            print "mlox Version: %s\nmlox-base Version: %s" % (Version, mlox_base_version)
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True
