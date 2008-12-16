@@ -2,10 +2,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; WARNING - the rules in this file are ALPHA! they may give incorrect
 ;; advice on conflicts and pre-requisites they may hose up your load
-;; order read mlox_readme.txt for safe testing procedures
+;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-16 13:43:16 (UTC)]
+[Version 2008-12-16 17:28:40 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -20,18 +20,42 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Note for Editors:
-;; most rules are grouped into "sections", which begin with "@"
-;; followed by the section name, and each section corresponds more or
-;; less to one "Mod". This is only a convention to help keep order in
-;; the file, and to generate some happy statistics.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note for Editors (read this if you will be making changes in svn):
+;;
+;; Line ending convention:
 ;; WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ;; mlox is developed on Linux using standard Unix line endings (LF).
 ;; If you introduce DOS line endings (CRLF), do not upload those
 ;; changes to the googlecode svn repository (it's perfectly all right
 ;; if you just want to make local changes, but those should go in
 ;; mlox_user.txt anyway).
+;;
+;; URLs:
+;; Please make sure URLs are surrounded with whitespace:
+;; Good:
+;; (Ref: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists )
+;; Bad:
+;; (Ref: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists)
+;; sometimes rules are quoted on web pages that automatically link
+;; URLs, and without whitespece it can make a broken link.
+;;
+;; Sections:
+;; most rules are grouped into "sections", which begin with "@"
+;; followed by the section name, and each section corresponds more or
+;; less to one "Mod". This is only a convention to help keep order in
+;; the file, and to generate some happy statistics.
+;;
+;; Highlighting:
+;; When a comment message on a rule begins with exclamation points,
+;; that comment will be highlighted in the GUI Messages pane.
+;; ! - one bang is highlighted blue for low priority
+;;     use low priority for stuff that should be "noticed"
+;; !! - yellow, for medium priority
+;;     use medium priority for stuff that should be attended to.
+;; !!! - red, for most urgent priority
+;;     use urgent priority for stuff that could break the game.
+;; the [Requires] rule will automatically highlight in red.
+;; the [Conflict] and [Patch] rules will automatically highlight in yellow.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -43,7 +67,7 @@
 ;; rule in order to ensure it loads very near the end of the load order.
 ;;
 ;; Note: overuse of NearStart/NearEnd will render them meaningless.
-;; They are intended to be use only for very special circumstances.
+;; They are intended to be used only for very special circumstances.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [NearStart]
@@ -85,10 +109,10 @@ Bloodmoon.esm
 ;; @Plugins using Deprecated Leveled List Functions on Bethsoft lists
 
 [Note]
- Uses deprecated AddToLev* function to modify Bethsoft leveled lists.
- For an explanation of why the functions AddToLev*/RemoveFromLev* are
- deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
- Some patches may be available at that link.
+ !! Uses deprecated AddToLev* function to modify Bethsoft leveled lists.
+ !! For an explanation of why the functions AddToLev*/RemoveFromLev* are
+ !! deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ !! Some patches may be available at that link.
 BMExtras.esp
 Clean Black Queen Chronicles Ver 2.5.esp
 EcoAdj(Sri+Ingredients).esp
@@ -112,9 +136,9 @@ NoM 2.12-03a with BEER!.esp
 ;; @Wrye Mash
 
 [Conflict]
- These files contain merged leveled lists, you should use only use one
- at a time. Wrye Mash's "Mashed Lists.esp" is the recommended way to
- merge leveled lists.
+ !!! These files contain merged leveled lists, you should use only use one
+ !!! at a time. Wrye Mash's "Mashed Lists.esp" is the recommended way to
+ !!! merge leveled lists.
 Mashed Lists.esp
 Merged_Leveled_Lists.esp
 
@@ -123,8 +147,9 @@ Merged_Leveled_Lists.esp
 ;; @TESTOOL
 
 [Note]
- Warning, the merged dialogs feature of TESTOOL is widely considered to
- be broken, and it is recommended you do not use it.
+ !!! Warning, the merged dialogs feature of TESTOOL is widely considered to
+ !!! be broken, it will cause some mods to stop working, and it is recommended
+ !!! you do not use it.
 Merged_Dialogs.esp
 
 [Note]
@@ -231,7 +256,7 @@ AdvTC_TribunalAddon.esp
 [ALL AdventurersTC_beta1.esp
      Tribunal.esm]
 
-;; what is this?:
+;; from the distribution archive - what is this?:
 ;;time_2x.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -290,8 +315,8 @@ _Legends_of_Ydumea_v2.esp
      Ald-Vendras_V31-LoKKen-SC.esp]
 
 [Note]
- An upgraded version (v3.1) of Ald Vendras is available:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3523
+ ! An upgraded version (v3.1) of Ald Vendras is available:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3523
 Ald-Vendras_V3.esp
 Ald-Vendras_V3-LoKKen.esp
 Ald-Vendras_V3-LoKKen-SC.esp
@@ -340,8 +365,8 @@ Balmora Expansion V1.4.esp
 ;; @Antares' Big Mod 2.8.5.esp
 
 [Note]
- This is an older version of this plugin, you should upgrade:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=136072&id=5892
+ ! This is an older version of this plugin, you should upgrade:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=136072&id=5892
 Antares' Big Mod 2.8.5.esp
 
 
@@ -360,7 +385,7 @@ AreaEffectArrows.esp ; [Bethesda]
 
 [Conflict]
  Use only one plugin:
- "valshea_bloodmoon.esp" is you have Bloodmoon and Tribunal
+ "valshea_bloodmoon.esp" if you have Bloodmoon and Tribunal
  "valshea_tribunal.esp" if you just have Tribunal
  (Ref: "README_VALSHEA.TXT")
 valshea_bloodmoon.esp
@@ -538,7 +563,7 @@ Better Clothes_v1.1.esp
 Better Clothes_v1.1_nac.esp
 
 [Note]
- Better Clothes 1.0 is updated by Better Clothes 1.1, you should upgrade!
+ ! Better Clothes 1.0 is updated by Better Clothes 1.1, you should upgrade!
 Better Clothes_v1.0.esp
 
 
@@ -571,9 +596,9 @@ Better Heads Tribunal addon.esm
 ;; @bigmod/bigmod2 by xereau
 
 [Note]
- Contains evil GMSTs. You should upgrade to "BigMod2 v2.0 RELEASE.esp"
- ( http://www3.telus.net/public/xereau/BigMod2%20v2.0%20RELEASE.rar )
- (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+ !! Contains evil GMSTs. You should upgrade to "BigMod2 v2.0 RELEASE.esp"
+ !! ( http://www3.telus.net/public/xereau/BigMod2%20v2.0%20RELEASE.rar )
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 BigMod 2.2.esp
 
 [Conflict]
@@ -615,8 +640,8 @@ TheBlackMill11.esp
 TheBlackMill.esp
 
 [Note]
- TheBlackMill.esp is updated by TheBlackMill11.esp
- ( http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3141 )
+ ! TheBlackMill.esp is updated by TheBlackMill11.esp
+ ! ( http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3141 )
 TheBlackMill.esp
 
 [Requires]
@@ -755,7 +780,17 @@ Blood and Gore MW-TB-VGreetings add-on.esp
  (Ref: "blood_gore_manual.htm")
 Blood and Gore Morrowind-Tribunal add-on.esp
 [ALL Blood and Gore.esp
-     Tribunal.esm]
+     Tribunal.esm
+     [NOT VGreetings.esp]]
+
+[Conflict]
+ You should use "Blood and Gore MW-TB-VGreetings add-on.esp"
+ instead of "Blood and Gore Morrowind-Tribunal add-on.esp"
+ when you have VGreetings.
+ (Ref: "blood_gore_manual.htm")
+[ALL Blood and Gore Morrowind-Tribunal add-on.esp
+     [NOT Blood and Gore MW-TB-VGreetings add-on.esp]]
+VGreetings.esp
 
 [Conflict]
  "Blood and Gore MW-TB-VGreetings add-on.esp" is for
@@ -1555,10 +1590,10 @@ GCD_BigMod2_patch.esp
 ;; @Ghostgate v1.3 [Princess Stomper]
 
 [Note]
- "***THIS MOD WILL BREAK THE MAIN QUEST. PLEASE USE ONLY WITH A
- CHARACTER YOU DO NOT INTEND TO PLAY THE MAIN QUEST WITH, OR WHO HAS
- ALREADY DEFEATED DAGOTH UR.***"
- (Ref: "Ghostgate readme.txt")
+ !! "***THIS MOD WILL BREAK THE MAIN QUEST. PLEASE USE ONLY WITH A
+ !! CHARACTER YOU DO NOT INTEND TO PLAY THE MAIN QUEST WITH, OR WHO HAS
+ !! ALREADY DEFEATED DAGOTH UR.***"
+ !! (Ref: "Ghostgate readme.txt")
 Clean Ghostgate.esp
 
 [Requires]
@@ -1610,11 +1645,11 @@ _Legends_of_Ydumea_v2.esp
 ;; @GMST fixing things
 
 [NOTE]
- These plugins are supposed to fix the evil GMSTs, but they also conflict
- with any mod that intentionally and legitimately changes one of those GMSTs.
- It is strongly suggested that you remove these plugins and use proper
- plugin cleaning procedures, the following web page will give you a start:
- http://www.mwmythicmods.com/argent/tech/gmst.html#Removing
+ !!! These plugins are supposed to fix the evil GMSTs, but they also conflict
+ !!! with any mod that intentionally and legitimately changes one of those GMSTs.
+ !!! It is strongly suggested that you remove these plugins and use proper
+ !!! plugin cleaning procedures, the following web page will give you a start:
+ !!! http://www.mwmythicmods.com/argent/tech/gmst.html#Removing
 [ANY GMST-Fix.esp
      GMST Fix.esp
      GMST Vaccine.esp]
@@ -1811,7 +1846,7 @@ H.E.L.L.U.V.A._Merchant_Containers.esm
 H.E.L.L.U.V.A._Merchant_Containers.esm
 
 [Note]
- You are using an old version of HELLUVA Complete Weapons. Download the latest version.
+ ! You are using an old version of HELLUVA Complete Weapons. Download the latest version.
 H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 
 
@@ -1978,6 +2013,8 @@ NPC LCV Schedules 03.esp
 LCV MCA 4.1 Patch.esp
 NPC LCV Locks.esp
 
+;; I'd like to be able to test for MCA 4.1, but MCA.esm(at least 5.2)
+;; does not contain a version string. - JMS
 [Note]
  Wrye says: "You should only use it if you're using LCV schedules and
  MCA 4.1 (it does not work with the newer MCA 5.0, so far as I know.)"
@@ -2052,7 +2089,7 @@ LGNPC_TelUvirith_UI_v1_10.esp
 ;; @The Lost Artifacts of Morrowind (April 15th, 2006)
 
 [Note]
- Contains evil GMSTs.
+ Contains evil GMSTs, even though it is named "Clean", the original is not.
  (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Clean The Lost Artifacts of Morrowind.esm
 Clean The Lost Artifacts of Morrowind.esp
@@ -2192,11 +2229,11 @@ Madd Leveler - Illuminated Order Fix.esp
      Illuminated Order v1.0.esp]
 
 [Note]
- "KNOWN ISSUE: Do NOT reset/restart the madd leveler when you have any
- of the following powers (from Illuminated Order) active:
-	-Mehrunes Dagon's Blessing
-	-Sheogorath's Blessing
-	-Pearl's Legacy"
+ ! "KNOWN ISSUE: Do NOT reset/restart the madd leveler when you have any
+ ! of the following powers (from Illuminated Order) active:
+ !	-Mehrunes Dagon's Blessing
+ !	-Sheogorath's Blessing
+ !	-Pearl's Legacy"
  (Ref: "Madd Leveler Readme.txt")
 [ALL Madd Leveler - Illuminated Order Fix.esp
      Madd Leveler - Base.esp
@@ -2210,10 +2247,10 @@ Madd Leveler - Lichcraft Fix.esp
      Lichcraft.esp]
 
 [Note]
- "KNOWN ISSUE:  Level one liches have skills fortified by one point.
- This may cause your stats to increase as well due to the skill
- point-based attribute increase."
- (Ref: "Madd Leveler Readme.txt")
+ ! "KNOWN ISSUE:  Level one liches have skills fortified by one point.
+ ! This may cause your stats to increase as well due to the skill
+ ! point-based attribute increase."
+ ! (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Lichcraft Fix.esp
 
 [Patch]
@@ -2297,27 +2334,27 @@ Pov_Distant_Activator_Fix_Waterfalls.esp
 
 ;; rules for mods obsoleted by the MCP
 [Note]
- The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
- the problem of merchants wearing items sold to them (and much more).
- The MCP fix is also less likely to conflict with other mods. If you
- have the MCP, you will not need "Fashionable Merchants 1.0.esp"
- (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
+ !! the problem of merchants wearing items sold to them (and much more).
+ !! The MCP fix is also less likely to conflict with other mods. If you
+ !! have the MCP, you will not need "Fashionable Merchants 1.0.esp"
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
 Fashionable Merchants 1.0.esp
 
 [Note]
- The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
- the problem of the "missing month" of Morning Star. The MCP fix
- also may be slightly easier on the CPU as it does not require
- scripting. If you install the MCP, you will not need these plugins.
- (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
+ !! the problem of the "missing month" of Morning Star. The MCP fix
+ !! also may be slightly easier on the CPU as it does not require
+ !! scripting. If you install the MCP, you will not need these plugins.
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
 Calendar_Fix.esp
 Month Bugfix - NoExp.esp
 Month Bugfix.esp
 
 [Note]
- The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
- the Unarmored Bug. If you install the MCP, you will not need these
- plugins. (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
+ !! the Unarmored Bug. If you install the MCP, you will not need these
+ !! plugins. (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
 Unarmored_Corrector_V01_BM.esp
 Unarmored_Corrector_V01_TRIB.esp
 
@@ -2352,8 +2389,8 @@ From Hell To Heaven.esm
 ;; @Morrowind Advanced
 
 [Note]
- There is a suggested update for Morrowind Advanced: Morrowind Advanced 1.82
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4967 )
+ ! There is a suggested update for Morrowind Advanced: Morrowind Advanced 1.82
+ ! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4967 )
 MW_A01.esp
 
 ;; If you are running Thepal's Unofficial Morrowind Patch you should load
@@ -2561,11 +2598,11 @@ ACE_Subtitles.esp
 ;; @MCA - Morrowind Comes Alive
 
 [Note]
- "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you
- have not already done so, install "MCA 5.2 - The Undead 3.0
- Compatible" (from:
- http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354 )
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=847583&view=findpost&p=12338232 )
+ ! "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you
+ ! have not already done so, install "MCA 5.2 - The Undead 3.0
+ ! Compatible" (from:
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354 )
+ ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=847583&view=findpost&p=12338232 )
 The Undead - MCA5.2 Compatibility Patch.esp
 
 [Note]
@@ -2611,10 +2648,10 @@ BM_S_Inn.esp
 S_Inn_th.esp
 
 [Note]
- S_Inn_th.esp is the older version of the Moldy Horker.
- Seek out the newer version that contains an exterior sign by Nigedo:
- http://lovkullen.net/Emma/Apartement.htm;MoldyHorker
- http://emma.ufrealms.net/index.php?dir=&file=BM_S_Inn.zip
+ ! S_Inn_th.esp is the older version of the Moldy Horker.
+ ! Seek out the newer version that contains an exterior sign by Nigedo:
+ ! http://lovkullen.net/Emma/Apartement.htm;MoldyHorker
+ ! http://emma.ufrealms.net/index.php?dir=&file=BM_S_Inn.zip
 S_Inn_th.esp
 
 
@@ -2684,8 +2721,8 @@ MultiMark.esp
 ;; @Necessities of Morrowind (NOM)
 
 [Note]
- Latest version of Necessities of Morrowind (NOM) is 2.13
- (Ref: http://wrye.ufrealms.net/;TeamMods )
+ ! Latest version of Necessities of Morrowind (NOM) is 2.13
+ ! (Ref: http://wrye.ufrealms.net/;TeamMods )
 Necessities of Morrowind 2.0.esp
 Necessities of Morrowind 2.1.esp
 NOM 2.12.esp
@@ -2954,8 +2991,8 @@ Suran Achery Store_v3.0 NSE.esp
 Farmers Mod v4.3 NSE.esp
 
 [Note]
- The latest version of New Suran Extended is 1.52:
- http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4488
+ ! The latest version of New Suran Extended is 1.52:
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4488
 [ANY Balanced NSE CoM.esp
      Balanced NSE.esp
      New Suran Extended CoM.esp
@@ -3004,8 +3041,8 @@ PTE - BC Patch.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Protective Guards
 [Note]
- If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=918882&view=findpost&p=13377858 )
+ ! If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
+ ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=918882&view=findpost&p=13377858 )
 [ALL Protective Guards.esp
      MCA - Guards patch.esp]
 
@@ -3216,12 +3253,12 @@ Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp
 ;; @Silgrad Tower
 
 [Note]
- There is a suggested update for Silgrad Tower:
- silgrad_tower_internal_release_1-4_6.6.esp
- http://www.fileplanet.com/167255/160000/fileinfo/Elder-Scrolls-III:-Morrowind---Silgrad-Tower-1-4_6-update
- There is a suggested texture fix for Silgrad Tower:
- Texture Fix - Silgrad Tower 1.0.esp [Slartibartfast]
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4851
+ ! There is a suggested update for Silgrad Tower:
+ ! silgrad_tower_internal_release_1-4_6.6.esp
+ ! http://www.fileplanet.com/167255/160000/fileinfo/Elder-Scrolls-III:-Morrowind---Silgrad-Tower-1-4_6-update
+ ! There is a suggested texture fix for Silgrad Tower:
+ ! Texture Fix - Silgrad Tower 1.0.esp [Slartibartfast]
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4851
 Silgrad_Tower_internal_build_1-4_3.esp
 
 [Conflict]
@@ -3485,7 +3522,7 @@ TLM - Sneak Modifiers (Locations).esp
 [Note]
  In order to retain the modified interior light settings of TLM,
  "TLM - Ambient Light + Fog Update.esp" must load later than any mod
-  that might change a pre-existing interior cell.
+ that might change a pre-existing interior cell.
 TLM - Ambient Light + Fog Update.esp
 
 [Conflict]
@@ -3694,8 +3731,8 @@ Bloodmoon.esm
 Morrowind Patch v1.6.4 (WIP).esm
 
 [Note]
- This is the older name of the UUMPP patch to remove bloat from UUMPP.
- The new version is: "UUMPP Bloated Morrowind removal patch.esp"
+ ! This is the older name of the UUMPP patch to remove bloat from UUMPP.
+ ! The new version is: "UUMPP Bloated Morrowind removal patch.esp"
 UUMPP Bloated Morrowind Patch v1.6.4.esp
 
 [Requires]
@@ -3735,11 +3772,11 @@ Morrowind Patch v1.6.4 (WIP).esm
      Book Placement Fix - Tribunal.esp]
 
 [Note]
- Morrowind Patch v1.2.2.esm is old and should only be run by people
- who do not have the expansions. Since you have Tribunal and
- Bloodmoon, it is highly recommended that you upgrade to the UUMPP!
- (Unofficial 'Unofficial Morrowind Patch' Project by quorn)
- (See: http://www.bethsoft.com/bgsforums/index.php?showtopic=899830 )
+ !! Morrowind Patch v1.2.2.esm is old and should only be run by people
+ !! who do not have the expansions. Since you have Tribunal and
+ !! Bloodmoon, it is highly recommended that you upgrade to the UUMPP!
+ !! (Unofficial 'Unofficial Morrowind Patch' Project by quorn)
+ !! (See: http://www.bethsoft.com/bgsforums/index.php?showtopic=899830 )
 [ALL Morrowind Patch v1.2.2.esm
      Tribunal.esm
      Bloodmoon.esm]

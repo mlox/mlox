@@ -12,15 +12,15 @@ Warning: mlox_base.txt:23: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp
  > 'aaaaa.esp'
  | Second message for aaaaa.esp
 [PATCH]
- 'MISSING(abpat.esp)' for:
+ !!'MISSING(abpat.esp)' for:
  [ALL 'aaaaa.esp', 'bbbbb.esp']
  | abpat.esp is recommended for gluing aaaaa and bbbbb together
 [PATCH]
- 'dkpat.esp' is missing some pre-requisites:
+ !!'dkpat.esp' is missing some pre-requisites:
  [ALL 'ddddd.esp', 'MISSING(kkkkk.esp)']
  | dkpat.esp recommended for gluing these two plugins together
 [REQUIRES]
- 'aaaaa.esp' Requires:
+ !!!'aaaaa.esp' Requires:
  > 'MISSING(ggggg.esp)'
  | ggggg must always follow aaaaa, because the readme done sez so.
 [CONFLICT]
@@ -28,7 +28,7 @@ Warning: mlox_base.txt:23: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp
  > 'eeeee.esp'
  | These plugins conflict because they modify the same GMST.
 [REQUIRES]
- 'ccccc.esp' Requires:
+ !!!'ccccc.esp' Requires:
  > [NOT 'ddddd.esp']
 Read rules from: "mlox_base.txt"                   ( 13 rules)
 [LOAD ORDER UPDATED!]

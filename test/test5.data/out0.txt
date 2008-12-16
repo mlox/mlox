@@ -14,32 +14,32 @@ Warning: mlox_base.txt:21: Cycle detected, not adding: "aaaaa.esp" -> "bbbbb.esp
  > 'eeeee.esp'
  | These plugins conflict because they modify the same GMST.
 [REQUIRES]
- 'ccccc.esp' Requires:
+ !!!'ccccc.esp' Requires:
  > [ALL 'MISSING(ploppy.esp)', 'MISSING(squishy.esp)', 'MISSING(fnord.esp)']
 [REQUIRES]
- 'blue.esp' Requires:
+ !!!'blue.esp' Requires:
  > [ALL 'green.esp', 'MISSING(chartreuse.esp)']
 [REQUIRES]
- 'yellow.esp' Requires:
+ !!!'yellow.esp' Requires:
  > [ALL 'MISSING(mauve.esp)', 'MISSING(chartreuse.esp)']
 [REQUIRES]
- 'red.esp' Requires:
+ !!!'red.esp' Requires:
  > [ALL 'blue.esp', 'MISSING(ColorPatch.esp)']
 [PATCH]
- 'persimmon-fruitcake-pat.esp' is missing some pre-requisites:
+ !!'persimmon-fruitcake-pat.esp' is missing some pre-requisites:
  [ALL
    'MISSING(persimmon.esp)',
    [ANY 'MISSING(fruitcake.esp)', 'MISSING(bananabread.esp)']]
  | (expect missing persimmon/fruitcake/bananabread)
 [PATCH]
- 'MISSING(ap-ban-pat.esp)' for:
+ !!'MISSING(ap-ban-pat.esp)' for:
  [ALL 'apple.esp', 'banana.esp']
  | (expect missing patch)
 [REQUIRES]
- 'papaya.esp' Requires:
+ !!!'papaya.esp' Requires:
  > [ALL 'pomegranate.esp', 'jalapeno.esp', 'MISSING(grapes.esp)']
 [REQUIRES]
- 'kumquat.esp' Requires:
+ !!!'kumquat.esp' Requires:
  > 'MISSING(sugar.esp)'
 Read rules from: "mlox_base.txt"                   ( 26 rules)
 [LOAD ORDER UPDATED!]

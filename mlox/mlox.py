@@ -468,12 +468,12 @@ class rule_parser:
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
                 Msg.add("[PATCH]\n%s is missing some pre-requisites:\n%s" %
-                        (self.pprint(expr1, " "), self.pprint(expr2, " ")))
+                        (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": Msg.add(msg)
             if bool2 and not bool1:
                 # case where the patch is missing for the thing to be patched
                 Msg.add("[PATCH]\n%s for:\n%s" %
-                        (self.pprint(expr1, " "), self.pprint(expr2, " ")))
+                        (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": Msg.add(msg)
         elif rule == "REQUIRES": # takes 2 exprs
             (bool1, expr1) = self.parse_expression(True)
@@ -485,7 +485,7 @@ class rule_parser:
                     return
             if bool1 and not bool2:
                 Msg.add("[REQUIRES]\n%s Requires:\n%s" %
-                        (self.pprint(expr1, " "), self.pprint(expr2, " > ")))
+                        (self.pprint(expr1, " !!!"), self.pprint(expr2, " > ")))
                 if msg != "": Msg.add(msg)
         ParseDbg.add("parse_statement RETURNING")
 
@@ -1034,18 +1034,25 @@ class mlox_gui(wx.App):
         self.txt_cur.Bind(wx.EVT_RIGHT_DOWN, self.right_click_handler)
 
     def highlight_warnings(self, txt):
-        # highlight background color for special words in the warnings messages
-        highlighters = { re.compile(r'((error|critical):|\[(requires)\])', re.IGNORECASE):
-                             wx.TextAttr(colBack=wx.Colour(255,180,180)), # high: red
-                         re.compile(r'((warning):|\[conflict|patch\])', re.IGNORECASE):
-                             wx.TextAttr(colBack=wx.Colour(255,255,180)), # medium: yellow
-                         re.compile(r'((info):|(\[note\]))', re.IGNORECASE):
-                             wx.TextAttr(colBack=wx.Colour(125,220,240)),  # low: blue
-                         re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE):
-                             wx.TextAttr(colBack=wx.Colour(145,240,180)) } # Good: green
+        # highlight warnings in message window to help convey urgency
+        # highlight styles:
+        low = wx.TextAttr(colBack=wx.Colour(125,220,240))
+        medium = wx.TextAttr(colBack=wx.Colour(255,255,180))
+        high = wx.TextAttr(colBack=wx.Colour(255,180,180))
+        happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
+        highlighters = {
+            re.compile(r'^\[conflict\]', re.IGNORECASE): medium,
+            re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy }
         text = Msg.get()
-        for (pat, style) in highlighters.items():
-            for match in re.finditer(pat, text):
+        # for special highlighting
+        for (re_pat, style) in highlighters.items():
+            for match in re.finditer(re_pat, text):
+                (start, end) = match.span()
+                txt.SetStyle(start, end, style)
+        # for leveled highlighting
+        for (level, style) in (('!', low), ('!!', medium), ('!!!', high)):
+            re_pat = re.compile("^ (?:\\| )?(%s.*)$" % level, re.MULTILINE)
+            for match in re.finditer(re_pat, text):
                 (start, end) = match.span()
                 txt.SetStyle(start, end, style)
 
