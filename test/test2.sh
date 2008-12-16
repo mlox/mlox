@@ -17,7 +17,7 @@ for f in ../$TEST.data/*.es[mp] ; do
 done
 cp ../$TEST.data/*.txt .
 echo "$TEST Running $PROG ..."
-$PROG > mlox.out 2>&1
+$PROG | grep -v "^Version: mlox" > mlox.out 2>&1
 if [ $? -ne 0 ] ; then echo "FAILED $TEST: Program Error" ; exit 1 ; fi
 echo "$TEST Finished"
 
