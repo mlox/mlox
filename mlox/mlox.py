@@ -266,7 +266,7 @@ class rule_parser:
             pos = plugin_match.span(2)[1]
             self.buffer = buff[pos:].lstrip()
             # if the plugin name contains metacharacters, do filename expansion
-            if re_plugin_meta.search(plugin_name):
+            if re_plugin_meta.search(plugin_name) != None:
                 pat = plugin_name
                 ParseDbg.add("parse_plugin_name name has META: %s" % pat)
                 matches = []
@@ -340,9 +340,9 @@ class rule_parser:
                 return(True, expr)
             re_pat = re.compile(pat)
             desc = plugin_description(self.datadir.find_path(plugin))
-            bool = re_pat.search(desc)
+            bool = (re_pat.search(desc) != None)
             if bang == "!": bool = not bool
-            ParseDbg.add("parse_desc [DESC] returning: (%s, %s)" % ("True" if bool else "False", expr))
+            ParseDbg.add("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
             return(bool, expr)
         self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
         return(None, None)
@@ -1202,8 +1202,7 @@ if __name__ == "__main__":
     except GetoptError, err:
         print str(err)
         usage(2)                # exits
-    mlox_base_version = get_mlox_base_version()
-    full_version = "mlox %s [mlox-base %s]" % (Version, mlox_base_version)
+    full_version = "%s %s [mlox-base %s]" % (os.path.basename(sys.argv[0]), Version, get_mlox_base_version())
     for opt, arg in opts:
         if opt in   ("-a", "--all"):
             Opt.GetAll = True
@@ -1228,7 +1227,7 @@ if __name__ == "__main__":
         elif opt in ("-u", "--update"):
             Opt.Update = True
         elif opt in ("-v", "--version"):
-            print "mlox Version: %s\nmlox-base Version: %s" % (Version, mlox_base_version)
+            print full_version
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True

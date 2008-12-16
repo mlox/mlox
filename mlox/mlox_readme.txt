@@ -99,6 +99,8 @@ If you run into a problem with mlox, the best thing to do to get help
 is to post on the BethSoft forums:
 http://www.bethsoft.com/bgsforums/index.php?showforum=12
 
+Please include in your problem report a copy of the text from the
+Statistics (top) pane of the mlox GUI.
 
 ------------------------------------------------------------
 o Introduction - Why mlox?
