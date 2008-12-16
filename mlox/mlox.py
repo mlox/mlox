@@ -70,6 +70,7 @@ re_allstr = re.compile(r"\s*'ALL',")
 re_indented = re.compile(r'^', re.MULTILINE)
 
 
+full_version = ""
 clip_file = "mlox_clipboard.out"
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
@@ -86,6 +87,13 @@ class logger:
         self.log.append(message)
         for c in self.cohort:
             c.add(message)
+        if self.prints and Opt.GUI == False:
+            print message
+
+    def insert(self, message):
+        self.log.insert(0, message)
+        for c in self.cohort:
+            c.insert(message)
         if self.prints and Opt.GUI == False:
             print message
 
@@ -496,7 +504,6 @@ class rule_parser:
                 self.curr_rule = new_rule.group(1).upper()
                 self.message = []
                 if self.curr_rule == "VERSION":
-                    Msg.add("[mlox-base Version: %s]" % new_rule.group(2).strip())
                     self.buffer = ""
                 elif self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
                     self.parse_ordering(self.curr_rule)
@@ -856,6 +863,7 @@ class loadorder:
         Stats.flush()
         New.flush()
         Old.flush()
+        Stats.add("Version: %s" % full_version)
         if Opt.FromFile:
             self.read_from_file(fromfile)
             if len(self.order) == 0:
@@ -973,8 +981,7 @@ class mlox_gui(wx.App):
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
         self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         # see if setting the font fixes display problems on Windows
-        # pointSize, family, style, weight, underline=False, face=EmptyString, encoding=FONTENCODING_DEFAULT)
-        self.txt_new.SetFont(wx.Font(-1, wx.FONTFAMILY_DEFAULT, -1, -1, False, "", wx.FONTENCODING_SYSTEM))
+        self.txt_new.SetFont(wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_NORMAL, underline=False, face="", encoding=wx.FONTENCODING_SYSTEM))
         self.btn_update = wx.Button(self.frame, -1, Message["update"], size=(90,60))
         self.btn_quit = wx.Button(self.frame, -1, Message["quit"], size=(90,60))
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
@@ -1107,7 +1114,7 @@ class mlox_gui(wx.App):
 
     def menu_debug_handler(self, e):
         # pop up a window containing the debug output
-        dbg_frame = wx.Frame(None, wx.ID_ANY, ("mlox %s - Debug Output" % Version))
+        dbg_frame = wx.Frame(None, wx.ID_ANY, ("%s - Debug Output" % full_version))
         dbg_frame.SetSizeHints(500,800)
         dbg_label = wx.StaticText(dbg_frame, -1, "[Debug Output Saved to \"%s\"]" % debug_output)
         dbg_txt = wx.TextCtrl(dbg_frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
@@ -1169,6 +1176,8 @@ if __name__ == "__main__":
     except GetoptError, err:
         print str(err)
         usage(2)                # exits
+    mlox_base_version = get_mlox_base_version()
+    full_version = "mlox %s [mlox-base %s]" % (Version, mlox_base_version)
     for opt, arg in opts:
         if opt in   ("-a", "--all"):
             Opt.GetAll = True
@@ -1193,7 +1202,6 @@ if __name__ == "__main__":
         elif opt in ("-u", "--update"):
             Opt.Update = True
         elif opt in ("-v", "--version"):
-            mlox_base_version = get_mlox_base_version()
             print "mlox Version: %s\nmlox-base Version: %s" % (Version, mlox_base_version)
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
