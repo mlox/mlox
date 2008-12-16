@@ -5,7 +5,7 @@
 ;; order read mlox_readme.txt for safe testing procedures
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-16 01:01:08 (UTC)]
+[Version 2008-12-16 13:43:16 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -1606,6 +1606,20 @@ _Legends_of_Ydumea_v2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GMST fixing things
+
+[NOTE]
+ These plugins are supposed to fix the evil GMSTs, but they also conflict
+ with any mod that intentionally and legitimately changes one of those GMSTs.
+ It is strongly suggested that you remove these plugins and use proper
+ plugin cleaning procedures, the following web page will give you a start:
+ http://www.mwmythicmods.com/argent/tech/gmst.html#Removing
+[ANY GMST-Fix.esp
+     GMST Fix.esp
+     GMST Vaccine.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Go To Jail
 
 [Conflict]
@@ -1908,41 +1922,16 @@ k_weather (louder sounds).esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
 
-[Note]
- Interior Weather may cause issues with Herbalism mods
- (Ref: "k_weather.txt")
-[ALL k_weather.esp
-     Syc_HerbalismforPurists.esp]
-
-[Note]
- Interior Weather may cause issues with Herbalism mods
- (Ref: "k_weather.txt")
-[ALL k_weather.esp
-     Syc_HerbalismforPurists_BM.esp]
-
-[Note]
- Interior Weather may cause issues with Herbalism mods
- (Ref: "k_weather.txt")
-[ALL k_weather.esp
-     Syc_HerbalismforPurists_TB.esp]
-
-[Note]
- Interior Weather may cause issues with Herbalism mods 
- (Ref: "k_weather.txt")
-[ALL k_weather (louder sounds).esp
-     Syc_HerbalismforPurists.esp]
-
-[Note]
- Interior Weather may cause issues with Herbalism mods 
- (Ref: "k_weather.txt")
-[ALL k_weather (louder sounds).esp
-     Syc_HerbalismforPurists_BM.esp]
-
-[NOTE]
- Interior Weather may cause issues with Herbalism mods 
- (Ref: "k_weather.txt")
-[ALL k_weather (louder sounds).esp
-     Syc_HerbalismforPurists_TB.esp]
+;; I believe this warning is not necessary, since the load order is fixed below
+;; so that k_weather will get overridden by the Herbalism mods - JMS
+;;[Note]
+;; Interior Weather may cause issues with Herbalism mods
+;; (Ref: "k_weather.txt")
+;;[ALL [ANY k_weather.esp
+;;	  k_weather (louder sounds).esp]
+;;     [ANY Syc_HerbalismforPurists.esp
+;;	  Syc_HerbalismforPurists_BM.esp
+;;	  Syc_HerbalismforPurists_TB.esp]]
 
 ;; (Ref: "k_weather.txt")
 [Order]
@@ -3487,7 +3476,7 @@ TLM - Sneak Modifiers (Code).esp
 TLM - Sneak Modifiers (Locations).esp
 
 [Note]
- in order to retain the modified interior light settings of TLM,
+ In order to retain the modified interior light settings of TLM,
  "TLM - Ambient Light + Fog Update.esp" must load later than any mod
   that might change a pre-existing interior cell.
 TLM - Ambient Light + Fog Update.esp

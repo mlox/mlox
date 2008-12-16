@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.27"
+Version = "0.28"
 
 import sys
 
@@ -347,7 +347,7 @@ class rule_parser:
         self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
         return(None, None)
 
-    def parse_expression(self):
+    def parse_expression(self, prune):
         self.buffer = self.buffer.strip()
         if self.buffer == "":
             if self.readline():
@@ -375,7 +375,7 @@ class rule_parser:
             bool_end = re_end_fun.match(self.buffer)
             ParseDbg.add("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
-                (bool, expr) = self.parse_expression()
+                (bool, expr) = self.parse_expression(prune)
                 exprs.append(expr)
                 vals.append(bool)
                 ParseDbg.add("self.buffer 2 =\"%s\"" % self.buffer)
@@ -386,15 +386,12 @@ class rule_parser:
             if fun == "ALL":
                 # prune out uninteresting expressions from ANY results
                 exprs = [e for e in exprs if not(isinstance(e, list) and e == [])]
-                if len(exprs) > 1:
-                    exprs = ["ALL"] + exprs
-                return(all(vals), exprs)
+                return(all(vals), exprs[0] if len(exprs) == 1 else ["ALL"] + exprs)
             if fun == "ANY":
                 # prune out uninteresting expressions from ANY results
-                exprs = [e for e in exprs if not(isinstance(e, str) and e[0:8] == "MISSING(")]
-                if len(exprs) > 1:
-                    exprs = ["ANY"] + exprs
-                return(any(vals), exprs)
+                if prune:
+                    exprs = [e for e in exprs if not(isinstance(e, str) and e[0:8] == "MISSING(")]
+                return(any(vals), exprs[0] if len(exprs) == 1 else ["ANY"] + exprs)
             if fun == "NOT":
                 return(not(all(vals)), ["NOT"] + exprs)
             else:
@@ -436,12 +433,12 @@ class rule_parser:
         if rule == "CONFLICT":  # takes any number of exprs
             exprs = []
             ParseDbg.add("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
-            (bool, expr) = self.parse_expression()
+            (bool, expr) = self.parse_expression(False)
             ParseDbg.add("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
             while bool != None:
                 if bool:
                     exprs.append(expr)
-                (bool, expr) = self.parse_expression()
+                (bool, expr) = self.parse_expression(False)
                 ParseDbg.add("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
                 Msg.add("[CONFLICT]")
@@ -451,20 +448,20 @@ class rule_parser:
         elif rule == "NOTE":    # takes any number of exprs
             ParseDbg.add("function NOTE: %s" % msg)
             exprs = []
-            (bool, expr) = self.parse_expression()
+            (bool, expr) = self.parse_expression(True)
             while bool != None:
                 if bool:
                     exprs.append(expr)
-                (bool, expr) = self.parse_expression()
+                (bool, expr) = self.parse_expression(True)
             if not Opt.Quiet and len(exprs) > 0:
                 Msg.add("[NOTE]")
                 for e in exprs:
                     Msg.add(self.pprint(e, " > "))
                 if msg != "": Msg.add(msg)
         elif rule == "PATCH":   # takes 2 exprs
-            (bool1, expr1) = self.parse_expression()
+            (bool1, expr1) = self.parse_expression(False)
             if bool1 != None:
-                (bool2, expr2) = self.parse_expression()
+                (bool2, expr2) = self.parse_expression(False)
             if bool2 == None:
                 Msg.add("Warning: %s: PATCH rule must have 2 conditions" % (self.where()))
                 return
@@ -479,9 +476,9 @@ class rule_parser:
                         (self.pprint(expr1, " "), self.pprint(expr2, " ")))
                 if msg != "": Msg.add(msg)
         elif rule == "REQUIRES": # takes 2 exprs
-            (bool1, expr1) = self.parse_expression()
+            (bool1, expr1) = self.parse_expression(True)
             if bool1 != None:
-                (bool2, expr2) = self.parse_expression()
+                (bool2, expr2) = self.parse_expression(False)
                 ParseDbg.add("REQ expr2 == %s" % expr2)
                 if bool2 == None:
                     self.parse_error("REQUIRES rule must have 2 conditions")
@@ -927,7 +924,7 @@ class loadorder:
         new_order_truename = [C.truename(p) for p in new_order_cname]
 
         if self.order == new_order_cname:
-            Msg.add("[Plugins already in sorted order. No sorting needed!")
+            Msg.add("[Plugins already in sorted order. No sorting needed!]")
             self.sorted = True
 
         # print out the new load order
@@ -973,6 +970,9 @@ class mlox_gui(wx.App):
         self.can_update = True
         self.dir = os.getcwd()
         # setup widgets
+        default_font = wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
+                                weight=wx.FONTWEIGHT_NORMAL, underline=False, face="",
+                                encoding=wx.FONTENCODING_SYSTEM)
         self.frame = wx.Frame(None, wx.ID_ANY, ("mlox %s" % Version))
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
@@ -981,7 +981,8 @@ class mlox_gui(wx.App):
         self.label_stats = wx.StaticText(self.frame, -1, Message["statistics"])
         self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
         self.label_msg = wx.StaticText(self.frame, -1, Message["messages"])
-        self.txt_msg = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL)
+        self.txt_msg = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+        self.txt_msg.SetFont(default_font)
         self.label_cur = wx.StaticText(self.frame, -1, Message["current_load_order"])
         self.txt_cur = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL)
         self.label_cur_bottom = wx.StaticText(self.frame, -1, Message["click for options"])
@@ -989,7 +990,7 @@ class mlox_gui(wx.App):
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
         self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         # see if setting the font fixes display problems on Windows
-        self.txt_new.SetFont(wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_NORMAL, underline=False, face="", encoding=wx.FONTENCODING_SYSTEM))
+        self.txt_new.SetFont(default_font)
         self.btn_update = wx.Button(self.frame, -1, Message["update"], size=(90,60))
         self.btn_quit = wx.Button(self.frame, -1, Message["quit"], size=(90,60))
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
@@ -1032,13 +1033,29 @@ class mlox_gui(wx.App):
         # setup up rightclick menu handler for original load order pane
         self.txt_cur.Bind(wx.EVT_RIGHT_DOWN, self.right_click_handler)
 
+    def highlight_warnings(self, txt):
+        # highlight background color for special words in the warnings messages
+        highlighters = { re.compile(r'((error|critical):|\[(requires)\])', re.IGNORECASE):
+                             wx.TextAttr(colBack=wx.Colour(255,180,180)), # high: red
+                         re.compile(r'((warning):|\[conflict|patch\])', re.IGNORECASE):
+                             wx.TextAttr(colBack=wx.Colour(255,255,180)), # medium: yellow
+                         re.compile(r'((info):|(\[note\]))', re.IGNORECASE):
+                             wx.TextAttr(colBack=wx.Colour(125,220,240)),  # low: blue
+                         re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE):
+                             wx.TextAttr(colBack=wx.Colour(145,240,180)) } # Good: green
+        text = Msg.get()
+        for (pat, style) in highlighters.items():
+            for match in re.finditer(pat, text):
+                (start, end) = match.span()
+                txt.SetStyle(start, end, style)
+
     def highlight_moved(self, txt):
         # highlight background color for changed items in txt widget
         highlight = wx.TextAttr(colBack=wx.Colour(255,255,180))
         re_start = re.compile(r'[^_]\d+[^_][^\n]+')
         text = New.get()
-        for m in re.finditer(re_start, text):
-            (start, end) = m.span()
+        for match in re.finditer(re_start, text):
+            (start, end) = match.span()
             if text[start] == '*': txt.SetStyle(start, end, highlight)
 
     def analyze_loadorder(self, fromfile):
@@ -1049,6 +1066,7 @@ class mlox_gui(wx.App):
             self.btn_update.Disable()
         self.txt_stats.SetValue(Stats.get())
         self.txt_msg.SetValue(Msg.get())
+        self.highlight_warnings(self.txt_msg)
         self.txt_cur.SetValue(Old.get())
         self.txt_new.SetValue(New.get())
         self.label_cur.SetLabel(lo.origin)
