@@ -209,6 +209,21 @@ def plugin_description(plugin):
     inp.close()
     return(desc[0:desc.find("\x00")])
 
+def find_appdata():
+    try:
+        import _winreg, os
+        try:
+            key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
+                                  r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
+            ret = _winreg.QueryValueEx(key, 'Personal')
+        except WindowsError:
+            return None
+        else:
+            key.Close()
+        return(ret[0])
+    except ImportError:
+        return None
+
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating nested boolean expressions."""
     def __init__(self, active, graph, datadir):
@@ -347,7 +362,7 @@ class rule_parser:
         self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
         return(None, None)
 
-    def parse_expression(self, prune):
+    def parse_expression(self, prune=False):
         self.buffer = self.buffer.strip()
         if self.buffer == "":
             if self.readline():
@@ -433,12 +448,12 @@ class rule_parser:
         if rule == "CONFLICT":  # takes any number of exprs
             exprs = []
             ParseDbg.add("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
-            (bool, expr) = self.parse_expression(False)
+            (bool, expr) = self.parse_expression()
             ParseDbg.add("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
             while bool != None:
                 if bool:
                     exprs.append(expr)
-                (bool, expr) = self.parse_expression(False)
+                (bool, expr) = self.parse_expression()
                 ParseDbg.add("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
                 Msg.add("[CONFLICT]")
@@ -448,20 +463,20 @@ class rule_parser:
         elif rule == "NOTE":    # takes any number of exprs
             ParseDbg.add("function NOTE: %s" % msg)
             exprs = []
-            (bool, expr) = self.parse_expression(True)
+            (bool, expr) = self.parse_expression(prune=True)
             while bool != None:
                 if bool:
                     exprs.append(expr)
-                (bool, expr) = self.parse_expression(True)
+                (bool, expr) = self.parse_expression(prune=True)
             if not Opt.Quiet and len(exprs) > 0:
                 Msg.add("[NOTE]")
                 for e in exprs:
                     Msg.add(self.pprint(e, " > "))
                 if msg != "": Msg.add(msg)
         elif rule == "PATCH":   # takes 2 exprs
-            (bool1, expr1) = self.parse_expression(False)
+            (bool1, expr1) = self.parse_expression()
             if bool1 != None:
-                (bool2, expr2) = self.parse_expression(False)
+                (bool2, expr2) = self.parse_expression()
             if bool2 == None:
                 Msg.add("Warning: %s: PATCH rule must have 2 conditions" % (self.where()))
                 return
@@ -476,9 +491,9 @@ class rule_parser:
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": Msg.add(msg)
         elif rule == "REQUIRES": # takes 2 exprs
-            (bool1, expr1) = self.parse_expression(True)
+            (bool1, expr1) = self.parse_expression(prune=True)
             if bool1 != None:
-                (bool2, expr2) = self.parse_expression(False)
+                (bool2, expr2) = self.parse_expression()
                 ParseDbg.add("REQ expr2 == %s" % expr2)
                 if bool2 == None:
                     self.parse_error("REQUIRES rule must have 2 conditions")
@@ -743,7 +758,7 @@ class loadorder:
             ini = myopen_file(ini_path, 'r')
             if ini == None:
                 return
-            for line in ini.readlines():
+            for line in ini:
                 line.rstrip()
                 gamefile = re_gamefile.match(line)
                 if gamefile:
@@ -760,8 +775,24 @@ class loadorder:
             ini.close()
         else:
             # TBD
-            source = "Plugins.txt"
-            return
+            appdata = find_appdata()
+            if appdata == None:
+                Dbg.add("Application data directory not found")
+                return
+            plugins_txt_path = os.path.join(appdata, "Oblivion", "Saves", "plugins.txt")
+            Msg.add("plugins.txt = %s" % plugins_txt_path)
+            inp = myopen_file(plugins_txt_path, 'r')
+            if inp == None:
+                Msg.add("Plugins.txt not found")
+                return
+            for line in inp:
+                line.strip()
+                plugin = re_plugin.match(line)
+                if plugin:
+                    f = self.datadir.find_file(plugin.group(1))
+                    if f != None:
+                        files.append(f)
+            inp.close()
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
