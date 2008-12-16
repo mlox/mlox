@@ -55,8 +55,9 @@ below:
 ** So we need to avoid putting cycles in our graph.
 * A topological sort can have many valid solutions. 
 ** So we try to pick the solution we'd most like to see.
-*** by root picking (the [NearStart] and [NearEnd] rules)
+*** by forcing following (the [NearEnd] rule)
 *** maintaining previous order (pseudo-rules)
+*** by root picking (the [NearStart] rule)
 
 2) mlox gives warnings
 ** about plugin conflicts
@@ -122,25 +123,17 @@ user of mlox is a human being, we want to ensure that the sorted load
 order differs no more from the original order than is dictated by the
 ordering rules in our rule-base.
 
-*** by root picking (nearstart, nearend)
+*** by forcing following (the [NearEnd] rule)
 
-A root is a node in the graph that has no incoming edges. In our
-example graph, A and C are roots. B is not a root because we know the
-ordering: A -> B. (B is a child of A), and it has an incoming edge.
+For the NearEnd rules, we use a method of forcing plugins marked with
+NearEnd to follow all other active plugins.
 
-We allow some control over the topological sort by allowing the user
-to specify nodes (plugins) that they would prefer to see near the
-start of the sorted order. I call this "root-picking", because the
-first step of the topological sort is to collect all the root nodes of
-the graph in a list. In a standard topological sort there is no
-priority of one root over another. But by introducing the [NearStart]
-and [NearEnd] rules, we can let the user choose roots that should be
-near the start of the sorted order or near the end.
-
-In our example, the user could have said that B was a [NearStart]. So
-what mlox does is it finds root of the subgraph that B belongs to (in
-this case, that would be root A). and it chooses that root as the
-first root.
+This is accomplished by adding an edge from every plugin in the
+current load order to each NearEnd plugin. That is, we force each
+NearEnd plugin to follow all other plugins in the user's load order.
+Of course, when we add these edges, we omit any that might cause a
+cycle just like in the process of creating pseudo-rules from the
+current load order discussed in the next section.
 
 *** maintaining previous order (pseudo-rules)
 
@@ -180,6 +173,26 @@ And that's okay, no cycle detected.
 And if we apply those to the set B, A, C, we end up with:
 
 A, B, C
+
+*** by root picking (NearStart)
+
+A root is a node in the graph that has no incoming edges. In our
+example graph, A and C are roots. B is not a root because we know the
+ordering: A -> B. (B is a child of A), and it has an incoming edge.
+
+We allow some control over the topological sort by allowing the user
+to specify nodes (plugins) that they would prefer to see near the
+start of the sorted order. I call this "root-picking", because the
+first step of the topological sort is to collect all the root nodes of
+the graph in a list. In a standard topological sort there is no
+priority of one root over another. But by introducing the [NearStart]
+rules, we can let the user choose roots that should be near the start
+of the sorted order or near the end.
+
+In our example, the user could have said that B was a [NearStart]. So
+what mlox does is it finds root of the subgraph that B belongs to (in
+this case, that would be root A). and it chooses that root as the
+first root.
 
 2) mlox gives warnings
 ** about plugin conflicts

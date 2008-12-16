@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.26"
+Version = "0.27"
 
 import sys
 
@@ -371,7 +371,7 @@ class rule_parser:
             self.buffer = self.buffer[p:]
             ParseDbg.add("fun = %s" % fun)
             vals = []
-            exprs = [fun]
+            exprs = []
             bool_end = re_end_fun.match(self.buffer)
             ParseDbg.add("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
@@ -384,11 +384,19 @@ class rule_parser:
             self.buffer = self.buffer[pos:]
             ParseDbg.add("self.buffer 3 =\"%s\"" % self.buffer)
             if fun == "ALL":
+                # prune out uninteresting expressions from ANY results
+                exprs = [e for e in exprs if not(isinstance(e, list) and e == [])]
+                if len(exprs) > 1:
+                    exprs = ["ALL"] + exprs
                 return(all(vals), exprs)
             if fun == "ANY":
+                # prune out uninteresting expressions from ANY results
+                exprs = [e for e in exprs if not(isinstance(e, str) and e[0:8] == "MISSING(")]
+                if len(exprs) > 1:
+                    exprs = ["ANY"] + exprs
                 return(any(vals), exprs)
             if fun == "NOT":
-                return(not(all(vals)), exprs)
+                return(not(all(vals)), ["NOT"] + exprs)
             else:
                 # should not be reached due to match on re_start_fun
                 Msg.add("Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\"" % (self.where(), buff))
@@ -1025,7 +1033,7 @@ class mlox_gui(wx.App):
         self.txt_cur.Bind(wx.EVT_RIGHT_DOWN, self.right_click_handler)
 
     def highlight_moved(self, txt):
-        # hightlight background color for changed items in txt widget
+        # highlight background color for changed items in txt widget
         highlight = wx.TextAttr(colBack=wx.Colour(255,255,180))
         re_start = re.compile(r'[^_]\d+[^_][^\n]+')
         text = New.get()
