@@ -776,7 +776,8 @@ VGreetings-Hit.esp
  (Ref: "blood_gore_manual.htm")
 Blood and Gore MW-TB-VGreetings add-on.esp
 [ALL Blood and Gore.esp
-     VGreetings.esp]
+     VGreetings.esp
+     Tribunal.esm]
 
 [Patch]
  Use "Blood and Gore BM add-on.esp" if you have Bloodmoon.
@@ -1928,10 +1929,11 @@ k_weather (louder sounds).esp
 ;; Interior Weather may cause issues with Herbalism mods
 ;; (Ref: "k_weather.txt")
 ;;[ALL [ANY k_weather.esp
-;;	  k_weather (louder sounds).esp]
+;;          k_weather (louder sounds).esp]
 ;;     [ANY Syc_HerbalismforPurists.esp
-;;	  Syc_HerbalismforPurists_BM.esp
-;;	  Syc_HerbalismforPurists_TB.esp]]
+;;          Syc_HerbalismforPurists_BM.esp
+;;          Syc_HerbalismforPurists_TB.esp
+;;          Syc_HerbalismforPurists_TB-ONLY.esp]]
 
 ;; (Ref: "k_weather.txt")
 [Order]
@@ -1940,6 +1942,7 @@ k_weather (louder sounds).esp
 Syc_HerbalismforPurists.esp
 Syc_HerbalismforPurists_BM.esp
 Syc_HerbalismforPurists_TB.esp
+Syc_HerbalismforPurists_TB-ONLY.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3378,6 +3381,7 @@ Bloodmoon.esm
 Syc_HerbalismforPurists_TB.esp
 Tribunal.esm
 
+;; Note Expanded Sounds requires BM+TB so we only check for Syc_HerbalismforPurists.esp - JMS
 [Patch]
  "Syc_Herbalism ES Patch.esp" is required to make
  Herbalism for Purists work with Expanded Sounds.
@@ -3390,16 +3394,19 @@ Syc_Herbalism ES Patch.esp
  "Syc_HerbalismforPurists.esp" includes "Bloated Morrowind.esp", so
  you do not need to load both.
  (Ref: "Readme - Herbalism for Purists.txt")
-Syc_HerbalismforPurists.esp
+[ANY Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp]
 Bloated Morrowind.esp
 
 [Conflict]
  "Syc_HerbalismforPurists.esp" includes "Flora Glow 1.0.esp", you
  do not need to load both.
  (Ref: "Readme - Herbalism for Purists.txt")
-Syc_HerbalismforPurists.esp
+[ANY Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp]
 Flora Glow 1.0.esp
 
+;; Note UUMPP requires BM+TB so we only check for Syc_HerbalismforPurists.esp - JMS
 [Conflict]
  When using Herbalism for Purists and the UUMPP together, you should use
  "UUMPP Bloated Morrowind removal patch.esp" to avoid doubling your bloats.
