@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.31"
+Version = "0.32"
 
 import sys
 
@@ -38,6 +38,7 @@ Opt.ParseDBG = False
 Opt.Quiet = False
 Opt.Update = False
 Opt.WarningsOnly = False
+Opt._Game = None
 
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
@@ -85,7 +86,7 @@ clip_file = "mlox_clipboard.out"
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
 debug_output = "mlox_debug.out"
-min_plugin_size = 362           # minimum size for a TES plugin
+tes3_min_plugin_size = 362           # minimum size for a TES3 plugin
 
 class logger:
     def __init__(self, prints, *cohort):
@@ -174,8 +175,8 @@ C = caseless_filenames()
 
 class caseless_dirlist:
 
-    def __init__(self, dir):
-        self.dir = dir
+    def __init__(self, dir='.'):
+        self.dir = os.path.normpath(os.path.abspath(dir))
         self.files = {}
         for f in [p for p in os.listdir(dir)]:
             self.files[f.lower()] = f
@@ -189,6 +190,19 @@ class caseless_dirlist:
             return(os.path.join(self.dir, self.files[f]))
         return(None)
 
+    def find_parent_dir(self, file):
+        """return the caseless_dirlist of the directory that contains file,
+        starting from self.dir and working back towards root."""
+        path = self.dir
+        prev = None
+        while path != prev:
+            dl = caseless_dirlist(path)
+            if dl.find_file(file):
+                return(dl)
+            prev = path
+            path = os.path.split(path)[0]
+        return(None)
+
     def dirpath(self):
         return(self.dir)
 
@@ -198,7 +212,6 @@ class caseless_dirlist:
 
 # Utility functions
 def format_version(ver):
-    #print "DBG: input ver = %s" % ver
     v = re_ver_delim.split(ver, 3)
     match = re_alpha_tail.match(v[-1])
     alpha = "_"
@@ -209,9 +222,7 @@ def format_version(ver):
         v[i] = int(v[i])
     while len(v) < 3:
         v.append(0)
-    v.append(alpha)
-    #print "DBG: v = %s" % PrettyPrinter(indent=2).pformat(v)
-    return("%05d.%05d.%05d.%s" % (v[0], v[1], v[2], v[3]))
+    return("%05d.%05d.%05d.%s" % (v[0], v[1], v[2], alpha))
 
 def loadup_msg(msg, count, what):
     Stats.add("%-50s (%3d %s)" % (msg, count, what))
@@ -226,36 +237,72 @@ def myopen_file(filename, mode):
     return(None)
 
 def plugin_description(plugin):
-    if os.path.getsize(plugin) < min_plugin_size:
-        Dbg.add("plugin_description(%s): file too short, returning NULL string" % plugin)
-        return("")
     inp = myopen_file(plugin, 'r')
-    inp.seek(64,0)
-    desc = inp.read(260)
+    if inp == None: return("")
+    block = inp.read(4096)
     inp.close()
-    return(desc[0:desc.find("\x00")])
+    if block[0:4] == "TES3":    # Morrowind
+        if len(block) < tes3_min_plugin_size:
+            Dbg.add("plugin_description(%s): file too short, returning NULL string" % plugin)
+            return("")
+        desc = block[64:block.find("\x00", 64)]
+        return(desc)
+    elif block[0:4] == "TES4":  # Oblivion
+        # This is very cheesy.
+        pos = block.find("SNAM", 0)
+        if pos == -1: return("")
+        desc_start = block.find("\x00", pos) + 1
+        if desc_start == -1: return("")
+        desc_end = block.find("\x00", desc_start)
+        if desc_end == -1: return("")
+        desc = block[desc_start:desc_end]
+        return(desc)
+    else:
+        return("")
 
 def find_appdata():
+    """a rather shaky function for finding where Oblivion's Application Data lives.
+    Hopefully works under Windows, Wine, and native Linux."""
     if os.name == "posix":
         # Linux - total hack for finding plugins.txt
+        # we assume we're running under a wine tree somewhere. so we
         # find where we are now, then walk the tree upwards to find system.reg
         # then grovel around in system.reg until we find the localappdata path
         # and then fake it like a Republican
-        #"LOCALAPPDATA"
-        path = os.path.normpath(os.path.abspath("."))
+        re_appdata = re.compile(r'"LOCALAPPDATA"="([^"]+)"', re.IGNORECASE)
+        regdir = caseless_dirlist().find_parent_dir("system.reg")
+        regpath = regdir.find_path("system.reg")
+        if regpath == None:
+            return(None)
+        inp = myopen_file(regpath, 'r')
+        if inp != None:
+            for line in inp:
+                match = re_appdata.match(line)
+                if match:
+                    path = match.group(1)
+                    path = path.split(r'\\')
+                    drive = "drive_" + path.pop(0).lower()[0]
+                    appdata = "/".join([regdir.dirpath(), drive, "/".join(path)])
+                    inp.close()
+                    return(appdata)
+            inp.close()
+            return(None)
         return(None)
     # Windows
     try:
         import _winreg
         try:
             key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
-                                  r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
-            ret = _winreg.QueryValueEx(key, 'Personal')
+                                  r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders')
+            vals = _winreg.QueryValueEx(key, 'Local AppData')
         except WindowsError:
             return None
         else:
             key.Close()
-        return(os.path.expandvars(ret[0]))
+        re_env = re.compile(r'%([^|<>=^%]+)%')
+        appdata = re_env.sub(lambda m: os.environ.get(m.group(1), m.group(0)), vals[0])
+        print "appdata=%s" % appdata
+        return(os.path.expandvars(appdata))
     except ImportError:
         return None
 
@@ -383,7 +430,12 @@ class rule_parser:
                 return(False, expr) # file does not exist
             if self.datadir == None:
                 # this case is reached when doing fromfile checks
-                return(True, expr)
+                # and we do not have the actual plugin to check, so
+                # we assume that the plugin matches the given version
+                if op == '=':
+                    return(True, expr)
+                else:
+                    return(False, expr)
             desc = plugin_description(self.datadir.find_path(plugin))
             match = re_header_version.search(desc)
             if match:
@@ -429,10 +481,9 @@ class rule_parser:
                 return(False, expr) # file does not exist
             if self.datadir == None:
                 # this case is reached when doing fromfile checks,
-                # which do not have access to the datadir, and hence
-                # to the plugin header, so we always assume the test
-                # is merely for file existence, to err on the side of
-                # caution
+                # which do not have access to the actual plugin, so we
+                # always assume the test is merely for file existence,
+                # to err on the side of caution
                 return(True, expr)
             re_pat = re.compile(pat)
             desc = plugin_description(self.datadir.find_path(plugin))
@@ -773,7 +824,6 @@ class loadorder:
         # order is the list of plugins in Data Files, ordered by mtime
         self.active = {}                   # current active plugins
         self.order = []                    # the load order
-        self.game = None                   # Morrowind or Oblivion
         self.gamedir = None                # where game is installed
         self.datadir = None                # where plugins live
         self.graph = pluggraph()
@@ -798,32 +848,22 @@ class loadorder:
                 esm_files.append(filename)
         return(esm_files, esp_files)
 
-    def find_parent_dir(self, file):
-        """return the caseless_dirlist of the directory that contains file,
-        starting from cwd and working back towards root."""
-        path = os.getcwd()
-        prev = None
-        while path != prev:
-            dl = caseless_dirlist(path)
-            if dl.find_file(file):
-                return(dl)
-            prev = path
-            path = os.path.split(path)[0]
-        return(None)
-
     def find_game_dirs(self):
-        self.gamedir = self.find_parent_dir("Morrowind.exe")
+        cwd = caseless_dirlist() # start our search in our current directory
+        self.gamedir = cwd.find_parent_dir("Morrowind.exe")
         if self.gamedir != None:
-            self.game = "Morrowind"
+            Opt._Game = "Morrowind" # we found Morrowind.exe
             self.datadir = caseless_dirlist(self.gamedir.find_path("Data Files"))
         else:
-            self.gamedir = self.find_parent_dir("Oblivion.exe")
-            if self.gamedir != None:
-                self.game = "Oblivion"
+            self.gamedir = cwd.find_parent_dir("Oblivion.exe")
+            if self.gamedir != None: # we found Oblivion.exe
+                Opt._Game = "Oblivion"
                 self.datadir = caseless_dirlist(self.gamedir.find_path("Data"))
             else:
-                self.game = "None"
-                self.datadir = caseless_dirlist(".")
+                # Not running under a game directory, so we're probably testing
+                # assume plugins live in current directory.
+                Opt._Game = "None"
+                self.datadir = cwd
                 self.gamedir = caseless_dirlist("..")
         Dbg.add("plugin directory: \"%s\"" % self.datadir.dirpath())
 
@@ -833,7 +873,7 @@ class loadorder:
         files = []
         # we look for the list of currently active plugins
         source = "Morrowind.ini"
-        if self.game == "Morrowind":
+        if Opt._Game == "Morrowind":
             # find Morrowind.ini for Morrowind
             ini_path = self.gamedir.find_path(source)
             if ini_path == None:
@@ -857,14 +897,13 @@ class loadorder:
                     if f != None:
                         files.append(f)
             ini.close()
-        else:
-            # TBD
+        elif Opt._Game == "Oblivion":
+            source = "Oblivion/Plugins.txt"
             appdata = find_appdata()
             if appdata == None:
                 Dbg.add("Application data directory not found")
                 return
-            # TBD - verify location
-            plugins_txt_path = os.path.join(appdata, "Oblivion", "Saves", "plugins.txt")
+            plugins_txt_path = os.path.join(appdata, "Oblivion", "Plugins.txt")
             Msg.add("plugins.txt = %s" % plugins_txt_path)
             inp = myopen_file(plugins_txt_path, 'r')
             if inp == None:
@@ -878,6 +917,9 @@ class loadorder:
                     if f != None:
                         files.append(f)
             inp.close()
+        else:
+            # not running under a game directory (e.g.: doing testing)
+            return
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
@@ -906,9 +948,12 @@ class loadorder:
             match = re_filename_version.search(p)
             file_ver = match.group(1) if match else None
             desc = plugin_description(self.datadir.find_path(p))
+            if desc == None:
+                desc == ""
             match = re_header_version.search(desc)
             desc_ver = match.group(1) if match else None
             print "%10s %10s    %s" % (file_ver, desc_ver, C.truename(p))
+        if Opt.DBG: print Dbg.get()
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
@@ -964,9 +1009,9 @@ class loadorder:
     def update_mod_times(self, files):
         """change the modification times of files to be in order of file list,
         oldest to newest"""
-        if self.game == "Morrowind":
+        if Opt._Game == "Morrowind":
             mtime_first = 1026943162 # Morrowind.esm
-        else: # self.game == Oblivion
+        else: # Opt._Game == Oblivion
             mtime_first = 1165600070 # Oblivion.esm
         if len(files) > 1:
             mtime_last = int(time()) # today
