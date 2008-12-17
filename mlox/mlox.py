@@ -71,7 +71,7 @@ re_ver_fun = re.compile(r'\[VER\s*([=<>])\s*%s\s*([^\]]+)\]' % plugin_version, r
 # for grabbing version numbers from filenames
 re_filename_version = re.compile(r'\D%s\D*\.es[mp]' % plugin_version)
 # for grabbing version numbers from plugin header description fields
-re_header_version = re.compile(r'version\b\D+%s' % plugin_version, re.IGNORECASE)
+re_header_version = re.compile(r'(?:version\b\D+|v(?:er)?\.\s*)%s' % plugin_version, re.IGNORECASE)
 
 # for cleaning up pretty printer
 re_notstr = re.compile(r"\s*'NOT',")
@@ -394,7 +394,7 @@ class rule_parser:
                 match = re_filename_version.search(plugin)
                 if match:
                     p_ver_orig = match.group(1)
-                    p_ver = re_ver_delim.split(p_ver_orig)
+                    p_ver = format_version(p_ver_orig)
                     ParseDbg.add("parse_ver (filename) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
                 else:
                     ParseDbg.add("parse_ver no version for %s" % plugin)
@@ -908,7 +908,7 @@ class loadorder:
             desc = plugin_description(self.datadir.find_path(p))
             match = re_header_version.search(desc)
             desc_ver = match.group(1) if match else None
-            print "%10s %10s    %s" % (file_ver, desc_ver, p)
+            print "%10s %10s    %s" % (file_ver, desc_ver, C.truename(p))
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
