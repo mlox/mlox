@@ -1,4 +1,4 @@
-Getting list of plugins from plugin directory      (  2 plugins)
+Getting list of plugins from plugin directory      (  4 plugins)
 [NOTE]
  > '[DESC /Trophy/ one.esp]'
  | we see this note
@@ -11,23 +11,44 @@ Getting list of plugins from plugin directory      (  2 plugins)
  | we do see this conflict message
 [NOTE]
  > '[VER = 1.0.9f one.esp]'
- | we do see this note
+ | (version from header) we do see this note
 [NOTE]
  > '[VER < 1.0.9g one.esp]'
- | we do see this note
+ | (version from header) we do see this note
 [NOTE]
  > '[VER > 1.0.9d one.esp]'
- | we do see this note
+ | (version from header) we do see this note
 [NOTE]
  > '[VER = 3.33.3a two.esp]'
- | we do see this note
+ | (version from header) we do see this note
 [NOTE]
  > '[VER < 3.33.3b two.esp]'
- | we do see this note
+ | (version from header) we do see this note
 [NOTE]
  > '[VER > 3.33.3 two.esp]'
- | we do see this note
-Read rules from: "mlox_base.txt"                   ( 25 rules)
+ | (version from header) we do see this note
+[NOTE]
+ > '[VER = 1.1 one_v1.01.esp]'
+ | (version from filename) we do see this note
+[NOTE]
+ > '[VER = 1.01 one_v1.01.esp]'
+ | (version from filename) we do see this note
+[NOTE]
+ > '[VER < 1.1a one_v1.01.esp]'
+ | (version from filename) we do see this note
+[NOTE]
+ > '[VER > 1.0.9 one_v1.01.esp]'
+ | (version from filename) we do see this note
+[NOTE]
+ > '[VER = 2.2g two_2_2g.esp]'
+ | (version from filename) we do see this note
+[NOTE]
+ > '[VER < 2.2i two_2_2g.esp]'
+ | (version from filename) we do see this note
+[NOTE]
+ > '[VER > 2.2f two_2_2g.esp]'
+ | (version from filename) we do see this note
+Read rules from: "mlox_base.txt"                   ( 45 rules)
 [Plugins already in sorted order. No sorting needed!]
 [LOAD ORDER UPDATED!]
 current saved to: current_loadorder.out
@@ -36,4 +57,6 @@ mlox sorted saved to: mlox_new_loadorder.out
 [UPDATED] New Load Order:
 ---------------
 _001_ one.esp
-_002_ two.esp
+_002_ one_v1.01.esp
+_003_ two.esp
+_004_ two_2_2g.esp
