@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.31
+Version: 0.32
 Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -56,7 +56,7 @@ oo Requirements
   http://www.python.org/ftp/python/2.5/python-2.5.msi
   http://prdownloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.0.1-py25.exe
 
-- It is strongly recommended that you install Hrnchamd's MCP
+- It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP
   ("Morrowind Code Patch"):
   http://www.tesnexus.com/downloads/file.php?id=19510
   The MCP makes it safer to change your load order in an existing

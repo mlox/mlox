@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-17 02:51:39 (UTC)]
+[Version 2008-12-17 14:40:53 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -49,11 +49,13 @@
 ;; When a comment message on a rule begins with exclamation points,
 ;; that comment will be highlighted in the GUI Messages pane.
 ;; ! - one bang is highlighted blue for low priority
-;;     use low priority for stuff that should be "noticed"
+;;     use low priority for stuff that should be "noticed", but probably
+;;     have low to nil impact on playing.
 ;; !! - yellow, for medium priority
-;;     use medium priority for stuff that should be attended to.
+;;     use medium priority for stuff that could possibly impact the
+;;     game but is probably not too serious.
 ;; !!! - red, for most urgent priority
-;;     use urgent priority for stuff that could break the game.
+;;     use urgent priority for stuff that could break the mod or game.
 ;; the [Requires] rule will automatically highlight in red.
 ;; the [Conflict] and [Patch] rules will automatically highlight in yellow.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1188,10 +1190,10 @@ Complete Morrowind - Replacer.esp
 ;; @Contact Hits
 
 [Note]
- Note that while the Contact Hits works, it sets your agility to zero,
- which will prevent you from advancing in some factions.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
-  and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
+ !! Note that while the Contact Hits works, it sets your agility to zero,
+ !! which will prevent you from advancing in some factions.
+ !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
+ !! and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
 Contact hits.esp
 
 
@@ -2040,6 +2042,24 @@ Syc_HerbalismforPurists.esp
 Syc_HerbalismforPurists_BM.esp
 Syc_HerbalismforPurists_TB.esp
 Syc_HerbalismforPurists_TB-ONLY.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Kobu's Leveling Mod
+
+; Order does not seem actually important? - JMS
+;[Order]
+;Kobu's No Planning.esp
+;Kobu's Skills.esp
+;Kobu's Hard Skills.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Kobu's Skills.esp" - increases skill gain difficulty x2
+ "Kobu's Hard Skills.esp"  - increases skill gain difficulty x5
+ (Ref: kobusleveling_0604.zip/"leveling.txt")
+Kobu's Skills.esp
+Kobu's Hard Skills.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
