@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-16 17:28:40 (UTC)]
+[Version 2008-12-17 02:51:39 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -426,6 +426,7 @@ Assassins Armory - Arrows.esp
  Choose ONLY ONE of these plugins.
  (Ref: "readme_ase30.htm")
 AtmosphericSoundEffects-3.0-Tribunal.esp
+AtmosphericSoundEffects-3.0-TBM.esp
 AtmosphericSoundEffects-3.0.esp
 
 [Conflict]
@@ -436,6 +437,19 @@ Tribunal.esm
 
 [Requires]
 AtmosphericSoundEffects-3.0-Tribunal.esp
+Tribunal.esm
+
+[Requires]
+AtmosphericSoundEffects-3.0-TBM.esp
+Bloodmoon.esm
+
+; Unsure if TXT file quoted comes with the download.
+; TBM.esp is for those with Bloodmoon but not Tribunal.
+; Dragon32.
+[Conflict]
+ You should use "AtmosphericSoundEffects-3.0-Tribunal.esp" instead.
+ (Ref. AtmosphericSoundEffects-3.0-TBM.esp.txt)
+AtmosphericSoundEffects-3.0-TBM.esp
 Tribunal.esm
 
 
@@ -1899,6 +1913,54 @@ Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Illuminated Windows
+
+[Requires]
+Illuminated Windows.esp
+Tribunal.esm
+
+[Requires]
+Illuminated Windows - Bloodmoon.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+; based on file dates in archive
+[Order]
+Illuminated Windows.esp
+Illuminated Windows - Bloodmoon.esp
+
+[Note]
+ ! Dark Angel suggests changing your morrowind.ini so quadratic lighting is used.
+ ! See Illuminated Windows.zip/"DrkAngel readme.doc"
+Illuminated Windows.esp
+
+[Conflict]
+ Illuminated Windows includes ModMan's Windowlights
+ (Ref. Illuminated Windows.zip/"DrkAngel readme.doc")
+Illuminated Windows.esp
+[ANY Windowlights_Full_2.esp
+     Windowlights_Purist_2.esp]
+
+; The ASE Expansions are included in the Illuminated Windows archive, they're
+; add-ons for Atmospheric Sound Effects
+[Requires]
+[ANY ASE Bloodmoon Expansion.esp
+     ASE Tribunal Expansion.esp]
+[ANY AtmosphericSoundEffects-3.0.esp
+     AtmosphericSoundEffects-3.0-Tribunal.esp
+     AtmosphericSoundEffects-3.0-TBM.esp]
+
+; Not mentioned in readme but the readme does say that an ASE mod's required for 
+; these mods to run, so...
+[Order]
+AtmosphericSoundEffects-3.0.esp
+AtmosphericSoundEffects-3.0-Tribunal.esp
+AtmosphericSoundEffects-3.0-TBM.esp
+ASE Bloodmoon Expansion.esp
+ASE Tribunal Expansion.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Inns [taddeus]
 
 [Conflict]
@@ -2357,6 +2419,23 @@ Month Bugfix.esp
  !! plugins. (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
 Unarmored_Corrector_V01_BM.esp
 Unarmored_Corrector_V01_TRIB.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @ModMan's Windowlights
+
+[Conflict]
+ Choose only ONE of these plugins.
+ "Windowlights_Full_2.esp" - Includes lights added to Telvanni architecture
+ "Windowlights_Purist_2.esp" - Does not include Telvanni lights
+Windowlights_Full_2.esp
+Windowlights_Purist_2.esp
+
+[Note]
+ ! Modman suggests changing your morrowind.ini so quadratic lighting is used.
+ ! See "readme_modman_lights_2.txt"
+Windowlights_Full_2.esp
+Windowlights_Purist_2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
