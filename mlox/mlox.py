@@ -211,7 +211,7 @@ def format_version(ver):
         v.append(0)
     v.append(alpha)
     #print "DBG: v = %s" % PrettyPrinter(indent=2).pformat(v)
-    return("%03d.%03d.%03d.%s" % (v[0], v[1], v[2], v[3]))
+    return("%05d.%05d.%05d.%s" % (v[0], v[1], v[2], v[3]))
 
 def loadup_msg(msg, count, what):
     Stats.add("%-50s (%3d %s)" % (msg, count, what))
