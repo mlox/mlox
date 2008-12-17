@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.30"
+Version = "0.31"
 
 import sys
 
@@ -59,9 +59,19 @@ re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
 re_plugin_meta = re.compile(r'([*?])')
 # for recognizing our functions:
-re_start_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC)\s*', re.IGNORECASE)
+re_start_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER)\s*', re.IGNORECASE)
 re_end_fun = re.compile(r'^\]\s*')
-re_desc = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s*(.*)\]', re.IGNORECASE)
+re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s*([^\]]+)\]', re.IGNORECASE)
+# for parsing a version number
+ver_delim = r'[_.-]'
+re_ver_delim = re.compile(ver_delim)
+plugin_version = r'(\d(?:%s?\d+)*[a-zA-Z]?)' % ver_delim
+re_alpha_tail = re.compile(r'(\d+)([a-z])', re.IGNORECASE)
+re_ver_fun = re.compile(r'\[VER\s*([=<>])\s*%s\s*([^\]]+)\]' % plugin_version, re.IGNORECASE)
+# for grabbing version numbers from filenames
+re_filename_version = re.compile(r'\D%s\D*\.es[mp]' % plugin_version)
+# for grabbing version numbers from plugin header description fields
+re_header_version = re.compile(r'version\b\D+%s' % plugin_version, re.IGNORECASE)
 
 # for cleaning up pretty printer
 re_notstr = re.compile(r"\s*'NOT',")
@@ -187,6 +197,22 @@ class caseless_dirlist:
 
 
 # Utility functions
+def format_version(ver):
+    #print "DBG: input ver = %s" % ver
+    v = re_ver_delim.split(ver, 3)
+    match = re_alpha_tail.match(v[-1])
+    alpha = "_"
+    if match:
+        v[-1] = match.group(1)
+        alpha = match.group(2)
+    for i in range(0, len(v)):
+        v[i] = int(v[i])
+    while len(v) < 3:
+        v.append(0)
+    v.append(alpha)
+    #print "DBG: v = %s" % PrettyPrinter(indent=2).pformat(v)
+    return("%03d.%03d.%03d.%s" % (v[0], v[1], v[2], v[3]))
+
 def loadup_msg(msg, count, what):
     Stats.add("%-50s (%3d %s)" % (msg, count, what))
 
@@ -210,8 +236,17 @@ def plugin_description(plugin):
     return(desc[0:desc.find("\x00")])
 
 def find_appdata():
+    if os.name == "posix":
+        # Linux - total hack for finding plugins.txt
+        # find where we are now, then walk the tree upwards to find system.reg
+        # then grovel around in system.reg until we find the localappdata path
+        # and then fake it like a Republican
+        #"LOCALAPPDATA"
+        path = os.path.normpath(os.path.abspath("."))
+        return(None)
+    # Windows
     try:
-        import _winreg, os
+        import _winreg
         try:
             key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
                                   r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
@@ -220,7 +255,7 @@ def find_appdata():
             return None
         else:
             key.Close()
-        return(ret[0])
+        return(os.path.expandvars(ret[0]))
     except ImportError:
         return None
 
@@ -331,9 +366,55 @@ class rule_parser:
             elif n_order == 1:
                 Msg.add("Warning: %s: ORDER rule skipped because it only has one entry: %s" % (self.where(), C.truename(prev)))
 
+    def parse_ver(self):
+        match = re_ver_fun.match(self.buffer)
+        if match:
+            p = match.span(0)[1]
+            self.buffer = self.buffer[p:]
+            ParseDbg.add("parse_ver new buffer = %s" % self.buffer)
+            op = match.group(1)
+            orig_ver = match.group(2)
+            ver = format_version(orig_ver)
+            plugin = C.cname(match.group(3))
+            expr = "[VER %s %s %s]" % (op, orig_ver, plugin)
+            ParseDbg.add("parse_ver, expr=%s ver=%s" % (expr, ver))
+            if not plugin in self.active:
+                ParseDbg.add("parse_ver [VER] \"%s\" not active" % plugin)
+                return(False, expr) # file does not exist
+            if self.datadir == None:
+                # this case is reached when doing fromfile checks
+                return(True, expr)
+            desc = plugin_description(self.datadir.find_path(plugin))
+            match = re_header_version.search(desc)
+            if match:
+                p_ver_orig = match.group(1)
+                p_ver = format_version(p_ver_orig)
+                ParseDbg.add("parse_ver (header) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
+            else:
+                match = re_filename_version.search(plugin)
+                if match:
+                    p_ver_orig = match.group(1)
+                    p_ver = re_ver_delim.split(p_ver_orig)
+                    ParseDbg.add("parse_ver (filename) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
+                else:
+                    ParseDbg.add("parse_ver no version for %s" % plugin)
+                    return(False, expr)
+            ParseDbg.add("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
+            if op == '=':
+                return(p_ver == ver, expr)
+            elif op == '<':
+                return(p_ver < ver, expr)
+            elif op == '>':
+                return(p_ver > ver, expr)
+            else:
+                self.parse_error("Invalid [VER] operator: %s" %  self.buffer)
+                return(None, None)
+        self.parse_error("Invalid [VER] function: %s" %  self.buffer)
+        return(None, None)
+
     def parse_desc(self):
         """match patterns against the description string in the plugin header."""
-        match = re_desc.match(self.buffer)
+        match = re_desc_fun.match(self.buffer)
         if match:
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
@@ -380,6 +461,9 @@ class rule_parser:
             if fun == "DESC":
                 ParseDbg.add("parse_expression calling parse_desc()")
                 return(self.parse_desc())
+            elif fun == "VER":
+                ParseDbg.add("parse_expression calling parse_ver()")
+                return(self.parse_ver())
             # otherwise it's a boolean function ...
             ParseDbg.add("parse_expression parsing expression: \"%s\"" % self.buffer)
             p = match.span(0)[1]
@@ -779,6 +863,7 @@ class loadorder:
             if appdata == None:
                 Dbg.add("Application data directory not found")
                 return
+            # TBD - verify location
             plugins_txt_path = os.path.join(appdata, "Oblivion", "Saves", "plugins.txt")
             Msg.add("plugins.txt = %s" % plugins_txt_path)
             inp = myopen_file(plugins_txt_path, 'r')
@@ -805,7 +890,6 @@ class loadorder:
     def get_data_files(self):
         """Get the list of plugins from the data files directory. Updates self.active.
         If called,"""
-        files = []
         files = [f for f in self.datadir.filelist() if os.path.isfile(self.datadir.find_path(f))]
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
@@ -814,6 +898,17 @@ class loadorder:
         for p in self.order:
             self.active[p] = True
         self.origin = "Installed Plugins"
+
+    def listversions(self):
+        self.find_game_dirs()
+        self.get_data_files()
+        for p in self.order:
+            match = re_filename_version.search(p)
+            file_ver = match.group(1) if match else None
+            desc = plugin_description(self.datadir.find_path(p))
+            match = re_header_version.search(desc)
+            desc_ver = match.group(1) if match else None
+            print "%10s %10s    %s" % (file_ver, desc_ver, p)
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
@@ -1207,6 +1302,7 @@ def get_mlox_base_version():
         base.close()
     return("")
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         Opt.GUI = True
@@ -1234,9 +1330,9 @@ if __name__ == "__main__":
     # process command line arguments
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
-        opts, args = getopt(sys.argv[1:], "acde:fhpquvw",
+        opts, args = getopt(sys.argv[1:], "acde:fhlpquvw",
                             ["all", "base-only", "check", "debug", "explain", "fromfile", "help", 
-                             "parsedebug", "quiet", "update", "version", "warningsonly"])
+                             "listversions", "parsedebug", "quiet", "update", "version", "warningsonly"])
     except GetoptError, err:
         print str(err)
         usage(2)                # exits
@@ -1258,6 +1354,9 @@ if __name__ == "__main__":
             Opt.FromFile = True
         elif opt in ("-h", "--help"):
             usage(0)            # exits
+        elif opt in ("-l", "--listversions"):
+            loadorder().listversions()
+            sys.exit(0)
         elif opt in ("-p", "--parsedebug"):
             Opt.ParseDBG = True
         elif opt in ("-q", "--quiet"):
@@ -1283,3 +1382,4 @@ if __name__ == "__main__":
     else:
         # run with command line arguments
         loadorder().update(None)
+

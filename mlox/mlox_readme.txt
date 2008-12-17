@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.30
+Version: 0.31
 Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -330,6 +330,13 @@ Usage: mlox [OPTIONS]
 	output of Wrye Mash, and Reorder Mods++.
  -h|--help
 	print this help.
+ -l|--listversions
+        Use this to list the version numbers parsed from your plugins.
+        The output is in 2 columns, the first is the version from the 
+        plugin filename, if present, the second is from the plugin header,
+        if present. Naturally, many plugins do not use version numbers so
+        results are spotty. This information can be used to write rules
+        using the [VER] predicate.
  -p|--parsedebug
 	Turn on debugging for the rules parser. (This can generate a
 	fair amount of output).
@@ -401,6 +408,15 @@ send me this bugdump so I can figure out what happened.
 ==================================================
 
 o ChangeLog
+
+Version 0.31 - 2008/12/16
+	* added new [VER] function that allows you to check the
+	version of a plugin, if the plugin has a discoverable version
+	number.
+
+Versions 0.30 - 0.25:
+	* added some stuff, uh, like, uh, highlighting 'n junk. I
+	forget, brain hurt.
 
 Version 0.24 - 2008/12/14
 	* added new [DESC] function that allows you check the contents

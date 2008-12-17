@@ -25,6 +25,13 @@ Usage: mlox [OPTIONS]
 	output of Wrye Mash, and Reorder Mods++.
  -h|--help
 	print this help.
+ -l|--listversions
+        Use this to list the version numbers parsed from your plugins.
+        The output is in 2 columns, the first is the version from the 
+        plugin filename, if present, the second is from the plugin header,
+        if present. Naturally, many plugins do not use version numbers so
+        results are spotty. This information can be used to write rules
+        using the [VER] predicate.
  -p|--parsedebug
 	Turn on debugging for the rules parser. (This can generate a
 	fair amount of output).

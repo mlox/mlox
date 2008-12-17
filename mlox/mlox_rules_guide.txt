@@ -21,6 +21,7 @@ o Warning Rules
 oo Messages
 oo Boolean Expressions
 ooo The Desc predicate
+ooo The Ver predicate
 oo The Note Rule
 oo The Requires Rule
 oo The Conflict Rule
@@ -245,6 +246,47 @@ Sris_Alchemy_BM.esp contains the pattern "v. 1.1109".
 
 You can use a [DESC] predicate in any warning rule, just like any
 other expression.
+
+----------------------------------------------------------------------
+ooo The Ver predicate
+
+Syntac: [VER operator version plugin.esp)
+
+  where operator is: <, =, >
+  for comparing less than, equal to, or greater than
+
+  and version number is something that looks like a version number. 
+  The format can be fairly sloppy. mlox will recognize up to 3 numbers
+  separated by "." or "_" and followed by a possible alpha character.
+  So all the following are valid version numbers:
+
+  1.2.3a, 1.0, 1, 1a, 1_3a, 
+
+The Ver predicate is a special predicate that first tries to match the
+version number string stored in the plugin header, and if that fails
+it tries to match the version number from the plugin filename. If a
+version number is found, it can be used in a comparison 
+
+This predicate must all be on one line, like so:
+
+[VER = 1.0 A.esp]
+
+This predicate means plugin A.esp exists and the discovered version
+number matches 1.0. The format does not have to match the orignal, as
+both the given version number and the version number of the plugin are
+converted to a canonical form before comparison. Here's an example:
+
+[Note]
+ this is an old version, please upgrade
+[VER<1.2 foo.esp]
+
+This is read: "print the Note if the version of the plugin is less
+than 1.2". Note that you don't really need whitespace around the
+comparison operator, but it is nice for readability.
+
+You can use a [VER] predicate in any warning rule, just like any
+other expression.
+
 
 ----------------------------------------------------------------------
 oo The Note Rule
