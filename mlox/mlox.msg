@@ -10,7 +10,6 @@
 `et`Tere päevast!
 `fi`Hyvää päivää!
 `fr`Salut!
-`he`שלום!
 `hu`Szép jó napot!
 `it`Ciao!
 `ja`今日は!
@@ -25,7 +24,6 @@
 `sk`Dobrý deň!
 `sl`Pozdravljeni!
 `sv`Hallå!
-`th`สวัสดีครับ!
 `tr`Merhaba!
 `uk`Вітаю!
 `vi`Chào bạn!
