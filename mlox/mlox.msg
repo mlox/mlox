@@ -1,6 +1,35 @@
 
-[[goodday]]
-`ja`今日は
+[[Hello!]]
+`bg`Здравейте!
+`cs`Dobrý den!
+`da`Halløj!
+`de`Grüß Gott!
+`el`Γειά σας!
+`eo`Saluton!
+`es`¡Hola!
+`et`Tere päevast!
+`fi`Hyvää päivää!
+`fr`Salut!
+`he`שלום!
+`hu`Szép jó napot!
+`it`Ciao!
+`ja`今日は!
+`jv`selamat sore!
+`ko`안녕하십니까!
+`lo`ຂໍໃຫ້ໂຊກດີ!
+`mt`Saħħa!
+`nl`Dag!
+`no`God dag!
+`pl`Cześć!
+`ru`Здравствуйте!
+`sk`Dobrý deň!
+`sl`Pozdravljeni!
+`sv`Hallå!
+`th`สวัสดีครับ!
+`tr`Merhaba!
+`uk`Вітаю!
+`vi`Chào bạn!
+`zh`你好!
 
 [[Usage]]
 `en`Usage: mlox [OPTIONS]
@@ -62,26 +91,45 @@ Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
 
 [[Statistics]]
+`ja`スタティスティックス
+`de`Statistiken
+`it`Statistiche
 
 [[Messages]]
+`ja`メッセージ
 
 [[Quit]]
+`ja`終了
 
 [[Update Load Order]]
+`ja`更新 Load Order
+`de`Aktualisieren Load Order
+`it`Aggiorna Load Order
 
 [[Close]]
+`ja`閉じる
 
 [[Select All]]
+`ja`すべてのテキストを選択する
+`de`Wähle alle
+`it`Seleziona tutti
 
 [[Paste]]
+`ja`ペーストする
 
 [[Open File]]
+`ja`ファイルを開く
 
 [[Debug]]
+`ja`デバッグ機能
 
 [[%s - Debug Output]]
+`ja`%s - デバッグ出力
 
 [[(Not Found)]]
+`ja`(見当たらない)
+`de`(Nicht Gefunden)
+`it`(Non Trovata)
 
 [[Input Plugin List from File]]
 

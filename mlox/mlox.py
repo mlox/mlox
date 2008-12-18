@@ -9,6 +9,7 @@ import locale
 import os
 import sys
 import re
+import codecs
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 from time import time
@@ -108,7 +109,7 @@ class logger:
             print message
 
     def get(self):
-        return("\n".join(self.log) + "\n").decode("ascii", "replace").encode("ascii", "replace")
+        return("\n".join(self.log) + "\n")
 
     def flush(self):
         self.log = []
@@ -212,6 +213,7 @@ class caseless_dirlist:
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
 Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
+#Lang = "ja"
 
 class dyndict(dict):
     def __getitem__(self, item):
@@ -222,7 +224,7 @@ def load_translations(lang):
         (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
         trans = dict(map(lambda y: y.split('`'), val.split("\n`"))[1:])
         return(key, trans[lang].rstrip() if lang in trans else key)
-    return(dyndict(map(splitter, file("mlox.msg", 'r').read().split("\n[["))[1:]))
+    return(dyndict(map(splitter, codecs.open("mlox.msg", 'r', "utf-8").read().split("\n[["))[1:]))
 
 _ = load_translations(Lang)
 
@@ -242,9 +244,9 @@ def format_version(ver):
 def loadup_msg(msg, count, what):
     Stats.add("%-50s (%3d %s)" % (msg, count, what))
 
-def myopen_file(filename, mode):
+def myopen_file(filename, mode, encoding=None):
     try:
-        return(open(filename, mode))
+        return(codecs.open(filename, mode, encoding))
     except IOError, (errno, strerror):
         if Opt.DBG:
             mode_str = _["input"] if mode == 'r' else _["output"]
@@ -252,7 +254,7 @@ def myopen_file(filename, mode):
     return(None)
 
 def plugin_description(plugin):
-    inp = myopen_file(plugin, 'r')
+    inp = myopen_file(plugin, 'rb')
     if inp == None: return("")
     block = inp.read(4096)
     inp.close()
@@ -972,19 +974,19 @@ class loadorder:
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
         others debug their load order."""
-        file = myopen_file(fromfile, 'r')
+        file = myopen_file(fromfile, 'r', "utf-8")
         if fromfile == None:
             return
         self.order = []
-        for line in file.readlines():
+        for line in file:
             plugin_match = re_sloppy_plugin.match(line)
             if plugin_match:
                 p = plugin_match.group(1)
                 self.order.append(C.cname(p))
-        Stats.add("%-50s (%3d plugins)" % (_["\nReading plugins from file: \"%s\""] % fromfile, len(self.active)))
+        Stats.add("%-50s (%3d plugins)" % (_["Reading plugins from file: \"%s\""] % fromfile, len(self.order)))
         for p in self.order:
             self.active[p] = True
-        self.origin = "Plugin List from %s" % fromfile
+        self.origin = "Plugin List from %s" % os.path.basename(fromfile)
 
     def add_current_order(self):
         """We treat the current load order as a sort of preferred order in
@@ -1053,7 +1055,7 @@ class loadorder:
         Stats.flush()
         New.flush()
         Old.flush()
-        Stats.add("Version: %s" % full_version)
+        Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
             self.read_from_file(fromfile)
             if len(self.order) == 0:
@@ -1150,6 +1152,7 @@ class loadorder:
 
 class mlox_gui():
     def __init__(self):
+        wx.Locale(wx.LOCALE_LOAD_DEFAULT)
         self.app = wx.App()
         self.can_update = True
         self.dir = os.getcwd()
@@ -1157,26 +1160,34 @@ class mlox_gui():
         default_font = wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
                                 weight=wx.FONTWEIGHT_NORMAL, underline=False, face="",
                                 encoding=wx.FONTENCODING_SYSTEM)
+        label_font = wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
         self.frame = wx.Frame(None, wx.ID_ANY, ("mlox %s" % Version))
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.logo = wx.Panel(self.frame, -1)
         wx.StaticBitmap(self.logo, bitmap=wx.BitmapFromImage(wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF)))
         self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
-        self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
+        self.label_stats.SetFont(label_font)
+        self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
+        self.txt_stats.SetFont(default_font)
         self.label_msg = wx.StaticText(self.frame, -1, _["Messages"])
+        self.label_msg.SetFont(label_font)
         self.txt_msg = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_msg.SetFont(default_font)
         self.label_cur = wx.StaticText(self.frame, -1, _["Current Load Order"])
-        self.txt_cur = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL)
+        self.label_cur.SetFont(label_font)
+        self.txt_cur = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+        self.txt_cur.SetFont(default_font)
         self.label_cur_bottom = wx.StaticText(self.frame, -1, _["(Right click in this pane for options)"])
         self.label_new = wx.StaticText(self.frame, -1, _["Proposed Load Order Sorted by mlox"])
+        self.label_new.SetFont(label_font)
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
         self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
-        # see if setting the font fixes display problems on Windows
         self.txt_new.SetFont(default_font)
         self.btn_update = wx.Button(self.frame, -1, _["Update Load Order"], size=(90,60))
+        self.btn_update.SetFont(label_font)
         self.btn_quit = wx.Button(self.frame, -1, _["Quit"], size=(90,60))
+        self.btn_quit.SetFont(label_font)
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
         self.btn_update.Bind(wx.EVT_BUTTON, self.on_update)
         self.btn_quit.Bind(wx.EVT_BUTTON, self.on_quit)
@@ -1217,6 +1228,15 @@ class mlox_gui():
         # setup up rightclick menu handler for original load order pane
         self.txt_cur.Bind(wx.EVT_RIGHT_DOWN, self.right_click_handler)
 
+    def highlight_hello(self, txt):
+        happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
+        highlighters = { re.compile(r'Version[^\]]+\]\t+(.+)', re.IGNORECASE): happy }
+        text = Stats.get()
+        for (re_pat, style) in highlighters.items():
+            for match in re.finditer(re_pat, text):
+                (start, end) = match.span(1)
+                txt.SetStyle(start, end, style)
+
     def highlight_warnings(self, txt):
         # highlight warnings in message window to help convey urgency
         # highlight styles:
@@ -1239,6 +1259,7 @@ class mlox_gui():
             for match in re.finditer(re_pat, text):
                 (start, end) = match.span()
                 txt.SetStyle(start, end, style)
+        happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
 
     def highlight_moved(self, txt):
         # highlight background color for changed items in txt widget
@@ -1256,11 +1277,13 @@ class mlox_gui():
         if not self.can_update:
             self.btn_update.Disable()
         self.txt_stats.SetValue(Stats.get())
+        self.highlight_hello(self.txt_stats)
         self.txt_msg.SetValue(Msg.get())
         self.highlight_warnings(self.txt_msg)
         self.txt_cur.SetValue(Old.get())
         self.txt_new.SetValue(New.get())
         self.label_cur.SetLabel(lo.origin)
+        self.cur_vbox.Layout()
         self.highlight_moved(self.txt_new)
 
     def start(self):
@@ -1419,7 +1442,8 @@ if __name__ == "__main__":
             # dump the translation dictionary
             print "Languages translations for: %s" % arg
             for k, v in (load_translations(arg).items()):
-                print "%s:\n -> %s" % (k, v)
+                print "%s:" % k
+                print " -> %s" % v.encode("utf-8")
             sys.exit(0)
         elif opt in ("-u", "--update"):
             Opt.Update = True
