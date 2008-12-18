@@ -61,6 +61,6 @@ dist/mlox:
 
 stats:
 	@echo "Rule-base stats ($(RELDATE))"
-	@egrep -i '^\[(order|nearstart|nearend|note|conflict|patch|requires)( |\])' data/mlox_base.txt |wc -l|xargs echo "rules:		"
 	@grep '^;; @' data/mlox_base.txt |wc -l|xargs echo "sections:	"
+	@egrep -i '^\[(order|nearstart|nearend|note|conflict|patch|requires)( |\])' data/mlox_base.txt |wc -l|xargs echo "rules:		"
 

@@ -3,7 +3,7 @@
 # mlox - elder scrolls mod load order eXpert
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.32"
+Version = "0.33"
 
 import locale
 import os
@@ -213,7 +213,6 @@ class caseless_dirlist:
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
 Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
-#Lang = "ja"
 
 class dyndict(dict):
     def __getitem__(self, item):
@@ -227,6 +226,16 @@ def load_translations(lang):
     return(dyndict(map(splitter, codecs.open("mlox.msg", 'r', "utf-8").read().split("\n[["))[1:]))
 
 _ = load_translations(Lang)
+
+def unify(s):
+    """For GUI text areas that may contain filenames, we guess at the encoding."""
+    for encoding in ("utf-8", "latin-1"):
+        try:
+            return(unicode(s, encoding))
+        except UnicodeDecodeError:
+            pass
+    # punt!
+    return(s.decode("ascii", "replace").encode("ascii", "replace"))
 
 def format_version(ver):
     v = re_ver_delim.split(ver, 3)
@@ -974,7 +983,7 @@ class loadorder:
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
         others debug their load order."""
-        file = myopen_file(fromfile, 'r', "utf-8")
+        file = myopen_file(fromfile, 'r')
         if fromfile == None:
             return
         self.order = []
@@ -1160,7 +1169,9 @@ class mlox_gui():
         default_font = wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL,
                                 weight=wx.FONTWEIGHT_NORMAL, underline=False, face="",
                                 encoding=wx.FONTENCODING_SYSTEM)
-        label_font = wx.Font(-1, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        size = default_font.GetPointSize()
+        label_font = wx.Font(size + 2, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        button_font = wx.Font(size + 6, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
         self.frame = wx.Frame(None, wx.ID_ANY, ("mlox %s" % Version))
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
@@ -1185,9 +1196,9 @@ class mlox_gui():
         self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_new.SetFont(default_font)
         self.btn_update = wx.Button(self.frame, -1, _["Update Load Order"], size=(90,60))
-        self.btn_update.SetFont(label_font)
+        self.btn_update.SetFont(button_font)
         self.btn_quit = wx.Button(self.frame, -1, _["Quit"], size=(90,60))
-        self.btn_quit.SetFont(label_font)
+        self.btn_quit.SetFont(button_font)
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
         self.btn_update.Bind(wx.EVT_BUTTON, self.on_update)
         self.btn_quit.Bind(wx.EVT_BUTTON, self.on_quit)
@@ -1278,10 +1289,10 @@ class mlox_gui():
             self.btn_update.Disable()
         self.txt_stats.SetValue(Stats.get())
         self.highlight_hello(self.txt_stats)
-        self.txt_msg.SetValue(Msg.get())
+        self.txt_msg.SetValue(unify(Msg.get()))
         self.highlight_warnings(self.txt_msg)
-        self.txt_cur.SetValue(Old.get())
-        self.txt_new.SetValue(New.get())
+        self.txt_cur.SetValue(unify(Old.get()))
+        self.txt_new.SetValue(unify(New.get()))
         self.label_cur.SetLabel(lo.origin)
         self.cur_vbox.Layout()
         self.highlight_moved(self.txt_new)
@@ -1365,7 +1376,7 @@ class mlox_gui():
         dbg_frame_vbox.Add(dbg_txt, 1, wx.EXPAND)
         dbg_frame_vbox.Add(dbg_btn_close, 0, wx.EXPAND)
         dbg_frame.Bind(wx.EVT_CLOSE, lambda x: dbg_frame.Destroy())
-        dbg_txt.SetValue(Dbg.get())
+        dbg_txt.SetValue(unify(Dbg.get()))
         dbg_frame.SetSizer(dbg_frame_vbox)
         dbg_frame_vbox.Fit(dbg_frame)
         dbg_frame.Show(True)
