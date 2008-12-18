@@ -1,33 +1,58 @@
 
 [[Hello!]]
-`bg`Здравейте!
-`cs`Dobrý den!
-`da`Halløj!
-`de`Grüß Gott!
-`el`Γειά σας!
-`eo`Saluton!
-`es`¡Hola!
-`et`Tere päevast!
-`fi`Hyvää päivää!
-`fr`Salut!
-`hu`Szép jó napot!
-`it`Ciao!
-`ja`今日は!
-`jv`selamat sore!
-`ko`안녕하십니까!
-`lo`ຂໍໃຫ້ໂຊກດີ!
-`mt`Saħħa!
-`nl`Dag!
-`no`God dag!
-`pl`Cześć!
-`ru`Здравствуйте!
-`sk`Dobrý deň!
-`sl`Pozdravljeni!
-`sv`Hallå!
-`tr`Merhaba!
-`uk`Вітаю!
-`vi`Chào bạn!
-`zh`你好!
+`af`Hallo
+`ar`مرحبً
+`bg`Здравей
+`ca`Hola
+`cs`Ahoj
+`cy`Helo
+`da`Hej
+`de`Grüß Gott
+`el`Γειά σας
+`eo`Saluton
+`es`¡Hola
+`et`Tere päevast
+`eu`Kaixo
+`fa`سلام
+`fi`Hyvää päivää
+`fj`Bula
+`fo`Hey
+`fr`Salut
+`ga`Haigh
+`ha`Sannu
+`hi`नमस्त
+`hr`Bok
+`hu`Szia
+`id`Hai
+`is`Halló
+`it`Ciao
+`ja`今日は
+`jv`Selamat sore
+`ka`გამარჯობა
+`kk`Сәлем
+`ko`안녕하십니까
+`la`Ave
+`lo`ຂໍໃຫ້ໂຊກດີ
+`lt`Sveikas
+`mt`Saħħa
+`nl`Hoi
+`no`Hei
+`pl`Cześć
+`pt`Olá
+`ro`Bună
+`ru`Здравствуйте
+`sa`नमस्कार
+`sk`Ahoj
+`sl`Pozdravljeni
+`sq`Tungjatjeta
+`sr`Здраво
+`sv`Hallå
+`sw`Jambo
+`tr`Merhaba
+`uk`Привіт
+`vi`Chào bạn
+`zh`你好
+`zu`Sawubona
 
 [[Usage]]
 `en`Usage: mlox [OPTIONS]
@@ -87,6 +112,13 @@ Note: if you use Wrye Mash's "lock times" feature and you want mlox to
 update your load order, you need to run Mash first and turn it off.
 Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
+
+[[Ordering_Explanation]]
+`en`Ordering Explanation:
+This is a picture of all the plugins mlox thinks should follow %s
+Child plugins are indented with respect to their parents
+Lines beginning with '=' are plugins you don't have.
+Lines beginning with '+' are plugins you do have.
 
 [[Statistics]]
 `ja`スタティスティックス

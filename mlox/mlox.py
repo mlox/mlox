@@ -215,9 +215,11 @@ Lang = locale.getdefaultlocale()[0]
 Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
 
 class dyndict(dict):
+    """if item is in dict, return value, otherwise return item. for soft failure when looking up translations."""
     def __getitem__(self, item):
         return(super(dyndict, self).__getitem__(item) if item in self else item)
 def load_translations(lang):
+    """double-de-bungify the translation dictionary."""
     def splitter(x):
         s = x.split("]]")
         (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
@@ -238,6 +240,7 @@ def unify(s):
     return(s.decode("ascii", "replace").encode("ascii", "replace"))
 
 def format_version(ver):
+    """convert something we think is a version number into a canonical form that can be used for comparison"""
     v = re_ver_delim.split(ver, 3)
     match = re_alpha_tail.match(v[-1])
     alpha = "_"
@@ -263,6 +266,7 @@ def myopen_file(filename, mode, encoding=None):
     return(None)
 
 def plugin_description(plugin):
+    """Read the description field of a TES3/TES4 plugin file header"""
     inp = myopen_file(plugin, 'rb')
     if inp == None: return("")
     block = inp.read(4096)
@@ -332,7 +336,7 @@ def find_appdata():
         return None
 
 class rule_parser:
-    """A simple recursive descent rule parser, for evaluating nested boolean expressions."""
+    """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
     def __init__(self, active, graph, datadir):
         self.active = active
         self.graph = graph
@@ -768,11 +772,7 @@ class pluggraph:
 
     def explain(self, what, active):
         seen = {}
-        print _["""Ordering Explanation:
-This is a picture of all the plugins mlox thinks should follow %s
-Child plugins are indented with respect to their parents
-Lines beginning with '=' are plugins you don't have.
-Lines beginning with '+' are plugins you do have.\n"""] % what
+        print _["Ordering_Explanation"] % what
         print what
         def explain_rec(indent, n):
             if n in seen:
