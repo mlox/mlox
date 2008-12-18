@@ -1,23 +1,17 @@
 #!/usr/bin/python
 # -*- mode: python -*-
+# mlox - elder scrolls mod load order eXpert
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
 Version = "0.32"
 
-import sys
-
-"""
-mlox - elder scrolls mod load order eXpert
-"""
-
+import locale
 import os
+import sys
 import re
-import wx
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 from time import time
-
-Message = {}
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -39,6 +33,11 @@ Opt.Quiet = False
 Opt.Update = False
 Opt.WarningsOnly = False
 Opt._Game = None
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        Opt.GUI = True
+        import wx
 
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
@@ -86,7 +85,7 @@ clip_file = "mlox_clipboard.out"
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
 debug_output = "mlox_debug.out"
-tes3_min_plugin_size = 362           # minimum size for a TES3 plugin
+tes3_min_plugin_size = 362
 
 class logger:
     def __init__(self, prints, *cohort):
@@ -211,6 +210,22 @@ class caseless_dirlist:
 
 
 # Utility functions
+Lang = locale.getdefaultlocale()[0]
+Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
+
+class dyndict(dict):
+    def __getitem__(self, item):
+        return(super(dyndict, self).__getitem__(item) if item in self else item)
+def load_translations(lang):
+    def splitter(x):
+        s = x.split("]]")
+        (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
+        trans = dict(map(lambda y: y.split('`'), val.split("\n`"))[1:])
+        return(key, trans[lang].rstrip() if lang in trans else key)
+    return(dyndict(map(splitter, file("mlox.msg", 'r').read().split("\n[["))[1:]))
+
+_ = load_translations(Lang)
+
 def format_version(ver):
     v = re_ver_delim.split(ver, 3)
     match = re_alpha_tail.match(v[-1])
@@ -232,8 +247,8 @@ def myopen_file(filename, mode):
         return(open(filename, mode))
     except IOError, (errno, strerror):
         if Opt.DBG:
-            mode_str = "input" if mode == 'r' else "output"
-            Dbg.add("Error opening \"%s\" for %s (%s)" % (filename, mode_str, strerror))
+            mode_str = _["input"] if mode == 'r' else _["output"]
+            Dbg.add(_["Error opening \"%s\" for %s (%s)"] % (filename, mode_str, strerror))
     return(None)
 
 def plugin_description(plugin):
@@ -261,7 +276,7 @@ def plugin_description(plugin):
         return("")
 
 def find_appdata():
-    """a rather shaky function for finding where Oblivion's Application Data lives.
+    """a somewhat hacky function for finding where Oblivion's Application Data lives.
     Hopefully works under Windows, Wine, and native Linux."""
     if os.name == "posix":
         # Linux - total hack for finding plugins.txt
@@ -301,7 +316,6 @@ def find_appdata():
             key.Close()
         re_env = re.compile(r'%([^|<>=^%]+)%')
         appdata = re_env.sub(lambda m: os.environ.get(m.group(1), m.group(0)), vals[0])
-        print "appdata=%s" % appdata
         return(os.path.expandvars(appdata))
     except ImportError:
         return None
@@ -344,7 +358,7 @@ class rule_parser:
         return("%s:%d" % (self.rule_file, self.line_num))
 
     def parse_error(self, what):
-        Msg.add("%s: Parse Error(%s), %s" % (self.where(), self.curr_rule, what))
+        Msg.add(_["%s: Parse Error(%s), %s"] % (self.where(), self.curr_rule, what))
 
     def parse_message_block(self):
         while self.readline():
@@ -383,7 +397,7 @@ class rule_parser:
             exists = plugin_name in self.active
             return(exists, plugin_name)
         else:
-            self.parse_error("expected a plugin name: \"%s\"" % buff)
+            self.parse_error(_["expected a plugin name: \"%s\""] % buff)
             self.buffer = ""
             return(None, None)
 
@@ -409,9 +423,9 @@ class rule_parser:
                 self.graph.nodes.setdefault(p, [])
         if rule == "ORDER":
             if n_order == 0:
-                Msg.add("Warning: %s: ORDER rule has no entries" % (self.where()))
+                Msg.add(_["Warning: %s: ORDER rule has no entries"] % (self.where()))
             elif n_order == 1:
-                Msg.add("Warning: %s: ORDER rule skipped because it only has one entry: %s" % (self.where(), C.truename(prev)))
+                Msg.add(_["Warning: %s: ORDER rule skipped because it only has one entry: %s"] % (self.where(), C.truename(prev)))
 
     def parse_ver(self):
         match = re_ver_fun.match(self.buffer)
@@ -459,9 +473,9 @@ class rule_parser:
             elif op == '>':
                 return(p_ver > ver, expr)
             else:
-                self.parse_error("Invalid [VER] operator: %s" %  self.buffer)
+                self.parse_error(_["Invalid [VER] operator: %s"] %  self.buffer)
                 return(None, None)
-        self.parse_error("Invalid [VER] function: %s" %  self.buffer)
+        self.parse_error(_["Invalid [VER] function: %s"] %  self.buffer)
         return(None, None)
 
     def parse_desc(self):
@@ -491,7 +505,7 @@ class rule_parser:
             if bang == "!": bool = not bool
             ParseDbg.add("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
             return(bool, expr)
-        self.parse_error("Invalid [DESC] function: %s" %  self.buffer)
+        self.parse_error(_["Invalid [DESC] function: %s"] %  self.buffer)
         return(None, None)
 
     def parse_expression(self, prune=False):
@@ -546,7 +560,7 @@ class rule_parser:
                 return(not(all(vals)), ["NOT"] + exprs)
             else:
                 # should not be reached due to match on re_start_fun
-                Msg.add("Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\"" % (self.where(), buff))
+                Msg.add(_["Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\""] % (self.where(), buff))
                 return(None, None)
             ParseDbg.add("parse_expression NOTREACHED")
         else:
@@ -613,16 +627,16 @@ class rule_parser:
             if bool1 != None:
                 (bool2, expr2) = self.parse_expression()
             if bool2 == None:
-                Msg.add("Warning: %s: PATCH rule must have 2 conditions" % (self.where()))
+                Msg.add(_["Warning: %s: PATCH rule must have 2 conditions"] % (self.where()))
                 return
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
-                Msg.add("[PATCH]\n%s is missing some pre-requisites:\n%s" %
+                Msg.add(_["[PATCH]\n%s is missing some pre-requisites:\n%s"] %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": Msg.add(msg)
             if bool2 and not bool1:
                 # case where the patch is missing for the thing to be patched
-                Msg.add("[PATCH]\n%s for:\n%s" %
+                Msg.add(_["[PATCH]\n%s for:\n%s"] %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": Msg.add(msg)
         elif rule == "REQUIRES": # takes 2 exprs
@@ -634,7 +648,7 @@ class rule_parser:
                     self.parse_error("REQUIRES rule must have 2 conditions")
                     return
             if bool1 and not bool2:
-                Msg.add("[REQUIRES]\n%s Requires:\n%s" %
+                Msg.add(_["[REQUIRES]\n%s Requires:\n%s"] %
                         (self.pprint(expr1, " !!!"), self.pprint(expr2, " > ")))
                 if msg != "": Msg.add(msg)
         ParseDbg.add("parse_statement RETURNING")
@@ -666,12 +680,12 @@ class rule_parser:
                     self.parse_statement(self.curr_rule, new_rule.group(2), new_rule.group(3))
                 else:
                     # we should never reach here, since re_rule only matches known rules
-                    self.parse_error("read_rules failed sanity check, unknown rule %s" % self.buffer)
+                    self.parse_error(_["read_rules failed sanity check, unknown rule %s"] % self.buffer)
                     self.buffer = ""
             else:
-                self.parse_error("expected start of rule: \"%s\"" % self.buffer)
+                self.parse_error(_["expected start of rule: \"%s\""] % self.buffer)
                 self.buffer = ""
-        loadup_msg("Read rules from: \"%s\"" % self.rule_file, n_rules, "rules")
+        loadup_msg(_["Read rules from: \"%s\""] % self.rule_file, n_rules, "rules")
         return True
 
 
@@ -725,7 +739,7 @@ class pluggraph:
             # this case because they do not matter.
             # (where != "") when it is an edge from a rules file, and in
             # that case we do want to see cycle errors.
-            cycle_detected = "Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2))
+            cycle_detected = _["Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\""] % (where, C.truename(plug1), C.truename(plug2))
             if where == "":
                 Dbg.add(cycle_detected)
             else:
@@ -743,11 +757,11 @@ class pluggraph:
 
     def explain(self, what, active):
         seen = {}
-        print """Ordering Explanation:
+        print _["""Ordering Explanation:
 This is a picture of all the plugins mlox thinks should follow %s
 Child plugins are indented with respect to their parents
 Lines beginning with '=' are plugins you don't have.
-Lines beginning with '+' are plugins you do have.\n""" % what
+Lines beginning with '+' are plugins you do have.\n"""] % what
         print what
         def explain_rec(indent, n):
             if n in seen:
@@ -812,7 +826,7 @@ Lines beginning with '+' are plugins you do have.\n""" % what
                     roots.append(child)
             del self.nodes[root]
         if len(self.nodes.items()) != 0:
-            Msg.add("Error: Topological Sort Failed!")
+            Msg.add(_["Error: Topological Sort Failed!"])
             Dbg.add(PrettyPrinter(indent=4).pformat(self.nodes.items()))
             return None
         return sorted
@@ -877,7 +891,7 @@ class loadorder:
             # find Morrowind.ini for Morrowind
             ini_path = self.gamedir.find_path(source)
             if ini_path == None:
-                Msg.add("[%s not found, assuming running outside Morrowind directory]" % source)
+                Msg.add(_["[%s not found, assuming running outside Morrowind directory]"] % source)
                 return
             ini = myopen_file(ini_path, 'r')
             if ini == None:
@@ -923,11 +937,11 @@ class loadorder:
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
-        loadup_msg("Getting active plugins from: \"%s\"" % source, len(plugins), "plugins")
+        loadup_msg(_["Getting active plugins from: \"%s\""] % source, len(plugins), "plugins")
         self.order = plugins
         for p in self.order:
             self.active[p] = True
-        self.origin = "Active Plugins"
+        self.origin = _["Active Plugins"]
 
     def get_data_files(self):
         """Get the list of plugins from the data files directory. Updates self.active.
@@ -936,10 +950,10 @@ class loadorder:
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         self.order = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
-        loadup_msg("Getting list of plugins from plugin directory", len(self.order), "plugins")
+        loadup_msg(_["Getting list of plugins from plugin directory"], len(self.order), "plugins")
         for p in self.order:
             self.active[p] = True
-        self.origin = "Installed Plugins"
+        self.origin = _["Installed Plugins"]
 
     def listversions(self):
         self.find_game_dirs()
@@ -967,7 +981,7 @@ class loadorder:
             if plugin_match:
                 p = plugin_match.group(1)
                 self.order.append(C.cname(p))
-        Stats.add("%-50s (%3d plugins)" % ("\nReading plugins from file: \"%s\"" % fromfile, len(self.active)))
+        Stats.add("%-50s (%3d plugins)" % (_["\nReading plugins from file: \"%s\""] % fromfile, len(self.active)))
         for p in self.order:
             self.active[p] = True
         self.origin = "Plugin List from %s" % fromfile
@@ -1031,7 +1045,7 @@ class loadorder:
         for p in order:
             print >> out, p
         out.close()
-        Msg.add("%s saved to: %s" % (what, filename))
+        Msg.add(_["%s saved to: %s"] % (what, filename))
 
     def update(self, fromfile):
         """Update the load order based on input rules."""
@@ -1043,8 +1057,7 @@ class loadorder:
         if Opt.FromFile:
             self.read_from_file(fromfile)
             if len(self.order) == 0:
-                Msg.add("No plugins detected. mlox.py understands lists of plugins in the format")
-                Msg.add("used by Morrowind.ini or Wrye Mash. Is that what you used for input?")
+                Msg.add(_["No plugins detected. mlox.py understands lists of plugins in the format\nused by Morrowind.ini or Wrye Mash. Is that what you used for input?"])
                 return(self)
         else:
             self.find_game_dirs()
@@ -1055,7 +1068,7 @@ class loadorder:
                 if self.order == []:
                     self.get_data_files()
             if self.order == []:
-                Msg.add("No plugins detected! mlox needs to run somewhere under where the game is installed.")
+                Msg.add(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
                 return(self)
         if Opt.DBG:
             Dbg.add("initial load order")
@@ -1068,7 +1081,7 @@ class loadorder:
         parser.read_rules("mlox_user.txt")
         # secondary rules from mlox_base.txt
         if not parser.read_rules("mlox_base.txt"):
-            Msg.add("Error: unable to open mlox_base.txt. You must run mlox in the directory where mlox_base.txt lives.")
+            Msg.add(_["Error: unable to open mlox_base.txt. You must run mlox in the directory where mlox_base.txt lives."])
             return(self)
         # now do the topological sort of all known plugins (rules + load order)
         if Opt.Explain == None:
@@ -1095,31 +1108,31 @@ class loadorder:
         new_order_truename = [C.truename(p) for p in new_order_cname]
 
         if self.order == new_order_cname:
-            Msg.add("[Plugins already in sorted order. No sorting needed!]")
+            Msg.add(_["[Plugins already in sorted order. No sorting needed!]"])
             self.sorted = True
 
         # print out the new load order
         if len(new_order_cname) != len(self.order):
-            Msg.add("Program Error: sanity check: len(new_order_truename %d) != len(self.order %d)" % (len(new_order_truename), len(self.order)))
+            Msg.add(_["Program Error: sanity check: len(new_order_truename %d) != len(self.order %d)"] % (len(new_order_truename), len(self.order)))
         if not Opt.FromFile:
             # these are things we do not want to do if just testing a load
             # order from a file (FromFile)
             if Opt.Update:
                 self.update_mod_times(new_order_truename)
-                Msg.add("[LOAD ORDER UPDATED!]")
+                Msg.add(_["[LOAD ORDER UPDATED!]"])
                 self.sorted = True
             else:
                 if not Opt.GUI:
-                    Msg.add("[Load Order NOT updated.]")
+                    Msg.add(_["[Load Order NOT updated.]"])
             # save the load orders to file for future reference
-            self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], "current")
-            self.save_order(new_loadorder_output, new_order_truename, "mlox sorted")
+            self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], _["current"])
+            self.save_order(new_loadorder_output, new_order_truename, _["mlox sorted"])
         if not Opt.WarningsOnly:
             if Opt.GUI == False:
                 if Opt.Update:
-                    Msg.add("\n[UPDATED] New Load Order:\n---------------")
+                    Msg.add(_["\n[UPDATED] New Load Order:\n---------------"])
                 else:
-                    Msg.add("\n[Proposed] New Load Order:\n---------------")
+                    Msg.add(_["\n[Proposed] New Load Order:\n---------------"])
             # highlight mods that have moved up in the load order
             highlight = "_"
             for i in range(0, len(new_order_truename)):
@@ -1135,9 +1148,9 @@ class loadorder:
         return(self)
 
 
-class mlox_gui(wx.App):
+class mlox_gui():
     def __init__(self):
-        wx.App.__init__(self)
+        self.app = wx.App()
         self.can_update = True
         self.dir = os.getcwd()
         # setup widgets
@@ -1149,21 +1162,21 @@ class mlox_gui(wx.App):
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.logo = wx.Panel(self.frame, -1)
         wx.StaticBitmap(self.logo, bitmap=wx.BitmapFromImage(wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF)))
-        self.label_stats = wx.StaticText(self.frame, -1, Message["statistics"])
+        self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
         self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
-        self.label_msg = wx.StaticText(self.frame, -1, Message["messages"])
+        self.label_msg = wx.StaticText(self.frame, -1, _["Messages"])
         self.txt_msg = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_msg.SetFont(default_font)
-        self.label_cur = wx.StaticText(self.frame, -1, Message["current_load_order"])
+        self.label_cur = wx.StaticText(self.frame, -1, _["Current Load Order"])
         self.txt_cur = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL)
-        self.label_cur_bottom = wx.StaticText(self.frame, -1, Message["click for options"])
-        self.label_new = wx.StaticText(self.frame, -1, Message["new_load_order"])
+        self.label_cur_bottom = wx.StaticText(self.frame, -1, _["(Right click in this pane for options)"])
+        self.label_new = wx.StaticText(self.frame, -1, _["Proposed Load Order Sorted by mlox"])
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
         self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         # see if setting the font fixes display problems on Windows
         self.txt_new.SetFont(default_font)
-        self.btn_update = wx.Button(self.frame, -1, Message["update"], size=(90,60))
-        self.btn_quit = wx.Button(self.frame, -1, Message["quit"], size=(90,60))
+        self.btn_update = wx.Button(self.frame, -1, _["Update Load Order"], size=(90,60))
+        self.btn_quit = wx.Button(self.frame, -1, _["Quit"], size=(90,60))
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
         self.btn_update.Bind(wx.EVT_BUTTON, self.on_update)
         self.btn_quit.Bind(wx.EVT_BUTTON, self.on_quit)
@@ -1253,7 +1266,7 @@ class mlox_gui(wx.App):
     def start(self):
         self.frame.Show(True)
         self.analyze_loadorder(None)
-        self.MainLoop()
+        self.app.MainLoop()
 
     def on_quit(self, e):
         sys.exit(0)
@@ -1278,10 +1291,10 @@ class mlox_gui(wx.App):
 
     def right_click_handler(self, e):
         menu = wx.Menu()
-        menu_items = [("Select All", self.menu_select_all_handler),
-                      ("Paste", self.menu_paste_handler),
-                      ("Open File", self.menu_open_file_handler),
-                      ("Debug", self.menu_debug_handler)]
+        menu_items = [(_["Select All"], self.menu_select_all_handler),
+                      (_["Paste"], self.menu_paste_handler),
+                      (_["Open File"], self.menu_open_file_handler),
+                      (_["Debug"], self.menu_debug_handler)]
         for name, handler in menu_items:
             id = wx.NewId()
             menu.Append(id, name)
@@ -1310,7 +1323,7 @@ class mlox_gui(wx.App):
 
     def menu_open_file_handler(self, e):
         self.can_update = False
-        dialog = wx.FileDialog(self.frame, message="Input from File", defaultDir=self.dir, defaultFile="", style=wx.OPEN)
+        dialog = wx.FileDialog(self.frame, message=_["Input Plugin List from File"], defaultDir=self.dir, defaultFile="", style=wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             self.dir = dialog.GetDirectory()
             Opt.FromFile = True
@@ -1318,11 +1331,11 @@ class mlox_gui(wx.App):
 
     def menu_debug_handler(self, e):
         # pop up a window containing the debug output
-        dbg_frame = wx.Frame(None, wx.ID_ANY, ("%s - Debug Output" % full_version))
+        dbg_frame = wx.Frame(None, wx.ID_ANY, (_["%s - Debug Output"] % full_version))
         dbg_frame.SetSizeHints(500,800)
-        dbg_label = wx.StaticText(dbg_frame, -1, "[Debug Output Saved to \"%s\"]" % debug_output)
+        dbg_label = wx.StaticText(dbg_frame, -1, _["(Debug Output Saved to \"%s\")"] % debug_output)
         dbg_txt = wx.TextCtrl(dbg_frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
-        dbg_btn_close = wx.Button(dbg_frame, -1, Message["close"], size=(90,60))
+        dbg_btn_close = wx.Button(dbg_frame, -1, _["Close"], size=(90,60))
         dbg_btn_close.Bind(wx.EVT_BUTTON, lambda x: dbg_frame.Destroy())
         dbg_frame_vbox = wx.BoxSizer(wx.VERTICAL)
         dbg_frame_vbox.Add(dbg_label, 0, wx.EXPAND)
@@ -1345,23 +1358,18 @@ def get_mlox_base_version():
                 base.close()
                 return(m.group(1))
         base.close()
-    return("")
+    return(_["(Not Found)"])
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        Opt.GUI = True
     Dbg.add("\nmlox DEBUG DUMP:\n")
-    # read in message strings
-    def splitter(s): return(map(lambda x: x.strip("\n"), s.split("]]\n")))
-    Message = dict(map(splitter, file("mlox.msg", 'r').read().split("\n[["))[1:])
     def usage(status):
-        print Message["usage"]
+        print _["Usage"]
         sys.exit(status)
     # Check Python version
     Dbg.add("Python Version: %s" % sys.version[:3])
     if float(sys.version[:3]) < 2.5:
-        print Message["requiresPython25"]
+        print _["This program requires Python version 2.5."]
         sys.exit(1)
     # run under psyco if available
     do_psyco = False
@@ -1376,8 +1384,9 @@ if __name__ == "__main__":
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
         opts, args = getopt(sys.argv[1:], "acde:fhlpquvw",
-                            ["all", "base-only", "check", "debug", "explain", "fromfile", "help", 
-                             "listversions", "parsedebug", "quiet", "update", "version", "warningsonly"])
+                            ["all", "base-only", "check", "debug", "explain=", "fromfile", "help", 
+                             "listversions", "parsedebug", "quiet", "translations=",
+                             "update", "version", "warningsonly"])
     except GetoptError, err:
         print str(err)
         usage(2)                # exits
@@ -1406,17 +1415,23 @@ if __name__ == "__main__":
             Opt.ParseDBG = True
         elif opt in ("-q", "--quiet"):
             Opt.Quiet = True
+        elif opt in ("--translations"):
+            # dump the translation dictionary
+            print "Languages translations for: %s" % arg
+            for k, v in (load_translations(arg).items()):
+                print "%s:\n -> %s" % (k, v)
+            sys.exit(0)
         elif opt in ("-u", "--update"):
             Opt.Update = True
         elif opt in ("-v", "--version"):
-            print full_version
+            print "%s (%s)" % (full_version, Lang)
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True
 
     if Opt.FromFile:
         if len(args) == 0:
-            print "Error: -f specified, but no files on command line."
+            print _["Error: -f specified, but no files on command line."]
             usage(2)            # exits
         for file in args:
             loadorder().update(file)

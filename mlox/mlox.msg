@@ -1,6 +1,9 @@
 
-[[usage]]
-Usage: mlox [OPTIONS]
+[[goodday]]
+`ja`今日は
+
+[[Usage]]
+`en`Usage: mlox [OPTIONS]
 
  OPTIONS
  -a|--all
@@ -58,29 +61,39 @@ update your load order, you need to run Mash first and turn it off.
 Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
 
-[[statistics]]
-Statistics
+[[Statistics]]
 
-[[messages]]
-Messages
+[[Messages]]
 
-[[current_load_order]]
-Current Load Order
+[[Quit]]
 
-[[new_load_order]]
-Proposed Load Order Sorted by mlox
+[[Update Load Order]]
 
-[[quit]]
-Quit
+[[Close]]
 
-[[update]]
-Update Load Order
+[[Select All]]
 
-[[requiresPython25]]
-This program requires Python version 2.5 or later.
+[[Paste]]
 
-[[close]]
-close
+[[Open File]]
 
-[[click for options]]
-[Right click in this pane for options]
+[[Debug]]
+
+[[%s - Debug Output]]
+
+[[(Not Found)]]
+
+[[Input Plugin List from File]]
+
+[[(Debug Output Saved to "%s")]]
+
+[[Error: -f specified, but no files on command line.]]
+
+[[This program requires Python version 2.5.]]
+
+[[Current Load Order]]
+
+[[(Right click in this pane for options)]]
+
+[[Proposed Load Order Sorted by mlox]]
+
