@@ -60,7 +60,8 @@ re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
 re_plugin_meta = re.compile(r'([*?])')
 # for recognizing our functions:
-re_start_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER)\s*', re.IGNORECASE)
+re_start_fun = re.compile(r'^\[')
+re_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER)\s*', re.IGNORECASE)
 re_end_fun = re.compile(r'^\]\s*')
 re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s*([^\]]+)\]', re.IGNORECASE)
 # for parsing a version number
@@ -347,6 +348,10 @@ class rule_parser:
         self.buffer = ""        # the parsing buffer
         self.message = []       # the comment for the current rule
         self.curr_rule = ""     # name of the current rule we are parsing
+        self.parse_dbg_indent = ""
+
+    def pdbg(self, msg):
+        ParseDbg.add(self.parse_dbg_indent + msg)
 
     def readline(self):
         """reads a line into the current parsing buffer"""
@@ -360,10 +365,10 @@ class rule_parser:
                 line = line.rstrip() # strip whitespace from end of line, include CRLF
                 if line != "":
                     self.buffer = line
-                    ParseDbg.add("readline returns: %s" % line)
+                    self.pdbg("readline returns: %s" % line)
                     return(True)
         except StopIteration:
-            ParseDbg.add("EOF")
+            self.pdbg("EOF")
             self.buffer = ""
             self.input_handle.close()
             self.input_handle = None
@@ -383,44 +388,49 @@ class rule_parser:
                 return
 
     def parse_plugin_name(self):
+        self.parse_dbg_indent += "  "
         buff = self.buffer.strip()
-        ParseDbg.add("parse_plugin_name buff=%s" % buff)
+        self.pdbg("parse_plugin_name buff=%s" % buff)
         plugin_match = re_plugin.match(buff)
         if plugin_match:
             plugin_name = C.cname(plugin_match.group(1))
-            ParseDbg.add("parse_plugin_name name=%s" % plugin_name)
+            self.pdbg("parse_plugin_name name=%s" % plugin_name)
             pos = plugin_match.span(2)[1]
             self.buffer = buff[pos:].lstrip()
             # if the plugin name contains metacharacters, do filename expansion
             if re_plugin_meta.search(plugin_name) != None:
                 pat = plugin_name
-                ParseDbg.add("parse_plugin_name name has META: %s" % pat)
+                self.pdbg("parse_plugin_name name has META: %s" % pat)
                 matches = []
                 pat = re_plugin_meta.sub(r".\1", pat)
-                ParseDbg.add("parse_plugin_name new RE pat: %s" % pat)
+                self.pdbg("parse_plugin_name new RE pat: %s" % pat)
                 re_namepat = re.compile(pat, re.IGNORECASE)
                 for p in self.active:
                     if re_namepat.match(p):
                         matches.append(p)
-                        ParseDbg.add("parse_plugin_name matching name: %s" % p)
+                        self.pdbg("parse_plugin_name matching name: %s" % p)
                 if len(matches) > 0:
                     plugin_name = matches.pop(0)
-                    ParseDbg.add("parse_plugin_name new name=%s" % plugin_name)
+                    self.pdbg("parse_plugin_name new name=%s" % plugin_name)
                     if len(matches) > 0:
                         self.buffer = " ".join(matches) + " " + self.buffer
-            ParseDbg.add("parse_plugin_name new buff=\"%s\"" % self.buffer)
+            self.pdbg("parse_plugin_name new buff=\"%s\"" % self.buffer)
             exists = plugin_name in self.active
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(exists, plugin_name)
         else:
             self.parse_error(_["expected a plugin name: \"%s\""] % buff)
             self.buffer = ""
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(None, None)
 
     def parse_ordering(self, rule):
+        self.parse_dbg_indent += "  "
         prev = None
         n_order = 0
         while self.readline():
             if re_rule.match(self.buffer):
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             p = self.parse_plugin_name()[1]
             if p == None:
@@ -443,44 +453,49 @@ class rule_parser:
                 Msg.add(_["Warning: %s: ORDER rule skipped because it only has one entry: %s"] % (self.where(), C.truename(prev)))
 
     def parse_ver(self):
+        self.parse_dbg_indent += "  "
         match = re_ver_fun.match(self.buffer)
         if match:
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            ParseDbg.add("parse_ver new buffer = %s" % self.buffer)
+            self.pdbg("parse_ver new buffer = %s" % self.buffer)
             op = match.group(1)
             orig_ver = match.group(2)
             ver = format_version(orig_ver)
             plugin = C.cname(match.group(3))
             expr = "[VER %s %s %s]" % (op, orig_ver, plugin)
-            ParseDbg.add("parse_ver, expr=%s ver=%s" % (expr, ver))
+            self.pdbg("parse_ver, expr=%s ver=%s" % (expr, ver))
             if not plugin in self.active:
-                ParseDbg.add("parse_ver [VER] \"%s\" not active" % plugin)
+                self.pdbg("parse_ver [VER] \"%s\" not active" % plugin)
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
                 # this case is reached when doing fromfile checks
                 # and we do not have the actual plugin to check, so
                 # we assume that the plugin matches the given version
                 if op == '=':
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(True, expr)
                 else:
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(False, expr)
             desc = plugin_description(self.datadir.find_path(plugin))
             match = re_header_version.search(desc)
             if match:
                 p_ver_orig = match.group(1)
                 p_ver = format_version(p_ver_orig)
-                ParseDbg.add("parse_ver (header) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
+                self.pdbg("parse_ver (header) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
             else:
                 match = re_filename_version.search(plugin)
                 if match:
                     p_ver_orig = match.group(1)
                     p_ver = format_version(p_ver_orig)
-                    ParseDbg.add("parse_ver (filename) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
+                    self.pdbg("parse_ver (filename) version(%s) = %s (%s)" % (plugin, p_ver_orig, p_ver))
                 else:
-                    ParseDbg.add("parse_ver no version for %s" % plugin)
+                    self.pdbg("parse_ver no version for %s" % plugin)
                     return(False, expr)
-            ParseDbg.add("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
+            self.pdbg("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             if op == '=':
                 return(p_ver == ver, expr)
             elif op == '<':
@@ -491,100 +506,121 @@ class rule_parser:
                 self.parse_error(_["Invalid [VER] operator: %s"] %  self.buffer)
                 return(None, None)
         self.parse_error(_["Invalid [VER] function: %s"] %  self.buffer)
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         return(None, None)
 
     def parse_desc(self):
         """match patterns against the description string in the plugin header."""
+        self.parse_dbg_indent += "  "
         match = re_desc_fun.match(self.buffer)
         if match:
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            ParseDbg.add("parse_desc new buffer = %s" % self.buffer)
+            self.pdbg("parse_desc new buffer = %s" % self.buffer)
             bang = match.group(1) # means to invert the meaning of the match
             pat = match.group(2)
             plugin = C.cname(match.group(3))
             expr = "[DESC %s/%s/ %s]" % (bang, pat, plugin)
-            ParseDbg.add("parse_desc, expr=%s" % expr)
+            self.pdbg("parse_desc, expr=%s" % expr)
             if not plugin in self.active:
-                ParseDbg.add("parse_desc [DESC] \"%s\" not active" % plugin)
+                self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin)
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
                 # this case is reached when doing fromfile checks,
                 # which do not have access to the actual plugin, so we
                 # always assume the test is merely for file existence,
                 # to err on the side of caution
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(True, expr)
             re_pat = re.compile(pat)
             desc = plugin_description(self.datadir.find_path(plugin))
             bool = (re_pat.search(desc) != None)
             if bang == "!": bool = not bool
-            ParseDbg.add("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
+            self.pdbg("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(bool, expr)
         self.parse_error(_["Invalid [DESC] function: %s"] %  self.buffer)
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         return(None, None)
 
     def parse_expression(self, prune=False):
+        self.parse_dbg_indent += "  "
         self.buffer = self.buffer.strip()
         if self.buffer == "":
             if self.readline():
                 if re_rule.match(self.buffer):
-                    ParseDbg.add("parse_expression new line started new rule, returning None")
+                    self.pdbg("parse_expression new line started new rule, returning None")
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(None, None)
                 self.buffer = self.buffer.strip()
             else:
-                ParseDbg.add("parse_expression EOF, returning None")
+                self.pdbg("parse_expression EOF, returning None")
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(None, None)
-        ParseDbg.add("parse_expression, start buffer: \"%s\"" % self.buffer)
-        match = re_start_fun.match(self.buffer)
+        self.pdbg("parse_expression, start buffer: \"%s\"" % self.buffer)
+        match = re_fun.match(self.buffer)
         if match:
             fun = match.group(1).upper()
             if fun == "DESC":
-                ParseDbg.add("parse_expression calling parse_desc()")
+                self.pdbg("parse_expression calling parse_desc()")
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(self.parse_desc())
             elif fun == "VER":
-                ParseDbg.add("parse_expression calling parse_ver()")
+                self.pdbg("parse_expression calling parse_ver()")
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(self.parse_ver())
             # otherwise it's a boolean function ...
-            ParseDbg.add("parse_expression parsing expression: \"%s\"" % self.buffer)
+            self.pdbg("parse_expression parsing expression: \"%s\"" % self.buffer)
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            ParseDbg.add("fun = %s" % fun)
+            self.pdbg("fun = %s" % fun)
             vals = []
             exprs = []
             bool_end = re_end_fun.match(self.buffer)
-            ParseDbg.add("self.buffer 1 =\"%s\"" % self.buffer)
+            self.pdbg("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
                 (bool, expr) = self.parse_expression(prune)
                 exprs.append(expr)
                 vals.append(bool)
-                ParseDbg.add("self.buffer 2 =\"%s\"" % self.buffer)
+                self.pdbg("self.buffer 2 =\"%s\"" % self.buffer)
                 bool_end = re_end_fun.match(self.buffer)
             pos = bool_end.span(0)[1]
             self.buffer = self.buffer[pos:]
-            ParseDbg.add("self.buffer 3 =\"%s\"" % self.buffer)
+            self.pdbg("self.buffer 3 =\"%s\"" % self.buffer)
             if fun == "ALL":
                 # prune out uninteresting expressions from ANY results
                 exprs = [e for e in exprs if not(isinstance(e, list) and e == [])]
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(all(vals), exprs[0] if len(exprs) == 1 else ["ALL"] + exprs)
             if fun == "ANY":
                 # prune out uninteresting expressions from ANY results
                 if prune:
                     exprs = [e for e in exprs if not(isinstance(e, str) and e[0:8] == "MISSING(")]
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(any(vals), exprs[0] if len(exprs) == 1 else ["ANY"] + exprs)
             if fun == "NOT":
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(not(all(vals)), ["NOT"] + exprs)
             else:
-                # should not be reached due to match on re_start_fun
+                # should not be reached due to match on re_fun
                 Msg.add(_["Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\""] % (self.where(), buff))
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(None, None)
-            ParseDbg.add("parse_expression NOTREACHED")
+            self.pdbg("parse_expression NOTREACHED")
         else:
-            ParseDbg.add("parse_expression parsing plugin: \"%s\"" % self.buffer)
+            if re_start_fun.match(self.buffer):
+                self.parse_error(_["Invalid function expression: \"%s\""] % self.buffer)
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return(None, None)
+            self.pdbg("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
             if exists != None and p != None:
                 p = C.truename(p) if exists else ("MISSING(%s)" % C.truename(p))
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(exists, p)
-        ParseDbg.add("parse_expression NOTREACHED(2)")
+        self.pdbg("parse_expression NOTREACHED(2)")
 
     def pprint(self, expr, prefix):
         """pretty printer for parsed expressions"""
@@ -595,7 +631,8 @@ class rule_parser:
         return(re_indented.sub(prefix, formatted))
 
     def parse_statement(self, rule, msg, expr):
-        ParseDbg.add("parse_statement(%s, %s, %s)" % (rule, msg, expr))
+        self.parse_dbg_indent += "  "
+        self.pdbg("parse_statement(%s, %s, %s)" % (rule, msg, expr))
         expr = expr.strip()
         if msg == "":
             if expr == "":
@@ -605,27 +642,28 @@ class rule_parser:
             self.message = [msg]
         if expr == "":
             if not self.readline():
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
         else:
             self.buffer = expr
         msg = "" if self.message == [] else " |" + "\n |".join(self.message) # no ending LF
         if rule == "CONFLICT":  # takes any number of exprs
             exprs = []
-            ParseDbg.add("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
+            self.pdbg("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
             (bool, expr) = self.parse_expression()
-            ParseDbg.add("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
+            self.pdbg("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
             while bool != None:
                 if bool:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression()
-                ParseDbg.add("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
+                self.pdbg("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
                 Msg.add("[CONFLICT]")
                 for e in exprs:
                     Msg.add(self.pprint(e, " > "))
                 if msg != "": Msg.add(msg)
         elif rule == "NOTE":    # takes any number of exprs
-            ParseDbg.add("function NOTE: %s" % msg)
+            self.pdbg("function NOTE: %s" % msg)
             exprs = []
             (bool, expr) = self.parse_expression(prune=True)
             while bool != None:
@@ -643,6 +681,7 @@ class rule_parser:
                 (bool2, expr2) = self.parse_expression()
             if bool2 == None:
                 Msg.add(_["Warning: %s: PATCH rule must have 2 conditions"] % (self.where()))
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
@@ -658,21 +697,23 @@ class rule_parser:
             (bool1, expr1) = self.parse_expression(prune=True)
             if bool1 != None:
                 (bool2, expr2) = self.parse_expression()
-                ParseDbg.add("REQ expr2 == %s" % expr2)
+                self.pdbg("REQ expr2 == %s" % expr2)
                 if bool2 == None:
                     self.parse_error("REQUIRES rule must have 2 conditions")
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return
             if bool1 and not bool2:
                 Msg.add(_["[REQUIRES]\n%s Requires:\n%s"] %
                         (self.pprint(expr1, " !!!"), self.pprint(expr2, " > ")))
                 if msg != "": Msg.add(msg)
-        ParseDbg.add("parse_statement RETURNING")
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+        self.pdbg("parse_statement RETURNING")
 
     def read_rules(self, rule_file):
         """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
         add order rules to graph, and print warnings."""
         self.rule_file = rule_file
-        ParseDbg.add("READING RULES FROM: \"%s\"" % self.rule_file)
+        self.pdbg("READING RULES FROM: \"%s\"" % self.rule_file)
         self.input_handle = myopen_file(self.rule_file, 'r')
         if self.input_handle == None:
             return False
@@ -682,6 +723,8 @@ class rule_parser:
             if self.buffer == "":
                 if not self.readline():
                     break
+            self.parse_dbg_indent = ""
+            self.curr_rule = ""
             new_rule = re_rule.match(self.buffer)
             if new_rule:        # start a new rule
                 n_rules += 1
