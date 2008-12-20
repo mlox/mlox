@@ -3,7 +3,7 @@
 # mlox - elder scrolls mod load order eXpert
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.34"
+Version = "0.35"
 
 import locale
 import os
