@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-18 14:09:58 (UTC)]
+[Version 2008-12-19 04:31:12 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -199,6 +199,48 @@ colourglass.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Abandoned Flat version 2.1f [GhostWhoWalks]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Abandoned Flat.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Abot's Tempus Fugit Ring [Abot]
+
+[Conflict]
+ You do not need abotTempusFugitRing.esp, as the Tempus Fugit Ring is included
+ in Water Life.
+abotTempusFugitRing.esp
+abotWaterLife.esm
+
+[Conflict]
+ You do not need Sid's TimeMod if you have Abot's Tempus Fugit Ring installed.
+abotTempusFugitRing.esp
+[ANY 2xTimeMod.esp
+     RealTimeMod.esp]
+
+[Conflict]
+ You do not need Sid's TimeMod if you have Abot's Water Life installed.
+ You can use the "Tempus Fugit Ring" from Water Life to set Morrowind's 
+ timescale any time during the game.
+abotWaterLife.esm
+[ANY 2xTimeMod.esp
+     RealTimeMod.esp]
+
+[Note]
+ You do not need Sid's TimeMod to set the timescale, just use the console
+ command: "set timescale to X", where X is 30 (the default for Vanilla
+ Morrowind, or X is 1, for real-time, or X is 15 for twice as slow as
+ Vanilla. Or alternatively, use Abot's Tempus Fugit Ring and you can set 
+ the timescale to whatever you want while the game is running.
+2xTimeMod.esp
+RealTimeMod.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Abigail's Petshop v5.5
 
 [Conflict]
@@ -302,6 +344,24 @@ GUARD-Remover.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adventurer's Tanktops 2 v.1.0 [Hurdy Gurdy]
+
+[Note]
+ !! Contains evil GMSTs. (Contrary to what the readme says).
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+HG_adventurers_tanktop2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adventurer's Vests v.1.0 [Hurdy Gurdy]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+HG_adventurers vests.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurers TC Beta 1
 
 [Patch]
@@ -312,6 +372,38 @@ AdvTC_TribunalAddon.esp
 
 ;; from the distribution archive - what is this?:
 ;;time_2x.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ald Redaynia Extended
+
+;This mod is compatible with Necessities of Morrowind. To enjoy
+;full functionality, please ensure that NOM is loaded AFTER this
+;mod, by using Wrye Mash or by opening NOM in the CS and saving
+;without any changes.
+; (Ref: "Ald Redaynia Extended Readme.rtf")
+[Order]
+Ald Redaynia Extended COM.esp
+Ald Redaynia Extended.esp
+NOM 2.13.esp
+
+[Conflict]
+ "PLEASE DO NOT play both .esp files together or errors will occur."
+ (Ref: "Ald Redaynia Extended Readme.rtf")
+Ald Redaynia Extended COM.esp
+Ald Redaynia Extended.esp
+
+[Requires]
+Ald Redaynia Extended COM.esp
+MW_Children_1_0.esm
+
+[Requires]
+ (Ref: "Ald Redaynia Extended Readme.rtf")
+[ALL Ald Redaynia Extended.esp
+     Ald Redaynia Extended COM.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ald Vendras v31
@@ -456,9 +548,12 @@ Antares' Big Mod 2.8.5.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
-AreaEffectArrows XB Edition.esp ; [Xeth-Ban]
-Area Effect Arrows.esp ; ???
-AreaEffectArrows.esp ; [Bethesda]
+ "AreaEffectArrows.esp" is the original plugin from Bethesda
+ "Area Effect Arrows.esp" from Particle_Arrow_Replacer_v30 adds particle effects
+ "AreaEffectArrows XB Edition.esp" by Xeth-Ban makes the plugin harder to abuse.
+AreaEffectArrows.esp
+AreaEffectArrows XB Edition.esp
+Area Effect Arrows.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -480,6 +575,15 @@ valshea_bloodmoon.esp
 [Requires]
 valshea_tribunal.esp
 Tribunal.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Clean Aradia's Needle.esp
+
+[Requires]
+ (Ref: "Read me Aradia's Needle.txt")
+Clean Aradia's Needle.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -821,6 +925,18 @@ Castlevania.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Blasphemous Revenants Werewolf Patch BETA [Fliggerty]
+
+[Patch]
+ "BR_Werewolf_Patch.esp will ensure that if you change into a werewolf in
+ front of only your revenants you will not become a 'known werewolf.'
+ It only works with BR revenants."
+ (Ref: "BR Werewolf Patch BETA Readme.txt")
+BR_Werewolf_Patch.esp
+Blasphemous Revenants.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Blood and Gore [TheLys]
 
 [Order]
@@ -1045,6 +1161,15 @@ Bloodmoon Landscape Overhaul 1.0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloody Oath_v.1.0 [Aquan]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Bloody Oath_v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bones 1.1 [James Fraser]
 
 [Note]
@@ -1201,6 +1326,19 @@ Sris_Alchemy_BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CactusSeaElf v1.0 [CactusBoy]
+
+[Note]
+ !! There are 2 versions of this .esp, the original:
+ !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1189
+ !! and the patch to support the Puzzle Canal:
+ !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1542
+ !! The patch contains evil GMSTs!
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+CactusSeaElf.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Cait's Critters Unleashed 2.0
 
 [Conflict]
@@ -1225,6 +1363,20 @@ Tribunal.esm
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Castle of Balmora.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Chapels of Vvardenfell v2 [Xanondorf/Zorrodorf]
+
+[Note]
+ !! Contains evil GMSTs. Use "Clean chapelsv2.esp" instead!
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+chapelsv2.esp
+
+[Conflict]
+ !! "chapelsv2.esp" contains dirty Tribunal GMSTs, use "Clean chapelsv2.esp" instead!
+Clean chapelsv2.esp
+chapelsv2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1322,6 +1474,25 @@ Complete Morrowind - Replacer.esp
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
  !! and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
 Contact hits.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cragonmoor v1.1 [Quatloos]
+
+[Conflict]
+ Cragonmoor has a serious conflict with Princess Stomper's Suran Extended.
+ (Ref: "Cragonmoor readme.txt")
+Cragonmoor v 1.1.esp
+Clean Suran Extended.esp
+
+[Conflict]
+ Since Cragonmoor conflicts with Suran Extended, it will also conflict
+ with New Suran Extended
+Cragonmoor v 1.1.esp
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1478,6 +1649,25 @@ io_deadite_race-1.4b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Decorator+ 1.1.1 [Raveren]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Decorator+.esp" - resurrecting has no negative side-effects
+ "Decorator+ (Balanced).esp" - resurrecting a being has major side
+ effects.
+ (Ref: "Decorator+ (Readme).txt")
+Decorator+ (Balanced).esp
+Decorator+.esp
+
+[Note]
+ You are using an older version of Decorator+, the current version is 1.1.1:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4256
+[ANY [VER < 1.1.1 Decorator+ (Balanced).esp]
+     [VER < 1.1.1 Decorator+.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Deora Mansion:  Version 4.0 [FireHeaven]
 
 [Note]
@@ -1510,6 +1700,16 @@ C0N2 v1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dragon rider's armor [Mandamus]
+
+[Requires]
+ "Don't try this mod without Better Bodies, it would be horrible
+ from an esthetic point of view!"
+ (Ref: "Dragon rider's armor, by Mandamus.txt")
+Dragon rider's armor, by Mandamus.esp
+Better Bodies.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Durzog Armor
 
 [Conflict]
@@ -1537,6 +1737,37 @@ Dracus's Durzog Armor Tribunal Update V1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwarves! 1.3 [Tarnsman]
+
+[Conflict]
+ Use "Dwarves! BB.esp" if you have Better Bodies, otherwise use: "Dwarves!.esp".
+ (Ref: "Dwarves!_readme.doc")
+Dwarves!.esp
+Dwarves! BB.esp
+
+[Requires]
+ (Ref: "Dwarves!_readme.doc")
+Dwarves! BB.esp
+Better Bodies.esp
+
+[Requires]
+ "Dwarves! MCA add-on" requires Morrowind, Bloodmoon, Tribunal and MCA.esm
+ (Ref: "Dwarves! MCA addon_readme.txt")
+Dwarves! MCA addon v2.1.esp
+[ALL MCA.esm
+     Morrowind.esm
+     Tribunal.esm
+     Bloodmoon.esm
+     [ANY Dwarves!.esp
+	  Dwarves! BB.esp]]
+
+[Order]
+Dwarves!.esp
+Dwarves! BB.esp
+Dwarves! MCA addon v2.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @DWEMER CYBORGS V2.10 [Henkbein]
 
 [Requires]
@@ -1545,6 +1776,21 @@ Dracus's Durzog Armor Tribunal Update V1.1.esp
 Dwemer_Cyborgs.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Eylurian Manor [Icepick]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Eylurian Manor-NO TRIBUNAL.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: eylurian_manor.zip/"readme.txt")
+Eylurian Manor.esp
+Eylurian Manor-NO TRIBUNAL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1561,6 +1807,20 @@ GCD better balanced birthsigns.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fast Travel [Yacoby]
+
+[Order]
+Fast Travel.esp
+Fast Travel Health Fix.esp
+
+[Requires]
+ "REQUIRES, and MUST be loaded after Fast Travel.esp"
+ (Ref: "Fast Travel Health Fix.esp" plugin header description field)
+Fast Travel Health Fix.esp
+Fast Travel.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Felsaad Revamped
 
 [Conflict]
@@ -1571,6 +1831,23 @@ LOCH_Felsaad_Revamped.esp
 [ANY LOCH_Cliffs_Of_Fjalding.esp
      Fortified_Thirsk_1.1.esp
      Skaal Forest 1.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fishing Academy Mod v2.0 [MADMAX]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Fishing Academy v2.0.esp
+Fishing Academy v2.53.esp
+
+[Conflict]
+ !! It is suggested you use "Fishing Academy v2.54.esp", the other two
+ !! plugins have dirty GMSTs.
+Fishing Academy v2.0.esp
+Fishing Academy v2.53.esp
+Fishing Academy v2.54.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1800,6 +2077,21 @@ Clean Ghostgate.esp
  (Ref: "Ghostgate readme.txt")
 Clean Ghostgate COM.esp
 MW_Children_1_0.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Glenfinnan [Cuchulainn]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Glenfinnan.esp
+
+[Requires]
+ (Ref: "Glenfinnan.txt")
+Glenfinnan.esp
+[ALL Armor Mannequin.esp
+     dg_kilts.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2054,6 +2346,27 @@ Herbalism Redux ES Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @House of Earthly Delights Upgrade Mod [Kaira Midnight]
+
+[Note]
+ !! Contains evil GMSTs. (Even though the archive is named
+ !! "cleanhouseofearthlydelights.zip")
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+EarthlyDelights.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @House of Mannequins v1.0
+
+[Patch]
+ "Fixes the mistform mannequins from 'House of Mannequins' by giving them
+ clothing when you drop them."
+ (Ref: "HoMfix.txt")
+House of Mannequins - Mistform fix.esp
+House of Mannequins v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Hugely Expanded Leveled Lists Ultimate Version Addition
 
 [Conflict]
@@ -2225,6 +2538,42 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Journey's End [lochnarus]
+
+[Order]
+Journey's End 1.1.esp
+Jounrey's End- Alchemy add-on.esp	;original is misspelled
+Journey's End- Alchemy add-on.esp	;in case someone corrects spelling
+
+[Order]
+Journey's End 1.1.esp
+Journey's End- HOM add-on.esp
+
+[Order]
+Journey's End 1.1.esp
+Journey's End- Wilderness Mod add-on.esp
+
+[Requires]
+ "Requires Sri's Homeopathic Alchemy Mod to run."
+ (Ref: "JOURNEY'S END_1.1_README.txt")
+[ANY Jounrey's End- Alchemy add-on.esp
+     Journey's End- Alchemy add-on.esp]
+Sris_Alchemy.esp
+
+[Requires]
+ "Requires the Wilderness Mod to run."
+ (Ref: "JOURNEY'S END_1.1_README.txt")
+Journey's End- Wilderness Mod add-on.esp
+The Wilderness Mod 2.0 T & B.esm
+
+[Requires]
+ "Requires House of Mannequins mod to run."
+ (Ref: "JOURNEY'S END_1.1_README.txt")
+Journey's End- HOM add-on.esp
+House of Mannequins v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Julan Ashlander Companion 1.3 [Kateri]
 
 [Conflict]
@@ -2361,6 +2710,15 @@ LCV MCA 4.1 Patch.esp
 [Requires]
 LCV MCA 4.1 Patch.esp
 NPC LCV Schedules 03.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Leafy Trees [Irmekroache]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Leafy Trees.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2711,6 +3069,16 @@ newarrowsLITE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Minerals [evelas]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Minerals (Tribunal&Bloodmoon).esp
+Minerals.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Minions of House Dagoth v1.1 [Neoptolemus]
 
 ;; (Ref: "Minions of House Dagoth - Readme.txt")
@@ -2766,6 +3134,14 @@ Pov_Distant_Activator_Fix_Waterfalls.esp
  !! have the MCP, you will not need "Fashionable Merchants 1.0.esp"
  !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
 Fashionable Merchants 1.0.esp
+
+[Note]
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
+ !! the problem of merchants wearing items sold to them (and much more).
+ !! The MCP fix is also less likely to conflict with other mods. If you
+ !! have the MCP, you will not need "Merchant Unequip v1.0.esp"
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+Merchant Unequip v1.0.esp
 
 [Note]
  !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes
@@ -2872,6 +3248,15 @@ Morrowind Advanced.esp
 MW_Adv_PHW.esp
 [ALL MW_Adv_Required.esp
      Passive_Healthy_Wildlife.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Crafting 2.1 [Drac & Toccatta]
+
+[Requires]
+ (Ref: "Morrowind Crafting ReadMe.rtf")
+Morrowind Crafting Equipment.esp
+Morrowind Crafting 2-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3218,6 +3603,16 @@ Blood and Gore Fire damage.esp
      Necessities of Morrowind 2.0.esp
      Necessities of Morrowind 2.1.esp
      NOM 2.12.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Blood mod [razorfett147]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "readme_NewBloods.txt")
+NewBlood_MW.esp
+NewBlood_MwTbBm1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3607,7 +4002,22 @@ Pegas Horse Ranch v3.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Piratelords Trade Enhancements 3.2
+;; @PC Clothier_Balmora [AimeeKae]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+AK_PCClothier_Balmora_CS.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "ak_pcclothier_balmora-readme.txt")
+AK_PCClothier_Balmora.esp
+AK_PCClothier_Balmora_CS.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Piratelords Trade Enhancements 3.2 [PirateLord]
 
 ;; (Ref: "PTE Readme.txt")
 [Order]
@@ -3775,6 +4185,15 @@ The regulars - Sitting NPC's v2.02.esp
 Ring Texture Fix.esp
 [ANY Morrowind Patch v1.6.3.esm
      Morrowind Patch v1.6.4 (WIP).esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RolePlayersNPC [La'Shae]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+RolePlayersNPC.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4007,6 +4426,15 @@ Texture Fix - Silgrad Tower 1.0.esp
 SkeldaleHouseMTM.esp
 [ALL SNSkeldaleHouse_022403.esp
      MultiMark.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Silk Dragon Imports 1.0 [Xiamara]
+
+[Requires]
+ (Ref: "README_Xia_Silk_Dragon_Imports_1.0.txt")
+Clean_Xia_Silk_Dragon_Imports_1.0.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4283,6 +4711,24 @@ Thescrib_Leather_breton-v3.esp
      Thescrib_Leather_breton-addon03.esp]
 Thescrib_Leather_breton-v3.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Thirsk Expanded [Princess Stomper]
+
+[Conflict]
+ Choose ONLY ONE of these plugins. Use "Thirsk Expanded Family.esp" if
+ you have "Chidren of Morrowind" installed and want children.
+ (Ref: "Thirsk Expanded Readme.rtf")
+Thirsk Expanded.esp
+Thirsk Expanded Family.esp
+
+[Requires]
+ "Thirsk Expanded Family.esp" requires "Children of Morrowind".
+ (Ref: "Thirsk Expanded Readme.rtf")
+Thirsk Expanded Family.esp
+MW_Children_1_0.esm
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TLM - The Lighting Mod (Modular + Complete)
 ;; (Ref: "TLM - ~Readme.htm")
@@ -4436,6 +4882,17 @@ True_Lights_And_Darkness_0.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Trade Disputes v1.5 [dalin]
+
+[Conflict]
+ Trade Disputes conflicts with The Prison Ship Escape by Tenaka
+ (Ref: "TradeDisputes.txt")
+TradeDisputes.esp
+[ANY The Prison Ship Escape V2.esp
+     The Prison Ship Escape High Level V2.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Traveling Merchants
 [Note]
  Do not use quick-save [F5] while in the vicinity of a running travel script.
@@ -4478,12 +4935,53 @@ Tree_of_Life.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Treetop Village 1.3 [MDJ]
+
+[Note]
+ This plugin needs to be cleaned, it has "mega dirty refs and many extra cells".
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2317 )
+Treetop Village.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @True Lights and Darkness 0.5 [Cool Demon]
 
 [Note]
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 True_Lights_And_Darkness_0.5.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Galeon [Madmax]
+
+[Patch]
+ (Ref: "UG readme.txt")
+Ultimate Galleon ( Pegas ESM Addon ).esp
+[ALL Ultimate Galleon v2.2.esp
+     Pegas Horse Ranch v3.1.esm]
+
+[Patch]
+ (Ref: "UG readme.txt")
+Ultimate Galleon ( Pegas ESP Addon ).esp
+[ALL Ultimate Galleon v2.2.esp
+     Pegas Horse Ranch v3.1.esp]
+
+[Conflict]
+ (Ref: "UG readme.txt")
+ Choose ONLY ONE of these plugins.
+Ultimate Galleon ( Pegas ESM Addon ).esp
+Ultimate Galleon ( Pegas ESP Addon ).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Underground Manor 3.0 [MDJ]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: underground30.zip.dir/"Readme.txt")
+Underground Manor 3.0 no mannequins.esp
+Underground Manor 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4813,6 +5311,15 @@ Vader.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vality's Balmora Addon [Vality]
+
+[Requires]
+ (Ref: "Vality's Balmora Mod.txt")
+Vality's Balmora Addon.esp
+Vality's Bitter Coast Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vality's Grass Mods
 
 [Note]
@@ -5057,6 +5564,59 @@ abotWaterLifeTRaddon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Weapon Compilation Mod V1.0 [Farrp]
+
+[Conflict]
+ Use "farrp_WeaponCompilationMod_V1.esp" if you want the full
+ effects of the mod and you want to play it the way it was
+ intended. Use "farrp_WeaponCompilationMod_V1_NoLegendWeps.esp"
+ if you don't want to play this mod with scripted legendary
+ weapons.
+ (Ref: "README -- WeaponCompilationMod.txt")
+farrp_WeaponCompilationMod_V1.esp
+farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @weapon fix v1.77 [Varg 'Euthanasiologist' Axenov]
+
+[Requires]
+ (Ref: "WeaponFix177.txt")
+[ANY WeaponFix164_WCM_addon.esp
+     WeaponFix164_Assassin_addon.esp
+     WeaponFix_anticheat.esp]
+WeaponFix177.esp
+
+[Conflict]
+ WeaponFix144basic.esp is an older version without major
+ effectiveness changes, which you shoud use by itself if you want
+ just to fix the weight and some inconsistencies.
+ (Ref: "WeaponFix177.txt")
+WeaponFix144basic.esp
+[ANY WeaponFix177.esp
+     WeaponFix164_WCM_addon.esp
+     WeaponFix164_Assassin_addon.esp
+     WeaponFix_anticheat.esp]
+
+[Requires]
+ Use WeaponFix164_Assassin_addon.esp to add Weapon fixes to
+ Assassin's Armory.
+ (Ref: "WeaponFix177.txt")
+WeaponFix164_Assassin_addon.esp
+[ALL WeaponFix177.esp
+     Assassins Armory.esm]
+
+[Requires]
+ Use WeaponFix164_WCM_addon.esp to add Weapon fixes to farrp's
+ Weapon Compilation Mod
+ (Ref: "WeaponFix177.txt")
+WeaponFix164_WCM_addon.esp
+[ALL WeaponFix177.esp
+     [ANY farrp_WeaponCompilationMod_V1.esp
+	  farrp_WeaponCompilationMod_V1_NoLegendWeps.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Westly's Headpacks
 
 [Conflict]
@@ -5283,6 +5843,30 @@ Wizards Islands - Scourge of the Frost Bringer.esm
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Wizards Islands - Scourge of the Frost Bringer.esm
 Silgrad_Tower_internal_build_1-4_3.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wolf Manor 2.5 [kllrwlf]
+
+[Requires]
+ (Ref: "wolf_manor.txt")
+Wolf Manor bloodmoon addon.esp
+[ALL Wolf Manor 2.5.esp
+     Bloodmoon.esm]
+
+[Order]
+Wolf Manor 2.5.esp
+Wolf Manor bloodmoon addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @World of Heads/World of Faces [GhanBuriGhan]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "World_Of_Faces readme.txt")
+World_Of_Faces_Master.esm
+World_Of_Faces.esp
 
 
 ;;TBD
