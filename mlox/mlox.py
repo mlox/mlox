@@ -3,7 +3,7 @@
 # mlox - elder scrolls mod load order eXpert
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.33"
+Version = "0.34"
 
 import locale
 import os
@@ -67,13 +67,13 @@ re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s*([^\]]+)\]', re.IGNORECASE)
 # for parsing a version number
 ver_delim = r'[_.-]'
 re_ver_delim = re.compile(ver_delim)
-plugin_version = r'(\d(?:%s?\d+)*[a-zA-Z]?)' % ver_delim
+plugin_version = r'(\d+(?:%s?\d+)*[a-zA-Z]?)' % ver_delim
 re_alpha_tail = re.compile(r'(\d+)([a-z])', re.IGNORECASE)
 re_ver_fun = re.compile(r'\[VER\s*([=<>])\s*%s\s*([^\]]+)\]' % plugin_version, re.IGNORECASE)
 # for grabbing version numbers from filenames
 re_filename_version = re.compile(r'\D%s\D*\.es[mp]' % plugin_version)
 # for grabbing version numbers from plugin header description fields
-re_header_version = re.compile(r'(?:version\b\D+|v(?:er)?\.\s*)%s' % plugin_version, re.IGNORECASE)
+re_header_version = re.compile(r'\b(?:version\b\D+|v(?:er)?\.?\s*)%s' % plugin_version, re.IGNORECASE)
 
 # for cleaning up pretty printer
 re_notstr = re.compile(r"\s*'NOT',")
@@ -378,7 +378,10 @@ class rule_parser:
         return("%s:%d" % (self.rule_file, self.line_num))
 
     def parse_error(self, what):
-        Msg.add(_["%s: Parse Error(%s), %s"] % (self.where(), self.curr_rule, what))
+        """print a message about current parsing error, and blow away the
+        current parse buffer so next parse starts on next input line."""
+        Msg.add(_["%s: Parse Error(%s), %s [Buffer=%s]"] % (self.where(), self.curr_rule, what, self.buffer))
+        self.buffer = ""
 
     def parse_message_block(self):
         while self.readline():
@@ -419,8 +422,7 @@ class rule_parser:
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(exists, plugin_name)
         else:
-            self.parse_error(_["expected a plugin name: \"%s\""] % buff)
-            self.buffer = ""
+            self.parse_error(_["expected a plugin name"])
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(None, None)
 
@@ -503,9 +505,9 @@ class rule_parser:
             elif op == '>':
                 return(p_ver > ver, expr)
             else:
-                self.parse_error(_["Invalid [VER] operator: %s"] %  self.buffer)
+                self.parse_error(_["Invalid [VER] operator"])
                 return(None, None)
-        self.parse_error(_["Invalid [VER] function: %s"] %  self.buffer)
+        self.parse_error(_["Invalid [VER] function"])
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         return(None, None)
 
@@ -540,7 +542,7 @@ class rule_parser:
             self.pdbg("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(bool, expr)
-        self.parse_error(_["Invalid [DESC] function: %s"] %  self.buffer)
+        self.parse_error(_["Invalid [DESC] function"])
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         return(None, None)
 
@@ -611,7 +613,7 @@ class rule_parser:
             self.pdbg("parse_expression NOTREACHED")
         else:
             if re_start_fun.match(self.buffer):
-                self.parse_error(_["Invalid function expression: \"%s\""] % self.buffer)
+                self.parse_error(_["Invalid function expression"])
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(None, None)
             self.pdbg("parse_expression parsing plugin: \"%s\"" % self.buffer)
@@ -738,11 +740,9 @@ class rule_parser:
                     self.parse_statement(self.curr_rule, new_rule.group(2), new_rule.group(3))
                 else:
                     # we should never reach here, since re_rule only matches known rules
-                    self.parse_error(_["read_rules failed sanity check, unknown rule %s"] % self.buffer)
-                    self.buffer = ""
+                    self.parse_error(_["read_rules failed sanity check, unknown rule"])
             else:
-                self.parse_error(_["expected start of rule: \"%s\""] % self.buffer)
-                self.buffer = ""
+                self.parse_error(_["expected start of rule"])
         loadup_msg(_["Read rules from: \"%s\""] % self.rule_file, n_rules, "rules")
         return True
 
