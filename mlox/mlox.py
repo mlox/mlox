@@ -382,6 +382,7 @@ class rule_parser:
         current parse buffer so next parse starts on next input line."""
         Msg.add(_["%s: Parse Error(%s), %s [Buffer=%s]"] % (self.where(), self.curr_rule, what, self.buffer))
         self.buffer = ""
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
 
     def parse_message_block(self):
         while self.readline():
@@ -423,7 +424,6 @@ class rule_parser:
             return(exists, plugin_name)
         else:
             self.parse_error(_["expected a plugin name"])
-            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(None, None)
 
     def parse_ordering(self, rule):
@@ -508,7 +508,6 @@ class rule_parser:
                 self.parse_error(_["Invalid [VER] operator"])
                 return(None, None)
         self.parse_error(_["Invalid [VER] function"])
-        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         return(None, None)
 
     def parse_desc(self):
@@ -543,7 +542,6 @@ class rule_parser:
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(bool, expr)
         self.parse_error(_["Invalid [DESC] function"])
-        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         return(None, None)
 
     def parse_expression(self, prune=False):
@@ -583,6 +581,9 @@ class rule_parser:
             self.pdbg("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
                 (bool, expr) = self.parse_expression(prune)
+                if bool == None:
+                    self.parse_error(_["Invalid boolean arguments"])
+                    return(None, None)
                 exprs.append(expr)
                 vals.append(bool)
                 self.pdbg("self.buffer 2 =\"%s\"" % self.buffer)
@@ -607,14 +608,12 @@ class rule_parser:
                 return(not(all(vals)), ["NOT"] + exprs)
             else:
                 # should not be reached due to match on re_fun
-                Msg.add(_["Program Error: %s: expected Boolean function (ALL, ANY, NOT): \"%s\""] % (self.where(), buff))
-                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                self.parse_error(_["Expected Boolean function (ALL, ANY, NOT)"])
                 return(None, None)
             self.pdbg("parse_expression NOTREACHED")
         else:
             if re_start_fun.match(self.buffer):
                 self.parse_error(_["Invalid function expression"])
-                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(None, None)
             self.pdbg("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
@@ -702,7 +701,6 @@ class rule_parser:
                 self.pdbg("REQ expr2 == %s" % expr2)
                 if bool2 == None:
                     self.parse_error("REQUIRES rule must have 2 conditions")
-                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return
             if bool1 and not bool2:
                 Msg.add(_["[REQUIRES]\n%s Requires:\n%s"] %

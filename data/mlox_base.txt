@@ -217,27 +217,34 @@ abotTempusFugitRing.esp
 abotWaterLife.esm
 
 [Conflict]
- You do not need Sid's TimeMod if you have Abot's Tempus Fugit Ring installed.
+ You do not need Sid's TimeMod or "time.esp" from "Merkin's Multi-mod"
+ if you have Abot's Tempus Fugit Ring installed.
 abotTempusFugitRing.esp
 [ANY 2xTimeMod.esp
-     RealTimeMod.esp]
+     RealTimeMod.esp
+     time.esp]
 
 [Conflict]
- You do not need Sid's TimeMod if you have Abot's Water Life installed.
- You can use the "Tempus Fugit Ring" from Water Life to set Morrowind's 
+ You do not need Sid's TimeMod or "time.esp" from "Merkin's
+ Multi-mod" if you have Abot's Water Life installed. You can use
+ the "Tempus Fugit Ring" from Water Life to set Morrowind's
  timescale any time during the game.
 abotWaterLife.esm
 [ANY 2xTimeMod.esp
-     RealTimeMod.esp]
+     RealTimeMod.esp
+     time.esp]
 
 [Note]
- You do not need Sid's TimeMod to set the timescale, just use the console
- command: "set timescale to X", where X is 30 (the default for Vanilla
- Morrowind, or X is 1, for real-time, or X is 15 for twice as slow as
- Vanilla. Or alternatively, use Abot's Tempus Fugit Ring and you can set 
- the timescale to whatever you want while the game is running.
+ You do not need Sid's TimeMod or "time.esp" from "Merkin's
+ Multi-mod" to set the timescale, just use the console
+ command: "set timescale to X", where X is 30 (the default for
+ Vanilla Morrowind, or X is 1, for real-time, or X is 15 for
+ twice as slow as Vanilla. Or alternatively, use Abot's Tempus
+ Fugit Ring and you can set the timescale to whatever you want
+ while the game is running.
 2xTimeMod.esp
 RealTimeMod.esp
+time.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -498,6 +505,15 @@ Nevena's Assistants & Apprentices 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Amazon War Boots 1.0 [Durgoth]
+
+[Requires]
+ (Ref: "Amazon War Boots 1.0.txt")
+Amazon War Boots 1.0.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Anastasio The Great's Hideout [VÎKIÑG_LÖRÐ]
 
 [Requires]
@@ -544,6 +560,15 @@ Antares' Big Mod 2.8.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Aradia's Needle
+
+[Requires]
+ (Ref: "Read me Aradia's Needle.txt")
+Clean Aradia's Needle.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Area Effect Arrows [Bethesda/etc]
 
 [Conflict]
@@ -578,12 +603,13 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Clean Aradia's Needle.esp
-
-[Requires]
- (Ref: "Read me Aradia's Needle.txt")
-Clean Aradia's Needle.esp
-Better Bodies.esp
+;; @Armorer Mod Beta 1.94 [Indestructible]
+;armorer.esp
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "readme-armorer194.txt")
+carrymore2x.esp
+carrymore3x.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -602,6 +628,16 @@ Assassins Armory - Bolt Rifles.esp
 Assassins Armory - Arrows.esp
 [ANY AreaEffectArrows.esp
      AreaEffectArrows XB Edition.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @At Home Alchemy 1.0 [Syclonix]
+
+[Requires]
+ (Ref: "Readme - At Home Alchemy.txt")
+Syc_AtHomeAlchemy.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -672,6 +708,25 @@ Vality's Balmora Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Thieves' Hideout 3.1 UPDATE [sentinal]
+
+[Requires]
+ (Ref: "BTH 3.0 readme.txt")
+Balmora Thieves' Hideout 3.1.esp
+Tribunal.esm
+
+[Patch]
+ (Ref: "BTH 3.0 readme.txt")
+Door Fix for Thieve's Hideout 3.1.esp
+Balmora Thieves' Hideout 3.1.esp
+
+[Requires]
+ (Ref: "BTH 3.0 readme.txt")
+Weapons to Add to Bal, Thieves' Hideout 3.1.esp
+Balmora Thieves' Hideout 3.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Baron's Partners
 
 [Conflict]
@@ -688,20 +743,20 @@ CM_Partners_3.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BEER!
 
-[Requires]
- BEER! requires ASE
+[Note]
+ BEER! strongly recommends using ASE.
  (Ref: "Readme - BEER!.rtf")
-[ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
-     BEER! Combo v1.12-03a (PR esp v2.4fix).esp
-     BEER! Combo v1.12-03a.esp
-     BEER! Combo.esp
-     BEER! with MCA.esp
-     BEER!.esp
-     NoM 2.1 with BEER!.esp
-     NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
-     NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
-     NoM 2.12-03a with BEER!.esp]
-AtmosphericSoundEffects-3.0.esp
+[ALL [ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+	  BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+	  BEER! Combo v1.12-03a.esp
+	  BEER! Combo.esp
+	  BEER! with MCA.esp
+	  BEER!.esp
+	  NoM 2.1 with BEER!.esp
+	  NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
+	  NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
+	  NoM 2.12-03a with BEER!.esp]
+     [NOT AtmosphericSoundEffects-3.0.esp]]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -928,6 +983,7 @@ Castlevania.esp
 ;; @Blasphemous Revenants Werewolf Patch BETA [Fliggerty]
 
 [Patch]
+ BR_Werewolf_Patch.esp is an available optional patch for Blasphemous Revenants.
  "BR_Werewolf_Patch.esp will ensure that if you change into a werewolf in
  front of only your revenants you will not become a 'known werewolf.'
  It only works with BR revenants."
@@ -1357,12 +1413,35 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Carnithus' New Game Complete [Carnithus]
+;; (and Carnithus' Add-On II/Update)
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ Use "NG_New_Carnithus'_Armamentarium.esp" if you've never used 
+ Carnithus' Armamentarium before, otherwise read
+ "New Carnithus' Armamentarium readme.txt" from crn_add_ii.rar and use the
+ upgrade procedure outined for "New_Carnithus'_Armamentarium.esp".
+NG_New_Carnithus'_Armamentarium.esp
+New_Carnithus'_Armamentarium.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Castle of Balmora
 
 [Note]
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Castle of Balmora.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Vianden Mod VERSION 2.1 [ReflectioN]
+
+[Conflict]
+ (Ref: "ReadMe Castle Vianden V2.1.txt")
+Castle Vianden V2.1 NO Mannequins.esp
+Castle Vianden V2.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1422,7 +1501,30 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Complete Morrowind
+;; @Companion Arya [Baratheon79]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "BAR_Comp_Arya_v1.3.esp" - enforces the 100-point cap on all stats/skills
+ "BAR_Comp_Arya_v1.3_NoCap.esp" - does not enforce this cap, allowing the 
+ companion to advance without restriction.
+ (Ref: "Companion Arya v1.3 Readme.txt")
+BAR_Comp_Arya_v1.3.esp
+BAR_Comp_Arya_v1.3_NoCap.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Companion Hilda 1.01 [Dixon]
+
+[Requires]
+ (Ref: "readme_Hilda.txt")
+Hilda.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Complete Morrowind [Max also known as ~NOBODY~]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -1441,18 +1543,11 @@ Complete Morrowind - Tribunal & Bloodmoon.esp
 Complete Morrowind TB & BM - Replacer.esp
 
 [Conflict]
- You should only use "Complete Morrowind.esp" if you do not have
+ You should only use "Complete Morrowind.esp" or
+ "Complete Morrowind - Replacer.esp" if you do not have
  Tribunal and Bloodmoon.
-Complete Morrowind.esp
-[ANY Complete Morrowind - Tribunal & Bloodmoon.esp
-     Complete Morrowind TB & BM - Replacer.esp
-     [ALL Bloodmoon.esm
-	  Tribunal.esm]]
-
-[Conflict]
- You should only use "Complete Morrowind - Replacer.esp" if you do not
- have Tribunal or Bloodmoon.
-Complete Morrowind - Replacer.esp
+[ANY Complete Morrowind.esp
+     Complete Morrowind - Replacer.esp]
 [ANY Complete Morrowind - Tribunal & Bloodmoon.esp
      Complete Morrowind TB & BM - Replacer.esp
      [ALL Bloodmoon.esm
@@ -1463,6 +1558,27 @@ Complete Morrowind - Replacer.esp
      Complete Morrowind TB & BM - Replacer.esp]
 [ALL Bloodmoon.esm
      Tribunal.esm]
+
+[Conflict]
+ Any of these files already include all the parts:
+     "Complete Morrowind - Replacer.esp"
+     "Complete Morrowind.esp"
+     "Complete Morrowind - Tribunal & Bloodmoon.esp"
+     "Complete Morrowind TB & BM - Replacer.esp"
+ So you do not need to activate any of the separately released parts
+ of Complete Morrowind.
+[ANY Complete Morrowind - Replacer.esp
+     Complete Morrowind.esp
+     Complete Morrowind - Tribunal & Bloodmoon.esp
+     Complete Morrowind TB & BM - Replacer.esp]
+[ANY Complete Morrowind Part 1.esp
+     Complete Morrowind Part 2.esp
+     Complete Morrowind Part 3.esp
+     Complete Morrowind Part 4.esp
+     Complete Morrowind Part 5.esp
+     Complete Morrowind Part 1 - Addon.esp
+     CMP4 - TB&BM Fix.esp
+     CMP5 - Trib.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1487,7 +1603,7 @@ Clean Suran Extended.esp
 
 [Conflict]
  Since Cragonmoor conflicts with Suran Extended, it will also conflict
- with New Suran Extended
+ with New Suran Extended by Nicholiathan
 Cragonmoor v 1.1.esp
 [ANY New Suran Extended 1.5.esp
      Balanced NSE 1.5.esp
@@ -1540,6 +1656,15 @@ Creatures 6th House Patch.esp
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 CreeperPlugin.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Daedra Manor 1.8 [Trylobit]
+
+[Requires]
+ (Ref: "readme-daedra_manor18.txt")
+trylo_daedra_manor.esp
+skeleton.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2221,6 +2346,17 @@ Go To Jail 3.5 - T B - MCA - NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gryphon version 1.0 [Sabregirl]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "SG_gryphon2_0-M.esp" is the Mature (nude) version.
+ "SG_gryphon2_0.esp" is the regular version.
+SG_gryphon2_0-M.esp
+SG_gryphon2_0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GS_Seyda Neen Complete [Gianluca]
 
 [Conflict]
@@ -2259,6 +2395,30 @@ Dogmeat's Servant Repository.esp	; modifies the slave script
  (Ref: "GS_SEYDA NEEN COMPLETE  Readme.txt")
 GS_SEYDA NEEN COMPLETE.esp
 Clean Seyda Neen - Extension.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GS_Tamriel: Tribute to the Comunity [Gianluca Sabbatini]
+
+[Conflict]
+ (Ref: "GS Tamriel Complete.doc")
+GS_Tamriel Tribute to The Comunity.esm
+Journey's End 1.1.esp
+
+[Conflict]
+ (Ref: "GS Tamriel Complete.doc")
+GS_Tamriel Tribute to The Comunity.esm
+From Hell To Heaven.esm
+
+[Conflict]
+ (Ref: "GS Tamriel Complete.doc")
+GS_Tamriel Tribute to The Comunity.esm
+SnakeBitten Island - Alpha.esp
+
+[Conflict]
+ (Ref: "GS Tamriel Complete.doc")
+GS_Tamriel Tribute to The Comunity.esm
+Wizards Islands - Scourge of the Frost Bringer.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2501,6 +2661,19 @@ ASE Tribunal Expansion.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Imperial Legion Badge 1.0 [Rodrigo Ortiz]
+
+; The Imperial Legion Badge Readme.txt
+[Conflict]
+ "The Imperial Legion Badge" by Rodrigo Ortiz and "Imperial legion shirt"
+ by Dagoth Ur both do the same thing: allow you to be in the legion without
+ having to wear legion armor. You probably only want to activate one or the
+ other.
+The Imperial Legion Badge.esp
+Legion Shirt.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Inns [taddeus]
 
 [Conflict]
@@ -2514,6 +2687,31 @@ Improved Inns.esp
 Improved Inns TB.esp
 Improved Inns BM.esp
 Improved Inns MW.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Indarys Unleashed [Michael "HelioS" Bennett]
+
+[Note]
+ !! Contains evil GMSTs. (Even though Readme says it was cleaned)
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Indarys Unleashed.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Infernal Summoning Mod 1.1 [Lap]
+
+[Note]
+ There is an update to Infernal Summoning v1.1 available:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1216
+ (Ref: "ISPatch1.1.txt")
+Infernal SummoningV1.esp
+
+[Conflict]
+ "Infernal SummoningV1.esp" should be replaced by:
+ "Infernal SummoningV1.esp". Do not activate them simultaneously.
+Infernal SummoningV1.esp
+Infernal SummoningV1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2925,6 +3123,19 @@ Lights_300_V4.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lock Bash Enhanced v1.5 [TheLys]
+
+[Conflict]
+ These plugins are incompatible, you must first deactivate one
+ before you activate another for a given savegame. This will help
+ prevent doubling and other issues. Make sure you follow this step.
+ (Ref: "TheLys Lock Bash enhanced Readme.txt")
+Lock bash enhanced.esp
+NPC Schedules - Locks.esp
+Complete Doors and Locks.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Louis' Beauty Shop (Rin's BeautyShop ver. 1.5)
 
 [Requires]
@@ -3066,6 +3277,28 @@ newarrows - crossbow realism.esp
  (Ref: "Marksmanmod README.doc")
 newarrows.esp
 newarrowsLITE.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Merkin's Multi-mod v1 [Merkin]
+
+; (Ref: "multimodreadme.txt")
+
+[Conflict]
+ "Passive_Healthy_Wildlife.esp" and "animalbehave.esp"
+ from "Merkin's Multi-mod" have very similar function, you should
+ probably choose only one or the other.
+animalbehave.esp
+Passive_Healthy_Wildlife.esp
+
+;;encumbrance.esp
+;;magicbalance.esp
+;;marksman.esp
+;;movement.esp
+;;skillbalance.esp
+;;time.esp - deprecated in favor of abot's Tempus Fugit ring or console
+;;training.esp
+;;underwatertime.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3512,6 +3745,17 @@ MTT IV Master.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @mournhold downtown v1.40 [Varg 'Euthanasiologist' Axenov]
+
+[Conflict]
+ "Deactivate Mournhold Farms.esp or any previous versions of this mod if you
+ have it activated."
+ (Ref: "Mournhold Downtown 140.txt")
+Mournhold Downtown.esp
+Mournhold Farms.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MultiMark (multipleteleportmarking2.2)
 
 ;; (Ref: MultipleTeleportMarking.txt)
@@ -3543,6 +3787,27 @@ MultiMark_BloodmoonPlugin.esp
 MultiMark.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @My Favorites Compatible and Combined ver 1.4 [Dale French]
+
+[Conflict]
+ My Favorites Compatible and Combine ver 1.4.esp
+[ANY
+;	--Captain Guar-skin's Crew ver 1.2 FINAL
+;	--Eerie Shack on the Odai
+;	--Jester's Hat of Delight ver 5 FINAL
+;	--Lute of First Impressions ver 2
+;	--Gnomes and Gadabouts FINAL
+;	--Myth and Murder ver 1.1
+;	--Night Lizards, Marplots, and the Faker Sign ver 1.1
+;	--The Seekers Faction ver 1.8
+;	--Swervo Random the Gambler
+;	--The Runaway ver 1.2
+;	--The Soothsayer ver 1.1
+;	--The Widow Fedaris ver 1.1
+]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3725,6 +3990,16 @@ Balanced NSE 1.5.esp
 New Suran Extended CoM 1.5.esp
 Balanced NSE CoM 1.5.esp
 
+[Conflict]
+ New Suran Extended includes Princess Stomper's Suran Extended.
+ (Ref: "New Suran Extended - readme.txt")
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+[ANY Clean Suran Extended.esp
+     Suran Extended Family.esp]
+
 [Requires]
  "New Suran Extended CoM 1.5.esp" requires Children of Morrowind
  (Ref: "New Suran Extended - readme.txt")
@@ -3754,24 +4029,15 @@ Balanced NSE 1.5.esp
      Bloodmoon.esm]
 
 [Conflict]
- Since you are running New Suran Extended, you should install the
- compatible version of the Archery Store mod that comes with NSE:
- Suran Archery Store_v3.0 NSE.esp
-[DESC !/by Nicholiatha/ Suran Archery Store_v3.0 NSE.esp]
-[ANY New Suran Extended 1.5.esp
-     Balanced NSE 1.5.esp
-     New Suran Extended CoM 1.5.esp
-     Balanced NSE CoM 1.5.esp]
-
-[Conflict]
- Since you are running New Suran Extended, you should install the
+ Since you are running New Suran Extended, you should use
  compatible version of the Farmer mod that comes with NSE:
- Farmer Mod v4.3 NSE.esp
-[DESC !/by Nicholiathan/ Farmer Mod v4.3 NSE.esp]
+ "Farmer Mod v4.3 NSE.esp" and disable "Farmer Mod v4.3.esp".
+Farmer Mod v4.3.esp
 [ANY New Suran Extended 1.5.esp
      Balanced NSE 1.5.esp
      New Suran Extended CoM 1.5.esp
-     Balanced NSE CoM 1.5.esp]
+     Balanced NSE CoM 1.5.esp
+     Farmer Mod v4.3 NSE.esp]
 
 [Conflict]
  "New Suran Extended NoM.esp" is no longer needed if you install the
@@ -3785,7 +4051,7 @@ New Suran Extended NoM.esp
 
 [Requires]
  (Ref: "New Suran Extended - readme.txt")
-Farmers Mod v4.3 NSE.esp
+Farmer Mod v4.3 NSE.esp
 [ANY New Suran Extended 1.5.esp
      Balanced NSE 1.5.esp
      New Suran Extended CoM 1.5.esp
@@ -3793,49 +4059,32 @@ Farmers Mod v4.3 NSE.esp
 
 [Requires]
  (Ref: "New Suran Extended - readme.txt")
-Suran Achery Store_v3.0 NSE.esp
+Suran Archery Store_v3.0 NSE.esp
 [ANY New Suran Extended 1.5.esp
      Balanced NSE 1.5.esp
      New Suran Extended CoM 1.5.esp
      Balanced NSE CoM 1.5.esp]
 
 [Conflict]
- Replace "Suran Achery Store_v3.0.esp" with "Suran Achery Store_v3.0 NSE.esp"
+ Since you are running New Suran Extended, you should use the
+ compatible version of the Archery Store mod that comes with NSE:
+ "Suran Archery Store_v3.0 NSE.esp" and disable
+ "Suran Archery Store_v3.0.esp"
  (Ref: "New Suran Extended - readme.txt")
-Suran Achery Store_v3.0 NSE.esp
-Suran Achery Store_v3.0.esp
-
-[Conflict]
- Replace "Farmers Mod v4.3.esp" with "Farmers Mod v4.3 NSE.esp"
- (Ref: "New Suran Extended - readme.txt")
-Farmers Mod v4.3 NSE.esp
-Farmers Mod v4.3.esp
-
-[Conflict]
- Use the New Suran Extended-compatible version of Suran Archery Tradehouse.
- (Ref: "New Suran Extended - readme.txt")
-Suran Achery Store_v3.0.esp
+Suran Archery Store_v3.0.esp
 [ANY New Suran Extended 1.5.esp
      Balanced NSE 1.5.esp
      New Suran Extended CoM 1.5.esp
-     Balanced NSE CoM 1.5.esp]
-
-[Conflict]
-  Use the New Suran Extended-compatible version of Farmers Mod
- (Ref: "New Suran Extended - readme.txt")
-Farmers Mod v4.3.esp
-[ANY New Suran Extended 1.5.esp
-     Balanced NSE 1.5.esp
-     New Suran Extended CoM 1.5.esp
-     Balanced NSE CoM 1.5.esp]
+     Balanced NSE CoM 1.5.esp
+     Suran Archery Store_v3.0 NSE.esp]
 
 [Order]
 New Suran Extended 1.5.esp
 Balanced NSE 1.5.esp
 New Suran Extended CoM 1.5.esp
 Balanced NSE CoM 1.5.esp
-Suran Achery Store_v3.0 NSE.esp
-Farmers Mod v4.3 NSE.esp
+Suran Archery Store_v3.0 NSE.esp
+Farmer Mod v4.3 NSE.esp
 
 [Note]
  ! The latest version of New Suran Extended is 1.52:
@@ -3859,9 +4108,41 @@ Nightelf.esp
 [Conflict]
  The NightElf race is incompatible with Better Bodies, as it will 
  cause clipping. Use Smoother Bodies with NightElf Race instead.
- (Ref: "NightElf Race Readme.txt")
+ Or try using "Night Elf Race for Better Bodies" by theGreatNothing.
+ (Ref: "NightElf Race Readme.txt" / "NightElf Race for BB Readme.txt")
 Nightelf.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Night Elf Race for Better Bodies [theGreatNothing]
+
+[Conflict]
+ "Night Elf Race for Better Bodies" requires the Night Elf race be 
+ installed, but inactive.
+ (Ref: "NightElf Race for BB Readme.txt")
+NightElvesForBBWithClothing.esp
+Nightelf.esp
+
+[Requires]
+ "This Patch enables You to buy the Night Elf Armor at Meldor's Armory."
+ It requires NightElvesForBBWithClothing.esp.
+ (Ref: "NightElf Race for BB Readme.txt")
+NightElvesBBPatch1.1.esp
+NightElvesForBBWithClothing.esp
+
+[Requires]
+ "This Patch add's a 'real' Double Crescent Blade to the Game."
+ It requires NightElvesForBBWithClothing.esp.
+ (Ref: "NightElf Race for BB Readme.txt")
+NightElvesBBPatch1.2.esp
+NightElvesForBBWithClothing.esp
+
+[Patch]
+ (Ref: "NightElf Race for BB Readme.txt")
+TweakForAWB.esp
+[ALL NightElvesForBBWithClothing.esp
+     Amazon War Boots 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4015,6 +4296,23 @@ AK_PCClothier_Balmora_CS.esp
 AK_PCClothier_Balmora.esp
 AK_PCClothier_Balmora_CS.esp
 
+[Patch]
+ (Ref: "ak_pcc_v1.67.txt")
+Clean_AK_PCClothier_patch_v1.67.esp
+[ANY AK_PCClothier_Balmora.esp
+     AK_PCClothier_Balmora_CS.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @PC Smithy v1.0 [AimeeKae]
+
+[Requires]
+ "This mod uses the Companion Share function, so Tribunal or Bloodmoon is required."
+ (Ref: "ak_pcsmithy_ebonheart-readme-v1.0.txt")
+Clean_AK_PCSmithy_v1.0.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Piratelords Trade Enhancements 3.2 [PirateLord]
@@ -4094,6 +4392,25 @@ quarraclan.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RealFurnitureV1.0
+
+[Requires]
+RF - Bethesda Furniture.esp
+RF - Furniture shop.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RealSignposts [ElBundeee]
+
+[Conflict]
+ These three mods all do the same thing: replace the signposts in Morrowind
+ with readable signs. You probably only want to enable one of them at a time.
+RealSignposts.esp
+WeatheredSigns.esp
+Textured_Signs.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Regionally Known Criminals
 
 [Conflict]
@@ -4126,7 +4443,7 @@ RKCriminals TR&BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @RKWerewolves - Regionally Known Werewolves
+;; @Regionally Known Werewolves
 
 [Requires]
 RKWerewolf.esp
@@ -4147,33 +4464,50 @@ RKWerewolf-NoTrib.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @RTS-HealingFaeries
-
-[Order]
-RTS_HealingFaeries.esp
-RTS_FaeriesSeydaNeen.esp
-
-[Requires]
- (Ref: "RTS Healing Faeries Ver1 - readme.rtf")
-RTS_FaeriesSeydaNeen.esp
-RTS_HealingFaeries.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @RealFurnitureV1.0
-
-[Requires]
-RF - Bethesda Furniture.esp
-RF - Furniture shop.esm
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Regulars 2.02
 
 [Note]
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 The regulars - Sitting NPC's v2.02.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rethan Expansion Version 2.2 [Baratheon79]
+
+[Conflict]
+ "If you are using Necessities of Morrowind and want to have a
+ well in the stronghold that you can easily get to, use the
+ BAR_RethanExpansion_v2.1_NoM.esp file. Otherwise, use
+ BAR_RethanExpansion_v2.1.esp. Just don't use both, or you will
+ encounter lots of doubling."
+ (Ref: "Rethan Expansion v2.2 Readme.txt")
+BAR_RethanExpansion_v2.1.esp
+BAR_RethanExpansion_v2.1_NoM.esp
+
+[Requires]
+ (Ref: "Rethan Expansion v2.2 Readme.txt")
+BAR_RethanExpansion_v2.1.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "Rethan Expansion v2.2 Readme.txt")
+BAR_RethanExpansion_v2.1_NoM.esp
+[ALL NOM 2.13.esp
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ (Ref: "Rethan Expansion v2.2 Readme.txt")
+[ANY BAR_RethanExpansion_v2.1.esp
+     BAR_RethanExpansion_v2.1_NoM.esp]
+Indarys Unleashed.esp
+
+[Conflict]
+ (Ref: "Rethan Expansion v2.2 Readme.txt")
+[ANY BAR_RethanExpansion_v2.1.esp
+     BAR_RethanExpansion_v2.1_NoM.esp]
+New Rethan Manor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4219,6 +4553,30 @@ Romance_v37EV.esp
 [Requires]
 Prostitution_v12EV.esp
 Romance_v37EV.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RTS-HealingFaeries
+
+[Order]
+RTS_HealingFaeries.esp
+RTS_FaeriesSeydaNeen.esp
+
+[Requires]
+ (Ref: "RTS Healing Faeries Ver1 - readme.rtf")
+RTS_FaeriesSeydaNeen.esp
+RTS_HealingFaeries.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ryukaissen - Dragon Race - Version 1.1 [Sabregirl and Midnight]
+
+[Conflict]
+ "Select either the SG_Ryukaissen.esp OR the SG_Ryukaissen-M.esp (This
+ version gives the female dragons 'chests')"
+ (Ref: "Ryukaissen-readme.txt")
+SG_Ryukaissen.esp
+SG_Ryukaissen-M.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4299,6 +4657,18 @@ SWP_patch.esp
      Sandman101's W.P.L.H.esp
      Sandman101's W.P.L.S.esp
      Sandman101's W.P.M.O.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sauron's Abode 2.5.2 [Doan]
+
+[Requires]
+ "Please note that the SauronsEnchantments252.esp plugin does
+ *require* that the SauronsAbode252.esp plugin be used as they
+ were designed to work together."
+ (Ref: "SauronsAbode252.txt")
+SauronsEnchantments252.esp
+SauronsAbode252.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4393,6 +4763,29 @@ _seyda_neen_expanded_01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Seyda Neen, Skeldale House (ver. 022403) [The Merry Piper]
+
+[Patch]
+ Use SkeldaleHouseMTM.esp to allow teleporting to Seyda Neen, Skeldale House
+ (Ref: "readme_skeldale_house_MTM.txt")
+SkeldaleHouseMTM.esp
+[ALL SNSkeldaleHouse_022403.esp
+     MultiMark.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ships of the Imperial Navy [Neoptolemus]
+
+[Conflict]
+ "Two .esps are included, one for Bloodmoon, and the other for standard Morrowind.
+ The Bloodmoon version includes the ship at Fort Frostmoth. Check
+ the .esp that applies."
+ (Ref: "Ships of the Imperial Navy - Readme.txt")
+Ships of the Imperial Navy.esp
+Ships of the Imperial Navy.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silgrad Tower
 
 [Note]
@@ -4418,23 +4811,24 @@ Texture Fix - Silgrad Tower 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Seyda Neen, Skeldale House (ver. 022403) [The Merry Piper]
-
-[Patch]
- Use SkeldaleHouseMTM.esp to allow teleporting to Seyda Neen, Skeldale House
- (Ref: "readme_skeldale_house_MTM.txt")
-SkeldaleHouseMTM.esp
-[ALL SNSkeldaleHouse_022403.esp
-     MultiMark.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silk Dragon Imports 1.0 [Xiamara]
 
 [Requires]
  (Ref: "README_Xia_Silk_Dragon_Imports_1.0.txt")
 Clean_Xia_Silk_Dragon_Imports_1.0.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Slavers V1.01 [Ghostwalker71]
+
+[Conflict]
+ "there is a script conflict with 'Scourge of the Lich Father'.
+ It will cause your system to crash to desktop."
+ (Ref: "Slavers Readme.txt")
+Slavers By Ghostwalker71.esm
+[ANY Lich Father Act I.esp
+     Lich Father Act II.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4533,6 +4927,21 @@ ss_DBNRDZ_NV.esp
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 super_adventurers302.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Suran Extended v1.2 [Princess Stomper]
+
+[Requires]
+Suran Extended Family.esp
+MW_Children_1_0.esm
+
+[Conflict]
+ "Suran Extended Family.esp" includes "Clean Suran Extended.esp" and
+ adds children from Children of Morrowind.
+ (Ref: "Suran Extended v1.2 readme.rtf")
+Suran Extended Family.esp
+Clean Suran Extended.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4727,6 +5136,17 @@ Thirsk Expanded Family.esp
  (Ref: "Thirsk Expanded Readme.rtf")
 Thirsk Expanded Family.esp
 MW_Children_1_0.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tir Thalor [Endhome.com staff (project leader: Granarinth)]
+
+[Conflict]
+ "If you have 'SAFIX.esp' installed, UNCHECK it and delete it from your
+ drive (important.) It has been replaced by this mod!"
+ (Ref: "readme_TirThalor3.0.txt")
+TirThalor.esp
+SAFIX.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4972,6 +5392,21 @@ Ultimate Galleon ( Pegas ESP Addon ).esp
  Choose ONLY ONE of these plugins.
 Ultimate Galleon ( Pegas ESM Addon ).esp
 Ultimate Galleon ( Pegas ESP Addon ).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Underground 2 [Qarl]
+
+[Conflict]
+ "THE_UNDERGROUND_2.esp" is an updated version of "THE_UNDERGROUND.esp"
+ You should disable "THE_UNDERGROUND.esp"
+THE_UNDERGROUND_2.esp
+THE_UNDERGROUND.esp
+
+[Note]
+ THE_UNDERGROUND is superceded by THE_UNDERGROUND_2, which fixes a number
+ of problems in the first version. You should upgrade!
+THE_UNDERGROUND.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5476,6 +5911,16 @@ Varied Vampiric Visages.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Veldion2.0.esm
+
+[Requires]
+ (Ref: "Veldion Readme.txt")
+Veldion2.0.esm
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Venombyte's GoldWeight Plug-in V 1.2
 
 ;; GoldWeight - Must load after Reflective Gold
@@ -5555,6 +6000,19 @@ Weapon Range Balance.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Walled City of Balmora [Hargreth]
+;; IndyBank [Indestructible]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Walled_City_v1.2.esp" is not compatible with "Indybank.esp", if you want
+ to use both, use Hargreth's "WalledCity_IndyBank.esp".
+Walled_City_v1.2.esp
+WalledCity_IndyBank.esp
+Indybank.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Water Life
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
@@ -5614,6 +6072,33 @@ WeaponFix164_WCM_addon.esp
 [ALL WeaponFix177.esp
      [ANY farrp_WeaponCompilationMod_V1.esp
 	  farrp_WeaponCompilationMod_V1_NoLegendWeps.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Weapon Rotate [Cydine, Maboroshi Daikon, and Erstam]
+
+[Requires]
+ (Ref: "WeaponRotate1.1.txt")
+Weapon Rotate.esm
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ (Ref: "WeaponRotate1.1.txt")
+Weapon Rotate - Tribunal.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "WeaponRotate1.1.txt")
+Weapon Rotate - Bloodmoon.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "WeaponRotate1.1.txt")
+[ANY Weapon Rotate - Vendors.esp
+     Weapon Rotate - Tribunal.esp
+     Weapon Rotate - Bloodmoon.esp]
+Weapon Rotate.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
