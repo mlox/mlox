@@ -1,0 +1,185 @@
+#!/usr/bin/perl
+
+use Getopt::Std;
+use strict;
+
+# expdep == expansion/depends
+# tool for scanning plugins to see if they depend on Tribunal/Bloodmoon expansions
+# Look for SSCR (Startup Scripts) and look for BM/TB funs and MAST
+
+
+$::opt_d = 0;			# do not remove intermediate files
+
+my $Usage = qq{expdep [OPTIONS] plugin...
+
+OPTIONS
+ -d   debug output
+};
+
+getopts('d') or die $Usage;
+
+# http://www.uesp.net/wiki/Tes3Mod:Categorical_Function_List
+my @BMFUN = qw(BecomeWerewolf
+	       GetPCInJail
+	       GetPCTraveling
+	       GetWerewolfKills
+	       IsWerewolf
+	       PCWerewolf
+	       PlaceAtMe
+	       SetWerewolfAcrobatics
+	       TurnMoonRed
+	       TurnMoonWhite
+	       UndoWerewolf);
+
+my @TBFUN = qw(AddToLevCreature
+	       AddToLevItem
+	       ClearForceJump
+	       ClearForceMoveJump
+	       ClearForceRun
+	       DisableLevitation
+	       EnableLevitation
+	       ExplodeSpell
+	       ForceJump
+	       ForceMoveJump
+	       ForceRun
+	       GetCollidingActor
+	       GetCollidingPC
+	       GetForceJump
+	       GetForceMoveJump
+	       GetForceRun
+	       GetPCJumping
+	       GetPCRunning
+	       GetPCSneaking
+	       GetScale
+	       GetSpellReadied
+	       GetSquareRoot
+	       GetWaterLevel
+	       GetWeaponDrawn
+	       GetWeaponType
+	       HasItemEquipped
+	       ModScale
+	       ModWaterLevel
+	       PlaceItem
+	       PlaceItemCell
+	       RemoveFromLevCreature
+	       RemoveFromLevItem
+	       SetDelete
+	       SetScale
+	       SetWaterLevel
+	     );
+
+my $re_bmfun = "^[^;]*(" . join("|", @BMFUN) . ")";
+$re_bmfun = qr{$re_bmfun};
+my $re_tbfun = "^[^;]*(" . join("|", @TBFUN) . ")";
+$re_tbfun = qr{$re_tbfun};
+
+my $hdr_size = 16;
+sub read_rec {
+    my($expected_type) = @_;
+    my $rec_hdr = "";
+    my $n_read = sysread(INP, $rec_hdr, $hdr_size);
+    if ($n_read == 0) {
+	return(undef, undef);
+    }
+    if ($n_read != $hdr_size) {
+	warn "Error(hdr): asked for $hdr_size bytes, got $n_read\n";
+	return(undef, undef);
+    }
+    my($rec_type, $rec_len) = unpack("a4I", $rec_hdr);
+    if (defined($expected_type) and $expected_type ne $rec_type) {
+	warn "Error: Expected: $expected_type, got: $rec_type\n";
+	return(undef, undef);
+    }
+    my $rec = "";
+    $n_read = sysread(INP, $rec, $rec_len);
+    if ($n_read != $rec_len) {
+	warn "Error(rec): asked for $rec_len bytes, got $n_read\n";
+	return(undef, undef);
+    }
+    return($rec_type, $rec);
+}
+
+sub parse_subrec {
+    my($rec) = @_;
+    my %r = ();
+    my $p = 0;
+    my $rec_len = length($rec);
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4I", substr($rec, $p));
+	$p += 8;
+	push(@{$r{$subrec_type}}, substr($rec, $p, $subrec_len));
+	$p += $subrec_len;
+    }
+    return(\%r);
+}
+
+sub scan {
+    my($plugin) = @_;
+    warn "### Scanning $plugin\n";
+    unless(open(INP, "<$plugin")) {
+	warn "Error opening $plugin for input ($!)\n";
+	return;
+    }
+    my $sscr = 0;
+    my %tbfun = ();
+    my %bmfun = ();
+    my $mastbm = 0;
+    my $masttb = 0;
+    my $expected = "TES3";
+    while(my($rec_type, $rec) = read_rec($expected)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	print "REC=$rec_type\n" if ($::opt_d);
+	if ($rec_type eq "TES3") {
+	    my $r = parse_subrec($rec);
+	    for my $sub_type (keys(%$r)) {
+		print "  SUBREC=$sub_type\n" if ($::opt_d);
+		if ($sub_type eq "MAST") {
+		    for my $mast (@{$r->{$sub_type}}) {
+			$mast = substr($mast, 0, length($mast) - 1);
+			print "Master: $mast\n" if ($::opt_d);
+			$mastbm++ if (lc($mast) eq 'bloodmoon.esm');
+			$masttb++ if (lc($mast) eq 'tribunal.esm');
+		    }
+		}
+	    }
+	} elsif ($rec_type eq "SSCR") {
+	    $sscr++;
+	} elsif ($rec_type eq "SCPT") {
+	    my $r = parse_subrec($rec);
+	    for my $sub_type (keys(%$r)) {
+		print "  SUBREC=$sub_type\n" if ($::opt_d);
+		if ($sub_type eq "SCTX") {
+		    for my $script (@{$r->{SCTX}}) {
+			#$script = substr($script, 0, length($script) - 1);
+			#print "Script:\n$script\n" if ($::opt_d);
+			if ($script =~ m!$re_tbfun!mi) {
+			    print "TBFUN: $1\n" if ($::opt_d);
+			    $tbfun{lc($1)}++;
+			}
+			if ($script =~ m!$re_bmfun!mi) {
+			    print "BMFUN: $1\n" if ($::opt_d);
+			    $bmfun{lc($1)}++;
+			}
+		    }
+		}
+	    }
+	}
+    }
+    if ($sscr > 0 and not ($masttb or $mastbm)) {
+	print "$plugin: SSCR\n";
+    }
+    my $tbfuns = join(",", keys(%tbfun));
+    if ($tbfuns and not ($masttb or $mastbm)) {
+	print "$plugin: TB-FUN-DEP: $tbfuns\n";
+    }
+    my $bmfuns = join(",", keys(%bmfun));
+    if ($bmfuns and not $mastbm) {
+	print "$plugin: BM-FUN-DEP: $bmfuns\n";
+    }
+    close(INP);
+}
+
+for my $plugin (@ARGV) {
+    scan($plugin);
+}
