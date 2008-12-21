@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# called by top level Makefile to create a unique archive name
+
+ARCDATE=`date --utc "+%Y-%m-%d"`
+DATAARC="mlox-data_$ARCDATE"
+
+x=""
+for L in a b c d e f g h i j k l m n o p q r s t u v w x y z ; do
+    if [ ! -f "dist/${DATAARC}${x}.7z" ] ; then break ; fi
+    x=$L
+done
+echo "dist/${DATAARC}${x}.7z"

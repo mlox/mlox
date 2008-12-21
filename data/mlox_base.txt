@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-20 21:19:43 (UTC)]
+[Version 2008-12-21 00:34:45 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2559,6 +2559,39 @@ H.E.L.L.U.V.A._Merchant_Containers.esm
      H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp]
 H.E.L.L.U.V.A._Merchant_Containers.esm
 
+[Conflict]
+ Since you are using "H.E.L.L.U.V.A. Complete Weapons.esp"', you should not
+ activate the 9 separate H.E.L.L.U.V.A. weaponsplugins! (The resources they 
+ came with do have to be installed, however).
+ (Ref: H.E.L.L.U.V.A. mod readmes)
+H.E.L.L.U.V.A. Complete Weapons.esp
+[ANY H.E.L.L.U.V.A. Axes.esp
+     H.E.L.L.U.V.A. Blunt.esp
+     H.E.L.L.U.V.A. Bows.esp
+     H.E.L.L.U.V.A. Longblades_1H(1).esp
+     H.E.L.L.U.V.A. Longblades_1H(2).esp
+     H.E.L.L.U.V.A. Longblades_2H.esp
+     H.E.L.L.U.V.A. Marksman.esp
+     H.E.L.L.U.V.A. Shortblades.esp
+     H.E.L.L.U.V.A. Spears.esp]
+
+[Note]
+ Since you are using all 9 separate H.E.L.L.U.V.A. weapons plugins, you
+ should install and activate "H.E.L.L.U.V.A. Complete Weapons.esp", and
+ then you can deactivate the 9 separate plugins. (The resources they 
+ came with do have to be installed, however).
+ (Ref: H.E.L.L.U.V.A. mod readmes)
+[ALL [NOT H.E.L.L.U.V.A. Complete Weapons.esp]
+     [ALL H.E.L.L.U.V.A. Axes.esp
+	  H.E.L.L.U.V.A. Blunt.esp
+	  H.E.L.L.U.V.A. Bows.esp
+	  H.E.L.L.U.V.A. Longblades_1H(1).esp
+	  H.E.L.L.U.V.A. Longblades_1H(2).esp
+	  H.E.L.L.U.V.A. Longblades_2H.esp
+	  H.E.L.L.U.V.A. Marksman.esp
+	  H.E.L.L.U.V.A. Shortblades.esp
+	  H.E.L.L.U.V.A. Spears.esp]]
+
 [Note]
  ! You are using an old version of HELLUVA Complete Weapons. Download the latest version.
 H.E.L.L.U.V.A. Wicked Weapons Complete.esp
@@ -2922,40 +2955,46 @@ Leafy Trees.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LGNPC
 
-;; "IMPORTANT: LGNPC NoLore must load before any other LGNPC mod!"
-;; (Ref: http://lgnpc.sabregirl.com/mod_nolore.php )
-;;
 ;; "...regarding the load order of Less Lore and LGNPC NoLore relative to
 ;; each other, I would recommend having Less Lore load first." (cyrano)
 ;; (Ref: http://escf.rethan-manor.net/index.php?topic=1909.msg20857;msg20857 )
 
-;;  The order of the other installments is not critical, but LGNPC Indarys Manor,
-;;  LGNPC Tel Uvirith and LGNPC Secret Masters would do better to load later in the order.
-;;  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=883033 )
+;; Those that have been recently updated have date stamps that
+;; assures the mods will load in the appropriate order. In short,
+;; LGNPC NoLore should load first (perhaps before any
+;; dialog-extensive mod), LGNPC Vivec Redoran loads second to last
+;; and LGNPC Pax Redoran last (excepting the Soul Sickness Patch
+;; which should load after Pax Redoran if used). The order of the
+;; other installments is not critical, but LGNPC Indarys Manor,
+;; LGNPC Tel Uvirith and LGNPC Secret Masters would do better to
+;; load later in the order.
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=929185&view=findpost&p=13463743 )
 
 [Order]
 Less Lore.esp
 LGNPC_NoLore_v0_83.esp
 Lgnpc_SN.esp
-LGNPC_Indarys_Manor_v1_45.esp
 LGNPC_GnaarMok_v1_10.esp
 LGNPC_AldVelothi_v1_20.esp
 LGNPC_MaarGan_v1_10.esp
-LGNPC_Secret_Masters_v1_21.esp
 LGNPC_HlaOad_v1_32.esp
 LGNPC_Aldruhn_v1_13.esp
 LGNPC_Pelagiad_v1_13.esp
 LGNPC_TelMora_v1_11.esp
 LGNPC_Khuul_v2_01.esp
 LGNPC_VivecFQ_v2_03.esp
+LGNPC_Indarys_Manor_v1_45.esp
+LGNPC_Secret_Masters_v1_21.esp
 LGNPC_TelUvirith_v1_10.esp
-LGNPC_VivecRedoran_v1_40.esp
-LGNPC_PaxRedoran_v1_11.esp
+LGNPC_TelUvirith_UI_v1_10.esp
+LGNPC_VivecRedoran_v1_41.esp
+LGNPC_PaxRedoran_v1_12.esp
+LGNPC_SoulSicknessPatch_v1_00.esp
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 0.83 LGNPC_NoLore_v0_83.esp]
+[VER < 0.83 LGNPC_NoLore_*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -2965,72 +3004,77 @@ LGNPC_PaxRedoran_v1_11.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.45 LGNPC_Indarys_Manor_v1_45.esp]
+[VER < 1.45 LGNPC_Indarys_Manor_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_GnaarMok_v1_10.esp]
+[VER < 1.10 LGNPC_GnaarMok_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.20 LGNPC_AldVelothi_v1_20.esp]
+[VER < 1.20 LGNPC_AldVelothi_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_MaarGan_v1_10.esp]
+[VER < 1.10 LGNPC_MaarGan_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.21 LGNPC_Secret_Masters_v1_21.esp]
+[VER < 1.21 LGNPC_Secret_Masters_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.32 LGNPC_HlaOad_v1_32.esp]
+[VER < 1.32 LGNPC_HlaOad_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Aldruhn_v1_13.esp]
+[VER < 1.13 LGNPC_Aldruhn_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Pelagiad_v1_13.esp]
+[VER < 1.13 LGNPC_Pelagiad_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.11 LGNPC_TelMora_v1_11.esp]
+[VER < 1.11 LGNPC_TelMora_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 2.01 LGNPC_Khuul_v2_01.esp]
+[VER < 2.01 LGNPC_Khuul_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 2.03 LGNPC_VivecFQ_v2_03.esp]
+[VER < 2.03 LGNPC_VivecFQ_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_TelUvirith_v1_10.esp]
+[VER < 1.10 LGNPC_TelUvirith_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.40 LGNPC_VivecRedoran_v1_40.esp]
+[VER < 1.10 LGNPC_TelUvirith_UI_v*.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.11 LGNPC_PaxRedoran_v1_11.esp]
+[VER < 1.41 LGNPC_VivecRedoran_v*.esp]
+
+[Note]
+ A newer version is available, check the LGNPC download site:
+ http://lgnpc.sabregirl.com/downloads.php
+[VER < 1.12 LGNPC_PaxRedoran_v*.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

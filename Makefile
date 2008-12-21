@@ -8,9 +8,8 @@ RULES     := data/mlox_base.txt
 VERSION   := $(shell cat VERSION)
 MLOXARC   := mlox-$(VERSION).7z
 EXEARC    := mlox-exe-$(VERSION).7z
-ARCDATE   := $(shell date --utc "+%Y-%m-%d")
 RELDATE   := $(shell date --utc "+%Y-%m-%d %T (UTC)")
-DATAARC   := mlox-data_$(ARCDATE).7z
+DATAARC   := $(shell data/arcname)
 UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
 
 all: mlox-dist data-dist test-dist
@@ -18,12 +17,15 @@ all: mlox-dist data-dist test-dist
 upload: upload-mlox upload-exe upload-data
 
 upload-mlox:
+	@echo "Uploading dist/$(MLOXARC)"
 	$(UPLOAD) -s "[mlox $(VERSION)] - requires Python25 and wxPython" dist/$(MLOXARC)
 
 upload-data:
-	$(UPLOAD) -s "[mlox-data $(RELDATE)] - install mlox_base.txt into your mlox directory" dist/$(DATAARC)
+	@echo "Uploading `cat dist/DATAARC`"
+	$(UPLOAD) -s "[mlox-data $(RELDATE)] - install mlox_base.txt into your mlox directory" `cat dist/DATAARC`
 
 upload-exe:
+	@echo "Uploading dist/$(EXEARC)"
 	$(UPLOAD) -s "[mlox-exe $(VERSION)] - standalone executable for Windows" dist/$(EXEARC)
 
 # update the version strings in mlox_readme.txt, mlox.py
@@ -54,6 +56,7 @@ dist/$(DATAARC): $(RULES)
 	@perl -p -i -e "s/^\[Version\s+[^\]]+\]/[Version $(RELDATE)]/" $<
 	@(cd data ; 7z a ../$@ $(<F)) > /dev/null 2>&1
 	@echo "CREATED distibution archive for mlox rule-base: $@"
+	@echo "$@" > dist/DATAARC
 
 dist/mlox:
 	@echo "Creating $@"
