@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-21 00:34:45 (UTC)]
+[Version 2008-12-22 00:54:50 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -889,6 +889,17 @@ Beryl's_Head_Replacer_v1.0.esm
 [ANY Slof's Better Beasts a.esp
      Slof's Better Beasts b.esp
      Slof's Civilised Beasts.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Bodies for Beasts [Sabregirl]
+
+;; If you want to use BB-argonian-sils-text.esp with better bodies for beasts
+;; you'll have to have the esp load AFTER better bodies for beasts.
+;; (Ref: https://www.msu.edu/~kindersa/khajiit.html )
+[Order]
+SG-BB-for-beasts.esp
+BB-argonian-sils-text.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3288,6 +3299,22 @@ Leafy Trees.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Leaves of Lorien v1.3 [Westly]
+
+[Requires]
+ (Ref: "Leaves of Lorien Readme 1.3.txt")
+Leaves of Lorien.esp
+Better Bodies.esp
+
+;; "the mod Leaves of Lorien, needs to load after The Vvardenfell Libraries, as it
+;; causes a landscape conflict the other way around." - lettuceman44
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13469885 )
+[Order]
+The_Vvardenfell_Libraries.esp
+Leaves of Lorien.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Leveled Magicka [Marcel Hesselbarth]
 
 [Requires]
@@ -3318,24 +3345,24 @@ LeveledMagicka.esp
 
 [Order]
 Less Lore.esp
-LGNPC_NoLore_v0_83.esp
+LGNPC_NoLore_v?_??.esp
 Lgnpc_SN.esp
-LGNPC_GnaarMok_v1_10.esp
-LGNPC_AldVelothi_v1_20.esp
-LGNPC_MaarGan_v1_10.esp
-LGNPC_HlaOad_v1_32.esp
-LGNPC_Aldruhn_v1_13.esp
-LGNPC_Pelagiad_v1_13.esp
-LGNPC_TelMora_v1_11.esp
-LGNPC_Khuul_v2_01.esp
-LGNPC_VivecFQ_v2_03.esp
-LGNPC_Indarys_Manor_v1_45.esp
-LGNPC_Secret_Masters_v1_21.esp
-LGNPC_TelUvirith_v1_10.esp
-LGNPC_TelUvirith_UI_v1_10.esp
-LGNPC_VivecRedoran_v1_41.esp
-LGNPC_PaxRedoran_v1_12.esp
-LGNPC_SoulSicknessPatch_v1_00.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan_v?_??.esp
+LGNPC_HlaOad_v?_??.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Pelagiad_v?_??.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ_v?_??.esp
+LGNPC_Indarys_Manor_v?_??.esp
+LGNPC_Secret_Masters_v?_??.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_VivecRedoran_v?_??.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 [Requires]
  Uses Tribunal function: forcerun.
@@ -3358,7 +3385,7 @@ LGNPC_Pelagiad_v1_13.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 0.83 LGNPC_NoLore_?_??.esp]
+[VER < 0.83 LGNPC_NoLore_v?_??.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -3393,7 +3420,7 @@ LGNPC_Pelagiad_v1_13.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Pelagiad_v*.esp]
+[VER < 1.13 LGNPC_Pelagiad_v?_??.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -3449,21 +3476,21 @@ LGNPC_Pelagiad_v1_13.esp
  "LGNPC_TelUvirith_UI_v1_10.esp" for users of Uvirith Inside
  "LGNPC_TelUvirith_v1_10.esp" for everyone else
  (Ref: "LGNPC_TelUvirith_Readme.txt")
-LGNPC_TelUvirith_UI_v1_10.esp
-LGNPC_TelUvirith_v1_10.esp
+LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_TelUvirith_v?_??.esp
 
 [Requires]
  (Ref: "LGNPC_TelUvirith_Readme.txt") 
-LGNPC_TelUvirith_UI_v1_10.esp
+LGNPC_TelUvirith_UI_v?_??.esp
 Uvirith Inside.esp
 
 ;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
 ;; See Order notes for other LGNPC mods
 [Order]
 Less Lore.esp
-LGNPC_NoLore_v0_83.esp
+LGNPC_NoLore_v?_??.esp
 Uvirith Inside.esp
-LGNPC_TelUvirith_UI_v1_10.esp
+LGNPC_TelUvirith_UI_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4413,6 +4440,58 @@ Nevena's Clubs & Courtiers 1.0.esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Beast Bodies 3.0 [LizTail]
+
+[Conflict]
+ Choose ONLY ONE of these plugins. "Mature" is for anatomically correct,
+ "Clean" is for a more asexual look.
+New Argonian Bodies - Mature.esp
+New Argonian Bodies - Clean.esp
+New Argonian Bodies (Silaria Textures) - Mature.esp
+New Argonian Bodies (Silaria Textures) - Clean.esp
+New Argonian Bodies (Slof Textures) - Mature.esp
+New Argonian Bodies (Slof Textures) - Clean.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins. "Mature" is for anatomically correct,
+ "Clean" is for a more asexual look.
+New Khajiit Bodies - Mature.esp
+New Khajiit Bodies - Clean.esp
+New Khajiit Bodies (Slof Textures) - Mature.esp
+New Khajiit Bodies (Slof Textures) - Clean.esp
+
+[Requires]
+ To use this mod, you must have both Slof's Better Beasts (reptile
+ version) and New Beast Bodies mod installed. Activate Slof's
+ Better Beasts and this mod at the same time to replace the
+ Argonians and/or Khajiit in the game with ones that use the new
+ mesh with Slof's textures and heads.
+ (Ref: "new_beast_bodies-slof-tex-readme.txt")
+[ANY New Khajiit Bodies (Slof Textures) - Mature.esp
+     New Khajiit Bodies (Slof Textures) - Clean.esp
+     New Argonian Bodies (Slof Textures) - Mature.esp
+     New Argonian Bodies (Slof Textures) - Clean.esp]
+[ANY Slof's Better Beasts a.esp
+     Slof's Better Beasts b.esp
+     Slof's Civilised Beasts.esp]
+
+; For Slof's you need to enable Slof's Better Beasts Reptile
+; version as well as the New Argonian Bodies (Slof Textures) mod in
+; order to get her heads and my bodies. Her mod needs to load first
+; before mine, but unless her mod is updated, it should always load
+; before mine due to the modification date being earlier.
+; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=921269&view=findpost&p=13470588 )
+[Order]
+Slof's Better Beasts a.esp
+Slof's Better Beasts b.esp
+Slof's Civilised Beasts.esp
+New Khajiit Bodies (Slof Textures) - Mature.esp
+New Khajiit Bodies (Slof Textures) - Clean.esp
+New Argonian Bodies (Slof Textures) - Mature.esp
+New Argonian Bodies (Slof Textures) - Clean.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6209,6 +6288,94 @@ Underground Manor 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Uvirith's Legacy [StuporStar]
+
+[Patch]
+ Use "UL_Srikandy_patch_2.1.esp" when using Sri's Alchemy BM with
+ Uvirith's Legacy.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+UL_Srikandy_patch_2.1.esp
+[ALL Uvirith's Legacy_ALPHA1.08.esp
+     Sris_Alchemy_BM.esp]
+
+[Order]
+Uvirith's Legacy_ALPHA1.08.esp
+UL_Srikandy_patch_2.1.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+UL_Srikandy_patch_2.1.esp
+
+[Patch]
+ Use "Uvirith's Legacy Book Jackets Add-on.esp" when using Book Jackets with
+ Uvirith's Legacy.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+Uvirith's Legacy Book Jackets Add-on.esp
+[ALL Uvirith's Legacy_ALPHA1.08.esp
+     [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
+	       Book Jackets - Morrowind.esp]
+	  [ANY Book Jackets - Tribunal - BookRotate.esp
+	       Book Jackets - Tribunal.esp]
+	  [ANY Book Jackets - Bloodmoon - BookRotate.esp
+	       Book Jackets - Bloodmoon.esp]]]
+
+[Order]
+Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy Book Jackets Add-on.esp
+
+[Order]
+Book Jackets - *.esp
+Uvirith's Legacy Book Jackets Add-on.esp
+
+[Requires]
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+UL_Obliv&LGNPC_Booksorter.esp
+Uvirith's Legacy_ALPHA1.08.esp
+
+[Patch]
+ Use "UL_RoHT_Compatibility.esp" when using Pozzo's Rise of House
+ Telvanni with Uvirith's Legacy.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+UL_RoHT_Compatibility.esp
+[ALL Uvirith's Legacy_ALPHA1.08.esp
+     Pozzo's RoHT v1.25.esp]
+
+[Order]
+Uvirith's Legacy_ALPHA1.08.esp
+UL_RoHT_Compatibility.esp
+
+[Order]
+Uvirith's Legacy_ALPHA1.08.esp
+Pozzo's RoHT v1.25.esp
+
+[Patch]
+ Use "UL_TLM_ambiance.esp" when using The Lighing Mod with Uvirith's
+ Legacy, otherwise the light in interiors will be very bright.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+UL_TLM_ambiance.esp
+[ALL Uvirith's Legacy_ALPHA1.08.esp
+     TLM - Ambient Light + Fog Update.esp]
+
+[Order]
+Uvirith's Legacy_ALPHA1.08.esp
+UL_TLM_ambiance.esp
+
+[Conflict]
+ Uvirith's Legacy is not compatible with Uvirith Inside, as it has 
+ been derived from that mod and does many of the same things.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+Uvirith's Legacy_ALPHA1.08.esp
+Uvirith Inside.esp
+
+[Conflict]
+ Uvirith's Legacy and Building Up Uvirith's Grave are not currently
+ compatible as they both make changes to Tel Uvirith.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+Uvirith's Legacy_ALPHA1.08.esp
+Building Up Uvirith's Grave 1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @UUMPP
 
 [Patch]
@@ -6224,7 +6391,7 @@ UUMPP LGNPC wild nix hounds fix.esp
  from the Andus Tradehouse rent room door).
 UUMPP LGNPC Andus Tradehouse fix.esp
 [ALL Morrowind Patch v1.6.4 (WIP).esm
-     LGNPC_MaarGan_v1_10.esp]
+     LGNPC_MaarGan_v?_??.esp]
 
 [Order]
 Bloodmoon.esm
@@ -6813,6 +6980,16 @@ Vivec Outdoor Mall_v2.esp
 Vivec Outdoor Mall CoM_v2.esp
 [ANY Chateau Nerevarine Estate.esp
      Clean SECRET GARDEN V2.esp]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Vvardenfell Library [The Wanderer]
+
+[Requires]
+ (Ref: "wl_library_quickstart.txt")
+The_Vvardenfell_Libraries.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wakim's Game Improvments 9 (WGI)

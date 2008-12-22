@@ -3,7 +3,7 @@
 # mlox - elder scrolls mod load order eXpert
 # Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
 # License: MIT License (see the file: License.txt)
-Version = "0.35"
+Version = "0.36"
 
 import locale
 import os
@@ -13,6 +13,7 @@ import codecs
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 from time import time
+import cPickle
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -712,13 +713,13 @@ class rule_parser:
     def read_rules(self, rule_file):
         """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
         add order rules to graph, and print warnings."""
+        n_rules = 0
         self.rule_file = rule_file
         self.pdbg("READING RULES FROM: \"%s\"" % self.rule_file)
         self.input_handle = myopen_file(self.rule_file, 'r')
         if self.input_handle == None:
             return False
         self.line_num = 0
-        n_rules = 0
         while True:
             if self.buffer == "":
                 if not self.readline():
@@ -1197,6 +1198,8 @@ class loadorder:
                         next = new_order_truename[i+1].lower()
                     if (orig_index[curr] > orig_index[next]):
                         highlight = "_"
+        if Opt.GUI == False:
+            Msg.add("")
         return(self)
 
 
