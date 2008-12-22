@@ -4,16 +4,26 @@ use Getopt::Std;
 use strict;
 
 # expdep == expansion/depends
-# tool for scanning plugins to see if they depend on Tribunal/Bloodmoon expansions
+# command-line tool for scanning plugins to see if they depend on Tribunal/Bloodmoon expansions
 # Look for SSCR (Startup Scripts) and look for BM/TB funs and MAST
 
-
-$::opt_d = 0;			# do not remove intermediate files
+$::opt_d = 0;
 
 my $Usage = qq{expdep [OPTIONS] plugin...
 
 OPTIONS
  -d   debug output
+
+Example:
+
+ % expdep "Blood and Gore.esp"
+ ### Scanning Blood and Gore.esp
+ Blood and Gore.esp: SSCR
+ Blood and Gore.esp: TB-FUN-DEP: forcejump,placeitem,setscale,modscale,getwaterlevel,getscale
+
+ This shows that "Blood and Gore.esp" uses Startup scripts (SSCR), feature introduced with Tribunal.
+ and it lists the Tribunal scripting functions it uses (TB-FUN-DEP).
+ (Bloodmoon function dependencies would be listed with "BM-FUN-DEP", if they existed).
 };
 
 getopts('d') or die $Usage;
