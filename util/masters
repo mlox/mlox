@@ -1,0 +1,104 @@
+#!/usr/bin/perl
+
+use Getopt::Std;
+use strict;
+
+BEGIN {
+    # since perl will optimize out conditional branches that are never
+    # reached, we define the following constants so that we only compile
+    # debug/help code into the program when it it actually needed.
+    use constant HELP => grep(/^(?:-h|-?-help)$/, @ARGV);
+    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+}
+
+$::opt_v = 0;			# verbose
+
+my $Usage = qq{masters [OPTIONS] plugin...
+
+OPTIONS
+ -d   debug output (vast output)
+
+};
+
+getopts('d') or die $Usage;
+
+my $hdr_size = 16;
+sub read_rec {
+    my($expected_type) = @_;
+    my $rec_hdr = "";
+    my $n_read = sysread(INP, $rec_hdr, $hdr_size);
+    if ($n_read == 0) {
+	# EOF
+	return(undef, undef);
+    }
+    if ($n_read != $hdr_size) {
+	warn "Error(hdr): asked for $hdr_size bytes, got $n_read\n";
+	return(undef, undef);
+    }
+    my($rec_type, $rec_len) = unpack("a4I", $rec_hdr);
+    if (defined($expected_type) and $expected_type ne $rec_type) {
+	warn "Error: Expected: $expected_type, got: $rec_type\n";
+	return(undef, undef);
+    }
+    my $rec = "";
+    $n_read = sysread(INP, $rec, $rec_len);
+    if ($n_read != $rec_len) {
+	warn "Error(rec): asked for $rec_len bytes, got $n_read\n";
+	return(undef, undef);
+    }
+    return($rec_type, $rec);
+}
+
+sub get_subrec {
+    my($rec, $subtype) = @_;
+    my @r = ();
+    my $p = 0;
+    my $rec_len = length($rec);
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4I", substr($rec, $p));
+	$p += 8;
+	push(@r, substr($rec, $p, $subrec_len))
+	    if ($subrec_type eq $subtype);
+	$p += $subrec_len;
+    }
+    return(\@r);
+}
+
+sub scan {
+    my($plugin) = @_;
+    warn "### Scanning $plugin\n" if ($::opt_v);
+    unless(open(INP, "<$plugin")) {
+	warn "Error opening $plugin for input ($!)\n";
+	return;
+    }
+    my $mastbm = 0;
+    my $masttb = 0;
+    my $expected = "TES3";
+    while (my($rec_type, $rec) = read_rec($expected)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	print "REC=$rec_type\n" if (DBG);
+	if ($rec_type eq "TES3") {
+	    for my $mast (@{get_subrec($rec, "MAST")}) {
+		$mast = substr($mast, 0, length($mast) - 1);
+		print "Master: $mast\n" if (DBG);
+		$mastbm++ if (lc($mast) eq 'bloodmoon.esm');
+		$masttb++ if (lc($mast) eq 'tribunal.esm');
+	    }
+	    last;
+	}
+    }
+    if ($mastbm or $masttb) {
+	print "$plugin:";
+	print " tribunal.esm" if ($masttb);
+	print " bloodmoon.esm" if ($mastbm);
+	print "\n";
+    } else {
+	print "$plugin: noexp\n";
+    }
+    close(INP);
+}
+
+for my $plugin (@ARGV) {
+    scan($plugin);
+}

@@ -1,0 +1,1087 @@
+#!/usr/bin/perl
+
+# TBD:
+# - look for Bloodmoon variable: PCWerewolf and Tribunal variable: DaysPassed
+#   but only flag if not declared global/local
+# - add check for scripts on doors. (need test case).
+# - add check for problematic use of GetSoundPlaying.
+
+use Cwd;
+use Getopt::Std;
+use strict;
+
+BEGIN {
+    # since perl will optimize out conditional branches that are never
+    # reached, we define the following constants so that we only compile
+    # debug code into the program when it it actually needed.
+    use constant DBG => grep(/^(?:-D)$/, @ARGV);
+}
+
+# esplint: command-line tool for scanning plugins for various potential problems.
+
+$::opt_a = 0;
+$::opt_d = 0;
+$::opt_m = 0;
+$::opt_q = 0;
+$::opt_v = 0;			# verbose
+
+
+my $dup_dia_help = <<END;
+    DUP-DIA: indicates the exact INFO dialog with the same ID, text and filter
+             exists in one of the masters of this plugin. This may be a
+             problem, or maybe not. Sometimes duplicate dialog is intentional
+             in order for dialog sorting to be correct.
+END
+
+my $mod_dia_help = <<END;
+    MOD-DIA: indicates that an INFO dialog with the same ID exists in the
+	     master, but this plugin has modified the text or the filter. This
+	     is quite common when a plugin intentionally modifies a master's
+	     dialog.
+END
+
+my $mod_id_help = <<END;
+    MOD-ID:  MOD-ID indicates that the exact same INFO dialog text and filter
+	     exists in one of the masters of this plugin, but under a
+	     different ID. This can be caused by creating new dialog by
+	     copying the original, and then accidentally editing the original
+	     instead of the copy. These should be checked out.
+END
+
+my $Usage = qq{esplint [OPTIONS] plugin...
+
+OPTIONS
+ -D  debug output (vast)
+ -a  all normal options on (not debug).
+ -d  print out duplicate dialog (DUP-DIA)
+ -m  print out modified dialog (MOD-DIA)
+ -q  quiet (less output, no explanation text)
+ -v  verbose (more output)
+
+[Note: esplint wants to be able to find Masters for a given plugin, so it
+needs to run somewhere under your Morrowind directory, but it does not
+necessarily have to be in your Data Files directory.]
+
+ Explanation of Flags:
+
+    EXP-DEP: The plugin requires either Tribunal or Bloodmoon because it uses
+             engine features not present in the original Morrowind such as
+             startup scripts or Tribunal functions, but the plugin has not
+             listed any expansions in its list of Masters.
+
+    BM-DEP:  The plugin uses Bloodmoon specific functions, so it needs version
+             1.6.1820, but the plugin does not list Bloodmoon.esm in its list
+             of Masters.
+
+    GMSTs:   You know this one! This means that some of the "Evil GMSTs" are
+             present in this plugin and that they have the same exact value as
+             the original GMST in the master .esm. Other GMSTs not in the list
+             of known Evil GMSTs or GMSTs that have been modified from their
+             original values are not flagged.
+
+    DEP-LST: This plugin makes deprecated use of scripting functions to modify
+             standard Bethesda Leveled Lists. This is bad because these lists
+             will then be stored in the user's savegame, just like any other
+             changed object. Since savegames load after all plugins (including
+             "Mashed Lists.esp" which contains merged leveled lists, this
+             means that merged leveled lists will be ignored. Note that this
+             warning only applies to changes to Bethesda lists. Changes to
+             leveled lists specific to the mod will not be flagged.
+
+    FOGBUG:  The plugin has an interior CELL with a fog density of 0.0, and the
+             cell is not marked to "behave as exterior". This circumstance can
+             trigger the "fog bug" in some graphics cards, resulting in the
+             cell being rendered as a blank screen.
+
+$dup_dia_help
+
+$mod_dia_help
+
+$mod_id_help
+};
+
+getopts('aDdmqv') or die $Usage;
+
+if ($::opt_a) {
+    $::opt_d = 1;
+    $::opt_m = 1;
+    $::opt_v = 1;
+}
+
+my $RE_BMFUN;
+my $RE_TBFUN;
+my $RE_DEPFUN;
+my %TB_EVIL;
+my %BM_EVIL;
+my %MASTER_DIALOG;
+
+sub chop_nulls {
+    my($str) = @_;
+    $str =~ tr/\000//d;
+    return($str);
+}
+
+sub load_data_list {
+    my @datalist = ();
+    my $title = scalar(<DATA>);
+    print "Loading: $title" if (DBG);
+    while (<DATA>) {
+	chomp;
+	last if (/^# END-OF-LIST/);
+	push(@datalist, $_);
+    }
+    return(\@datalist);
+}
+
+sub load_data {
+    $RE_TBFUN = '^[^;]*?\b(' . join("|", @{load_data_list()}) . ')\b';
+    $RE_BMFUN = '^[^;]*?\b(' . join("|", @{load_data_list()}) . ')\b';
+    $RE_DEPFUN = '^[^;]*?\b((?:addto|removefrom)lev(?:item|creature)\W+(?:' . join("|", @{load_data_list()}) . ')\b\"?).*$';
+    foreach my $g (@{load_data_list()}) {
+	my($name, $val) = split(" ", $g);
+	$TB_EVIL{$name} = $val;
+    }
+    foreach my $g (@{load_data_list()}) {
+	my($name, $val) = split(" ", $g);
+	$BM_EVIL{$name} = $val;
+    }
+    if (DBG) {
+	print "\nTBFUN regexp: $RE_TBFUN\n";
+	print "\nBMFUN regexp: $RE_BMFUN\n";
+	print "\nDEPFUN regexp: $RE_DEPFUN\n";
+    }
+}
+
+sub list_files {
+    my($dir) = @_;
+    my %files = ();
+    if (opendir(DH, $dir)) {
+	while (my $file = readdir(DH)) {
+	    next if (($file eq '.') or ($file eq '..'));
+	    $files{lc $file} = $file;
+	}
+	closedir(DH);
+    } else {
+	warn qq{ERROR opening "$dir" ($!)\n};
+    }
+    return(\%files);
+}
+
+sub sort_by_date {
+    my($datadir, @masters) = @_;
+    my $dirlist = list_files($datadir);
+    my @sorted = sort { (-M "$datadir/$dirlist->{$a}") <=> (-M "$datadir/$dirlist->{$b}") } @masters;
+    print "DBG: sorted masters: @sorted\n" if (DBG);
+    return(@sorted);
+}
+
+sub find_datadir {
+    my $dirlist = list_files(".");
+    if ($dirlist->{"morrowind.esm"}) {
+	return(".");
+    }
+    my $dir = Cwd::getcwd();
+    print "DBG: checking for data dir in: $dir\n" if (DBG);
+    while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
+	my $datadir = list_files($dir)->{"data files"};
+	if ($datadir) {
+	    print "DBG: found datadir: $dir/$datadir\n" if (DBG);
+	    return("$dir/$datadir");
+	}
+	my @parts = split(m![\\/]!, $dir);
+	pop(@parts);
+	$dir = join("/", @parts);
+	print "DBG: checking for data dir in: $dir\n" if (DBG);
+    }
+    warn qq{Can't find "Data Files" directory. Won't be able to find masters\n};
+    return(undef);		# not running under morrowind directory
+}
+
+sub load_dialog {
+    my($dia, $datadir, $plugin, $label) = @_;
+    if (defined $MASTER_DIALOG{$plugin}) {
+	print "DBG: re-using dialog for $plugin\n" if (DBG);
+	foreach my $id (keys(%{$MASTER_DIALOG{$plugin}})) {
+	    $dia->{$id} = $MASTER_DIALOG{$plugin}->{$id};
+	}
+	return;
+    }
+    my $dirlist = list_files($datadir);
+    $plugin = $dirlist->{lc($plugin)};
+    print "DBG: loading dialog for $datadir/$plugin\n" if (DBG);
+    unless(open(INP, "<$datadir/$plugin")) {
+	warn "Error opening $label $datadir/$plugin for loading dialog ($!)\n";
+	return;
+    }
+    while(my($rec_type, $rec, $flags) = read_rec(undef)) {
+	print "DBG: rec_type = $rec_type\n" if (DBG);
+	last if not defined $rec_type;
+	if ($rec_type eq "INFO") {
+	    my $r = parse_subrec($rec);
+	    my $id = chop_nulls($r->{INAM}[0]);
+	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
+	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
+	    my $val = (split(/DATA/, $rec, 2))[1];
+	    $dia->{$id} = $val;
+	    $MASTER_DIALOG{$plugin}->{$id} = $val;
+	    print "DBG: DIA($plugin) $id = $dia->{$id}\n" if (DBG);
+	}
+    }
+    close(INP);
+}
+
+sub load_masters_dialog {
+    my(@masters) = @_;
+    my $datadir = find_datadir();
+    print "DBG: datadir = $datadir\n" if (DBG);
+    my %dialog = ();
+    @masters = sort_by_date($datadir, @masters);
+    foreach my $master (@masters) {
+	load_dialog(\%dialog, $datadir, $master, "Master");
+    }
+    return(\%dialog);
+}
+
+my $hdr_size = 16;
+sub read_rec {
+    my($expected_type) = @_;
+    my $rec_hdr = "";
+    my $n_read = sysread(INP, $rec_hdr, $hdr_size);
+    if ($n_read == 0) {		# EOF
+	return(undef, undef);
+    }
+    if ($n_read != $hdr_size) {
+	warn "Error(hdr): asked for $hdr_size bytes, got $n_read\n";
+	return(undef, undef);
+    }
+    my($rec_type, $rec_len, $flags) = unpack("a4Lx[L]L", $rec_hdr);
+    if (defined($expected_type) and $expected_type ne $rec_type) {
+	warn "Error: Expected: $expected_type, got: $rec_type\n";
+	return(undef, undef);
+    }
+    my $rec = "";
+    $n_read = sysread(INP, $rec, $rec_len);
+    if ($n_read != $rec_len) {
+	warn "Error(rec): asked for $rec_len bytes, got $n_read\n";
+	return(undef, undef);
+    }
+    return($rec_type, $rec, $flags);
+}
+
+sub parse_subrec {
+    my($rec) = @_;
+    my %r = ();
+    my $p = 0;
+    my $rec_len = length($rec);
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4I", substr($rec, $p));
+	$p += 8;
+	push(@{$r{$subrec_type}}, substr($rec, $p, $subrec_len));
+	$p += $subrec_len;
+    }
+    return(\%r);
+}
+
+sub get_subrec {
+    my($rec, $subtype) = @_;
+    my @r = ();
+    my $p = 0;
+    my $rec_len = length($rec);
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4I", substr($rec, $p));
+	$p += 8;
+	push(@r, substr($rec, $p, $subrec_len))
+	    if ($subrec_type eq $subtype);
+	$p += $subrec_len;
+    }
+    return(\@r);
+}
+
+my %tbfun = ();
+my %bmfun = ();
+my %depfun = ();
+sub scan_expdep {
+    my($script, $label) = @_;
+    print "SCRIPT:\n$script\n\n" if (DBG and $::opt_v);
+    while ($script =~ m!$RE_TBFUN!gim) {
+	print "TBFUN($label): $1\n" if (DBG);
+	$tbfun{"$label\t".lc($1)}++;
+    }
+    while ($script =~ m!$RE_BMFUN!gim) {
+	print "BMFUN($label): $1\n" if (DBG);
+	$bmfun{"$label\t".lc($1)}++;
+    }
+    while ($script =~ m!$RE_DEPFUN!gim) {
+	print "DEPFUN($label): $1\n" if (DBG);
+	$depfun{"$label\t".lc($1)}++;
+    }
+}
+
+sub gmstval {
+    my($rec, $plugin_path) = @_;
+    my $r = parse_subrec($rec);
+    my $name = lc($r->{NAME}[0]);
+    delete $r->{NAME};
+    my @keys = keys(%$r);
+    if (scalar(@keys) > 1) {
+	warn "$plugin_path: Error, too many keys for $name: @keys\n";
+    }
+    my $type = $keys[0];
+    my $val = $r->{$type}[0];
+    return($name, unpack("h*", "$type $val"));
+}
+
+sub report {
+    my($items, $label) = @_;
+    my @itemlist = sort(keys(%$items));
+    if (@itemlist) {
+	my %items;
+	foreach (@itemlist) { $items{(split(/\s/))[1]}++; }
+	print "    $label:\n";
+	print "\t$_\n" foreach (@itemlist);
+    }
+}
+
+sub beautify_dia {
+    my($dia) = @_;
+    my $dia_str = $dia;
+    $dia_str =~ s!([\000-\037\177-\377])!_!g;
+    return($dia_str);
+}
+
+sub scan {
+    my($plugin_path) = @_;
+    my $plugin = (split(m![\\/]!, $plugin_path))[-1];
+    warn "### Scanning $plugin_path\n" if ($::opt_v);
+    unless(open(INP, "<$plugin_path")) {
+	warn "Error opening $plugin_path for input ($!)\n";
+	return;
+    }
+    %tbfun = ();
+    %bmfun = ();
+    %depfun = ();
+    my %evil = ();
+    my $evil_tb = 0;
+    my $evil_bm = 0;
+    my %fogbug = ();
+    my %mydia = ();
+    my @sscr = ();
+    my $mastbm = 0;
+    my $masttb = 0;
+    my $expected = "TES3";
+    my @masters = ();
+    while (my($rec_type, $rec, $flags) = read_rec($expected)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	print "REC=$rec_type flags=$flags\n" if (DBG);
+	if ($flags & 0x1000) {
+	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	if ($rec_type eq "TES3") {
+	    for my $mast (@{get_subrec($rec, "MAST")}) {
+		$mast = chop_nulls($mast);
+		push(@masters, $mast);
+		print "Master: $mast\n" if (DBG);
+		$mastbm++ if (lc($mast) eq 'bloodmoon.esm');
+		$masttb++ if (lc($mast) eq 'tribunal.esm');
+	    }
+	} elsif ($rec_type eq "GMST") {
+	    # check for evil GMSTs
+	    my($name, $val) = gmstval($rec, $plugin_path);
+	    print "DBG: GMST=$name val=$val tb=$TB_EVIL{$name} bm=$BM_EVIL{$name}\n" if (DBG);
+	    if ($val eq $TB_EVIL{$name}) {
+		$evil{"TB $name"}++;
+		$evil_tb++;
+	    } elsif ($val eq $BM_EVIL{$name}) {
+		$evil{"BM $name"}++;
+		$evil_bm++;
+	    }
+	} elsif ($rec_type eq "SSCR") {
+	    # check for startup script dependency
+	    my $name = parse_subrec($rec)->{NAME}[0];
+	    $name = chop_nulls($name);
+	    push(@sscr, $name);
+	} elsif ($rec_type eq "INFO") {
+	    # check for tribunal/bloodmoon function dependency in infos
+	    my $r = parse_subrec($rec);
+	    my $id = $r->{INAM}[0];
+	    $id = chop_nulls($id);
+	    my $script = $r->{BNAM}[0];
+	    scan_expdep($script, "INFO($id)");
+	    $mydia{$id} = (split(/DATA/s, $rec, 2))[1];
+	    print "DBG: MYDIA($plugin) $id = $mydia{$id}\n" if (DBG);
+	} elsif ($rec_type eq "SCPT") {
+	    # check for tribunal/bloodmoon function dependency in scripts
+	    my $script = get_subrec($rec, "SCTX")->[0];
+	    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+	    scan_expdep($script, "SCPT($name)");
+	} elsif ($rec_type eq "CELL") {
+	    # check for fogbugs in cells
+	    my $r = parse_subrec($rec);
+	    my $name = chop_nulls($r->{NAME}[0]);
+	    if ($name) {	# interior cells have names
+		my $data = $r->{DATA}[0];
+		my($databits, $fog_level, $fog_density) = unpack("iff", $data);
+		if ($fog_density == 0.0 and
+		    not ($databits & 128)) { # behave like exterior
+		    $fogbug{$name}++;
+		}
+	    }
+	}
+    }
+    close(INP);
+    # analyze dialog problems
+    my $dup_dia = 0;
+    my $mod_dia = 0;
+    my $mod_id = 0;
+    my $dia_out = "";
+    if (%mydia) {
+	my %master_dia = %{load_masters_dialog(@masters)};
+	my %rev_master_dia = ();
+	# create a reverse index
+	foreach my $key (keys(%master_dia)) {
+	    $rev_master_dia{$master_dia{$key}} = $key;
+	}
+	foreach my $id (sort {$a <=> $b} keys(%mydia)) {
+	    my $dia = $mydia{$id};
+	    my $dia_str = beautify_dia($dia);
+	    if (defined($master_dia{$id})) {
+		if ($master_dia{$id} eq $dia) {
+		    $dup_dia++;
+		    if ($::opt_d) {
+			$dia_out .= "DUP-DIA: ID=$id\n";
+			$dia_out .= "  DIA=$dia_str\n";
+		    }
+		} else {
+		    $mod_dia++;
+		    if ($::opt_m) {
+			my $mast_dia_str = beautify_dia($master_dia{$id});
+			$dia_out .= "MOD-DIA: ID=$id\n";
+			$dia_out .= "  NEW-DIA=$dia_str\n";
+			$dia_out .= "  ORIG-DIA=$mast_dia_str\n";
+		    }
+		}
+	    }
+	    if (defined($rev_master_dia{$id})) {
+		$mod_id++;
+		if ($rev_master_dia{$dia} != $id) {
+		    $dia_out .= "MOD-ID: ID=$id DIA=$dia\n";
+		    $dia_out .= "  ORIG-ID=$rev_master_dia{$dia}\n";
+		}
+	    }
+	}
+    }
+    # create a summary line of things we have discovered.
+    my $problems = "";
+    $problems .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
+    $problems .= " BM-DEP" if ((not $mastbm) and %bmfun);
+    $problems .= " GMSTs" if (%evil);
+    $problems .= " DEP-LST" if (%depfun);
+    $problems .= " FOGBUG" if (%fogbug);
+    $problems .= " DUP-DIA" if ($dup_dia);
+    $problems .= " MOD-DIA" if ($mod_dia);
+    $problems .= " MOD-ID" if ($mod_id);
+    if ($problems) {
+	print "$plugin_path:$problems\n";
+    } else {
+	return;
+    }
+    # now print out verbose versions, if applicable
+    if (@sscr and not $masttb and not $mastbm) {
+	my $pl = (scalar(@sscr) > 1) ? "s" : "";
+	print "    Expansion Dependency: Startup Script$pl: ", join(", ", @sscr), "\n";
+    }
+    report(\%tbfun, "Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
+    report(\%bmfun, "Bloodmoon Dependency: Bloodmoon Functions") if (not $mastbm);
+    report(\%depfun, "Deprecated use of Leveled List functions on Bethesda Lists");
+    report(\%evil, "EVIL GMSTs");
+    if (%fogbug) {
+	print "    FOGBUG: Cells with zero fog density setting:\n";
+	print "\t$_\n" foreach (sort(keys(%fogbug)));
+    }
+    unless ($::opt_q) {
+	if ($::opt_d and $dup_dia) {
+	    print "   $dup_dia_help";
+	}
+	if ($::opt_m and $mod_dia) {
+	    print "   $mod_dia_help";
+	}
+	if ($mod_id) {
+	    print "   $mod_id_help";
+	}
+    }
+    print $dia_out;
+}
+
+load_data();
+for my $plugin (@ARGV) {
+    scan($plugin);
+}
+
+__DATA__
+# Tribunal Functions
+AddToLevCreature
+AddToLevItem
+ClearForceJump
+ClearForceMoveJump
+ClearForceRun
+DisableLevitation
+EnableLevitation
+ExplodeSpell
+ForceJump
+ForceMoveJump
+ForceRun
+GetCollidingActor
+GetCollidingPC
+GetForceJump
+GetForceMoveJump
+GetForceRun
+GetPCJumping
+GetPCRunning
+GetPCSneaking
+GetScale
+GetSpellReadied
+GetSquareRoot
+GetWaterLevel
+GetWeaponDrawn
+GetWeaponType
+HasItemEquipped
+ModScale
+ModWaterLevel
+PlaceItem
+PlaceItemCell
+RemoveFromLevCreature
+RemoveFromLevItem
+SetDelete
+SetScale
+SetWaterLevel
+# END-OF-LIST for Tribunal functions
+# Bloodmoon Functions
+BecomeWerewolf
+GetPCInJail
+GetPCTraveling
+GetWerewolfKills
+IsWerewolf
+PlaceAtMe
+SetWerewolfAcrobatics
+TurnMoonRed
+TurnMoonWhite
+UndoWerewolf
+# END-OF-LIST for Bloodmoon Functions
+# Standard Bethesda Leveled Lists
+BM_Imperial Guard Random Weapon
+Imperial Guard Random Helmet
+Imperial Guard Random LPauldron
+Imperial Guard Random RPauldron
+Imperial Guard Random Shield
+Imperial Guard Random Skirt
+Imperial Guard Random Weapon
+bm_ex_berserkers
+bm_ex_felcoast
+bm_ex_felcoast_40
+bm_ex_felcoast_60
+bm_ex_felcoast_sleep
+bm_ex_hirforest
+bm_ex_hirforest_40
+bm_ex_hirforest_60
+bm_ex_hirforest_sleep
+bm_ex_horker_h20
+bm_ex_horker_lake
+bm_ex_isinplains
+bm_ex_isinplains_40
+bm_ex_isinplains_60
+bm_ex_isinplains_sleep
+bm_ex_moemountains
+bm_ex_moemountains_40
+bm_ex_moemountains_60
+bm_ex_moemountains_sleep
+bm_ex_reaver_archers
+bm_ex_reavers
+bm_ex_rieklingpatrols
+bm_ex_rieklingpatrols_20
+bm_ex_rieklingpatrols_40
+bm_ex_rieklingpatrols_60
+bm_ex_smugglers
+bm_ex_wolfpack
+bm_ex_wolfpack_20
+bm_ex_wolfpack_40
+bm_ex_wolfpack_60
+bm_frysehag_all
+bm_in_berserker_20
+bm_in_berserker_40
+bm_in_berserker_60
+bm_in_frysehag_20
+bm_in_frysehag_40
+bm_in_frysehag_8
+bm_in_icecaves
+bm_in_icecaves_40
+bm_in_icecaves_60
+bm_in_nordburial
+bm_in_nordburial_40
+bm_in_nordburial_60
+bm_random_nordictomb
+bm_random_nordsilver
+bm_random_riekling_loot
+bm_randomboots_smugglers
+bm_randomcuirass_smugglers
+bm_randomgreaves_smugglers
+bm_randomhealth_smugglers
+bm_randomhelmet_smugglers
+bm_randomleft_smugglers
+bm_randomloot_smugglers
+bm_randomright_smugglers
+bm_randomshield_smugglers
+bm_randomweapon_berserker
+bm_randomwpn_smugglers
+bm_werewolf_Connor
+bm_werewolf_wilderness01
+bm_werewolf_wilderness02
+bm_werewolf_wilderness03
+bm_werewolf_wilderness04
+bm_werewolf_wilderness05
+bm_werewolf_wilderness06
+bm_werewolf_wilderness07
+bm_werewolf_wilderness08
+bm_werewolf_wilderness09
+db_assassins
+ex_RedMtn_all_lev[+]0
+ex_RedMtn_all_lev[+]2
+ex_RedMtn_all_lev-2
+ex_RedMtn_all_sleep
+ex_ascadianisles_lev[+]0
+ex_ascadianisles_lev[+]2
+ex_ascadianisles_lev-1
+ex_ascadianisles_sleep
+ex_azurascoast_lev[+]0
+ex_azurascoast_lev[+]2
+ex_azurascoast_lev-1
+ex_azurascoast_sleep
+ex_bittercoast_lev[+]0
+ex_bittercoast_lev[+]2
+ex_bittercoast_lev-1
+ex_bittercoast_sleep
+ex_grazelands_lev[+]0
+ex_grazelands_lev[+]2
+ex_grazelands_lev-1
+ex_grazelands_sleep
+ex_molagmar_lev[+]0
+ex_molagmar_lev[+]2
+ex_molagmar_lev-1
+ex_molagmar_sleep
+ex_sheogorad_lev[+]0
+ex_sheogorad_lev[+]2
+ex_sheogorad_lev-1
+ex_sheogorad_sleep
+ex_shore_all_lev[+]0
+ex_shore_all_lev[+]2
+ex_shore_all_lev-2
+ex_shore_cliffracer_lev[+]0
+ex_shore_cliffracer_lev[+]2
+ex_shore_cliffracer_lev-2
+ex_shore_mudcrab
+ex_westgash_lev[+]0
+ex_westgash_lev[+]2
+ex_westgash_lev-1
+ex_westgash_sleep
+ex_wild_all_lev[+]0
+ex_wild_all_lev[+]2
+ex_wild_all_lev-1
+ex_wild_all_sleep
+ex_wild_netch_lev[+]0
+ex_wild_netch_lev[+]2
+ex_wild_netch_lev-1
+ex_wild_rat_lev[+]0
+ex_wild_rat_lev[+]2
+ex_wild_rat_lev-2
+goblin_health
+goblin_weapons_random
+h2o_all_lev[+]0
+h2o_all_lev[+]2
+h2o_all_lev-2
+h2o_slaughterfish
+in_6th_all_lev[+]0
+in_6th_all_lev[+]2
+in_6th_all_lev-2
+in_6th_ash_lev[+]0
+in_6th_ash_lev[+]2
+in_6th_ash_lev-2
+in_cave_alit_lev[+]0
+in_cave_alit_lev[+]2
+in_cave_alit_lev-1
+in_cave_all_lev[+]0
+in_cave_all_lev[+]2
+in_cave_all_lev-1
+in_cave_kagouti_lev[+]0
+in_cave_kagouti_lev[+]2
+in_cave_kagouti_lev-1
+in_cave_nix_lev[+]0
+in_cave_nix_lev[+]2
+in_cave_nix_lev-1
+in_dae_all_lev[+]0
+in_dae_all_lev[+]2
+in_dae_all_lev-2
+in_dae_atronach_lev[+]0
+in_dae_atronach_lev[+]2
+in_dae_atronach_lev-2
+in_dae_clanfear_lev[+]0
+in_dae_clanfear_lev[+]2
+in_dae_clanfear_lev-2
+in_dae_dremora_lev[+]0
+in_dae_dremora_lev[+]2
+in_dae_dremora_lev-2
+in_durzogs
+in_dwe_all_lev[+]0
+in_dwe_all_lev[+]2
+in_dwe_all_lev-2
+in_dwe_all_tribunal
+in_dwe_cent_lev[+]0
+in_dwe_cent_lev[+]2
+in_dwe_cent_lev-2
+in_egg_all_lev[+]0
+in_egg_all_lev[+]2
+in_egg_all_lev-1
+in_egg_kwama_blight_lev[+]0
+in_egg_kwama_blight_lev[+]2
+in_egg_kwama_blight_lev-1
+in_egg_kwama_lev[+]0
+in_egg_kwama_lev[+]2
+in_egg_kwama_lev-1
+in_egg_kwama_mined
+in_egg_scrib_lev[+]0
+in_egg_scrib_lev[+]2
+in_egg_scrib_lev-1
+in_goblins
+in_tomb_all_lev[+]0
+in_tomb_all_lev[+]2
+in_tomb_all_lev-2
+in_tomb_all_lev_trib
+in_tomb_bone_lev[+]0
+in_tomb_bone_lev[+]2
+in_tomb_bone_lev-2
+in_tomb_skele_lev[+]0
+in_tomb_skele_lev[+]2
+in_tomb_skele_lev-2
+in_vamp_cattle
+in_vamp_cattle_aun
+in_vamp_cattle_ber
+in_vamp_cattle_qua
+l_b_Bandit_goods
+l_b_amulets
+l_b_loot_tomb
+l_b_loot_tomb01
+l_b_loot_tomb02
+l_b_loot_tomb03
+l_b_rings
+l_m_amulets
+l_m_armor
+l_m_armor_boots
+l_m_armor_bracers
+l_m_armor_cuirass
+l_m_armor_gauntlet
+l_m_armor_helmet
+l_m_armor_shields
+l_m_belts
+l_m_enchantitem_hlaalu_rank0
+l_m_enchantitem_hlaalu_rank4
+l_m_enchantitem_hlaalu_rank6
+l_m_enchantitem_imperial_rank0
+l_m_enchantitem_redoran_rank2
+l_m_enchantitem_redoran_rank4
+l_m_enchantitem_redoran_rank6
+l_m_enchantitem_redoran_rank8
+l_m_enchantitem_telvanni_rank01
+l_m_enchantitem_telvanni_rank6
+l_m_enchantitem_telvanni_rank8
+l_m_enchantitem_temple_rank0_1
+l_m_enchantitem_temple_rank0_2
+l_m_enchantitem_temple_rank4
+l_m_enchantitem_temple_rank6
+l_m_enchantitem_temple_rank8_1
+l_m_enchantitem_temple_rank8_2
+l_m_potion
+l_m_potion_h
+l_m_rings
+l_m_wpn_melee
+l_m_wpn_melee_axe
+l_m_wpn_melee_blunt
+l_m_wpn_melee_long blade
+l_m_wpn_melee_short blade
+l_m_wpn_melee_spear
+l_m_wpn_missle
+l_m_wpn_missle_arrow
+l_m_wpn_missle_bolt
+l_n_amulet
+l_n_apparatus
+l_n_armor
+l_n_armor_boots
+l_n_armor_bracers
+l_n_armor_cuirass
+l_n_armor_gauntlet
+l_n_armor_greaves
+l_n_armor_helmet
+l_n_armor_pauldron
+l_n_armor_shields
+l_n_lockpicks
+l_n_probe
+l_n_repair item
+l_n_rings
+l_n_smuggled_goods
+l_n_soul gem
+l_n_wpn_melee
+l_n_wpn_melee_axe
+l_n_wpn_melee_blunt
+l_n_wpn_melee_long blade
+l_n_wpn_melee_short blade
+l_n_wpn_melee_spear
+l_n_wpn_melee_tomb
+l_n_wpn_missle
+l_n_wpn_missle_arrow
+l_n_wpn_missle_bolt
+l_n_wpn_missle_bow
+l_n_wpn_missle_thrown
+l_n_wpn_missle_xbow
+l_vamp_cattle
+misc_com_redware_bowl
+random ashlander weapon
+random ebony weapon
+random excellent melee weapon
+random gold
+random gold_lev_05
+random gold_lev_10
+random gold_lev_15
+random gold_lev_20
+random orcish armor
+random_Golden_saint_shield
+random_Golden_saint_weapon
+random_adamantium
+random_alchemy_diff
+random_alit_hide
+random_ampoule_pod
+random_armor_bonemold
+random_armor_chitin
+random_armor_fur
+random_armor_glass
+random_armor_iron
+random_armor_netch_leather
+random_armor_steel
+random_ash_salts
+random_ash_yam
+random_bear_pelt
+random_belladonna_plant
+random_belladonna_spriggan
+random_bittergreen_petals
+random_black_anther
+random_black_lichen
+random_boar_leather
+random_bonemeal
+random_book_dunmer
+random_book_imperial_dunmer
+random_book_imperial_hlaalu
+random_book_skill
+random_book_wizard_all
+random_book_wizard_evil
+random_bulbs
+random_bunglers_bane
+random_cabbage
+random_chokeweed
+random_coda_flower
+random_com_kitchenware
+random_comberry
+random_common_de_fclothes_01
+random_common_de_mclothes_01
+random_coprinus
+random_corkbulb_root
+random_cornberry
+random_corprus_weepings
+random_crab_meat
+random_daedra_heart
+random_daedra_skin
+random_daedric_weapon
+random_de_blueware_01
+random_de_cheapfood_01_nc
+random_de_cheapfood_01_ne
+random_de_pants
+random_de_pos_01
+random_de_pos_01_nc
+random_de_robe
+random_de_shirt
+random_de_shoes_common
+random_de_weapon
+random_diamond
+random_dreugh_wax
+random_drinks_01
+random_drinks_nord
+random_drinksndrugs_imp
+random_dwarven_all
+random_dwarven_ingredients
+random_dwarven_misc
+random_dwemer_armor
+random_dwemer_coins
+random_dwemer_weapon
+random_ebony
+random_ectoplasm
+random_expensive_de_fclothes_02
+random_expensive_de_mclothes_02
+random_exquisite_de_fclothes1
+random_exquisite_de_mclothes1
+random_extravagant_de_fclothes1
+random_extravagant_de_mclothes1
+random_fire_petal
+random_fire_salts
+random_food
+random_frost_salts
+random_gem
+random_ghoul_heart
+random_glass_weapon
+random_gold_kanet
+random_golden_sedge
+random_gravetar
+random_green_lichen
+random_guar_hide
+random_hackle-lo_leaf
+random_heartwood
+random_heather
+random_holly
+random_horker_tusk
+random_hound_meat
+random_hypha_facia
+random_imp_armor
+random_imp_silverware
+random_imp_weapon
+random_ingredient
+random_ingredient_diff
+random_iron_fur_armor
+random_iron_weapon
+random_kagouti_hide
+random_kresh_fiber
+random_kwama egg
+random_kwama_cuttle
+random_loot_bonewalker
+random_loot_bonewalker_greater
+random_loot_special
+random_marshmerrow
+random_moon_sugar
+random_muck
+random_netch_leather
+random_noble_sedge
+random_nordic_weapons
+random_nordictomb_rare
+random_orcish_weapons
+random_pearl
+random_pos
+random_potion_bad
+random_racer_plumes
+random_rat_meat
+random_rawglass
+random_red_guard_cloth_01
+random_red_lichen
+random_riekling_loot
+random_roobrush
+random_russula
+random_rye
+random_saltrice
+random_scales
+random_scamp_skin
+random_scathecraw
+random_scrap_metal
+random_scrib_jelly
+random_scroll_all
+random_shalk_resin
+random_silver_weapon
+random_skooma
+random_smuggler_1-5
+random_smuggler_11[+]
+random_smuggler_6-10
+random_snowbear_pelt
+random_snowwolf_pelt
+random_spines
+random_stalks
+random_steel_weapon
+random_stoneflower_petals
+random_sweetpulp
+random_timsa
+random_trama_root
+random_vampire_dust
+random_void_salts
+random_weapon_melee_basic
+random_wickwheat
+random_willow_anther
+random_wolf_pelt
+# END-OF-LIST for Bethesda lists
+# Evil GMSTs Tribunal (values are hexencoded)
+scompanionshare 35452565023586162756
+scompanionwarningbuttonone 3545256502c456470247865602d656273656e61627970217579647e2
+scompanionwarningbuttontwo 35452565022556475727e60247f60234f6d60716e696f6e60235861627560246963707c61697e2
+scompanionwarningmessage 354525650295f6572702d656273656e61627970296370207f6f627562702e6f67702478616e602778656e60286560236f6e64727163647564602779647860297f657e2020295f6572702d656273656e6162797027796c6c602175796470296660297f6570246f602e6f6470276966756028696d60276f6c64602f6270276f6f646370247f602262796e67602869637020527f66696470247f602160207f6379647966756026716c65756e2
+sdeletenote 35452565024456c656475602e4f64756f3
+seffectsummonfabricant 35452565023557d6d6f6e60264162627963616e647
+slevitatedisabled 3545256502c456679647164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2
+smagicfabricantid 354525650264162627963616e647f53757d6d6f6e6
+smaxsale 35452565023556c6c6562702d41687
+sprofitvalue 35452565020527f6669647a3
+steleportdisabled 35452565024556c65607f62747164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2
+# END-OF-LIST for Evil GMSTs Tribunal
+# Evil GMSTs Bloodmoon (values are hexencoded)
+fcombatdistancewerewolfmod 64c4456502a99999e3
+ffleedistance 64c44565020008b354
+fwerewolfacrobatics 64c445650200000a24
+fwerewolfagility 64c445650200006134
+fwerewolfalchemy 64c445650200000000
+fwerewolfalteration 64c445650200000000
+fwerewolfarmorer 64c445650200000000
+fwerewolfathletics 64c445650200008424
+fwerewolfaxe 64c445650200000000
+fwerewolfblock 64c445650200000000
+fwerewolfbluntweapon 64c445650200000000
+fwerewolfconjuration 64c445650200000000
+fwerewolfdestruction 64c445650200000000
+fwerewolfenchant 64c445650200000000
+fwerewolfendurance 64c445650200006134
+fwerewolffatigue 64c445650200008c34
+fwerewolfhandtohand 64c445650200008c24
+fwerewolfhealth 64c445650200000004
+fwerewolfheavyarmor 64c445650200000000
+fwerewolfillusion 64c445650200000000
+fwerewolfintellegence 64c445650200000000
+fwerewolflightarmor 64c445650200000000
+fwerewolflongblade 64c445650200000000
+fwerewolfluck 64c445650200008c14
+fwerewolfmagicka 64c445650200008c24
+fwerewolfmarksman 64c445650200000000
+fwerewolfmediumarmor 64c445650200000000
+fwerewolfmerchantile 64c445650200000000
+fwerewolfmysticism 64c445650200000000
+fwerewolfpersonality 64c445650200000000
+fwerewolfrestoration 64c445650200000000
+fwerewolfrunmult 64c445650266666af3
+fwerewolfsecurity 64c445650200000000
+fwerewolfshortblade 64c445650200000000
+fwerewolfsilverweapondamagemult 64c445650200000004
+fwerewolfsneak 64c44565020000eb24
+fwerewolfspear 64c445650200000000
+fwerewolfspeechcraft 64c445650200000000
+fwerewolfspeed 64c445650200004b24
+fwerewolfstrength 64c445650200006134
+fwerewolfunarmored 64c445650200008c24
+fwerewolfwillpower 64c445650200000000
+iwerewolfbounty 94e44565028e300000
+iwerewolffightmod 94e445650246000000
+iwerewolffleemod 94e445650246000000
+iwerewolfleveltoattack 94e445650241000000
+seditnote 35452565025446964702e4f64756
+seffectsummoncreature01 35452565023416c6c60275f6c666
+seffectsummoncreature02 35452565023416c6c60224561627
+seffectsummoncreature03 35452565023557d6d6f6e60224f6e65677f6c666
+seffectsummoncreature04 3545256502375466665636473557d6d6f6e634275616475727560343
+seffectsummoncreature05 3545256502375466665636473557d6d6f6e634275616475727560353
+smagiccreature01id 354525650224d4f577f6c666f576275697f53757d6d6f6e6
+smagiccreature02id 354525650224d4f526561627f526c61636b6f53757d6d6f6e6
+smagiccreature03id 354525650224d4f577f6c666f526f6e656f53757d6d6f6e6
+smagiccreature04id 354525650237d416769636342756164757275603439444
+smagiccreature05id 354525650237d416769636342756164757275603539444
+swerewolfalarmmessage 354525650295f657028616675602265656e6024656475636475646021637021602b6e6f677e6027756275677f6c666e2
+swerewolfpopup 35452565027556275677f6c666
+swerewolfrefusal 354525650295f657023616e6e6f6470246f602478696370216370216027756275677f6c666e2
+swerewolfrestmessage 354525650295f657023616e6e6f64702275637470296e6027756275677f6c6660266f627d6e2
+# END-OF-LIST for Evil GMSTs Bloodmoon
