@@ -344,6 +344,12 @@ ACG2 NOM Compatible.esp
 [ALL Acheron's Camping Gear 2.esp
      NOM 2.13.esp]
 
+;; expdep
+[Requires]
+ This plugin uses the Tribunal functions: setdelete, getwaterlevel.
+Acheron's Camping Gear 2.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Advanced Guards [Marty V. aka "The Puma Man"]
@@ -388,6 +394,16 @@ AdvTC_TribunalAddon.esp
 
 ;; from the distribution archive - what is this?:
 ;;time_2x.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ahmose Isle Version 2.0 [M7]
+
+
+[Note]
+ !! Contains evil GMSTs, despite the filename and Readme.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Cleaned_Ahmose Isle 2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -444,7 +460,9 @@ MW_Children_1_0.esm
 [Order]
 Illuminated Order v1.0.esp
 Korobal v1.2.esp
-Balmora Expansion V1.4.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+BE+(1.4) Better Looking Morrowind.esp
 BT_Whitewolf_2_0.esp
 Clean Solstheim_Castle_v1.1.esp
 Clean SCastle_LoKKen_Patch.esp
@@ -582,7 +600,9 @@ Andarysv1.esp
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [Order]
 Annastia V3.3.esp
-Balmora Expansion V1.4.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+BE+(1.4) Better Looking Morrowind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -592,6 +612,11 @@ Balmora Expansion V1.4.esp
  ! This is an older version of this plugin, you should upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=136072&id=5892
 Antares' Big Mod 2.8.5.esp
+
+[Requires]
+ Uses Bloodmoon function: placeatme.
+Antares' Big Mod 3.5.7.esp
+Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -606,6 +631,7 @@ Better Bodies.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Arch-Mage's quarters [Magelord648]
 
+;; expdep
 [Requires]
  These plugins use the Tribunal function explodespell.
 [ALL arch-magesquarters.esp
@@ -651,10 +677,17 @@ Tribunal.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Armorer Mod Beta 1.94 [Indestructible]
-;armorer.esp
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  (Ref: "readme-armorer194.txt")
+carrymore2x.esp
+carrymore3x.esp
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+armorer.esp
 carrymore2x.esp
 carrymore3x.esp
 
@@ -662,10 +695,20 @@ carrymore3x.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Art of War Museum v1.0 [Painkiller_Rider & Friends]
 
+;; expdep
 [Requires]
  Plugin users Bloodmoon function placeatme.
 Art Of War Museum.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ascadia 1 - The Lost City of the Dwemer [M7]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Ascadia 1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -757,10 +800,24 @@ baos.esp
 Balmora Expansion - LITE 1.0.esp
 Balmora Expansion v1.4.esp
 
-[Conflict]
- Vality's Balmora Addon.esp conflicts with Balmora Expansion
-Balmora Expansion v1.4.esp
+; Vality's Balmora Addon.esp conflicts with Balmora Expansion but it should
+; work okay if you load it before BE.
+; (Ref: "http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13485819 )
+[Order]
 Vality's Balmora Addon.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+BE+(1.4) Better Looking Morrowind.esp
+
+;; Ordering:
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13477129 )
+;; (Ref: Readme - Texture Fix- Balmora Expansion.txt)
+[Order]
+Grandmaster of Hlaalu.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+BE+(1.4) Better Looking Morrowind.esp
+BE-Callenwald.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -853,6 +910,29 @@ NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
 Indybank.esp
 Balmora Expansion V1.4.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Looking Liquor, Drugs, and Vials [Korana]
+
+[Conflict]
+ "BLLDV_MW_ONLY.esp" Use this plugin ONLY if you do not have the expansions.
+ "BLLDV_MW_TR.esp"   Use this plugin ONLY if you have ONLY Morrowind
+                     and Tribunal installed.
+ "BLLDV_ALL.esp"     Use this plugin ONLY if you have Morrowind, Tribunal.
+                     AND Bloodmoon installed.
+ (Ref: "BLLDV_README.txt")
+BLLDV_ALL.esp
+BLLDV_MW_ONLY.esp
+BLLDV_MW_TR.esp
+
+;; load BLLDV after NOM, to ensure that labels are on the bottles.
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13484010 )
+[Order]
+NOM 2.13.esp
+BLLDV_ALL.esp
+BLLDV_MW_ONLY.esp
+BLLDV_MW_TR.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1069,6 +1149,7 @@ BR_Werewolf_Patch.esp
 Blasphemous Revenants.esp
 
 [Requires]
+ Uses Bloodmoon global PCWerewolf and a Startup script.
 BR_Werewolf_Patch.esp
 Bloodmoon.esm
 
@@ -1461,6 +1542,7 @@ BUUG Alchemy- Bloodmoon.esp
 BUUG Alchemy- Srikandi.esp
 BUUG Alchemy- Tribunal.esp
 
+;; expdep
 [Requires]
  This plugin uses some Tribunal scripting functions:
  (placeitem, getsquareroot, setdelete, getwaterlevel).
@@ -1565,6 +1647,7 @@ chapelsv2.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Chalk 3.0 [ManaUser]
 
+;; expdep
 [Requires]
  "Chalk30-Base.esp" requires Tribunal or Bloodmoon for scripting functions.
  (Ref: "Chalk30-Base - Readme.txt")
@@ -1598,6 +1681,7 @@ Character Maker (qs).esp
  one Chargen mod.
 Immersive Chargen.esp
 CharGen_Revamped_v14.esp
+Clean Royal Chargen.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1721,6 +1805,7 @@ Complete Morrowind TB & BM - Replacer.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Construction v0.50.2 [jck87]
 
+;; expdep
 [Requires]
  This plugin uses the Tribunal function getweapondrawn.
 construction v0.50.2.esp
@@ -1818,6 +1903,7 @@ trylo_daedra_manor.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Daedric Sorcery v1.2 [Edwardsmd]
 
+;; expdep
 [Requires]
  This plugin uses Tribunal function hasitemequipped.
 Daedric Sorcery.esp
@@ -1939,6 +2025,7 @@ Death's Doorstep.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Decorator+ 1.1.1 [Raveren]
 
+;; expdep
 [Requires]
  These plugins use startup scripts and some Tribunal scripting functions:
  (setscale, getscale).
@@ -2087,6 +2174,7 @@ Dwemer_Cyborgs.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Exotics Boutique 1.1 [TommyKhajiit]
 
+;; expdep
 [Requires]
  These plugins use Startup scripts and some Tribunal functions:
  addtolevitem, hasitemequipped, removefromlevitem
@@ -2131,6 +2219,7 @@ Eylurian Manor-NO TRIBUNAL.esp
 Eylurian Manor.esp
 Eylurian Manor-NO TRIBUNAL.esp
 
+;; expdep
 [Requires]
  Despite the name, this plugin uses Tribunal functions setdelete and
  getweapontype (combat dummy scripts).
@@ -2144,7 +2233,7 @@ Eylurian Manor-NO TRIBUNAL.esp
 
 [Requires]
  Fair Magicka Regen uses Startup scripts so it requires one of the expansions.
-[ANY Adj_Magicka Regen (0.10%).esp
+[ALL Adj_Magicka Regen (0.10%).esp
      Adj_Magicka Regen (0.25%).esp
      Adj_Magicka Regen (0.50%).esp
      Adj_Magicka Regen (1.00%).esp]
@@ -2155,6 +2244,7 @@ Eylurian Manor-NO TRIBUNAL.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Farmer Mod [Josh aka Xeon]
 
+;; expdep
 [Requires]
  This plugin uses Bloodmoon function placeatme.
 Farmer Mod v4.3.esp
@@ -2169,7 +2259,7 @@ Fast Travel.esp
 Fast Travel Health Fix.esp
 
 [Requires]
- "REQUIRES, and MUST be loaded after Fast Travel.esp"
+ "'Fast Travel Health Fix.esp' REQUIRES, and MUST be loaded after Fast Travel.esp"
  (Ref: "Fast Travel Health Fix.esp" plugin header description field)
 Fast Travel Health Fix.esp
 [ALL Fast Travel.esp
@@ -2194,7 +2284,7 @@ LOCH_Felsaad_Revamped.esp
 ;; @Fishing Academy Mod v2.0 [MADMAX]
 
 [Note]
- !! Contains evil GMSTs.
+ !! Contains evil GMSTs. You should upgrade to "Fishing Academy v2.54.esp"
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Fishing Academy v2.0.esp
 Fishing Academy v2.53.esp
@@ -2206,6 +2296,7 @@ Fishing Academy v2.0.esp
 Fishing Academy v2.53.esp
 Fishing Academy v2.54.esp
 
+;; expdep
 [Requires]
  This plugin uses a Startup script and some Tribunal functions.
 Fishing Academy v2.54.esp
@@ -2233,6 +2324,7 @@ FAP Low Chance.esp
 Flying Carpet.esp
 Trial.esp
 
+;; expdep
 [Requires]
  Flying Carpet v1.3 uses Startup scripts and Tribunal functions so it requires
  at least one of the expansions.
@@ -2296,9 +2388,15 @@ Brittlewind fix.esp
 GCD_WE_patch.esp
 GCD_107x_to_108_patch.esp
 
+;; expdep
 [Requires]
- This plugin uses the Tribunal function getspellreadied.
-Galsiahs Character Development.esp
+ "Galsiahs Character Development.esp" depends on using one of the
+ expansions because it uses the Tribunal function
+ getspellreadied. This dependency was removed with the
+ patch: "GCD_107x_to_108_patch.esp", which you should
+ use (especially if you do not have the expansions).
+[ALL Galsiahs Character Development.esp
+     [NOT GCD_107x_to_108_patch.esp]]
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
@@ -2370,6 +2468,7 @@ GCD_Havish_patch.esp
 [ALL Galsiahs Character Development.esp
      Havish.esm]
 
+;; expdep
 [Requires]
  This plugin uses the Tribunal function getweapondrawn.
 GCD_Havish_patch.esp
@@ -2466,6 +2565,7 @@ MW_Children_1_0.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GIANTS Creature Remover V.1.1 [Puma Man/Sargothe]
 
+;; expdep
 [Requires]
  Uses Tribunal function getweapondrawn.
 GIANTS_No_Gore_Patch.esp
@@ -2563,6 +2663,8 @@ Go To Jail 3.5 - T B - NOM.esp
 Go To Jail 3.5 - T B - MCA.esp
 Go To Jail 3.5 - T B - MCA - NOM.esp
 
+; TBD - JMS - "Go To Jail 3.5 - T.esp" uses Bloodmoon function PlaceAtMe
+;; expdep
 [Requires]
  Go To Jail 3.5 - T.esp should only be loaded when you
  have Tribunal, but not Bloodmoon
@@ -2617,8 +2719,9 @@ Go To Jail 3.5 - T B - MCA - NOM.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Gothic Attire Complete v1-1 [Qarl]
 
+;; expdep
 [Requires]
- This plugin uses the Tribunal function getscale, so it will require
+ This plugin uses the Tribunal function set/getscale, so it will require
  at least one of the expansions.
 Gothic Attire Complete v1-1.esp
 [ANY Tribunal.esm
@@ -3035,6 +3138,7 @@ Improved Inns MW.esp
 
 [Requires]
  This plugin requires Bloodmoon (Morrowind v1.6.1820)
+ (Ref: "Improved Positioning Readme.txt")
 Improved Postitioning.esp
 Bloodmoon.esm
 
@@ -3366,18 +3470,21 @@ LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;; expdep
 [Requires]
  Uses Tribunal function: forcerun.
 LGNPC_PaxRedoran_v1_12.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;; expdep
 [Requires]
  Uses Tribunal function: setscale.
 LGNPC_VivecRedoran_v1_41.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;; expdep
 [Requires]
  Uses Tribunal function: hasitemequipped.
 LGNPC_Pelagiad_v1_13.esp
@@ -3579,6 +3686,7 @@ Louis_BeautyShop_v1.5.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lover's and Legends [Mr Cellophane]
 
+;; expdep
 [Requires]
  (Uses Startup scripts and Tribunal functions: hasitemequipped,setdelete)
 Mr Cellophane's Lovers and Legends V0.esp
@@ -3839,6 +3947,7 @@ Suran Ferry.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;; expdep
 [Requires]
  This plugin uses the Tribunal function: setscale.
 Tome of Spellmaking.esp
@@ -3893,6 +4002,13 @@ Pov_Distant_Activator_Fix_Waterfalls.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCP (Morrowind Code Patch) [Hrnchamd]
+
+[Note]
+ ! The Morrowind Code Patch Showcase does not need to be loaded
+ ! for MCP to function. Disable the mod after you have compared how
+ ! patched Morrowind differs from normal Morrowind.
+ ! (Ref: "MCP Readme.txt")
+Morrowind Code Patch Showcase.esp
 
 ;; rules for mods obsoleted by the MCP
 [Note]
@@ -4197,6 +4313,29 @@ ACE_Subtitles.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Relighted [PirateLord]
+
+[Requires]
+Tribunal Relighted.esp
+Tribunal.esm
+
+[Requires]
+Bloodmoon Relighted.esp
+Bloodmoon.esm
+
+;; expdep
+[Requires]
+ This plugin uses the Bloodmoon function: placeatme.
+Mushroom Lights Tribunal.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+;[Patch]
+;RV with MR.esp
+;Morrowind Relighted exVivec.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA - Morrowind Comes Alive [Neoptolemus]
 
 [Note]
@@ -4414,6 +4553,7 @@ Blood and Gore Fire damage.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necrorise [Cid88 and The NecroRise team]
 
+;; expdep
 [Requires]
  Uses Bloodmoon function: placeatme.
 NecroRisefinal.esp
@@ -4423,6 +4563,7 @@ Bloodmoon.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nevena's Clubs & Courtiers v1.0 [Nevena]
 
+;; expdep
 [Requires]
  Uses Tribunal functions: getpcsneaking, setdelete.
 Nevena's Clubs & Courtiers 1.0.esp
@@ -4433,8 +4574,9 @@ Nevena's Clubs & Courtiers 1.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nevena's Twin Lamps & Slave Hunters 1.5 [Nevena]
 
+;; expdep
 [Requires]
- (This plugin uses the Tribunal function "SetDelete")
+ This plugin uses the Tribunal functions: setdelete, placeitem
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
@@ -4766,11 +4908,28 @@ TweakForAWB.esp
 [ALL NightElvesForBBWithClothing.esp
      Amazon War Boots 1.0.esp]
 
+;; expdep
 [Requires]
- "NightElvesBBPatch1.1.esp" uses hasitemequipped function.
-NightElvesBBPatch1.1.esp
+ "NightElvesBBPatch1.2.esp" uses hasitemequipped function.
+NightElvesBBPatch1.2.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ninja Girl Companion [Wildman]
+
+;; expdep
+[Requires]
+ This plugin uses the Bloodmoon function placeatme.
+Ninja_Girl_Companion_v1B.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "Ninja_Girl_Readme.txt")
+Ninja_Girl_JapHouse_teleport.esp
+[ALL Ninja_Girl_Companion_v1B.esp
+     Japanese_House.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4895,6 +5054,7 @@ OBs MWE_Magicka patch.esp
 [ALL Oblivion-Style Spellcasting.esp
      MWE_MagickaSpells.esp]
 
+;; expdep
 [Requires]
  Oblivion-Style Spellcasting uses Tribunal scripting functions.
 [ALL Oblivion-Style Spellcasting.esp
@@ -4921,6 +5081,7 @@ VA_OrdReplace_openhelm1.0.esp
 Pegas Horse Ranch v3.1.esm
 Pegas Horse Ranch v3.1.esp
 
+;; expdep
 [Requires]
  Uses Tribunal functions: forcejump, getsquareroot, disablelevitation,
  setdelete, enablelevitation.
@@ -5220,6 +5381,21 @@ Romance_v37EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Royal Chargen version 1.2 [Princess Stomper]
+
+;; expdep
+[Requires]
+ Uses Bloodmoon function placeatme.
+Clean Royal Chargen.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "Royal Chargen Readme.txt")
+Royal Chargen Calvus add-on.esp
+Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @RTS-HealingFaeries [redwoodtreesprite]
 
 [Order]
@@ -5343,16 +5519,6 @@ SauronsAbode252.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Scamp Lord / Doppleganger 2.0 [Lepain]
-
-[Requires]
- Uses Bloodmoon function: pcwerewolf.
-Clean Scamp Lord - Doppleganger 2.0.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scent of Blood 1.1 [AlienSlof & Peter]
 
 [Conflict]
@@ -5424,11 +5590,11 @@ ScentOfBlood_MWSE_AddOn.esp
      [ANY Tribunal.esm
 	  Bloodmoon.esm]]
 
+;; expdep
 [Requires]
  "ScentOfBlood_VR.esp" uses Tribunal function: hasitemequipped, MWSE AddOn
  uses a Startup script so they require one of the expansions.
-[ALL ScentOfBlood.esp
-     ScentOfBlood_VR.esp
+[ALL ScentOfBlood_VR.esp
      ScentOfBlood_MWSE_AddOn.esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
@@ -5585,10 +5751,12 @@ Better Bodies.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sixth House Advanced 2.1 [SiNNeR]
 
+;; expdep
 [Requires]
  Uses Bloodmoon function: placeatme.
 Sixth House Advanced 2.1.esp
 Bloodmoon.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Slavers V1.01 [Ghostwalker71]
@@ -5629,8 +5797,9 @@ Slof's BB neck fix.esp
 ;; @Slof's Goth Shop For Men Add-On [AlienSlof]
 
 
+;; expdep
 [Requires]
- This plugin uses SetScale function which is only available in the expansions.
+ This plugin uses Get/SetScale function which is only available in the expansions.
 Slof's Goth Shop 1.1.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
@@ -5649,6 +5818,15 @@ CDR_SmootherBodies_F_Nude.esp
  (Ref: "CDR_Ice_SmootherBodies_readme.txt")
 CDR_SmootherBodies_M_NewUWear.esp
 CDR_SmootherBodies_M_OldUWear.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @SnakeBitten's Lair [Snakebitten]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+SnakeBittens Lair1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5911,6 +6089,20 @@ Tenience's Rare Items.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Texture Fix - Balmora Expansion [Slartibartfast]
+
+[Conflict]
+  Choose ONLY ONE of these plugins.
+ "Balmora Expansion v1.4.esp" is the original Balmora Expansion.
+ "Balmora Expansion v1.4+(1.4).esp" is the Texture fix version.
+ "BE+(1.4) Better Looking Morrowind.esp" is the Better Looking
+ Morrowind version, with Texture fix.
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+BE+(1.4) Better Looking Morrowind.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Thescrib_Leather_breton [Ant & Thescrib(Tscrib)]
 
 [Order]
@@ -6126,10 +6318,21 @@ True_Lights_And_Darkness_0.5.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tougher Sixth House version 1.0 [Sabregirl]
 
+;; expdep
 [Requires]
  Uses Bloodmoon function: placeatme.
 SG-toughersixth.esp
 [ALL Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Chu's Toys [Chu]
+
+[Requires]
+ This plugin uses Tribunal function: setscale.
+Toys.esp
+[ANY Tribunal.esm
      Bloodmoon.esm]
 
 
@@ -6154,6 +6357,7 @@ TradeDisputes.esp
 TravelingMerchants_v2.2.esp
 TravelingMerchants_v2.2_Update.esp
 
+;; expdep
 [Requires]
  This plugin uses Tribunal function: placeitem.
 TravelingMerchants_v2.2.esp
@@ -6213,6 +6417,7 @@ True_Lights_And_Darkness_0.5.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Tylwyth [Korana, Westly, Phijama, and Kalikut]
 
+;; expdep
 [Requires]
  Uses Tribunal function setdelete.
 The_Tylwyth.esp
@@ -6223,6 +6428,7 @@ The_Tylwyth.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Uber Crystal Egg Hunt [Bryss Phoenix & Fliggerty]
 
+;; expdep
 [Requires]
  Uses Tribunal function: addtolevitem. (Not on a Bethesda list, so it's OK :))
 TheUberCrystalEggHunt.esp
@@ -6251,6 +6457,7 @@ Ultimate Galleon ( Pegas ESP Addon ).esp
 Ultimate Galleon ( Pegas ESM Addon ).esp
 Ultimate Galleon ( Pegas ESP Addon ).esp
 
+;; expdep
 [Requires]
  These plugins use various Tribunal functions.
 [ALL Ultimate Galleon v2.2.esp
@@ -6310,12 +6517,14 @@ UL_Srikandy_patch_2.1.esp
  (Ref: "Uvrith's Legacy_beta_README.txt")
 Uvirith's Legacy Book Jackets Add-on.esp
 [ALL Uvirith's Legacy_ALPHA1.08.esp
-     [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
-	       Book Jackets - Morrowind.esp]
-	  [ANY Book Jackets - Tribunal - BookRotate.esp
-	       Book Jackets - Tribunal.esp]
-	  [ANY Book Jackets - Bloodmoon - BookRotate.esp
-	       Book Jackets - Bloodmoon.esp]]]
+     [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
+	       Librarian with Jackets BM Trib.esp]
+	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
+		    Book Jackets - Morrowind.esp]
+	       [ANY Book Jackets - Tribunal - BookRotate.esp
+		    Book Jackets - Tribunal.esp]
+	       [ANY Book Jackets - Bloodmoon - BookRotate.esp
+		    Book Jackets - Bloodmoon.esp]]]]
 
 [Order]
 Uvirith's Legacy_ALPHA1.08.esp
@@ -6374,7 +6583,7 @@ Building Up Uvirith's Grave 1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @UUMPP [quorn, based on ThePal's UMP]
+;; @UUMPP [TES Morrowind Community, ThePal, Baldurdash, and quorn]
 
 [Patch]
  "UUMPP LGNPC wild nix hounds fix.esp" fixes a compatibility
@@ -6408,6 +6617,13 @@ Morrowind Patch v1.6.4 (WIP).esm
 [Order]
 UUMPP Bloated Morrowind removal patch.esp
 Syc_HerbalismforPurists.esp
+
+[Conflict]
+ The UUMPP now also fixes the fog density parameter in the cell:
+ "Sotha Sil, Dome of Serlyn", so you shouldn't also need the plugin:
+ "Dome of Serlyn fix.esp".
+Morrowind Patch v1.6.4 (WIP).esm
+Dome of Serlyn fix.esp
 
 [Conflict]
  The UUMPP also fixes the problem with Trebonius challenging you when
@@ -6724,6 +6940,7 @@ Bloated Morrowind.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Vader.esp
 
+;; expdep
 [Requires]
  Uses Tribunal function: setdelete.
 Vader.esp
@@ -6825,6 +7042,7 @@ Vampire Realism II - BL Patch.esp
 Vampire Realism II - VE Patch.esp
 Vampiric Hunger Base.esp
 
+;; expdep
 [Requires]
  Uses Tribunal function hasitemequipped
 Vampire Realism II.esp
@@ -7060,6 +7278,7 @@ abotWaterLifeTRaddon.esp
 [ALL abotWaterLife.esm
      TR_Data.esm]
 
+;; expdep
 [Requires]
  This plugin uses a Startup script and some Tribunal functions.
 abotWaterLife.esm
@@ -7091,6 +7310,7 @@ farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
      WeaponFix_anticheat.esp]
 WeaponFix177.esp
 
+;; expdep
 [Requires]
  Uses Tribunal function: getweapondrawn.
 weaponFix177.esp
@@ -7182,15 +7402,6 @@ Westly's Master Headpack X.esp
  (Ref: "DONTREADME_were-realism-moononly.rtf")
 werewolfrealism-moononly.esp
 werewolfrealism-moononly_changeatwill.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Werewolves mod [the McAsmod team]
-
-[Requires]
- Uses Bloodmoon function: pcwerewolf.
-Werewolves.esp
-Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7321,6 +7532,7 @@ GIANTS_Ultimate_Official_Fixes.esp
 	  The Wilderness Mod 2.0.esm]
      GIANTS.esm]
 
+;; expdep
 [Requires]
  Uses a tribunal function: getweapondrawn.
 GIANTS_Ultimate_Official_Fixes.esp
@@ -7406,6 +7618,15 @@ Wizards Islands - Scourge of the Frost Bringer.esm
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Wizards Islands - Scourge of the Frost Bringer.esm
 Silgrad_Tower_internal_build_1-4_3.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @WizThis Face Pack version 1.3* (Final) [Wizthis]
+
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+WizThis_Facepack_v1.3.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
