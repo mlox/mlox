@@ -602,11 +602,12 @@ sub scan {
     report(\%door, "Bethesda doors that have had scripts attached to them");
     if (%dup_recs) {
 	print "    Dirty Records:\n";
-	print "\tDuped From\tType\tName\n";
+	my $format = "\t%-12s\t%4s\t%s\n";
+	printf $format, "Duped From", "Type", "Name";
 	foreach my $rec_type (sort keys %dup_recs) {
 	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
 		my $master = $dup_recs{$rec_type}->{$name};
-		print "\t$master\t$rec_type\t$name\n";
+		printf $format, $master, $rec_type, $name;
 	    }
 	}
     }
