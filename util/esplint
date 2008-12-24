@@ -114,8 +114,9 @@ usually expanded on with more detail. The following flags are defined.
              function. CellChanged in that cell will always return 0 from now on.
              See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
-    DUPCELL: These are cells in the plugin that are exactly the same as one in
-             one or more of the masters.
+    DUP-REC: These are records in the plugin that are exact duplicates of a
+             record that occurs in one of the masters. These are sometimes
+             referred to as "dirty" or "unclean" entries.
 
 $dup_dia_help
 
@@ -232,43 +233,36 @@ sub find_datadir {
 }
 
 sub load_master {
-    my($datadir, $plugin, $label) = @_;
-    if (defined $MASTER{$plugin}) {
-	print "DBG: re-using master data: $plugin\n" if (DBG);
+    my($datadir, $esm, $label) = @_;
+    if (defined $MASTER{$esm}) {
+	print "DBG: re-using master data: $esm\n" if (DBG);
 	return;
     }
     my $dirlist = list_files($datadir);
-    $plugin = $dirlist->{lc($plugin)};
-    print "DBG: loading $datadir/$plugin\n" if (DBG);
-    unless(open(INP, "<$datadir/$plugin")) {
-	warn "Error opening $label $datadir/$plugin for loading ($!)\n";
+    $esm = $dirlist->{lc($esm)};
+    print "DBG: loading $datadir/$esm\n" if (DBG);
+    unless(open(INP, "<$datadir/$esm")) {
+	warn "Error opening $label $datadir/$esm for loading ($!)\n";
 	return;
     }
+    $MASTER{$esm}->{LOADED} = 1;
     while(my($rec_type, $rec, $flags) = read_rec(undef)) {
-	print "DBG: rec_type = $rec_type\n" if (DBG);
 	last if not defined $rec_type;
+	if ($flags & 0x1000) {
+	    print "Master($esm) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	print "DBG: rec_type = $rec_type\n" if (DBG);
 	if ($rec_type eq "INFO") {
 	    my $r = parse_subrec($rec);
 	    my $id = chop_nulls($r->{INAM}[0]);
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
 	    my $val = (split(/DATA/, $rec, 2))[1];
-	    $MASTER{$plugin}->{INFO}->{$id} = $val;
-	    print "DBG: DIA($plugin) $id = $val\n" if (DBG);
-	} elsif ($rec_type eq "CELL") {
-	    my $r = parse_subrec($rec);
-	    my $name = chop_nulls($r->{NAME}[0]);
-	    if ($name) {	# interior cells have names
-		$MASTER{$plugin}->{CELL}->{$name} = $rec;
-	    } else {		# exterior cells
-		my $rgnn = chop_nulls($r->{RGNN}[0]);
-		my($flags, $x, $y, $dummy) = unpack("i4", $r->{DATA}[0]);
-		my $name = "($x, $y)";
-		if (my $rgnn = chop_nulls($r->{RGNN}[0])) {
-		    $name = "$rgnn $name";
-		}
-		$MASTER{$plugin}->{CELL}->{$name} = $rec;
-	    }
+	    $MASTER{$esm}->{INFO}->{$id} = $val;
+	    print "DBG: DIA($esm) $id = $val\n" if (DBG);
+	} else {
+	    $MASTER{$rec_type}->{$rec} = $esm;
 	}
     }
     close(INP);
@@ -421,7 +415,7 @@ sub scan {
     my $evil_bm = 0;
     my %fogbug = ();
     my %mydia = ();
-    my %mycell = ();
+    my %myrec = ();
     my %door = ();
     my @sscr = ();
     my $mastbm = 0;
@@ -454,6 +448,8 @@ sub scan {
 	    } elsif ($val eq $BM_EVIL{$name}) {
 		$evil{"BM $name"}++;
 		$evil_bm++;
+	    } else {
+		$myrec{$rec} = $name;
 	    }
 	} elsif ($rec_type eq "SSCR") {
 	    # check for startup script dependency
@@ -474,6 +470,7 @@ sub scan {
 	    my $script = get_subrec($rec, "SCTX")->[0];
 	    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
 	    scan_script($script, "SCPT($name)");
+	    $myrec{$rec} = $name;
 	} elsif ($rec_type eq "CELL") {
 	    # check for fogbugs in cells
 	    my $r = parse_subrec($rec);
@@ -485,14 +482,14 @@ sub scan {
 		    not ($databits & 128)) { # behave like exterior
 		    $fogbug{$name}++;
 		}
-		$mycell{$name} = $rec;
+		$myrec{$rec} = $name;
 	    } else {		# exterior cells
 		my($flags, $x, $y, $dummy) = unpack("i4", $r->{DATA}[0]);
 		my $name = "($x, $y)";
 		if (my $rgnn = chop_nulls($r->{RGNN}[0])) {
 		    $name = "$rgnn $name";
 		}
-		$mycell{$name} = $rec;
+		$myrec{$rec} = $name;
 	    }
 	} elsif ($rec_type eq "DOOR") {
 	    my $r = parse_subrec($rec);
@@ -501,6 +498,9 @@ sub scan {
 	    if ($scri and $BETHDOOR{$name}) {
 		$door{"$name\t$scri"}++;
 	    }
+	    $myrec{$rec} = $name;
+	} else {
+	    $myrec{$rec} = chop_nulls(get_subrec($rec, "NAME")->[0]);
 	}
     }
     close(INP);
@@ -509,20 +509,19 @@ sub scan {
     my $mod_dia = 0;
     my $mod_id = 0;
     my $dia_out = "";
-    my %dup_cells = ();
-    if (%mycell) {
+    my %dup_recs = ();
+    if (%myrec) {
 	load_all_masters(@masters);
 	my %dups = ();
 	foreach my $master (@MASTERS) {
-	    my $master_cell = $MASTER{$master}->{CELL};
-	    foreach my $name (keys(%{$master_cell})) {
-		if ($mycell{$name} eq $master_cell->{$name}) {
-		    $dups{$name} = $master;
+	    foreach my $rec_type (keys %MASTER) {
+		my $master_recs = $MASTER{$rec_type};
+		foreach my $rec (keys %{$master_recs}) {
+		    if ($myrec{$rec}) {
+			$dup_recs{$rec_type}->{$myrec{$rec}} = $master;
+		    }
 		}
 	    }
-	}
-	foreach my $cell (keys(%dups)) {
-	    $dup_cells{"$dups{$cell}:\t$cell"}++;
 	}
     }
     if (%mydia) {
@@ -577,7 +576,7 @@ sub scan {
     $problems .= " FOGBUG" if (%fogbug);
     $problems .= " GETSND" if (%getsound);
     $problems .= " SCRDOOR" if (%door);
-    $problems .= " DUPCELL" if (%dup_cells);
+    $problems .= " DUP-REC" if (%dup_recs);
     $problems .= " DUP-DIA" if ($dup_dia);
     $problems .= " MOD-DIA" if ($mod_dia);
     $problems .= " MOD-ID" if ($mod_id);
@@ -601,7 +600,16 @@ sub scan {
     }
     report(\%getsound, "GetSoundPlaying used to detect events");
     report(\%door, "Bethesda doors that have had scripts attached to them");
-    report(\%dup_cells, "Duplicate cells");
+    if (%dup_recs) {
+	print "    Dirty Records:\n";
+	print "\tDuped From\tType\tName\n";
+	foreach my $rec_type (sort keys %dup_recs) {
+	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
+		my $master = $dup_recs{$rec_type}->{$name};
+		print "\t$master\t$rec_type\t$name\n";
+	    }
+	}
+    }
     unless ($::opt_q) {
 	print "   $dup_dia_help" if ($::opt_d and $dup_dia);
 	print "   $mod_dia_help" if ($::opt_m and $mod_dia);
