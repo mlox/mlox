@@ -24,17 +24,19 @@ BEGIN {
 # esplint: command-line tool for scanning plugins for various potential problems.
 
 $::opt_a = 0;
+$::opt_c = 0;
 $::opt_d = 0;
 $::opt_m = 0;
 $::opt_q = 0;
-$::opt_v = 0;			# verbose
+$::opt_v = 0;
 
 
 my $dup_dia_help = <<END;
     DUP-DIA: indicates the exact INFO dialog with the same ID, text and filter
              exists in one of the masters of this plugin. This may be a
              problem, or maybe not. Sometimes duplicate dialog is intentional
-             in order for dialog sorting to be correct.
+             in order for dialog sorting to be correct. It's only a mistake
+             if it really was unintentional.
 END
 
 my $mod_dia_help = <<END;
@@ -47,9 +49,10 @@ END
 my $mod_id_help = <<END;
     MOD-ID:  MOD-ID indicates that the exact same INFO dialog text and filter
 	     exists in one of the masters of this plugin, but under a
-	     different ID. This can be caused by creating new dialog by
+	     *different* ID. This can be caused by creating new dialog by
 	     copying the original, and then accidentally editing the original
-	     instead of the copy. These should be checked out.
+	     instead of the copy. This can cause bad dialog problems and
+             should be checked out.
 END
 
 my $Usage = qq{esplint [OPTIONS] plugin...
@@ -57,21 +60,26 @@ my $Usage = qq{esplint [OPTIONS] plugin...
 OPTIONS
  -D  debug output (vast)
  -a  all normal output options on (-d, -m, not debug).
+ -c  also print out otherwise unflagged plugins, flagged with "CLEAN"
  -d  print out duplicate dialog (DUP-DIA)
  -m  print out modified dialog (MOD-DIA)
  -q  quiet (less output, no explanation text)
- -v  verbose (more output)
+ -v  verbose (possibly more output)
 
 [Note: esplint wants to be able to find Masters for a given plugin, so it
 needs to run somewhere under your Morrowind directory, but it does not
 necessarily have to be in your Data Files directory.]
 
-esplint only prints output for interesting things it finds. If it finds nothing
-for a plugin, no output is generated. When something interesting is found, a
-flag is printed after the plugin name. And then following that, the flags are
-usually expanded on with more detail. The following flags are defined.
+esplint normally only prints output for interesting things it finds. If it
+finds nothing for a plugin, no output is generated, unless the -c switch is
+given. When something interesting is found, a flag is printed after the plugin
+name. And then following that, the flags are usually expanded on with more
+detail.
 
- Explanation of Output Flags:
+ The following flags are defined:
+
+    CLEAN:   If -c command line switch is used, then a plugin that is not 
+             flagged with any of the flags below will be flagged "CLEAN".
 
     EXP-DEP: The plugin requires either Tribunal or Bloodmoon because it uses
              engine features not present in the original Morrowind such as
@@ -82,11 +90,14 @@ usually expanded on with more detail. The following flags are defined.
              1.6.1820, but the plugin does not list Bloodmoon.esm in its list
              of Masters.
 
-    GMSTs:   You know this one! This means that some of the "Evil GMSTs" are
+    GMSTs:   You know this one! This means that some of the "72 Evil GMSTs" are
              present in this plugin and that they have the same exact value as
              the original GMST in the master .esm. Other GMSTs not in the list
              of known Evil GMSTs or GMSTs that have been modified from their
-             original values are not flagged.
+             original values are not flagged. Note that it is also possible to
+             have other GMSTs show up in the DUP-REC list, but those are not
+             from the list of 72 GMSTs that would get introduced by the
+             Construction Set.
 
     DEP-LST: This plugin makes deprecated use of scripting functions to modify
              standard Bethesda Leveled Lists. This is bad because these lists
@@ -96,6 +107,7 @@ usually expanded on with more detail. The following flags are defined.
              means that merged leveled lists will be ignored. Note that this
              warning only applies to changes to Bethesda lists. Changes to
              leveled lists specific to the mod will not be flagged.
+             See: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
 
     FOGBUG:  The plugin has an interior CELL with a fog density of 0.0, and the
              cell is not marked to "behave as exterior". This circumstance can
@@ -114,9 +126,13 @@ usually expanded on with more detail. The following flags are defined.
              function. CellChanged in that cell will always return 0 from now on.
              See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
-    DUP-REC: These are records in the plugin that are exact duplicates of a
-             record that occurs in one of the masters. These are sometimes
+    DUP-REC: These are records in the plugin that are exact duplicates of
+             records that occur in one of the masters. These are sometimes
              referred to as "dirty" or "unclean" entries.
+
+    CELL00:  This means that cell (0, 0) is included in the plugin. This cell
+             is often accidentally modified since it is the default cell
+             displayed in the cell view window.
 
 $dup_dia_help
 
@@ -125,9 +141,10 @@ $mod_dia_help
 $mod_id_help
 };
 
-getopts('aDdmqv') or die $Usage;
+getopts('acDdmqv') or die $Usage;
 
 if ($::opt_a) {
+    $::opt_c = 1;
     $::opt_d = 1;
     $::opt_m = 1;
     $::opt_v = 1;
@@ -420,6 +437,7 @@ sub scan {
     my @sscr = ();
     my $mastbm = 0;
     my $masttb = 0;
+    my $cell00 = 0;
     my $expected = "TES3";
     my @masters = ();
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
@@ -485,6 +503,7 @@ sub scan {
 		$myrec{$rec} = $name;
 	    } else {		# exterior cells
 		my($flags, $x, $y, $dummy) = unpack("i4", $r->{DATA}[0]);
+		$cell00++ if ($x == 0 and $y == 0);
 		my $name = "($x, $y)";
 		if (my $rgnn = chop_nulls($r->{RGNN}[0])) {
 		    $name = "$rgnn $name";
@@ -568,21 +587,23 @@ sub scan {
 	}
     }
     # create a summary line of things we have discovered.
-    my $problems = "";
-    $problems .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
-    $problems .= " BM-DEP" if ((not $mastbm) and %bmfun);
-    $problems .= " GMSTs" if (%evil);
-    $problems .= " DEP-LST" if (%depfun);
-    $problems .= " FOGBUG" if (%fogbug);
-    $problems .= " GETSND" if (%getsound);
-    $problems .= " SCRDOOR" if (%door);
-    $problems .= " DUP-REC" if (%dup_recs);
-    $problems .= " DUP-DIA" if ($dup_dia);
-    $problems .= " MOD-DIA" if ($mod_dia);
-    $problems .= " MOD-ID" if ($mod_id);
-    if ($problems) {
-	print "$plugin_path:$problems\n";
+    my $found = "";
+    $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
+    $found .= " BM-DEP" if ((not $mastbm) and %bmfun);
+    $found .= " GMSTs" if (%evil);
+    $found .= " DEP-LST" if (%depfun);
+    $found .= " FOGBUG" if (%fogbug);
+    $found .= " GETSND" if (%getsound);
+    $found .= " SCRDOOR" if (%door);
+    $found .= " DUP-REC" if (%dup_recs);
+    $found .= " DUP-DIA" if ($dup_dia);
+    $found .= " MOD-DIA" if ($mod_dia);
+    $found .= " MOD-ID" if ($mod_id);
+    $found .= " CELL00" if ($cell00);
+    if ($found) {
+	print "$plugin_path:$found\n";
     } else {
+	print "$plugin_path: CLEAN\n" if ($::opt_c);
 	return;
     }
     # now print out verbose versions, if applicable
@@ -598,14 +619,15 @@ sub scan {
 	print "    FOGBUG: Cells with zero fog density setting:\n";
 	print "\t$_\n" foreach (sort keys %fogbug);
     }
-    report(\%getsound, "GetSoundPlaying used to detect events");
+    report(\%getsound, "GetSoundPlaying possibly used to detect events");
     report(\%door, "Bethesda doors that have had scripts attached to them");
     if (%dup_recs) {
-	print "    Dirty Records:\n";
-	my $format = "\t%-12s\t%4s\t%s\n";
+	print "    Duplicate Records:\n";
+	my $format = "\t%-16s\t%4s\t%s\n";
 	printf $format, "Duped From", "Type", "Name";
 	foreach my $rec_type (sort keys %dup_recs) {
 	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
+		next if (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name}));
 		my $master = $dup_recs{$rec_type}->{$name};
 		printf $format, $master, $rec_type, $name;
 	    }
