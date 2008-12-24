@@ -155,20 +155,35 @@ sub scan {
 	    }
 	} elsif ($rec_type eq "SSCR") {
 	    $sscr++;
+	} elsif ($rec_type eq "INFO") {
+	    my $r = parse_subrec($rec);
+	    for my $sub_type (keys(%$r)) {
+		print "  INFO SUBREC=$sub_type\n" if ($::opt_d);
+		if ($sub_type eq "BNAM") {
+		    for my $script (@{$r->{BNAM}}) {
+			if ($script =~ m!$re_tbfun!mi) {
+			    print "TBFUN(INFO): $1\n" if ($::opt_d);
+			    $tbfun{lc($1)}++;
+			}
+			if ($script =~ m!$re_bmfun!mi) {
+			    print "BMFUN(INFO): $1\n" if ($::opt_d);
+			    $bmfun{lc($1)}++;
+			}
+		    }
+		}
+	    }
 	} elsif ($rec_type eq "SCPT") {
 	    my $r = parse_subrec($rec);
 	    for my $sub_type (keys(%$r)) {
 		print "  SUBREC=$sub_type\n" if ($::opt_d);
 		if ($sub_type eq "SCTX") {
 		    for my $script (@{$r->{SCTX}}) {
-			#$script = substr($script, 0, length($script) - 1);
-			#print "Script:\n$script\n" if ($::opt_d);
 			if ($script =~ m!$re_tbfun!mi) {
-			    print "TBFUN: $1\n" if ($::opt_d);
+			    print "TBFUN(SCTX): $1\n" if ($::opt_d);
 			    $tbfun{lc($1)}++;
 			}
 			if ($script =~ m!$re_bmfun!mi) {
-			    print "BMFUN: $1\n" if ($::opt_d);
+			    print "BMFUN(SCTX): $1\n" if ($::opt_d);
 			    $bmfun{lc($1)}++;
 			}
 		    }
