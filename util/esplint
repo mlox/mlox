@@ -7,6 +7,7 @@
 # - add check for problematic use of GetSoundPlaying.
 
 use Cwd;
+use Data::Dumper;
 use Getopt::Std;
 use strict;
 
@@ -276,7 +277,8 @@ sub parse_subrec {
     while ($p < $rec_len) {
 	my($subrec_type, $subrec_len) = unpack("a4I", substr($rec, $p));
 	$p += 8;
-	push(@{$r{$subrec_type}}, substr($rec, $p, $subrec_len));
+	my $val = substr($rec, $p, $subrec_len);
+	push(@{$r{$subrec_type}}, $val) if (defined $val);
 	$p += $subrec_len;
     }
     return(\%r);
@@ -324,7 +326,7 @@ sub gmstval {
     delete $r->{NAME};
     my @keys = keys(%$r);
     if (scalar(@keys) > 1) {
-	warn "$plugin_path: Error, too many keys for $name: @keys\n";
+	warn "$plugin_path: Error, too many keys for GMST $name: @{[Dumper($r)]}\n";
     }
     my $type = $keys[0];
     my $val = $r->{$type}[0];
