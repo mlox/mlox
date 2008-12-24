@@ -8,8 +8,6 @@
 # TBD:
 # - look for Bloodmoon variable: PCWerewolf and Tribunal variable: DaysPassed
 #   but only flag if not declared global/local
-# - add check for scripts on doors. (need test case).
-# - add check for problematic use of GetSoundPlaying.
 
 use Cwd;
 use Data::Dumper;
@@ -58,7 +56,7 @@ my $Usage = qq{esplint [OPTIONS] plugin...
 
 OPTIONS
  -D  debug output (vast)
- -a  all normal options on (not debug).
+ -a  all normal output options on (-d, -m, not debug).
  -d  print out duplicate dialog (DUP-DIA)
  -m  print out modified dialog (MOD-DIA)
  -q  quiet (less output, no explanation text)
@@ -104,6 +102,21 @@ usually expanded on with more detail. The following flags are defined.
              trigger the "fog bug" in some graphics cards, resulting in the
              cell being rendered as a blank screen.
 
+    GETSND:  The plugin appears to use the scripting function GetSoundPlaying
+             to detect events (as opposed to managing the playing of sound
+             files). GetSoundPlaying fails consistently on a small number of
+             users' systems, so these users will encounter problems with these
+             scripts.
+             See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
+
+    SCRDOOR: The plugin adds scripts to Bethesda doors, which has the potential
+             to break any script in the same cell that uses the CellChanged
+             function. CellChanged in that cell will always return 0 from now on.
+             See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
+
+    DUPCELL: These are cells in the plugin that are exactly the same as one in
+             one or more of the masters.
+
 $dup_dia_help
 
 $mod_dia_help
@@ -124,7 +137,14 @@ my $RE_TBFUN;
 my $RE_DEPFUN;
 my %TB_EVIL;
 my %BM_EVIL;
-my %MASTER_DIALOG;
+my %MASTER;
+my %BETHDOOR;
+my @MASTERS = ();
+
+# regular expressions used for finding getSoundPlaying usage
+my $RE_GETSOUND = "\\bgetSoundPlaying\\b[^\n]+\n([^\n]+)\n";
+my $RE_SOUND = '\b(?:PlayLoopSound3D(?:VP)?|PlaySound(?:3D|3DVP|VP)?|Say(?:Done)?|StopSound|StreamMusic)\b';
+my $RE_IGNORE = "^[ \t]*(?:;[^\n]+)*\n"; # for removing comments and blank lines
 
 sub chop_nulls {
     my($str) = @_;
@@ -155,6 +175,9 @@ sub load_data {
     foreach my $g (@{load_data_list()}) {
 	my($name, $val) = split(" ", $g);
 	$BM_EVIL{$name} = $val;
+    }
+    foreach my $door (@{load_data_list()}) {
+	$BETHDOOR{$door}++;
     }
     if (DBG) {
 	print "\nTBFUN regexp: $RE_TBFUN\n";
@@ -208,20 +231,17 @@ sub find_datadir {
     return(undef);		# not running under morrowind directory
 }
 
-sub load_dialog {
-    my($dia, $datadir, $plugin, $label) = @_;
-    if (defined $MASTER_DIALOG{$plugin}) {
-	print "DBG: re-using dialog for $plugin\n" if (DBG);
-	foreach my $id (keys(%{$MASTER_DIALOG{$plugin}})) {
-	    $dia->{$id} = $MASTER_DIALOG{$plugin}->{$id};
-	}
+sub load_master {
+    my($datadir, $plugin, $label) = @_;
+    if (defined $MASTER{$plugin}) {
+	print "DBG: re-using master data: $plugin\n" if (DBG);
 	return;
     }
     my $dirlist = list_files($datadir);
     $plugin = $dirlist->{lc($plugin)};
-    print "DBG: loading dialog for $datadir/$plugin\n" if (DBG);
+    print "DBG: loading $datadir/$plugin\n" if (DBG);
     unless(open(INP, "<$datadir/$plugin")) {
-	warn "Error opening $label $datadir/$plugin for loading dialog ($!)\n";
+	warn "Error opening $label $datadir/$plugin for loading ($!)\n";
 	return;
     }
     while(my($rec_type, $rec, $flags) = read_rec(undef)) {
@@ -233,24 +253,35 @@ sub load_dialog {
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
 	    my $val = (split(/DATA/, $rec, 2))[1];
-	    $dia->{$id} = $val;
-	    $MASTER_DIALOG{$plugin}->{$id} = $val;
-	    print "DBG: DIA($plugin) $id = $dia->{$id}\n" if (DBG);
+	    $MASTER{$plugin}->{INFO}->{$id} = $val;
+	    print "DBG: DIA($plugin) $id = $val\n" if (DBG);
+	} elsif ($rec_type eq "CELL") {
+	    my $r = parse_subrec($rec);
+	    my $name = chop_nulls($r->{NAME}[0]);
+	    if ($name) {	# interior cells have names
+		$MASTER{$plugin}->{CELL}->{$name} = $rec;
+	    } else {		# exterior cells
+		my $rgnn = chop_nulls($r->{RGNN}[0]);
+		my($flags, $x, $y, $dummy) = unpack("i4", $r->{DATA}[0]);
+		my $name = "($x, $y)";
+		if (my $rgnn = chop_nulls($r->{RGNN}[0])) {
+		    $name = "$rgnn $name";
+		}
+		$MASTER{$plugin}->{CELL}->{$name} = $rec;
+	    }
 	}
     }
     close(INP);
 }
 
-sub load_masters_dialog {
+sub load_all_masters {
     my(@masters) = @_;
     my $datadir = find_datadir();
-    print "DBG: datadir = $datadir\n" if (DBG);
-    my %dialog = ();
-    @masters = sort_by_date($datadir, @masters);
-    foreach my $master (@masters) {
-	load_dialog(\%dialog, $datadir, $master, "Master");
+    print "DBG: loading masters, datadir = $datadir\n" if (DBG);
+    @MASTERS = sort_by_date($datadir, @masters);
+    foreach my $master (@MASTERS) {
+	load_master($datadir, $master, "Master");
     }
-    return(\%dialog);
 }
 
 my $hdr_size = 16;
@@ -309,12 +340,15 @@ sub get_subrec {
     return(\@r);
 }
 
-my %tbfun = ();
-my %bmfun = ();
-my %depfun = ();
-sub scan_expdep {
+my %tbfun;
+my %bmfun;
+my %depfun;
+my %getsound;
+sub scan_script {
     my($script, $label) = @_;
     print "SCRIPT:\n$script\n\n" if (DBG and $::opt_v);
+    # remove comments and blank lines from the script
+    $script =~ s/$RE_IGNORE//gm;
     while ($script =~ m!$RE_TBFUN!gim) {
 	print "TBFUN($label): $1\n" if (DBG);
 	$tbfun{"$label\t".lc($1)}++;
@@ -326,6 +360,12 @@ sub scan_expdep {
     while ($script =~ m!$RE_DEPFUN!gim) {
 	print "DEPFUN($label): $1\n" if (DBG);
 	$depfun{"$label\t".lc($1)}++;
+    }
+    while ($script =~ m!$RE_GETSOUND!gis) {
+	my $next_line = $1;
+	if ($next_line !~ m!$RE_SOUND!i) {
+	    $getsound{$label}++;
+	}
     }
 }
 
@@ -345,10 +385,10 @@ sub gmstval {
 
 sub report {
     my($items, $label) = @_;
-    my @itemlist = sort(keys(%$items));
+    my @itemlist = sort keys %$items;
     if (@itemlist) {
 	my %items;
-	foreach (@itemlist) { $items{(split(/\s/))[1]}++; }
+	#foreach (@itemlist) { $items{(split(/\s/))[1]}++; }
 	print "    $label:\n";
 	print "\t$_\n" foreach (@itemlist);
     }
@@ -369,14 +409,20 @@ sub scan {
 	warn "Error opening $plugin_path for input ($!)\n";
 	return;
     }
+    # the following are globals used by scan_script
+    @MASTERS = ();
     %tbfun = ();
     %bmfun = ();
     %depfun = ();
+    %getsound = ();
+    # locals
     my %evil = ();
     my $evil_tb = 0;
     my $evil_bm = 0;
     my %fogbug = ();
     my %mydia = ();
+    my %mycell = ();
+    my %door = ();
     my @sscr = ();
     my $mastbm = 0;
     my $masttb = 0;
@@ -420,14 +466,14 @@ sub scan {
 	    my $id = $r->{INAM}[0];
 	    $id = chop_nulls($id);
 	    my $script = $r->{BNAM}[0];
-	    scan_expdep($script, "INFO($id)");
+	    scan_script($script, "INFO($id)");
 	    $mydia{$id} = (split(/DATA/s, $rec, 2))[1];
 	    print "DBG: MYDIA($plugin) $id = $mydia{$id}\n" if (DBG);
 	} elsif ($rec_type eq "SCPT") {
 	    # check for tribunal/bloodmoon function dependency in scripts
 	    my $script = get_subrec($rec, "SCTX")->[0];
 	    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
-	    scan_expdep($script, "SCPT($name)");
+	    scan_script($script, "SCPT($name)");
 	} elsif ($rec_type eq "CELL") {
 	    # check for fogbugs in cells
 	    my $r = parse_subrec($rec);
@@ -439,6 +485,21 @@ sub scan {
 		    not ($databits & 128)) { # behave like exterior
 		    $fogbug{$name}++;
 		}
+		$mycell{$name} = $rec;
+	    } else {		# exterior cells
+		my($flags, $x, $y, $dummy) = unpack("i4", $r->{DATA}[0]);
+		my $name = "($x, $y)";
+		if (my $rgnn = chop_nulls($r->{RGNN}[0])) {
+		    $name = "$rgnn $name";
+		}
+		$mycell{$name} = $rec;
+	    }
+	} elsif ($rec_type eq "DOOR") {
+	    my $r = parse_subrec($rec);
+	    my $name = chop_nulls($r->{NAME}[0]);
+	    my $scri = chop_nulls($r->{SCRI}[0]);
+	    if ($scri and $BETHDOOR{$name}) {
+		$door{"$name\t$scri"}++;
 	    }
 	}
     }
@@ -448,12 +509,35 @@ sub scan {
     my $mod_dia = 0;
     my $mod_id = 0;
     my $dia_out = "";
+    my %dup_cells = ();
+    if (%mycell) {
+	load_all_masters(@masters);
+	my %dups = ();
+	foreach my $master (@MASTERS) {
+	    my $master_cell = $MASTER{$master}->{CELL};
+	    foreach my $name (keys(%{$master_cell})) {
+		if ($mycell{$name} eq $master_cell->{$name}) {
+		    $dups{$name} = $master;
+		}
+	    }
+	}
+	foreach my $cell (keys(%dups)) {
+	    $dup_cells{"$dups{$cell}:\t$cell"}++;
+	}
+    }
     if (%mydia) {
-	my %master_dia = %{load_masters_dialog(@masters)};
+	load_all_masters(@masters);
+	my %master_dia = ();
+	foreach my $master (@MASTERS) {
+	    my $master_info = $MASTER{$master}->{INFO};
+	    foreach my $id (keys(%{$master_info})) {
+		$master_dia{$id} = $master_info->{$id};
+	    }
+	}
 	my %rev_master_dia = ();
 	# create a reverse index
-	foreach my $key (keys(%master_dia)) {
-	    $rev_master_dia{$master_dia{$key}} = $key;
+	foreach my $id (keys(%master_dia)) {
+	    $rev_master_dia{$master_dia{$id}} = $id;
 	}
 	foreach my $id (sort {$a <=> $b} keys(%mydia)) {
 	    my $dia = $mydia{$id};
@@ -491,6 +575,9 @@ sub scan {
     $problems .= " GMSTs" if (%evil);
     $problems .= " DEP-LST" if (%depfun);
     $problems .= " FOGBUG" if (%fogbug);
+    $problems .= " GETSND" if (%getsound);
+    $problems .= " SCRDOOR" if (%door);
+    $problems .= " DUPCELL" if (%dup_cells);
     $problems .= " DUP-DIA" if ($dup_dia);
     $problems .= " MOD-DIA" if ($mod_dia);
     $problems .= " MOD-ID" if ($mod_id);
@@ -510,18 +597,15 @@ sub scan {
     report(\%evil, "EVIL GMSTs");
     if (%fogbug) {
 	print "    FOGBUG: Cells with zero fog density setting:\n";
-	print "\t$_\n" foreach (sort(keys(%fogbug)));
+	print "\t$_\n" foreach (sort keys %fogbug);
     }
+    report(\%getsound, "GetSoundPlaying used to detect events");
+    report(\%door, "Bethesda doors that have had scripts attached to them");
+    report(\%dup_cells, "Duplicate cells");
     unless ($::opt_q) {
-	if ($::opt_d and $dup_dia) {
-	    print "   $dup_dia_help";
-	}
-	if ($::opt_m and $mod_dia) {
-	    print "   $mod_dia_help";
-	}
-	if ($mod_id) {
-	    print "   $mod_id_help";
-	}
+	print "   $dup_dia_help" if ($::opt_d and $dup_dia);
+	print "   $mod_dia_help" if ($::opt_m and $mod_dia);
+	print "   $mod_id_help" if ($mod_id);
     }
     print $dia_out;
 }
@@ -1097,3 +1181,272 @@ swerewolfpopup 35452565027556275677f6c666
 swerewolfrefusal 354525650295f657023616e6e6f6470246f602478696370216370216027756275677f6c666e2
 swerewolfrestmessage 354525650295f657023616e6e6f64702275637470296e6027756275677f6c6660266f627d6e2
 # END-OF-LIST for Evil GMSTs Bloodmoon
+# Standard Bethesda doors
+BM_IC_door_01
+BM_IC_door_pelt
+BM_IC_door_pelt_dark
+BM_IC_door_pelt_wolf
+BM_KA_door
+BM_KA_door_dark
+BM_KA_door_dark_02
+BM_KA_door_dark_SG
+BM_KA_door_dark_udyr
+BM_KarstCav_Door
+BM_kartaag_Door
+BM_mazegate_01
+BM_mazegate_02
+BM_mazegate_03
+CharGen Exit Door
+CharGen_cabindoor
+CharGen_ship_trapdoor
+EX_MH_door_02
+EX_MH_door_02_ignatius
+EX_MH_door_02_sadri
+EX_MH_door_02_velas
+EX_MH_temple_door_01
+EX_MH_temple_door_01_ch
+Ex_BM_tomb_door_01
+Ex_BM_tomb_door_02
+Ex_BM_tomb_door_03
+Ex_BM_tomb_door_skaalara
+Ex_Cave_Door_01_Koal
+Ex_DE_ship_cabindoor
+Ex_Dae_door_static
+Ex_De_SN_Gate
+Ex_De_Shack_Door
+Ex_MH_Door_01
+Ex_MH_Palace_gate
+Ex_MH_Pav_Gate_Door
+Ex_MH_Pav_Ladder_01
+Ex_MH_sewer_trapdoor_01
+Ex_MH_sewer_trapdoor_sadri
+Ex_MH_swr_trapdr_blkd
+Ex_S_door
+Ex_S_door_double
+Ex_S_door_double_GH
+Ex_S_door_double_fixed
+Ex_S_door_double_fixing
+Ex_S_door_rigmor
+Ex_S_door_rigmor2
+Ex_V_cantondoor_01
+Ex_V_palace_grate_02
+Ex_co_ship_cabindoor
+Ex_colony_bardoor
+Ex_colony_door01.NIF
+Ex_colony_door01_1B.NIF
+Ex_colony_door02
+Ex_colony_door02_1
+Ex_colony_door02_2
+Ex_colony_door02b_2
+Ex_colony_door03
+Ex_colony_door03 int
+Ex_colony_door03_1
+Ex_colony_door03_1_uryn
+Ex_colony_door03_2
+Ex_colony_door03_4
+Ex_colony_door03_4a
+Ex_colony_door03_int
+Ex_colony_door04
+Ex_colony_door04_1
+Ex_colony_door04_2
+Ex_colony_door04_2b
+Ex_colony_door04_3
+Ex_colony_door04b_3
+Ex_colony_door04c_3
+Ex_colony_door05
+Ex_colony_door05_2
+Ex_colony_door05_3
+Ex_colony_door05_int
+Ex_colony_door05_int_a
+Ex_colony_door05_int_b
+Ex_colony_door05_int_c
+Ex_colony_door05a_4
+Ex_colony_door05b_4
+Ex_colony_door05c_4
+Ex_colony_door06
+Ex_colony_door07
+Ex_colony_door08
+Ex_colony_minedoor
+Ex_imp_loaddoor_02
+Ex_redoran_hut_01_a
+In_DB_door01
+In_DB_door_oval
+In_DB_door_oval_02
+In_DB_door_oval_relvel
+In_DE_LLshipdoor_Large
+In_De_Shack_Trapdoor
+In_De_Shack_Trapdoor_01
+In_Hlaalu_Door_01
+In_MH_Pav_Ladder
+In_MH_door_01
+In_MH_door_01_velas
+In_MH_door_02
+In_MH_door_02_bar1_uni
+In_MH_door_02_bar2_uni
+In_MH_door_02_bar3_uni
+In_MH_door_02_bar4_uni
+In_MH_door_02_chapel
+In_MH_door_02_hels_uni
+In_MH_door_02_play
+In_MH_door_02_throne1
+In_MH_door_02_throne2
+In_MH_jaildoor_01
+In_MH_trapdoor_01
+In_M_sewer_door_01
+In_OM_door_round
+In_S_door
+In_impsmall_d_hidden_01
+In_thirsk_door
+In_thirsk_door_main_1
+In_thirsk_door_main_1_b
+In_thirsk_door_main_2
+In_thirsk_door_main_2_b
+Indalen_closet_door
+PrisonMarker
+Rent_Ghost_Dusk_Door
+Rent_MH_Guar_Door
+Rent_colony_door
+Velothi_Sewer_Door
+chargen customs door
+chargen door captain
+chargen door exit
+chargen door hall
+chargen_shipdoor
+chargendoorjournal
+clutter_whouse_door_01
+clutter_whouse_door_02
+door_cavern_doors00
+door_cavern_doors00_velas
+door_cavern_doors10
+door_cavern_doors20
+door_cavern_vassir_un
+door_dwe_00_exp
+door_dwrv_double00
+door_dwrv_double01
+door_dwrv_inner00
+door_dwrv_load00
+door_dwrv_loaddown00
+door_dwrv_loadup00
+door_dwrv_main00
+door_load_darkness00
+door_ravenrock_mine
+door_sotha_imp_door
+door_sotha_load
+door_sotha_mach_door
+door_sotha_mach_door2
+door_sotha_pre_load
+ex_BM_ringdoor
+ex_S_door_rounded
+ex_S_fence_gate
+ex_S_fence_gate_uni
+ex_ashl_door_01
+ex_ashl_door_02
+ex_cave_door_01
+ex_co_ship_trapdoor
+ex_common_door_01
+ex_common_door_balcony
+ex_dae_door_load_oval
+ex_de_ship_trapdoor
+ex_emp_tower_01_a
+ex_emp_tower_01_b
+ex_h_pcfort_exdoor_ 01
+ex_h_pcfort_exdoor_ 02
+ex_h_pcfort_exdoor_ 03
+ex_h_pcfort_exdoor_ 03-3
+ex_h_pcfort_trapdoor_01-2
+ex_h_trapdoor_01
+ex_imp_loaddoor_01
+ex_imp_loaddoor_03
+ex_nord_door_01
+ex_nord_door_01-back
+ex_nord_door_01_ignatius
+ex_nord_door_01_ignatius1
+ex_nord_door_02
+ex_nord_door_gyldenhul
+ex_nord_door_lair
+ex_nord_door_wolf
+ex_r_pcfort_d_01
+ex_r_pcfort_d_01-2
+ex_r_pcfort_d_01-3
+ex_r_pcfort_d_02
+ex_r_trapdoor_01
+ex_redoran_barracks_door
+ex_t_door_01
+ex_t_door_01_pc_hold_a
+ex_t_door_01_pc_hold_b
+ex_t_door_02
+ex_t_door_02_pc_hold_a
+ex_t_door_02_pc_hold_b
+ex_t_door_slavepod_01
+ex_t_door_sphere_01
+ex_t_door_stone_large
+ex_v_palace_grate_01
+ex_velothi_loaddoor_01
+ex_velothi_loaddoor_02
+ex_velothicave_door_01
+ex_velothicave_door_03
+ex_vivec_grate_01
+hlaal_loaddoor_01
+hlaalu_loaddoor_ 02
+hlaalu_loaddoor_ 02_balyn
+in_ar_door_01
+in_ashl_door_01
+in_ashl_door_02
+in_ashl_door_02_sha
+in_c_door_arched
+in_c_door_wood_square
+in_ci_door_01
+in_ci_door_01_indoor
+in_com_trapbottom_01
+in_com_traptop_01
+in_dae_door_01
+in_de_shack_door
+in_de_ship_cabindoor
+in_de_shipdoor_toplevel
+in_h_trapdoor_01
+in_hlaalu_door
+in_hlaalu_door_uni
+in_hlaalu_loaddoor_01
+in_hlaalu_loaddoor_02
+in_impsmall_d_cave_01
+in_impsmall_door_01
+in_impsmall_door_01_shrine
+in_impsmall_door_jail_01
+in_impsmall_loaddoor_01
+in_impsmall_trapdoor_01a
+in_m_sewer_trapdoor_01
+in_m_sewer_trapdoor_01_blkd
+in_r_s_door_01
+in_r_trapdoor_01
+in_redoran_barrack_door
+in_redoran_hut_door_01
+in_redoran_ladder_01
+in_strong_vaultdoor00
+in_strong_vaultdoor_tela_UNIQUE
+in_t_door_small
+in_t_door_small_load
+in_t_housepod_door_exit
+in_t_l_door_01
+in_t_s_plain_door
+in_v_s_jaildoor_01
+in_v_s_jaildoor_frelene
+in_v_s_trapdoor_01
+in_v_s_trapdoor_02
+in_velothismall_ndoor_01
+in_velothismall_ndoor_01_jeanne
+in_velothismall_ndoor_agrippina
+in_vivec_grate_door_01
+pelagiad_halfway_room
+rent_balmora_council_door
+rent_balmora_eight_door
+rent_balmora_lucky_door
+rent_balmora_south_door
+rent_caldera_shenk_door
+rent_ebon_six_door
+rent_maargan_andus_door
+rent_vivec_black_door
+rent_vivec_flower_door
+rent_vivec_lizard_door
+smora_fara_door
+vivec_grate_door_02
+# END-OF-LIST Standard Bethesda Doors
