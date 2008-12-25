@@ -537,27 +537,28 @@ sub scan {
 	}
     }
     close(INP);
-    # analyze dialog problems
     my $dup_dia = 0;
     my $mod_dia = 0;
     my $mod_id = 0;
     my $dia_out = "";
     my %dup_recs = ();
-    if (%myrec) {
+    if (%myrec) {		# find records duplicated from masters
 	load_all_masters(@masters);
 	my %dups = ();
 	foreach my $master (@MASTERS) {
 	    foreach my $rec_type (keys %MASTER) {
 		my $master_recs = $MASTER{$rec_type};
 		foreach my $rec (keys %{$master_recs}) {
-		    if ($myrec{$rec}) {
-			$dup_recs{$rec_type}->{$myrec{$rec}} = $master;
+		    if (my $name = $myrec{$rec}) {
+			unless (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name})) {
+			    $dup_recs{$rec_type}->{$name} = $master;
+			}
 		    }
 		}
 	    }
 	}
     }
-    if (%mydia) {
+    if (%mydia) {		# analyze dialog problems
 	load_all_masters(@masters);
 	my %master_dia = ();
 	foreach my $master (@MASTERS) {
