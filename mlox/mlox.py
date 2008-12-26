@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- mode: python -*-
-# mlox - elder scrolls mod load order eXpert
-# Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
-# License: MIT License (see the file: License.txt)
+# mlox - the elder scrolls mod load order eXpert
+# Copyright 2008 by John Moonsugar
+# Distributed as part of the mlox project:
+#   http://code.google.com/p/mlox/
+# under the MIT License:
+#   http://code.google.com/p/mlox/source/browse/trunk/License.txt
 Version = "0.36"
 
 import locale
