@@ -117,15 +117,14 @@ sub read_rec {
     my($expected_type) = @_;
     my $rec_hdr = "";
     my $n_read = sysread(INP, $rec_hdr, $hdr_size);
-    if ($n_read == 0) {
-	# EOF
+    if ($n_read == 0) {		# EOF
 	return(undef, undef);
     }
     if ($n_read != $hdr_size) {
 	warn "Error(hdr): asked for $hdr_size bytes, got $n_read\n";
 	return(undef, undef);
     }
-    my($rec_type, $rec_len) = unpack("a4I", $rec_hdr);
+    my($rec_type, $rec_len, $flags) = unpack("a4Lx[L]L", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rec_type) {
 	warn "Error: Expected: $expected_type, got: $rec_type\n";
 	return(undef, undef);
@@ -136,7 +135,7 @@ sub read_rec {
 	warn "Error(rec): asked for $rec_len bytes, got $n_read\n";
 	return(undef, undef);
     }
-    return($rec_type, $rec);
+    return($rec_type, $rec, $flags);
 }
 
 sub parse_subrec {
@@ -190,9 +189,13 @@ sub scan {
 	return;
     }
     my $expected = "TES3";
-    while (my($rec_type, $rec) = read_rec($expected)) {
+    while (my($rec_type, $rec, $flags) = read_rec($expected)) {
 	$expected = undef;
 	last if not defined $rec_type;
+	if ($flags & 0x1000) {
+	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
 	print "REC=$rec_type\n" if (DBG);
 	if ($rec_type eq "GMST") {
 	    my($name, $val) = gmstval($rec);
