@@ -63,7 +63,6 @@ OPTIONS
  -f  check for masters who's functions are not used (!TB-FUN, !BM-FUN).
  -m  print out modified dialog (MOD-DIA)
  -q  quiet (less output, no explanation text)
- -s  spellcheck the plugin. (all other options will be ignored).
  -v  verbose (possibly more output)
 
 [Note: esplint wants to be able to find Masters for a given plugin, so it
@@ -182,6 +181,9 @@ my %BM_EVIL;
 my %MASTER;
 my %BETHDOOR;
 my @MASTERS = ();
+
+my %STD_OBJECT = qw(CLAS FACT RACE REGN BSGN DOOR MISC WEAP CONT SPEL CREA
+		    LIGH NPC_ ARMO CLOT REPA ACTI APPA LOCK PROB INGR ALCH);
 
 # regular expressions used for finding getSoundPlaying usage
 my $RE_GETSOUND = "\\bgetSoundPlaying\\b[^\n]+\n([^\n]+)\n";
@@ -749,7 +751,7 @@ sub load_dict {
 	if ($file =~ m!^esplint.*\.dict$!) {
 	    my $dict = "$esplint_dir/$dirlist->{$file}";
 	    if (open(DICT, "<$dict")) {
-		print "Loading dictionary: $dict\n";
+		warn "Loading dictionary: $dict\n";
 		while (<DICT>) {
 		    chomp; chomp;
 		    $DICT{lc($_)}++;
@@ -762,104 +764,10 @@ sub load_dict {
     }
 }
 
-my $RE_WORD = "([A-Za-z][A-Za-z'-]*)";
-sub spelltext {
-    my($rec_type, $id, $text) = @_;
-    my @misspelled = ();
-    $id = chop_nulls($id);
-    $text =~ s/\\n/\n/g;
-    $text =~ tr///d;
-    $text =~ tr/’/'/;
-    chomp($text);
-    chomp($text);
-    while ($text =~ m!$RE_WORD!g) {
-	my $word = $1;
-	$word =~ s/(?:'s|')$//;
-	unless ($DICT{lc($word)}) {
-	    if ($word =~ /-/) {
-		foreach my $subword (split("-", $word)) {
-		    unless ($DICT{lc($subword)}) {
-			push(@misspelled, $word);
-			last;
-		    }
-		}
-	    } else {
-		push(@misspelled, $word);
-	    }
-	}
-    }
-    if (@misspelled) {
-	if ($::opt_S) {
-	    foreach my $word (@misspelled) {
-		print "$word\n";
-	    }
-	} else {
-	    foreach my $word (@misspelled) {
-		$text =~ s/(>>)?$word(<<)?/>>$word<</g;
-	    }
-	    my $format = "\t%4s    %-20s    %s\n";
-	    $text =~ s/\n/\n\t                    /g;
-	    printf $format, $rec_type, $id, $text;
-	}
-    }
-}
-
-sub spell {
-    my($plugin_path) = @_;
-    my $plugin = (split(m![\\/]!, $plugin_path))[-1];
-    warn "### Spellchecking $plugin_path\n" if ($::opt_v);
-    unless(open(INP, "<$plugin_path")) {
-	warn "Error opening $plugin_path for input ($!)\n";
-	return;
-    }
-    my $expected = "TES3";
-    while (my($rec_type, $rec, $flags) = read_rec($expected)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	print "REC=$rec_type flags=$flags\n" if (DBG);
-	if ($flags & 0x1000) {
-	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
-	    next;
-	}
-	if ($rec_type eq "INFO") {
-	    my $r = parse_subrec($rec);
-	    my $id = $r->{INAM}[0];
-	    my $text = get_subrec($rec, "NAME")->[0];
-	    spelltext($rec_type, $id, $text);
-	} elsif ($rec_type eq "SCPT") {
-	    my $script = get_subrec($rec, "SCTX")->[0];
-	    my $id = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
-	    my $text = "";
-	    # spell messagebox text
-	    while ($script =~ /(messagebox\s+\"[^\"]+\")/gi) {
-		$text .= "$1\n";
-	    }
-	    spelltext($rec_type, $id, $text);
-	} elsif ($rec_type eq "BOOK") {
-	    my $r = parse_subrec($rec);
-	    my $text = get_subrec($rec, "TEXT")->[0];
-	    my $id = $r->{NAME}[0];
-	    my $name = $r->{FNAM}[0];
-	    $id = "$id ($name)";
-	    # first remove html markup
-	    $text =~ s/<[^>]+>//g;
-	    spelltext($rec_type, $id, $text);
-	}
-    }
-    close(INP);
-}
-
 # run the program.
-if ($::opt_s or $::opt_S) {
-    load_dict();
-    for my $plugin (@ARGV) {
-	spell($plugin);
-    }
-} else {
-    load_data();
-    for my $plugin (@ARGV) {
-	scan($plugin);
-    }
+load_data();
+for my $plugin (@ARGV) {
+    scan($plugin);
 }
 
 # Data segment follows.
