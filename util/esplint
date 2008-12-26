@@ -24,6 +24,8 @@ $::opt_d = 0;
 $::opt_f = 0;
 $::opt_m = 0;
 $::opt_q = 0;
+$::opt_s = 0;
+$::opt_S = 0;
 $::opt_v = 0;
 
 
@@ -61,6 +63,7 @@ OPTIONS
  -f  check for masters who's functions are not used (!TB-FUN, !BM-FUN).
  -m  print out modified dialog (MOD-DIA)
  -q  quiet (less output, no explanation text)
+ -s  spellcheck the plugin. (all other options will be ignored).
  -v  verbose (possibly more output)
 
 [Note: esplint wants to be able to find Masters for a given plugin, so it
@@ -145,6 +148,12 @@ about the flagged items.
              records that occur in one of the masters. These are sometimes
              referred to as "dirty" or "unclean" entries.
 
+    JUNKCEL: These are irrelevant external CELL records that crop up in many
+             plugins, possibly due to a Construction Set bug. They always
+             contain only NAME, DATA and sometimes RGNN subrecords, and the
+             flags in the DATA subrecord are always unchanged from the flags
+             in the Master.
+
     CELL00:  This means that an apparently dirty copy of cell (0, 0) is
              included in the plugin. This cell is often accidentally modified
              since it is the default cell displayed in the cell view window.
@@ -156,7 +165,7 @@ $mod_dia_help
 $mod_id_help
 };
 
-getopts('acDdmqv') or die $Usage;
+getopts('acDdmqsSv') or die $Usage;
 
 if ($::opt_a) {
     $::opt_c = 1;
@@ -447,6 +456,14 @@ sub beautify_dia {
     return($dia_str);
 }
 
+sub ext_cell_info {
+    my($r) = @_;
+    my($flags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+    my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
+    my $name = "$rgnn ($x, $y)";
+    return($name, $flags, $x, $y);
+}
+
 # this is the main routine that scans a plugin for potential problems.
 sub scan {
     my($plugin_path) = @_;
@@ -470,6 +487,7 @@ sub scan {
     my %mydia = ();
     my %myrec = ();
     my %door = ();
+    my %myjunk = ();
     my @sscr = ();
     my $mastbm = 0;
     my $masttb = 0;
@@ -538,19 +556,18 @@ sub scan {
 		}
 		$myrec{$rec} = $name;
 	    } else {		# exterior cells
-		my($flags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+		my($name, $flags, $x, $y) = ext_cell_info($r);
 		if ($x == 0 and $y == 0) {
 		    print "DBG: CELL00: $rec\n" if (DBG);
-		    # when CELL (0,0) is length 53, we know it is just an empty dirty cell record.
 		    my $frmr = (defined $r->{FRMR}) ? scalar(@{$r->{FRMR}}) : 0;
-		    $cell00 = "Empty copy of CELL" if (length($rec) == 53);
 		    $cell00 = "Refcount of CELL == 155" if ($frmr == 155);
 		}
-		my $name = "($x, $y)";
-		if (my $rgnn = chop_nulls($r->{RGNN}[0])) {
-		    $name = "$rgnn $name";
+		my $nkeys = scalar(keys %$r);
+		if (($nkeys == 2) or ($nkeys == 3)) {
+		    $myjunk{$name} = $flags;
+		} else {
+		    $myrec{$rec} = $name;
 		}
-		$myrec{$rec} = $name;
 	    }
 	} elsif ($rec_type eq "DOOR") {
 	    my $r = parse_subrec($rec);
@@ -570,14 +587,27 @@ sub scan {
     my $mod_id = 0;
     my $dia_out = "";
     my %dup_recs = ();
+    my %junkcell = ();
+    if (%myjunk) {
+	load_all_masters(@masters);
+	foreach my $master (@MASTERS) {
+	    my $master_recs = $MASTER{CELL};
+	    foreach my $rec (keys %{$master_recs}) {
+		my($name, $oldflags) = ext_cell_info(parse_subrec($rec));
+		if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
+		    $junkcell{$name} = [$oldflags, $myjunk{$name}];
+		}
+	    }
+	}
+    }
     if (%myrec) {		# find records duplicated from masters
 	load_all_masters(@masters);
-	my %dups = ();
 	foreach my $master (@MASTERS) {
 	    foreach my $rec_type (keys %MASTER) {
 		my $master_recs = $MASTER{$rec_type};
-		foreach my $rec (keys %{$master_recs}) {
-		    if (my $name = $myrec{$rec}) {
+		foreach my $rec (keys %myrec) {
+		    if ($master_recs->{$rec}) {
+			my $name = $myrec{$rec};
 			unless (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name})) {
 			    $dup_recs{$rec_type}->{$name} = $master;
 			}
@@ -642,11 +672,12 @@ sub scan {
     $found .= " FOGBUG" if (%fogbug);
     $found .= " GETSND" if (%getsound);
     $found .= " SCRDOOR" if (%door);
+    $found .= " CELL00" if ($cell00);
+    $found .= " JUNKCEL" if (%junkcell);
     $found .= " DUP-REC" if (%dup_recs);
     $found .= " DUP-DIA" if ($dup_dia);
     $found .= " MOD-DIA" if ($mod_dia);
     $found .= " MOD-ID" if ($mod_id);
-    $found .= " CELL00" if ($cell00);
     if ($found) {
 	print "$plugin_path:$found\n";
     } else {
@@ -673,9 +704,25 @@ sub scan {
     }
     report(\%getsound, "GetSoundPlaying possibly used to detect events");
     report(\%door, "Bethesda doors that have had scripts attached to them");
+    if (%junkcell) {
+	if ($::opt_v) {
+	    print "    Junk Cells:                                  Master Flags   Plugin Flags\n";
+	} else {
+	    print "    Junk Cells:\n";
+	}
+	my $format = "\t%-36s     0x%02x           0x%02x\n";
+	foreach my $name (sort keys %junkcell) {
+	    if ($::opt_v) {
+		my($oldflags, $newflags) = @{$junkcell{$name}};
+		printf $format, $name, $oldflags, $newflags;
+	    } else {
+		printf "\t$name\n";
+	    }
+	}
+    }
     if (%dup_recs) {
 	print "    Duplicate Records:\n";
-	my $format = "\t%-16s\t%4s\t%s\n";
+	my $format = "\t%-16s    %4s    %s\n";
 	printf $format, "Duped From", "Type", "Name";
 	foreach my $rec_type (sort keys %dup_recs) {
 	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
@@ -692,10 +739,128 @@ sub scan {
     print $dia_out;
 }
 
+my %DICT = ();
+sub load_dict {
+    # TBD: find morrowind/esplint diretory too
+    #while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
+
+    my $esplint_dir = ".";
+    my $dirlist = list_files($esplint_dir);
+    foreach my $file (sort keys %{$dirlist}) {
+	if ($file =~ m!^esplint.*\.dict$!) {
+	    my $dict = "$esplint_dir/$dirlist->{$file}";
+	    if (open(DICT, "<$dict")) {
+		print "Loading dictionary: $dict\n";
+		while (<DICT>) {
+		    chomp; chomp;
+		    $DICT{lc($_)}++;
+		}
+		close(DICT);
+	    } else {
+		warn "Error opening dictionary $dict for input ($!)\n";
+	    }
+	}
+    }
+}
+
+my $RE_WORD = "([A-Za-z][A-Za-z'-]*)";
+sub spelltext {
+    my($rec_type, $id, $text) = @_;
+    my @misspelled = ();
+    $id = chop_nulls($id);
+    $text =~ s/\\n/\n/g;
+    $text =~ tr///d;
+    $text =~ tr/’/'/;
+    chomp($text);
+    chomp($text);
+    while ($text =~ m!$RE_WORD!g) {
+	my $word = $1;
+	$word =~ s/(?:'s|')$//;
+	unless ($DICT{lc($word)}) {
+	    if ($word =~ /-/) {
+		foreach my $subword (split("-", $word)) {
+		    unless ($DICT{lc($subword)}) {
+			push(@misspelled, $word);
+			last;
+		    }
+		}
+	    } else {
+		push(@misspelled, $word);
+	    }
+	}
+    }
+    if (@misspelled) {
+	if ($::opt_S) {
+	    foreach my $word (@misspelled) {
+		print "$word\n";
+	    }
+	} else {
+	    foreach my $word (@misspelled) {
+		$text =~ s/(>>)?$word(<<)?/>>$word<</g;
+	    }
+	    my $format = "\t%4s    %-20s    %s\n";
+	    $text =~ s/\n/\n\t                    /g;
+	    printf $format, $rec_type, $id, $text;
+	}
+    }
+}
+
+sub spell {
+    my($plugin_path) = @_;
+    my $plugin = (split(m![\\/]!, $plugin_path))[-1];
+    warn "### Spellchecking $plugin_path\n" if ($::opt_v);
+    unless(open(INP, "<$plugin_path")) {
+	warn "Error opening $plugin_path for input ($!)\n";
+	return;
+    }
+    my $expected = "TES3";
+    while (my($rec_type, $rec, $flags) = read_rec($expected)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	print "REC=$rec_type flags=$flags\n" if (DBG);
+	if ($flags & 0x1000) {
+	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	if ($rec_type eq "INFO") {
+	    my $r = parse_subrec($rec);
+	    my $id = $r->{INAM}[0];
+	    my $text = get_subrec($rec, "NAME")->[0];
+	    spelltext($rec_type, $id, $text);
+	} elsif ($rec_type eq "SCPT") {
+	    my $script = get_subrec($rec, "SCTX")->[0];
+	    my $id = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+	    my $text = "";
+	    # spell messagebox text
+	    while ($script =~ /(messagebox\s+\"[^\"]+\")/gi) {
+		$text .= "$1\n";
+	    }
+	    spelltext($rec_type, $id, $text);
+	} elsif ($rec_type eq "BOOK") {
+	    my $r = parse_subrec($rec);
+	    my $text = get_subrec($rec, "TEXT")->[0];
+	    my $id = $r->{NAME}[0];
+	    my $name = $r->{FNAM}[0];
+	    $id = "$id ($name)";
+	    # first remove html markup
+	    $text =~ s/<[^>]+>//g;
+	    spelltext($rec_type, $id, $text);
+	}
+    }
+    close(INP);
+}
+
 # run the program.
-load_data();
-for my $plugin (@ARGV) {
-    scan($plugin);
+if ($::opt_s or $::opt_S) {
+    load_dict();
+    for my $plugin (@ARGV) {
+	spell($plugin);
+    }
+} else {
+    load_data();
+    for my $plugin (@ARGV) {
+	scan($plugin);
+    }
 }
 
 # Data segment follows.
