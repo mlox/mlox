@@ -1,13 +1,10 @@
 #!/usr/bin/perl
-
+# esplint - a diagnostic tool for TES3/Morrowind plugins
+# Copyright 2008 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-
-# TBD:
-# - look for Bloodmoon variable: PCWerewolf and Tribunal variable: DaysPassed
-#   but only flag if not declared global/local
 
 use Cwd;
 use Data::Dumper;
@@ -21,11 +18,10 @@ BEGIN {
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
 
-# esplint: command-line tool for scanning plugins for various potential problems.
-
 $::opt_a = 0;
 $::opt_c = 0;
 $::opt_d = 0;
+$::opt_f = 0;
 $::opt_m = 0;
 $::opt_q = 0;
 $::opt_v = 0;
@@ -59,9 +55,10 @@ my $Usage = qq{esplint [OPTIONS] plugin...
 
 OPTIONS
  -D  debug output (vast)
- -a  all normal output options on (-d, -m, not debug).
+ -a  all normal output options on (-d, -f, -m, not -D).
  -c  also print out otherwise unflagged plugins, flagged with "CLEAN"
  -d  print out duplicate dialog (DUP-DIA)
+ -f  check for masters who's functions are not used (!TB-FUN, !BM-FUN).
  -m  print out modified dialog (MOD-DIA)
  -q  quiet (less output, no explanation text)
  -v  verbose (possibly more output)
@@ -93,6 +90,16 @@ about the flagged items.
              1.6.1820, but the plugin does not list Bloodmoon.esm in its list
              of Masters. This is similar to the EXP-DEP flag, but it is for
              Bloodmoon only.
+
+    !TB-FUN: Tribunal.esm is listed as a master, but esplint did not detect
+             any usage of Tribunal functions. (Note that there may be other
+             reasons for listing Tribunal as a master). This flag is only
+             checked if the -f switch is given.
+
+    !BM-FUN: Bloodmoon.esm is listed as a master, but esplint did not detect
+             any usage of Bloodmoon functions. (Note that there may be other
+             reasons for listing Bloodmoon as a master). This flag is only
+             checked if the -f switch is given.
 
     GMSTs:   You know this one! This means that some of the "72 Evil GMSTs" are
              present in this plugin and that they have the same exact value as
@@ -154,6 +161,7 @@ getopts('acDdmqv') or die $Usage;
 if ($::opt_a) {
     $::opt_c = 1;
     $::opt_d = 1;
+    $::opt_f = 1;
     $::opt_m = 1;
     $::opt_v = 1;
 }
@@ -172,12 +180,14 @@ my $RE_GETSOUND = "\\bgetSoundPlaying\\b[^\n]+\n([^\n]+)\n";
 my $RE_SOUND = '\b(?:PlayLoopSound3D(?:VP)?|PlaySound(?:3D|3DVP|VP)?|Say(?:Done)?|StopSound|StreamMusic)\b';
 my $RE_IGNORE = "^[ \t]*(?:;[^\n]+)*\n"; # for removing comments and blank lines
 
+# remove the nulls from the end of string value retrieved from a plugin record
 sub chop_nulls {
     my($str) = @_;
     $str =~ tr/\000//d;
     return($str);
 }
 
+# load a section of data from the DATA pseudo-filedescriptor at the end of this script
 sub load_data_list {
     my @datalist = ();
     my $title = scalar(<DATA>);
@@ -190,6 +200,7 @@ sub load_data_list {
     return(\@datalist);
 }
 
+# load all data sections from the DATA segment at the end of this script
 sub load_data {
     $RE_TBFUN = '^[^;]*?\b(' . join("|", @{load_data_list()}) . ')\b';
     $RE_BMFUN = '^[^;]*?\b(' . join("|", @{load_data_list()}) . ')\b';
@@ -212,6 +223,8 @@ sub load_data {
     }
 }
 
+# return a dictionary of all the files found in the given directory.
+# keys are lowercased for caseless file finding.
 sub list_files {
     my($dir) = @_;
     my %files = ();
@@ -227,14 +240,17 @@ sub list_files {
     return(\%files);
 }
 
+# sort list of files by their modification date
 sub sort_by_date {
-    my($datadir, @masters) = @_;
-    my $dirlist = list_files($datadir);
-    my @sorted = sort { (-M "$datadir/$dirlist->{$a}") <=> (-M "$datadir/$dirlist->{$b}") } @masters;
-    print "DBG: sorted masters: @sorted\n" if (DBG);
+    my($dir, @files) = @_;
+    my $dirlist = list_files($dir);
+    my @sorted = sort { (-M "$dir/$dirlist->{$a}") <=> (-M "$dir/$dirlist->{$b}") } @files;
+    print "DBG: sorted files: @sorted\n" if (DBG);
     return(@sorted);
 }
 
+# assuming the program is run somewhere under the Morrowind game directory, find the
+# location of the "Data Files" directory by walking up the hierarchy.
 sub find_datadir {
     my $dirlist = list_files(".");
     if ($dirlist->{"morrowind.esm"}) {
@@ -257,6 +273,7 @@ sub find_datadir {
     return(undef);		# not running under morrowind directory
 }
 
+# load all the records from a master .esm into a dictionary.
 sub load_master {
     my($datadir, $esm, $label) = @_;
     if (defined $MASTER{$esm}) {
@@ -293,6 +310,7 @@ sub load_master {
     close(INP);
 }
 
+# load all the masters into memory
 sub load_all_masters {
     my(@masters) = @_;
     my $datadir = find_datadir();
@@ -303,6 +321,7 @@ sub load_all_masters {
     }
 }
 
+# read next TES3 record from a plugin
 my $hdr_size = 16;
 sub read_rec {
     my($expected_type) = @_;
@@ -329,6 +348,7 @@ sub read_rec {
     return($rec_type, $rec, $flags);
 }
 
+# parse a record into sub-records, and return as a dictionary ref.
 sub parse_subrec {
     my($rec) = @_;
     my %r = ();
@@ -344,6 +364,7 @@ sub parse_subrec {
     return(\%r);
 }
 
+# return only the given type of sub-records from the given record as a list ref.
 sub get_subrec {
     my($rec, $subtype) = @_;
     my @r = ();
@@ -359,6 +380,7 @@ sub get_subrec {
     return(\@r);
 }
 
+# scan the script text for various function usage.
 my %tbfun;
 my %bmfun;
 my %depfun;
@@ -388,6 +410,9 @@ sub scan_script {
     }
 }
 
+# chop up a GMST record and return the value portion in hexified string form
+# this is used to compare against known Evil GMST records similarly hexified
+# which are stored in the DATA segment of this script.
 sub gmstval {
     my($rec, $plugin_path) = @_;
     my $r = parse_subrec($rec);
@@ -402,6 +427,7 @@ sub gmstval {
     return($name, unpack("h*", "$type $val"));
 }
 
+# format a simple report for the given items
 sub report {
     my($items, $label) = @_;
     my @itemlist = sort keys %$items;
@@ -413,6 +439,7 @@ sub report {
     }
 }
 
+# given a raw INFO record, so some very hackish ascii-fication.
 sub beautify_dia {
     my($dia) = @_;
     my $dia_str = $dia;
@@ -420,6 +447,7 @@ sub beautify_dia {
     return($dia_str);
 }
 
+# this is the main routine that scans a plugin for potential problems.
 sub scan {
     my($plugin_path) = @_;
     my $plugin = (split(m![\\/]!, $plugin_path))[-1];
@@ -605,6 +633,10 @@ sub scan {
     my $found = "";
     $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
     $found .= " BM-DEP" if ((not $mastbm) and %bmfun);
+    if ($::opt_f) {
+	$found .= " !BM-FUN" if ($mastbm and not(%bmfun or @sscr));
+	$found .= " !TB-FUN" if ($masttb and not(%tbfun or %bmfun or @sscr));
+    }
     $found .= " GMSTs" if (%evil);
     $found .= " DEP-LST" if (%depfun);
     $found .= " FOGBUG" if (%fogbug);
@@ -621,7 +653,9 @@ sub scan {
 	print "$plugin_path: CLEAN\n" if ($::opt_c);
 	return;
     }
-    # now print out verbose versions, if applicable
+    ##################################################
+    # now print out verbose detail, if applicable
+    ##################################################
     if ($cell00) {
 	print "    CELL (0, 0): $cell00\n";
     }
@@ -645,7 +679,6 @@ sub scan {
 	printf $format, "Duped From", "Type", "Name";
 	foreach my $rec_type (sort keys %dup_recs) {
 	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
-		next if (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name}));
 		my $master = $dup_recs{$rec_type}->{$name};
 		printf $format, $master, $rec_type, $name;
 	    }
@@ -659,11 +692,13 @@ sub scan {
     print $dia_out;
 }
 
+# run the program.
 load_data();
 for my $plugin (@ARGV) {
     scan($plugin);
 }
 
+# Data segment follows.
 __DATA__
 # Tribunal Functions
 AddToLevCreature
