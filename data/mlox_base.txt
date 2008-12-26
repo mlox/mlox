@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-22 00:54:50 (UTC)]
+[Version 2008-12-26 01:38:25 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -181,6 +181,18 @@ A good place to stay, Ver 1,8.esp
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 A Grand Abode.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @A Flock Of Seagulls [Cait, Abot and TextureFreak]
+
+[Requires]
+ This plugin uses the Tribunal functions: getwaterlevel. So
+ despite the readme that says it needs only Morrowind, it
+ actually requires at least one of the expansions to be present.
+A_flock_of_seagulls.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1805,12 +1817,12 @@ Complete Morrowind TB & BM - Replacer.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Construction v0.50.2 [jck87]
 
-;; expdep
-[Requires]
- This plugin uses the Tribunal function getweapondrawn.
-construction v0.50.2.esp
-[ANY Tribunal.esm
-     Bloodmoon.esm]
+;; expdep - it looks like the script involved is attached to an unused object (.SFG_Guard)
+;[Requires]
+; This plugin uses the Tribunal function getweapondrawn.
+;construction v0.50.2.esp
+;[ANY Tribunal.esm
+;     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2547,6 +2559,20 @@ GCD_BigMod2_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gardener's of Morrowind [ZeroTheHero,Slowride,and Black]
+
+[Conflict]
+ Gardener's of Morrowind conflicts with Korobal island, "The
+ error shows up on the road from SN to Pelegiad - Korobal Island
+ and Gardeners of Morrowind modify same cell (I think: 0,-5). The
+ way to fix it is to remove this cell from Gardeners of Morrowind
+ plugin with EE."
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13495426 )
+Gardeners of Morrowind.esp
+Korobal v1.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ghostgate v1.3 [Princess Stomper]
 
 [Note]
@@ -2740,6 +2766,31 @@ Gothic Attire Complete v1-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism
+
+;; (Ref: "Graphic Herbalism Readme.txt")
+[Order]
+Bloated Caves.esp
+Graphic Herbalism.esp
+Graphic Herbalism Extra.esp
+
+[Requires]
+ (Ref: "Graphic Herbalism Readme.txt") 
+Graphic Herbalism Extra.esp
+Graphic Herbalism.esp
+
+[Conflict]
+ These Herbalism mods do very similar things and so they will conflict,
+ you probably should only be using one at a time.
+Graphic Herbalism.esp
+Herbalism Redux 1.12a.esp
+Syc_HerbalismforPurists.esp
+Herbalism_Lite_v1.0.esp
+Herbalismv1.3(Tribunal).esp
+Ultra Light Herbalism.esp ; by Rogue_Shadow?
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Gryphon version 1.0 [Sabregirl]
 
 [Conflict]
@@ -2849,6 +2900,26 @@ SG_ hazaeki_race-1_2.esp
 [Order]
 Scripted_Spells.esp
 SG_ hazaeki_race-1_2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism [balor]
+
+[Requires]
+ (Ref: "Herbalism readme.txt")
+Herbalismv1.3(Bloodmoon addon).esp
+Herbalismv1.3(Tribunal).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism Lite v1.0 [Shakeidas]
+
+;;Herbalism_Lite_+Bloodmoon_v1.0.esp
+;;Herbalism_Lite_+Tribunal_v1.0.esp
+[Note]
+ !! Contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Herbalism_Lite_v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3134,6 +3205,22 @@ Improved Inns MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Improved No Glow [Shadre]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Improved_No_Glow_v1-MW_Only.esp" If you do not have Tribunal or Bloodmoon
+ "Improved_No_Glow_v1-MW_Trib.esp" If you have only Tribunal
+ "Improved_No_Glow_v1-MW_Blood.esp" If you have only Bloodmoon
+ "Improved_No_Glow_v1-MW_Trib_Blood.esp" If you have both expansions
+ (Ref: "Improved_No_Glow_v1_readme.txt")
+Improved_No_Glow_v1-MW_Only.esp
+Improved_No_Glow_v1-MW_Trib.esp
+Improved_No_Glow_v1-MW_Blood.esp
+Improved_No_Glow_v1-MW_Trib_Blood.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Positioning [HeyYou]
 
 [Requires]
@@ -3321,16 +3408,6 @@ Syc_HerbalismforPurists_TB-ONLY.esp
  (Ref: kobusleveling_0604.zip/"leveling.txt")
 Kobu's Skills.esp
 Kobu's Hard Skills.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Korobal Island v1.2 [Korobal Mod Team/ed_conn]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- (Ref: "LBS_Readme.txt")
-LBS_Full v1.4(trib).esp
-LBS_Lite v1.4(trib).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3651,6 +3728,16 @@ Librarian with Jackets BM Trib.esp
      Book Jackets - Bloodmoon.esp
      Book Jackets - Tribunal - BookRotate.esp
      Book Jackets - Tribunal.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Light Based Sneaking [Vanhikes & qwert_44643]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "LBS_Readme.txt")
+LBS_Full v1.4(trib).esp
+LBS_Lite v1.4(trib).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4740,6 +4827,16 @@ New Npc Replacer 3.50.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Seyda Neen 1.4 [Trancemaster]
+
+[Note]
+ "New Seyda Neen FINAL_CLEANED seems to break Fargoth 2nd Quest. He cannot
+  find his way towards Lighthouse."
+ (Ref http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13492454 )
+New Seyda Neen v 1.4.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Suran Extended 1.52 [Nicholiathan]
 
 [Conflict]
@@ -4753,6 +4850,18 @@ New Suran Extended 1.5.esp
 Balanced NSE 1.5.esp
 New Suran Extended CoM 1.5.esp
 Balanced NSE CoM 1.5.esp
+
+[Conflict]
+ "Traveling Merchants v2-2 also conflicts with NSE. I have
+ deleted a couple of Suran & Ascadian Isles cells from Traveling
+ Merchants v2-2 with Enchanted Editor (the TT's Slave crossing
+ bridge NPC cells) and everything seems to work O.K."
+ (Ref http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13492454 )
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp]
+TravelingMerchants_v2.2.esp
 
 [Conflict]
  New Suran Extended includes Princess Stomper's Suran Extended.
@@ -4842,7 +4951,10 @@ Suran Archery Store_v3.0.esp
      Balanced NSE CoM 1.5.esp
      Suran Archery Store_v3.0 NSE.esp]
 
+;; Info about Juniper's Twin Lamps from Black Crow King:
+;; (Ref http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13492454 )
 [Order]
+Juniper's Twin Lamps (1.1 Tribunal).esp
 New Suran Extended 1.5.esp
 Balanced NSE 1.5.esp
 New Suran Extended CoM 1.5.esp
@@ -4917,6 +5029,20 @@ NightElvesBBPatch1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NighttimeDoorLocks-LD v1.1a [LDones]
+
+[Note]
+ This plugin contains a bug, when you enter "Under Skar" (the
+ manor district) in Ald'ruhn, you end up stuck in the rope
+ railing next to the wooden walkway. One fix is to load up the
+ .esp in TESAME, and delete the CELL Ald-ruhn that contains
+ in_ar_door_01. You can tell which cell that is by looking at the
+ detail view for that cell record in TESAME.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13495433 )
+NighttimeDoorLocks-LD 1.1a.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ninja Girl Companion [Wildman]
 
 ;; expdep
@@ -4939,6 +5065,18 @@ Ninja_Girl_JapHouse_teleport.esp
  !! Contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 npcreplace3_0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NoShieldEffect [Daniel Wessl]
+
+;; NoShieldEffect modifies one MGEF, and it needs to come after No Glow type mods.
+[Order]
+Improved_No_Glow_v1-MW_Only.esp
+Improved_No_Glow_v1-MW_Trib.esp
+Improved_No_Glow_v1-MW_Blood.esp
+Improved_No_Glow_v1-MW_Trib_Blood.esp
+NoShieldEffect.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6617,6 +6755,13 @@ Morrowind Patch v1.6.4 (WIP).esm
 [Order]
 UUMPP Bloated Morrowind removal patch.esp
 Syc_HerbalismforPurists.esp
+
+[Note]
+ The UUMPP now contains the Baldurdash Text Patch (with the
+ exception of corrections to books).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=924590&view=findpost&p=13409684 )
+Morrowind Patch v1.6.4 (WIP).esm
+Text Patch for Morrowind with Tribunal & Bloodmoon.esp
 
 [Conflict]
  The UUMPP now also fixes the fog density parameter in the cell:
