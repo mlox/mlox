@@ -458,7 +458,8 @@ sub beautify_dia {
 }
 
 sub ext_cell_name {
-    my($r, $x, $y) = @_;
+    my($r) = @_;
+    my($x, $y) = unpack("x[L]ll", $r->{DATA}[0]);
     my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
     return("$rgnn ($x, $y)");
 }
@@ -546,16 +547,16 @@ sub scan {
 	    # check for fogbugs in cells
 	    my $r = parse_subrec($rec);
 	    my $name = chop_nulls($r->{NAME}[0]);
-	    my($flags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+	    my $data = $r->{DATA}[0];
+	    my($flags, $fog_density) = unpack("Lx[L]f", $data);
 	    if ($flags & 1) {	# interior cells
-		my $fog_density = unpack("x[L3]f", $r->{AMBI}[0]);
 		if ($fog_density == 0.0 and
 		    not ($flags & 128)) { # behave like exterior
 		    $fogbug{$name}++;
 		}
 		$myrec{$rec} = $name;
 	    } else {		# exterior cells
-		my $name = ext_cell_name($r, $x, $y);
+		my($name, $x, $y) = ext_cell_name($r);
 		if ($x == 0 and $y == 0) {
 		    print "DBG: CELL00: $rec\n" if (DBG);
 		    my $frmr = (defined $r->{FRMR}) ? scalar(@{$r->{FRMR}}) : 0;
@@ -593,9 +594,9 @@ sub scan {
 	    my $master_recs = $MASTER{CELL};
 	    foreach my $rec (keys %{$master_recs}) {
 		my $r = parse_subrec($rec);
-		my($oldflags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+		my($oldflags) = unpack("L", $r->{DATA}[0]);
 		if (not ($oldflags & 1)) {
-		    my $name = ext_cell_name($r, $x, $y);
+		    my($name) = ext_cell_name($r);
 		    if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
 			$junkcell{$name} = [$oldflags, $myjunk{$name}];
 		    }
