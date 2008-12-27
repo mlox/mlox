@@ -457,12 +457,10 @@ sub beautify_dia {
     return($dia_str);
 }
 
-sub ext_cell_info {
-    my($r) = @_;
-    my($flags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+sub ext_cell_name {
+    my($r, $x, $y) = @_;
     my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
-    my $name = "$rgnn ($x, $y)";
-    return($name, $flags, $x, $y);
+    return("$rgnn ($x, $y)");
 }
 
 # this is the main routine that scans a plugin for potential problems.
@@ -548,16 +546,16 @@ sub scan {
 	    # check for fogbugs in cells
 	    my $r = parse_subrec($rec);
 	    my $name = chop_nulls($r->{NAME}[0]);
-	    if ($name) {	# interior cells have names
-		my $data = $r->{DATA}[0];
-		my($databits, $fog_level, $fog_density) = unpack("Lff", $data);
+	    my($flags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+	    if ($flags & 1) {	# interior cells
+		my $fog_density = unpack("x[L3]f", $r->{AMBI}[0]);
 		if ($fog_density == 0.0 and
-		    not ($databits & 128)) { # behave like exterior
+		    not ($flags & 128)) { # behave like exterior
 		    $fogbug{$name}++;
 		}
 		$myrec{$rec} = $name;
 	    } else {		# exterior cells
-		my($name, $flags, $x, $y) = ext_cell_info($r);
+		my $name = ext_cell_name($r, $x, $y);
 		if ($x == 0 and $y == 0) {
 		    print "DBG: CELL00: $rec\n" if (DBG);
 		    my $frmr = (defined $r->{FRMR}) ? scalar(@{$r->{FRMR}}) : 0;
@@ -594,9 +592,13 @@ sub scan {
 	foreach my $master (@MASTERS) {
 	    my $master_recs = $MASTER{CELL};
 	    foreach my $rec (keys %{$master_recs}) {
-		my($name, $oldflags) = ext_cell_info(parse_subrec($rec));
-		if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
-		    $junkcell{$name} = [$oldflags, $myjunk{$name}];
+		my $r = parse_subrec($rec);
+		my($oldflags, $x, $y) = unpack("Ll2", $r->{DATA}[0]);
+		if (not ($oldflags & 1)) {
+		    my $name = ext_cell_name($r, $x, $y);
+		    if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
+			$junkcell{$name} = [$oldflags, $myjunk{$name}];
+		    }
 		}
 	    }
 	}
