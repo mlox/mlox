@@ -442,10 +442,12 @@ sub report {
     my($items, $label) = @_;
     my @itemlist = sort keys %$items;
     if (@itemlist) {
-	my %items;
-	#foreach (@itemlist) { $items{(split(/\s/))[1]}++; }
+	my $format = "\t%-35s  %s\n";
 	print "    $label:\n";
-	print "\t$_\n" foreach (@itemlist);
+	foreach (@itemlist) {
+	    my($name, $val) = split(/\t/, $_, 2);
+	    printf $format, $name, $val;
+	}
     }
 }
 
@@ -461,7 +463,7 @@ sub ext_cell_name {
     my($r) = @_;
     my($x, $y) = unpack("x[L]ll", $r->{DATA}[0]);
     my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
-    return("$rgnn ($x, $y)");
+    return("$rgnn ($x, $y)", $x, $y);
 }
 
 # this is the main routine that scans a plugin for potential problems.
