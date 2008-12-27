@@ -200,10 +200,8 @@ sub scan {
 	if ($rec_type eq "GMST") {
 	    my($name, $val) = gmstval($rec);
 	    if ($EVILTB{$name}) {
-		print "DBG: $name $val\n" if (DBG);
 		print qq{TB $name $val\n};
 	    } elsif ($EVILBM{$name}) {
-		print "DBG: $name $val\n" if (DBG);
 		print qq{BM $name $val\n};
 	    } else {
 		print qq{XX $name $val\n};
