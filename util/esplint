@@ -428,7 +428,7 @@ sub gmstval {
     my $r = parse_subrec($rec);
     my $name = lc($r->{NAME}[0]);
     delete $r->{NAME};
-    my @keys = keys(%$r);
+    my @keys = keys %$r;
     if (scalar(@keys) > 1) {
 	warn "$plugin_path: Error, too many keys for GMST $name: @{[Dumper($r)]}\n";
     }
@@ -558,7 +558,8 @@ sub scan {
 		}
 		$myrec{$rec} = $name;
 	    } else {		# exterior cells
-		my($name, $x, $y) = ext_cell_name($r);
+		my($xname, $x, $y) = ext_cell_name($r);
+		$name = ($name) ? "$name ($x, $y)" : $xname;
 		if ($x == 0 and $y == 0) {
 		    print "DBG: CELL00: $rec\n" if (DBG);
 		    my $frmr = (defined $r->{FRMR}) ? scalar(@{$r->{FRMR}}) : 0;
@@ -627,16 +628,16 @@ sub scan {
 	my %master_dia = ();
 	foreach my $master (@MASTERS) {
 	    my $master_info = $MASTER{$master}->{INFO};
-	    foreach my $id (keys(%{$master_info})) {
+	    foreach my $id (keys %{$master_info}) {
 		$master_dia{$id} = $master_info->{$id};
 	    }
 	}
 	my %rev_master_dia = ();
 	# create a reverse index
-	foreach my $id (keys(%master_dia)) {
+	foreach my $id (keys %master_dia) {
 	    $rev_master_dia{$master_dia{$id}} = $id;
 	}
-	foreach my $id (sort {$a <=> $b} keys(%mydia)) {
+	foreach my $id (sort {$a <=> $b} keys %mydia) {
 	    my $dia = $mydia{$id};
 	    my $dia_str = beautify_dia($dia);
 	    if (defined($master_dia{$id})) {
