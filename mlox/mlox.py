@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.36"
+Version = "0.37"
 
 import locale
 import os
@@ -707,9 +707,13 @@ class rule_parser:
                     self.parse_error("REQUIRES rule must have 2 conditions")
                     return
             if bool1 and not bool2:
+                expr2_str = self.pprint(expr2, " > ")
                 Msg.add(_["[REQUIRES]\n%s Requires:\n%s"] %
-                        (self.pprint(expr1, " !!!"), self.pprint(expr2, " > ")))
+                        (self.pprint(expr1, " !!!"), expr2_str))
                 if msg != "": Msg.add(msg)
+                match = re_filename_version.search(expr2_str)
+                if match:
+                    Msg.add(_[" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version]."])
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         self.pdbg("parse_statement RETURNING")
 
