@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2008-12-26 01:38:25 (UTC)]
+[Version 2008-12-27 00:31:14 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2014,6 +2014,15 @@ dh_furn.esp
 [Requires]
 dh_thriftshop.esp
 dh_furn.esp
+
+;; "in the case of dh_homes dh_homes must load after Vality's
+;; Ascadian Isles Trees or the large castle type house thats placed
+;; in ebonheart is burried in land scape. once its loaded after, its
+;; just a matter of removing a couple trees."
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13503499 )
+[Order]
+Vality's Ascadian Isles Addon.esp
+dh_homes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
