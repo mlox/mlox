@@ -11,8 +11,11 @@ EXEARC    := mlox-exe-$(VERSION).7z
 RELDATE   := $(shell date --utc "+%Y-%m-%d %T (UTC)")
 DATAARC   := $(shell data/arcname)
 UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
+ESPLINTFILES  := $(wildcard util/esplint util/esplint*.bat util/esplint*.txt)
+ESPLINTVER    := $(shell svn log -l 1 -q util/esplint | grep ^r | cut -f 1 -d " ")
+ESPLINTARC    := esplint-$(ESPLINTVER).7z
 
-all: mlox-dist data-dist test-dist
+all: mlox-dist data-dist test-dist esplint-dist
 
 upload: upload-mlox upload-exe upload-data
 
@@ -27,6 +30,11 @@ upload-data:
 upload-exe:
 	@echo "Uploading dist/$(EXEARC)"
 	$(UPLOAD) -s "[mlox-exe $(VERSION)] - standalone executable for Windows" dist/$(EXEARC)
+
+upload-esplint:
+	@echo "Uploading dist/$(ESPLINTARC)"
+	$(UPLOAD) -s "[esplint $(ESPLINTVER)]" dist/$(ESPLINTARC)
+
 
 # update the version strings in mlox_readme.txt, mlox.py
 version: $(README) $(PROGRAM)
@@ -46,7 +54,8 @@ dist/$(MLOXARC): version dist/mlox $(wildcard mlox/*)
 	@cp License.txt dist/mlox
 	@echo "Adding DOS line endings to .bat and .txt files in staging directory"
 	@for i in dist/mlox/*.bat dist/mlox/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
-	@(cd dist && 7z a $(MLOXARC) mlox) > /dev/null 2>&1
+	@(cd dist && rm -f $(MLOXARC) && 7z a $(MLOXARC) mlox) > /dev/null 2>&1
+	@rm -rf dist/mlox/
 	@echo "CREATED distibution archive for mlox: $@"
 
 data-dist: dist dist/$(DATAARC) stats
@@ -59,6 +68,21 @@ dist/$(DATAARC): $(RULES)
 	@echo "$@" > dist/DATAARC
 
 dist/mlox:
+	@echo "Creating $@"
+	@mkdir -p $@
+
+esplint-dist: dist/$(ESPLINTARC)
+
+dist/$(ESPLINTARC): dist/esplint $(ESPLINTFILES)
+	@rsync -uvaC $(ESPLINTFILES) dist/esplint/ > /dev/null 2>&1
+	@cp License.txt dist/esplint
+	@echo "Adding DOS line endings to .bat and .txt files in staging directory"
+	@for i in dist/esplint/*.bat dist/esplint/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
+	@(cd dist && 7z a $(ESPLINTARC) esplint) > /dev/null 2>&1
+	@rm -rf dist/esplint/
+	@echo "CREATED distibution archive for esplint: $@"
+
+dist/esplint:
 	@echo "Creating $@"
 	@mkdir -p $@
 
