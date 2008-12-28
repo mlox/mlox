@@ -322,7 +322,7 @@ sub load_master {
 	    my $id = chop_nulls($r->{INAM}[0]);
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
-	    my $val = "DATA" . (split(/DATA/, $rec, 2))[1];
+	    my $val = (split(/DATA/, $rec, 2))[1];
 	    $MASTER{$esm}->{INFO}->{$id} = $val;
 	    print "DBG: DIA($esm) $id = $val\n" if (DBG);
 	} else {
