@@ -65,7 +65,7 @@ my @valid_types = qw(GMST.NAME CLAS.NAME CLAS.FNAM FACT.NAME FACT.FNAM RACE.NAME
 my %VALID_TYPES;
 $VALID_TYPES{$_}++ foreach (@valid_types);
 my $type = uc(shift(@ARGV)) or die "Missing required RECTYPE.SUBTYPE\n$Usage";
-die "Error: Invalid record type.subtype requested: $type\n" unless ($VALID_TYPES{$type});
+die "Error: Invalid record type.subtype requested: $type\n\nI only know these:\n@valid_types\n" unless ($VALID_TYPES{$type});
 my($TYPE, $SUBTYPE) = split(/\./, $type);
 
 
@@ -212,9 +212,11 @@ sub do_rename {
 	}
 	write_rec($rec_type, $rec, $unk, $flags) unless($::opt_l);
     }
-    close(INP) unless $::opt_l;
-    close(OUT);
-    print "Output saved in: $newplugin\n";
+    close(INP);
+    unless ($::opt_l) {
+	close(OUT);
+	print "Output saved in: $newplugin\n";
+    }
 }
 
 for my $plugin (@ARGV) {
