@@ -177,6 +177,7 @@ sub do_rename {
 	    warn "Error opening $newplugin for output ($!)\n";
 	    return;
 	}
+	binmode(OUT, ':raw');
     }
     my $expected = "TES3";
     while (my($rec_type, $rec, $unk, $flags) = read_rec($expected)) {
