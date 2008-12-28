@@ -25,11 +25,10 @@ $::opt_f = 0;
 $::opt_m = 0;
 $::opt_q = 0;
 $::opt_s = 0;
-$::opt_S = 0;
 $::opt_v = 0;
+$::opt_w = 999;
 
-
-my $dup_dia_help = <<END;
+my $DUP_DIA_HELP = <<END;
     DUP-DIA: indicates the exact INFO dialog with the same ID, text and filter
              exists in one of the masters of this plugin. This may be a
              problem, or maybe not. Sometimes duplicate dialog is intentional
@@ -37,14 +36,14 @@ my $dup_dia_help = <<END;
              if it really was unintentional.
 END
 
-my $mod_dia_help = <<END;
+my $MOD_DIA_HELP = <<END;
     MOD-DIA: indicates that an INFO dialog with the same ID exists in the
 	     master, but this plugin has modified the text or the filter. This
 	     is quite common when a plugin intentionally modifies a master's
 	     dialog.
 END
 
-my $mod_id_help = <<END;
+my $MOD_ID_HELP = <<END;
     MOD-ID:  indicates that the exact same INFO dialog text and filter exists
 	     in one of the masters of this plugin, but under a *different* ID.
 	     This can be caused by creating new dialog by copying the
@@ -63,6 +62,7 @@ OPTIONS
  -f  check for masters who's functions are not used (!TB-FUN, !BM-FUN).
  -m  print out modified dialog (MOD-DIA)
  -q  quiet (less output, no explanation text)
+ -s  show autocalc'ed spells
  -v  verbose (possibly more output)
 
 [Note: esplint wants to be able to find Masters for a given plugin, so it
@@ -77,40 +77,20 @@ about the flagged items.
 
  The following flags are defined:
 
-    CLEAN:   If -c command line switch is used, then a plugin that is not
-             flagged with any of the flags below will be flagged "CLEAN". It
-             really just means: "found nothing of interest".
-
-    EXP-DEP: The plugin requires either Tribunal or Bloodmoon because it uses
-             engine features not present in the original Morrowind such as
-             startup scripts or Tribunal functions, but the plugin has not
-             listed any expansions in its list of Masters. This is not
-             necessarily a problem, but it may contradict the Readme for the
-             mod sometimes.
+    AUTOSPL: The plugin defines autocalc'ed spells. (only flagged if -s).
 
     BM-DEP:  The plugin uses Bloodmoon specific functions, so it needs version
              1.6.1820, but the plugin does not list Bloodmoon.esm in its list
              of Masters. This is similar to the EXP-DEP flag, but it is for
              Bloodmoon only.
 
-    !TB-FUN: Tribunal.esm is listed as a master, but esplint did not detect
-             any usage of Tribunal functions. (Note that there may be other
-             reasons for listing Tribunal as a master). This flag is only
-             checked if the -f switch is given.
+    CELL00:  This means that an apparently dirty copy of cell (0, 0) is
+             included in the plugin. This cell is often accidentally modified
+             since it is the default cell displayed in the cell view window.
 
-    !BM-FUN: Bloodmoon.esm is listed as a master, but esplint did not detect
-             any usage of Bloodmoon functions. (Note that there may be other
-             reasons for listing Bloodmoon as a master). This flag is only
-             checked if the -f switch is given.
-
-    GMSTs:   You know this one! This means that some of the "72 Evil GMSTs" are
-             present in this plugin and that they have the same exact value as
-             the original GMST in the master .esm. Other GMSTs not in the list
-             of known Evil GMSTs or GMSTs that have been modified from their
-             original values are not flagged. Note that it is also possible to
-             have other GMSTs show up in the DUP-REC list, but those are not
-             from the list of 72 GMSTs that would get introduced by the
-             Construction Set.
+    CLEAN:   If -c command line switch is used, then a plugin that is not
+             flagged with any of the flags below will be flagged "CLEAN". It
+             really just means: "found nothing of interest".
 
     DEP-LST: This flag indicates that the plugin makes deprecated use of
              scripting functions to modify standard Bethesda Leveled Lists.
@@ -123,6 +103,27 @@ about the flagged items.
              not be flagged. For more about the problem of using scripting
              functions to modify Bethesda lists see:
              http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+
+$DUP_DIA_HELP
+    DUP-REC: These are records in the plugin that are exact duplicates of
+             records that occur in one of the masters. These are sometimes
+             referred to as "dirty" or "unclean" entries.
+
+    EXP-DEP: The plugin requires either Tribunal or Bloodmoon because it uses
+             engine features not present in the original Morrowind such as
+             startup scripts or Tribunal functions, but the plugin has not
+             listed any expansions in its list of Masters. This is not
+             necessarily a problem, but it may contradict the Readme for the
+             mod sometimes.
+
+    EVLGMST: You know this one! This means that some of the "72 Evil GMSTs" are
+             present in this plugin and that they have the same exact value as
+             the original GMST in the master .esm. Other GMSTs not in the list
+             of known Evil GMSTs or GMSTs that have been modified from their
+             original values are not flagged. Note that it is also possible to
+             have other GMSTs show up in the DUP-REC list, but those are not
+             from the list of 72 GMSTs that would get introduced by the
+             Construction Set.
 
     FOGBUG:  The plugin has an interior CELL with a fog density of 0.0, and the
              cell is not marked to "behave as exterior". This circumstance can
@@ -145,38 +146,37 @@ about the flagged items.
              false positives. For more about the GetSoundPlaying problem see:
              http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
-    SCRDOOR: The plugin adds scripts to Bethesda doors, which has the potential
-             to break any script in the same cell that uses the CellChanged
-             function. CellChanged in that cell will always return 0 from now on.
-             See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
-
-    DUP-REC: These are records in the plugin that are exact duplicates of
-             records that occur in one of the masters. These are sometimes
-             referred to as "dirty" or "unclean" entries.
-
     JUNKCEL: These are bogus external CELL records that crop up in many
              plugins, possibly due to a Construction Set bug. They contain
              only NAME, DATA and sometimes RGNN subrecords, and the flags in
              the DATA subrecord are unchanged from the flags in the Master.
 
-    CELL00:  This means that an apparently dirty copy of cell (0, 0) is
-             included in the plugin. This cell is often accidentally modified
-             since it is the default cell displayed in the cell view window.
+$MOD_DIA_HELP
+$MOD_ID_HELP
+    SCRDOOR: The plugin adds scripts to Bethesda doors, which has the potential
+             to break any script in the same cell that uses the CellChanged
+             function. CellChanged in that cell will always return 0 from now on.
+             See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
-$dup_dia_help
+    !BM-FUN: Bloodmoon.esm is listed as a master, but esplint did not detect
+             any usage of Bloodmoon functions. (Note that there may be other
+             reasons for listing Bloodmoon as a master). This flag is only
+             checked if the -f switch is given.
 
-$mod_dia_help
-
-$mod_id_help
+    !TB-FUN: Tribunal.esm is listed as a master, but esplint did not detect
+             any usage of Tribunal functions. (Note that there may be other
+             reasons for listing Tribunal as a master). This flag is only
+             checked if the -f switch is given.
 };
 
-getopts('acDdmqsSv') or die $Usage;
+getopts('acDdmqsv') or die $Usage;
 
 if ($::opt_a) {
     $::opt_c = 1;
     $::opt_d = 1;
     $::opt_f = 1;
     $::opt_m = 1;
+    $::opt_s = 1;
     $::opt_v = 1;
 }
 
@@ -304,6 +304,11 @@ sub load_master {
 	warn "Error opening $label $datadir/$esm for loading ($!)\n";
 	return;
     }
+    unless (binmode(INP)) {
+	warn "Error setting binmode on $label $datadir/$esm ($!)\n";
+	close(INP);
+	return;
+    }
     $MASTER{$esm}->{LOADED} = 1;
     while(my($rec_type, $rec, $flags) = read_rec(undef)) {
 	last if not defined $rec_type;
@@ -317,7 +322,7 @@ sub load_master {
 	    my $id = chop_nulls($r->{INAM}[0]);
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
-	    my $val = (split(/DATA/, $rec, 2))[1];
+	    my $val = "DATA" . (split(/DATA/, $rec, 2))[1];
 	    $MASTER{$esm}->{INFO}->{$id} = $val;
 	    print "DBG: DIA($esm) $id = $val\n" if (DBG);
 	} else {
@@ -458,19 +463,20 @@ sub report {
     }
 }
 
-# given a raw INFO record, so some very hackish ascii-fication.
-sub beautify_dia {
-    my($dia) = @_;
-    my $dia_str = $dia;
-    $dia_str =~ s!([\000-\037\177-\377])!_!g;
-    return($dia_str);
-}
-
 sub ext_cell_name {
     my($r) = @_;
     my($x, $y) = unpack("x[L]ll", $r->{DATA}[0]);
     my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
     return("$rgnn ($x, $y)", $x, $y);
+}
+
+sub pprec {
+    my($rec, $subtype) = @_;
+    print "DBG: pprec($rec)\n" if (DBG);
+    my $recstr = join(":", grep(!/[^[:print:]]/, map { s/\000+$//; $_; } split(/\000?([A-Z][A-Z_][A-Z_][A-Z_\d])...\000/, $rec)));
+    $recstr =~ s/^:$subtype:.*?:// if ($subtype);
+    $recstr =~ s/:([A-Z][A-Z_][A-Z_][A-Z_\d])/|$1/g;
+    return(substr($recstr, 0, $::opt_w));
 }
 
 # this is the main routine that scans a plugin for potential problems.
@@ -480,6 +486,11 @@ sub scan {
     warn "### Scanning $plugin_path\n" if ($::opt_v);
     unless(open(INP, "<$plugin_path")) {
 	warn "Error opening $plugin_path for input ($!)\n";
+	return;
+    }
+    unless (binmode(INP)) {
+	warn "Error setting binmode on $plugin_path ($!)\n";
+	close(INP);
 	return;
     }
     # the following are globals used by scan_script
@@ -493,6 +504,7 @@ sub scan {
     my $evil_tb = 0;
     my $evil_bm = 0;
     my @fogsync = ();
+    my @autospl = ();
     my %fogbug = ();
     my %mydia = ();
     my %myrec = ();
@@ -592,6 +604,14 @@ sub scan {
 	    if (defined $fogsync) {
 		push(@fogsync, sprintf "%-35s  %s", $name, $fogsync);
 	    }
+	} elsif ($::opt_s and ($rec_type eq "SPEL")) {
+	    my $r = parse_subrec($rec);
+	    my $spdt = $r->{SPDT}[0];
+	    if (my $autocalc = (unpack("x[L2]L", $spdt) & 1)) {
+		my $id = chop_nulls($r->{NAME}[0]);
+		my $name = chop_nulls($r->{FNAM}[0]);
+		push(@autospl, sprintf("%-30s %s", $id, $name));
+	    }
 	} elsif ($rec_type eq "DOOR") {
 	    my $r = parse_subrec($rec);
 	    my $name = chop_nulls($r->{NAME}[0]);
@@ -659,19 +679,19 @@ sub scan {
 	}
 	foreach my $id (sort {$a <=> $b} keys %mydia) {
 	    my $dia = $mydia{$id};
-	    my $dia_str = beautify_dia($dia);
+	    my $dia_str = pprec($dia);
 	    if (defined($master_dia{$id})) {
 		if ($master_dia{$id} eq $dia) {
 		    $dup_dia++;
 		    if ($::opt_d) {
-			$dia_out .= "DUP-DIA: ID=$id\n";
+			$dia_out .= "[DUP-DIA]: ID=$id\n";
 			$dia_out .= "  DIA=$dia_str\n";
 		    }
 		} else {
 		    $mod_dia++;
 		    if ($::opt_m) {
-			my $mast_dia_str = beautify_dia($master_dia{$id});
-			$dia_out .= "MOD-DIA: ID=$id\n";
+			my $mast_dia_str = pprec($master_dia{$id});
+			$dia_out .= "[MOD-DIA]: ID=$id\n";
 			$dia_out .= "  NEW-DIA=$dia_str\n";
 			$dia_out .= "  ORIG-DIA=$mast_dia_str\n";
 		    }
@@ -680,7 +700,7 @@ sub scan {
 	    if (defined($rev_master_dia{$id})) {
 		$mod_id++;
 		if ($rev_master_dia{$dia} != $id) {
-		    $dia_out .= "MOD-ID: ID=$id DIA=$dia\n";
+		    $dia_out .= "[MOD-ID]: ID=$id DIA=$dia\n";
 		    $dia_out .= "  ORIG-ID=$rev_master_dia{$dia}\n";
 		}
 	    }
@@ -688,24 +708,25 @@ sub scan {
     }
     # create a summary line of things we have discovered.
     my $found = "";
-    $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
+    $found .= " AUTOSPL" if (@autospl);
+    $found .= " CELL00" if ($cell00);
     $found .= " BM-DEP" if ((not $mastbm) and %bmfun);
+    $found .= " DEP-LST" if (%depfun);
+    $found .= " DUP-DIA" if ($dup_dia);
+    $found .= " DUP-REC" if (%dup_recs);
+    $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
+    $found .= " FOGBUG" if (%fogbug);
+    $found .= " FOGSYNC" if (@fogsync);
+    $found .= " GETSND" if (%getsound);
+    $found .= " EVLGMST" if (%evil);
+    $found .= " JUNKCEL" if (%junkcell);
+    $found .= " MOD-DIA" if ($mod_dia);
+    $found .= " MOD-ID" if ($mod_id);
+    $found .= " SCRDOOR" if (%door);
     if ($::opt_f) {
 	$found .= " !BM-FUN" if ($mastbm and not(%bmfun or @sscr));
 	$found .= " !TB-FUN" if ($masttb and not(%tbfun or %bmfun or @sscr));
     }
-    $found .= " GMSTs" if (%evil);
-    $found .= " DEP-LST" if (%depfun);
-    $found .= " FOGBUG" if (%fogbug);
-    $found .= " FOGSYNC" if (@fogsync);
-    $found .= " GETSND" if (%getsound);
-    $found .= " SCRDOOR" if (%door);
-    $found .= " CELL00" if ($cell00);
-    $found .= " JUNKCEL" if (%junkcell);
-    $found .= " DUP-REC" if (%dup_recs);
-    $found .= " DUP-DIA" if ($dup_dia);
-    $found .= " MOD-DIA" if ($mod_dia);
-    $found .= " MOD-ID" if ($mod_id);
     if ($found) {
 	print "$plugin_path:$found\n";
     } else {
@@ -715,34 +736,40 @@ sub scan {
     ##################################################
     # now print out verbose detail, if applicable
     ##################################################
+    if (@autospl) {
+	print "    [AUTOSPL] Auto-calced Spells:\n";
+	foreach my $spell (@autospl) {
+	    print "\t$spell\n";
+	}
+    }
     if ($cell00) {
-	print "    CELL (0, 0): $cell00\n";
+	print "    [CELL00]: $cell00\n";
     }
     if (@sscr and not $masttb and not $mastbm) {
 	my $pl = (scalar(@sscr) > 1) ? "s" : "";
-	print "    Expansion Dependency: Startup Script$pl: ", join(", ", @sscr), "\n";
+	print "    [EXP-DEP] Expansion Dependency: Startup Script$pl: ", join(", ", @sscr), "\n";
     }
-    report(\%tbfun, "Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
-    report(\%bmfun, "Bloodmoon Dependency: Bloodmoon Functions") if (not $mastbm);
-    report(\%depfun, "Deprecated use of Leveled List functions on Bethesda Lists");
-    report(\%evil, "EVIL GMSTs");
+    report(\%tbfun, "[EXP-DEP] Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
+    report(\%bmfun, "[BM-DEP] Bloodmoon Dependency: Bloodmoon Functions") if (not $mastbm);
+    report(\%depfun, "[DEP-FUN] Deprecated use of Leveled List functions on Bethesda Lists");
+    report(\%evil, "[EVLGMST]");
     if (%fogbug) {
-	print "    FOGBUG: Cells with zero fog density setting:\n";
+	print "    [FOGBUG]: Cells with zero fog density setting:\n";
 	print "\t$_\n" foreach (sort keys %fogbug);
     }
     if (@fogsync) {
-	print "    FOGSYNC: Fog density settings unsynced:\n";
+	print "    [FOGSYNC]: Fog density settings unsynced:\n";
 	foreach my $cell (@fogsync) {
 	    print "\t$cell\n";
 	}
     }
-    report(\%getsound, "GetSoundPlaying possibly used to detect events");
-    report(\%door, "Bethesda doors that have had scripts attached to them");
+    report(\%getsound, "[GETSND] GetSoundPlaying possibly used to detect events");
+    report(\%door, "[SCRDOOR] Bethesda doors that have had scripts attached to them");
     if (%junkcell) {
 	if ($::opt_v) {
-	    print "    Junk Cells:                                  Master Flags   Plugin Flags\n";
+	    print "    [JUNKCEL] Junk Cells:                      Master Flags   Plugin Flags\n";
 	} else {
-	    print "    Junk Cells:\n";
+	    print "    [JUNKCEL] Junk Cells:\n";
 	}
 	my $format = "\t%-36s     0x%02x           0x%02x\n";
 	foreach my $name (sort keys %junkcell) {
@@ -755,7 +782,7 @@ sub scan {
 	}
     }
     if (%dup_recs) {
-	print "    Duplicate Records:\n";
+	print "    [DUP-REC] Duplicate Records:\n";
 	my $format = "\t%-16s    %4s    %s\n";
 	printf $format, "Duped From", "Type", "Name";
 	foreach my $rec_type (sort keys %dup_recs) {
@@ -766,35 +793,11 @@ sub scan {
 	}
     }
     unless ($::opt_q) {
-	print "   $dup_dia_help" if ($::opt_d and $dup_dia);
-	print "   $mod_dia_help" if ($::opt_m and $mod_dia);
-	print "   $mod_id_help" if ($mod_id);
+	print "\n   $DUP_DIA_HELP" if ($::opt_d and $dup_dia);
+	print "\n   $MOD_DIA_HELP" if ($::opt_m and $mod_dia);
+	print "\n   $MOD_ID_HELP" if ($mod_id);
     }
     print $dia_out;
-}
-
-my %DICT = ();
-sub load_dict {
-    # TBD: find morrowind/esplint diretory too
-    #while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
-
-    my $esplint_dir = ".";
-    my $dirlist = list_files($esplint_dir);
-    foreach my $file (sort keys %{$dirlist}) {
-	if ($file =~ m!^esplint.*\.dict$!) {
-	    my $dict = "$esplint_dir/$dirlist->{$file}";
-	    if (open(DICT, "<$dict")) {
-		warn "Loading dictionary: $dict\n";
-		while (<DICT>) {
-		    chomp; chomp;
-		    $DICT{lc($_)}++;
-		}
-		close(DICT);
-	    } else {
-		warn "Error opening dictionary $dict for input ($!)\n";
-	    }
-	}
-    }
 }
 
 # run the program.
