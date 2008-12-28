@@ -17,14 +17,14 @@ $::opt_l = 0;
 $::opt_i = 0;
 $::opt_e = 0;
 
-my $Usage = qq{esprenamerec [-D] RECTYPE FROM TO plugin...
+my $Usage = qq{esprenamerec [-D] RECTYPE.SUBTYPE FROM TO plugin...
 
 This first form of the command renames all records of type RECTYPE, replacing
 the Perl regular expression FROM with the value of TO (which may contain
 backreferences). The rename only happens if the CELL.NAME subrecord matches
 the given FROM regular expression.
 
-esprenamerec -l RECTYPE plugin...
+esprenamerec -l RECTYPE.SUBTYPE plugin...
 
 When the -l switch is given, records of the given type are only listed.
 
@@ -40,21 +40,35 @@ The original input file is never modified, the changes are made in a new file
 Examples:
 
 # rename all exterior cells to the null string:
-esprenamerec -e CELL '.*' ''
+esprenamerec -e CELL.NAME '.*' ''
 
 # do a caseless comparison:
-esprenamerec cell '(?i)pelagaid' 'Pelagiad'
+esprenamerec cell.name '(?i)pelagaid' 'Pelagiad'
 (This would rename any name that has the string "pelagaid" in it with any form
 of capitalization, to "Pelagiad").
 
 # substitute backreferences:
-esprenamerec npc_ '^(\S+)\s(\S+)$' '$2 $1'
+esprenamerec npc_.fnam '^(\S+)\s(\S+)$' '$2 $1'
 (This would swap the first and last name of all NPCs).
 };
 
 getopts('Deilv') or die $Usage;
 
-my $TYPE = uc(shift(@ARGV)) or die "Missing required RECTYPE\n$Usage";
+my @valid_types = qw(GMST.NAME CLAS.NAME CLAS.FNAM FACT.NAME FACT.FNAM RACE.NAME RACE.FNAM
+		     SOUN.NAME SOUN.FNAM REGN.NAME REGN.FNAM BSGN.NAME BSGN.FNAM STAT.NAME
+		     DOOR.NAME DOOR.FNAM MISC.NAME MISC.FNAM WEAP.NAME WEAP.FNAM CONT.NAME
+		     CONT.FNAM SPEL.NAME SPEL.FNAM CREA.NAME CREA.FNAM LIGH.NAME LIGH.FNAM
+		     ENCH.NAME NPC_.NAME NPC_.FNAM ARMO.NAME ARMO.FNAM CLOT.NAME CLOT.FNAM
+		     REPA.NAME REPA.FNAM ACTI.NAME ACTI.FNAM APPA.NAME APPA.FNAM LOCK.NAME
+		     LOCK.FNAM PROB.NAME PROB.FNAM INGR.NAME INGR.FNAM BOOK.NAME BOOK.FNAM
+		     ALCH.NAME ALCH.FNAM LEVI.NAME CELL.NAME DIAL.NAME);
+my %VALID_TYPES;
+$VALID_TYPES{$_}++ foreach (@valid_types);
+my $type = uc(shift(@ARGV)) or die "Missing required RECTYPE.SUBTYPE\n$Usage";
+die "Error: Invalid record type.subtype requested: $type\n" unless ($VALID_TYPES{$type});
+my($TYPE, $SUBTYPE) = split(/\./, $type);
+
+
 my($FROM, $TO);
 unless ($::opt_l) {
     $FROM = shift(@ARGV) or die "Missing required FROM\n$Usage";
@@ -106,7 +120,7 @@ sub parse_subrec {
     my $name_idx;
     while ($p < $rec_len) {
 	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	$name_idx = scalar(@subrecs) if ((not defined $name_idx) and ($subrec_type eq "NAME"));
+	$name_idx = scalar(@subrecs) if ((not defined $name_idx) and ($subrec_type eq $SUBTYPE));
 	$p += 8;
 	my $val = substr($rec, $p, $subrec_len);
 	push(@subrecs, [$subrec_type, $val]) if (defined $val);
@@ -191,7 +205,7 @@ sub do_rename {
 		    }
 		}
 	    } else {
-		print "Error, Record has no NAME subrecord: $rec\n";
+		print "Error, Record has no $SUBTYPE subrecord: $rec\n";
 	    }
 	    $rec = new_rec($subrecs) if $renamed;
 	}
