@@ -161,6 +161,15 @@ sub allowed_cell_type {
     }
 }
 
+sub pprec {
+    my($rec, $subtype) = @_;
+    print "DBG: pprec($rec)\n" if (DBG);
+    my $recstr = join(":", grep(!/[^[:print:]]/, map { s/\000+$//; $_; } split(/\000?([A-Z][A-Z_][A-Z_][A-Z_\d])...\000/, $rec)));
+    $recstr =~ s/^:$subtype:.*?:// if ($subtype);
+    $recstr =~ s/:([A-Z][A-Z_][A-Z_][A-Z_\d])/,$1/g;
+    return(substr($recstr, 0, $::opt_w));
+}
+
 sub do_rename {
     my($plugin) = @_;
     my $newplugin = $plugin;
@@ -197,11 +206,8 @@ sub do_rename {
 		my $name = $subrecs->[$name_idx]->[1]) {
 		$name = chop_nulls($name);
 		if ($::opt_l) {	# only list records
-		    my @r = grep(!/[^[:print:]]/, split(/\000?([[:upper:]]{4})...\000/, $rec));
-		    my $recstr = join(":", @r);
-		    $recstr =~ s/^:$SUBTYPE:.*?://;
-		    $recstr =~ s/:([[:upper:]]{4})/,$1/g;
-		    printf qq{  $rec_type  %-30s [%s]\n}, $name, substr($recstr, 0, $::opt_w);
+		    my $recstr = pprec($rec, $SUBTYPE);
+		    printf qq{  $rec_type  %-30s [%s]\n}, $name, $recstr;
 		} else {	# rename records
 		    my $do_rename = 1;
 		    $do_rename = 0 if ($rec_type eq "CELL" and not allowed_cell_type($subrecs));
