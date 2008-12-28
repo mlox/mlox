@@ -177,7 +177,11 @@ sub do_rename {
 	    warn "Error opening $newplugin for output ($!)\n";
 	    return;
 	}
-	binmode(OUT, ':raw');
+	unless(binmode(OUT, ':raw')) {
+	    warn "Error setting binmode on $newplugin ($!)\n";
+	    close(OUT);
+	    return;
+	}
     }
     my $expected = "TES3";
     while (my($rec_type, $rec, $unk, $flags) = read_rec($expected)) {
