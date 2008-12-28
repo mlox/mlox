@@ -129,6 +129,13 @@ about the flagged items.
              trigger the "fog bug" in some graphics cards, resulting in the
              cell being rendered as a black or featureless blank screen.
 
+    FOGSYNC: This flag indicates that for some reason that the fog density
+             setting in the CELL.DATA subrecord is not equal to the fog
+             density setting in the CELL.AMBI subrecord. This is unusual, it's
+             probably caused by editing the plugin in Enchanted Editor, and
+             it's probably harmless, but you can resync the values by editing
+             that cell in the Construction Set.
+
     GETSND:  The plugin appears to use the scripting function GetSoundPlaying
              to detect events (as opposed to managing the playing of sound
              files). GetSoundPlaying fails consistently on a small number of
@@ -485,6 +492,7 @@ sub scan {
     my %evil = ();
     my $evil_tb = 0;
     my $evil_bm = 0;
+    my @fogsync = ();
     my %fogbug = ();
     my %mydia = ();
     my %myrec = ();
@@ -550,11 +558,20 @@ sub scan {
 	    my $r = parse_subrec($rec);
 	    my $name = chop_nulls($r->{NAME}[0]);
 	    my $data = $r->{DATA}[0];
-	    my($flags, $fog_density) = unpack("Lx[L]f", $data);
+	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
+	    my $fogsync;
 	    if ($flags & 1) {	# interior cells
-		if ($fog_density == 0.0 and
-		    not ($flags & 128)) { # behave like exterior
-		    $fogbug{$name}++;
+		if (not $flags & 128) { # behave like exterior
+		    my $ambi = $r->{AMBI}[0];
+		    if (length($ambi) == 16) {
+			my $fog_den_ambi = unpack("x[L3]f", $ambi);
+			$fogbug{$name}++ if ($fog_den_ambi == 0.0);
+			$fogsync = sprintf("DATA:%0.2f  !=  AMBI:%0.2f", $fog_den_data, $fog_den_ambi)
+			    if ($fog_den_ambi != $fog_den_data);
+		    } else {
+			print "DBG: Error: CELL($name), AMBI subrecord length is @{[length($ambi)]}, not 16)\n" if (DBG);
+			$fogbug{$name}++ if ($fog_den_data == 0.0);
+		    }
 		}
 		$myrec{$rec} = $name;
 	    } else {		# exterior cells
@@ -571,6 +588,9 @@ sub scan {
 		} else {
 		    $myrec{$rec} = $name;
 		}
+	    }
+	    if (defined $fogsync) {
+		push(@fogsync, sprintf "%-35s  %s", $name, $fogsync);
 	    }
 	} elsif ($rec_type eq "DOOR") {
 	    my $r = parse_subrec($rec);
@@ -677,6 +697,7 @@ sub scan {
     $found .= " GMSTs" if (%evil);
     $found .= " DEP-LST" if (%depfun);
     $found .= " FOGBUG" if (%fogbug);
+    $found .= " FOGSYNC" if (@fogsync);
     $found .= " GETSND" if (%getsound);
     $found .= " SCRDOOR" if (%door);
     $found .= " CELL00" if ($cell00);
@@ -708,6 +729,12 @@ sub scan {
     if (%fogbug) {
 	print "    FOGBUG: Cells with zero fog density setting:\n";
 	print "\t$_\n" foreach (sort keys %fogbug);
+    }
+    if (@fogsync) {
+	print "    FOGSYNC: Fog density settings unsynced:\n";
+	foreach my $cell (@fogsync) {
+	    print "\t$cell\n";
+	}
     }
     report(\%getsound, "GetSoundPlaying possibly used to detect events");
     report(\%door, "Bethesda doors that have had scripts attached to them");
@@ -1268,77 +1295,77 @@ random_willow_anther
 random_wolf_pelt
 # END-OF-LIST for Bethesda lists
 # Evil GMSTs Tribunal (values are hexencoded)
-scompanionshare 35452565023586162756
+scompanionshare 354525650234f6d60716e696f6e6023586162756
 scompanionwarningbuttonone 3545256502c456470247865602d656273656e61627970217579647e2
 scompanionwarningbuttontwo 35452565022556475727e60247f60234f6d60716e696f6e60235861627560246963707c61697e2
-scompanionwarningmessage 354525650295f6572702d656273656e61627970296370207f6f627562702e6f67702478616e602778656e60286560236f6e64727163647564602779647860297f657e2020295f6572702d656273656e6162797027796c6c602175796470296660297f6570246f602e6f6470276966756028696d60276f6c64602f6270276f6f646370247f602262796e67602869637020527f66696470247f602160207f6379647966756026716c65756e2
+scompanionwarningmessage 354525650295f6572702d656273656e61627970296370207f6f627562702e6f67702478616e602778656e60286560236f6e64727163647564602779647860297f657e2020295f6572702d656273656e6162797027796c6c602175796470296660297f6570246f602e6f6470276966756028696d60276f6c64602f6270276f6f646370247f602262796e67602869637020527f6669647026516c657560247f602160207f6379647966756026716c65756e2
 sdeletenote 35452565024456c656475602e4f64756f3
-seffectsummonfabricant 35452565023557d6d6f6e60264162627963616e647
+seffectsummonfabricant 3545256502375466665636473557d6d6f6e664162627963616e647
 slevitatedisabled 3545256502c456679647164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2
-smagicfabricantid 354525650264162627963616e647f53757d6d6f6e6
-smaxsale 35452565023556c6c6562702d41687
-sprofitvalue 35452565020527f6669647a3
+smagicfabricantid 354525650264162627963616e647
+smaxsale 3545256502d41687023516c656
+sprofitvalue 35452565020527f6669647026516c65756
 steleportdisabled 35452565024556c65607f62747164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2
 # END-OF-LIST for Evil GMSTs Tribunal
 # Evil GMSTs Bloodmoon (values are hexencoded)
 fcombatdistancewerewolfmod 64c4456502a99999e3
 ffleedistance 64c44565020008b354
-fwerewolfacrobatics 64c445650200000a24
+fwerewolfacrobatics 64c445650200006134
 fwerewolfagility 64c445650200006134
-fwerewolfalchemy 64c445650200000000
-fwerewolfalteration 64c445650200000000
-fwerewolfarmorer 64c445650200000000
-fwerewolfathletics 64c445650200008424
-fwerewolfaxe 64c445650200000000
-fwerewolfblock 64c445650200000000
-fwerewolfbluntweapon 64c445650200000000
-fwerewolfconjuration 64c445650200000000
-fwerewolfdestruction 64c445650200000000
-fwerewolfenchant 64c445650200000000
+fwerewolfalchemy 64c4456502000008f3
+fwerewolfalteration 64c4456502000008f3
+fwerewolfarmorer 64c4456502000008f3
+fwerewolfathletics 64c445650200006134
+fwerewolfaxe 64c4456502000008f3
+fwerewolfblock 64c4456502000008f3
+fwerewolfbluntweapon 64c4456502000008f3
+fwerewolfconjuration 64c4456502000008f3
+fwerewolfdestruction 64c4456502000008f3
+fwerewolfenchant 64c4456502000008f3
 fwerewolfendurance 64c445650200006134
 fwerewolffatigue 64c445650200008c34
 fwerewolfhandtohand 64c445650200008c24
 fwerewolfhealth 64c445650200000004
-fwerewolfheavyarmor 64c445650200000000
-fwerewolfillusion 64c445650200000000
-fwerewolfintellegence 64c445650200000000
-fwerewolflightarmor 64c445650200000000
-fwerewolflongblade 64c445650200000000
-fwerewolfluck 64c445650200008c14
+fwerewolfheavyarmor 64c4456502000008f3
+fwerewolfillusion 64c4456502000008f3
+fwerewolfintellegence 64c4456502000008f3
+fwerewolflightarmor 64c4456502000008f3
+fwerewolflongblade 64c4456502000008f3
+fwerewolfluck 64c4456502000008f3
 fwerewolfmagicka 64c445650200008c24
-fwerewolfmarksman 64c445650200000000
-fwerewolfmediumarmor 64c445650200000000
-fwerewolfmerchantile 64c445650200000000
-fwerewolfmysticism 64c445650200000000
-fwerewolfpersonality 64c445650200000000
-fwerewolfrestoration 64c445650200000000
-fwerewolfrunmult 64c445650266666af3
-fwerewolfsecurity 64c445650200000000
-fwerewolfshortblade 64c445650200000000
-fwerewolfsilverweapondamagemult 64c445650200000004
-fwerewolfsneak 64c44565020000eb24
-fwerewolfspear 64c445650200000000
-fwerewolfspeechcraft 64c445650200000000
-fwerewolfspeed 64c445650200004b24
+fwerewolfmarksman 64c4456502000008f3
+fwerewolfmediumarmor 64c4456502000008f3
+fwerewolfmerchantile 64c4456502000008f3
+fwerewolfmysticism 64c4456502000008f3
+fwerewolfpersonality 64c4456502000008f3
+fwerewolfrestoration 64c4456502000008f3
+fwerewolfrunmult 64c445650200000cf3
+fwerewolfsecurity 64c4456502000008f3
+fwerewolfshortblade 64c4456502000008f3
+fwerewolfsilverweapondamagemult 64c445650200000cf3
+fwerewolfsneak 64c4456502000008f3
+fwerewolfspear 64c4456502000008f3
+fwerewolfspeechcraft 64c4456502000008f3
+fwerewolfspeed 64c445650200006134
 fwerewolfstrength 64c445650200006134
 fwerewolfunarmored 64c445650200008c24
-fwerewolfwillpower 64c445650200000000
-iwerewolfbounty 94e44565028e300000
+fwerewolfwillpower 64c4456502000008f3
+iwerewolfbounty 94e445650201720000
 iwerewolffightmod 94e445650246000000
 iwerewolffleemod 94e445650246000000
 iwerewolfleveltoattack 94e445650241000000
 seditnote 35452565025446964702e4f64756
-seffectsummoncreature01 35452565023416c6c60275f6c666
-seffectsummoncreature02 35452565023416c6c60224561627
-seffectsummoncreature03 35452565023557d6d6f6e60224f6e65677f6c666
+seffectsummoncreature01 3545256502375466665636473557d6d6f6e634275616475727560313
+seffectsummoncreature02 3545256502375466665636473557d6d6f6e634275616475727560323
+seffectsummoncreature03 3545256502375466665636473557d6d6f6e634275616475727560333
 seffectsummoncreature04 3545256502375466665636473557d6d6f6e634275616475727560343
 seffectsummoncreature05 3545256502375466665636473557d6d6f6e634275616475727560353
-smagiccreature01id 354525650224d4f577f6c666f576275697f53757d6d6f6e6
-smagiccreature02id 354525650224d4f526561627f526c61636b6f53757d6d6f6e6
-smagiccreature03id 354525650224d4f577f6c666f526f6e656f53757d6d6f6e6
+smagiccreature01id 354525650237d416769636342756164757275603139444
+smagiccreature02id 354525650237d416769636342756164757275603239444
+smagiccreature03id 354525650237d416769636342756164757275603339444
 smagiccreature04id 354525650237d416769636342756164757275603439444
 smagiccreature05id 354525650237d416769636342756164757275603539444
-swerewolfalarmmessage 354525650295f657028616675602265656e6024656475636475646021637021602b6e6f677e6027756275677f6c666e2
+swerewolfalarmmessage 354525650295f657028616675602265656e602465647563647564602368616e67696e676026627f6d60216027756275677f6c666023747164756e2
 swerewolfpopup 35452565027556275677f6c666
 swerewolfrefusal 354525650295f657023616e6e6f6470246f602478696370216370216027756275677f6c666e2
 swerewolfrestmessage 354525650295f657023616e6e6f64702275637470296e6027756275677f6c6660266f627d6e2
