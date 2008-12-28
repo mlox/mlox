@@ -662,10 +662,13 @@ sub scan {
     if (%mydia) {		# analyze dialog problems
 	load_all_masters(@masters);
 	my %master_dia = ();
+	my %dia_master = ();	# map back to the master the dialog came from.
 	foreach my $master (@MASTERS) {
 	    my $master_info = $MASTER{$master}->{INFO};
 	    foreach my $id (keys %{$master_info}) {
-		$master_dia{$id} = $master_info->{$id};
+		my $dia = $master_info->{$id};
+		$master_dia{$id} = $dia;
+		$dia_master{"$id$dia"} = $master;
 	    }
 	}
 	my %rev_master_dia = ();
@@ -681,15 +684,20 @@ sub scan {
 		    $dup_dia++;
 		    if ($::opt_d) {
 			$dia_out .= "[DUP-DIA]: ID=$id\n";
-			$dia_out .= "  DIA=$dia_str\n";
+			$dia_out .= "  $dia_str\n";
 		    }
 		} else {
 		    $mod_dia++;
 		    if ($::opt_m) {
-			my $mast_dia_str = pprec($master_dia{$id});
+			my $master_dialog = $master_dia{$id};
+			my $mast_dia_str = pprec($master_dialog);
+			my $master = $dia_master{"$id$master_dia{$id}"};
+			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
+			my $plugin_pref = $plugin . "-"x($maxlen - length($plugin));
+			my $master_pref = $master . "-"x($maxlen - length($master));
 			$dia_out .= "[MOD-DIA]: ID=$id\n";
-			$dia_out .= "  NEW-DIA=$dia_str\n";
-			$dia_out .= "  ORIG-DIA=$mast_dia_str\n";
+			$dia_out .= "  ${master_pref}->$mast_dia_str\n";
+			$dia_out .= "  ${plugin_pref}->$dia_str\n";
 		    }
 		}
 	    }
