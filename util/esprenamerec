@@ -16,6 +16,7 @@ $::opt_v = 0;
 $::opt_l = 0;
 $::opt_i = 0;
 $::opt_e = 0;
+$::opt_w = 38;
 
 my $Usage = q{esprenamerec [-D] RECTYPE.SUBTYPE FROM TO plugin...
 
@@ -33,6 +34,7 @@ OPTIONS
  -i   only rename if the record is an interior CELL.
  -e   only rename if the record is an exterior CELL.
  -l   just list the records, do not rename them.
+ -w   size of printable window for record contents printed with -l switch.
 
 The original input file is never modified, the changes are made in a new file
 "<plugin_name>_new.esp".
@@ -52,7 +54,7 @@ esprenamerec npc_.fnam '^(\S+)\s(\S+)$' '$2 $1'
 (This would swap the first and last name of all NPCs).
 };
 
-getopts('Deilv') or die $Usage;
+getopts('Deilvw:') or die $Usage;
 
 my @valid_types = qw(GMST.NAME CLAS.NAME CLAS.FNAM FACT.NAME FACT.FNAM RACE.NAME RACE.FNAM
 		     SOUN.NAME SOUN.FNAM REGN.NAME REGN.FNAM BSGN.NAME BSGN.FNAM STAT.NAME
@@ -195,7 +197,11 @@ sub do_rename {
 		my $name = $subrecs->[$name_idx]->[1]) {
 		$name = chop_nulls($name);
 		if ($::opt_l) {	# only list records
-		    print "\t$rec_type    $name\n";
+		    my @r = grep(!/[^[:print:]]/, split(/\000?([[:upper:]]{4})...\000/, $rec));
+		    my $recstr = join(":", @r);
+		    $recstr =~ s/^:$SUBTYPE:.*?://;
+		    $recstr =~ s/:([[:upper:]]{4})/,$1/g;
+		    printf qq{  $rec_type  %-30s [%s]\n}, $name, substr($recstr, 0, $::opt_w);
 		} else {	# rename records
 		    my $do_rename = 1;
 		    $do_rename = 0 if ($rec_type eq "CELL" and not allowed_cell_type($subrecs));
