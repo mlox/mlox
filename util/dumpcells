@@ -120,18 +120,27 @@ sub scan {
 	    my $data = $r->{DATA}[0];
 	    my($flags, $fog_density) = unpack("Lx[L]f", $data);
 	    my $type;
+	    my $bax = ($flags & 128) ? "bax" : "   ";
 	    my $nsub = scalar(keys %$r);
-	    my $fogbug = "";
+	    my $fogden = "";
 	    my $frmr = (defined $r->{FRMR}) ? scalar(@{$r->{FRMR}}) : 0;
 	    if ($flags & 1) { 	# interior cell
 		$type = "INT";
-		$fogbug = " FOGBUG" if (($fog_density == 0.0 and not ($flags & 128)));
+		my $ambi = $r->{AMBI}[0];
+		my $ambilen = length($ambi);
+		$fogden = sprintf "%f", $fog_density;
+		if ($ambilen == 16) {
+		    my $fog_den_ambi = unpack("x[L3]f", $ambi);
+		    $fogden = sprintf " (fogden: %0.2f %0.2f)", $fog_density, $fog_den_ambi;
+		} else {
+		    warn "DBG: ambi not 16 bytes\n" if (DBG);
+		}
 	    } else {		# exterior cell
 		$type = "EXT";
 		my($xname, $x, $y) = ext_cell_name($r);
 		$name = ($name) ? "$name ($x, $y)" : $xname;
 	    }
-	    printf "$plug%3s %-35s  flags:%02x  frmr:%3d  len:%5d  nsub:%3d$fogbug\n",
+	    printf "$plug%3s %-35s  flags:%02x $bax  frmr:%3d  len:%5d  nsub:%3d$fogden\n",
 		$type, $name, $flags, $frmr, $len, $nsub;
 	    print "  DBG: rec=$rec\n" if (DBG);
 	}
