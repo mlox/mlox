@@ -633,31 +633,27 @@ sub scan {
     my %junkcell = ();
     if (%myjunk) {
 	load_all_masters(@masters);
-	foreach my $master (@MASTERS) {
-	    my $master_recs = $MASTER{CELL};
-	    foreach my $rec (keys %{$master_recs}) {
-		my $r = parse_subrec($rec);
-		my($oldflags) = unpack("L", $r->{DATA}[0]);
-		if (not ($oldflags & 1)) {
-		    my($name) = ext_cell_name($r);
-		    if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
-			$junkcell{$name} = [$oldflags, $myjunk{$name}];
-		    }
+	my $master_recs = $MASTER{CELL};
+	foreach my $rec (keys %{$master_recs}) {
+	    my $r = parse_subrec($rec);
+	    my($oldflags) = unpack("L", $r->{DATA}[0]);
+	    if (not ($oldflags & 1)) {
+		my($name) = ext_cell_name($r);
+		if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
+		    $junkcell{$name} = [$oldflags, $myjunk{$name}];
 		}
 	    }
 	}
     }
     if (%myrec) {		# find records duplicated from masters
 	load_all_masters(@masters);
-	foreach my $master (@MASTERS) {
-	    foreach my $rec_type (keys %MASTER) {
-		my $master_recs = $MASTER{$rec_type};
-		foreach my $rec (keys %myrec) {
-		    if ($master_recs->{$rec}) {
-			my $name = $myrec{$rec};
-			unless (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name})) {
-			    $dup_recs{$rec_type}->{$name} = $master;
-			}
+	foreach my $rec_type (keys %MASTER) {
+	    my $master_recs = $MASTER{$rec_type};
+	    foreach my $rec (keys %myrec) {
+		if ($master_recs->{$rec}) {
+		    my $name = $myrec{$rec};
+		    unless (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name})) {
+			$dup_recs{$rec_type}->{$name} = $MASTER{$rec_type}->{$rec}
 		    }
 		}
 	    }
@@ -785,12 +781,14 @@ sub scan {
 	print "    [DUP-REC] Duplicate Records:\n";
 	my $format = "\t%-16s    %4s    %s\n";
 	printf $format, "Duped From", "Type", "Name";
+	my @output = ();
 	foreach my $rec_type (sort keys %dup_recs) {
 	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
 		my $master = $dup_recs{$rec_type}->{$name};
-		printf $format, $master, $rec_type, $name;
+		push(@output, sprintf $format, $master, $rec_type, $name);
 	    }
 	}
+	print sort @output;
     }
     unless ($::opt_q) {
 	print "\n   $DUP_DIA_HELP" if ($::opt_d and $dup_dia);
