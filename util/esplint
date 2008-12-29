@@ -23,28 +23,32 @@ $::opt_c = 0;
 $::opt_d = 0;
 $::opt_f = 0;
 $::opt_m = 0;
+$::opt_o = 0;
 $::opt_q = 0;
 $::opt_s = 0;
 $::opt_v = 0;
 $::opt_w = 999;
 
-my $DUP_DIA_HELP = <<END;
-    DUP-DIA: indicates the exact INFO dialog with the same ID, text and filter
+# OVR-REC specials:
+# PGRD.????
+# CELL.NAME/(X,Y) SKIL.INDX MGEF.INDX LAND.INTV(X,Y) SCPT.SCHD
+my $DUP_INF_HELP = <<END;
+    DUP-INF: indicates the exact INFO dialog with the same ID, text and filter
              exists in one of the masters of this plugin. This may be a
              problem, or maybe not. Sometimes duplicate dialog is intentional
              in order for dialog sorting to be correct. It's only a mistake
              if it really was unintentional.
 END
 
-my $MOD_DIA_HELP = <<END;
-    MOD-DIA: indicates that an INFO dialog with the same ID exists in the
+my $MOD_INF_HELP = <<END;
+    MOD-INF: indicates that an INFO dialog with the same ID exists in the
 	     master, but this plugin has modified the text or the filter. This
 	     is quite common when a plugin intentionally modifies a master's
 	     dialog.
 END
 
-my $MOD_ID_HELP = <<END;
-    MOD-ID:  indicates that the exact same INFO dialog text and filter exists
+my $MOD_IID_HELP = <<END;
+    MOD-IID: indicates that the exact same INFO dialog text and filter exists
 	     in one of the masters of this plugin, but under a *different* ID.
 	     This can be caused by creating new dialog by copying the
 	     original, and then accidentally editing the original instead of
@@ -58,9 +62,10 @@ OPTIONS
  -D  debug output (vast)
  -a  all normal output options on (-d, -f, -m, not -D).
  -c  also print out otherwise unflagged plugins, flagged with "CLEAN"
- -d  print out duplicate dialog (DUP-DIA)
+ -d  print out duplicate dialog INFOs (DUP-INF)
  -f  check for masters who's functions are not used (!TB-FUN, !BM-FUN).
- -m  print out modified dialog (MOD-DIA)
+ -m  print out modified dialog INFOs (MOD-INF)
+ -o  print out records that override the master (other than dialog INFOs)
  -q  quiet (less output, no explanation text)
  -s  show autocalc'ed spells
  -v  verbose (possibly more output)
@@ -104,7 +109,7 @@ about the flagged items.
              functions to modify Bethesda lists see:
              http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
 
-$DUP_DIA_HELP
+$DUP_INF_HELP
     DUP-REC: These are records in the plugin that are exact duplicates of
              records that occur in one of the masters. These are sometimes
              referred to as "dirty" or "unclean" entries.
@@ -151,8 +156,11 @@ $DUP_DIA_HELP
              only NAME, DATA and sometimes RGNN subrecords, and the flags in
              the DATA subrecord are unchanged from the flags in the Master.
 
-$MOD_DIA_HELP
-$MOD_ID_HELP
+$MOD_INF_HELP
+$MOD_IID_HELP
+    OVR-REC: The plugin contains a record that overrides the record with the
+             same ID in one of its masters.
+
     SCRDOOR: The plugin adds scripts to Bethesda doors, which has the potential
              to break any script in the same cell that uses the CellChanged
              function. CellChanged in that cell will always return 0 from now on.
@@ -169,13 +177,14 @@ $MOD_ID_HELP
              checked if the -f switch is given.
 };
 
-getopts('acDdmqsv') or die $Usage;
+getopts('acDdmoqsv') or die $Usage;
 
 if ($::opt_a) {
     $::opt_c = 1;
     $::opt_d = 1;
     $::opt_f = 1;
     $::opt_m = 1;
+    $::opt_o = 1;
     $::opt_s = 1;
     $::opt_v = 1;
 }
@@ -186,6 +195,7 @@ my $RE_DEPFUN;
 my %TB_EVIL;
 my %BM_EVIL;
 my %MASTER;
+my %ID_MASTER;
 my %BETHDOOR;
 my @MASTERS = ();
 
@@ -290,6 +300,40 @@ sub find_datadir {
     return(undef);		# not running under morrowind directory
 }
 
+sub ext_cell_name {
+    my($r) = @_;
+    my($x, $y) = unpack("x[L]ll", $r->{DATA}[0]);
+    my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
+    return("$rgnn ($x, $y)", $x, $y);
+}
+
+sub rec_id {
+    my($r, $rec_type) = @_;
+    if ($rec_type eq "CELL") {
+	my $name = chop_nulls($r->{NAME}[0]);
+	my $data = $r->{DATA}[0];
+	my($flags) = unpack("L", $data);
+	if ($flags & 1) {	# interior
+	    return($name);
+	} else {		# exterior
+	    my($xname, $x, $y) = ext_cell_name($r);
+	    return(($name) ? "$name ($x, $y)" : $xname);
+	}
+    } elsif ($rec_type eq "SCPT") {
+	my $script = $r->{SCTX}->[0];
+	my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+	return(lc($name));
+    } elsif (defined $r->{NAME}) {
+	return(lc(chop_nulls($r->{NAME}->[0])));
+    } elsif (defined $r->{INDX}) {
+	return(unpack("L", $r->{INDX}->[0]));
+    } elsif ($rec_type eq "LAND") {
+	my($x, $y) = unpack("ll", $r->{INTV}->[0]);
+	return("($x, $y)");
+    }
+    return(undef);
+}
+
 # load all the records from a master .esm into a dictionary.
 sub load_master {
     my($datadir, $esm, $label) = @_;
@@ -324,8 +368,14 @@ sub load_master {
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
 	    my $val = (split(/DATA/, $rec, 2))[1];
 	    $MASTER{$esm}->{INFO}->{$id} = $val;
-	    print "DBG: DIA($esm) $id = $val\n" if (DBG);
+	    print "DBG: INFO($esm) $id = $val\n" if (DBG);
 	} else {
+	    if ($::opt_o) {
+		my $id = rec_id(parse_subrec($rec), $rec_type);
+		if (defined $id) {
+		    $ID_MASTER{$rec_type}->{$id} = $esm;
+		}
+	    }
 	    $MASTER{$rec_type}->{$rec} = $esm;
 	}
     }
@@ -438,15 +488,15 @@ sub scan_script {
 sub gmstval {
     my($rec, $plugin_path) = @_;
     my $r = parse_subrec($rec);
-    my $name = lc($r->{NAME}[0]);
+    my $id = rec_id($r, "GMST");
     delete $r->{NAME};
     my @keys = keys %$r;
     if (scalar(@keys) > 1) {
-	warn "$plugin_path: Error, too many keys for GMST $name: @{[Dumper($r)]}\n";
+	warn "$plugin_path: Error, too many keys for GMST $id: @{[Dumper($r)]}\n";
     }
     my $type = $keys[0];
     my $val = $r->{$type}[0];
-    return($name, unpack("h*", "$type $val"));
+    return($id, unpack("h*", "$type $val"));
 }
 
 # format a simple report for the given items
@@ -463,11 +513,21 @@ sub report {
     }
 }
 
-sub ext_cell_name {
-    my($r) = @_;
-    my($x, $y) = unpack("x[L]ll", $r->{DATA}[0]);
-    my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
-    return("$rgnn ($x, $y)", $x, $y);
+sub report_recs {
+    my($recs, $title) = @_;
+    if (%{$recs}) {
+	print "    $title:\n";
+	my $format = "\t%-16s    %4s    %s\n";
+	printf $format, "From Master", "Type", "Name";
+	my @output = ();
+	foreach my $rec_type (sort keys %{$recs}) {
+	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$recs->{$rec_type}}) {
+		my $master = $recs->{$rec_type}->{$name};
+		push(@output, sprintf $format, $master, $rec_type, $name);
+	    }
+	}
+	print sort @output;
+    }
 }
 
 sub pprec {
@@ -506,8 +566,9 @@ sub scan {
     my @fogsync = ();
     my @autospl = ();
     my %fogbug = ();
-    my %mydia = ();
+    my %myinf = ();
     my %myrec = ();
+    my %myid = ();
     my %door = ();
     my %myjunk = ();
     my @sscr = ();
@@ -516,6 +577,8 @@ sub scan {
     my $cell00 = undef;
     my $expected = "TES3";
     my @masters = ();
+    my $cur_dial;
+    my %dial_info = ();
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
 	$expected = undef;
 	last if not defined $rec_type;
@@ -545,11 +608,12 @@ sub scan {
 	    } else {
 		$myrec{$rec} = $name;
 	    }
+	    $myid{$rec_type}->{$name}++ if ($::opt_o);
 	} elsif ($rec_type eq "SSCR") {
 	    # check for startup script dependency
-	    my $name = parse_subrec($rec)->{NAME}[0];
-	    $name = chop_nulls($name);
-	    push(@sscr, $name);
+	    my $id = rec_id(parse_subrec($rec), $rec_type);
+	    push(@sscr, $id);
+	    $myid{$rec_type}->{$id}++ if ($::opt_o);
 	} elsif ($rec_type eq "INFO") {
 	    # check for tribunal/bloodmoon function dependency in infos
 	    my $r = parse_subrec($rec);
@@ -557,14 +621,17 @@ sub scan {
 	    $id = chop_nulls($id);
 	    my $script = $r->{BNAM}[0];
 	    scan_script($script, "INFO($id)");
-	    $mydia{$id} = (split(/DATA/s, $rec, 2))[1];
-	    print "DBG: MYDIA($plugin) $id = $mydia{$id}\n" if (DBG);
+	    $myinf{$id} = (split(/DATA/s, $rec, 2))[1];
+	    print "DBG: MYINF($plugin) $id = $myinf{$id}\n" if (DBG);
+	    # TBD
+	    $dial_info{$cur_dial}->{$id} = 0;
 	} elsif ($rec_type eq "SCPT") {
 	    # check for tribunal/bloodmoon function dependency in scripts
 	    my $script = get_subrec($rec, "SCTX")->[0];
 	    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
 	    scan_script($script, "SCPT($name)");
 	    $myrec{$rec} = $name;
+	    $myid{$rec_type}->{lc($name)}++ if ($::opt_o);
 	} elsif ($rec_type eq "CELL") {
 	    # check for fogbugs in cells
 	    my $r = parse_subrec($rec);
@@ -600,6 +667,7 @@ sub scan {
 		} else {
 		    $myrec{$rec} = $name;
 		}
+		$myid{$rec_type}->{$name}++ if ($::opt_o);
 	    }
 	    if (defined $fogsync) {
 		push(@fogsync, sprintf "%-35s  %s", $name, $fogsync);
@@ -608,28 +676,39 @@ sub scan {
 	    my $r = parse_subrec($rec);
 	    my $spdt = $r->{SPDT}[0];
 	    if (my $autocalc = (unpack("x[L2]L", $spdt) & 1)) {
-		my $id = chop_nulls($r->{NAME}[0]);
+		my $id = rec_id($r, $rec_type);
 		my $name = chop_nulls($r->{FNAM}[0]);
 		push(@autospl, sprintf("%-30s %s", $id, $name));
+		$myid{$rec_type}->{$id}++ if ($::opt_o);
 	    }
 	} elsif ($rec_type eq "DOOR") {
 	    my $r = parse_subrec($rec);
-	    my $name = chop_nulls($r->{NAME}[0]);
+	    my $id = rec_id($r, $rec_type);
 	    my $scri = chop_nulls($r->{SCRI}[0]);
-	    if ($scri and $BETHDOOR{$name}) {
-		$door{"$name\t$scri"}++;
+	    if ($scri and $BETHDOOR{$id}) {
+		$door{"$id\t$scri"}++;
 	    }
-	    $myrec{$rec} = $name;
+	    $myrec{$rec} = $id;
+	    $myid{$rec_type}->{$id}++ if ($::opt_o);
+	} elsif ($rec_type eq "DIAL") {
+	    my $id = rec_id(parse_subrec($rec), $rec_type);
+	    $cur_dial = $id;
+	    if (defined $id) {
+		$myid{$rec_type}->{$id}++ if ($::opt_o);
+	    }
 	} else {
-	    $myrec{$rec} = chop_nulls(get_subrec($rec, "NAME")->[0]);
+	    my $id = rec_id(parse_subrec($rec), $rec_type);
+	    if (defined $id) {
+		$myrec{$rec} = $id;
+		$myid{$rec_type}->{$id}++ if ($::opt_o);
+	    }
 	}
     }
     close(INP);
-    my $dup_dia = 0;
-    my $mod_dia = 0;
-    my $mod_id = 0;
-    my $dia_out = "";
-    my %dup_recs = ();
+    my $dup_inf = 0;
+    my $mod_inf = 0;
+    my $mod_iid = 0;
+    my $inf_out = "";
     my %junkcell = ();
     if (%myjunk) {
 	load_all_masters(@masters);
@@ -645,6 +724,7 @@ sub scan {
 	    }
 	}
     }
+    my %dup_recs = ();
     if (%myrec) {		# find records duplicated from masters
 	load_all_masters(@masters);
 	foreach my $rec_type (keys %MASTER) {
@@ -653,59 +733,96 @@ sub scan {
 		if ($master_recs->{$rec}) {
 		    my $name = $myrec{$rec};
 		    unless (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name})) {
-			$dup_recs{$rec_type}->{$name} = $MASTER{$rec_type}->{$rec}
+			$dup_recs{$rec_type}->{$name} = $MASTER{$rec_type}->{$rec};
 		    }
 		}
 	    }
 	}
     }
-    if (%mydia) {		# analyze dialog problems
+    my %ovr_recs = ();
+    if (%myid) {
 	load_all_masters(@masters);
-	my %master_dia = ();
-	my %dia_master = ();	# map back to the master the dialog came from.
-	foreach my $master (@MASTERS) {
-	    my $master_info = $MASTER{$master}->{INFO};
-	    foreach my $id (keys %{$master_info}) {
-		my $dia = $master_info->{$id};
-		$master_dia{$id} = $dia;
-		$dia_master{"$id$dia"} = $master;
-	    }
-	}
-	my %rev_master_dia = ();
-	# create a reverse index
-	foreach my $id (keys %master_dia) {
-	    $rev_master_dia{$master_dia{$id}} = $id;
-	}
-	foreach my $id (sort {$a <=> $b} keys %mydia) {
-	    my $dia = $mydia{$id};
-	    my $dia_str = pprec($dia);
-	    if (defined($master_dia{$id})) {
-		if ($master_dia{$id} eq $dia) {
-		    $dup_dia++;
-		    if ($::opt_d) {
-			$dia_out .= "[DUP-DIA]: ID=$id\n";
-			$dia_out .= "  $dia_str\n";
-		    }
-		} else {
-		    $mod_dia++;
-		    if ($::opt_m) {
-			my $master_dialog = $master_dia{$id};
-			my $mast_dia_str = pprec($master_dialog);
-			my $master = $dia_master{"$id$master_dia{$id}"};
-			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
-			my $plugin_pref = $plugin . "-"x($maxlen - length($plugin));
-			my $master_pref = $master . "-"x($maxlen - length($master));
-			$dia_out .= "[MOD-DIA]: ID=$id\n";
-			$dia_out .= "  ${master_pref}->$mast_dia_str\n";
-			$dia_out .= "  ${plugin_pref}->$dia_str\n";
+	foreach my $rec_type (keys %myid) {
+	    foreach my $id (keys %{$myid{$rec_type}}) {
+		if (my $master = $ID_MASTER{$rec_type}->{$id}) {
+		    unless($dup_recs{$rec_type}->{$id} or ($rec_type eq "DIAL")) {
+			$ovr_recs{$rec_type}->{$id} = $master;
 		    }
 		}
 	    }
-	    if (defined($rev_master_dia{$id})) {
-		$mod_id++;
-		if ($rev_master_dia{$dia} != $id) {
-		    $dia_out .= "[MOD-ID]: ID=$id DIA=$dia\n";
-		    $dia_out .= "  ORIG-ID=$rev_master_dia{$dia}\n";
+	}
+    }
+    my %info_master = ();
+    if (%myinf) {		# analyze info problems
+	load_all_masters(@masters);
+	my %master_inf = ();
+	my %inf_master = ();	# map back to the master the info came from.
+	foreach my $master (@MASTERS) {
+	    my $master_info = $MASTER{$master}->{INFO};
+	    foreach my $id (keys %{$master_info}) {
+		my $inf = $master_info->{$id};
+		$master_inf{$id} = $inf;
+		$inf_master{"$id$inf"} = $master;
+	    }
+	}
+	my %rev_master_inf = ();
+	# create a reverse index
+	foreach my $id (keys %master_inf) {
+	    $rev_master_inf{$master_inf{$id}} = $id;
+	}
+	foreach my $id (sort {$a <=> $b} keys %myinf) {
+	    my $inf = $myinf{$id};
+	    my $inf_str = pprec($inf);
+	    if (defined($master_inf{$id})) {
+		if ($master_inf{$id} eq $inf) {
+		    foreach my $dial_id (keys %dial_info) {
+			$dial_info{$dial_id}->{$id}++;
+		    }
+		    $dup_inf++;
+		    if ($::opt_d) {
+			$inf_out .= "[DUP-INF]: ID=$id\n";
+			$inf_out .= "  $inf_str\n";
+		    }
+		} else {
+		    $mod_inf++;
+		    if ($::opt_m) {
+			my $mast_inf_str = pprec($master_inf{$id});
+			my $master = $inf_master{"$id$master_inf{$id}"};
+			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
+			my $plugin_pref = $plugin . "-"x($maxlen - length($plugin));
+			my $master_pref = $master . "-"x($maxlen - length($master));
+			$inf_out .= "[MOD-INF]: ID=$id\n";
+			$inf_out .= "  ${master_pref}->$mast_inf_str\n";
+			$inf_out .= "  ${plugin_pref}->$inf_str\n";
+		    }
+		}
+	    }
+	    if (defined($rev_master_inf{$id})) {
+		$mod_iid++;
+		if ($rev_master_inf{$inf} != $id) {
+		    $inf_out .= "[MOD-ID]: ID=$id REC=$inf\n";
+		    $inf_out .= "  ORIG-ID=$rev_master_inf{$inf}\n";
+		}
+	    }
+	}
+    }
+    my %dup_dial = ();
+    if (%dial_info) {
+	foreach my $dial_id (%dial_info) {
+	    if (my $master = $ID_MASTER{DIAL}->{$dial_id}) {
+		# for every DIAL id that also is in the master ...
+		my $all_infos_duped = 1;
+		foreach my $info_id (keys %{$dial_info{$dial_id}}) {
+		    if ($dial_info{$dial_id}->{$info_id} == 0) {
+			$all_infos_duped = 0;
+			last;
+		    }
+		}
+		if ($all_infos_duped) {
+		    # all of the infos for this dial were duped from the master
+		    $dup_dial{DIAL}->{$dial_id} = $master;
+		} else {
+		    $ovr_recs{DIAL}->{$dial_id} = $master;
 		}
 	    }
 	}
@@ -713,19 +830,20 @@ sub scan {
     # create a summary line of things we have discovered.
     my $found = "";
     $found .= " AUTOSPL" if (@autospl);
-    $found .= " CELL00" if ($cell00);
-    $found .= " BM-DEP" if ((not $mastbm) and %bmfun);
+    $found .= " CELL00"  if ($cell00);
+    $found .= " BM-DEP"  if ((not $mastbm) and %bmfun);
     $found .= " DEP-LST" if (%depfun);
-    $found .= " DUP-DIA" if ($dup_dia);
+    $found .= " DUP-INF" if ($dup_inf);
     $found .= " DUP-REC" if (%dup_recs);
     $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
-    $found .= " FOGBUG" if (%fogbug);
+    $found .= " FOGBUG"  if (%fogbug);
     $found .= " FOGSYNC" if (@fogsync);
-    $found .= " GETSND" if (%getsound);
+    $found .= " GETSND"  if (%getsound);
     $found .= " EVLGMST" if (%evil);
     $found .= " JUNKCEL" if (%junkcell);
-    $found .= " MOD-DIA" if ($mod_dia);
-    $found .= " MOD-ID" if ($mod_id);
+    $found .= " MOD-INF" if ($mod_inf);
+    $found .= " MOD-ID"  if ($mod_iid);
+    $found .= " OVR-REC" if (%ovr_recs);
     $found .= " SCRDOOR" if (%door);
     if ($::opt_f) {
 	$found .= " !BM-FUN" if ($mastbm and not(%bmfun or @sscr));
@@ -756,7 +874,7 @@ sub scan {
     report(\%tbfun, "[EXP-DEP] Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
     report(\%bmfun, "[BM-DEP] Bloodmoon Dependency: Bloodmoon Functions") if (not $mastbm);
     report(\%depfun, "[DEP-FUN] Deprecated use of Leveled List functions on Bethesda Lists");
-    report(\%evil, "[EVLGMST]");
+    report(\%evil, "[EVLGMST]" . (($evil_tb > 0)? " Tribunal($evil_tb)" : "") . (($evil_tb > 0)? " Bloodmoon($evil_bm)" : ""));
     if (%fogbug) {
 	print "    [FOGBUG]: Cells with zero fog density setting:\n";
 	print "\t$_\n" foreach (sort keys %fogbug);
@@ -785,25 +903,15 @@ sub scan {
 	    }
 	}
     }
-    if (%dup_recs) {
-	print "    [DUP-REC] Duplicate Records:\n";
-	my $format = "\t%-16s    %4s    %s\n";
-	printf $format, "Duped From", "Type", "Name";
-	my @output = ();
-	foreach my $rec_type (sort keys %dup_recs) {
-	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$dup_recs{$rec_type}}) {
-		my $master = $dup_recs{$rec_type}->{$name};
-		push(@output, sprintf $format, $master, $rec_type, $name);
-	    }
-	}
-	print sort @output;
-    }
+    report_recs(\%dup_dial, "[DUP-DIAL] Duplicate Dialog Records");
+    report_recs(\%dup_recs, "[DUP-REC] Duplicate Records");
+    report_recs(\%ovr_recs, "[OVR-REC] Overridden Records");
     unless ($::opt_q) {
-	print "\n   $DUP_DIA_HELP" if ($::opt_d and $dup_dia);
-	print "\n   $MOD_DIA_HELP" if ($::opt_m and $mod_dia);
-	print "\n   $MOD_ID_HELP" if ($mod_id);
+	print "\n$DUP_INF_HELP" if ($::opt_d and $dup_inf);
+	print "\n$MOD_INF_HELP" if ($::opt_m and $mod_inf);
+	print "\n$MOD_IID_HELP" if ($mod_iid);
     }
-    print $dia_out;
+    print $inf_out;
 }
 
 # run the program.
