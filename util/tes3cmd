@@ -148,7 +148,7 @@ add_alias("rename", "ren");
 sub opts_help {
     if (my $cmd_name = shift(@ARGV)) {
 	if (my $cmd_ref = $CMDS{$cmd_name}) {
-	    $cmd_ref->[0]->();	# exits
+	    $cmd_ref->[0]->(1);	# exits
 	} else {
 	    die $USAGE_ALL;
 	}
