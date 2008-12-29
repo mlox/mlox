@@ -37,15 +37,15 @@ The original input file is never modified, the changes are made in a new file
 Examples:
 
 # rename all exterior cells to the null string:
-tes3cmd rename -e CELL.NAME '.*' ''
+tes3cmd rename -e CELL.NAME '.*' '' plugin.esp
 
 # do a caseless comparison:
-tes3cmd rename cell.name '(?i)pelagaid' 'Pelagiad'
+tes3cmd rename cell.name '(?i)pelagaid' 'Pelagiad' plugin.esp
 (This would rename any name that has the string "pelagaid" in it with any form
 of capitalization, to "Pelagiad").
 
 # substitute backreferences:
-tes3cmd rename npc_.fnam '^(\S+)\s(\S+)$' '$2 $1'
+tes3cmd rename npc_.fnam '^(\S+)\s(\S+)$' '$2 $1' plugin.esp
 (This would swap the first and last name of all NPCs).
 };
 
