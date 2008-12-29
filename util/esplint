@@ -6,6 +6,8 @@
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
 
+# TBD: OVR-REC specials: PGRD.????
+
 use Cwd;
 use Data::Dumper;
 use Getopt::Std;
@@ -29,9 +31,6 @@ $::opt_s = 0;
 $::opt_v = 0;
 $::opt_w = 999;
 
-# OVR-REC specials:
-# PGRD.????
-# CELL.NAME/(X,Y) SKIL.INDX MGEF.INDX LAND.INTV(X,Y) SCPT.SCHD
 my $DUP_INF_HELP = <<END;
     DUP-INF: indicates the exact INFO dialog with the same ID, text and filter
              exists in one of the masters of this plugin. This may be a
@@ -207,23 +206,28 @@ if ($::opt_a) {
     $::opt_v = 1;
 }
 
+my %STD_OBJECT = qw(CLAS FACT RACE REGN BSGN DOOR MISC WEAP CONT SPEL CREA
+		    LIGH NPC_ ARMO CLOT REPA ACTI APPA LOCK PROB INGR ALCH);
+
+# BEGIN: globals loaded from __DATA__ segment at end of script
 my $RE_BMFUN;
 my $RE_TBFUN;
 my $RE_DEPFUN;
 my %TB_EVIL;
 my %BM_EVIL;
-my %MASTER;
-my %ID_MASTER;
 my %BETHDOOR;
-my @MASTERS = ();
-
-my %STD_OBJECT = qw(CLAS FACT RACE REGN BSGN DOOR MISC WEAP CONT SPEL CREA
-		    LIGH NPC_ ARMO CLOT REPA ACTI APPA LOCK PROB INGR ALCH);
+# END: globals loaded from __DATA__ segment at end of script
 
 # regular expressions used for finding getSoundPlaying usage
 my $RE_GETSOUND = "\\bgetSoundPlaying\\b[^\n]+\n([^\n]+)\n";
 my $RE_SOUND = '\b(?:PlayLoopSound3D(?:VP)?|PlaySound(?:3D|3DVP|VP)?|Say(?:Done)?|StopSound|StreamMusic)\b';
 my $RE_IGNORE = "^[ \t]*(?:;[^\n]+)*\n"; # for removing comments and blank lines
+
+# globals used for caching data when scanning multiple plugins at once
+my @MASTERS = ();		# reset in scan() for each new plugin
+my %MASTER_INFO;		# reused from plugin to plugin
+my %REC_MASTER;			# reused from plugin to plugin
+my %ID_MASTER;			# reused from plugin to plugin
 
 # remove the nulls from the end of string value retrieved from a plugin record
 sub chop_nulls {
@@ -353,15 +357,17 @@ sub rec_id {
 }
 
 # load all the records from a master .esm into a dictionary.
+my %LOADED_ESM;		# reused from plugin to plugin
 sub load_master {
     my($datadir, $esm, $label) = @_;
-    if (defined $MASTER{$esm}) {
+    if (defined $LOADED_ESM{$esm}) {
 	print "DBG: re-using master data: $esm\n" if (DBG);
 	return;
     }
     my $dirlist = list_files($datadir);
     $esm = $dirlist->{lc($esm)};
     print "DBG: loading $datadir/$esm\n" if (DBG);
+    #TBD try finding master in same directory as plugin first, then in datadir
     unless(open(INP, "<$datadir/$esm")) {
 	warn "Error opening $label $datadir/$esm for loading ($!)\n";
 	return;
@@ -371,7 +377,7 @@ sub load_master {
 	close(INP);
 	return;
     }
-    $MASTER{$esm}->{LOADED} = 1;
+    $LOADED_ESM{$esm}++;
     while(my($rec_type, $rec, $flags) = read_rec(undef)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
@@ -385,7 +391,7 @@ sub load_master {
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
 	    my $val = (split(/DATA/, $rec, 2))[1];
-	    $MASTER{$esm}->{INFO}->{$id} = $val;
+	    $MASTER_INFO{$esm}->{$id} = $val;
 	    print "DBG: INFO($esm) $id = $val\n" if (DBG);
 	} else {
 	    if ($::opt_o) {
@@ -394,7 +400,7 @@ sub load_master {
 		    $ID_MASTER{$rec_type}->{$id} = $esm;
 		}
 	    }
-	    $MASTER{$rec_type}->{$rec} = $esm;
+	    $REC_MASTER{$rec_type}->{$rec} = $esm;
 	}
     }
     close(INP);
@@ -402,10 +408,9 @@ sub load_master {
 
 # load all the masters into memory
 sub load_all_masters {
-    my(@masters) = @_;
     my $datadir = find_datadir();
     print "DBG: loading masters, datadir = $datadir\n" if (DBG);
-    @MASTERS = sort_by_date($datadir, @masters);
+    @MASTERS = sort_by_date($datadir, @MASTERS);
     foreach my $master (@MASTERS) {
 	load_master($datadir, $master, "Master");
     }
@@ -573,8 +578,8 @@ sub scan {
 	close(INP);
 	return;
     }
-    # the following are globals used by scan_script
     @MASTERS = ();
+    # the following are globals used by scan_script
     %tbfun = ();
     %bmfun = ();
     %depfun = ();
@@ -599,7 +604,6 @@ sub scan {
     my $masttb = 0;
     my $cell00 = undef;
     my $expected = "TES3";
-    my @masters = ();
     my $cur_dial;
     my %dial_info = ();
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
@@ -625,7 +629,7 @@ sub scan {
 	    }
 	    for my $mast (@{$r->{MAST}}) {
 		$mast = chop_nulls($mast);
-		push(@masters, $mast);
+		push(@MASTERS, $mast);
 		print "Master: $mast\n" if (DBG);
 		$mastbm++ if (lc($mast) eq 'bloodmoon.esm');
 		$masttb++ if (lc($mast) eq 'tribunal.esm');
@@ -745,9 +749,9 @@ sub scan {
     my $inf_out = "";
     my %junkcell = ();
     if (%myjunk) {
-	load_all_masters(@masters);
-	my $master_recs = $MASTER{CELL};
-	foreach my $rec (keys %{$master_recs}) {
+	load_all_masters();
+	my $cell_recs = $REC_MASTER{CELL};
+	foreach my $rec (keys %{$cell_recs}) {
 	    my $r = parse_subrec($rec);
 	    my($oldflags) = unpack("L", $r->{DATA}[0]);
 	    if (not ($oldflags & 1)) {
@@ -760,24 +764,22 @@ sub scan {
     }
     my %dup_recs = ();
     if (%myrec) {		# find records duplicated from masters
-	load_all_masters(@masters);
-	foreach my $rec_type (keys %MASTER) {
-	    my $master_recs = $MASTER{$rec_type};
-	    foreach my $rec (keys %myrec) {
-		if ($master_recs->{$rec}) {
-		    my $name = $myrec{$rec};
+	load_all_masters();
+	while (my($rec_type, $master_recs) = each %REC_MASTER) {
+	    while (my($rec, $id) = each %myrec) {
+		if (my $master = $master_recs->{$rec}) {
 		    next if ($rec_type eq "DIAL");
-		    next if (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name}));
-		    $dup_recs{$rec_type}->{$name} = $MASTER{$rec_type}->{$rec};
+		    next if (($rec_type eq "GMST") and ($TB_EVIL{$id} or $BM_EVIL{$id}));
+		    $dup_recs{$rec_type}->{$id} = $master;
 		}
 	    }
 	}
     }
     my %ovr_recs = ();
     if (%myid) {
-	load_all_masters(@masters);
-	foreach my $rec_type (keys %myid) {
-	    foreach my $id (keys %{$myid{$rec_type}}) {
+	load_all_masters();
+	while (my($rec_type, $ids) = each %myid) {
+	    foreach my $id (keys %{$ids}) {
 		if (my $master = $ID_MASTER{$rec_type}->{$id}) {
 		    unless($dup_recs{$rec_type}->{$id} or ($rec_type eq "DIAL")) {
 			$ovr_recs{$rec_type}->{$id} = $master;
@@ -788,21 +790,20 @@ sub scan {
     }
     my %info_master = ();
     if (%myinf) {		# analyze info problems
-	load_all_masters(@masters);
+	load_all_masters();
 	my %master_inf = ();
 	my %inf_master = ();	# map back to the master the info came from.
 	foreach my $master (@MASTERS) {
-	    my $master_info = $MASTER{$master}->{INFO};
-	    foreach my $id (keys %{$master_info}) {
-		my $inf = $master_info->{$id};
+	    my $master_info = $MASTER_INFO{$master};
+	    while (my($id, $inf) = each %{$master_info}) {
 		$master_inf{$id} = $inf;
 		$inf_master{"$id$inf"} = $master;
 	    }
 	}
 	my %rev_master_inf = ();
 	# create a reverse index
-	foreach my $id (keys %master_inf) {
-	    $rev_master_inf{$master_inf{$id}} = $id;
+	while (my($id, $inf) = each %master_inf) {
+	    $rev_master_inf{$inf} = $id;
 	}
 	foreach my $id (sort {$a <=> $b} keys %myinf) {
 	    my $inf = $myinf{$id};
@@ -948,7 +949,18 @@ sub scan {
 	print "\n$MOD_INF_HELP" if ($::opt_m and $mod_inf);
 	print "\n$MOD_IID_HELP" if ($mod_iid);
     }
+    $| = 1;			# flush STDOUT
     print $inf_out;
+    if (open(STAT, "/proc/$$/status")) {
+	while (<STAT>) {
+	    if (/^VmRSS:\s*(\d+)/) {
+		my $vmsize = $1 / 1024;
+		warn "### esplint Memory Usage: $vmsize (MB)\n";
+	    }
+	}
+	close(STAT);
+    }
+    $| = 0;
 }
 
 # run the program.
