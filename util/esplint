@@ -516,17 +516,19 @@ sub report {
 sub report_recs {
     my($recs, $title) = @_;
     if (%{$recs}) {
-	print "    $title:\n";
-	my $format = "\t%-16s    %4s    %s\n";
-	printf $format, "From Master", "Type", "Name";
 	my @output = ();
+	my $format = "\t%-16s    %4s    %s\n";
 	foreach my $rec_type (sort keys %{$recs}) {
 	    foreach my $name (sort { lc($a) cmp lc($b) } keys %{$recs->{$rec_type}}) {
 		my $master = $recs->{$rec_type}->{$name};
 		push(@output, sprintf $format, $master, $rec_type, $name);
 	    }
 	}
-	print sort @output;
+	if (@output) {
+	    print "    $title:\n";
+	    printf $format, "From Master", "Type", "Name";
+	    print sort @output;
+	}
     }
 }
 
@@ -731,9 +733,9 @@ sub scan {
 	    foreach my $rec (keys %myrec) {
 		if ($master_recs->{$rec}) {
 		    my $name = $myrec{$rec};
-		    unless (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name})) {
-			$dup_recs{$rec_type}->{$name} = $MASTER{$rec_type}->{$rec};
-		    }
+		    next if ($rec_type eq "DIAL");
+		    next if (($rec_type eq "GMST") and ($TB_EVIL{$name} or $BM_EVIL{$name}));
+		    $dup_recs{$rec_type}->{$name} = $MASTER{$rec_type}->{$rec};
 		}
 	    }
 	}
