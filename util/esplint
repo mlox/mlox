@@ -156,6 +156,24 @@ $DUP_INF_HELP
              only NAME, DATA and sometimes RGNN subrecords, and the flags in
              the DATA subrecord are unchanged from the flags in the Master.
 
+    MISSAUT: The plugin header is missing the Author field. It is strongly
+             recommended that authors put their name or handle in the Author
+             field.
+
+    MISSDSC: The plugin header is missing a description field. It is strongly
+             recommended that a short description of the plugin is entered in
+             this field.
+
+    MISSVER: The plugin header description field is missing a "Version: X.Y"
+             string. It is strongly recommended that the version number be
+             added to the description. This version number is very helpful in
+             documenting which version of the plugin a user is using. This
+             information is used by tools such as Wrye Mash and mlox. The
+             regular expression pattern used by Wrye Mash to match the version
+             is: "^(Version:?) *([-0-9\\.]*\\+?) *\\r?\$". (mlox will match a
+             much wider variety of version number formats). It is safest to
+             use a string of the format: "Version: X.Y", on a line by itself.
+
 $MOD_INF_HELP
 $MOD_IID_HELP
     OVR-REC: The plugin contains a record that overrides the record with the
@@ -573,6 +591,9 @@ sub scan {
     my %myid = ();
     my %door = ();
     my %myjunk = ();
+    my $missauth = 0;
+    my $missdesc = 0;
+    my $missver = 0;
     my @sscr = ();
     my $mastbm = 0;
     my $masttb = 0;
@@ -590,7 +611,19 @@ sub scan {
 	    next;
 	}
 	if ($rec_type eq "TES3") {
-	    for my $mast (@{get_subrec($rec, "MAST")}) {
+	    my $r = parse_subrec($rec);
+	    my $hedr = $r->{HEDR}[0];
+	    my($hedrver, $auth, $desc, $nrec) = unpack("fx[L]a32a256L", $hedr);
+	    printf "DBG: TES3.HEDR.version = %0.3f  NumRecords = %d\n", $hedrver, $nrec if (DBG);
+	    $auth = chop_nulls($auth);
+	    $missauth++ if (length($auth) == 0);
+	    $desc = chop_nulls($desc);
+	    if (length($desc) == 0) {
+		$missdesc = $missver = 1;
+	    } elsif ($desc !~ /^(Version:?) *([-0-9\.]*\+?) *\r?$/m) {
+		$missver++;
+	    }
+	    for my $mast (@{$r->{MAST}}) {
 		$mast = chop_nulls($mast);
 		push(@masters, $mast);
 		print "Master: $mast\n" if (DBG);
@@ -842,6 +875,9 @@ sub scan {
     $found .= " GETSND"  if (%getsound);
     $found .= " EVLGMST" if (%evil);
     $found .= " JUNKCEL" if (%junkcell);
+    $found .= " MISSAUT" if ($missauth);
+    $found .= " MISSDSC" if ($missdesc);
+    $found .= " MISSVER" if ($missver);
     $found .= " MOD-INF" if ($mod_inf);
     $found .= " MOD-ID"  if ($mod_iid);
     $found .= " OVR-REC" if (%ovr_recs);
