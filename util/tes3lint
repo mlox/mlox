@@ -529,11 +529,27 @@ sub read_rec {
     return($rec_type, $rec, $flags);
 }
 
+sub parse_subrec_long {
+    my($rec) = @_;
+    my %r = ();
+    my $p = 0;
+    my $rec_len = length($rec);
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	$p += 8;
+	my $val = substr($rec, $p, $subrec_len);
+	push(@{$r{$subrec_type}}, $val) if (defined $val);
+	$p += $subrec_len;
+    }
+    return(\%r);
+}
+
 # parse a record into sub-records, and return as a dictionary ref.
 sub parse_subrec {
     my($rec) = @_;
     my %r = ();
-    my(@parts) = unpack("(a4L/a*)*", $rec);
+    my @parts = eval { unpack("(a4L/a*)*", $rec); };
+    return(parse_subrec_long($rec)) if ($@);
     while (@parts) {
 	my $subrec_type = shift(@parts);
 	my $subrec_val = shift(@parts);
