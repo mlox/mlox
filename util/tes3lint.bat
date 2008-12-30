@@ -1,7 +1,9 @@
 @echo off
-rem run esplint with default "normal" arguments
+rem run tes3lint with default "recommended" arguments
+rem assumes perl.exe is in your %PATH%
+rem (by default strawberry Perl puts itself in your %PATH%)
 
-c:/strawberry/perl/bin/perl.exe esplint -r %1 > esplint.log
-type esplint.log
-echo "(Output saved in esplint.log)"
+perl.exe tes3lint -r %1 > tes3lint.log
+type tes3lint.log
+echo "(Output saved in tes3lint.log)"
 pause

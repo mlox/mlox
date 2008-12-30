@@ -1,4 +1,7 @@
 @echo off
-rem run esplint to show usage
-c:/strawberry/perl/bin/perl.exe esplint -h
+rem run tes3lint to show usage
+rem assumes perl.exe is in your %PATH%
+rem (by default strawberry Perl puts itself in your %PATH%)
+
+perl.exe tes3lint -h
 pause
