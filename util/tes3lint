@@ -509,13 +509,12 @@ sub read_rec {
     my $rec_hdr = "";
     my $n_read = sysread(INP, $rec_hdr, $hdr_size);
     if ($n_read == 0) {		# EOF
-	return(undef, undef);
+	return(undef);
     }
     if ($n_read != $hdr_size) {
 	warn "Error(hdr): asked for $hdr_size bytes, got $n_read\n";
-	return(undef, undef);
+	return(undef);
     }
-    # TBD: use "/" template (must use buffered input or slurp entire plugin)
     my($rec_type, $rec_len, $flags) = unpack("a4Lx[L]L", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rec_type) {
 	warn "Error: Expected: $expected_type, got: $rec_type\n";
