@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# esplint - a diagnostic tool for TES3/Morrowind plugins
+# tes3lint - a diagnostic tool for TES3/Morrowind plugins
 # Copyright 2008 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
@@ -73,7 +73,7 @@ my $MOD_IID_HELP = <<END;
 	     investigated further.
 END
 
-my $Usage = qq{esplint [OPTIONS] plugin...
+my $Usage = qq{tes3lint [OPTIONS] plugin...
 
 OPTIONS
  -D        debug output (vast)
@@ -96,19 +96,19 @@ The following are shortcuts for printing recommended lists of flags:
 Examples:
 
 # print out selected flags (just: AUTOSPL and MENUMOD):
-esplint -f autospl,menumod plugin.esp
+tes3lint -f autospl,menumod plugin.esp
 
 # print out all flags for a bunch of plugins:
-esplint -a plugin1.esp plugin2.esp ... pluginN.esp
+tes3lint -a plugin1.esp plugin2.esp ... pluginN.esp
 
 # print out only the most important flags
-espling -r plugin.esp
+tes3lint -r plugin.esp
 
-[Note: esplint wants to be able to find Masters for a given plugin, so it
+[Note: tes3lint wants to be able to find Masters for a given plugin, so it
 needs to run somewhere under your Morrowind directory, but it does not
 necessarily have to be in your Data Files directory.]
 
-esplint normally only prints output for interesting things it finds. If it
+tes3lint normally only prints output for interesting things it finds. If it
 finds nothing for a plugin, no output is generated unless the CLEAN flag is
 given. When something interesting is found, a flag is printed after the plugin
 name. On following lines, an indented report is printed that gives more detail
@@ -180,7 +180,7 @@ $DUP_INF_HELP
              to detect events (as opposed to managing the playing of sound
              files). GetSoundPlaying fails consistently on a small number of
              users' systems, so these users will encounter problems with these
-             scripts. Note that esplint uses regular expressions to detect the
+             scripts. Note that tes3lint uses regular expressions to detect the
              purpose for using GetSoundPlaying, and it will sometimes get
              false positives. For more about the GetSoundPlaying problem see:
              http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
@@ -223,11 +223,11 @@ $MOD_IID_HELP
              function. CellChanged in that cell will always return 0 from now on.
              See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
-    !BM-FUN: Bloodmoon.esm is listed as a master, but esplint did not detect
+    !BM-FUN: Bloodmoon.esm is listed as a master, but tes3lint did not detect
              any usage of Bloodmoon functions. (Note that there may be other
              reasons for listing Bloodmoon as a master).
 
-    !TB-FUN: Tribunal.esm is listed as a master, but esplint did not detect
+    !TB-FUN: Tribunal.esm is listed as a master, but tes3lint did not detect
              any usage of Tribunal functions. (Note that there may be other
              reasons for listing Tribunal as a master).
 };
@@ -1072,7 +1072,7 @@ sub scan {
 	while (<STAT>) {
 	    if (/^VmRSS:\s*(\d+)/) {
 		my $vmsize = $1 / 1024;
-		warn "### esplint($plugin) Memory Usage: $vmsize (MB)\n";
+		warn "### tes3lint($plugin) Memory Usage: $vmsize (MB)\n";
 	    }
 	}
 	close(STAT);
