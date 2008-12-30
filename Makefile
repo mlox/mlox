@@ -11,13 +11,13 @@ EXEARC    := mlox-exe-$(VERSION).7z
 RELDATE   := $(shell date --utc "+%Y-%m-%d %T (UTC)")
 DATAARC   := $(shell data/arcname)
 UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
-ESPLINTFILES  := $(wildcard util/esplint util/esplint*.bat util/esplint*.txt)
-ESPLINTVER    := $(shell svn log -l 1 -q util/esplint | grep ^r | cut -f 1 -d " ")
-ESPLINTARC    := esplint-$(ESPLINTVER).7z
+TES3LINTFILES  := $(wildcard util/tes3lint util/tes3lint*.bat util/tes3lint*.txt)
+TES3LINTVER    := $(shell svn log -l 1 -q util/tes3lint | grep ^r | cut -f 1 -d " ")
+TES3LINTARC    := tes3lint-$(TES3LINTVER).7z
 
-all: mlox-dist data-dist test-dist esplint-dist
+all: mlox-dist data-dist test-dist tes3lint-dist
 
-upload: upload-mlox upload-exe upload-data
+upload: upload-mlox upload-exe upload-data upload-tes3lint
 
 upload-mlox:
 	@echo "Uploading dist/$(MLOXARC)"
@@ -31,9 +31,9 @@ upload-exe:
 	@echo "Uploading dist/$(EXEARC)"
 	$(UPLOAD) -s "[mlox-exe $(VERSION)] - standalone executable for Windows" dist/$(EXEARC)
 
-upload-esplint:
-	@echo "Uploading dist/$(ESPLINTARC)"
-	$(UPLOAD) -s "[esplint $(ESPLINTVER)]" dist/$(ESPLINTARC)
+upload-tes3lint:
+	@echo "Uploading dist/$(TES3LINTARC)"
+	$(UPLOAD) -s "[tes3lint $(TES3LINTVER)]" dist/$(TES3LINTARC)
 
 
 # update the version strings in mlox_readme.txt, mlox.py
@@ -71,18 +71,18 @@ dist/mlox:
 	@echo "Creating $@"
 	@mkdir -p $@
 
-esplint-dist: dist/$(ESPLINTARC)
+tes3lint-dist: dist/$(TES3LINTARC)
 
-dist/$(ESPLINTARC): dist/esplint $(ESPLINTFILES)
-	@rsync -uvaC $(ESPLINTFILES) dist/esplint/ > /dev/null 2>&1
-	@cp License.txt dist/esplint
+dist/$(TES3LINTARC): dist/tes3lint $(TES3LINTFILES)
+	@rsync -uvaC $(TES3LINTFILES) dist/tes3lint/ > /dev/null 2>&1
+	@cp License.txt dist/tes3lint
 	@echo "Adding DOS line endings to .bat and .txt files in staging directory"
-	@for i in dist/esplint/*.bat dist/esplint/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
-	@(cd dist && 7z a $(ESPLINTARC) esplint) > /dev/null 2>&1
-	@rm -rf dist/esplint/
-	@echo "CREATED distibution archive for esplint: $@"
+	@for i in dist/tes3lint/*.bat dist/tes3lint/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
+	@(cd dist && 7z a $(TES3LINTARC) tes3lint) > /dev/null 2>&1
+	@rm -rf dist/tes3lint/
+	@echo "CREATED distibution archive for tes3lint: $@"
 
-dist/esplint:
+dist/tes3lint:
 	@echo "Creating $@"
 	@mkdir -p $@
 
