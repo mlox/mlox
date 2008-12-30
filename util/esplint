@@ -10,6 +10,7 @@
 
 use Cwd;
 use Data::Dumper;
+use Storable;
 use Getopt::Std;
 use strict;
 
@@ -20,16 +21,33 @@ BEGIN {
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
 
-$::opt_a = 0;
-$::opt_c = 0;
-$::opt_d = 0;
-$::opt_f = 0;
-$::opt_m = 0;
-$::opt_o = 0;
-$::opt_q = 0;
-$::opt_s = 0;
-$::opt_v = 0;
-$::opt_w = 999;
+$::opt_a = 0;			# "all" output options ON
+$::opt_f = "";			# which flags to output
+$::opt_n = 0;			# "normal" output options ON
+$::opt_q = 0;			# quiet
+$::opt_r = 0;			# "recommended" output options ON
+$::opt_v = 0;			# verbose ON
+$::opt_w = 999;			# record output field width
+
+my %OPTFLAG = ();		# output flag options
+
+my $CHECK_CLEAN = 0;		# CLEAN
+my $CHK_DUPLICATE_INFO = 0;	# DUP-INF
+my $CHK_EVIL_GMSTS = 0;		# EVLGMST
+my $CHK_FOG_DENSITY = 0;	# FOGBUG & FOGSYNC
+my $CHK_NO_EXPANSION_FUNS = 0;	# !TB-FUN & !BM-FUN
+my $CHK_GETSOUNDPLAYING = 0;	# GETSND
+my $CHK_MENUMODE = 0;		# MENUMOD
+my $CHK_HEADER_FIELDS = 0;	# MISSAUT, MISSDSC, MISSVER
+my $CHK_CHANGED_INFO_IDS = 0;	# MOD-IID
+my $CHK_JUNK_CELLS = 0;		# JUNKCEL
+my $CHK_DEPRECATED_LISTFUN = 0;	# DEP-LST
+my $CHK_MODIFIED_INFO = 0;	# MOD-INF
+my $CHK_OVERRIDDEN_REC = 0;	# OVR-REC
+my $CHK_AUTOCALCED_SPELLS = 0;	# AUTOSPL
+my $CHK_SCRIPTED_DOORS = 0;	# SCRDOOR
+my $CHK_DUP_REC = 0;		# DUP-REC
+my $CHK_EXPANSION_FUNCTIONS = 0; # BM-DEP & EXP-DEP
 
 my $DUP_INF_HELP = <<END;
     DUP-INF: indicates the exact INFO dialog with the same ID, text and filter
@@ -58,30 +76,47 @@ END
 my $Usage = qq{esplint [OPTIONS] plugin...
 
 OPTIONS
- -D  debug output (vast)
- -a  all normal output options on (-d, -f, -m, not -D).
- -c  also print out otherwise unflagged plugins, flagged with "CLEAN"
- -d  print out duplicate dialog INFOs (DUP-INF)
- -f  check for masters who's functions are not used (!TB-FUN, !BM-FUN).
- -m  print out modified dialog INFOs (MOD-INF)
- -o  print out records that override the master (other than dialog INFOs)
- -q  quiet (less output, no explanation text)
- -s  show autocalc'ed spells
- -v  verbose (possibly more output)
+ -D        debug output (vast)
+ -f flags  specify which flags (in a comma delimited list) to print.
+ -q        quiet (less output, no explanation text)
+ -v        verbose (possibly more output)
+
+The following are shortcuts for printing recommended lists of flags:
+ -a  all output flags on. (slowest, but most comprehensive option).
+ -n  "normal" output flags on (performs relatively speedily):
+      (EVLGMST, FOGBUG/FOGSYNC, MOD-IID, JUNKCEL, DUP-REC)
+     this option omits some flags for the sake of speed and relevancy.
+ -r  "recommended" output flags on (performs relatively slower):
+      (CLEAN, EVLGMST, FOGBUG/FOGSYNC, MISSAUT, MISSDSC, MISSVER, MOD-IID,
+      JUNKCEL, DEP-LST, DUP-REC, BM-DEP/EXP-DEP)
+      This adds some checks that perform slowly due to massive regular
+      expression matching. This is the default output flag option that
+      selected if no others are specified.
+
+Examples:
+
+# print out selected flags (just: AUTOSPL and MENUMOD):
+esplint -f autospl,menumod plugin.esp
+
+# print out all flags for a bunch of plugins:
+esplint -a plugin1.esp plugin2.esp ... pluginN.esp
+
+# print out only the most important flags
+espling -r plugin.esp
 
 [Note: esplint wants to be able to find Masters for a given plugin, so it
 needs to run somewhere under your Morrowind directory, but it does not
 necessarily have to be in your Data Files directory.]
 
 esplint normally only prints output for interesting things it finds. If it
-finds nothing for a plugin, no output is generated unless the -c switch is
+finds nothing for a plugin, no output is generated unless the CLEAN flag is
 given. When something interesting is found, a flag is printed after the plugin
 name. On following lines, an indented report is printed that gives more detail
 about the flagged items.
 
  The following flags are defined:
 
-    AUTOSPL: The plugin defines autocalc'ed spells. (only flagged if -s).
+    AUTOSPL: The plugin defines autocalc'ed spells.
 
     BM-DEP:  The plugin uses Bloodmoon specific functions, so it needs version
              1.6.1820, but the plugin does not list Bloodmoon.esm in its list
@@ -92,9 +127,9 @@ about the flagged items.
              included in the plugin. This cell is often accidentally modified
              since it is the default cell displayed in the cell view window.
 
-    CLEAN:   If -c command line switch is used, then a plugin that is not
-             flagged with any of the flags below will be flagged "CLEAN". It
-             really just means: "found nothing of interest".
+    CLEAN:   If this flag is used, then a plugin that is not flagged with any of
+             the flags below will be flagged "CLEAN". It really just means:
+             "found nothing of interest".
 
     DEP-LST: This flag indicates that the plugin makes deprecated use of
              scripting functions to modify standard Bethesda Leveled Lists.
@@ -185,26 +220,64 @@ $MOD_IID_HELP
 
     !BM-FUN: Bloodmoon.esm is listed as a master, but esplint did not detect
              any usage of Bloodmoon functions. (Note that there may be other
-             reasons for listing Bloodmoon as a master). This flag is only
-             checked if the -f switch is given.
+             reasons for listing Bloodmoon as a master).
 
     !TB-FUN: Tribunal.esm is listed as a master, but esplint did not detect
              any usage of Tribunal functions. (Note that there may be other
-             reasons for listing Tribunal as a master). This flag is only
-             checked if the -f switch is given.
+             reasons for listing Tribunal as a master).
 };
 
-getopts('acDdmoqsv') or die $Usage;
+getopts('aDf:nqrvx') or die $Usage;
+
+# by default choose -r (recommended flags) if no other output option selected:
+$::opt_r = 1 unless ($::opt_a or $::opt_f or $::opt_n or $::opt_r);
+
+my %DEFINED_FLAGS = (); $DEFINED_FLAGS{$_}++ foreach (qw(CLEAN DUP-INF EVLGMST
+FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MENUMOD MISSAUT MISSDSC MISSVER
+MOD-IID JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR DUP-REC BM-DEP
+EXP-DEP));
+
+if ($::opt_f) {
+    my @unknown_flags = ();
+    foreach my $flag (map {uc} split(/\s*,\s*/, $::opt_f)) {
+	if ($DEFINED_FLAGS{$flag}){
+	    $OPTFLAG{$flag}++;
+	} else {
+	    push(@unknown_flags, $flag);
+	}
+    }
+    if (@unknown_flags) {
+	my $pl = (scalar(@unknown_flags) > 1) ? "s" : "";
+	die "Error: unknown flag$pl: @unknown_flags\n";
+    }
+}
 
 if ($::opt_a) {
-    $::opt_c = 1;
-    $::opt_d = 1;
-    $::opt_f = 1;
-    $::opt_m = 1;
-    $::opt_o = 1;
-    $::opt_s = 1;
+    %OPTFLAG = %DEFINED_FLAGS;
     $::opt_v = 1;
+} elsif ($::opt_n) {
+    $OPTFLAG{$_}++ foreach (qw(EVLGMST FOGBUG FOGSYNC MOD-IID JUNKCEL DUP-REC));
+} elsif ($::opt_r) {
+    $OPTFLAG{$_}++ foreach (qw(CLEAN EVLGMST FOGBUG FOGSYNC MISSAUT MISSDSC MISSVER MOD-IID JUNKCEL DEP-LST DUP-REC BM-DEP EXP-DEP));
 }
+
+$CHECK_CLEAN = 1              if ($OPTFLAG{CLEAN});
+$CHK_DUPLICATE_INFO = 1       if ($OPTFLAG{'DUP-INF'});
+$CHK_EVIL_GMSTS = 1	      if ($OPTFLAG{EVLGMST});
+$CHK_FOG_DENSITY = 1	      if ($OPTFLAG{FOGBUG} or $OPTFLAG{FOGSYNC});
+$CHK_NO_EXPANSION_FUNS = 1    if ($OPTFLAG{'!TB-FUN'} or $OPTFLAG{'!BM-FUN'});
+$CHK_GETSOUNDPLAYING = 1      if ($OPTFLAG{GETSND});
+$CHK_MENUMODE = 1	      if ($OPTFLAG{MENUMOD});
+$CHK_HEADER_FIELDS = 1	      if ($OPTFLAG{MISSAUT} or $OPTFLAG{MISSDSC} or $OPTFLAG{MISSVER});
+$CHK_CHANGED_INFO_IDS = 1     if ($OPTFLAG{'MOD-IID'});
+$CHK_JUNK_CELLS = 1	      if ($OPTFLAG{JUNKCEL});
+$CHK_DEPRECATED_LISTFUN = 1   if ($OPTFLAG{'DEP-LST'});
+$CHK_MODIFIED_INFO = 1	      if ($OPTFLAG{'MOD-INF'});
+$CHK_OVERRIDDEN_REC = 1       if ($OPTFLAG{'OVR-REC'});
+$CHK_AUTOCALCED_SPELLS = 1    if ($OPTFLAG{AUTOSPL});
+$CHK_SCRIPTED_DOORS = 1       if ($OPTFLAG{SCRDOOR});
+$CHK_DUP_REC = 1	      if ($OPTFLAG{'DUP-REC'});
+$CHK_EXPANSION_FUNCTIONS = 1  if ($OPTFLAG{'BM-DEP'} or $OPTFLAG{'EXP-DEP'});
 
 my %STD_OBJECT = qw(CLAS FACT RACE REGN BSGN DOOR MISC WEAP CONT SPEL CREA
 		    LIGH NPC_ ARMO CLOT REPA ACTI APPA LOCK PROB INGR ALCH);
@@ -223,11 +296,14 @@ my $RE_GETSOUND = "\\bgetSoundPlaying\\b[^\n]+\n([^\n]+)\n";
 my $RE_SOUND = '\b(?:PlayLoopSound3D(?:VP)?|PlaySound(?:3D|3DVP|VP)?|Say(?:Done)?|StopSound|StreamMusic)\b';
 my $RE_IGNORE = "^[ \t]*(?:;[^\n]+)*\n"; # for removing comments and blank lines
 
+# regular expressions used for finding menumode usage
+my $RE_MENUMODE = '\bmenumode\b';
+
 # globals used for caching data when scanning multiple plugins at once
 my @MASTERS = ();		# reset in scan() for each new plugin
 my %MASTER_INFO;		# reused from plugin to plugin
-my %REC_MASTER;			# reused from plugin to plugin
-my %ID_MASTER;			# reused from plugin to plugin
+my %MASTER_REC;			# reused from plugin to plugin
+my %MASTER_ID;			# reused from plugin to plugin
 
 # remove the nulls from the end of string value retrieved from a plugin record
 sub chop_nulls {
@@ -264,6 +340,10 @@ sub load_data {
     }
     foreach my $door (@{load_data_list()}) {
 	$BETHDOOR{$door}++;
+    }
+    if (not $CHK_EVIL_GMSTS) {
+	undef %TB_EVIL;
+	undef %BM_EVIL;
     }
     if (DBG) {
 	print "\nTBFUN regexp: $RE_TBFUN\n";
@@ -378,6 +458,7 @@ sub load_master {
 	return;
     }
     $LOADED_ESM{$esm}++;
+    my $read_info = ($CHK_CHANGED_INFO_IDS or $CHK_DUPLICATE_INFO or $CHK_MODIFIED_INFO);
     while(my($rec_type, $rec, $flags) = read_rec(undef)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
@@ -385,7 +466,7 @@ sub load_master {
 	    next;
 	}
 	print "DBG: rec_type = $rec_type\n" if (DBG);
-	if ($rec_type eq "INFO") {
+	if ($read_info and $rec_type eq "INFO") {
 	    my $r = parse_subrec($rec);
 	    my $id = chop_nulls($r->{INAM}[0]);
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
@@ -394,13 +475,13 @@ sub load_master {
 	    $MASTER_INFO{$esm}->{$id} = $val;
 	    print "DBG: INFO($esm) $id = $val\n" if (DBG);
 	} else {
-	    if ($::opt_o) {
+	    if ($CHK_OVERRIDDEN_REC) {
 		my $id = rec_id(parse_subrec($rec), $rec_type);
 		if (defined $id) {
-		    $ID_MASTER{$rec_type}->{$id} = $esm;
+		    $MASTER_ID{$esm}->{$rec_type}->{$id} = 1;
 		}
 	    }
-	    $REC_MASTER{$rec_type}->{$rec} = $esm;
+	    $MASTER_REC{$esm}->{$rec_type}->{$rec} = 1;
 	}
     }
     close(INP);
@@ -429,6 +510,7 @@ sub read_rec {
 	warn "Error(hdr): asked for $hdr_size bytes, got $n_read\n";
 	return(undef, undef);
     }
+    # TBD: use "/" template (must use buffered input or slurp entire plugin)
     my($rec_type, $rec_len, $flags) = unpack("a4Lx[L]L", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rec_type) {
 	warn "Error: Expected: $expected_type, got: $rec_type\n";
@@ -447,14 +529,12 @@ sub read_rec {
 sub parse_subrec {
     my($rec) = @_;
     my %r = ();
-    my $p = 0;
-    my $rec_len = length($rec);
-    while ($p < $rec_len) {
-	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	$p += 8;
-	my $val = substr($rec, $p, $subrec_len);
-	push(@{$r{$subrec_type}}, $val) if (defined $val);
-	$p += $subrec_len;
+    my(@parts) = unpack("(a4L/a*)*", $rec);
+    while (@parts) {
+	my $subrec_type = shift(@parts);
+	my $subrec_val = shift(@parts);
+	push(@{$r{$subrec_type}}, $subrec_val)
+	    if (defined $subrec_val);
     }
     return(\%r);
 }
@@ -463,14 +543,12 @@ sub parse_subrec {
 sub get_subrec {
     my($rec, $subtype) = @_;
     my @r = ();
-    my $p = 0;
-    my $rec_len = length($rec);
-    while ($p < $rec_len) {
-	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	$p += 8;
-	push(@r, substr($rec, $p, $subrec_len))
+    my(@parts) = unpack("(a4L/a*)*", $rec);
+    while (@parts) {
+	my $subrec_type = shift(@parts);
+	my $subrec_val = shift(@parts);
+	push(@r, $subrec_val)
 	    if ($subrec_type eq $subtype);
-	$p += $subrec_len;
     }
     return(\@r);
 }
@@ -480,28 +558,38 @@ my %tbfun;
 my %bmfun;
 my %depfun;
 my %getsound;
+my %menumode;
 sub scan_script {
     my($script, $label) = @_;
     print "SCRIPT:\n$script\n\n" if (DBG and $::opt_v);
     # remove comments and blank lines from the script
     $script =~ s/$RE_IGNORE//gm;
-    while ($script =~ m!$RE_TBFUN!gim) {
-	print "TBFUN($label): $1\n" if (DBG);
-	$tbfun{"$label\t".lc($1)}++;
-    }
-    while ($script =~ m!$RE_BMFUN!gim) {
-	print "BMFUN($label): $1\n" if (DBG);
-	$bmfun{"$label\t".lc($1)}++;
-    }
-    while ($script =~ m!$RE_DEPFUN!gim) {
-	print "DEPFUN($label): $1\n" if (DBG);
-	$depfun{"$label\t".lc($1)}++;
-    }
-    while ($script =~ m!$RE_GETSOUND!gis) {
-	my $next_line = $1;
-	if ($next_line !~ m!$RE_SOUND!i) {
-	    $getsound{$label}++;
+    if ($CHK_EXPANSION_FUNCTIONS or $CHK_NO_EXPANSION_FUNS) {
+	while ($script =~ m!$RE_TBFUN!gim) {
+	    print "TBFUN($label): $1\n" if (DBG);
+	    $tbfun{"$label\t".lc($1)}++;
 	}
+	while ($script =~ m!$RE_BMFUN!gim) {
+	    print "BMFUN($label): $1\n" if (DBG);
+	    $bmfun{"$label\t".lc($1)}++;
+	}
+    }
+    if ($CHK_DEPRECATED_LISTFUN) {
+	while ($script =~ m!$RE_DEPFUN!gim) {
+	    print "DEPFUN($label): $1\n" if (DBG);
+	    $depfun{"$label\t".lc($1)}++;
+	}
+    }
+    if ($CHK_GETSOUNDPLAYING) {
+	while ($script =~ m!$RE_GETSOUND!gis) {
+	    my $next_line = $1;
+	    if ($next_line !~ m!$RE_SOUND!i) {
+		$getsound{$label}++;
+	    }
+	}
+    }
+    if ($label !~ /^INFO/ and $CHK_MENUMODE and ($script !~ m!$RE_MENUMODE!gis)) {
+	$menumode{$label}++;
     }
 }
 
@@ -531,7 +619,11 @@ sub report {
 	print "    $label:\n";
 	foreach (@itemlist) {
 	    my($name, $val) = split(/\t/, $_, 2);
-	    printf $format, $name, $val;
+	    if ($val) {
+		printf $format, $name, $val;
+	    } else {
+		print "\t$name\n";
+	    }
 	}
     }
 }
@@ -584,6 +676,7 @@ sub scan {
     %bmfun = ();
     %depfun = ();
     %getsound = ();
+    %menumode = ();
     # locals
     my %evil = ();
     my $evil_tb = 0;
@@ -605,6 +698,10 @@ sub scan {
     my $cell00 = undef;
     my $expected = "TES3";
     my $cur_dial;
+    my $read_info = ($CHK_CHANGED_INFO_IDS or $CHK_DUPLICATE_INFO or $CHK_MODIFIED_INFO);
+    my $read_scpt = ($CHK_EXPANSION_FUNCTIONS or $CHK_NO_EXPANSION_FUNS or $CHK_DEPRECATED_LISTFUN or $CHK_GETSOUNDPLAYING or $CHK_MENUMODE);
+    my $read_gmsts = ($CHK_EVIL_GMSTS or $CHK_DUP_REC or $CHK_OVERRIDDEN_REC);
+    my $read_cell = ($CHK_JUNK_CELLS or $CHK_FOG_DENSITY or $CHK_DUP_REC);
     my %dial_info = ();
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
 	$expected = undef;
@@ -616,16 +713,18 @@ sub scan {
 	}
 	if ($rec_type eq "TES3") {
 	    my $r = parse_subrec($rec);
-	    my $hedr = $r->{HEDR}[0];
-	    my($hedrver, $auth, $desc, $nrec) = unpack("fx[L]a32a256L", $hedr);
-	    printf "DBG: TES3.HEDR.version = %0.3f  NumRecords = %d\n", $hedrver, $nrec if (DBG);
-	    $auth = chop_nulls($auth);
-	    $missauth++ if (length($auth) == 0);
-	    $desc = chop_nulls($desc);
-	    if (length($desc) == 0) {
-		$missdesc = $missver = 1;
-	    } elsif ($desc !~ /^(Version:?) *([-0-9\.]*\+?) *\r?$/m) {
-		$missver++;
+	    if ($CHK_HEADER_FIELDS) {
+		my $hedr = $r->{HEDR}[0];
+		my($hedrver, $auth, $desc, $nrec) = unpack("fx[L]a32a256L", $hedr);
+		printf "DBG: TES3.HEDR.version = %0.3f  NumRecords = %d\n", $hedrver, $nrec if (DBG);
+		$auth = chop_nulls($auth);
+		$missauth++ if (length($auth) == 0);
+		$desc = chop_nulls($desc);
+		if (length($desc) == 0) {
+		    $missdesc = $missver = 1;
+		} elsif ($desc !~ /^(Version:?) *([-0-9\.]*\+?) *\r?$/m) {
+		    $missver++;
+		}
 	    }
 	    for my $mast (@{$r->{MAST}}) {
 		$mast = chop_nulls($mast);
@@ -634,7 +733,7 @@ sub scan {
 		$mastbm++ if (lc($mast) eq 'bloodmoon.esm');
 		$masttb++ if (lc($mast) eq 'tribunal.esm');
 	    }
-	} elsif ($rec_type eq "GMST") {
+	} elsif ($read_gmsts and $rec_type eq "GMST") {
 	    # check for evil GMSTs
 	    my($name, $val) = gmstval($rec, $plugin_path);
 	    print "DBG: GMST=$name val=$val tb=$TB_EVIL{$name} bm=$BM_EVIL{$name}\n" if (DBG);
@@ -645,21 +744,21 @@ sub scan {
 		$evil{"BM $name"}++;
 		$evil_bm++;
 	    } else {
-		$myrec{$rec} = $name;
+		$myrec{$rec} = $name if ($CHK_DUP_REC);
 	    }
-	    $myid{$rec_type}->{$name}++ if ($::opt_o);
-	} elsif ($rec_type eq "SSCR") {
+	    $myid{$rec_type}->{$name}++ if ($CHK_OVERRIDDEN_REC);
+	} elsif ($CHK_EXPANSION_FUNCTIONS and $rec_type eq "SSCR") {
 	    # check for startup script dependency
 	    my $id = rec_id(parse_subrec($rec), $rec_type);
 	    push(@sscr, $id);
-	    $myid{$rec_type}->{$id}++ if ($::opt_o);
-	} elsif ($rec_type eq "INFO") {
+	    $myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
+	} elsif ($read_info and $rec_type eq "INFO") {
 	    # check for tribunal/bloodmoon function dependency in infos
 	    my $r = parse_subrec($rec);
 	    my $id = $r->{INAM}[0];
 	    $id = chop_nulls($id);
 	    my $script = $r->{BNAM}[0];
-	    scan_script($script, "INFO($id)");
+	    scan_script($script, "INFO($id)") if ($read_scpt);
 	    $myinf{$id} = (split(/DATA/s, $rec, 2))[1];
 	    print "DBG: MYINF($plugin) $id = $myinf{$id}\n" if (DBG);
 	    # TBD
@@ -668,10 +767,10 @@ sub scan {
 	    # check for tribunal/bloodmoon function dependency in scripts
 	    my $script = get_subrec($rec, "SCTX")->[0];
 	    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
-	    scan_script($script, "SCPT($name)");
-	    $myrec{$rec} = $name;
-	    $myid{$rec_type}->{lc($name)}++ if ($::opt_o);
-	} elsif ($rec_type eq "CELL") {
+	    scan_script($script, "SCPT($name)") if ($read_scpt);
+	    $myrec{$rec} = $name if ($CHK_DUP_REC);
+	    $myid{$rec_type}->{lc($name)}++ if ($CHK_OVERRIDDEN_REC);
+	} elsif ($read_cell and $rec_type eq "CELL") {
 	    # check for fogbugs in cells
 	    my $r = parse_subrec($rec);
 	    my $name = chop_nulls($r->{NAME}[0]);
@@ -679,7 +778,7 @@ sub scan {
 	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
 	    my $fogsync;
 	    if ($flags & 1) {	# interior cells
-		if (not $flags & 128) { # behave like exterior
+		if ($CHK_FOG_DENSITY and not $flags & 128) { # behave like exterior
 		    my $ambi = $r->{AMBI}[0];
 		    if (length($ambi) == 16) {
 			my $fog_den_ambi = unpack("x[L3]f", $ambi);
@@ -691,7 +790,7 @@ sub scan {
 			$fogbug{$name}++ if ($fog_den_data == 0.0);
 		    }
 		}
-		$myrec{$rec} = $name;
+		$myrec{$rec} = $name if ($CHK_DUP_REC);
 	    } else {		# exterior cells
 		my($xname, $x, $y) = ext_cell_name($r);
 		$name = ($name) ? "$name ($x, $y)" : $xname;
@@ -702,43 +801,45 @@ sub scan {
 		}
 		my $nkeys = scalar(keys %$r);
 		if (($nkeys == 2) or ($nkeys == 3)) {
-		    $myjunk{$name} = $flags;
+		    $myjunk{$name} = $flags if ($CHK_JUNK_CELLS);
 		} else {
-		    $myrec{$rec} = $name;
+		    $myrec{$rec} = $name if ($CHK_DUP_REC);
 		}
 	    }
 	    if (defined $fogsync) {
 		push(@fogsync, sprintf "%-35s  %s", $name, $fogsync);
 	    }
-	} elsif ($::opt_s and ($rec_type eq "SPEL")) {
+	} elsif ($CHK_AUTOCALCED_SPELLS and ($rec_type eq "SPEL")) {
 	    my $r = parse_subrec($rec);
 	    my $spdt = $r->{SPDT}[0];
 	    if (my $autocalc = (unpack("x[L2]L", $spdt) & 1)) {
 		my $id = rec_id($r, $rec_type);
 		my $name = chop_nulls($r->{FNAM}[0]);
 		push(@autospl, sprintf("%-30s %s", $id, $name));
-		$myid{$rec_type}->{$id}++ if ($::opt_o);
+		$myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	    }
 	} elsif ($rec_type eq "DOOR") {
 	    my $r = parse_subrec($rec);
 	    my $id = rec_id($r, $rec_type);
-	    my $scri = chop_nulls($r->{SCRI}[0]);
-	    if ($scri and $BETHDOOR{$id}) {
-		$door{"$id\t$scri"}++;
+	    if ($CHK_SCRIPTED_DOORS) {
+		my $scri = chop_nulls($r->{SCRI}[0]);
+		if ($scri and $BETHDOOR{$id}) {
+		    $door{"$id\t$scri"}++;
+		}
 	    }
-	    $myrec{$rec} = $id;
-	    $myid{$rec_type}->{$id}++ if ($::opt_o);
+	    $myrec{$rec} = $id if ($CHK_DUP_REC);
+	    $myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	} elsif ($rec_type eq "DIAL") {
 	    my $id = rec_id(parse_subrec($rec), $rec_type);
 	    $cur_dial = $id;
 	    if (defined $id) {
-		$myid{$rec_type}->{$id}++ if ($::opt_o);
+		$myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	    }
 	} else {
 	    my $id = rec_id(parse_subrec($rec), $rec_type);
 	    if (defined $id) {
-		$myrec{$rec} = $id;
-		$myid{$rec_type}->{$id}++ if ($::opt_o);
+		$myrec{$rec} = $id if ($CHK_DUP_REC);
+		$myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	    }
 	}
     }
@@ -750,14 +851,16 @@ sub scan {
     my %junkcell = ();
     if (%myjunk) {
 	load_all_masters();
-	my $cell_recs = $REC_MASTER{CELL};
-	foreach my $rec (keys %{$cell_recs}) {
-	    my $r = parse_subrec($rec);
-	    my($oldflags) = unpack("L", $r->{DATA}[0]);
-	    if (not ($oldflags & 1)) {
-		my($name) = ext_cell_name($r);
-		if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
-		    $junkcell{$name} = [$oldflags, $myjunk{$name}];
+	foreach my $master (keys %MASTER_REC) {
+	    my $cell_recs = $MASTER_REC{$master}->{CELL};
+	    foreach my $rec (keys %{$cell_recs}) {
+		my $r = parse_subrec($rec);
+		my($oldflags) = unpack("L", $r->{DATA}[0]);
+		if (not ($oldflags & 1)) {
+		    my($name) = ext_cell_name($r);
+		    if ($myjunk{$name} and ($oldflags == $myjunk{$name})) {
+			$junkcell{$name} = $oldflags;
+		    }
 		}
 	    }
 	}
@@ -765,12 +868,14 @@ sub scan {
     my %dup_recs = ();
     if (%myrec) {		# find records duplicated from masters
 	load_all_masters();
-	while (my($rec_type, $master_recs) = each %REC_MASTER) {
-	    while (my($rec, $id) = each %myrec) {
-		if (my $master = $master_recs->{$rec}) {
-		    next if ($rec_type eq "DIAL");
-		    next if (($rec_type eq "GMST") and ($TB_EVIL{$id} or $BM_EVIL{$id}));
-		    $dup_recs{$rec_type}->{$id} = $master;
+	while (my($master, $all_recs) = each %MASTER_REC) {
+	    while (my($rec_type, $type_recs) = each %{$all_recs}) {
+		while (my($rec, $id) = each %myrec) {
+		    if ($type_recs->{$rec}) {
+			next if ($rec_type eq "DIAL");
+			next if (($rec_type eq "GMST") and ($TB_EVIL{$id} or $BM_EVIL{$id}));
+			$dup_recs{$rec_type}->{$id} = $master;
+		    }
 		}
 	    }
 	}
@@ -780,9 +885,11 @@ sub scan {
 	load_all_masters();
 	while (my($rec_type, $ids) = each %myid) {
 	    foreach my $id (keys %{$ids}) {
-		if (my $master = $ID_MASTER{$rec_type}->{$id}) {
-		    unless($dup_recs{$rec_type}->{$id} or ($rec_type eq "DIAL")) {
-			$ovr_recs{$rec_type}->{$id} = $master;
+		foreach my $master (keys %MASTER_ID) {
+		    if ($MASTER_ID{$master}->{$rec_type}->{$id}) {
+			unless($dup_recs{$rec_type}->{$id} or ($rec_type eq "DIAL")) {
+			    $ovr_recs{$rec_type}->{$id} = $master;
+			}
 		    }
 		}
 	    }
@@ -813,14 +920,14 @@ sub scan {
 		    foreach my $dial_id (keys %dial_info) {
 			$dial_info{$dial_id}->{$id}++;
 		    }
-		    $dup_inf++;
-		    if ($::opt_d) {
+		    $dup_inf++ if ($CHK_DUPLICATE_INFO);
+		    if ($CHK_DUPLICATE_INFO) {
 			$inf_out .= "[DUP-INF]: ID=$id\n";
 			$inf_out .= "  $inf_str\n";
 		    }
 		} else {
-		    $mod_inf++;
-		    if ($::opt_m) {
+		    $mod_inf++ if ($CHK_MODIFIED_INFO);
+		    if ($CHK_MODIFIED_INFO) {
 			my $mast_inf_str = pprec($master_inf{$id});
 			my $master = $inf_master{"$id$master_inf{$id}"};
 			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
@@ -835,8 +942,10 @@ sub scan {
 	    if (defined($rev_master_inf{$id})) {
 		$mod_iid++;
 		if ($rev_master_inf{$inf} != $id) {
-		    $inf_out .= "[MOD-ID]: ID=$id REC=$inf\n";
-		    $inf_out .= "  ORIG-ID=$rev_master_inf{$inf}\n";
+		    if ($CHK_CHANGED_INFO_IDS) {
+			$inf_out .= "[MOD-ID]: ID=$id REC=$inf\n";
+			$inf_out .= "  ORIG-ID=$rev_master_inf{$inf}\n";
+		    }
 		}
 	    }
 	}
@@ -844,20 +953,22 @@ sub scan {
     my %dup_dial = ();
     if (%dial_info) {
 	foreach my $dial_id (%dial_info) {
-	    if (my $master = $ID_MASTER{DIAL}->{$dial_id}) {
-		# for every DIAL id that also is in the master ...
-		my $all_infos_duped = 1;
-		foreach my $info_id (keys %{$dial_info{$dial_id}}) {
-		    if ($dial_info{$dial_id}->{$info_id} == 0) {
-			$all_infos_duped = 0;
-			last;
+	    foreach my $master (keys %MASTER_ID) {
+		if ($MASTER_ID{$master}->{DIAL}->{$dial_id}) {
+		    # for every DIAL id that also is in the master ...
+		    my $all_infos_duped = 1;
+		    foreach my $info_id (keys %{$dial_info{$dial_id}}) {
+			if ($dial_info{$dial_id}->{$info_id} == 0) {
+			    $all_infos_duped = 0;
+			    last;
+			}
 		    }
-		}
-		if ($all_infos_duped) {
-		    # all of the infos for this dial were duped from the master
-		    $dup_dial{DIAL}->{$dial_id} = $master;
-		} else {
-		    $ovr_recs{DIAL}->{$dial_id} = $master;
+		    if ($all_infos_duped) {
+			# all of the infos for this dial were duped from the master
+			$dup_dial{DIAL}->{$dial_id} = $master;
+		    } else {
+			$ovr_recs{DIAL}->{$dial_id} = $master;
+		    }
 		}
 	    }
 	}
@@ -871,26 +982,27 @@ sub scan {
     $found .= " DUP-INF" if ($dup_inf);
     $found .= " DUP-REC" if (%dup_recs);
     $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
-    $found .= " FOGBUG"  if (%fogbug);
-    $found .= " FOGSYNC" if (@fogsync);
+    $found .= " FOGBUG"  if ($OPTFLAG{FOGBUG} and %fogbug);
+    $found .= " FOGSYNC" if ($OPTFLAG{FOGSYNC} and @fogsync);
     $found .= " GETSND"  if (%getsound);
     $found .= " EVLGMST" if (%evil);
     $found .= " JUNKCEL" if (%junkcell);
-    $found .= " MISSAUT" if ($missauth);
-    $found .= " MISSDSC" if ($missdesc);
-    $found .= " MISSVER" if ($missver);
+    $found .= " MENUMOD" if (%menumode);
+    $found .= " MISSAUT" if ($OPTFLAG{MISSAUT} and $missauth);
+    $found .= " MISSDSC" if ($OPTFLAG{MISSDSC} and $missdesc);
+    $found .= " MISSVER" if ($OPTFLAG{MISSVER} and $missver);
     $found .= " MOD-INF" if ($mod_inf);
     $found .= " MOD-ID"  if ($mod_iid);
     $found .= " OVR-REC" if (%ovr_recs);
     $found .= " SCRDOOR" if (%door);
-    if ($::opt_f) {
-	$found .= " !BM-FUN" if ($mastbm and not(%bmfun or @sscr));
-	$found .= " !TB-FUN" if ($masttb and not(%tbfun or %bmfun or @sscr));
+    if ($CHK_NO_EXPANSION_FUNS) {
+	$found .= " !BM-FUN" if ($OPTFLAG{'!BM-FUN'} and $mastbm and not(%bmfun or @sscr));
+	$found .= " !TB-FUN" if ($OPTFLAG{'!TB-FUN'} and $masttb and not(%tbfun or %bmfun or @sscr));
     }
     if ($found) {
 	print "$plugin_path:$found\n";
     } else {
-	print "$plugin_path: CLEAN\n" if ($::opt_c);
+	print "$plugin_path: CLEAN\n" if ($CHECK_CLEAN);
 	return;
     }
     ##################################################
@@ -910,7 +1022,7 @@ sub scan {
 	print "    [EXP-DEP] Expansion Dependency: Startup Script$pl: ", join(", ", @sscr), "\n";
     }
     report(\%tbfun, "[EXP-DEP] Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
-    report(\%bmfun, "[BM-DEP] Bloodmoon Dependency: Bloodmoon Functions") if (not $mastbm);
+    report(\%bmfun, "[BM-DEP] Bloodmoon Dependency: Bloodmoon Functions") if ($OPTFLAG{'BM-DEP'} and not $mastbm);
     report(\%depfun, "[DEP-FUN] Deprecated use of Leveled List functions on Bethesda Lists");
     report(\%evil, "[EVLGMST]" . (($evil_tb > 0)? " Tribunal($evil_tb)" : "") . (($evil_tb > 0)? " Bloodmoon($evil_bm)" : ""));
     if (%fogbug) {
@@ -924,18 +1036,19 @@ sub scan {
 	}
     }
     report(\%getsound, "[GETSND] GetSoundPlaying possibly used to detect events");
+    report(\%menumode, "[MENUMOD] Scripts not checking menumode");
     report(\%door, "[SCRDOOR] Bethesda doors that have had scripts attached to them");
     if (%junkcell) {
 	if ($::opt_v) {
-	    print "    [JUNKCEL] Junk Cells:                      Master Flags   Plugin Flags\n";
+	    print "    [JUNKCEL] Junk Cells:                        Flags\n";
 	} else {
 	    print "    [JUNKCEL] Junk Cells:\n";
 	}
-	my $format = "\t%-36s     0x%02x           0x%02x\n";
+	my $format = "\t%-36s     0x%02x\n";
 	foreach my $name (sort keys %junkcell) {
 	    if ($::opt_v) {
-		my($oldflags, $newflags) = @{$junkcell{$name}};
-		printf $format, $name, $oldflags, $newflags;
+		my $flags = $junkcell{$name};
+		printf $format, $name, $flags;
 	    } else {
 		printf "\t$name\n";
 	    }
@@ -945,8 +1058,8 @@ sub scan {
     report_recs(\%dup_recs, "[DUP-REC] Duplicate Records");
     report_recs(\%ovr_recs, "[OVR-REC] Overridden Records");
     unless ($::opt_q) {
-	print "\n$DUP_INF_HELP" if ($::opt_d and $dup_inf);
-	print "\n$MOD_INF_HELP" if ($::opt_m and $mod_inf);
+	print "\n$DUP_INF_HELP" if ($CHK_DUPLICATE_INFO and $dup_inf);
+	print "\n$MOD_INF_HELP" if ($CHK_MODIFIED_INFO and $mod_inf);
 	print "\n$MOD_IID_HELP" if ($mod_iid);
     }
     $| = 1;			# flush STDOUT
@@ -955,7 +1068,7 @@ sub scan {
 	while (<STAT>) {
 	    if (/^VmRSS:\s*(\d+)/) {
 		my $vmsize = $1 / 1024;
-		warn "### esplint Memory Usage: $vmsize (MB)\n";
+		warn "### esplint($plugin) Memory Usage: $vmsize (MB)\n";
 	    }
 	}
 	close(STAT);
