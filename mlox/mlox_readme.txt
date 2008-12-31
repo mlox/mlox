@@ -409,6 +409,10 @@ send me this bugdump so I can figure out what happened.
 
 o ChangeLog
 
+Version 0.38 - 2008/12/30
+	* added new [SIZE] function that allows you to check the
+	filesize of a plugin.
+
 Version 0.31 - 2008/12/16
 	* added new [VER] function that allows you to check the
 	version of a plugin, if the plugin has a discoverable version

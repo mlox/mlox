@@ -21,6 +21,7 @@ o Warning Rules
 oo Messages
 oo Boolean Expressions
 ooo The Desc predicate
+ooo The Size predicate
 ooo The Ver predicate
 oo The Note Rule
 oo The Requires Rule
@@ -246,6 +247,33 @@ Sris_Alchemy_BM.esp contains the pattern "v. 1.1109".
 
 You can use a [DESC] predicate in any warning rule, just like any
 other expression.
+
+----------------------------------------------------------------------
+ooo The Size predicate
+
+The Size predicate is a special predicate that matches the filesize of the
+plugin
+
+The form is:
+
+[SIZE ### A.esp]
+or
+[SIZE !### A.esp]
+
+where ### is the size of the file in bytes. (!### means that the filesize does
+not match the given number).
+
+The function must all be on one line.
+
+[Note]
+ This file contains some GMSTs that need to be cleaned.
+[SIZE 2476 moons_soulgems.esp]
+
+In this case, the note will only print out if the size of moons_soulgems.esp
+is 2476 bytes.
+
+You can use a [SIZE] predicate in any warning rule, just like any other
+expression.
 
 ----------------------------------------------------------------------
 ooo The Ver predicate
