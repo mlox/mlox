@@ -21,26 +21,22 @@ BEGIN {
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
 
-$::opt_a = 0;			# "all" output options ON
-$::opt_f = "";			# which flags to output
-$::opt_n = 0;			# "normal" output options ON
-$::opt_q = 0;			# quiet
-$::opt_r = 0;			# "recommended" output options ON
-$::opt_v = 0;			# verbose ON
+$::opt_a = 0;			# "all" output options
+$::opt_e = 0;			# "error" output options
+$::opt_f = "";			# which specific flags to turn on
+$::opt_n = 0;			# "normal" output options
+$::opt_r = 0;			# "recommended" output options
+$::opt_v = 0;			# verbose
 $::opt_w = 999;			# record output field width
 
 my %OPTFLAG = ();		# output flag options
 
-my $CHECK_CLEAN = 0;		# CLEAN
 my $CHK_DUPLICATE_INFO = 0;	# DUP-INF
-my $CHK_EVIL_GMSTS = 0;		# EVLGMST
 my $CHK_FOG_DENSITY = 0;	# FOGBUG & FOGSYNC
 my $CHK_NO_EXPANSION_FUNS = 0;	# !TB-FUN & !BM-FUN
 my $CHK_GETSOUNDPLAYING = 0;	# GETSND
-my $CHK_MENUMODE = 0;		# MENUMOD
 my $CHK_HEADER_FIELDS = 0;	# MISSAUT, MISSDSC, MISSVER
 my $CHK_CHANGED_INFO_IDS = 0;	# MOD-IID
-my $CHK_JUNK_CELLS = 0;		# JUNKCEL
 my $CHK_DEPRECATED_LISTFUN = 0;	# DEP-LST
 my $CHK_MODIFIED_INFO = 0;	# MOD-INF
 my $CHK_OVERRIDDEN_REC = 0;	# OVR-REC
@@ -49,36 +45,11 @@ my $CHK_SCRIPTED_DOORS = 0;	# SCRDOOR
 my $CHK_DUP_REC = 0;		# DUP-REC
 my $CHK_EXPANSION_FUNCTIONS = 0; # BM-DEP & EXP-DEP
 
-my $DUP_INF_HELP = <<END;
-    DUP-INF: indicates the exact INFO dialog with the same ID, text and filter
-             exists in one of the masters of this plugin. This may be a
-             problem, or maybe not. Sometimes duplicate dialog is intentional
-             in order for dialog sorting to be correct. It's only a mistake
-             if it really was unintentional.
-END
-
-my $MOD_INF_HELP = <<END;
-    MOD-INF: indicates that an INFO dialog with the same ID exists in the
-	     master, but this plugin has modified the text or the filter. This
-	     is quite common when a plugin intentionally modifies a master's
-	     dialog.
-END
-
-my $MOD_IID_HELP = <<END;
-    MOD-IID: indicates that the exact same INFO dialog text and filter exists
-	     in one of the masters of this plugin, but under a *different* ID.
-	     This can be caused by creating new dialog by copying the
-	     original, and then accidentally editing the original instead of
-	     the copy. This may cause bad dialog problems and should be
-	     investigated further.
-END
-
 my $Usage = qq{tes3lint [OPTIONS] plugin...
 
 OPTIONS
  -D        debug output (vast)
  -f flags  specify which flags (in a comma delimited list) to print.
- -q        quiet (less output, no explanation text)
  -v        verbose (possibly more output)
 
 The following are shortcuts for printing recommended lists of flags:
@@ -143,7 +114,12 @@ about the flagged items.
              functions to modify Bethesda lists see:
              http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
 
-$DUP_INF_HELP
+    DUP-INF: indicates the exact INFO dialog with the same ID, text and filter
+             exists in one of the masters of this plugin. This may be a
+             problem, or maybe not. Sometimes duplicate dialog is intentional
+             in order for dialog sorting to be correct. It's only a mistake
+             if it really was unintentional.
+
     DUP-REC: These are records in the plugin that are exact duplicates of
              records that occur in one of the masters. These are sometimes
              referred to as "dirty" or "unclean" entries.
@@ -213,9 +189,22 @@ $DUP_INF_HELP
              much wider variety of version number formats). It is safest to
              use a string of the format: "Version: X.Y", on a line by itself.
 
-$MOD_INF_HELP
-$MOD_IID_HELP
-    OVR-REC: The plugin contains a record that overrides the record with the
+    MOD-INF: indicates that an INFO dialog with the same ID exists in the
+	     master, but this plugin has modified the text or the filter. This
+	     is quite common when a plugin intentionally modifies a master's
+	     dialog, but it often a problem when due to unintentional changes.
+	     A MOD-INF flag may have an associated MOD-IID flag. The modified
+	     Info record is dumped in a very cursory fashion (the binary bits
+	     are just trimmed out) in order to give a quick identification.
+
+    MOD-IID: indicates that the exact same INFO dialog text exists in this
+	     plugin as in a master, but under a different ID. When associated
+	     with a MOD-INF, this situation may be due to creating new dialog
+	     by copying the original, and then accidentally editing the
+	     original instead of the copy which may cause bad dialog problems
+	     and should probably be investigated further.
+
+    OVR-REC: The plugin contains record(s) that override the record with the
              same ID in one of its masters.
 
     SCRDOOR: The plugin adds scripts to Bethesda doors, which has the potential
@@ -232,14 +221,14 @@ $MOD_IID_HELP
              reasons for listing Tribunal as a master).
 };
 
-getopts('aDf:nqrvx') or die $Usage;
+getopts('aDef:nrvw') or die $Usage;
 
 # by default choose -r (recommended flags) if no other output option selected:
 $::opt_r = 1 unless ($::opt_a or $::opt_f or $::opt_n or $::opt_r);
 
-my %DEFINED_FLAGS = (); $DEFINED_FLAGS{$_}++ foreach (qw(CLEAN DUP-INF EVLGMST
-FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MENUMOD MISSAUT MISSDSC MISSVER
-MOD-IID JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR DUP-REC BM-DEP
+my %DEFINED_FLAGS = (); $DEFINED_FLAGS{$_}++ foreach (qw(CLEAN DUP-INF
+EVLGMST FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MENUMOD MISSAUT MISSDSC
+MISSVER MOD-IID JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR DUP-REC BM-DEP
 EXP-DEP));
 
 if ($::opt_f) {
@@ -260,24 +249,25 @@ if ($::opt_f) {
 if ($::opt_a) {
     %OPTFLAG = %DEFINED_FLAGS;
     $::opt_v = 1;
+} elsif ($::opt_e) {
+    $OPTFLAG{$_}++ foreach (qw(CELL00 EVLGMST FOGBUG FOGSYNC MOD-IID DEP-LST BM-DEP EXP-DEP));
 } elsif ($::opt_n) {
     $OPTFLAG{$_}++ foreach (qw(EVLGMST FOGBUG FOGSYNC MOD-IID JUNKCEL DUP-REC));
 } elsif ($::opt_r) {
     $OPTFLAG{$_}++ foreach (qw(CLEAN EVLGMST FOGBUG FOGSYNC MISSAUT MISSDSC MISSVER MOD-IID JUNKCEL DEP-LST DUP-REC BM-DEP EXP-DEP));
 }
 
-$CHECK_CLEAN = 1              if ($OPTFLAG{CLEAN});
 $CHK_DUPLICATE_INFO = 1       if ($OPTFLAG{'DUP-INF'});
-$CHK_EVIL_GMSTS = 1	      if ($OPTFLAG{EVLGMST});
 $CHK_FOG_DENSITY = 1	      if ($OPTFLAG{FOGBUG} or $OPTFLAG{FOGSYNC});
 $CHK_NO_EXPANSION_FUNS = 1    if ($OPTFLAG{'!TB-FUN'} or $OPTFLAG{'!BM-FUN'});
 $CHK_GETSOUNDPLAYING = 1      if ($OPTFLAG{GETSND});
-$CHK_MENUMODE = 1	      if ($OPTFLAG{MENUMOD});
 $CHK_HEADER_FIELDS = 1	      if ($OPTFLAG{MISSAUT} or $OPTFLAG{MISSDSC} or $OPTFLAG{MISSVER});
-$CHK_CHANGED_INFO_IDS = 1     if ($OPTFLAG{'MOD-IID'});
-$CHK_JUNK_CELLS = 1	      if ($OPTFLAG{JUNKCEL});
+
+# TBD: this is disabled until I find a better definition
+$CHK_CHANGED_INFO_IDS = 0     if ($OPTFLAG{'MOD-IID'});
+
 $CHK_DEPRECATED_LISTFUN = 1   if ($OPTFLAG{'DEP-LST'});
-$CHK_MODIFIED_INFO = 1	      if ($OPTFLAG{'MOD-INF'});
+$CHK_MODIFIED_INFO = 1	      if ($OPTFLAG{'MOD-INF'} or $OPTFLAG{'MOD-IID'});
 $CHK_OVERRIDDEN_REC = 1       if ($OPTFLAG{'OVR-REC'});
 $CHK_AUTOCALCED_SPELLS = 1    if ($OPTFLAG{AUTOSPL});
 $CHK_SCRIPTED_DOORS = 1       if ($OPTFLAG{SCRDOOR});
@@ -290,7 +280,7 @@ my %STD_OBJECT = qw(CLAS FACT RACE REGN BSGN DOOR MISC WEAP CONT SPEL CREA
 # BEGIN: globals loaded from __DATA__ segment at end of script
 my $RE_BMFUN;
 my $RE_TBFUN;
-my $RE_DEPFUN;
+my $RE_DEPLST;
 my %TB_EVIL;
 my %BM_EVIL;
 my %BETHDOOR;
@@ -307,6 +297,7 @@ my $RE_MENUMODE = '\bmenumode\b';
 # globals used for caching data when scanning multiple plugins at once
 my @MASTERS = ();		# reset in scan() for each new plugin
 my %MASTER_INFO;		# reused from plugin to plugin
+my %MASTER_INFTXT;		# reused from plugin to plugin
 my %MASTER_REC;			# reused from plugin to plugin
 my %MASTER_ID;			# reused from plugin to plugin
 
@@ -334,7 +325,7 @@ sub load_data_list {
 sub load_data {
     $RE_TBFUN = '^[^;]*?\b(' . join("|", @{load_data_list()}) . ')\b';
     $RE_BMFUN = '^[^;]*?\b(' . join("|", @{load_data_list()}) . ')\b';
-    $RE_DEPFUN = '^[^;]*?\b((?:addto|removefrom)lev(?:item|creature)\W+(?:' . join("|", @{load_data_list()}) . ')\b\"?).*$';
+    $RE_DEPLST = '^[^;]*?\b((?:addto|removefrom)lev(?:item|creature)\W+(?:' . join("|", @{load_data_list()}) . ')\b\"?).*$';
     foreach my $g (@{load_data_list()}) {
 	my($name, $val) = split(" ", $g);
 	$TB_EVIL{$name} = $val;
@@ -346,14 +337,14 @@ sub load_data {
     foreach my $door (@{load_data_list()}) {
 	$BETHDOOR{$door}++;
     }
-    if (not $CHK_EVIL_GMSTS) {
+    if (not $OPTFLAG{EVLGMST}) {
 	undef %TB_EVIL;
 	undef %BM_EVIL;
     }
     if (DBG) {
 	print "\nTBFUN regexp: $RE_TBFUN\n";
 	print "\nBMFUN regexp: $RE_BMFUN\n";
-	print "\nDEPFUN regexp: $RE_DEPFUN\n";
+	print "\nDEPLST regexp: $RE_DEPLST\n";
     }
 }
 
@@ -472,16 +463,17 @@ sub load_master {
 	}
 	print "DBG: rec_type = $rec_type\n" if (DBG);
 	if ($read_info and $rec_type eq "INFO") {
-	    my $r = parse_subrec($rec);
+	    my $r = parse_subrec_hash($rec);
 	    my $id = chop_nulls($r->{INAM}[0]);
 	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
 	    my $val = (split(/DATA/, $rec, 2))[1];
 	    $MASTER_INFO{$esm}->{$id} = $val;
+	    $MASTER_INFTXT{$esm}->{$id} = $r->{NAME}[0];
 	    print "DBG: INFO($esm) $id = $val\n" if (DBG);
 	} else {
 	    if ($CHK_OVERRIDDEN_REC) {
-		my $id = rec_id(parse_subrec($rec), $rec_type);
+		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 		if (defined $id) {
 		    $MASTER_ID{$esm}->{$rec_type}->{$id} = 1;
 		}
@@ -518,18 +510,19 @@ sub read_rec {
     my($rec_type, $rec_len, $flags) = unpack("a4Lx[L]L", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rec_type) {
 	warn "Error: Expected: $expected_type, got: $rec_type\n";
-	return(undef, undef);
+	return(undef);
     }
     my $rec = "";
     $n_read = sysread(INP, $rec, $rec_len);
     if ($n_read != $rec_len) {
 	warn "Error(rec): asked for $rec_len bytes, got $n_read\n";
-	return(undef, undef);
+	return(undef);
     }
     return($rec_type, $rec, $flags);
 }
 
-sub parse_subrec_long {
+# this version takes a little longer to execute
+sub parse_subrec_hash_long {
     my($rec) = @_;
     my %r = ();
     my $p = 0;
@@ -544,12 +537,11 @@ sub parse_subrec_long {
     return(\%r);
 }
 
-# parse a record into sub-records, and return as a dictionary ref.
-sub parse_subrec {
+sub parse_subrec_hash {
     my($rec) = @_;
     my %r = ();
     my @parts = eval { unpack("(a4L/a*)*", $rec); };
-    return(parse_subrec_long($rec)) if ($@);
+    return(parse_subrec_hash_long($rec)) if ($@);
     while (@parts) {
 	my $subrec_type = shift(@parts);
 	my $subrec_val = shift(@parts);
@@ -576,7 +568,7 @@ sub get_subrec {
 # scan the script text for various function usage.
 my %tbfun;
 my %bmfun;
-my %depfun;
+my %deplst;
 my %getsound;
 my %menumode;
 sub scan_script {
@@ -595,9 +587,9 @@ sub scan_script {
 	}
     }
     if ($CHK_DEPRECATED_LISTFUN) {
-	while ($script =~ m!$RE_DEPFUN!gim) {
-	    print "DEPFUN($label): $1\n" if (DBG);
-	    $depfun{"$label\t".lc($1)}++;
+	while ($script =~ m!$RE_DEPLST!gim) {
+	    print "DEPLST($label): $1\n" if (DBG);
+	    $deplst{"$label\t".lc($1)}++;
 	}
     }
     if ($CHK_GETSOUNDPLAYING) {
@@ -608,7 +600,7 @@ sub scan_script {
 	    }
 	}
     }
-    if ($label !~ /^INFO/ and $CHK_MENUMODE and ($script !~ m!$RE_MENUMODE!gis)) {
+    if ($label !~ /^INFO/ and $OPTFLAG{MENUMOD} and ($script !~ m!$RE_MENUMODE!gis)) {
 	$menumode{$label}++;
     }
 }
@@ -618,7 +610,7 @@ sub scan_script {
 # which are stored in the DATA segment of this script.
 sub gmstval {
     my($rec, $plugin_path) = @_;
-    my $r = parse_subrec($rec);
+    my $r = parse_subrec_hash($rec);
     my $id = rec_id($r, "GMST");
     delete $r->{NAME};
     my @keys = keys %$r;
@@ -694,7 +686,7 @@ sub scan {
     # the following are globals used by scan_script
     %tbfun = ();
     %bmfun = ();
-    %depfun = ();
+    %deplst = ();
     %getsound = ();
     %menumode = ();
     # locals
@@ -705,6 +697,7 @@ sub scan {
     my @autospl = ();
     my %fogbug = ();
     my %myinf = ();
+    my %myinftxt = ();
     my %myrec = ();
     my %myid = ();
     my %door = ();
@@ -719,9 +712,9 @@ sub scan {
     my $expected = "TES3";
     my $cur_dial;
     my $read_info = ($CHK_CHANGED_INFO_IDS or $CHK_DUPLICATE_INFO or $CHK_MODIFIED_INFO);
-    my $read_scpt = ($CHK_EXPANSION_FUNCTIONS or $CHK_NO_EXPANSION_FUNS or $CHK_DEPRECATED_LISTFUN or $CHK_GETSOUNDPLAYING or $CHK_MENUMODE);
-    my $read_gmsts = ($CHK_EVIL_GMSTS or $CHK_DUP_REC or $CHK_OVERRIDDEN_REC);
-    my $read_cell = ($CHK_JUNK_CELLS or $CHK_FOG_DENSITY or $CHK_DUP_REC);
+    my $read_scpt = ($CHK_EXPANSION_FUNCTIONS or $CHK_NO_EXPANSION_FUNS or $CHK_DEPRECATED_LISTFUN or $CHK_GETSOUNDPLAYING or $OPTFLAG{MENUMOD});
+    my $read_gmsts = ($OPTFLAG{EVLGMST} or $CHK_DUP_REC or $CHK_OVERRIDDEN_REC);
+    my $read_cell = ($OPTFLAG{JUNKCEL} or $CHK_FOG_DENSITY or $CHK_DUP_REC);
     my %dial_info = ();
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
 	$expected = undef;
@@ -732,7 +725,7 @@ sub scan {
 	    next;
 	}
 	if ($rec_type eq "TES3") {
-	    my $r = parse_subrec($rec);
+	    my $r = parse_subrec_hash($rec);
 	    if ($CHK_HEADER_FIELDS) {
 		my $hedr = $r->{HEDR}[0];
 		my($hedrver, $auth, $desc, $nrec) = unpack("fx[L]a32a256L", $hedr);
@@ -769,18 +762,19 @@ sub scan {
 	    $myid{$rec_type}->{$name}++ if ($CHK_OVERRIDDEN_REC);
 	} elsif ($CHK_EXPANSION_FUNCTIONS and $rec_type eq "SSCR") {
 	    # check for startup script dependency
-	    my $id = rec_id(parse_subrec($rec), $rec_type);
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 	    push(@sscr, $id);
 	    $myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	} elsif ($read_info and $rec_type eq "INFO") {
 	    # check for tribunal/bloodmoon function dependency in infos
-	    my $r = parse_subrec($rec);
+	    my $r = parse_subrec_hash($rec);
 	    my $id = $r->{INAM}[0];
 	    $id = chop_nulls($id);
 	    my $script = $r->{BNAM}[0];
 	    scan_script($script, "INFO($id)") if ($read_scpt);
 	    $myinf{$id} = (split(/DATA/s, $rec, 2))[1];
 	    print "DBG: MYINF($plugin) $id = $myinf{$id}\n" if (DBG);
+	    push(@{$myinftxt{$r->{NAME}[0]}}, $id);
 	    # TBD
 	    $dial_info{$cur_dial}->{$id} = 0;
 	} elsif ($rec_type eq "SCPT") {
@@ -792,7 +786,7 @@ sub scan {
 	    $myid{$rec_type}->{lc($name)}++ if ($CHK_OVERRIDDEN_REC);
 	} elsif ($read_cell and $rec_type eq "CELL") {
 	    # check for fogbugs in cells
-	    my $r = parse_subrec($rec);
+	    my $r = parse_subrec_hash($rec);
 	    my $name = chop_nulls($r->{NAME}[0]);
 	    my $data = $r->{DATA}[0];
 	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
@@ -821,7 +815,7 @@ sub scan {
 		}
 		my $nkeys = scalar(keys %$r);
 		if (($nkeys == 2) or ($nkeys == 3)) {
-		    $myjunk{$name} = $flags if ($CHK_JUNK_CELLS);
+		    $myjunk{$name} = $flags if ($OPTFLAG{JUNKCEL});
 		} else {
 		    $myrec{$rec} = $name if ($CHK_DUP_REC);
 		}
@@ -830,7 +824,7 @@ sub scan {
 		push(@fogsync, sprintf "%-35s  %s", $name, $fogsync);
 	    }
 	} elsif ($CHK_AUTOCALCED_SPELLS and ($rec_type eq "SPEL")) {
-	    my $r = parse_subrec($rec);
+	    my $r = parse_subrec_hash($rec);
 	    my $spdt = $r->{SPDT}[0];
 	    if (my $autocalc = (unpack("x[L2]L", $spdt) & 1)) {
 		my $id = rec_id($r, $rec_type);
@@ -839,7 +833,7 @@ sub scan {
 		$myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	    }
 	} elsif ($rec_type eq "DOOR") {
-	    my $r = parse_subrec($rec);
+	    my $r = parse_subrec_hash($rec);
 	    my $id = rec_id($r, $rec_type);
 	    if ($CHK_SCRIPTED_DOORS) {
 		my $scri = chop_nulls($r->{SCRI}[0]);
@@ -850,13 +844,13 @@ sub scan {
 	    $myrec{$rec} = $id if ($CHK_DUP_REC);
 	    $myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	} elsif ($rec_type eq "DIAL") {
-	    my $id = rec_id(parse_subrec($rec), $rec_type);
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 	    $cur_dial = $id;
 	    if (defined $id) {
 		$myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
 	    }
 	} else {
-	    my $id = rec_id(parse_subrec($rec), $rec_type);
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 	    if (defined $id) {
 		$myrec{$rec} = $id if ($CHK_DUP_REC);
 		$myid{$rec_type}->{$id}++ if ($CHK_OVERRIDDEN_REC);
@@ -874,7 +868,7 @@ sub scan {
 	foreach my $master (keys %MASTER_REC) {
 	    my $cell_recs = $MASTER_REC{$master}->{CELL};
 	    foreach my $rec (keys %{$cell_recs}) {
-		my $r = parse_subrec($rec);
+		my $r = parse_subrec_hash($rec);
 		my($oldflags) = unpack("L", $r->{DATA}[0]);
 		if (not ($oldflags & 1)) {
 		    my($name) = ext_cell_name($r);
@@ -927,11 +921,6 @@ sub scan {
 		$inf_master{"$id$inf"} = $master;
 	    }
 	}
-	my %rev_master_inf = ();
-	# create a reverse index
-	while (my($id, $inf) = each %master_inf) {
-	    $rev_master_inf{$inf} = $id;
-	}
 	foreach my $id (sort {$a <=> $b} keys %myinf) {
 	    my $inf = $myinf{$id};
 	    my $inf_str = pprec($inf);
@@ -940,9 +929,9 @@ sub scan {
 		    foreach my $dial_id (keys %dial_info) {
 			$dial_info{$dial_id}->{$id}++;
 		    }
-		    $dup_inf++ if ($CHK_DUPLICATE_INFO);
 		    if ($CHK_DUPLICATE_INFO) {
-			$inf_out .= "[DUP-INF]: ID=$id\n";
+			$dup_inf++;
+			$inf_out .= "\n[DUP-INF]: ID=$id\n";
 			$inf_out .= "  $inf_str\n";
 		    }
 		} else {
@@ -953,18 +942,18 @@ sub scan {
 			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
 			my $plugin_pref = $plugin . "-"x($maxlen - length($plugin));
 			my $master_pref = $master . "-"x($maxlen - length($master));
-			$inf_out .= "[MOD-INF]: ID=$id\n";
+			$inf_out .= "\n[MOD-INF]: ID=$id\n";
 			$inf_out .= "  ${master_pref}->$mast_inf_str\n";
 			$inf_out .= "  ${plugin_pref}->$inf_str\n";
-		    }
-		}
-	    }
-	    if (defined($rev_master_inf{$id})) {
-		$mod_iid++;
-		if ($rev_master_inf{$inf} != $id) {
-		    if ($CHK_CHANGED_INFO_IDS) {
-			$inf_out .= "[MOD-ID]: ID=$id REC=$inf\n";
-			$inf_out .= "  ORIG-ID=$rev_master_inf{$inf}\n";
+			if ($CHK_CHANGED_INFO_IDS) {
+			    my $inftxt = $MASTER_INFTXT{$master}->{$id};
+			    if ($myinftxt{$inftxt} and my @ids = grep($_ ne $id, @{$myinftxt{$inftxt}})) {
+				$mod_iid++;
+				my $pl = (scalar(@ids) > 1) ? "s" : "";
+				$inf_out .= "[MOD-IID]: ID$pl=@{[join(',', @ids)]}\n";
+				$inf_out .= "  ${plugin_pref}->$inftxt\n";
+			    }
+			}
 		    }
 		}
 	    }
@@ -998,7 +987,7 @@ sub scan {
     $found .= " AUTOSPL" if (@autospl);
     $found .= " CELL00"  if ($cell00);
     $found .= " BM-DEP"  if ((not $mastbm) and %bmfun);
-    $found .= " DEP-LST" if (%depfun);
+    $found .= " DEP-LST" if (%deplst);
     $found .= " DUP-INF" if ($dup_inf);
     $found .= " DUP-REC" if (%dup_recs);
     $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
@@ -1011,8 +1000,8 @@ sub scan {
     $found .= " MISSAUT" if ($OPTFLAG{MISSAUT} and $missauth);
     $found .= " MISSDSC" if ($OPTFLAG{MISSDSC} and $missdesc);
     $found .= " MISSVER" if ($OPTFLAG{MISSVER} and $missver);
-    $found .= " MOD-INF" if ($mod_inf);
-    $found .= " MOD-ID"  if ($mod_iid);
+    $found .= " MOD-INF" if ($mod_inf and $OPTFLAG{'MOD-INF'});
+    $found .= " MOD-IID" if ($mod_iid);
     $found .= " OVR-REC" if (%ovr_recs);
     $found .= " SCRDOOR" if (%door);
     if ($CHK_NO_EXPANSION_FUNS) {
@@ -1022,7 +1011,7 @@ sub scan {
     if ($found) {
 	print "$plugin_path:$found\n";
     } else {
-	print "$plugin_path: CLEAN\n" if ($CHECK_CLEAN);
+	print "$plugin_path: CLEAN\n" if ($OPTFLAG{CLEAN});
 	return;
     }
     ##################################################
@@ -1043,8 +1032,8 @@ sub scan {
     }
     report(\%tbfun, "[EXP-DEP] Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
     report(\%bmfun, "[BM-DEP] Bloodmoon Dependency: Bloodmoon Functions") if ($OPTFLAG{'BM-DEP'} and not $mastbm);
-    report(\%depfun, "[DEP-FUN] Deprecated use of Leveled List functions on Bethesda Lists");
-    report(\%evil, "[EVLGMST]" . (($evil_tb > 0)? " Tribunal($evil_tb)" : "") . (($evil_tb > 0)? " Bloodmoon($evil_bm)" : ""));
+    report(\%deplst, "[DEP-LST] Deprecated use of Leveled List functions on Bethesda Lists");
+    report(\%evil, "[EVLGMST]" . (($evil_tb > 0)? " Tribunal($evil_tb)" : "") . (($evil_bm > 0)? " Bloodmoon($evil_bm)" : ""));
     if (%fogbug) {
 	print "    [FOGBUG]: Cells with zero fog density setting:\n";
 	print "\t$_\n" foreach (sort keys %fogbug);
@@ -1077,18 +1066,13 @@ sub scan {
     report_recs(\%dup_dial, "[DUP-DIAL] Duplicate Dialog Records");
     report_recs(\%dup_recs, "[DUP-REC] Duplicate Records");
     report_recs(\%ovr_recs, "[OVR-REC] Overridden Records");
-    unless ($::opt_q) {
-	print "\n$DUP_INF_HELP" if ($CHK_DUPLICATE_INFO and $dup_inf);
-	print "\n$MOD_INF_HELP" if ($CHK_MODIFIED_INFO and $mod_inf);
-	print "\n$MOD_IID_HELP" if ($mod_iid);
-    }
     $| = 1;			# flush STDOUT
     print $inf_out;
     if (open(STAT, "/proc/$$/status")) {
 	while (<STAT>) {
 	    if (/^VmRSS:\s*(\d+)/) {
 		my $vmsize = $1 / 1024;
-		warn "### tes3lint($plugin) Memory Usage: $vmsize (MB)\n";
+		warn "### tes3lint($plugin) Memory Usage: $vmsize (MB)\n" if ($::opt_v);
 	    }
 	}
 	close(STAT);
@@ -1099,7 +1083,8 @@ sub scan {
 # run the program.
 load_data();
 for my $plugin (@ARGV) {
-    scan($plugin);
+    eval { scan($plugin); };
+    warn "$plugin: Error scanning: $@\n" if ($@);
 }
 
 # Data segment follows.
