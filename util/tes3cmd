@@ -12,7 +12,200 @@ BEGIN {
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
 
-my $REN_USAGE = q{Usage: tes3cmd rename [-D] RECTYPE.SUBTYPE FROM TO plugin...
+my $COM_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
+
+OPTIONS
+ -D   turn on debug output
+
+Prints the IDs of records that the 2 given plugins have in common.
+};
+
+sub opts_com {
+    $_[0] && do { warn $COM_USAGE; exit(0); };
+    getopts('D') or die $COM_USAGE;
+}
+
+
+my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
+
+OPTIONS
+ -D        turn on debug output
+ -i ids    only print out the ids matching the given comma-delimited list
+           of regular expression pattersn.
+ -t types  only print out the records matching the given comma-delimted
+           list of record types.
+
+Dumps the plugin to stdout in text form for easy perusal. For large plugins,
+the output can be voluminous.
+};
+
+my %INFO_SCVR_type =
+    ('0' => "Nothing",
+     '1' => "Function",
+     '2' => "Global",
+     '3' => "Local",
+     '4' => "Journal",
+     '5' => "Item",
+     '6' => "Dead",
+     '7' => "Not ID",
+     '8' => "Not Faction",
+     '9' => "Not Class",
+     'A' => "Not Race",
+     'B' => "Not Cell",
+     'C' => "Not Local");
+
+my %INFO_SCVR_cmp =
+    ('0' => '=',
+     '1' => '!=',
+     '2' => '>',
+     '3' => '>=',
+     '4' => '<',
+     '5' => '<=');
+
+my %SEX = (0 => "Male", 1 => "Female", 0xFF => "None");
+my %SPECIALIZATION = (0 => "Combat", 1 => "Magic", 2 => "Stealth");
+
+my %SKILL = ( 0 => "Block",
+	      1 => "Armorer",
+	      2 => "Medium Armor",
+	      3 => "Heavy Armor",
+	      4 => "Blunt Weapon",
+	      5 => "Long Blade",
+	      6 => "Axe",
+	      7 => "Spear",
+	      8 => "Athletics",
+	      9 => "Enchant",
+	     10 => "Destruction",
+	     11 => "Alteration",
+	     12 => "Illusion",
+	     13 => "Conjuration",
+	     14 => "Mysticism",
+	     15 => "Restoration",
+	     16 => "Alchemy",
+	     17 => "Unarmored",
+	     18 => "Security",
+	     19 => "Sneak",
+	     20 => "Acrobatics",
+	     21 => "Light Armor",
+	     22 => "Short Blade",
+	     23 => "Marksman",
+	     24 => "Mercantile",
+	     25 => "SpeechCraft",
+	     26 => "HandToHand");
+
+my %ATTRIBUTE = (0 => "Strength",
+		 1 => "Intelligence",
+		 2 => "Willpower",
+		 3 => "Agility",
+		 4 => "Speed",
+		 5 => "Endurance",
+		 6 => "Personality",
+		 7 => "Luck");
+
+my @AUTOCALC_FLAGS = ([0x00001 => "Weapon"],
+		      [0x00002 => "Armor"],
+		      [0x00004 => "Clothing"],
+		      [0x00008 => "Books"],
+		      [0x00010 => "Ingredient"],
+		      [0x00020 => "Picks"],
+		      [0x00040 => "Probes"],
+		      [0x00080 => "Lights"],
+		      [0x00100 => "Apparatus"],
+		      [0x00200 => "Repair"],
+		      [0x00400 => "Misc"],
+		      [0x00800 => "Spells"],
+		      [0x01000 => "Magic Items"],
+		      [0x02000 => "Potions"],
+		      [0x04000 => "Training"],
+		      [0x08000 => "Spellmaking"],
+		      [0x10000 => "Enchanting"],
+		      [0x20000 => "Repair Item"]);
+
+sub list_autocalc_flags {
+    my($flags) = @_;
+    my @list = ();
+    foreach my $ref (@AUTOCALC_FLAGS) {
+	my($val, $name) = @$ref;
+	push(@list, $name) if ($flags & $val);
+    }
+    return(join(", ", @list));
+}
+
+my $NREC;
+
+my $DEFAULT_UNPACK = 
+    sub { "hex:" . unpack("h*", $_[0]) . '  str:"' . substr((($_ = $_[0]) =~ tr/\000-\037\177-\377//d, $_), 0, 60) . '"' };
+my %UNPACK =
+    (TES3_HEDR => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack("fLZ32Z256L", $_[0]);
+			  $NREC = $nrec;
+			  return(qq{  Ver:$ver  Unk:$unk\n\t\tAuthor:"$auth"\n\t\tDescription:"$desc"\n\t\tNRec:$NREC});
+		      },
+     CLAS_CLDT => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
+			    unpack("L15", $_[0]);
+			return("  " . join("\n\t\t",
+				    "Primary Attribute:   $ATTRIBUTE{$attr1}",
+				    "Secondary Attribute: $ATTRIBUTE{$attr2}",
+				    "Specialization: $SPECIALIZATION{$spec}",
+				    "Major-Skill-1: $SKILL{$maj1}",
+				    "Major-Skill-2: $SKILL{$maj2}",
+				    "Major-Skill-3: $SKILL{$maj3}",
+				    "Major-Skill-4: $SKILL{$maj4}",
+				    "Major-Skill-5: $SKILL{$maj5}",
+				    "Minor-Skill-1: $SKILL{$min1}",
+				    "Minor-Skill-2: $SKILL{$min2}",
+				    "Minor-Skill-3: $SKILL{$min3}",
+				    "Minor-Skill-4: $SKILL{$min4}",
+				    "Minor-Skill-5: $SKILL{$min5}",
+				    "Flags: " . (($flags) ? "Playable" : "Non-playable"),
+				    "AutoCalc Flags: " . list_autocalc_flags($autoflags)));
+		    },
+     TES3_MAST => sub { unpack("Z*", $_[0]) },
+     TES3_DATA => sub { "Length:     " . unpack("Q", $_[0]) },
+
+     INFO_INAM => sub { unpack("Z*", $_[0]) },
+     INFO_DATA => sub { my($disp, $rank, $sex, $pcrank) = unpack("x[L]LCCC", $_[0]);
+			  return("Disp:$disp  Rank:$rank  Sex:$SEX{$sex}  PCRank:$pcrank"); },
+     INFO_ANAM => sub { "Cell:       " . unpack("Z*", $_[0]) },
+     INFO_BNAM => sub { "Result:     " . unpack("Z*", $_[0]) },
+     INFO_CNAM => sub { "Class:      " . unpack("Z*", $_[0]) },
+     INFO_DNAM => sub { "PC Faction: " . unpack("Z*", $_[0]) },
+     INFO_FNAM => sub { "Faction:    " . unpack("Z*", $_[0]) },
+     INFO_NAME => sub { "Response:   " . unpack("Z*", $_[0]) },
+     INFO_NNAM => sub { "Next ID:    " . unpack("Z*", $_[0]) },
+     INFO_ONAM => sub { "Actor:      " . unpack("Z*", $_[0]) },
+     INFO_PNAM => sub { "Prev ID:    " . unpack("Z*", $_[0]) },
+     INFO_RNAM => sub { "Race:       " . unpack("Z*", $_[0]) },
+     INFO_SCVR => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack("aaa2aZ*", $_[0]);
+			  return("Index:$idx  Type:$INFO_SCVR_type{$typ}  Fun:$fun  Cmp:$INFO_SCVR_cmp{$cmp}  Name:$nam");
+		      },
+
+     SCPT_SCVR => sub { "Script Variables: " . join(',', split(/\000/, unpack('a*', $_[0]))) },
+
+     LTEX_DATA => sub { unpack("Z*", $_[0]) },
+
+     FLAG => sub { sprintf "0x%04x", unpack("L", $_[0]) },
+     FLTV => sub { unpack("f", $_[0]) },
+     FRMR => sub { unpack("L", $_[0]) },
+     INDX => sub { unpack("L", $_[0]) },
+     INTV => sub { unpack("l", $_[0]) },
+     NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) },
+     XSCL => sub { unpack("f", $_[0]) },
+    );
+
+# add in defaults for all the fields that are simple strings
+foreach (qw(
+ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM HSND HVFX ITEX
+KNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SCTX SNAM STRV TEXT TNAM WNAM
+)) {
+    $UNPACK{$_} = sub { unpack("Z*", $_[0]) };
+}
+
+sub opts_dump {
+    $_[0] && do { warn $DUMP_USAGE; exit(0); };
+    getopts('Dt:i:') or die $DUMP_USAGE;
+}
+
+my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
 
 This first form of the command renames all records of type RECTYPE, replacing
 the Perl regular expression FROM with the value of TO (which may contain
@@ -127,7 +320,8 @@ sub opts_header {
 
 my %CMDS = ("rename" => [\&opts_rename, \&cmd_rename],
 	    "header" => [\&opts_header, \&cmd_header],
-#	    "dump"   => [\&opts_dump, \&cmd_dump],
+	    "dump"   => [\&opts_dump, \&cmd_dump],
+	    "common" => [\&opts_com, \&cmd_com],
 	    "help"   => [\&opts_help, undef],
 	   );
 
@@ -144,6 +338,7 @@ sub add_alias {
 # add shortcut aliases for convenience
 add_alias("header", "hdr");
 add_alias("rename", "ren");
+add_alias("common", "com");
 
 sub opts_help {
     if (my $cmd_name = shift(@ARGV)) {
@@ -223,7 +418,7 @@ sub write_rec {
     print OUT pack("a4LLLa*", $rec_type, length($rec), $unk, $flags, $rec);
 }
 
-sub parse_subrec {
+sub parse_subrec_list {
     my($rec) = @_;
     my $p = 0;
     my $rec_len = length($rec);
@@ -238,6 +433,36 @@ sub parse_subrec {
 	$p += $subrec_len;
     }
     return(\@subrecs, $name_idx);
+}
+
+# this version takes a little longer to execute
+sub parse_subrec_hash_long {
+    my($rec) = @_;
+    my %r = ();
+    my $p = 0;
+    my $rec_len = length($rec);
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	$p += 8;
+	my $val = substr($rec, $p, $subrec_len);
+	push(@{$r{$subrec_type}}, $val) if (defined $val);
+	$p += $subrec_len;
+    }
+    return(\%r);
+}
+
+sub parse_subrec_hash {
+    my($rec) = @_;
+    my %r = ();
+    my @parts = eval { unpack("(a4L/a*)*", $rec); };
+    return(parse_subrec_hash_long($rec)) if ($@);
+    while (@parts) {
+	my $subrec_type = shift(@parts);
+	my $subrec_val = shift(@parts);
+	push(@{$r{$subrec_type}}, $subrec_val)
+	    if (defined $subrec_val);
+    }
+    return(\%r);
 }
 
 sub new_rec {
@@ -279,6 +504,153 @@ sub pprec {
     return(substr($recstr, 0, $::opt_w));
 }
 
+sub open_input_plugin {
+    my($plugin, $mode) = @_;
+    unless(open(INP, "<$plugin")) {
+	warn qq{Error opening "$plugin" for input ($!)\n};
+	return;
+    }
+    unless (binmode(INP)) {
+	warn "Error setting binmode on $plugin ($!)\n";
+	close(INP);
+	return;
+    }
+}
+
+sub ext_cell_name {
+    my($r) = @_;
+    my($x, $y) = unpack("x[L]ll", $r->{DATA}[0]);
+    my $rgnn = chop_nulls($r->{RGNN}[0]) || "Wilderness";
+    return("$rgnn ($x, $y)", $x, $y);
+}
+
+sub rec_id {
+    my($r, $rec_type) = @_;
+    if ($rec_type eq "CELL") {
+	my $name = chop_nulls($r->{NAME}[0]);
+	my $data = $r->{DATA}[0];
+	my($flags) = unpack("L", $data);
+	if ($flags & 1) {	# interior
+	    return($name);
+	} else {		# exterior
+	    my($xname, $x, $y) = ext_cell_name($r);
+	    return(($name) ? "$name ($x, $y)" : $xname);
+	}
+    } elsif ($rec_type eq "SCPT") {
+	my $script = $r->{SCTX}->[0];
+	my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+	return(lc($name));
+    } elsif (defined $r->{NAME}) {
+	return(lc(chop_nulls($r->{NAME}->[0])));
+    } elsif (defined $r->{INDX}) {
+	return(unpack("L", $r->{INDX}->[0]));
+    } elsif ($rec_type eq "LAND") {
+	my($x, $y) = unpack("ll", $r->{INTV}->[0]);
+	return("($x, $y)");
+    }
+    return(undef);
+}
+
+sub read_object_ids {
+    my($plugin, $fun) = @_;
+    open_input_plugin($plugin);
+    my %plugin_id = ();
+    while(my($rec_type, $rec, $flags) = read_rec(undef)) {
+	last if not defined $rec_type;
+	if ($flags & 0x1000) {
+	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	if ($fun) {
+	    $fun->($rec_type, $id);
+	} else {
+	    $plugin_id{$rec_type}->{$id} = 1 if (defined $id);
+	}
+    }
+    close(INP);
+    return(\%plugin_id) unless ($fun);
+}
+
+# find objects in common between 2 plugins
+sub cmd_com {
+    my($plugin1, $plugin2) = @_;
+    # swap plugins if plugin1 is larger than plugin2
+    ($plugin1, $plugin2) = ($plugin2, $plugin1)
+	if (-s $plugin1 > -s $plugin2);
+    # read objects from smaller plugin
+    my $objects1 = read_object_ids($plugin1);
+    # compare to objects second plugin
+    my $compare_fun = sub {
+	my($rec_type, $id) = @_;
+	if ($objects1->{$rec_type}->{$id}) {
+	    print "  $rec_type: $id\n";
+	}
+    };
+    read_object_ids($plugin2, $compare_fun);
+}
+
+sub cmd_dump {
+    my($plugin) = @_;
+    #my $plugin = (split(m![\\/]!, $plugin))[-1];
+    warn "### Scanning $plugin\n" if ($::opt_v);
+    open_input_plugin($plugin);
+    my $expected = "TES3";
+    my $n = 0;
+    my $wanted_ids;
+    if ($::opt_i) {
+	$wanted_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
+    }
+    my %wanted_types = ();
+    if ($::opt_t) {
+	foreach (split(/,/, $::opt_t)) {
+	    # TBD - validate types
+	    $wanted_types{lc($_)}++;
+	}
+    }
+    print "\n$plugin:\n";
+    while (my($rec_type, $rec, $flags) = read_rec($expected)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	print "REC=$rec_type flags=$flags\n" if (DBG);
+	if ($flags & 0x1000) {
+	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	if ($wanted_ids) {
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    next if ($id !~ /$wanted_ids/i);
+	}
+	if (%wanted_types) {
+	    next unless ($wanted_types{lc($rec_type)});
+	}
+	my $p = 0;
+	my $rec_len = length($rec);
+	my $name_idx;
+	print "\n";
+	my $first = 1;
+	while ($p < $rec_len) {
+	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	    $p += 8;
+	    my $subrec = substr($rec, $p, $subrec_len);
+	    $p += $subrec_len;
+	    if (defined $subrec) {
+		my $full_type = "${rec_type}_${subrec_type}";
+		my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
+		my $subrec_str = $unpack->($subrec);
+		my $recnum = ($wanted_ids) ? "" : "Record: $n\n";
+		my $prefix = ($first) ? "$recnum   $full_type" : "        $subrec_type";
+		print "$prefix: $subrec_str\n";
+	    } else {
+		warn "$plugin: Error: malformed subrec $subrec_type\n";
+	    }
+	    $first = 0;
+	}
+	$n++;
+    }
+    close(INP);
+}
+
 sub cmd_rename {
     my($plugin) = @_;
     my $newplugin = $plugin;
@@ -288,17 +660,14 @@ sub cmd_rename {
 	return;
     }
     print "\n$plugin: RENAMING CELLS:\n" unless ($::opt_l);
-    unless(open(INP, "<$plugin")) {
-	warn "Error opening $plugin for input ($!)\n";
-	return;
-    }
+    open_input_plugin($plugin);
     unless($::opt_l) {
 	unless(open(OUT, ">$newplugin")) {
-	    warn "Error opening $newplugin for output ($!)\n";
+	    warn qq{Error opening "$newplugin" for output ($!)\n};
 	    return;
 	}
 	unless(binmode(OUT, ':raw')) {
-	    warn "Error setting binmode on $newplugin ($!)\n";
+	    warn qq{Error setting binmode on "$newplugin" ($!)\n};
 	    close(OUT);
 	    return;
 	}
@@ -310,7 +679,7 @@ sub cmd_rename {
 	print "REC=$rec_type flags=$flags\n" if (DBG);
 	if ($rec_type eq $REN_TYPE) {
 	    my $renamed = 0;
-	    my($subrecs, $name_idx) = parse_subrec($rec);
+	    my($subrecs, $name_idx) = parse_subrec_list($rec);
 	    if (defined($name_idx) and
 		my $name = $subrecs->[$name_idx]->[1]) {
 		$name = chop_nulls($name);
@@ -347,7 +716,7 @@ sub cmd_rename {
 sub cmd_header {
     my($plugin) = @_;
     unless(open(PLUG, "+<$plugin")) {
-	warn "Error opening $plugin for read/write ($!)\n";
+	warn qq{Error opening "$plugin" for read/write ($!)\n};
 	return;
     }
     unless(binmode(PLUG)) {
@@ -406,8 +775,12 @@ sub main {
     die $USAGE_ALL unless ($cmd_ref = $CMDS{$cmd_name});
     my($cmd_getopts, $cmd) = @{$cmd_ref};
     $cmd_getopts->();
-    for my $plugin (@ARGV) {
-	$cmd->($plugin);
+    if ($cmd_name =~ /^com(mon)?$/i) {
+	$cmd->(@ARGV);
+    } else {
+	for my $plugin (@ARGV) {
+	    $cmd->($plugin);
+	}
     }
 }
 
