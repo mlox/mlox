@@ -4763,6 +4763,11 @@ MCA - COV Addon.esp
 MCA.esm
 Morrowind Comes Alive.esm
 
+;; MCA - NOM Patch.esp modifieds NOM's Bed_Standard script, so it should come after NOM - JMS
+[Order]
+NOM 2.13.esp
+MCA - NOM Patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mokbar [Dalibor "Sahardoom" Brankov]
@@ -6354,7 +6359,37 @@ SkeldaleHouseMTM.esp
  the .esp that applies."
  (Ref: "Ships of the Imperial Navy - Readme.txt")
 Ships of the Imperial Navy.esp
+Ships of the Imperial Navy (Bloodmoon).esp
+
+[Note]
+ The latest version of "Ships of the Imperial Navy" is 1.1, available from Elricm:
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=1067
+[SIZE !24096 Ships of the Imperial Navy.esp]
 Ships of the Imperial Navy (Bloodmoon version).esp
+
+[Note]
+ There is a version of "Ships of the Imperial Navy" that was made
+ compatible with MetalQueen Boutique:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=892
+ (but note that it is based on version 1.0 and there is also a version 1.1 available):
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=1067
+[ALL MetalQueenBoutique.esm
+     [ANY [SIZE !24096 Ships of the Imperial Navy.esp]
+	  Ships of the Imperial Navy (Bloodmoon version).esp]]
+
+[Note]
+ There is a version of "Ships of the Imperial Navy" that was made
+ compatible with MetalQueenBoutique (but note that it is based on
+ version "Ships of the Imperial Navy 1.0"):
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=892
+[ALL MetalQueenBoutique.esm
+     [ANY [SIZE 24096 Ships of the Imperial Navy.esp]
+	  Ships of the Imperial Navy (Bloodmoon).esp]]
+
+[Conflict]
+Ships of the Imperial Navy (Bloodmoon and MQB version).esp
+[ANY Ships of the Imperial Navy.esp
+     Ships of the Imperial Navy (Bloodmoon).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
