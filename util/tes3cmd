@@ -23,6 +23,11 @@ OPTIONS
  -D   turn on debug output
 
 Prints the IDs of records that the 2 given plugins have in common.
+
+Example:
+
+# Show what is common between my plugin and Morrowind.esm:
+tes3cmd common myplugin.esp Morrowind.esm
 };
 
 sub opts_com {
@@ -42,6 +47,17 @@ OPTIONS
 
 Dumps the plugin to stdout in text form for easy perusal. For large plugins,
 the output can be voluminous.
+
+Examples:
+
+# Dump all records from a plugin:
+tes3cmd dump plugin.esp
+
+# Dump all records whos IDs match "foo":
+tes3cmd dump -i foo plugin.esp
+
+# Dump all the CELL records from a plugin:
+tes3cmd dump -t cell plugin.esp
 };
 
 my %INFO_SCVR_type =
@@ -298,12 +314,16 @@ If the value supplied won't fit into the plugin header field, you will be
 warned.
 
 Examples:
+
 # Show the Author/Description fields for a plugin:
 tes3cmd header plugin.esp
+
 # Set the Author field to "john.moonsugar":
 tes3cmd header -a john.moonsugar plugin.esp
+
 # Append " and friends" to the Author field:
 tes3cmd header -a "+ and friends" plugin.esp
+
 # Add a Version number to a plugin Description field:
 tes3cmd header -d "+\nVersion: 1.0" plugin.esp
 };
