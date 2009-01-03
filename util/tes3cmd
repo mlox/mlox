@@ -31,7 +31,7 @@ my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 OPTIONS
  -D        turn on debug output
  -i ids    only print out the ids matching the given comma-delimited list
-           of regular expression pattersn.
+           of regular expression patterns.
  -t types  only print out the records matching the given comma-delimted
            list of record types.
 
@@ -526,7 +526,9 @@ sub ext_cell_name {
 
 sub rec_id {
     my($r, $rec_type) = @_;
-    if ($rec_type eq "CELL") {
+    if ($rec_type eq "INFO") {
+	return(chop_nulls($r->{INAM}[0]));
+    } elsif ($rec_type eq "CELL") {
 	my $name = chop_nulls($r->{NAME}[0]);
 	my $data = $r->{DATA}[0];
 	my($flags) = unpack("L", $data);
