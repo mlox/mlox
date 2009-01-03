@@ -211,6 +211,12 @@ about the flagged items.
 	     original instead of the copy which may cause bad dialog problems
 	     and should probably be investigated further.
 
+    NUMRECS: This means that the number of records recorded in the TES3 plugin
+             header field does not match the actual number of records in the
+             plugin. This situation is not known to cause any errors or
+             warnings in the CS or in the Morrowind game itself, so it's just
+             presented as a matter of interest.
+
     OVR-REC: The plugin contains record(s) that override the record with the
              same ID in one of its masters.
 
@@ -235,7 +241,7 @@ $::opt_r = 1 unless ($::opt_a or $::opt_f or $::opt_n or $::opt_r);
 
 my %DEFINED_FLAGS = (); $DEFINED_FLAGS{$_}++ foreach (qw(CLEAN DUP-INF EVLGMST
 FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MASTERS MENUMOD MISSAUT MISSDSC
-MISSVER MOD-IID JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR
+MISSVER MOD-IID NUMRECS JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR
 DUP-REC BM-DEP EXP-DEP));
 
 if ($::opt_f) {
