@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#Version: 0.5
 # tes3lint - a diagnostic tool for TES3/Morrowind plugins
 # Copyright 2008 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -262,10 +263,7 @@ $CHK_FOG_DENSITY = 1	      if ($OPTFLAG{FOGBUG} or $OPTFLAG{FOGSYNC});
 $CHK_NO_EXPANSION_FUNS = 1    if ($OPTFLAG{'!TB-FUN'} or $OPTFLAG{'!BM-FUN'});
 $CHK_GETSOUNDPLAYING = 1      if ($OPTFLAG{GETSND});
 $CHK_HEADER_FIELDS = 1	      if ($OPTFLAG{MISSAUT} or $OPTFLAG{MISSDSC} or $OPTFLAG{MISSVER});
-
-# TBD: this is disabled until I find a better definition
-$CHK_CHANGED_INFO_IDS = 0     if ($OPTFLAG{'MOD-IID'});
-
+$CHK_CHANGED_INFO_IDS = 1     if ($OPTFLAG{'MOD-IID'});
 $CHK_DEPRECATED_LISTFUN = 1   if ($OPTFLAG{'DEP-LST'});
 $CHK_MODIFIED_INFO = 1	      if ($OPTFLAG{'MOD-INF'} or $OPTFLAG{'MOD-IID'});
 $CHK_OVERRIDDEN_REC = 1       if ($OPTFLAG{'OVR-REC'});
@@ -465,9 +463,9 @@ sub load_master {
 	if ($read_info and $rec_type eq "INFO") {
 	    my $r = parse_subrec_hash($rec);
 	    my $id = chop_nulls($r->{INAM}[0]);
-	    # use the binary chunk in the record following "DATA" as the value of the INFO record.
+	    # use the chunk of the record following "NNAM" as the value of the INFO record.
 	    # this ignores the INAM, PNAM, NNAM subrec which are used for dialog sorting.
-	    my $val = (split(/DATA/, $rec, 2))[1];
+	    my $val = (split(/NNAM....\d*\000/, $rec, 2))[1];
 	    $MASTER_INFO{$esm}->{$id} = $val;
 	    $MASTER_INFTXT{$esm}->{$id} = $r->{NAME}[0];
 	    print "DBG: INFO($esm) $id = $val\n" if (DBG);
@@ -662,7 +660,7 @@ sub report_recs {
 sub pprec {
     my($rec, $subtype) = @_;
     print "DBG: pprec($rec)\n" if (DBG);
-    my $recstr = join(":", grep(!/[^[:print:]]/, map { s/\000+$//; $_; } split(/\000?([A-Z][A-Z_][A-Z_][A-Z_\d])...\000/, $rec)));
+    my $recstr = join(":", grep(!/[^[:print:]]/, map { s/[\000]+$//gm; tr/\r\n/ /; $_; } split(/\000?([A-Z][A-Z_][A-Z_][A-Z_\d])...\000/, $rec)));
     $recstr =~ s/^:$subtype:.*?:// if ($subtype);
     $recstr =~ s/:([A-Z][A-Z_][A-Z_][A-Z_\d])/|$1/g;
     return(substr($recstr, 0, $::opt_w));
@@ -677,7 +675,7 @@ sub scan {
 	warn "Error opening $plugin_path for input ($!)\n";
 	return;
     }
-    unless (binmode(INP)) {
+    unless (binmode(INP, ':raw')) {
 	warn "Error setting binmode on $plugin_path ($!)\n";
 	close(INP);
 	return;
@@ -772,10 +770,10 @@ sub scan {
 	    $id = chop_nulls($id);
 	    my $script = $r->{BNAM}[0];
 	    scan_script($script, "INFO($id)") if ($read_scpt);
-	    $myinf{$id} = (split(/DATA/s, $rec, 2))[1];
+	    $myinf{$id} = (split(/NNAM....\d*\000/s, $rec, 2))[1];
+	    #print "\nDBG: myinf{$id}=$myinf{$id}\n  rec=$rec\n" if ($rec =~ /ra'virr/);
 	    print "DBG: MYINF($plugin) $id = $myinf{$id}\n" if (DBG);
 	    push(@{$myinftxt{$r->{NAME}[0]}}, $id);
-	    # TBD
 	    $dial_info{$cur_dial}->{$id} = 0;
 	} elsif ($rec_type eq "SCPT") {
 	    # check for tribunal/bloodmoon function dependency in scripts
@@ -921,11 +919,16 @@ sub scan {
 		$inf_master{"$id$inf"} = $master;
 	    }
 	}
+	my %rev_master = ();
+	while (my($id, $inf) = each %master_inf) {
+	    $rev_master{$inf} = $id;
+	}
 	foreach my $id (sort {$a <=> $b} keys %myinf) {
 	    my $inf = $myinf{$id};
 	    my $inf_str = pprec($inf);
-	    if (defined($master_inf{$id})) {
+	    if (defined($master_inf{$id})) { # when the master contains an info with the same ID as in the plugin
 		if ($master_inf{$id} eq $inf) {
+		    # infos in plugin that are duplicates of info from a master
 		    foreach my $dial_id (keys %dial_info) {
 			$dial_info{$dial_id}->{$id}++;
 		    }
@@ -935,21 +938,33 @@ sub scan {
 			$inf_out .= "  $inf_str\n";
 		    }
 		} else {
-		    $mod_inf++ if ($CHK_MODIFIED_INFO);
+		    # infos in plugin that are modifications info from a master
 		    if ($CHK_MODIFIED_INFO) {
+			my $mod_out = "";
 			my $mast_inf_str = pprec($master_inf{$id});
 			my $master = $inf_master{"$id$master_inf{$id}"};
 			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
 			my $plugin_pref = $plugin . "-"x($maxlen - length($plugin));
 			my $master_pref = $master . "-"x($maxlen - length($master));
-			$inf_out .= "\n[MOD-INF]: ID=$id\n";
-			$inf_out .= "  ${master_pref}->$mast_inf_str\n";
-			$inf_out .= "  ${plugin_pref}->$inf_str\n";
+			$mod_out .= "\n[MOD-INF]: ID=$id\n";
+			$mod_out .= "  ${master_pref}->$mast_inf_str\n";
+			$mod_out .= "  ${plugin_pref}->$inf_str\n";
+			if ($OPTFLAG{'MOD-INF'}) {
+			    $mod_inf++;
+			    $inf_out .= $mod_out;
+			}
 			if ($CHK_CHANGED_INFO_IDS) {
 			    my $inftxt = $MASTER_INFTXT{$master}->{$id};
-			    if ($myinftxt{$inftxt} and my @ids = grep($_ ne $id, @{$myinftxt{$inftxt}})) {
+			    my @ids = ();
+			    foreach my $id (grep(($_ ne $id and not $MASTER_INFTXT{$master}->{$_}), @{$myinftxt{$inftxt}})) {
+				my $r = parse_subrec_hash($myinf{$id});
+				my $disp = (length($r->{DATA}[0]) > 7) ? unpack("x[L]L", $r->{DATA}[0]) : 0;
+				push(@ids, $id) if ($disp == 0 and not defined $r->{BNAM});
+			    }
+			    if ($myinftxt{$inftxt} and @ids) {
 				$mod_iid++;
 				my $pl = (scalar(@ids) > 1) ? "s" : "";
+				$inf_out .= $mod_out;
 				$inf_out .= "[MOD-IID]: ID$pl=@{[join(',', @ids)]}\n";
 				$inf_out .= "  ${plugin_pref}->$inftxt\n";
 			    }

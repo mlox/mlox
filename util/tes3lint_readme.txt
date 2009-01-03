@@ -1,9 +1,9 @@
-Please visit the the esplint wiki page for the latest information on using
-esplint:  http://code.google.com/p/mlox/wiki/Esplint
+Please visit the the tes3lint wiki page for the latest information on using
+tes3lint:  http://code.google.com/p/mlox/wiki/Tes3lint
 
-You can also run esplinthelp.bat
+You can also run tes3linthelp.bat
 
-You should extract the esplint archive somewhere under your Morrowind
+You should extract the tes3lint archive somewhere under your Morrowind
 directory. If you do not have a preferred place, just extract it in the
-Morrowind directory itself. It will create a directory called esplint,
+Morrowind directory itself. It will create a directory called tes3lint,
 containing all the files.
