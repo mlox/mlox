@@ -241,7 +241,7 @@ def unify(s):
     for encoding in ("utf-8", "latin-1"):
         try:
             return(unicode(s, encoding))
-        except UnicodeDecodeError:
+        except:
             pass
     # punt!
     return(s.decode("ascii", "replace").encode("ascii", "replace"))
@@ -1263,39 +1263,47 @@ class mlox_gui():
                                 weight=wx.FONTWEIGHT_NORMAL, underline=False, face="",
                                 encoding=wx.FONTENCODING_SYSTEM)
         size = default_font.GetPointSize()
-        label_font = wx.Font(size + 2, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
-        button_font = wx.Font(size + 6, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        self.label_font = wx.Font(size + 2, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        self.button_font = wx.Font(size + 6, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
         self.frame = wx.Frame(None, wx.ID_ANY, ("mlox %s" % Version))
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.logo = wx.Panel(self.frame, -1)
         wx.StaticBitmap(self.logo, bitmap=wx.BitmapFromImage(wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF)))
         self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
-        self.label_stats.SetFont(label_font)
+        self.label_stats.SetFont(self.label_font)
         self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
         self.txt_stats.SetFont(default_font)
-        self.label_msg = wx.StaticText(self.frame, -1, _["Messages"])
-        self.label_msg.SetFont(label_font)
-        self.txt_msg = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+
+        self.splitter = wx.SplitterWindow(self.frame, -1)
+
+        self.split1 = wx.Panel(self.splitter, -1)
+        self.label_msg = wx.StaticText(self.split1, -1, _["Messages"])
+        self.label_msg.SetFont(self.label_font)
+        self.txt_msg = wx.TextCtrl(self.split1, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_msg.SetFont(default_font)
-        self.label_cur = wx.StaticText(self.frame, -1, _["Current Load Order"])
-        self.label_cur.SetFont(label_font)
-        self.txt_cur = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+
+        self.split2 = wx.Panel(self.splitter, -1)
+        self.label_cur = wx.StaticText(self.split2, -1, _["Current Load Order"])
+        self.label_cur.SetFont(self.label_font)
+        self.txt_cur = wx.TextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_cur.SetFont(default_font)
-        self.label_cur_bottom = wx.StaticText(self.frame, -1, _["(Right click in this pane for options)"])
-        self.label_new = wx.StaticText(self.frame, -1, _["Proposed Load Order Sorted by mlox"])
-        self.label_new.SetFont(label_font)
-        self.label_new_bottom = wx.StaticText(self.frame, -1, "")
-        self.txt_new = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+        self.label_cur_bottom = wx.StaticText(self.split2, -1, _["(Right click in this pane for options)"])
+        self.label_new = wx.StaticText(self.split2, -1, _["Proposed Load Order Sorted by mlox"])
+        self.label_new.SetFont(self.label_font)
+        self.label_new_bottom = wx.StaticText(self.split2, -1, "")
+        self.txt_new = wx.TextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_new.SetFont(default_font)
+
         self.btn_update = wx.Button(self.frame, -1, _["Update Load Order"], size=(90,60))
-        self.btn_update.SetFont(button_font)
+        self.btn_update.SetFont(self.button_font)
         self.btn_quit = wx.Button(self.frame, -1, _["Quit"], size=(90,60))
-        self.btn_quit.SetFont(button_font)
+        self.btn_quit.SetFont(self.button_font)
         self.frame.Bind(wx.EVT_CLOSE, self.on_close)
         self.btn_update.Bind(wx.EVT_BUTTON, self.on_update)
         self.btn_quit.Bind(wx.EVT_BUTTON, self.on_quit)
         # arrange widgets
+
         self.frame_vbox = wx.BoxSizer(wx.VERTICAL)
         self.frame_vbox.Add(self.label_stats, 0, wx.ALL)
         # top box for stats and logo
@@ -1307,7 +1315,8 @@ class mlox_gui():
         self.msg_vbox = wx.BoxSizer(wx.VERTICAL)
         self.msg_vbox.Add(self.label_msg, 0, wx.ALL)
         self.msg_vbox.Add(self.txt_msg, 1, wx.EXPAND)
-        self.frame_vbox.Add(self.msg_vbox, 1, wx.EXPAND)
+        self.split1.SetSizer(self.msg_vbox)
+
         # box for load orders output
         self.lo_box = wx.BoxSizer(wx.HORIZONTAL)
         self.cur_vbox = wx.BoxSizer(wx.VERTICAL)
@@ -1320,7 +1329,10 @@ class mlox_gui():
         self.new_vbox.Add(self.txt_new, 4, wx.EXPAND)
         self.new_vbox.Add(self.label_new_bottom, 0, wx.ALL|wx.CENTER)
         self.lo_box.Add(self.new_vbox, 4, wx.EXPAND)
-        self.frame_vbox.Add(self.lo_box, 3, wx.EXPAND)
+        self.split2.SetSizer(self.lo_box)
+
+        self.frame_vbox.Add(self.splitter, 1, wx.EXPAND)
+
         # bottom box for buttons
         self.button_box = wx.BoxSizer(wx.HORIZONTAL)
         self.button_box.Add(self.btn_update, 4)
@@ -1392,6 +1404,8 @@ class mlox_gui():
 
     def start(self):
         self.frame.Show(True)
+        #self.splitter.SetMinimumPaneSize(200)
+        self.splitter.SplitHorizontally(self.split1, self.split2)
         self.analyze_loadorder(None)
         self.app.MainLoop()
 
@@ -1461,9 +1475,11 @@ class mlox_gui():
         dbg_frame = wx.Frame(None, wx.ID_ANY, (_["%s - Debug Output"] % full_version))
         dbg_frame.SetSizeHints(500,800)
         dbg_label = wx.StaticText(dbg_frame, -1, _["(Debug Output Saved to \"%s\")"] % debug_output)
+        dbg_label.SetFont(self.label_font)
         dbg_txt = wx.TextCtrl(dbg_frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
         dbg_btn_close = wx.Button(dbg_frame, -1, _["Close"], size=(90,60))
         dbg_btn_close.Bind(wx.EVT_BUTTON, lambda x: dbg_frame.Destroy())
+        dbg_btn_close.SetFont(self.button_font)
         dbg_frame_vbox = wx.BoxSizer(wx.VERTICAL)
         dbg_frame_vbox.Add(dbg_label, 0, wx.EXPAND)
         dbg_frame_vbox.Add(dbg_txt, 1, wx.EXPAND)
