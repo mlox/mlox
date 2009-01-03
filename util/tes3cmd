@@ -181,8 +181,11 @@ my %UNPACK =
 				    "AutoCalc Flags: " . list_autocalc_flags($autoflags)));
 		    },
      TES3_MAST => sub { unpack("Z*", $_[0]) },
-     TES3_DATA => sub { "Length:     " . unpack("Q", $_[0]) },
-
+     TES3_DATA => sub {
+	 my($l1, $l2) = unpack("LL", $_[0]);
+	 my $size = $l1 + ($l2 << 32);
+	 "Length:     $size";
+     },
      INFO_INAM => sub { unpack("Z*", $_[0]) },
      INFO_DATA => sub { my($disp, $rank, $sex, $pcrank) = unpack("x[L]LCCC", $_[0]);
 			  return("Disp:$disp  Rank:$rank  Sex:$SEX{$sex}  PCRank:$pcrank"); },
