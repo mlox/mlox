@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- mode: python -*-
 # mlox - the elder scrolls mod load order eXpert
-# Copyright 2008 by John Moonsugar
+# Copyright 2009 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:

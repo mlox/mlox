@@ -1,6 +1,6 @@
 Name: mlox
 Version: 0.38
-Copyright 2008 John Moonsugar <john.moonsugar@gmail.com>
+Copyright 2009 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
         mlox - the elder scrolls Mod Load Order eXpert
