@@ -36,7 +36,7 @@ my $CHK_DUPLICATE_INFO = 0;	# DUP-INF
 my $CHK_FOG_DENSITY = 0;	# FOGBUG & FOGSYNC
 my $CHK_NO_EXPANSION_FUNS = 0;	# !TB-FUN & !BM-FUN
 my $CHK_GETSOUNDPLAYING = 0;	# GETSND
-my $CHK_HEADER_FIELDS = 0;	# MISSAUT, MISSDSC, MISSVER
+my $CHK_HEADER_FIELDS = 0;	# MISSAUT, MISSDSC, MISSVER, NUMRECS
 my $CHK_CHANGED_INFO_IDS = 0;	# MOD-IID
 my $CHK_DEPRECATED_LISTFUN = 0;	# DEP-LST
 my $CHK_MODIFIED_INFO = 0;	# MOD-INF
@@ -167,6 +167,12 @@ about the flagged items.
              only NAME, DATA and sometimes RGNN subrecords, and the flags in
              the DATA subrecord are unchanged from the flags in the Master.
 
+    MASTERS: Checks the plugin is in sync with its masters by checking their
+             size against the size recorded in the plugin header. This is
+             usually never a problem, but it means that Morrowind will give
+             the warning: "One of the files that "(plugin)" is dependent on
+             has changed since the last save..."
+
     MENUMOD: The plugin contains scripts that do not check menumode. Each script
              will be printed in the details section. This may or may not be
              intentional, so the flag is optional and only included in the -a
@@ -227,10 +233,10 @@ getopts('aDef:nrvw') or die $Usage;
 # by default choose -r (recommended flags) if no other output option selected:
 $::opt_r = 1 unless ($::opt_a or $::opt_f or $::opt_n or $::opt_r);
 
-my %DEFINED_FLAGS = (); $DEFINED_FLAGS{$_}++ foreach (qw(CLEAN DUP-INF
-EVLGMST FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MENUMOD MISSAUT MISSDSC
-MISSVER MOD-IID JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR DUP-REC BM-DEP
-EXP-DEP));
+my %DEFINED_FLAGS = (); $DEFINED_FLAGS{$_}++ foreach (qw(CLEAN DUP-INF EVLGMST
+FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MASTERS MENUMOD MISSAUT MISSDSC
+MISSVER MOD-IID JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR
+DUP-REC BM-DEP EXP-DEP));
 
 if ($::opt_f) {
     my @unknown_flags = ();
@@ -262,7 +268,7 @@ $CHK_DUPLICATE_INFO = 1       if ($OPTFLAG{'DUP-INF'});
 $CHK_FOG_DENSITY = 1	      if ($OPTFLAG{FOGBUG} or $OPTFLAG{FOGSYNC});
 $CHK_NO_EXPANSION_FUNS = 1    if ($OPTFLAG{'!TB-FUN'} or $OPTFLAG{'!BM-FUN'});
 $CHK_GETSOUNDPLAYING = 1      if ($OPTFLAG{GETSND});
-$CHK_HEADER_FIELDS = 1	      if ($OPTFLAG{MISSAUT} or $OPTFLAG{MISSDSC} or $OPTFLAG{MISSVER});
+$CHK_HEADER_FIELDS = 1	      if ($OPTFLAG{MISSAUT} or $OPTFLAG{MISSDSC} or $OPTFLAG{MISSVER} or $OPTFLAG{NUMRECS});
 $CHK_CHANGED_INFO_IDS = 1     if ($OPTFLAG{'MOD-IID'});
 $CHK_DEPRECATED_LISTFUN = 1   if ($OPTFLAG{'DEP-LST'});
 $CHK_MODIFIED_INFO = 1	      if ($OPTFLAG{'MOD-INF'} or $OPTFLAG{'MOD-IID'});
@@ -666,6 +672,40 @@ sub pprec {
     return(substr($recstr, 0, $::opt_w));
 }
 
+sub parse_masters {
+    my($rec) = @_;
+    my(@parts) = unpack("(a4L/a*)*", $rec);
+    @parts = @parts[2..$#parts]; # remove the TES3.HEDR part
+    print "DBG: parts: @{[join('|', @parts)]}\n" if (DBG);
+    my @masters_list = ();
+    while (@parts) {
+	my($mast, $master, $data, $datastr) =
+	    (shift(@parts), shift(@parts), shift(@parts), shift(@parts));
+	next if ($mast eq "HEDR");
+	if ($mast ne "MAST") {
+	    warn qq{Error reading header, expected: "MAST"  got: "$mast"\n};
+	    return(\@masters_list);
+	}
+	if (not defined $master) {
+	    warn qq{Error reading header, no master\n};
+	    return(\@masters_list);
+	}
+	if ($data ne "DATA") {
+	    warn qq{Error reading header, expected: "DATA"  got: "$data"\n};
+	    return(\@masters_list);
+	}
+	if (not defined $datastr) {
+	    warn qq{Error reading header, no data value\n};
+	    return(\@masters_list);
+	}
+	my $master = chop_nulls($master);
+	my($l1, $l2) = unpack("LL", $datastr);
+	my $size = $l1 + ($l2 << 32);
+	push(@masters_list, [$master, $size]);
+    }
+    return(\@masters_list);
+}
+
 # this is the main routine that scans a plugin for potential problems.
 sub scan {
     my($plugin_path) = @_;
@@ -700,6 +740,7 @@ sub scan {
     my %myid = ();
     my %door = ();
     my %myjunk = ();
+    my @master_sizes = ();
     my $missauth = 0;
     my $missdesc = 0;
     my $missver = 0;
@@ -714,20 +755,25 @@ sub scan {
     my $read_gmsts = ($OPTFLAG{EVLGMST} or $CHK_DUP_REC or $CHK_OVERRIDDEN_REC);
     my $read_cell = ($OPTFLAG{JUNKCEL} or $CHK_FOG_DENSITY or $CHK_DUP_REC);
     my %dial_info = ();
+    my $rec_count = 0;
+    my $hdr_nrec = 0;
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
 	$expected = undef;
 	last if not defined $rec_type;
+	$rec_count++;
 	print "REC=$rec_type flags=$flags\n" if (DBG);
 	if ($flags & 0x1000) {
 	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
 	    next;
 	}
 	if ($rec_type eq "TES3") {
-	    my $r = parse_subrec_hash($rec);
+	    $rec_count--;	# the header is not counted in the total record count
 	    if ($CHK_HEADER_FIELDS) {
+		my $r = parse_subrec_hash($rec);
 		my $hedr = $r->{HEDR}[0];
-		my($hedrver, $auth, $desc, $nrec) = unpack("fx[L]a32a256L", $hedr);
-		printf "DBG: TES3.HEDR.version = %0.3f  NumRecords = %d\n", $hedrver, $nrec if (DBG);
+		my($hdr_ver, $auth, $desc, $nrec) = unpack("fx[L]a32a256L", $hedr);
+		$hdr_nrec = $nrec;
+		printf "DBG: TES3.HEDR.version = %0.3f  NumRecords = %d\n", $hdr_ver, $nrec if (DBG);
 		$auth = chop_nulls($auth);
 		$missauth++ if (length($auth) == 0);
 		$desc = chop_nulls($desc);
@@ -737,12 +783,13 @@ sub scan {
 		    $missver++;
 		}
 	    }
-	    for my $mast (@{$r->{MAST}}) {
-		$mast = chop_nulls($mast);
-		push(@MASTERS, $mast);
-		print "Master: $mast\n" if (DBG);
-		$mastbm++ if (lc($mast) eq 'bloodmoon.esm');
-		$masttb++ if (lc($mast) eq 'tribunal.esm');
+	    for my $mastref (@{parse_masters($rec)}) {
+		my($master, $size) = @{$mastref};
+		push(@master_sizes, $mastref) if ($OPTFLAG{MASTERS});
+		push(@MASTERS, $master);
+		print "Master: $master  size: $size\n" if (DBG);
+		$mastbm++ if (lc($master) eq 'bloodmoon.esm');
+		$masttb++ if (lc($master) eq 'tribunal.esm');
 	    }
 	} elsif ($read_gmsts and $rec_type eq "GMST") {
 	    # check for evil GMSTs
@@ -997,6 +1044,19 @@ sub scan {
 	    }
 	}
     }
+    my $master_sync = "";
+    if (@master_sizes) {
+	my $datadir = find_datadir();
+	foreach my $mastref (@master_sizes) {
+	    my($master, $size) = @{$mastref};
+	    my $actual_size = -s "$datadir/$master";
+	    if ($actual_size and $actual_size != $size) {
+		$master_sync .= sprintf "\t%-25s %10d (plugin) %10d (installed size)\n", $master, $size, $actual_size;
+	    }
+	}
+	$master_sync = "    MASTERS: out of sync with the masters installed in your Data Files directory:\n$master_sync"
+	    if ($master_sync);
+    }
     # create a summary line of things we have discovered.
     my $found = "";
     $found .= " AUTOSPL" if (@autospl);
@@ -1011,12 +1071,14 @@ sub scan {
     $found .= " GETSND"  if (%getsound);
     $found .= " EVLGMST" if (%evil);
     $found .= " JUNKCEL" if (%junkcell);
+    $found .= " MASTERS" if ($master_sync);
     $found .= " MENUMOD" if (%menumode);
     $found .= " MISSAUT" if ($OPTFLAG{MISSAUT} and $missauth);
     $found .= " MISSDSC" if ($OPTFLAG{MISSDSC} and $missdesc);
     $found .= " MISSVER" if ($OPTFLAG{MISSVER} and $missver);
     $found .= " MOD-INF" if ($mod_inf and $OPTFLAG{'MOD-INF'});
     $found .= " MOD-IID" if ($mod_iid);
+    $found .= " NUMRECS" if ($OPTFLAG{NUMRECS} and $rec_count != $hdr_nrec);
     $found .= " OVR-REC" if (%ovr_recs);
     $found .= " SCRDOOR" if (%door);
     if ($CHK_NO_EXPANSION_FUNS) {
@@ -1032,11 +1094,15 @@ sub scan {
     ##################################################
     # now print out verbose detail, if applicable
     ##################################################
+    print $master_sync if ($master_sync);
     if (@autospl) {
 	print "    [AUTOSPL] Auto-calced Spells:\n";
 	foreach my $spell (@autospl) {
 	    print "\t$spell\n";
 	}
+    }
+    if ($OPTFLAG{NUMRECS} and $rec_count != $hdr_nrec) {
+	print "    [NUMRECS]: number of records in TES3.HEDR ($hdr_nrec) != Actual count ($rec_count)\n";
     }
     if ($cell00) {
 	print "    [CELL00]: $cell00\n";
