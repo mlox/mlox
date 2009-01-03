@@ -12,12 +12,12 @@ RELDATE   := $(shell date --utc "+%Y-%m-%d %T (UTC)")
 DATAARC   := $(shell data/arcname)
 UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
 TES3LINTFILES  := $(wildcard util/tes3lint util/tes3lint*.bat util/tes3lint*.txt)
-TES3LINTVER    := $(shell svn log -l 1 -q util/tes3lint | grep ^r | cut -f 1 -d " ")
+TES3LINTVER    := $(shell grep "^\#Version: " util/tes3lint | cut -f 2 -d ' ')
 TES3LINTARC    := tes3lint-$(TES3LINTVER).7z
 
 all: mlox-dist data-dist test-dist tes3lint-dist
 
-upload: upload-mlox upload-exe upload-data upload-tes3lint
+upload: upload-mlox upload-exe upload-data
 
 upload-mlox:
 	@echo "Uploading dist/$(MLOXARC)"
