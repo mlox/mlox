@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.38"
+Version = "0.39"
 
 import locale
 import os
