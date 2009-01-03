@@ -463,6 +463,7 @@ sub parse_subrec_list {
 # this version takes a little longer to execute
 sub parse_subrec_hash_long {
     my($rec) = @_;
+    warn "DBG: calling parse_subrec_hash_long for rec=$rec\n" if (DBG);
     my %r = ();
     my $p = 0;
     my $rec_len = length($rec);
