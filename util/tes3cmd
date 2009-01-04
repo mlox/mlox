@@ -157,11 +157,40 @@ my $NREC;
 my $DEFAULT_UNPACK = 
     sub { "hex:" . unpack("h*", $_[0]) . '  str:"' . substr((($_ = $_[0]) =~ tr/\000-\037\177-\377//d, $_), 0, 60) . '"' };
 my %UNPACK =
-    (TES3_HEDR => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack("fLZ32Z256L", $_[0]);
+    ("TES3.HEDR" => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack("fLZ32Z256L", $_[0]);
 			  $NREC = $nrec;
 			  return(qq{  Ver:$ver  Unk:$unk\n\t\tAuthor:"$auth"\n\t\tDescription:"$desc"\n\t\tNRec:$NREC});
 		      },
-     CLAS_CLDT => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
+     "TES3.MAST" => sub { unpack("Z*", $_[0]) },
+     "TES3.DATA" => sub {
+	 my($l1, $l2) = unpack("LL", $_[0]);
+	 my $size = $l1 + ($l2 << 32);
+	 "Length:     $size";
+     },
+     "CELL.DATA" => sub {
+	 if (length($_[0]) == 24) {
+	     $DEFAULT_UNPACK->($_[0]);
+	 } else {
+	     my($flags, $fog_den_data) = unpack("Lx[L]f", $_[0]);
+	     my @flags = ();
+	     my $coord = "";
+	     my $data_fog_str = "";
+	     if ($flags & 0x01) {
+		 push(@flags, "Interior");
+		 $data_fog_str = sprintf "FogDensity: %0.2f ", $fog_den_data;
+	     } else {
+		 push(@flags, "Exterior");
+		 my($x, $y) = unpack("x[L]ll", $_[0]);
+		 $coord = "Coordinates: ($x, $y) ";
+	     }
+	     push(@flags, "Has Water") if ($flags & 0x02);
+	     push(@flags, "Illegal to Sleep Here") if ($flags & 0x041);
+	     push(@flags, "Behave like Exterior") if ($flags & 0x80);
+	     my $flags_str = "Flags: @{[join(', ', @flags)]} ";
+	     $coord . $data_fog_str . $flags_str;
+	 }
+     },
+     "CLAS.CLDT" => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
 			    unpack("L15", $_[0]);
 			return("  " . join("\n\t\t",
 				    "Primary Attribute:   $ATTRIBUTE{$attr1}",
@@ -180,38 +209,36 @@ my %UNPACK =
 				    "Flags: " . (($flags) ? "Playable" : "Non-playable"),
 				    "AutoCalc Flags: " . list_autocalc_flags($autoflags)));
 		    },
-     TES3_MAST => sub { unpack("Z*", $_[0]) },
-     TES3_DATA => sub {
-	 my($l1, $l2) = unpack("LL", $_[0]);
-	 my $size = $l1 + ($l2 << 32);
-	 "Length:     $size";
-     },
-     INFO_INAM => sub { unpack("Z*", $_[0]) },
-     INFO_DATA => sub { my($disp, $rank, $sex, $pcrank) = unpack("x[L]LCCC", $_[0]);
+     "INFO.INAM" => sub { unpack("Z*", $_[0]) },
+     "INFO.DATA" => sub { my($disp, $rank, $sex, $pcrank) = unpack("x[L]LCCC", $_[0]);
 			  return("Disp:$disp  Rank:$rank  Sex:$SEX{$sex}  PCRank:$pcrank"); },
-     INFO_ANAM => sub { "Cell:       " . unpack("Z*", $_[0]) },
-     INFO_BNAM => sub { "Result:     " . unpack("Z*", $_[0]) },
-     INFO_CNAM => sub { "Class:      " . unpack("Z*", $_[0]) },
-     INFO_DNAM => sub { "PC Faction: " . unpack("Z*", $_[0]) },
-     INFO_FNAM => sub { "Faction:    " . unpack("Z*", $_[0]) },
-     INFO_NAME => sub { "Response:   " . unpack("Z*", $_[0]) },
-     INFO_NNAM => sub { "Next ID:    " . unpack("Z*", $_[0]) },
-     INFO_ONAM => sub { "Actor:      " . unpack("Z*", $_[0]) },
-     INFO_PNAM => sub { "Prev ID:    " . unpack("Z*", $_[0]) },
-     INFO_RNAM => sub { "Race:       " . unpack("Z*", $_[0]) },
-     INFO_SCVR => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack("aaa2aZ*", $_[0]);
+     "INFO.ANAM" => sub { "Cell:       " . unpack("Z*", $_[0]) },
+     "INFO.BNAM" => sub { "Result:     " . unpack("Z*", $_[0]) },
+     "INFO.CNAM" => sub { "Class:      " . unpack("Z*", $_[0]) },
+     "INFO.DNAM" => sub { "PC Faction: " . unpack("Z*", $_[0]) },
+     "INFO.FNAM" => sub { "Faction:    " . unpack("Z*", $_[0]) },
+     "INFO.NAME" => sub { "Response:   " . unpack("Z*", $_[0]) },
+     "INFO.NNAM" => sub { "Next ID:    " . unpack("Z*", $_[0]) },
+     "INFO.ONAM" => sub { "Actor:      " . unpack("Z*", $_[0]) },
+     "INFO.PNAM" => sub { "Prev ID:    " . unpack("Z*", $_[0]) },
+     "INFO.RNAM" => sub { "Race:       " . unpack("Z*", $_[0]) },
+     "INFO.SCVR" => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack("aaa2aZ*", $_[0]);
 			  return("Index:$idx  Type:$INFO_SCVR_type{$typ}  Fun:$fun  Cmp:$INFO_SCVR_cmp{$cmp}  Name:$nam");
 		      },
 
-     SCPT_SCVR => sub { "Script Variables: " . join(',', split(/\000/, unpack('a*', $_[0]))) },
+     "LTEX.DATA" => sub { unpack("Z*", $_[0]) },
 
-     LTEX_DATA => sub { unpack("Z*", $_[0]) },
+     # The following are common subrecord formats
+     "SCPT.SCVR" => sub { "Script Variables: " . join(',', split(/\000/, unpack('a*', $_[0]))) },
+     "SCPT.SCTX" => sub { "Script:\n" . unpack("Z*", $_[0]) },
+
 
      FLAG => sub { sprintf "0x%04x", unpack("L", $_[0]) },
      FLTV => sub { unpack("f", $_[0]) },
      FRMR => sub { unpack("L", $_[0]) },
      INDX => sub { unpack("L", $_[0]) },
      INTV => sub { unpack("l", $_[0]) },
+     NAM0 => sub { unpack("L", $_[0]) },
      NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) },
      XSCL => sub { unpack("f", $_[0]) },
     );
@@ -219,7 +246,7 @@ my %UNPACK =
 # add in defaults for all the fields that are simple strings
 foreach (qw(
 ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM HSND HVFX ITEX
-KNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SCTX SNAM STRV TEXT TNAM WNAM
+KNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV TEXT TNAM WNAM
 )) {
     $UNPACK{$_} = sub { unpack("Z*", $_[0]) };
 }
@@ -632,11 +659,25 @@ sub cmd_dump {
     if ($::opt_i) {
 	$wanted_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
     }
-    my %wanted_types = ();
+    my %wanted_types;
+    my %wanted_subtypes;
     if ($::opt_t) {
 	foreach (split(/,/, $::opt_t)) {
-	    # TBD - validate types
-	    $wanted_types{lc($_)}++;
+	    # TBD - validate types?
+	    my($type, $subtype) = split(/\./, $_);
+	    if (length($type) != 4) {
+		warn qq{Invalid record type: "$_" (must be 4 characters long)\n};
+		next;
+	    }
+	    $wanted_types{lc($type)}++;
+	    if ($subtype) {
+		if (length($subtype) == 4) {
+		    $wanted_subtypes{lc("$type.$subtype")}++ if ($subtype);
+		} else {
+		    warn qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
+		    next;
+		}
+	    }
 	}
     }
     print "\n$plugin:\n";
@@ -658,7 +699,6 @@ sub cmd_dump {
 	my $p = 0;
 	my $rec_len = length($rec);
 	my $name_idx;
-	print "\n";
 	my $first = 1;
 	while ($p < $rec_len) {
 	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
@@ -666,16 +706,17 @@ sub cmd_dump {
 	    my $subrec = substr($rec, $p, $subrec_len);
 	    $p += $subrec_len;
 	    if (defined $subrec) {
-		my $full_type = "${rec_type}_${subrec_type}";
-		my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
-		my $subrec_str = $unpack->($subrec);
-		my $recnum = "Record: $n\n";
-		my $prefix = ($first) ? "$recnum   $full_type" : "        $subrec_type";
-		print "$prefix: $subrec_str\n";
+		my $full_type = "${rec_type}.${subrec_type}";
+		if (not (%wanted_subtypes and not $wanted_subtypes{lc($full_type)})) {
+		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
+		    my $subrec_str = $unpack->($subrec);
+		    my $prefix = ($first) ? "\nRecord: $n\n   $full_type" : "        $subrec_type";
+		    print "$prefix: $subrec_str\n";
+		    $first = 0;
+		}
 	    } else {
 		warn "$plugin: Error: malformed subrec $subrec_type\n";
 	    }
-	    $first = 0;
 	}
 	$n++;
     }
