@@ -390,15 +390,24 @@ advanced options. These options are:
 - Select All: allows you to select the text of the plugin order so
 you can copy and paste it somewhere.
 
-- Paste: allows you to paste a list of plugins into mlox so you can,
-for example, analyze the plugin list posted by someone in a forum
-post. Input formats can be: Morrowind.ini [Game Files] section format,
-the format from Wrye Mash's "Copy List" function, or the output of
-Reorder Mods++.
+- Paste: allows you to paste a list of plugins into mlox so you can, for
+example, analyze the plugin list posted by someone in a forum post. Input
+formats can be: Morrowind.ini [Game Files] section format, the format from
+Wrye Mash's "Copy List" function, or the output of Reorder Mods++. NOTE: when
+you paste in a list of plugins, mlox assumes they are all active! Also, some
+of the rule functions like testing plugin size obviously won't work when
+you're pasting in from a list, and in these cases to be on the safe side, the
+rules will return a positive result, meaning that you will likely see false
+positives. For example, with a rule checking if you have a plugin containing
+GMSTs it would normally do that by checking the size of the plugin you have
+installed. But when you paste in from a list, mlox cannot check the size, so
+if it just sees the name of the plugin it will report that it may have GMSTs
+in it, whereas in reality it's possible that the user has cleaned that plugin,
+which would change its size.
 
 - Open File: this option allows you to input a list of plugins from
 file, instead of from pasting them. See the Paste option for input
-formats.
+formats and caveats.
 
 - Debug: this will pop up a window containing a list of debugging
 output (and automatically copy the contents to a file:

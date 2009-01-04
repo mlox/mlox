@@ -43,6 +43,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         Opt.GUI = True
         import wx
+        import wx.richtext as rt
+        import webbrowser
+        webbrowser.PROCESS_CREATION_DELAY = 0
 
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
@@ -1280,8 +1283,10 @@ class mlox_gui():
         self.split1 = wx.Panel(self.splitter, -1)
         self.label_msg = wx.StaticText(self.split1, -1, _["Messages"])
         self.label_msg.SetFont(self.label_font)
-        self.txt_msg = wx.TextCtrl(self.split1, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+#        self.txt_msg = wx.TextCtrl(self.split1, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+        self.txt_msg = rt.RichTextCtrl(self.split1, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_msg.SetFont(default_font)
+        self.txt_msg.Bind(wx.EVT_TEXT_URL, self.click_url)
 
         self.split2 = wx.Panel(self.splitter, -1)
         self.label_cur = wx.StaticText(self.split2, -1, _["Current Load Order"])
@@ -1353,14 +1358,20 @@ class mlox_gui():
                 (start, end) = match.span(1)
                 txt.SetStyle(start, end, style)
 
+    def click_url(self, e):
+        the_url = e.GetString()
+        webbrowser.open(the_url)
+
     def highlight_warnings(self, txt):
         # highlight warnings in message window to help convey urgency
         # highlight styles:
-        low = wx.TextAttr(colBack=wx.Colour(125,220,240))
-        medium = wx.TextAttr(colBack=wx.Colour(255,255,180))
-        high = wx.TextAttr(colBack=wx.Colour(255,180,180))
-        happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
+        low = rt.TextAttrEx()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
+        medium = rt.TextAttrEx() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
+        high = rt.TextAttrEx()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
+        happy = rt.TextAttrEx()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
+        url = rt.TextAttrEx()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
         highlighters = {
+            re.compile(r'http://\S+', re.IGNORECASE): url,
             re.compile(r'^\[conflict\]', re.IGNORECASE): medium,
             re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy }
         text = Msg.get()
@@ -1368,13 +1379,15 @@ class mlox_gui():
         for (re_pat, style) in highlighters.items():
             for match in re.finditer(re_pat, text):
                 (start, end) = match.span()
-                txt.SetStyle(start, end, style)
+                if style == url:
+                    url.SetURL(text[start:end])
+                txt.SetStyle((start, end), style)
         # for leveled highlighting
         for (level, style) in (('!', low), ('!!', medium), ('!!!', high)):
             re_pat = re.compile("^ (?:\\| )?(%s.*)$" % level, re.MULTILINE)
             for match in re.finditer(re_pat, text):
                 (start, end) = match.span()
-                txt.SetStyle(start, end, style)
+                txt.SetStyle((start, end), style)
         happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
 
     def highlight_moved(self, txt):
@@ -1404,7 +1417,7 @@ class mlox_gui():
 
     def start(self):
         self.frame.Show(True)
-        #self.splitter.SetMinimumPaneSize(200)
+        self.splitter.SetMinimumPaneSize(20)
         self.splitter.SplitHorizontally(self.split1, self.split2)
         self.analyze_loadorder(None)
         self.app.MainLoop()
