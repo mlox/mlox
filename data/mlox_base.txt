@@ -1472,6 +1472,13 @@ Texture Fix - Bloodmoon 1.?.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloody Oath_v.1.0 [Aquan]
 
+[Conflict]
+ Bloody Oath has major landmass conflicts with the island of Tusar
+ (See: http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg )
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+Bloody Oath_v1.0.esp
+tusar_v1.2.1.esp
+
 [Note]
  !! The original version of this plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
@@ -3083,6 +3090,30 @@ SG_gryphon2_0.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GS_Seyda Neen Complete [Gianluca]
+
+[Note]
+ !! GS_SEYDA NEEN COMPLETE.esp breaks guard behavior and several quest mods.
+ !! Under certain circumstances, when you choose the second option in a
+ !! conversation with an NPC, the NPC will say "Squeak" and start to follow you.
+ !! This happens when you try to resist guards who want to arrest you, it also breaks
+ !! many quests in Veldion 2.0.
+ !! The cause of this problem is a line of dialogue in greeting 0 ("Squeak") copied
+ !! over from the Tribunal packrat, but losing the id check which limits the response
+ !! to packrats in the original dialogue. To solve this problem, remove this line of
+ !! dialogue in the CS.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+GS_SEYDA NEEN COMPLETE.esp
+
+[Conflict]
+ GS_SEYDA NEEN COMPLETE adds a wall to the outside of the Census and Excise
+ office in Seyda Neen which blocks access to one of the two alignment barrels that
+ the Partners mod places there. These barrels are necessary to choose the alignment
+ of your character so that other Partners NPCs can react accordingly. A solution is
+ to open the console, click on the added wall, and enter the command "disable".
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+GS_SEYDA NEEN COMPLETE.esp
+[ANY Barons_Partners30.esp
+     CM_Partners_3.0.esp]
 
 [Conflict]
  GS_SEYDA NEEN COMPLETE.esp includes "Seyda Neen Docks" by Lonnie
@@ -6516,6 +6547,22 @@ K_Scroll_Upgrade_MW_Trib_Bmoon.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sea of Destiny [Various]
 
+[Conflict]
+ Sea of Destiny includes an early version of Adul's arsenal and relocates it. Using
+ both mods results in floating statics in one of the two locations, missing statics in
+ the other, a doubled and misaligned (slightly shifted) interior, and mismatched doors.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+Sea-of-Destiny.esm
+Aduls_Arsenal.esp
+
+[Conflict]
+ ! Sea of Destiny and The Black Mill both add an interior named "Submerged Cave".
+ ! This results in one interior cell used by both mods. Fortunately the areas added by
+ ! the two mods don't intersect, so this conflict is mostly harmless.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+Sea-of-Destiny.esm
+TheBlackMill11.esp
+
 [Patch]
 sodpatch1.esp
 Sea-of-Destiny.esm
@@ -7029,9 +7076,24 @@ TR_Map2.esm
 ;; @TarMar [Ravensong]
 
 [Conflict]
+ Necessities of Morrowind (NoM) adds a shop to one wall of the Mournhold Bazaar area
+ which blocks access to a door added by TarMar. You need to to relocate one of the
+ two, or you can open the console, click on the house static, and enter the command
+ "disable".
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+TarMar.esp
+NOM 2.13.esp
+
+[Conflict]
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Beyond YsGramor v2.5.esm
 TarMar.esp
+
+[Conflict]
+ TarMar and Oluhan both add a building to the same spot in Tel Branora.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
+TarMar.esp
+Oluhan v1.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
