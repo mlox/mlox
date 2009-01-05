@@ -3095,7 +3095,7 @@ SG_gryphon2_0.esp
  !! GS_SEYDA NEEN COMPLETE.esp breaks guard behavior and several quest mods.
  !! Under certain circumstances, when you choose the second option in a
  !! conversation with an NPC, the NPC will say "Squeak" and start to follow you.
- !! This happens when you try to resist guards who want to arrest you, it also breaks
+ !! This happens when you tell a guard you want to go to jail, it also breaks
  !! many quests in Veldion 2.0.
  !! The cause of this problem is a line of dialogue in greeting 0 ("Squeak") copied
  !! over from the Tribunal packrat, but losing the id check which limits the response
@@ -7110,6 +7110,42 @@ Tejón's Fatigue Effects - Blackout.esp
  (Ref: "TejÃ³n's Fatigue Effects v1.21.txt")
 Tejón's Fatigue Effects - .esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tel Magus [Aragon]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ If you want Tel Magus to be in the Grazelands, just north of
+ Zainab camp, use "TelMagus-Grazelands.esp" file. Or, if you want
+ Tel Magus to be just south of Ebonheart, use "TelMagus-Ebonheart.esp".
+ (Ref: "TelMagus-Readme.txt")
+TelMagus-Ebonheart.esp
+TelMagus-Grazelands.esp
+
+[Requires]
+ (Ref: "TelMagus-Readme.txt")
+TelMagus-Ebonheart.esp
+TelMagus.esp
+
+[Requires]
+ (Ref: "TelMagus-Readme.txt")
+TelMagus-Grazelands.esp
+TelMagus.esp
+
+[Requires]
+ (Ref: "TelMagus-Readme.txt")
+TelMagus.esp
+[ANY TelMagus-Grazelands.esp
+     TelMagus-Ebonheart.esp]
+
+[Requires]
+ (Ref: "TelMagus-Readme.txt")
+TelMagus-Ingredients-TB-BM.esp
+[ALL TelMagus.esp
+     Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
