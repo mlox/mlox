@@ -305,7 +305,7 @@ my $RE_IGNORE = "^[ \t]*(?:;[^\n]+)*\n"; # for removing comments and blank lines
 my $RE_MENUMODE = '\bmenumode\b';
 
 # globals used for caching data when scanning multiple plugins at once
-my @MASTERS = ();		# reset in scan() for each new plugin
+my %MASTERS;			# reset in scan() for each new plugin
 my %MASTER_INFO;		# reused from plugin to plugin
 my %MASTER_INFTXT;		# reused from plugin to plugin
 my %MASTER_REC;			# reused from plugin to plugin
@@ -314,8 +314,7 @@ my %MASTER_ID;			# reused from plugin to plugin
 # remove the nulls from the end of string value retrieved from a plugin record
 sub chop_nulls {
     my($str) = @_;
-    $str =~ tr/\000//d;
-    return($str);
+    return(unpack("Z*", $str));
 }
 
 # load a section of data from the DATA pseudo-filedescriptor at the end of this script
@@ -428,9 +427,10 @@ sub rec_id {
 	    return(($name) ? "$name ($x, $y)" : $xname);
 	}
     } elsif ($rec_type eq "SCPT") {
-	my $script = $r->{SCTX}->[0];
-	my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
-	return(lc($name));
+	return(lc(unpack("Z32", $r->{SCHD})));
+#	my $script = $r->{SCTX}->[0];
+#	my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+#	return(lc($name));
     } elsif (defined $r->{NAME}) {
 	return(lc(chop_nulls($r->{NAME}->[0])));
     } elsif (defined $r->{INDX}) {
@@ -446,20 +446,21 @@ sub rec_id {
 my %LOADED_ESM;		# reused from plugin to plugin
 sub load_master {
     my($datadir, $esm, $label) = @_;
+    $esm = lc($esm);
     if (defined $LOADED_ESM{$esm}) {
 	print "DBG: re-using master data: $esm\n" if (DBG);
 	return;
     }
     my $dirlist = list_files($datadir);
-    $esm = $dirlist->{lc($esm)};
-    print "DBG: loading $datadir/$esm\n" if (DBG);
+    my $esm_file = $dirlist->{$esm};
+    print "DBG: loading $datadir/$esm_file\n" if (DBG);
     #TBD try finding master in same directory as plugin first, then in datadir
-    unless(open(INP, "<$datadir/$esm")) {
-	warn "Error opening $label $datadir/$esm for loading ($!)\n";
+    unless(open(INP, "<$datadir/$esm_file")) {
+	warn "Error opening $label $datadir/$esm_file for loading ($!)\n";
 	return;
     }
     unless (binmode(INP)) {
-	warn "Error setting binmode on $label $datadir/$esm ($!)\n";
+	warn "Error setting binmode on $label $datadir/$esm_file ($!)\n";
 	close(INP);
 	return;
     }
@@ -498,8 +499,7 @@ sub load_master {
 sub load_all_masters {
     my $datadir = find_datadir();
     print "DBG: loading masters, datadir = $datadir\n" if (DBG);
-    @MASTERS = sort_by_date($datadir, @MASTERS);
-    foreach my $master (@MASTERS) {
+    foreach my $master (keys %MASTERS) {
 	load_master($datadir, $master, "Master");
     }
 }
@@ -679,7 +679,7 @@ sub pprec {
     return(substr($recstr, 0, $::opt_w));
 }
 
-sub parse_masters {
+sub parse_hedr_masters {
     my($rec) = @_;
     my(@parts) = unpack("(a4L/a*)*", $rec);
     @parts = @parts[2..$#parts]; # remove the TES3.HEDR part
@@ -727,8 +727,9 @@ sub scan {
 	close(INP);
 	return;
     }
-    @MASTERS = ();
     # the following are globals used by scan_script
+    %MASTERS = ();
+    $MASTERS{lc($_)}++ foreach (qw(Morrowind.esm Tribunal.esm Bloodmoon.esm));
     %tbfun = ();
     %bmfun = ();
     %deplst = ();
@@ -790,10 +791,10 @@ sub scan {
 		    $missver++;
 		}
 	    }
-	    for my $mastref (@{parse_masters($rec)}) {
+	    for my $mastref (@{parse_hedr_masters($rec)}) {
 		my($master, $size) = @{$mastref};
 		push(@master_sizes, $mastref) if ($OPTFLAG{MASTERS});
-		push(@MASTERS, $master);
+		$MASTERS{lc($master)}++;
 		print "Master: $master  size: $size\n" if (DBG);
 		$mastbm++ if (lc($master) eq 'bloodmoon.esm');
 		$masttb++ if (lc($master) eq 'tribunal.esm');
@@ -825,13 +826,14 @@ sub scan {
 	    my $script = $r->{BNAM}[0];
 	    scan_script($script, "INFO($id)") if ($read_scpt);
 	    $myinf{$id} = (split(/NNAM....\d*\000/s, $rec, 2))[1];
-	    #print "\nDBG: myinf{$id}=$myinf{$id}\n  rec=$rec\n" if ($rec =~ /ra'virr/);
 	    print "DBG: MYINF($plugin) $id = $myinf{$id}\n" if (DBG);
 	    push(@{$myinftxt{$r->{NAME}[0]}}, $id);
 	    $dial_info{$cur_dial}->{$id} = 0;
 	} elsif ($rec_type eq "SCPT") {
 	    # check for tribunal/bloodmoon function dependency in scripts
-	    my $script = get_subrec($rec, "SCTX")->[0];
+	    my $r = parse_subrec_hash($rec);
+	    my $script = $r->{SCTX}[0];
+#	    my $name = unpack("Z32", $r->{SCHD}[0]);
 	    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
 	    scan_script($script, "SCPT($name)") if ($read_scpt);
 	    $myrec{$rec} = $name if ($CHK_DUP_REC);
@@ -966,7 +968,7 @@ sub scan {
 	load_all_masters();
 	my %master_inf = ();
 	my %inf_master = ();	# map back to the master the info came from.
-	foreach my $master (@MASTERS) {
+	foreach my $master (keys %MASTERS) {
 	    my $master_info = $MASTER_INFO{$master};
 	    while (my($id, $inf) = each %{$master_info}) {
 		$master_inf{$id} = $inf;
