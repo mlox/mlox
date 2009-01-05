@@ -54,7 +54,7 @@ oo Requirements
   You can do this Windows if you install the following two packages:
 
   http://www.python.org/ftp/python/2.5/python-2.5.msi
-  http://prdownloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.0.1-py25.exe
+  http://downloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.7.1-py25.exe
 
 - It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP
   ("Morrowind Code Patch"):
