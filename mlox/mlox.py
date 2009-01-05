@@ -1537,6 +1537,8 @@ def print_version():
 
 
 if __name__ == "__main__":
+    try: os.remove("mlox.err")
+    except: pass
     Dbg.add("\nmlox DEBUG DUMP:\n")
     def usage(status):
         print _["Usage"]
