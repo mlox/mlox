@@ -27,7 +27,7 @@ class dynopt(dict):
 Opt = dynopt()
 
 # command line options
-Opt.AutoFocus = False
+Opt.AutoFocus = True
 Opt.BaseOnly = False
 Opt.DBG = False
 Opt.Explain = None

@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.39
+Version: 0.41
 Copyright 2009 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
