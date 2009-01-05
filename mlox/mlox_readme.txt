@@ -418,6 +418,11 @@ send me this bugdump so I can figure out what happened.
 
 o ChangeLog
 
+Version 0.41 - 2009/01/05
+	* GUI - now links URLs in Messages window, and autofocuses
+	the various text panes.
+	* now error output in GUI mode is sent to "mlox.err"
+
 Version 0.38 - 2008/12/30
 	* added new [SIZE] function that allows you to check the
 	filesize of a plugin.
