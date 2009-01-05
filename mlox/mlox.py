@@ -43,6 +43,9 @@ Opt._Game = None
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         Opt.GUI = True
+#        if not hasattr(sys, 'frozen'):
+#            import wxversion
+#            wxversion.select('2.8.7.1')
         import wx
         import wx.richtext as rt
         import webbrowser
@@ -1259,7 +1262,8 @@ class loadorder:
 class mlox_gui():
     def __init__(self):
         wx.Locale(wx.LOCALE_LOAD_DEFAULT)
-        self.app = wx.App()
+        self.app = wx.App(True, "mlox.err")
+        print_version()
         self.can_update = True
         self.dir = os.getcwd()
         # setup widgets
@@ -1525,6 +1529,13 @@ def get_mlox_base_version():
     return(_["(Not Found)"])
 
 
+def print_version():
+    print "%s (%s)" % (full_version, Lang)
+    print "Python Version: %s" % pyversion
+    import wx.__version__
+    print "wxPython Version: %s" % wx.__version__
+
+
 if __name__ == "__main__":
     Dbg.add("\nmlox DEBUG DUMP:\n")
     def usage(status):
@@ -1555,6 +1566,7 @@ if __name__ == "__main__":
     except GetoptError, err:
         print str(err)
         usage(2)                # exits
+    # set the global full_version now
     full_version = "%s %s [mlox-base %s]" % (os.path.basename(sys.argv[0]), Version, get_mlox_base_version())
     for opt, arg in opts:
         if opt in   ("-a", "--all"):
@@ -1590,10 +1602,7 @@ if __name__ == "__main__":
         elif opt in ("-u", "--update"):
             Opt.Update = True
         elif opt in ("-v", "--version"):
-            print "%s (%s)" % (full_version, Lang)
-            print "Python Version: %s" % pyversion
-            import wx.__version__
-            print "wxPython Version: %s" % wx.__version__
+            print_version()
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True
