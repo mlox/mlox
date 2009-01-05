@@ -42,6 +42,7 @@ OPTIONS
  -D        turn on debug output
  -i ids    only print out the ids matching the given comma-delimited list
            of regular expression patterns.
+ -m regex  only print records that match given regular expression.
  -t types  only print out the records matching the given comma-delimted
            list of record types.
 
@@ -58,6 +59,9 @@ tes3cmd dump -i foo plugin.esp
 
 # Dump all the CELL records from a plugin:
 tes3cmd dump -t cell plugin.esp
+
+# Dump all cells from bradhia_v1_4.esp containing NPC named: "Maeve Jaste"
+tes3cmd dump -t cell -m "NAME:.*maeve.jaste" bradhia_v1_4.esp
 };
 
 my @CELL_FLAGS = ([0x02, "Has Water"],
@@ -198,6 +202,22 @@ my %WEAPON_TYPE = (0 => "ShortBladeOneHand",
 
 my %WEAPON_FLAGS = (1 => "[Ignores Normal Weapon Resistance]");
 
+my @CONTAINER_FLAGS = ([0x0001, "Organic"],
+		       [0x0002, "Respawns, Organic only"],
+		       [0x0008, "Default"]);
+
+my @CREATURE_FLAGS = ([0x0001, "Biped"],
+		      [0x0002, "Respawn"],
+		      [0x0004, "Weapon and shield"],
+		      [0x0008, "None"],
+		      [0x0010, "Swims"],
+		      [0x0020, "Flies"],
+		      [0x0040, "Walks"],
+		      [0x0048, "Default"],
+		      [0x0080, "Essential"],
+		      [0x0400, "Skeleton Blood"],
+		      [0x0800, "Metal Blood"]);
+
 sub decode_flags {
     my($flags, $flagdefs) = @_;
     my @list = ();
@@ -261,6 +281,8 @@ my %UNPACK =
 				      "Flags: " . (($flags) ? "Playable" : "Non-playable"),
 				      "AutoCalc Flags: " . decode_flags($autoflags, \@AUTOCALC_FLAGS));
 		      },
+     "CONT.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CONTAINER_FLAGS) },
+     "CREA.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CREATURE_FLAGS) },
      "DIAL.DATA" => sub { $DIAL_TYPE{unpack("C", $_[0])} },
      "ENCH.ENDT" => sub { my($type, $cost, $chrg, $auto) = unpack("LLLL", $_[0]);
 		      sprintf "Type: %s  Cost: %d  Charge: %d  Autocalc: %d", $ENCHANT_TYPE{$type}, $cost, $chrg, $auto },
@@ -286,7 +308,12 @@ my %UNPACK =
      "MGEF.MEDT" => sub { my($school, $base, $flags, $red, $blue, $green, $speed, $size, $sizecap) = unpack("LfLLLLfff", $_[0]);
 			  sprintf "School: %s  BaseCost: %0.2f  Flags: %s  RGB: (%d, %d, %d)  SizeX: %0.2f  SizeCap: %0.2f",
 			      $MAGIC_SCHOOL{$school}, $base, decode_flags($flags, \@MGEF_FLAGS), $red, $blue, $green, $size, $sizecap },
-     # The following are common subrecord formats
+     "MISC.MCDT" => sub { sprintf "Weight: %0.2f  Value: %d", unpack("fL", $_[0]) },
+     "REGN.WEAT" => sub { sprintf "Clear: %d  Cloudy: %d  Foggy: %d  Overcast: %d  Rain: %d  Thunder: %d  Ash: %d  Blight: %d",
+			      unpack("C8", $_[0]) },
+     "REGN.CNAM" => sub { "Map Color RGB: (%d, %d, %d)", unpack("C3", $_[0]) },
+     "REGN.SNAM" => sub { "Chance: %3d  SoundName: %s", unpack("Z32C", $_[0]) },
+     "SCPT.SCDT" => sub { "(Compiled script data)" },
      "SCPT.SCHD" => sub { sprintf "Name: %s  NumShorts: %d  NumLongs: %d  NumFloats: %d  ScriptDataSize: %d  LongVarSize: %d",
 			      unpack("Z32LLLLL", $_[0]); },
      "SCPT.SCVR" => sub { "Script Variables: " . join(',', split(/\000/, unpack('a*', $_[0]))) },
@@ -303,7 +330,8 @@ my %UNPACK =
 		      sprintf "  Wght: %0.2f  Val: %d  Typ: %s  Hlth: %d  Spd: %0.2f  Rch: %0.2f\n\t\tEnchPts: %d  Chop: %d-%d  Slash: %d-%d Thrust: %d-%d  Flags: %s",
 			  $weight, $value, $WEAPON_TYPE{$type}, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $WEAPON_FLAGS{$flags}},
 
-     FLAG => sub { sprintf "0x%04x", unpack("L", $_[0]) },
+     # The following are common subrecord formats
+     FLAG => sub { sprintf "hexflags:0x%04x", unpack("L", $_[0]) },
      NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) },
     );
 
@@ -316,8 +344,8 @@ foreach (qw(FRMR INDX NAM0))
     { $UNPACK{$_} = sub { unpack("L", $_[0]) }; }
 
 # subrecords that decode as 32-bit floats:
-foreach (qw(FLTV WHGT XCSL))
-    { $UNPACK{$_} = sub { unpack("f", $_[0]) }; }
+foreach (qw(FLTV WHGT XSCL))
+    { $UNPACK{$_} = sub { sprintf "%0.2f", unpack("f", $_[0]) }; }
 
 # subrecords that decode as variable length Z-strings:
 foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM
@@ -327,7 +355,7 @@ TEXT TNAM WNAM))
 
 sub opts_dump {
     $_[0] && do { warn $DUMP_USAGE; exit(0); };
-    getopts('Dt:i:') or die $DUMP_USAGE;
+    getopts('Dt:i:m:') or die $DUMP_USAGE;
 }
 
 my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
@@ -727,8 +755,8 @@ sub cmd_dump {
     warn "### Scanning $plugin\n" if ($::opt_v);
     open_input_plugin($plugin);
     my $expected = "TES3";
-    my $n = 0;
     my $wanted_ids;
+    my $match;
     if ($::opt_i) {
 	$wanted_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
     }
@@ -753,7 +781,8 @@ sub cmd_dump {
 	    }
 	}
     }
-    print "\n$plugin:\n";
+    my $plugin_banner = "\n$plugin:\n";
+    my $n = 1;
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
 	$expected = undef;
 	last if not defined $rec_type;
@@ -767,10 +796,12 @@ sub cmd_dump {
 	    next if ($id !~ /$wanted_ids/i);
 	}
 	next if (%wanted_types and not $wanted_types{lc($rec_type)});
+	$n = 0 if ($rec_type eq "TES3");
 	my $p = 0;
 	my $rec_len = length($rec);
 	my $name_idx;
 	my $first = 1;
+	my $print_rec = "";
 	while ($p < $rec_len) {
 	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
 	    $p += 8;
@@ -781,14 +812,22 @@ sub cmd_dump {
 		if (not (%wanted_subtypes and not $wanted_subtypes{lc($full_type)})) {
 		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
 		    my $subrec_str = $unpack->($subrec);
-		    my $prefix = ($first) ? "\nRecord: $n\n   $full_type" : "        $subrec_type";
-		    print "$prefix: $subrec_str\n";
-		    $first = 0;
+		    $print_rec .= "   $full_type: $subrec_str\n";
 		}
 	    } else {
 		warn "$plugin: Error: malformed subrec $subrec_type\n";
 	    }
 	}
+	next if ($::opt_m and not $print_rec =~ /$::opt_m/i);
+	if ($print_rec and $plugin_banner) {
+	    print $plugin_banner;
+	    $plugin_banner = undef;
+	}
+	if ($first) {
+	    print "\nRecord: $n\n";
+	    $first = 0;
+	}
+	print $print_rec;
 	$n++;
     }
     close(INP);
