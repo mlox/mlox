@@ -8,6 +8,7 @@
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
 
 use Getopt::Std;
+use Data::Dumper;
 use strict;
 
 BEGIN {
@@ -16,6 +17,37 @@ BEGIN {
     # debug/help code into the program when it it actually needed.
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
+
+my $OVERDIAL_USAGE = q{Usage: tes3cmd overdial OPTIONS plugin...
+
+OPTIONS
+ -D   turn on debug output
+ -1   only test to see if dialog in the first plugin is overlapped. (by default
+      all plugins are checked against all other plugins, which is an n-squared
+      operation).
+
+Prints the IDs of dialog records that overlap from the set of given plugins.
+An overlap is defined as a dialog (DIAL) Topic from one plugin that entirely
+contains a dialog Topic from another plugin. For example, White Wolf of Lokken
+has a dialog topic "to rescue me" which overlaps with the dialog topic "rescue
+me" from Suran Underworld, which causes the "Special Guest" quest to get stuck
+because Ylarra won't offer the topic "rescue me" when you find her in her
+cell.
+
+Overlap would only be a problem if the plugins are loaded in the order they
+are listed in the output.
+
+Example:
+
+# Show dialog overlaps between Lokken and SU:
+tes3cmd overdial BT_Whitewolf_2_0.esm Suran_Underworld_2.5.esp
+};
+
+sub opts_overdial {
+    $_[0] && do { warn $OVERDIAL_USAGE; exit(0); };
+    getopts('1D') or die $OVERDIAL_USAGE;
+}
+
 
 my $COM_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
 
@@ -68,6 +100,16 @@ my @CELL_FLAGS = ([0x02, "Has Water"],
 		  [0x041, "Illegal to Sleep Here"],
 		  [0x80, "Behave like Exterior"]);
 
+my %INFO_FUN = ('sX' => "Global/Local/Not Local types",
+		'JX' => "Journal type",
+		'IX' => "Item Type",
+		'DX' => "Dead Type",
+		'XX' => "Not ID Type",
+		'FX' => "Not Faction",
+		'CX' => "Not Class",
+		'RX' => "Not Race",
+		'LX' => "Not Cell");
+
 my %INFO_SCVR_type =
     ('0' => "Nothing",
      '1' => "Function",
@@ -96,10 +138,10 @@ my %SPECIALIZATION = (0 => "Combat", 1 => "Magic", 2 => "Stealth");
 
 my %SKILL = ( 0 => "Block",
 	      1 => "Armorer",
-	      2 => "Medium Armor",
-	      3 => "Heavy Armor",
-	      4 => "Blunt Weapon",
-	      5 => "Long Blade",
+	      2 => "MediumArmor",
+	      3 => "HeavyArmor",
+	      4 => "BluntWeapon",
+	      5 => "LongBlade",
 	      6 => "Axe",
 	      7 => "Spear",
 	      8 => "Athletics",
@@ -115,8 +157,8 @@ my %SKILL = ( 0 => "Block",
 	     18 => "Security",
 	     19 => "Sneak",
 	     20 => "Acrobatics",
-	     21 => "Light Armor",
-	     22 => "Short Blade",
+	     21 => "LightArmor",
+	     22 => "ShortBlade",
 	     23 => "Marksman",
 	     24 => "Mercantile",
 	     25 => "SpeechCraft",
@@ -218,6 +260,56 @@ my @CREATURE_FLAGS = ([0x0001, "Biped"],
 		      [0x0400, "Skeleton Blood"],
 		      [0x0800, "Metal Blood"]);
 
+my %ARMOR_TYPE = (0 => "Helmet",
+		  1 => "Cuirass",
+		  2 => "L. Pauldron",
+		  3 => "R. Pauldron",
+		  4 => "Greaves",
+		  5 => "Boots",
+		  6 => "L. Gauntlet",
+		  7 => "R. Gauntlet",
+		  8 => "Shield",
+		  9 => "L. Bracer",
+		  10 => " R. Bracer");
+
+my %ARMOR_INDEX = (0 => "Head",
+		   1 => "Hair",
+		   2 => "Neck",
+		   3 => "Cuirass",
+		   4 => "Groin",
+		   5 => "Skirt",
+		   6 => "Right Hand",
+		   7 => "Left Hand",
+		   8 => "Right Wrist",
+		   9 => "Left Wrist",
+		   10 => "Shield",
+		   11 => "Right Forearm",
+		   12 => "Left Forearm",
+		   13 => "Right Upper Arm",
+		   14 => "Left Upper Arm",
+		   15 => "Right Foot",
+		   16 => "Left Foot",
+		   17 => "Right Ankle",
+		   18 => "Left Ankle",
+		   19 => "Right Knee",
+		   20 => "Left Knee",
+		   21 => "Right Upper Leg",
+		   22 => "Left Upper Leg",
+		   23 => "Right Pauldron",
+		   24 => "Left Pauldron",
+		   25 => "Weapon",
+		   26 => "Tail");
+
+my @NPC_FLAGS = ([0x0001, "Female"],
+		 [0x0002, "Essential"],
+		 [0x0004, "Respawn"],
+		 [0x0010, "Autocalc"],
+		 [0x0400, "Blood Skel"],
+		 [0x0800, "Blood Metal"]);
+
+my %LEVI_DATA = (1 => "Calc from all levels <= PC level",
+		 2 => "Calc for each item");
+
 sub decode_flags {
     my($flags, $flagdefs) = @_;
     my @list = ();
@@ -226,6 +318,11 @@ sub decode_flags {
 	push(@list, $name) if ($flags & $val);
     }
     return("(" . join(", ", @list) . ")");
+}
+
+sub dump_lookup {
+    my($key, $hashref) = @_;
+    return($hashref->{$key} || $key . "???");
 }
 
 my $NREC;
@@ -240,6 +337,10 @@ my %UNPACK =
      "TES3.DATA" => sub { my($l1, $l2) = unpack("LL", $_[0]);
 			  my $size = $l1 + ($l2 << 32);
 			  "Length:     $size"; },
+     "ARMO.AODT" => sub { my($type, $weight, $value, $health, $epts, $armor) = unpack("LfLLLL", $_[0]);
+			  sprintf "Type: %s  Weight: %0.2f  Value: %d  Health %d  EnchPoints: %d  ArmorRating: %d",
+			      $ARMOR_TYPE{$type}, $weight, $value, $health, $epts, $armor},
+     "ARMO.INDX" => sub { $ARMOR_INDEX{unpack("C", $_[0])} },
      "CELL.AMBI" => sub { sprintf("Ambient Color: 0x%08x  Sunlight Color: 0x%08x  Fog Color: 0x%08x  Fog Density: %0.2f",
 				unpack("lllf", $_[0])); },
      "CELL.DATA" => sub {
@@ -303,12 +404,38 @@ my %UNPACK =
      "INFO.PNAM" => sub { sprintf qq{Prev ID:    "%s"}, unpack("Z*", $_[0]) },
      "INFO.RNAM" => sub { sprintf qq{Race:       "%s"}, unpack("Z*", $_[0]) },
      "INFO.SCVR" => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack("aaa2aZ*", $_[0]);
-			  "Index:$idx  Type:$INFO_SCVR_type{$typ}  Fun:$fun  Cmp:$INFO_SCVR_cmp{$cmp}  Name:$nam"; },
+			  sprintf "Index:$idx  Type:%s  Fun:%s  Cmp:%s  Name:$nam",
+			      dump_lookup($fun, \%INFO_FUN), dump_lookup($typ, \%INFO_SCVR_type), dump_lookup($cmp, \%INFO_SCVR_cmp); },
+     "LEVC.DATA" => sub { "List Data: %d (1 = Calc from all levels <= PC level)", unpack("L", $_[0]) },
+     "LEVC.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
+     "LEVI.DATA" => sub { "List Data: %s ", $LEVI_DATA{unpack("L", $_[0])} },
+     "LEVI.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
      "LTEX.DATA" => sub { unpack("Z*", $_[0]) },
      "MGEF.MEDT" => sub { my($school, $base, $flags, $red, $blue, $green, $speed, $size, $sizecap) = unpack("LfLLLLfff", $_[0]);
 			  sprintf "School: %s  BaseCost: %0.2f  Flags: %s  RGB: (%d, %d, %d)  SizeX: %0.2f  SizeCap: %0.2f",
 			      $MAGIC_SCHOOL{$school}, $base, decode_flags($flags, \@MGEF_FLAGS), $red, $blue, $green, $size, $sizecap },
      "MISC.MCDT" => sub { sprintf "Weight: %0.2f  Value: %d", unpack("fL", $_[0]) },
+     "NPC_.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@NPC_FLAGS) },
+     "NPC_.NPDT" => sub { my $len = length($_[0]);
+			  if ($len == 12) {
+			      my($lev, $disp, $fact, $rank, $gold) = unpack("SC3x[C3]L", $_[0]);
+			      sprintf "Level: %d  Disposition: %d  Faction: %d  Rankd: %d", $lev, $disp, $fact, $rank, $gold;
+			  } elsif ($len == 52) {
+			      my $skills = "";
+			      my $n = 0;
+			      foreach (unpack('x[SC8]C27', $_[0])) {
+				  $skills .= "\n\t\t" if (($n % 7) == 0);
+				  $skills .= " $SKILL{$n}: $_";
+				  $n++;
+			      }
+			      my($lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck, $rep, $hlth, $spelpts, $fat, $disp, $fact, $rank, $gold) =
+				  unpack("SC8x[C27]CSSSCCCCxCL", $_[0]);
+			      sprintf "  Level: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tRep: %d  Health: %d SpellPts: %d  Fatigue: %d  Disp: %d  Faction: %d  Rank: %d  Gold: %d\n\t\tSkills:$skills",
+				  $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck, $rep, $hlth, $spelpts, $fat, $disp, $fact, $rank, $gold;
+			  } else {
+			      "BAD NPDT length ($len) is not 12 or 52!";
+			  }
+		      },
      "REGN.WEAT" => sub { sprintf "Clear: %d  Cloudy: %d  Foggy: %d  Overcast: %d  Rain: %d  Thunder: %d  Ash: %d  Blight: %d",
 			      unpack("C8", $_[0]) },
      "REGN.CNAM" => sub { "Map Color RGB: (%d, %d, %d)", unpack("C3", $_[0]) },
@@ -331,6 +458,7 @@ my %UNPACK =
 			  $weight, $value, $WEAPON_TYPE{$type}, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $WEAPON_FLAGS{$flags}},
 
      # The following are common subrecord formats
+     DODT => sub { sprintf "Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack("f6", $_[0]) },
      FLAG => sub { sprintf "hexflags:0x%04x", unpack("L", $_[0]) },
      NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) },
     );
@@ -475,27 +603,33 @@ sub opts_header {
     getopts('Da:d:mv:') or die $HDR_USAGE;
 }
 
-my %CMDS = ("rename" => [\&opts_rename, \&cmd_rename],
-	    "header" => [\&opts_header, \&cmd_header],
-	    "dump"   => [\&opts_dump, \&cmd_dump],
-	    "common" => [\&opts_com, \&cmd_com],
-	    "help"   => [\&opts_help, undef],
+my %CMDS = (
+	    "common"   => [ \&opts_com,      \&cmd_com ],
+	    "overdial" => [ \&opts_overdial, \&cmd_overdial ],
+	    "dump"     => [ \&opts_dump,     \&cmd_dump ],
+	    "header"   => [ \&opts_header,   \&cmd_header ],
+	    "help"     => [ \&opts_help,     undef ],
+	    "rename"   => [ \&opts_rename,   \&cmd_rename ],
 	   );
 
-my $USAGE_ALL = qq{Usage: tes3cmd {@{[join('|', sort keys %CMDS)]}} OPTIONS plugins...
+my $USAGE_ALL = qq{Usage: tes3cmd COMMAND OPTIONS plugins...
 
-For help on subcommands: tes3cmd help subcommand
+For help on commands: tes3cmd help command
+
+COMMANDS
+@{[join", ", keys %CMDS]}
 
 };
 sub add_alias {
     my($name, $alias) = @_;
     $CMDS{$alias} = $CMDS{$name};
-    $USAGE_ALL .= " $alias is an alias for subcommand: $name\n"
+    $USAGE_ALL .= " $alias is an alias for: $name\n"
 }
 # add shortcut aliases for convenience
 add_alias("header", "hdr");
 add_alias("rename", "ren");
 add_alias("common", "com");
+add_alias("overdial", "od");
 
 sub opts_help {
     if (my $cmd_name = shift(@ARGV)) {
@@ -731,6 +865,46 @@ sub read_object_ids {
     return(\%plugin_id) unless ($fun);
 }
 
+sub read_dialogs {
+    my($plugin, $dialref) = @_;
+    open_input_plugin($plugin);
+    while(my($rec_type, $rec, $flags) = read_rec(undef)) {
+	last if not defined $rec_type;
+	if ($flags & 0x1000) {
+	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	next if ($rec_type ne "DIAL");
+	my $r = parse_subrec_hash($rec);
+	my $id = unpack("Z*", $r->{NAME}[0]);
+	my $type = unpack("C", $r->{DATA}[0]);
+	$dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
+    }
+    close(INP);
+}
+
+sub cmd_overdial {
+    my(@plugins) = @_;
+    my %dialog;
+    foreach my $plugin (@plugins) {
+	read_dialogs($plugin, \%dialog);
+    }
+    my @testplugins = ($::opt_1) ? ($plugins[0]) : sort keys %dialog;
+    foreach my $plugin1 (sort keys %dialog) {
+	foreach my $plugin2 (@testplugins) {
+	    if ($plugin1 ne $plugin2) {
+		foreach my $id1 (keys %{$dialog{$plugin1}}) {
+		    foreach my $id2 (keys %{$dialog{$plugin2}}) {
+			if (length($id1) > length($id2) and $id1 =~ /\b$id2\b/i) {
+			    printf qq{%-40s "$id1"\n%-40s "$id2"\n\n}, "$plugin1:", "$plugin2:";
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+
 # find objects in common between 2 plugins
 sub cmd_com {
     my($plugin1, $plugin2) = @_;
@@ -957,7 +1131,7 @@ sub main {
     die $USAGE_ALL unless ($cmd_ref = $CMDS{$cmd_name});
     my($cmd_getopts, $cmd) = @{$cmd_ref};
     $cmd_getopts->();
-    if ($cmd_name =~ /^com(mon)?$/i) {
+    if ($cmd_name =~ /^(com(mon)?|overdial|od)$/i) {
 	$cmd->(@ARGV);
     } else {
 	for my $plugin (@ARGV) {
