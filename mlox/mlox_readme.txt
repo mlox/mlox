@@ -31,16 +31,20 @@ o Features
 
 - optimally reorders your load order to avoid known problems, where
 "optimally" is relative to the quality and coverage of the rule-base.
-(Currently the rule-base needs lots of work, of course).
+(Currently the rule-base knows about many of the popular Morrowind mods,
+but there is more work to be done to include more mods).
 - warns about missing pre-requisites
 - warns about plugin conflicts
 - prints notes for things you might want to know about a mod, but may
 have overlooked in the Readme, or things discussed in forum posts you
 may have missed.
-- customizable via a separate user rules file
+- mlox is customizable via a separate user rules file.
 - can also check someone else's load list, you can paste the list into
 the mlox GUI, or load the list from a file.
-- runs on Windows or Linux :)
+- it runs on Windows or Linux! :)
+
+(Note that mlox does not tell you if you have missing Meshes or Textures, it
+is only a load order tool, and does not report problems with resources).
 
 ------------------------------------------------------------
 o Installation and quick start
@@ -48,7 +52,7 @@ o Installation and quick start
 oo Requirements
 
 - mlox.py is written using Python 2.5 with wxWidgets, just like Wrye
-  Mash. (For Windows, there is a standalone executable that does not
+  Mash. (For Windows, there is a stand-alone executable that does not
   require these pre-requisites). You do need to install Python
   and wxWidgets if you wish to run the script form of the program. 
   You can do this Windows if you install the following two packages:
@@ -68,13 +72,13 @@ oo Requirements
   command line switches it starts in GUI mode, when executed with
   the switch -h, it displays command line usage help.
 
-- Unpack the mlox appication archive somewhere under your game
+- Unpack the mlox application archive somewhere under your game
   directory. If you don't have a place decided, I suggest you unpack in
   the Morrowind directory. A new directory called "mlox" will be
   created containing all the files.
 
-- The rule-base is released as a separate archive (mlox-data_DATE.7z),
-  unpack this archve in the mlox directory created when you unpacked the
+- The rule-base is released as a separate archive (mlox-data_<DATE>.7z),
+  unpack this archive in the mlox directory created when you unpacked the
   application.
 
 - A quick explanation of the included batch files for Windows (unless
@@ -86,6 +90,8 @@ oo Requirements
   lo - (run this in "Data Files") just prints your current load order.
 
 - On Windows, run mlox.exe or mlox.bat. On Linux, run: mlox.py
+  On Windows, if you have set up files that end in ".py" to be executed
+  by Python, then just double-clicking on mlox.py would start the GUI.
 
 - mlox always assumes that the rule-base files (mlox_base.txt and
   mlox_user.txt, if you have created one) are in the current working
@@ -98,201 +104,190 @@ o Support
 If you run into a problem with mlox, the best thing to do to get help
 is to post on the BethSoft forums:
 http://www.bethsoft.com/bgsforums/index.php?showforum=12
+You can search for the latest mlox thread by using the forum Search function.
 
-Please include in your problem report a copy of the text from the
-Statistics (top) pane of the mlox GUI.
+Please include in your problem report a copy of file "mlox.err" from your mlox
+directory.
 
 ------------------------------------------------------------
 o Introduction - Why mlox?
 
-mlox runs on a little rule-based engine that takes rules from 2 input
-files: mlox_base.txt, which contains general community knowledge, and
-mlox_user.txt (if you have created one), which you can edit to contain
-local knowledge of your personal load order situation. You may
-completely ignore mlox_user.txt if you don't want to be bothered with
-it. It's main audience will be the "power user".
+mlox runs on a little rule-based engine that takes rules from 2 input files:
+mlox_base.txt, which contains general community knowledge, and mlox_user.txt
+(if you have created one), which you can edit to contain local knowledge of
+your personal load order situation. You may completely ignore mlox_user.txt if
+you don't want to be bothered with it. It's main audience will be the "power
+user".
 
-Why mlox? Well, because getting your load order "sorted" (also in the
-sense of "working correctly") can be a tedious, error-prone job. So
-why not automate it? mlox can help in a variety of situations:
+Why mlox? Well, because getting your load order "sorted" (also in the sense of
+"working correctly") can be a tedious, error-prone job. So why not automate
+it? mlox can help in a variety of situations:
 
-- It's not rare that a user will post on a TES forum asking for load
-order help, and it is readily apparent that they have not read the
-Readmes for the mods they are using. For example, sometimes a Readme
-will say to activate only one of a set of plugins, but they have
-inadvertently activated them all. Then they ask why it's not working.
-The answer is simply: "run mlox".
+- It's not rare that a user will post on a TES forum asking for load order
+help, and it is readily apparent that they have not read the Readmes for the
+mods they are using. For example, sometimes a Readme will say to activate only
+one of a set of plugins, but they have inadvertently activated them all. Then
+they ask why it's not working. The answer is simply: "run mlox".
 
-- There's also the situation where a power user with hundreds of mods
-may want to re-install from scratch, but they have so many mods,
-they've forgotten about some of the pre-reqs, incompatibilities and
-orderings, so they end up making little mistakes during the
-re-install. Sadly, this has happened to me :) With the mlox knowledge
-base, you don't have to remember these details, you just write a rule
-and the rule remembers for you. mlox will not forget.
+- There's also the situation where a power user with hundreds of mods may want
+to re-install from scratch, but they have so many mods, they've forgotten
+about some of the pre-reqs, incompatibilities and orderings, so they end up
+making little mistakes during the re-install. Sadly, this has happened to me
+:) With the mlox knowledge base, you don't have to remember these details, you
+just write a rule and the rule remembers for you. mlox will not forget.
 
-- If you are a modder, and you are tired of hearing people having the
-same installation problems over and over again with your mod, or
-hearing about alleged problems with your mod that are actually known
-conflicts with other mods, you might consider contributing rules to
-the mlox rule-base that describe orderings, conflicts, and
-dependencies for your mod. Then when people have problems, you can
-tell them to run mlox, and post the output.
+- If you are a modder, and you are tired of hearing people having the same
+installation problems over and over again with your mod, or hearing about
+alleged problems with your mod that are actually known conflicts with other
+mods, you might consider contributing rules to the mlox rule-base that
+describe orderings, conflicts, and dependencies for your mod. Then when people
+have problems, you can tell them to run mlox.
 
 So mlox is potentially for everybody.
 
-That's the theory. Of course, before mlox really starts to deliver on
-its promise, significant effort will be required to add enough rules
-to provide comprehensive coverage of at least popular mods. If mlox
-succeeds, it will be due to the effort of many. No one person could do
-it all.
+That's the theory. Of course, it will take a lot of work to add rules for the
+many existing mods. Currently mlox is aware of many popular mods, but there is
+still much more work to be done to fill out the rule-base. If mlox succeeds,
+it will be due to the effort of many. No one person could do it all.
 
-mlox works by matching filenames specified in rules against the
-plugins you actually have installed and active. If you have merged
-many plugins with the Construction Set, and no longer use the original
-plugin filenames, mlox will not know this and will not be able to
-order them or tell you dependencies for your merged plugins. Of
-course, if you like, you can write rules yourself and put them in
-mlox_user.txt to cover these situations.
+mlox works by matching filenames specified in rules against the plugins you
+actually have installed and active. If you have merged many plugins with the
+Construction Set, and no longer use the original plugin filenames, mlox will
+not know this and will not be able to order them or tell you dependencies for
+your merged plugins. Of course, if you like, you can write rules yourself and
+put them in mlox_user.txt to cover these situations.
 
 ------------------------------------------------------------
 o Origins of mlox
 
-mlox is inspired by Random007's BOSS (formerly FCOMhelper) project,
-(see: http://www.bethsoft.com/bgsforums/index.php?showtopic=890589 ).
-BOSS (Better Oblivion Sorting Software) is truly invaluable for
-Oblivion, because Oblivion is particularly susceptible to crashing if
-the load order isn't correct, and some mod projects, notably FCOM,
-require a very large and complicated load ordering that can be
-difficult to get right. After BOSS came along, when people post about
-Oblivion load order problems, the answer to them simply became: "run
-BOSS". Hopefully, mlox will become as useful for Morrowind.
+mlox is inspired by Random007's BOSS (formerly FCOMhelper) project, (see:
+http://www.bethsoft.com/bgsforums/index.php?showtopic=890589 ). BOSS (Better
+Oblivion Sorting Software) is truly invaluable for Oblivion, because Oblivion
+is particularly susceptible to crashing if the load order isn't correct, and
+some mod projects, notably FCOM, require a very large and complicated load
+ordering that can be difficult to get right. After BOSS came along, when
+people post about Oblivion load order problems, the answer to them simply
+became: "run BOSS". Hopefully, mlox will become as useful for Morrowind.
 
 However, I decided to take a different approach in the design than the
-approach used in BOSS. BOSS uses a "total order" approach, every
-plugin in the database knows its ordering relationship with every
-other plugin, mlox uses a "partial order" approach, the rules specify
-a minimal set of orderings. If it does not matter whether 2 plugins
-are in a particular order, there is no ordering specified for them.
+approach used in BOSS. BOSS uses a "total order" approach, every plugin in the
+database knows its ordering relationship with every other plugin, mlox uses a
+"partial order" approach, the rules specify a minimal set of orderings. If it
+does not matter whether 2 plugins are in a particular order, there is no
+ordering specified for them.
 
-BOSS also sometimes requires a second step: every time you run it, all
-the plugins it doesn't know about end up at the end of the order and
-must be re-ordered by hand. (While BOSS knows about a vast number of
-mods, you may use some it doesn't know about. Also, experienced users
-often have some home-grown plugins and patches which BOSS couldn't
-know about). mlox uses your current load order as a set of
-"pseudo-rules", so plugin orderings that are unknown by the rule-base
-are filled in by what mlox knows about your current order. If that's
-too confusing, I'll put it this way, mlox normally only has one step,
-and you don't need to do any manual reordering afterwards. If you
-don't like the order mlox produces, you can add new rules in the
-mlox_user.txt, but this only has to be done once, from then on it's
-all automatic.
+BOSS also sometimes requires a second step: every time you run it, all the
+plugins it doesn't know about end up at the end of the order and must be
+re-ordered by hand. (While BOSS knows about a vast number of mods, you may use
+some it doesn't know about. Also, experienced users often have some home-grown
+plugins and patches which BOSS couldn't know about). mlox uses your current
+load order as a set of "pseudo-rules", so plugin orderings that are unknown by
+the rule-base are filled in by what mlox knows about your current order. If
+that's too confusing, I'll put it this way, mlox normally only has one step,
+and you don't need to do any manual reordering afterwards. If you don't like
+the order mlox produces, you can add new rules in the mlox_user.txt, but this
+only has to be done once, from then on it's all automatic.
 
 Finally, I wanted to have a set of rules that could easily express
-relationships between plugins: A depends on B, X conflicts with Y, and
-so on. This would require writing a simple rule-base system.
+relationships between plugins: A depends on B, X conflicts with Y, and so on.
+This would require writing a simple rule-base system.
 
-Don't take this explanation of the differences as a negative view of
-BOSS. I have used BOSS and it really has been invaluable in setting up
-a working load order for Oblivion. There's a lot to be said for the
-simple approach it takes. For example, the BOSS rule-base is trivial
-to understand, while the mlox rule-base in comparison is quite
-complicated and that can potentially lead to errors and behavior that
-is not understood. So it's not easy to say which approach is better. I
-can just say that I prefer to be able to write rules to customize my
-load order, and to be able to express dependencies and conflicts, and
-these are things that really need a little rule-based engine. So
-that's why I wrote mlox.
+Don't take this explanation of the differences as a negative view of BOSS. I
+have used BOSS and it really has been invaluable in setting up a working load
+order for Oblivion. There's a lot to be said for the simple approach it takes.
+For example, the BOSS rule-base is trivial to understand, while the mlox
+rule-base in comparison is quite complicated and that can potentially lead to
+errors and behavior that is not understood. So you can't really say one
+approach is better than the other. I just prefer to be able to write rules to
+customize my load order, and to be able to express dependencies and conflicts,
+and these are things that really need a little rule-based engine. So that's
+why I wrote mlox.
 
 ------------------------------------------------------------
 o Note to mod Authors
 
-It is my hope that the users of your mod will benefit from using mlox,
-and also that maybe mlox will help reduce mod conflicts, and support
-questions for your mod due to misconfiguration. It is a grand goal,
-and there are some things we can do together to see it happen.
+It is my hope that the users of your mod will benefit from using mlox, and
+also that maybe mlox will help reduce mod conflicts, and support questions for
+your mod due to misconfiguration. It is a grand goal, and there are some
+things we can do together to see it happen.
 
-The first thing is versioning of your mod. If mlox can tell what
-version of your mod the user is using, it can give more accurate
-advice. mlox can get the version of a plugin from its filename or from
-a string you put in the plugin header. So, for example, this works:
+The first thing is versioning of your mod. If mlox can tell what version of
+your mod the user is using, it can give more accurate advice. mlox can get the
+version of a plugin from its header description field (preferred), or from the
+plugin filename.
 
-  Plugin_V1.0.esp
-
-Or if the filename stays the same from version to version, then if the
+So, if the filename stays the same from version to version, then if the
 description field of the plugin contains a version string:
 
-  Version: 1.0
+Version: 1.0
 
-mlox will be able to use it. (Wrye Mash can report that version too,
-so it's just generally useful).
+(on a line by itself) mlox will be able to use it. (Wrye Mash can report that
+version too, so it's just a generally useful thing to have in the description).
 
-The next thing is teaching mlox about your mod. If you like, you can
-ask me to add rules for you. Or you can write them yourself and email
-them to me and I'll put them in the next release of the rule-base. If
-you're adventurous and know about Subversion, you can ask for write
-access to the rule-base, and I'll let you make changes to it directly.
-(There will be directions on the mlox wiki on how to do this, so don't
-worry if it sounds too technical). I'll try to help as much as I can,
-the more mlox knows, the more useful it is, and people will have fewer
-load order problems.
+mlox can also tell the version from the filename. So, for example, this works:
+
+Plugin_V1.0.esp
+
+The next thing is teaching mlox about your mod. If you like, you can ask me to
+add rules for you. Or you can write them yourself and email them to me or post
+on the Bethsoft forums and I'll put them in the next release of the rule-base.
+If you're adventurous and know about Subversion, you can ask for write access
+to the rule-base, and I'll let you make changes to the rule-base directly.
+(There will be directions on the mlox wiki on how to do this, so don't worry
+if it sounds too technical). I'll try to help as much as I can, the more mlox
+knows, the more useful it is, and people will have fewer load order problems.
 
 ------------------------------------------------------------
 o On the Importance of the output warnings
 
-[REQUIRES] warnings specify missing pre-requisites, this is usually
-very important, and normally you can consider these "errors" that
-should be fixed. But in some case, they are warnings about patches
-that are available to make two plugins work better together.
+[REQUIRES] warnings specify missing pre-requisites, this is usually very
+important, and normally you can consider these "errors" that should be fixed.
+But in some case, they are warnings about patches that are available to make
+two plugins work better together.
 
-[PATCH] warnings specify mutual dependencies as in the case of a patch
-plugin. where you'd like to know if the patch is missing or if the
-thing that's supposed to be patched is missing. These are usually
-pretty important warnings since proper functioning of a mod sometimes
-means getting patches properly installed.
+[PATCH] warnings specify mutual dependencies as in the case of a patch plugin.
+where you'd like to know if the patch is missing or if the thing that's
+supposed to be patched is missing. These are usually pretty important warnings
+since proper functioning of a mod sometimes means getting patches properly
+installed.
 
-[CONFLICT] warnings specify situations where plugins conflict and
-generally speaking, these are "warnings". When 2 plugins conflict, the
-second one in the load order wins, because it overrides objects it has
-in common with the first. In some cases, the game will still play, but
-you will not see some of the content of the first plugin. In other
-cases, conflicts will break your game. The comments printed by the
-conflict rules will try to tell you how important the conflict is so
-you can decide which plugin to load last, or which to omit, depending
-on what you want to see in your game.
+[CONFLICT] warnings specify situations where plugins conflict and generally
+speaking, these are "warnings". When 2 plugins conflict, the second one in the
+load order wins, because it overrides objects it has in common with the first.
+In some cases, the game will still play, but you will not see some of the
+content of the first plugin. In other cases, conflicts will break your game.
+The comments printed by the conflict rules will try to tell you how important
+the conflict is so you can decide which plugin to load last, or which to omit,
+depending on what you want to see in your game.
 
-[NOTE] warnings print information that may be of use to you. They may
-tell you that a particular plugin is known to have evil GMSTs, or
-whether or not it is a good idea to include it in "Merged Objects.esp"
-if you have that. They are like annotations for all your plugins. In
-command-line mode, you can always turn off the printing of NOTEs with
-the (-q) command line option if you don't want to see them.
+[NOTE] warnings print information that may be of use to you. They may tell you
+that a particular plugin is known to have evil GMSTs, or whether or not it is
+a good idea to include it in "Merged Objects.esp" if you have that. They are
+like annotations for all your plugins. In command-line mode, you can always
+turn off the printing of NOTEs with the (-q) command line option if you don't
+want to see them.
 
 ------------------------------------------------------------
 o Testing
 
-Before you start testing how mlox works on your load order, I
-recommend using Wrye Mash to save your current load order: In the
-plugin pane under Mash's "Mods" tab: right click on a column header,
-choose "Load" -> "Save List...", and enter a name for your saved load
-order so that you can revert back to it later should you decide that
-you do not like the results you get from mlox.
+Before you start testing how mlox works on your load order, I recommend using
+Wrye Mash to save your current load order: In the plugin pane under Mash's
+"Mods" tab: right click on a column header, choose "Load" -> "Save List...",
+and enter a name for your saved load order so that you can revert back to it
+later should you decide that you do not like the results you get from mlox.
 
-mlox only updates your load order in GUI mode if you press the
-update button, or in command-line mode if you use the -u switch.
-So you should let mlox tell you what it's going to do first, then
-decide whether or not you like the results before you actually let
-mlox update you load order.
+mlox only updates your load order in GUI mode if you press the update button,
+(or in command-line mode if you use the -u switch). So you should let mlox
+tell you what it's going to do first, then decide whether or not you like the
+results before you actually let mlox update you load order.
 
 ------------------------------------------------------------
 o Note to Wrye Mash users
 
-If you use the "Lock Times" feature of Wrye Mash, then you'll need to
-turn it off *before* you use mlox to sort your load order, otherwise
-Mash will just undo any load order changes mlox makes when it runs.
-After you have changed your load order with mlox, then you can turn
-"Lock Times" back on.
+If you use the "Lock Times" feature of Wrye Mash, then you'll need to turn it
+off *before* you use mlox to sort your load order, otherwise Mash will just
+undo any load order changes mlox makes when it runs. After you have changed
+your load order with mlox, then you can turn "Lock Times" back on.
 
 ------------------------------------------------------------
 o Usage
@@ -300,10 +295,11 @@ o Usage
 On Windows, run mlox.exe or the batch file: mlox.bat
 On Linux, run the python script: mlox.py
 
-These commands will start mlox in GUI mode. If the proposed load order
-looks good to you, press the "Update Load Order" button.
+These commands will start mlox in GUI mode. If the proposed load order looks
+good to you, press the "Update Load Order" button.
 
-Here is the full usage of mlox from "mlox -h":
+Here is the full command-line usage for mlox from "mlox -h" (You can ignore
+this if you only want to run mlox in GUI mode):
 
 Usage: mlox [OPTIONS]
 
@@ -374,21 +370,20 @@ current load order, then leave off the --base-only switch.
 ----------------------------------------------------------------------
 oo The mlox GUI
 
-The mlox GUI displays 4 text panes. The top text pane shows the rules
-files that have been loaded and their counts. The middle text pane
-shows messages and warnings. And the 2 lower panes that are side by
-side show the original load order on the left, and the mlox sorted
-load order to the right. Plugins that have moved up due to sorting are
-highlighted in the mlox sorted order.
+The mlox GUI displays 4 text panes. The top text pane shows the rules files
+that have been loaded and their counts. The middle text pane shows messages
+and warnings. And the 2 lower panes that are side by side show the original
+load order on the left, and the mlox sorted load order to the right. Plugins
+that have moved up due to sorting are highlighted in the mlox sorted order.
 
-To update your load order to the new sorted order, simply press the
-button labeled: "Update Load Order".
+To update your load order to the new sorted order, simply press the button
+labeled: "Update Load Order".
 
-Right click on the original load order to get a context menu for
-advanced options. These options are:
+Right click on the original load order to get a context menu for advanced
+options. These options are:
 
-- Select All: allows you to select the text of the plugin order so
-you can copy and paste it somewhere.
+- Select All: allows you to select the text of the plugin order so you can
+copy and paste it somewhere.
 
 - Paste: allows you to paste a list of plugins into mlox so you can, for
 example, analyze the plugin list posted by someone in a forum post. Input
@@ -405,27 +400,31 @@ if it just sees the name of the plugin it will report that it may have GMSTs
 in it, whereas in reality it's possible that the user has cleaned that plugin,
 which would change its size.
 
-- Open File: this option allows you to input a list of plugins from
-file, instead of from pasting them. See the Paste option for input
-formats and caveats.
+- Open File: this option allows you to input a list of plugins from a file,
+instead of from pasting them. See the Paste option above for input formats and
+caveats.
 
-- Debug: this will pop up a window containing a list of debugging
-output (and automatically copy the contents to a file:
-mlox_debug.out). If you run into problems with mlox, I may need you to
-send me this bugdump so I can figure out what happened.
+- Debug: this will pop up a window containing a list of debugging output (and
+automatically copy the contents to a file: mlox_debug.out). If you run into
+problems with mlox, I may need you to send me this bugdump so I can figure out
+what happened.
 
 ==================================================
 
 o ChangeLog
 
+Version 0.50 - 2009/01/06
+	* Beta release. Documentation has been edited to be current. No new
+	application functionality.
+
 Version 0.41 - 2009/01/05
-	* GUI - now links URLs in Messages window, and autofocuses
+	* GUI - now links URLs in Messages window, and auto-focuses
 	the various text panes.
 	* now error output in GUI mode is sent to "mlox.err"
 
 Version 0.38 - 2008/12/30
 	* added new [SIZE] function that allows you to check the
-	filesize of a plugin.
+	file-size of a plugin.
 
 Version 0.31 - 2008/12/16
 	* added new [VER] function that allows you to check the
