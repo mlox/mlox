@@ -123,7 +123,7 @@ class logger:
             print message
 
     def get(self):
-        return("\n".join(self.log) + "\n")
+        return("\n".join(map(unify, self.log)) + "\n")
 
     def flush(self):
         self.log = []
@@ -1419,10 +1419,10 @@ class mlox_gui():
             self.btn_update.Disable()
         self.txt_stats.SetValue(Stats.get())
         self.highlight_hello(self.txt_stats)
-        self.txt_msg.SetValue(unify(Msg.get()))
+        self.txt_msg.SetValue(Msg.get())
         self.highlight_warnings(self.txt_msg)
-        self.txt_cur.SetValue(unify(Old.get()))
-        self.txt_new.SetValue(unify(New.get()))
+        self.txt_cur.SetValue(Old.get())
+        self.txt_new.SetValue(New.get())
         self.label_cur.SetLabel(lo.origin)
         self.cur_vbox.Layout()
         self.highlight_moved(self.txt_new)
@@ -1452,7 +1452,7 @@ class mlox_gui():
         out = myopen_file(debug_output, 'w')
         if out == None:
             return
-        print >> out, Dbg.get()
+        print >> out, Dbg.get().encode("utf-8")
         out.close()
 
     def right_click_handler(self, e):
@@ -1501,7 +1501,7 @@ class mlox_gui():
         dbg_frame.SetSizeHints(500,800)
         dbg_label = wx.StaticText(dbg_frame, -1, _["(Debug Output Saved to \"%s\")"] % debug_output)
         dbg_label.SetFont(self.label_font)
-        dbg_txt = wx.TextCtrl(dbg_frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE)
+        dbg_txt = wx.TextCtrl(dbg_frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         dbg_btn_close = wx.Button(dbg_frame, -1, _["Close"], size=(90,60))
         dbg_btn_close.Bind(wx.EVT_BUTTON, lambda x: dbg_frame.Destroy())
         dbg_btn_close.SetFont(self.button_font)
@@ -1510,7 +1510,7 @@ class mlox_gui():
         dbg_frame_vbox.Add(dbg_txt, 1, wx.EXPAND)
         dbg_frame_vbox.Add(dbg_btn_close, 0, wx.EXPAND)
         dbg_frame.Bind(wx.EVT_CLOSE, lambda x: dbg_frame.Destroy())
-        dbg_txt.SetValue(unify(Dbg.get()))
+        dbg_txt.SetValue(Dbg.get())
         dbg_frame.SetSizer(dbg_frame_vbox)
         dbg_frame_vbox.Fit(dbg_frame)
         dbg_frame.Show(True)
