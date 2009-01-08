@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-01-08 17:15:23 (UTC)]
+[Version 2009-01-08 17:49:41 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -610,21 +610,21 @@ BE+(1.4) Better Looking Morrowind.esp
 [Conflict]
  Antares' Big Mod includes these other mods. You should not run them at the same time.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892 )
-Antares' Big Mod 4.esp
+Antares' Big Mod <VER>.esp
 [ANY Agent's Services.esp
      Alchemist's Services.esp
      Apothecary' s Services.esp
-     Appropriate Greetings M - 1.5.2.esp
-     Appropriate Greetings M - T - 1.5.2.esp
-     Archmage's Privileges 2.1.esp
-     Archmagister's Privileges 1.2.esp
-     Grandmaster's  Privileges 1.1.esp
-     Master Thief's Privileges 1.2.esp
-     Morag Tong's Services 1.1.esp
-     Patriarch's Privileges 3.5.esp
-     Scout's Services 1.9.esp
+     Appropriate Greetings M - <VER>.esp
+     Appropriate Greetings M - T - <VER>.esp
+     Archmage's Privileges <VER>.esp
+     Archmagister's Privileges <VER>.esp
+     Grandmaster's  Privileges <VER>.esp
+     Master Thief's Privileges <VER>.esp
+     Morag Tong's Services <VER>.esp
+     Patriarch's Privileges <VER>.esp
+     Scout's Services <VER>.esp
      Smith's Services.esp
-     You violated the law 1.5.esp]
+     You violated the law <VER>.esp]
 
 [Note]
  ! A newer version of this plugin exists, you may want to upgrade:
@@ -3987,6 +3987,14 @@ LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+; JMS - need to confirm if still needed for MCA5.2
+;[Patch]
+; "For users of MCA 5/5.1, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
+; (Ref: "LGNPC Secret Masters readme.txt")
+;LGNPC_SM_MCA5.esp
+;[ALL LGNPC_Secret_Masters_v1_21.esp
+;     MCA.esm]
+
 ;; expdep
 [Requires]
  Uses Tribunal function: forcerun.
@@ -4357,6 +4365,18 @@ Madd Leveler - Illuminated Order And Lichcraft Fix.esp
 Madd Leveler - Base.esp
 [ANY CapRemover 1.2 alpha.esp
      CapRemover 1.1c.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mannequins for Sale v1.2 [ManaUser]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Mannequins for Sale.esp" is the plugin you'd normally activate to use this mod in your game.
+ "Mannequins Resource.esp" is a modder's resource/demo.
+ (Ref: "Mannequins for Sale - Readme.txt")
+Mannequins for Sale.esp
+Mannequins Resource.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4913,6 +4933,28 @@ Morrowind Comes Alive.esm
 NOM 2.13.esp
 MCA - NOM Patch.esp
 
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - Vampire Realism Patch.esp
+[ALL MCA.esm
+     Vampire Realism II.esp]
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - NOM Patch.esp
+[ALL MCA.esm
+     NOM 2.13.esp]
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - Guards Patch.esp
+MCA.esm
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - More Enemies.esp
+MCA.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mokbar [Dalibor "Sahardoom" Brankov]
@@ -5049,6 +5091,25 @@ MultiMark.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mundane Weapons [ManaUser]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "Mundane Weapons-Readme.txt")
+Mundane Weaps-Silverware.esp
+Mundane Weaps-Torch.esp
+Mundane Weaps-Both.esp
+
+[Requires]
+ The Torch weapon requires having one of the expansions.
+ (Ref: "Mundane Weapons-Readme.txt")
+[ANY Mundane Weaps-Torch.esp
+     Mundane Weaps-Both.esp]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @My Favorites Compatible and Combined ver 1.4 [Dale French]
 
 ;[Conflict]
@@ -5071,6 +5132,11 @@ MultiMark.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities of Morrowind (NOM) [Taddeus & Nymeria]
+
+[Note]
+ !! This plugin is a modders resource, and is meant to be merged into other plugins, it is not normally supposed to be loaded in your game.
+ (Ref: "NOM 2.13.txt")
+NOM Modders Res.esp
 
 [Note]
  ! Latest version of Necessities of Morrowind (NOM) is 2.13
@@ -5924,7 +5990,7 @@ Bloodmoon.esm
  ! If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
  ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=918882&view=findpost&p=13377858 )
 [ALL Protective Guards.esp
-     MCA - Guards patch.esp]
+     MCA - Guards Patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6614,6 +6680,24 @@ Slof's BB neck fix.esp
      [ANY Slof's Better Beasts a.esp
 	  Slof's Better Beasts b.esp
 	  Slof's Civilised Beasts.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Slof's Black Panther [AlienSlof]
+
+[Requires]
+ (Ref: "BlackPantherReadMe.txt")
+Black Panther Tails.esp
+Black Panther.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Slof's Black Panther Robes [AlienSlof]
+
+[Note]
+ !! This plugin contains an evil GMST (seffectsummonfabricant).
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8297 Slof's Black Panther Robes.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7433,6 +7517,30 @@ pcc_undead_vetooch_10.esp
 [Requires]
 Teleport_plugin_The Undead Dungeons.esp
 The  Undead Dungeons.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Undeads: arise from death 1.3 [Arcimaestro Antares]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Undeads: arise from death 1.3 - T.esp" if you have Morrowind and Tribunal, but not Bloodmoon.
+ "Undeads: arise from death 1.3 - B.esp" if you have Morrowind and Bloodmoon, but not Tribunal.
+ "Undeads: arise from death 1.3 - T - B.esp" if you have Morrowind, Tribunal and Bloodmoon.
+ "Undeads: arise from death 1.3 - T - B - Neo.esp" if you have Morrowind, Tribunal, Bloodmoon and Neoptolemus' "The Undead".
+ (Ref: "Undeads arise from death 1.3 - README (only text).txt")
+Undeads arise from death 1.3  - B.esp
+Undeads arise from death 1.3 - T - B - Neo.esp
+Undeads arise from death 1.3 - T - B.esp
+Undeads arise from death 1.3 - T.esp
+
+[Requires]
+ (Ref: "Undeads arise from death 1.3 - README (only text).txt")
+New Corprus Stalker.esp
+[ANY Undeads arise from death 1.3  - B.esp
+     Undeads arise from death 1.3 - T - B - Neo.esp
+     Undeads arise from death 1.3 - T - B.esp
+     Undeads arise from death 1.3 - T.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
