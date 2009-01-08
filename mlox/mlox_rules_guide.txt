@@ -13,6 +13,7 @@ See mlox_guts.txt for a discussion of mlox's inner workings.
 
 o Note about Line Endings
 o How Rules work
+oo Filename Expansion
 o Ordering Rules
 oo The Order Rule
 oo The NearStart Rule
@@ -66,10 +67,35 @@ Filenames do not need to be quoted. The parser is smart enough to
 figure out where the names start and end.
 
 ------------------------------------------------------------
+oo Filename Expansion
+
+mlox will recognize special characters in filenames used in the rule-base, and
+expand them into files that exist in your load order.
+
+First, there are 2 special metacharacters that are treated in the canonical
+fashion: '?' and '*':
+
+ ? matches any single character
+ * matches any number of characters
+
+There is also a special construct: <VER> which matches something that looks
+like a Version number in the filename. This will match the same version number
+forms used in the [VER] predicate, refer to the documentation of that
+predicate for more.
+
+Examples:
+
+plugin-?.esp matches: plugin-A.esp, plugin-3.esp, and so on.
+plugin-*.esp matches: plugin-one.esp plugin-Banana.esp, and so on.
+plugin-<VER>.esp matches: plugin-1.0.esp, plugin-3.3g.esp, and so on.
+
+[Note: expanding filenames in rules can be rather CPU intensive, so while they
+are convenient, it is suggested that filename expansions be used sparingly.]
+
+------------------------------------------------------------
 o Ordering Rules
 
 
-------------------------------------------------------------
 oo The Order Rule
 
 * The [Order] rule specifies the order of plugins. (In the following
@@ -288,7 +314,10 @@ Syntax: [VER operator version plugin.esp)
   separated by "." or "_" and followed by a possible alpha character.
   So all the following are valid version numbers:
 
-  1.2.3a, 1.0, 1, 1a, 1_3a, 
+  1.2.3a, 1.0, 1, 1a, 1_3a, 77g
+
+  The actual regular expression used for matching version numbers is:
+      (\d+(?:[_.-]?\d+)*[a-z]?)
 
 The Ver predicate is a special predicate that first tries to match the
 version number string stored in the plugin header, and if that fails
