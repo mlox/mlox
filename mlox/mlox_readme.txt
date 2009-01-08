@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.41
+Version: 0.50
 Copyright 2009 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -219,7 +219,7 @@ plugin filename.
 So, if the filename stays the same from version to version, then if the
 description field of the plugin contains a version string:
 
-Version: 1.0
+Version: 0.50
 
 (on a line by itself) mlox will be able to use it. (Wrye Mash can report that
 version too, so it's just a generally useful thing to have in the description).
@@ -413,68 +413,11 @@ what happened.
 
 o ChangeLog
 
+Version 0.51 - 2009/01/08
+	* Fixed a few bugs in how filenames are expanded.
+	* Small GUI presentation tweak to ensure the labels at the bottom of
+	the load order panes don't collide when the sash is adjusted all the
+	way down.
 Version 0.50 - 2009/01/06
 	* Beta release. Documentation has been edited to be current. No new
-	application functionality.
-
-Version 0.41 - 2009/01/05
-	* GUI - now links URLs in Messages window, and auto-focuses
-	the various text panes.
-	* now error output in GUI mode is sent to "mlox.err"
-
-Version 0.38 - 2008/12/30
-	* added new [SIZE] function that allows you to check the
-	file-size of a plugin.
-
-Version 0.31 - 2008/12/16
-	* added new [VER] function that allows you to check the
-	version of a plugin, if the plugin has a discoverable version
-	number.
-
-Versions 0.30 - 0.25:
-	* added some stuff, uh, like, uh, highlighting 'n junk. I
-	forget, brain hurt.
-
-Version 0.24 - 2008/12/14
-	* added new [DESC] function that allows you check the contents
-	of the description field in a plugin header.
-
-Version 0.22 - 2008/12/14
-	* fixed bug where mlox was taking the plugin list from the
-	plugins in the Data Directory, instead of Morrowind.ini.
-	* added ability to use filename wildcard characters: '*' and '?'
-	* replaced the rule engine, now the warnings rules support
- 	full boolean expressions
-	* changed comment character from '#' to ';'.
-
-Version 0.21 - 2008/12/11
-	* new GUI features: right click on the current load order for
-	options menu: options are paste in from clipboard, read input
-	from file, select all, or generate a debug output.
-
-Version 0.19 - 2008/12/10
-	* mlox now hosted on googlecode, so I put it under the liberal
-	MIT License.
-
-Version 0.13 - 2008/12/07
-	* runs with a GUI when run without any command line parameters.
-	* use the new switch -u to update load order, and -c to just
-	check the load order in command line mode. old switch -n removed. 
-	* now comes with an .exe version for Windows that does not
-	require Python
-
-Version 0.12 - 2008/12/06
-	* new strategy for making pseudo-rules from current load
-	order. Now if adding an edge fails during this process due to
-	cycle detection, we re-try with a few of the forefather nodes.
-	This should improve the result to look more like the original
-	ordering in the case where the rule-base has sparse orderings. 
-	* added more debug output to -d switch.
-	* batch files now save all program output first before
-	displaying so a complete record of the run is kept.
-
-Version 0.11 - 2008/12/04
-	* made sure .bat files use DOS line endings.
-
-Version 0.1 -  2008/12/04
-	* Alpha release.
+	application functionality from version 0.41.
