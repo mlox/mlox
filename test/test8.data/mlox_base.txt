@@ -83,3 +83,20 @@ two_2_2g.esp
 [Note (version from filename) we don't see this note] [VER > 2.2.0g two_2_2g.esp]
 [Note (version from filename) we don't see this note] [VER > 2.2g two_2_2g.esp]
 
+;;;;; Test some filename expansion
+
+[Note]
+ (ver from expansion) we do see this note
+[VER = 2.2g two_<VER>.esp]
+
+[Note]
+ (ver from expansion) we don't see this note
+[VER < 2.2g two_<VER>.esp]
+
+[Note]
+ (ver from expansion) we do see this note
+[VER = 1.1 one_v<VER>.esp]
+
+[Note]
+ (ver from expansion) we don't see this note
+[VER < 1.0 smookie_<VER>.esp]
