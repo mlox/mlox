@@ -69,7 +69,10 @@ re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
 # (we allow '*' and '?' for filename matching).
 re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
+# metacharacters for filename expansion
 re_plugin_meta = re.compile(r'([*?])')
+re_plugin_metaver = re.compile(r'("V")')
+re_escape_meta = re.compile(r'([()+.])')
 # for recognizing our functions:
 re_start_fun = re.compile(r'^\[')
 re_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER|SIZE)\s*', re.IGNORECASE)
@@ -82,7 +85,7 @@ ver_delim = r'[_.-]'
 re_ver_delim = re.compile(ver_delim)
 plugin_version = r'(\d+(?:%s?\d+)*[a-zA-Z]?)' % ver_delim
 re_alpha_tail = re.compile(r'(\d+)([a-z])', re.IGNORECASE)
-re_ver_fun = re.compile(r'\[VER\s*([=<>])\s*%s\s+([^\]]+)\]' % plugin_version, re.IGNORECASE)
+re_ver_fun = re.compile(r'\[VER\s*([=<>])\s*%s\s*([^\]]+)\]' % plugin_version, re.IGNORECASE)
 # for grabbing version numbers from filenames
 re_filename_version = re.compile(r'\D%s\D*\.es[mp]' % plugin_version)
 # for grabbing version numbers from plugin header description fields
@@ -94,6 +97,7 @@ re_anystr = re.compile(r"\s*'ANY',")
 re_allstr = re.compile(r"\s*'ALL',")
 re_indented = re.compile(r'^', re.MULTILINE)
 
+version_operators = {'=': True, '<': True, '>': True}
 
 full_version = ""
 clip_file = "mlox_clipboard.out"
@@ -404,6 +408,29 @@ class rule_parser:
             else:
                 return
 
+    def expand_filename(self, plugin):
+        pat = "^%s$" % re_escape_meta.sub(r'\\\1', plugin)
+        # if the plugin name contains metacharacters, do filename expansion
+        subbed = False
+        if re_plugin_meta.search(plugin) != None:
+            pat = re_plugin_meta.sub(r'.\1', pat)
+            self.pdbg("expand_filename name has META: %s" % pat)
+            subbed = True
+        if re_plugin_metaver.search(plugin) != None:
+            pat = re_plugin_metaver.sub(plugin_version, pat)
+            self.pdbg("expand_filename name has METAVER: %s" % pat)
+            subbed = True
+        if not subbed:        # no expansions made
+            return([plugin] if plugin.lower() in self.active else [])
+        self.pdbg("expand_filename new RE pat: %s" % pat)
+        matches = []
+        re_namepat = re.compile(pat, re.IGNORECASE)
+        for p in self.active:
+            if re_namepat.match(p):
+                matches.append(p)
+                self.pdbg("expand_filename matching name: %s" % p)
+        return(matches)
+                
     def parse_plugin_name(self):
         self.parse_dbg_indent += "  "
         buff = self.buffer.strip()
@@ -414,29 +441,18 @@ class rule_parser:
             self.pdbg("parse_plugin_name name=%s" % plugin_name)
             pos = plugin_match.span(2)[1]
             self.buffer = buff[pos:].lstrip()
-            # if the plugin name contains metacharacters, do filename expansion
-            if re_plugin_meta.search(plugin_name) != None:
-                pat = plugin_name
-                self.pdbg("parse_plugin_name name has META: %s" % pat)
-                matches = []
-                pat = re_plugin_meta.sub(r".\1", pat)
-                self.pdbg("parse_plugin_name new RE pat: %s" % pat)
-                re_namepat = re.compile(pat, re.IGNORECASE)
-                for p in self.active:
-                    if re_namepat.match(p):
-                        matches.append(p)
-                        self.pdbg("parse_plugin_name matching name: %s" % p)
+            matches = self.expand_filename(plugin_name)
+            if len(matches) > 0:
+                plugin_name = matches.pop(0)
+                self.pdbg("parse_plugin_name new name=%s" % plugin_name)
                 if len(matches) > 0:
-                    plugin_name = matches.pop(0)
-                    self.pdbg("parse_plugin_name new name=%s" % plugin_name)
-                    if len(matches) > 0:
-                        self.buffer = " ".join(matches) + " " + self.buffer
-            self.pdbg("parse_plugin_name new buff=\"%s\"" % self.buffer)
-            exists = plugin_name in self.active
+                    self.buffer = " ".join(matches) + " " + self.buffer
+                return(True, plugin_name)
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-            return(exists, plugin_name)
+            return(False, plugin_name)
         else:
             self.parse_error(_["expected a plugin name"])
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(None, None)
 
     def parse_ordering(self, rule):
@@ -475,14 +491,17 @@ class rule_parser:
             self.buffer = self.buffer[p:]
             self.pdbg("parse_ver new buffer = %s" % self.buffer)
             op = match.group(1)
+            if op not in version_operators:
+                self.parse_error(_["Invalid [VER] operator"])
+                return(None, None)
             orig_ver = match.group(2)
             ver = format_version(orig_ver)
-            plugin = C.cname(match.group(3))
-            plugin_t = C.truename(plugin)
-            expr = "[VER %s %s %s]" % (op, orig_ver, plugin_t)
+            plugin_name = match.group(3)
+            expr = "[VER %s %s %s]" % (op, orig_ver, plugin_name)
             self.pdbg("parse_ver, expr=%s ver=%s" % (expr, ver))
-            if not plugin in self.active:
-                self.pdbg("parse_ver [VER] \"%s\" not active" % plugin_t)
+            expanded = self.expand_filename(plugin_name)
+            if expanded == []:
+                self.pdbg("parse_ver [VER] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
@@ -495,32 +514,38 @@ class rule_parser:
                 else:
                     self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(False, expr)
-            desc = plugin_description(self.datadir.find_path(plugin))
-            match = re_header_version.search(desc)
-            if match:
-                p_ver_orig = match.group(1)
-                p_ver = format_version(p_ver_orig)
-                self.pdbg("parse_ver (header) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
-            else:
-                match = re_filename_version.search(plugin)
+            for xp in expanded:
+                plugin = C.cname(xp)
+                plugin_t = C.truename(plugin)
+                desc = plugin_description(self.datadir.find_path(plugin))
+                match = re_header_version.search(desc)
                 if match:
                     p_ver_orig = match.group(1)
                     p_ver = format_version(p_ver_orig)
-                    self.pdbg("parse_ver (filename) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
+                    self.pdbg("parse_ver (header) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
                 else:
-                    self.pdbg("parse_ver no version for %s" % plugin_t)
-                    return(False, expr)
-            self.pdbg("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
+                    match = re_filename_version.search(plugin)
+                    if match:
+                        p_ver_orig = match.group(1)
+                        p_ver = format_version(p_ver_orig)
+                        self.pdbg("parse_ver (filename) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
+                    else:
+                        self.pdbg("parse_ver no version for %s" % plugin_t)
+                        return(False, expr)
+                self.pdbg("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
+                result = True
+                if op == '=':
+                    result = (p_ver == ver)
+                elif op == '<':
+                    result = (p_ver < ver)
+                elif op == '>':
+                    result = (p_ver > ver)
+                if result:
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                    return(True, "[VER %s %s %s]" % (op, orig_ver, plugin))
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-            if op == '=':
-                return(p_ver == ver, expr)
-            elif op == '<':
-                return(p_ver < ver, expr)
-            elif op == '>':
-                return(p_ver > ver, expr)
-            else:
-                self.parse_error(_["Invalid [VER] operator"])
-                return(None, None)
+            return(False, expr)
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         self.parse_error(_["Invalid [VER] function"])
         return(None, None)
 
@@ -534,12 +559,12 @@ class rule_parser:
             self.pdbg("parse_desc new buffer = %s" % self.buffer)
             bang = match.group(1) # means to invert the meaning of the match
             pat = match.group(2)
-            plugin = C.cname(match.group(3))
-            plugin_t = C.truename(plugin)
-            expr = "[DESC %s/%s/ %s]" % (bang, pat, plugin_t)
+            plugin_name = match.group(3)
+            expr = "[DESC %s/%s/ %s]" % (bang, pat, plugin_name)
             self.pdbg("parse_desc, expr=%s" % expr)
-            if not plugin in self.active:
-                self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin_t)
+            expanded = self.expand_filename(plugin_name)
+            if expanded == []:
+                self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
@@ -549,13 +574,20 @@ class rule_parser:
                 # to err on the side of caution
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(True, expr)
-            re_pat = re.compile(pat)
-            desc = plugin_description(self.datadir.find_path(plugin))
-            bool = (re_pat.search(desc) != None)
-            if bang == "!": bool = not bool
-            self.pdbg("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
+            for xp in expanded:
+                plugin = C.cname(xp)
+                plugin_t = C.truename(plugin)
+                re_pat = re.compile(pat)
+                desc = plugin_description(self.datadir.find_path(plugin))
+                bool = (re_pat.search(desc) != None)
+                if bang == "!": bool = not bool
+                self.pdbg("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
+                if bool:
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                    return(True, "[DESC %s/%s/ %s]" % (bang, pat, plugin_t))
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-            return(bool, expr)
+            return(False, expr)
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         self.parse_error(_["Invalid [DESC] function"])
         return(None, None)
 
@@ -569,12 +601,12 @@ class rule_parser:
             self.pdbg("parse_size new buffer = %s" % self.buffer)
             bang = match.group(1) # means "is not this size"
             wanted_size = int(match.group(2))
-            plugin = C.cname(match.group(3))
-            plugin_t = C.truename(plugin)
-            expr = "[SIZE %s%d %s]" % (bang, wanted_size, plugin_t)
+            plugin_name = match.group(3)
+            expr = "[SIZE %s%d %s]" % (bang, wanted_size, plugin_name)
             self.pdbg("parse_size, expr=%s" % expr)
-            if not plugin in self.active:
-                self.pdbg("parse_size [SIZE] \"%s\" not active" % plugin_t)
+            expanded = self.expand_filename(plugin_name)
+            if expanded == []:
+                self.pdbg("parse_size [SIZE] \"%s\" not active" % match.group(3))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
@@ -584,12 +616,20 @@ class rule_parser:
                 # to err on the side of caution
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(True, expr)
-            actual_size = os.path.getsize(self.datadir.find_path(plugin))
-            bool = (actual_size == wanted_size)
-            if bang == "!": bool = not bool
-            self.pdbg("parse_size [SIZE] returning: (%s, %s)" % (bool, expr))
+            for xp in expanded:
+                plugin = C.cname(xp)
+                plugin_t = C.truename(plugin)
+                actual_size = os.path.getsize(self.datadir.find_path(plugin))
+                bool = (actual_size == wanted_size)
+                if bang == "!": bool = not bool
+                self.pdbg("parse_size [SIZE] returning: (%s, %s)" % (bool, expr))
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                if bool:
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                    return(True, "[SIZE %s%d %s]" % (bang, wanted_size, plugin_t))
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-            return(bool, expr)
+            return(False, expr)
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         self.parse_error(_["Invalid [SIZE] function"])
         return(None, None)
 
@@ -635,7 +675,7 @@ class rule_parser:
             while not bool_end:
                 (bool, expr) = self.parse_expression(prune)
                 if bool == None:
-                    self.parse_error(_["Invalid boolean arguments"])
+                    self.parse_error(_["[%s] Invalid boolean arguments"] % fun)
                     return(None, None)
                 exprs.append(expr)
                 vals.append(bool)
@@ -731,10 +771,13 @@ class rule_parser:
                 if msg != "": Msg.add(msg)
         elif rule == "PATCH":   # takes 2 exprs
             (bool1, expr1) = self.parse_expression()
-            if bool1 != None:
-                (bool2, expr2) = self.parse_expression()
+            if bool1 == None:
+                Msg.add(_["Warning: %s: PATCH rule invalid first expression"] % (self.where()))
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return
+            (bool2, expr2) = self.parse_expression()
             if bool2 == None:
-                Msg.add(_["Warning: %s: PATCH rule must have 2 conditions"] % (self.where()))
+                Msg.add(_["Warning: %s: PATCH rule invalid second expression"] % (self.where()))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             if bool1 and not bool2:
@@ -749,12 +792,15 @@ class rule_parser:
                 if msg != "": Msg.add(msg)
         elif rule == "REQUIRES": # takes 2 exprs
             (bool1, expr1) = self.parse_expression(prune=True)
-            if bool1 != None:
-                (bool2, expr2) = self.parse_expression()
-                self.pdbg("REQ expr2 == %s" % expr2)
-                if bool2 == None:
-                    self.parse_error("REQUIRES rule must have 2 conditions")
-                    return
+            if bool1 == None:
+                Msg.add(_["Warning: %s: REQUIRES rule invalid first expression"] % (self.where()))
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return
+            (bool2, expr2) = self.parse_expression()
+            if bool2 == None:
+                Msg.add(_["Warning: %s: REQUIRES rule invalid second expression"] % (self.where()))
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return
             if bool1 and not bool2:
                 expr2_str = self.pprint(expr2, " > ")
                 Msg.add(_["[REQUIRES]\n%s Requires:\n%s"] %
