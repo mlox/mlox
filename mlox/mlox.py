@@ -1441,12 +1441,27 @@ class mlox_gui():
         medium = rt.TextAttrEx() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
         high = rt.TextAttrEx()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
         happy = rt.TextAttrEx()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
+        hide = rt.TextAttrEx()   ; hide.SetBackgroundColour(wx.BLACK)
         url = rt.TextAttrEx()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
         highlighters = {
             re.compile(r'http://\S+', re.IGNORECASE): url,
             re.compile(r'^\[conflict\]', re.IGNORECASE): medium,
             re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy }
         text = Msg.get()
+        # for hiding spoilers
+        hidden = []
+        adjust = [0]            # use a mutable entity for closure "hider"
+        def hider(match):
+            (p1, p2) = match.span(0)
+            delta = len(match.group(0)) - len(match.group(1))
+            hidden.append((p1 - adjust[0], p2 - delta - adjust[0]))
+            adjust[0] += delta
+            return(match.group(1))
+        re_hide = re.compile(r'<hide>(.*)</hide>', re.IGNORECASE)
+        text = re_hide.sub(hider, text)
+        txt.SetValue(text)
+        for where in hidden:
+            txt.SetStyle(where, hide)
         # for special highlighting
         for (re_pat, style) in highlighters.items():
             for match in re.finditer(re_pat, text):
