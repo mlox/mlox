@@ -5,7 +5,7 @@
 ;; order. Read mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-01-05 15:06:29 (UTC)]
+[Version 2009-01-07 00:46:27 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -632,15 +632,62 @@ BE+(1.4) Better Looking Morrowind.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Antares' Big Mod [Arcimaestro Antares]
 
+[Conflict]
+ Antares' Big Mod includes these other mods. You should not run them at the
+ same time.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892 )
+Antares' Big Mod 4.esp
+[ANY Agent's Services.esp
+     Alchemist's Services.esp
+     Apothecary' s Services.esp
+     Appropriate Greetings M - 1.5.2.esp
+     Appropriate Greetings M - T - 1.5.2.esp
+     Archmage's Privileges 2.1.esp
+     Archmagister's Privileges 1.2.esp
+     Grandmaster's  Privileges 1.1.esp
+     Master Thief's Privileges 1.2.esp
+     Morag Tong's Services 1.1.esp
+     Patriarch's Privileges 3.5.esp
+     Scout's Services 1.9.esp
+     Smith's Services.esp
+     You violated the law 1.5.esp]
+
 [Note]
- ! This is an older version of this plugin, you should upgrade:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=136072&id=5892
-Antares' Big Mod 2.8.5.esp
+ ! A newer version of this plugin exists, you may want to upgrade:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892
+[VER < 4.0 Antares' Big Mod "V".esp]
 
 [Requires]
  Uses Bloodmoon function: placeatme.
-Antares' Big Mod 3.5.7.esp
+Antares' Big Mod 4.esp
 Bloodmoon.esm
+
+[Patch]
+ "Some functions of ABM, if used with Npc from MCA, will crash
+ the game. With this patch, these new functions are not available
+ for Npcs from MCA."
+ (Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt")
+Antares' Big Mod 4 - MCA 5.2 - patch.esp
+[ALL Antares' Big Mod 4.esp
+     MCA.esm]
+
+
+; Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt"
+[Order]
+Antares' Big Mod 4.esp
+Antares' Big Mod 4 - MCA 5.2 - patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Appropriate Greetings 1.5.2 [Arcimaestro Antares]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Appropriate Greetings M - 1.5.2.esp", if you don't have Tribunal.
+ "Appropriate Greetings M - T - 1.5.2.esp", if you have Tribunal.
+ (Ref: "Appropriate Greetings 1.5.2  - README.txt")
+Appropriate Greetings M - 1.5.2.esp
+Appropriate Greetings M - T - 1.5.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2194,7 +2241,7 @@ io_deadite_race-1.4b.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Decorator+ 1.1.1 [Raveren]
 
-;; expdep
+;;; expdep
 [Requires]
  These plugins use startup scripts and some Tribunal scripting functions:
  (setscale, getscale).
@@ -2212,6 +2259,7 @@ io_deadite_race-1.4b.esp
 Decorator+ (Balanced).esp
 Decorator+.esp
 
+;TBD!
 [Note]
  You are using an older version of Decorator+, the current version is 1.1.1:
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4256
@@ -3820,6 +3868,14 @@ Armingers_at_Ghostgate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Kat's Kastle
+[Note]
+ There is a newer version of Kat's Kastle (1.2) available:
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3628
+[SIZE !4448885 KatsKastle.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kirel's Interior Weather [Kirel]
 
 ; No mention of louder sounds in readme, checked ESPs with Enchanted Editor.
@@ -4058,7 +4114,7 @@ LGNPC_Pelagiad_v1_13.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 0.83 LGNPC_NoLore_v?_??.esp]
+[VER < 0.83 LGNPC_NoLore_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -4068,98 +4124,98 @@ LGNPC_Pelagiad_v1_13.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_GnaarMok_v?_??.esp]
+[VER < 1.10 LGNPC_GnaarMok_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.20 LGNPC_AldVelothi_v?_??.esp]
+[VER < 1.20 LGNPC_AldVelothi_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_MaarGan_v?_??.esp]
+[VER < 1.10 LGNPC_MaarGan_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.32 LGNPC_HlaOad_v?_??.esp]
+[VER < 1.32 LGNPC_HlaOad_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Aldruhn_v?_??.esp]
+[VER < 1.13 LGNPC_Aldruhn_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Pelagiad_v?_??.esp]
+[VER < 1.13 LGNPC_Pelagiad_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.11 LGNPC_TelMora_v?_??.esp]
+[VER < 1.11 LGNPC_TelMora_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 2.01 LGNPC_Khuul_v?_??.esp]
+[VER < 2.01 LGNPC_Khuul_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 2.03 LGNPC_VivecFQ_v?_??.esp]
+[VER < 2.03 LGNPC_VivecFQ_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.45 LGNPC_Indarys_Manor_v?_??.esp]
+[VER < 1.45 LGNPC_Indarys_Manor_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.21 LGNPC_Secret_Masters_v?_??.esp]
+[VER < 1.21 LGNPC_Secret_Masters_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_TelUvirith_v?_??.esp]
+[VER < 1.10 LGNPC_TelUvirith_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_TelUvirith_UI_v?_??.esp]
+[VER < 1.10 LGNPC_TelUvirith_UI_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.41 LGNPC_VivecRedoran_v?_??.esp]
+[VER < 1.41 LGNPC_VivecRedoran_v"V".esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.12 LGNPC_PaxRedoran_v?_??.esp]
+[VER < 1.12 LGNPC_PaxRedoran_v"V".esp]
 
 [Conflict]
  Use only one plugin:
  "LGNPC_TelUvirith_UI_v1_10.esp" for users of Uvirith Inside
  "LGNPC_TelUvirith_v1_10.esp" for everyone else
  (Ref: "LGNPC_TelUvirith_Readme.txt")
-LGNPC_TelUvirith_UI_v?_??.esp
-LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_UI_v"V".esp
+LGNPC_TelUvirith_v"V".esp
 
 [Requires]
  (Ref: "LGNPC_TelUvirith_Readme.txt") 
-LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_TelUvirith_UI_v"V".esp
 Uvirith Inside.esp
 
 ;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
 ;; See Order notes for other LGNPC mods
 [Order]
 Less Lore.esp
-LGNPC_NoLore_v?_??.esp
+LGNPC_NoLore_v"V".esp
 Uvirith Inside.esp
-LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_TelUvirith_UI_v"V".esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7774,7 +7830,7 @@ soundfix.esp
  issue between the UUMPP and LGNPC Pax Redoran.
 UUMPP LGNPC wild nix hounds fix.esp
 [ALL Morrowind Patch v1.6.4 (WIP).esm
-     LGNPC_PaxRedoran_v?_??.esp]
+     LGNPC_PaxRedoran_v"V".esp]
 
 [Patch]
  "UUMPP LGNPC Andus Tradehouse fix.esp" fixes a compatability
@@ -7782,7 +7838,7 @@ UUMPP LGNPC wild nix hounds fix.esp
  from the Andus Tradehouse rent room door).
 UUMPP LGNPC Andus Tradehouse fix.esp
 [ALL Morrowind Patch v1.6.4 (WIP).esm
-     LGNPC_MaarGan_v?_??.esp]
+     LGNPC_MaarGan_v"V".esp]
 
 [Order]
 Bloodmoon.esm
@@ -8694,18 +8750,22 @@ abotWhereAreAllBirdsGoing.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @White Wolf of Lokken [Emma]
 
+;; For the older 2.0 Version:
 ;; If you play with a female char, you should use the KISS-patch
 ;; (BT_WWLokpatch1.esp) else the first kiss with your hero might be
 ;; ruined. Please note: this problem ONLY exists with the very first
 ;; kiss; after that, you won't need the patch any further.
 ;; (Ref: http://lovkullen.net/Emma/lokken.htm )
 
-[Order]
-BT_Whitewolf_2_0.esp
-BT_WWLokpatch1.esp
+[Note]
+ The latest version of White Wolf of Lokken is 2.1, which includes
+ Children of Morrowind 2.0 and the "kiss patch". You may want to upgrade:
+ http://lovkullen.net/Emma/lokken.htm
+[ANY [SIZE !3829352 BT_Whitewolf_2_0.esm]
+     [SIZE !3829352 BT_Whitewolf_2_0.esp]]
 
 [Order]
-BT_Whitewolf_2_0.esm
+BT_Whitewolf_2_0.esp
 BT_WWLokpatch1.esp
 
 [Requires]
