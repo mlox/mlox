@@ -458,6 +458,7 @@ my %UNPACK =
 			  $weight, $value, $WEAPON_TYPE{$type}, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $WEAPON_FLAGS{$flags}},
 
      # The following are common subrecord formats
+     DELE => sub { "DELETED" },
      DODT => sub { sprintf "Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack("f6", $_[0]) },
      FLAG => sub { sprintf "hexflags:0x%04x", unpack("L", $_[0]) },
      NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) },
