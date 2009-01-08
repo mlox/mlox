@@ -71,7 +71,7 @@ re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
 # metacharacters for filename expansion
 re_plugin_meta = re.compile(r'([*?])')
-re_plugin_metaver = re.compile(r'("V")')
+re_plugin_metaver = re.compile(r'(<VER>)', re.IGNORECASE)
 re_escape_meta = re.compile(r'([()+.])')
 # for recognizing our functions:
 re_start_fun = re.compile(r'^\[')
@@ -87,7 +87,7 @@ plugin_version = r'(\d+(?:%s?\d+)*[a-zA-Z]?)' % ver_delim
 re_alpha_tail = re.compile(r'(\d+)([a-z])', re.IGNORECASE)
 re_ver_fun = re.compile(r'\[VER\s*([=<>])\s*%s\s*([^\]]+)\]' % plugin_version, re.IGNORECASE)
 # for grabbing version numbers from filenames
-re_filename_version = re.compile(r'\D%s\D*\.es[mp]' % plugin_version)
+re_filename_version = re.compile(r'\D%s\D*\.es[mp]' % plugin_version, re.IGNORECASE)
 # for grabbing version numbers from plugin header description fields
 re_header_version = re.compile(r'\b(?:version\b\D+|v(?:er)?\.?\s*)%s' % plugin_version, re.IGNORECASE)
 
@@ -409,16 +409,17 @@ class rule_parser:
                 return
 
     def expand_filename(self, plugin):
+        self.pdbg("expand_filename, plugin=%s" % plugin)
         pat = "^%s$" % re_escape_meta.sub(r'\\\1', plugin)
         # if the plugin name contains metacharacters, do filename expansion
         subbed = False
         if re_plugin_meta.search(plugin) != None:
-            pat = re_plugin_meta.sub(r'.\1', pat)
             self.pdbg("expand_filename name has META: %s" % pat)
+            pat = re_plugin_meta.sub(r'.\1', pat)
             subbed = True
         if re_plugin_metaver.search(plugin) != None:
-            pat = re_plugin_metaver.sub(plugin_version, pat)
             self.pdbg("expand_filename name has METAVER: %s" % pat)
+            pat = re_plugin_metaver.sub(plugin_version, pat)
             subbed = True
         if not subbed:        # no expansions made
             return([plugin] if plugin.lower() in self.active else [])
@@ -428,7 +429,7 @@ class rule_parser:
         for p in self.active:
             if re_namepat.match(p):
                 matches.append(p)
-                self.pdbg("expand_filename matching name: %s" % p)
+                self.pdbg("expand_filename: %s expands to: %s" % (plugin, p))
         return(matches)
                 
     def parse_plugin_name(self):
@@ -442,7 +443,7 @@ class rule_parser:
             pos = plugin_match.span(2)[1]
             self.buffer = buff[pos:].lstrip()
             matches = self.expand_filename(plugin_name)
-            if len(matches) > 0:
+            if matches != []:
                 plugin_name = matches.pop(0)
                 self.pdbg("parse_plugin_name new name=%s" % plugin_name)
                 if len(matches) > 0:
@@ -497,10 +498,12 @@ class rule_parser:
             orig_ver = match.group(2)
             ver = format_version(orig_ver)
             plugin_name = match.group(3)
+            expanded = self.expand_filename(plugin_name)
             expr = "[VER %s %s %s]" % (op, orig_ver, plugin_name)
             self.pdbg("parse_ver, expr=%s ver=%s" % (expr, ver))
-            expanded = self.expand_filename(plugin_name)
-            if expanded == []:
+            if len(expanded) == 1:
+                expr = "[VER %s %s %s]" % (op, orig_ver, expanded[0])
+            elif expanded == []:
                 self.pdbg("parse_ver [VER] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
@@ -563,7 +566,9 @@ class rule_parser:
             expr = "[DESC %s/%s/ %s]" % (bang, pat, plugin_name)
             self.pdbg("parse_desc, expr=%s" % expr)
             expanded = self.expand_filename(plugin_name)
-            if expanded == []:
+            if len(expanded) == 1:
+                expr = "[DESC %s/%s/ %s]" % (bang, pat, expanded[0])
+            elif expanded == []:
                 self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
@@ -605,7 +610,9 @@ class rule_parser:
             expr = "[SIZE %s%d %s]" % (bang, wanted_size, plugin_name)
             self.pdbg("parse_size, expr=%s" % expr)
             expanded = self.expand_filename(plugin_name)
-            if expanded == []:
+            if len(expanded) == 1:
+                expr = "[SIZE %s%d %s]" % (bang, wanted_size, expanded[0])
+            elif expanded == []:
                 self.pdbg("parse_size [SIZE] \"%s\" not active" % match.group(3))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
@@ -1349,10 +1356,10 @@ class mlox_gui():
         self.txt_cur.SetFont(default_font)
         if Opt.AutoFocus:
             self.txt_cur.Bind(wx.EVT_ENTER_WINDOW, lambda e: self.txt_cur.SetFocus())
-        self.label_cur_bottom = wx.StaticText(self.split2, -1, _["(Right click in this pane for options)"])
+        self.label_cur_bottom = wx.StaticText(self.frame, -1, _["(Right click in this pane for options)"])
         self.label_new = wx.StaticText(self.split2, -1, _["Proposed Load Order Sorted by mlox"])
         self.label_new.SetFont(self.label_font)
-        self.label_new_bottom = wx.StaticText(self.split2, -1, "")
+        self.label_new_bottom = wx.StaticText(self.frame, -1, "")
         self.txt_new = wx.TextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_new.SetFont(default_font)
         if Opt.AutoFocus:
@@ -1367,41 +1374,48 @@ class mlox_gui():
         self.btn_quit.Bind(wx.EVT_BUTTON, self.on_quit)
         # arrange widgets
 
-        self.frame_vbox = wx.BoxSizer(wx.VERTICAL)
-        self.frame_vbox.Add(self.label_stats, 0, wx.ALL)
         # top box for stats and logo
         self.top_hbox = wx.BoxSizer(wx.HORIZONTAL)
         self.top_hbox.Add(self.txt_stats, 1, wx.EXPAND)
         self.top_hbox.Add(self.logo, 0, wx.EXPAND)
-        self.frame_vbox.Add(self.top_hbox, 0, wx.EXPAND)
-        # box for message output
+
+        # box for message output, in top split
         self.msg_vbox = wx.BoxSizer(wx.VERTICAL)
         self.msg_vbox.Add(self.label_msg, 0, wx.ALL)
         self.msg_vbox.Add(self.txt_msg, 1, wx.EXPAND)
         self.split1.SetSizer(self.msg_vbox)
 
-        # box for load orders output
-        self.lo_box = wx.BoxSizer(wx.HORIZONTAL)
+        # box for load orders output, in bottom split
+        self.lo_hbox = wx.BoxSizer(wx.HORIZONTAL)
         self.cur_vbox = wx.BoxSizer(wx.VERTICAL)
         self.cur_vbox.Add(self.label_cur, 0, wx.ALL|wx.CENTER)
         self.cur_vbox.Add(self.txt_cur, 4, wx.EXPAND)
-        self.cur_vbox.Add(self.label_cur_bottom, 0, wx.ALL|wx.CENTER)
-        self.lo_box.Add(self.cur_vbox, 4, wx.EXPAND)
+        self.lo_hbox.Add(self.cur_vbox, 1, wx.EXPAND)
         self.new_vbox = wx.BoxSizer(wx.VERTICAL)
         self.new_vbox.Add(self.label_new, 0, wx.ALL|wx.CENTER)
         self.new_vbox.Add(self.txt_new, 4, wx.EXPAND)
-        self.new_vbox.Add(self.label_new_bottom, 0, wx.ALL|wx.CENTER)
-        self.lo_box.Add(self.new_vbox, 4, wx.EXPAND)
-        self.split2.SetSizer(self.lo_box)
+        self.lo_hbox.Add(self.new_vbox, 1, wx.EXPAND)
+        self.split2.SetSizer(self.lo_hbox)
 
-        self.frame_vbox.Add(self.splitter, 1, wx.EXPAND)
+        # box to hold labels at bottom of load order panes
+        self.lo_labels_hbox = wx.BoxSizer(wx.HORIZONTAL)
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.label_cur_bottom, 0, wx.ALL|wx.CENTER)
+        self.lo_labels_hbox.Add(vbox, 1, wx.EXPAND)
+        self.lo_labels_hbox.Add(self.label_new_bottom, 1, wx.EXPAND)
 
         # bottom box for buttons
         self.button_box = wx.BoxSizer(wx.HORIZONTAL)
         self.button_box.Add(self.btn_update, 4)
         self.button_box.Add(self.btn_quit, 0)
-        self.frame_vbox.Add(self.button_box, 0, wx.EXPAND)
+
         # put em all together and that spells GUI
+        self.frame_vbox = wx.BoxSizer(wx.VERTICAL)
+        self.frame_vbox.Add(self.label_stats, 0, wx.ALL)
+        self.frame_vbox.Add(self.top_hbox, 0, wx.EXPAND)
+        self.frame_vbox.Add(self.splitter, 1, wx.EXPAND)
+        self.frame_vbox.Add(self.lo_labels_hbox, 0, wx.EXPAND)
+        self.frame_vbox.Add(self.button_box, 0, wx.EXPAND)
         self.frame.SetSizer(self.frame_vbox)
         self.frame_vbox.Fit(self.frame)
         # setup up rightclick menu handler for original load order pane
