@@ -37,7 +37,7 @@
 ;; Bad:
 ;; (Ref: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists)
 ;; sometimes rules are quoted on web pages that automatically link
-;; URLs, and without whitespece it can make a broken link.
+;; URLs, and without whitespace it can make a broken link.
 ;;
 ;; Sections:
 ;; most rules are grouped into "sections", which begin with "@"
@@ -1893,6 +1893,22 @@ Hilda.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Companion Role Play Plus v1.01 [ManaUser]
+
+[Requires]
+ This plugin requires one or the other of the expansions.
+ (Ref: "Companion RPP - Readme.txt")
+Companion RPP.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+Comp RPP CoverUp Add-on.esp
+[ALL Companion RPP.esp
+     CoverUp - Base.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Complete Morrowind [Max also known as ~NOBODY~]
 
 [Conflict]
@@ -1965,6 +1981,68 @@ Complete Morrowind TB & BM - Replacer.esp
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
  !! and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
 Contact hits.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CoverUp 1.0 [ManaUser]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "CoverUp - Base.esp" If you have Tribunal and/or Bloodmoon.
+ "CoverUp - Base - NoExp.esp" If not.
+ (Ref: "CoverUp - Readme.txt")
+CoverUp - Base.esp
+CoverUp - Base - NoExp.esp
+
+[Note]
+ Since you have at least one of the expansions, you should use "CoverUp - Base.esp" instead.
+[ALL CoverUp - Base - NoExp.esp
+     [ANY Tribunal.esm
+	  Bloodmoon.esm]]
+
+[Requires]
+ (Ref: "CoverUp - Readme.txt")
+CoverUp - Base - NoExp.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "CoverUp - MW - Regular.esp" Gives clothes to NPCs from the orignal game if they look very out of place without them.
+ "CoverUp - MW - Strict.esp" As above but also covers up NPC nudity that could be justified, but might seem a little out of place.
+ "Barb Fix.esp" Is a standalone plug-in to fix a particular bug, where some Barbarians who have armor don't wear it.
+ (Ref: "CoverUp - Readme.txt")
+CoverUp - MW - Regular.esp
+CoverUp - MW - Strict.esp
+Barb Fix.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "CoverUp - BM - Regular.esp" Gives berserkers loinclothes most of the time.
+ "CoverUp - BM - Strict.esp" Gives all berserkers loinclothes and gives all the female berserkers tops.
+ (Ref: "CoverUp - Readme.txt")
+CoverUp - BM - Regular.esp
+CoverUp - BM - Strict.esp
+
+[Requires]
+ (Ref: "CoverUp - Readme.txt")
+CoverUp - Partners (Regular).esp
+[ANY Barons_Partners30.esp
+     CM_Partners_3.0.esp]
+
+[Requires]
+CoverUp - Trib (Strict).esp
+Tribunal.esm
+
+[Requires]
+[ANY CoverUp - MW - Regular.esp
+     CoverUp - MW - Strict.esp
+     CoverUp - BM - Regular.esp
+     CoverUp - BM - Strict.esp
+     CoverUp - Partners (Regular).esp
+     CoverUp - Trib (Strict).esp]
+[ANY CoverUp - Base.esp
+     CoverUp - Base - NoExp.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3689,7 +3767,7 @@ Tribunal.esm
 
 [Requires]
 tusar_v1.2.1(bloodmoon addon).esp
-tusar_v1.2.1.espo
+tusar_v1.2.1.esp
 
 [Note]
  Some of the following may make one part of the quest in "Island of Tusar" difficult or impossible to complete:
@@ -4390,6 +4468,16 @@ Madd Leveler - Base.esp
  (Ref: "Mannequins for Sale - Readme.txt")
 Mannequins for Sale.esp
 Mannequins Resource.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Map Deluxe [ManaUser]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "Map - Deluxe - Readme.txt")
+Map - Deluxe.esp
+Map - Deluxe - NoQuest.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5223,6 +5311,24 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nerevar Say Nerevar [Blake]
+
+[Patch]
+ MW_CHILDREN_NSN_PATCH.esp is a compatibility patch for these two mods.
+ (Ref: "Readme - Nerevar Say Nerevar.txt")
+Clean Nerevar Say Nerevar Again_v1.01.esp
+[ALL MW_CHILDREN_NSN_PATCH.esp
+     MW_Children_1_0.esm]
+
+[Patch]
+ MCA_NSN_Patch.esp is a compatibility patch for these two mods.
+ (Ref: "Readme - Nerevar Say Nerevar.txt")
+Clean Nerevar Say Nerevar Again_v1.01.esp
+[ALL MCA_NSN_Patch.esp
+     MCA.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nevena's Clubs & Courtiers v1.0 [Nevena]
 
 ;; expdep
@@ -5311,24 +5417,6 @@ NewBlood_MwTbBm1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Nerevar Say Nerevar [Blake]
-
-[Patch]
- MW_CHILDREN_NSN_PATCH.esp is a compatibility patch for these two mods.
- (Ref: "Readme - Nerevar Say Nerevar.txt")
-Clean Nerevar Say Nerevar Again_v1.01.esp
-[ALL MW_CHILDREN_NSN_PATCH.esp
-     MW_Children_1_0.esm]
-
-[Patch]
- MCA_NSN_Patch.esp is a compatibility patch for these two mods.
- (Ref: "Readme - Nerevar Say Nerevar.txt")
-Clean Nerevar Say Nerevar Again_v1.01.esp
-[ALL MCA_NSN_Patch.esp
-     MCA.esm]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NEDE - New Elemental Damage Effects [rocker]
 
 ;; "you must reorder your mod so that NEDE WGI patch would be loaded after
@@ -5353,6 +5441,36 @@ NEDE WGI patch.esp
 [ALL NEDE v1.2.esp
      [ANY Wakim's Game Improvement 9.esp
 	  Balance - Magic Effects.esp]]	; WGI 9 Modular
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Icons [ManaUser]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "New Icons - Readme.txt")
+New Icons - WGI Compat.esp
+New Icons - Basic.esp
+
+[Requires]
+New Icons - Trib Add-on.esp
+[ALL [ANY New Icons - WGI Compat.esp
+	  New Icons - Basic.esp]
+     Tribunal.esm]
+
+[Requires]
+New Icons - BM Add-on.esp
+[ALL [ANY New Icons - WGI Compat.esp
+	  New Icons - Basic.esp]
+     Bloodmoon.esm]
+
+[Order]
+Wakim's Game Improvement 9.esp
+New Icons - WGI Compat.esp
+
+[Order]
+Balance - Magic Effects.esp
+New Icons - WGI Compat.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7555,6 +7673,13 @@ New Corprus Stalker.esp
      Undeads arise from death 1.3 - T - B.esp
      Undeads arise from death 1.3 - T.esp]
 
+[Requires]
+ (Ref: "Undeads arise from death 1.3 - README.mht")
+Undeads arise from death 1.3 - T - B - Neo.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     The Undead.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Underground Manor 3.0 [MDJ]
@@ -8415,7 +8540,7 @@ weaponFix177.esp
      Bloodmoon.esm]
 
 [Conflict]
- WeaponFix144basic.esp is an older version without major effectiveness changes, which you shoud use by itself if you want just to fix the weight and some inconsistencies.
+ WeaponFix144basic.esp is an older version without major effectiveness changes, which you should use by itself if you want just to fix the weight and some inconsistencies.
  (Ref: "WeaponFix177.txt")
 WeaponFix144basic.esp
 [ANY WeaponFix177.esp
@@ -8437,6 +8562,48 @@ WeaponFix164_WCM_addon.esp
 [ALL WeaponFix177.esp
      [ANY farrp_WeaponCompilationMod_V1.esp
 	  farrp_WeaponCompilationMod_V1_NoLegendWeps.esp]]
+
+[Note]
+ Weapon Fix only mentions v1.0 of farrp's weapon compilation mod, you are using v2.0. It is not clear if the Weapon Fix addon will work satisfactorily with this version.
+ (Ref: "WeaponFix177.txt")
+[ALL WeaponFix164_WCM_addon.esp
+     farrp_WeaponCompilationMod_V2.esp]
+
+[Note]
+ The Weapon Fix's addon for Assassins Armory does not include body parts for the Armory's defensive (offhand) weapons. This means the defensive weapons will not be visible in game.
+ To fix this you will need to run TESTool's Merge Objects function and enable the Merged Objects.esp.
+ (Ref: Dragon32, examined the plugins)
+WeaponFix164_Assassin_addon.esp
+[NOT Merged_Objects.esp]
+
+; Following plugins are either supported by the main weaponFix177.esp plugin or
+; through addons. "WeaponFix177.txt" says that Weapon Fix mods need to load 
+; last. (Dragon32)
+;
+; Note: It's possible we may want to break this up, if the only orderings between
+; individual plugins in this list and "Weapon Fix" are relevant. - JMS
+[Order]
+Aduls_Arsenal.esp
+FW_Sabre.esp
+Leias_Dual_Wield_03.esp
+newarrows.esp
+newarrowsLITE.esp
+Additions_Revamped__clean_.esp
+Re-coloured Ebony and Dwarven.esp
+The Arsenal.esp
+SOPBeta1.4.esp
+SOP1.4Patch1.34.esp
+The_Swords_of_Morrowind.esp
+; "Underwater Ruins" mentioned in readme - cannot find ESP file.
+Assassins Armory - No Scripts.esp
+Assassins Armory - Arrows.esp
+Assassins Armory - Bolt Rifles.esp
+farrp_WeaponCompilationMod_V1.esp
+farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
