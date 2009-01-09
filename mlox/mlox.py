@@ -35,6 +35,7 @@ Opt.FromFile = False
 Opt.GUI = False
 Opt.GetAll = False
 Opt.ParseDBG = False
+Opt.Profile = False
 Opt.Quiet = False
 Opt.Update = False
 Opt.WarningsOnly = False
@@ -149,12 +150,11 @@ class parse_debug_logger(logger):
         logger.__init__(self, False)
 
     def add(self, message):
-        if Opt.ParseDBG:
-            msg = "DBG: " + message
-            if Opt.GUI:
-                self.log.append(msg)
-            else:
-                print >> sys.stderr, msg
+        msg = "DBG: " + message
+        if Opt.GUI:
+            self.log.append(msg)
+        else:
+            print >> sys.stderr, msg
 
 ParseDbg = parse_debug_logger() # debug output for parser
 Dbg = debug_logger()            # debug output
@@ -382,10 +382,10 @@ class rule_parser:
                 line = line.rstrip() # strip whitespace from end of line, include CRLF
                 if line != "":
                     self.buffer = line
-                    self.pdbg("readline returns: %s" % line)
+                    if Opt.ParseDBG: self.pdbg("readline returns: %s" % line)
                     return(True)
         except StopIteration:
-            self.pdbg("EOF")
+            if Opt.ParseDBG: self.pdbg("EOF")
             self.buffer = ""
             self.input_handle.close()
             self.input_handle = None
@@ -409,43 +409,43 @@ class rule_parser:
                 return
 
     def expand_filename(self, plugin):
-        self.pdbg("expand_filename, plugin=%s" % plugin)
+        if Opt.ParseDBG: self.pdbg("expand_filename, plugin=%s" % plugin)
         pat = "^%s$" % re_escape_meta.sub(r'\\\1', plugin)
         # if the plugin name contains metacharacters, do filename expansion
         subbed = False
         if re_plugin_meta.search(plugin) != None:
-            self.pdbg("expand_filename name has META: %s" % pat)
+            if Opt.ParseDBG: self.pdbg("expand_filename name has META: %s" % pat)
             pat = re_plugin_meta.sub(r'.\1', pat)
             subbed = True
         if re_plugin_metaver.search(plugin) != None:
-            self.pdbg("expand_filename name has METAVER: %s" % pat)
+            if Opt.ParseDBG: self.pdbg("expand_filename name has METAVER: %s" % pat)
             pat = re_plugin_metaver.sub(plugin_version, pat)
             subbed = True
         if not subbed:        # no expansions made
             return([plugin] if plugin.lower() in self.active else [])
-        self.pdbg("expand_filename new RE pat: %s" % pat)
+        if Opt.ParseDBG: self.pdbg("expand_filename new RE pat: %s" % pat)
         matches = []
         re_namepat = re.compile(pat, re.IGNORECASE)
         for p in self.active:
             if re_namepat.match(p):
                 matches.append(p)
-                self.pdbg("expand_filename: %s expands to: %s" % (plugin, p))
+                if Opt.ParseDBG: self.pdbg("expand_filename: %s expands to: %s" % (plugin, p))
         return(matches)
                 
     def parse_plugin_name(self):
         self.parse_dbg_indent += "  "
         buff = self.buffer.strip()
-        self.pdbg("parse_plugin_name buff=%s" % buff)
+        if Opt.ParseDBG: self.pdbg("parse_plugin_name buff=%s" % buff)
         plugin_match = re_plugin.match(buff)
         if plugin_match:
             plugin_name = C.cname(plugin_match.group(1))
-            self.pdbg("parse_plugin_name name=%s" % plugin_name)
+            if Opt.ParseDBG: self.pdbg("parse_plugin_name name=%s" % plugin_name)
             pos = plugin_match.span(2)[1]
             self.buffer = buff[pos:].lstrip()
             matches = self.expand_filename(plugin_name)
             if matches != []:
                 plugin_name = matches.pop(0)
-                self.pdbg("parse_plugin_name new name=%s" % plugin_name)
+                if Opt.ParseDBG: self.pdbg("parse_plugin_name new name=%s" % plugin_name)
                 if len(matches) > 0:
                     self.buffer = " ".join(matches) + " " + self.buffer
                 return(True, plugin_name)
@@ -490,7 +490,7 @@ class rule_parser:
         if match:
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            self.pdbg("parse_ver new buffer = %s" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("parse_ver new buffer = %s" % self.buffer)
             op = match.group(1)
             if op not in version_operators:
                 self.parse_error(_["Invalid [VER] operator"])
@@ -500,11 +500,11 @@ class rule_parser:
             plugin_name = match.group(3)
             expanded = self.expand_filename(plugin_name)
             expr = "[VER %s %s %s]" % (op, orig_ver, plugin_name)
-            self.pdbg("parse_ver, expr=%s ver=%s" % (expr, ver))
+            if Opt.ParseDBG: self.pdbg("parse_ver, expr=%s ver=%s" % (expr, ver))
             if len(expanded) == 1:
                 expr = "[VER %s %s %s]" % (op, orig_ver, expanded[0])
             elif expanded == []:
-                self.pdbg("parse_ver [VER] \"%s\" not active" % plugin_name)
+                if Opt.ParseDBG: self.pdbg("parse_ver [VER] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
@@ -525,17 +525,17 @@ class rule_parser:
                 if match:
                     p_ver_orig = match.group(1)
                     p_ver = format_version(p_ver_orig)
-                    self.pdbg("parse_ver (header) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
+                    if Opt.ParseDBG: self.pdbg("parse_ver (header) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
                 else:
                     match = re_filename_version.search(plugin)
                     if match:
                         p_ver_orig = match.group(1)
                         p_ver = format_version(p_ver_orig)
-                        self.pdbg("parse_ver (filename) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
+                        if Opt.ParseDBG: self.pdbg("parse_ver (filename) version(%s) = %s (%s)" % (plugin_t, p_ver_orig, p_ver))
                     else:
-                        self.pdbg("parse_ver no version for %s" % plugin_t)
+                        if Opt.ParseDBG: self.pdbg("parse_ver no version for %s" % plugin_t)
                         return(False, expr)
-                self.pdbg("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
+                if Opt.ParseDBG: self.pdbg("parse_ver compare  p_ver=%s %s ver=%s" % (p_ver, op, ver))
                 result = True
                 if op == '=':
                     result = (p_ver == ver)
@@ -559,17 +559,17 @@ class rule_parser:
         if match:
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            self.pdbg("parse_desc new buffer = %s" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("parse_desc new buffer = %s" % self.buffer)
             bang = match.group(1) # means to invert the meaning of the match
             pat = match.group(2)
             plugin_name = match.group(3)
             expr = "[DESC %s/%s/ %s]" % (bang, pat, plugin_name)
-            self.pdbg("parse_desc, expr=%s" % expr)
+            if Opt.ParseDBG: self.pdbg("parse_desc, expr=%s" % expr)
             expanded = self.expand_filename(plugin_name)
             if len(expanded) == 1:
                 expr = "[DESC %s/%s/ %s]" % (bang, pat, expanded[0])
             elif expanded == []:
-                self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin_name)
+                if Opt.ParseDBG: self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
@@ -586,7 +586,7 @@ class rule_parser:
                 desc = plugin_description(self.datadir.find_path(plugin))
                 bool = (re_pat.search(desc) != None)
                 if bang == "!": bool = not bool
-                self.pdbg("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
+                if Opt.ParseDBG: self.pdbg("parse_desc [DESC] returning: (%s, %s)" % (bool, expr))
                 if bool:
                     self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(True, "[DESC %s/%s/ %s]" % (bang, pat, plugin_t))
@@ -603,17 +603,17 @@ class rule_parser:
         if match:
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            self.pdbg("parse_size new buffer = %s" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("parse_size new buffer = %s" % self.buffer)
             bang = match.group(1) # means "is not this size"
             wanted_size = int(match.group(2))
             plugin_name = match.group(3)
             expr = "[SIZE %s%d %s]" % (bang, wanted_size, plugin_name)
-            self.pdbg("parse_size, expr=%s" % expr)
+            if Opt.ParseDBG: self.pdbg("parse_size, expr=%s" % expr)
             expanded = self.expand_filename(plugin_name)
             if len(expanded) == 1:
                 expr = "[SIZE %s%d %s]" % (bang, wanted_size, expanded[0])
             elif expanded == []:
-                self.pdbg("parse_size [SIZE] \"%s\" not active" % match.group(3))
+                if Opt.ParseDBG: self.pdbg("parse_size [SIZE] \"%s\" not active" % match.group(3))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
             if self.datadir == None:
@@ -629,7 +629,7 @@ class rule_parser:
                 actual_size = os.path.getsize(self.datadir.find_path(plugin))
                 bool = (actual_size == wanted_size)
                 if bang == "!": bool = not bool
-                self.pdbg("parse_size [SIZE] returning: (%s, %s)" % (bool, expr))
+                if Opt.ParseDBG: self.pdbg("parse_size [SIZE] returning: (%s, %s)" % (bool, expr))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 if bool:
                     self.parse_dbg_indent = self.parse_dbg_indent[:-2]
@@ -646,39 +646,39 @@ class rule_parser:
         if self.buffer == "":
             if self.readline():
                 if re_rule.match(self.buffer):
-                    self.pdbg("parse_expression new line started new rule, returning None")
+                    if Opt.ParseDBG: self.pdbg("parse_expression new line started new rule, returning None")
                     self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(None, None)
                 self.buffer = self.buffer.strip()
             else:
-                self.pdbg("parse_expression EOF, returning None")
+                if Opt.ParseDBG: self.pdbg("parse_expression EOF, returning None")
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(None, None)
-        self.pdbg("parse_expression, start buffer: \"%s\"" % self.buffer)
+        if Opt.ParseDBG: self.pdbg("parse_expression, start buffer: \"%s\"" % self.buffer)
         match = re_fun.match(self.buffer)
         if match:
             fun = match.group(1).upper()
             if fun == "DESC":
-                self.pdbg("parse_expression calling parse_desc()")
+                if Opt.ParseDBG: self.pdbg("parse_expression calling parse_desc()")
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(self.parse_desc())
             elif fun == "VER":
-                self.pdbg("parse_expression calling parse_ver()")
+                if Opt.ParseDBG: self.pdbg("parse_expression calling parse_ver()")
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(self.parse_ver())
             elif fun == "SIZE":
-                self.pdbg("parse_expression calling parse_size()")
+                if Opt.ParseDBG: self.pdbg("parse_expression calling parse_size()")
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(self.parse_size())
             # otherwise it's a boolean function ...
-            self.pdbg("parse_expression parsing expression: \"%s\"" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("parse_expression parsing expression: \"%s\"" % self.buffer)
             p = match.span(0)[1]
             self.buffer = self.buffer[p:]
-            self.pdbg("fun = %s" % fun)
+            if Opt.ParseDBG: self.pdbg("fun = %s" % fun)
             vals = []
             exprs = []
             bool_end = re_end_fun.match(self.buffer)
-            self.pdbg("self.buffer 1 =\"%s\"" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("self.buffer 1 =\"%s\"" % self.buffer)
             while not bool_end:
                 (bool, expr) = self.parse_expression(prune)
                 if bool == None:
@@ -686,11 +686,11 @@ class rule_parser:
                     return(None, None)
                 exprs.append(expr)
                 vals.append(bool)
-                self.pdbg("self.buffer 2 =\"%s\"" % self.buffer)
+                if Opt.ParseDBG: self.pdbg("self.buffer 2 =\"%s\"" % self.buffer)
                 bool_end = re_end_fun.match(self.buffer)
             pos = bool_end.span(0)[1]
             self.buffer = self.buffer[pos:]
-            self.pdbg("self.buffer 3 =\"%s\"" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("self.buffer 3 =\"%s\"" % self.buffer)
             if fun == "ALL":
                 # prune out uninteresting expressions from ANY results
                 exprs = [e for e in exprs if not(isinstance(e, list) and e == [])]
@@ -710,18 +710,18 @@ class rule_parser:
                 # should not be reached due to match on re_fun
                 self.parse_error(_["Expected Boolean function (ALL, ANY, NOT)"])
                 return(None, None)
-            self.pdbg("parse_expression NOTREACHED")
+            if Opt.ParseDBG: self.pdbg("parse_expression NOTREACHED")
         else:
             if re_start_fun.match(self.buffer):
                 self.parse_error(_["Invalid function expression"])
                 return(None, None)
-            self.pdbg("parse_expression parsing plugin: \"%s\"" % self.buffer)
+            if Opt.ParseDBG: self.pdbg("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
             if exists != None and p != None:
                 p = C.truename(p) if exists else ("MISSING(%s)" % C.truename(p))
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(exists, p)
-        self.pdbg("parse_expression NOTREACHED(2)")
+        if Opt.ParseDBG: self.pdbg("parse_expression NOTREACHED(2)")
 
     def pprint(self, expr, prefix):
         """pretty printer for parsed expressions"""
@@ -733,7 +733,7 @@ class rule_parser:
 
     def parse_statement(self, rule, msg, expr):
         self.parse_dbg_indent += "  "
-        self.pdbg("parse_statement(%s, %s, %s)" % (rule, msg, expr))
+        if Opt.ParseDBG: self.pdbg("parse_statement(%s, %s, %s)" % (rule, msg, expr))
         expr = expr.strip()
         if msg == "":
             if expr == "":
@@ -750,21 +750,21 @@ class rule_parser:
         msg = "" if self.message == [] else " |" + "\n |".join(self.message) # no ending LF
         if rule == "CONFLICT":  # takes any number of exprs
             exprs = []
-            self.pdbg("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
+            if Opt.ParseDBG: self.pdbg("before conflict parse_expr() expr=%s line=%s" % (expr, self.buffer))
             (bool, expr) = self.parse_expression()
-            self.pdbg("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
+            if Opt.ParseDBG: self.pdbg("conflict parse_expr()1 bool=%s bool=%s" % (bool, expr))
             while bool != None:
                 if bool:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression()
-                self.pdbg("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
+                if Opt.ParseDBG: self.pdbg("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
                 Msg.add("[CONFLICT]")
                 for e in exprs:
                     Msg.add(self.pprint(e, " > "))
                 if msg != "": Msg.add(msg)
         elif rule == "NOTE":    # takes any number of exprs
-            self.pdbg("function NOTE: %s" % msg)
+            if Opt.ParseDBG: self.pdbg("function NOTE: %s" % msg)
             exprs = []
             (bool, expr) = self.parse_expression(prune=True)
             while bool != None:
@@ -817,14 +817,14 @@ class rule_parser:
                 if match:
                     Msg.add(_[" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version]."])
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-        self.pdbg("parse_statement RETURNING")
+        if Opt.ParseDBG: self.pdbg("parse_statement RETURNING")
 
     def read_rules(self, rule_file):
         """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
         add order rules to graph, and print warnings."""
         n_rules = 0
         self.rule_file = rule_file
-        self.pdbg("READING RULES FROM: \"%s\"" % self.rule_file)
+        if Opt.ParseDBG: self.pdbg("READING RULES FROM: \"%s\"" % self.rule_file)
         self.input_handle = myopen_file(self.rule_file, 'r')
         if self.input_handle == None:
             return False
@@ -1611,6 +1611,21 @@ def print_version():
     print "wxPython Version: %s" % wx.__version__
 
 
+def main():
+    if Opt.FromFile:
+        if len(args) == 0:
+            print _["Error: -f specified, but no files on command line."]
+            usage(2)            # exits
+        for file in args:
+            loadorder().update(file)
+    elif Opt.GUI == True:
+        # run with gui
+        Opt.DBG = True
+        mlox_gui().start()
+    else:
+        # run with command line arguments
+        loadorder().update(None)
+
 if __name__ == "__main__":
     try: os.remove("mlox.err")
     except: pass
@@ -1637,8 +1652,8 @@ if __name__ == "__main__":
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
         opts, args = getopt(sys.argv[1:], "acde:fhlpquvw",
-                            ["all", "base-only", "check", "debug", "explain=", "fromfile", "help", 
-                             "listversions", "parsedebug", "quiet", "translations=",
+                            ["all", "base-only", "check", "debug", "explain=", "fromfile", "gui", "help", 
+                             "listversions", "parsedebug", "profile", "quiet", "translations=",
                              "update", "version", "warningsonly"])
     except GetoptError, err:
         print str(err)
@@ -1660,6 +1675,8 @@ if __name__ == "__main__":
             Stats.prints = False
         elif opt in ("-f", "--fromfile"):
             Opt.FromFile = True
+        elif opt in ("--gui"):
+            Opt.GUI = True
         elif opt in ("-h", "--help"):
             usage(0)            # exits
         elif opt in ("-l", "--listversions"):
@@ -1667,6 +1684,8 @@ if __name__ == "__main__":
             sys.exit(0)
         elif opt in ("-p", "--parsedebug"):
             Opt.ParseDBG = True
+        elif opt in ("--profile"):
+            Opt.Profile = True
         elif opt in ("-q", "--quiet"):
             Opt.Quiet = True
         elif opt in ("--translations"):
@@ -1684,17 +1703,14 @@ if __name__ == "__main__":
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True
 
-    if Opt.FromFile:
-        if len(args) == 0:
-            print _["Error: -f specified, but no files on command line."]
-            usage(2)            # exits
-        for file in args:
-            loadorder().update(file)
-    elif Opt.GUI == True:
-        # run with gui
-        Opt.DBG = True
-        mlox_gui().start()
+    if Opt.Profile:
+        import hotshot, hotshot.stats
+        prof = hotshot.Profile("mlox.prof")
+        time = prof.runcall(main)
+        prof.close()
+        stats = hotshot.stats.load("mlox.prof")
+        stats.strip_dirs()
+        stats.sort_stats('time', 'calls')
+        stats.print_stats(20)
     else:
-        # run with command line arguments
-        loadorder().update(None)
-
+        main()
