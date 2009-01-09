@@ -244,6 +244,12 @@ FOGBUG FOGSYNC '!TB-FUN' '!BM-FUN' GETSND MASTERS MENUMOD MISSAUT MISSDSC
 MISSVER MOD-IID NUMRECS JUNKCEL DEP-LST MOD-INF OVR-REC AUTOSPL SCRDOOR
 DUP-REC BM-DEP EXP-DEP));
 
+my %DIAL_TYPE = (0 => "Topic",
+		 1 => "Voice",
+		 2 => "Greeting",
+		 3 => "Persuasion",
+		 4 => "Journal");
+
 if ($::opt_f) {
     my @unknown_flags = ();
     foreach my $flag (map {uc} split(/\s*,\s*/, $::opt_f)) {
@@ -763,6 +769,7 @@ sub scan {
     my $read_gmsts = ($OPTFLAG{EVLGMST} or $CHK_DUP_REC or $CHK_OVERRIDDEN_REC);
     my $read_cell = ($OPTFLAG{JUNKCEL} or $CHK_FOG_DENSITY or $CHK_DUP_REC);
     my %dial_info = ();
+    my %info_dial = ();
     my $rec_count = 0;
     my $hdr_nrec = 0;
     while (my($rec_type, $rec, $flags) = read_rec($expected)) {
@@ -829,6 +836,7 @@ sub scan {
 	    print "DBG: MYINF($plugin) $id = $myinf{$id}\n" if (DBG);
 	    push(@{$myinftxt{$r->{NAME}[0]}}, $id);
 	    $dial_info{$cur_dial}->{$id} = 0;
+	    $info_dial{$id} = $DIAL_TYPE{unpack("C", $r->{DATA}[0])}  . ":" . $cur_dial;
 	} elsif ($rec_type eq "SCPT") {
 	    # check for tribunal/bloodmoon function dependency in scripts
 	    my $r = parse_subrec_hash($rec);
@@ -990,7 +998,7 @@ sub scan {
 		    }
 		    if ($CHK_DUPLICATE_INFO) {
 			$dup_inf++;
-			$inf_out .= "\n[DUP-INF]: ID=$id\n";
+			$inf_out .= "\n[DUP-INF]: ID=$id($info_dial{$id})\n";
 			$inf_out .= "  $inf_str\n";
 		    }
 		} else {
@@ -1002,7 +1010,7 @@ sub scan {
 			my $maxlen = (length($plugin) > length($master)) ? length($plugin) : length($master);
 			my $plugin_pref = $plugin . "-"x($maxlen - length($plugin));
 			my $master_pref = $master . "-"x($maxlen - length($master));
-			$mod_out .= "\n[MOD-INF]: ID=$id\n";
+			$mod_out .= "\n[MOD-INF]: ID=$id($info_dial{$id})\n";
 			$mod_out .= "  ${master_pref}->$mast_inf_str\n";
 			$mod_out .= "  ${plugin_pref}->$inf_str\n";
 			if ($OPTFLAG{'MOD-INF'}) {
@@ -1018,10 +1026,20 @@ sub scan {
 				push(@ids, $id) if ($disp == 0 and not defined $r->{BNAM});
 			    }
 			    if ($myinftxt{$inftxt} and @ids) {
+				my $dial = $info_dial{$id};
+				my @ids_with_dials = ();
+				foreach my $id (@ids) {
+				    push(@ids_with_dials, "ID=$id($info_dial{$id})");
+				    $dial = "" if ($info_dial{$id} ne $dial);
+				}
 				$mod_iid++;
 				my $pl = (scalar(@ids) > 1) ? "s" : "";
 				$inf_out .= $mod_out;
-				$inf_out .= "[MOD-IID]: ID$pl=@{[join(',', @ids)]}\n";
+				if ($dial) {
+				    $inf_out .= "[MOD-IID]: ID$pl=@{[join(',', @ids)]}\n";
+				} else {
+				    $inf_out .= "[MOD-IID]: @{[join(',', @ids_with_dials)]}\n";
+				}
 				$inf_out .= "  ${plugin_pref}->$inftxt\n";
 			    }
 			}
