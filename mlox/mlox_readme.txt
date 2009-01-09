@@ -413,6 +413,8 @@ what happened.
 
 o ChangeLog
 
+Version 0.52 - 2009/01/08
+	* Implemented spoiler hiding for messages with <hide></hide>
 Version 0.51 - 2009/01/08
 	* Fixed a few bugs in how filenames are expanded.
 	* Small GUI presentation tweak to ensure the labels at the bottom of

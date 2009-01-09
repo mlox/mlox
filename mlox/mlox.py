@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.51"
+Version = "0.52"
 
 import locale
 import os
@@ -193,7 +193,7 @@ C = caseless_filenames()
 
 class caseless_dirlist:
 
-    def __init__(self, dir='.'):
+    def __init__(self, dir=os.getcwd()):
         self.dir = os.path.normpath(os.path.abspath(dir))
         self.files = {}
         for f in [p for p in os.listdir(dir)]:
