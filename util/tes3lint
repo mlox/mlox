@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#Version: 0.52
+#Version: 0.53
 # tes3lint - a diagnostic tool for TES3/Morrowind plugins
 # Copyright 2009 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -592,7 +592,7 @@ sub scan_script {
     print "SCRIPT:\n$script\n\n" if (DBG and $::opt_v);
     # remove comments and blank lines from the script
     $script =~ s/$RE_IGNORE//gm;
-    $script =~ s/\n\s*end\b//s;
+    $script =~ s/\n[ \t]*end\b.*\Z/\n/si;
     if ($CHK_EXPANSION_FUNCTIONS or $CHK_NO_EXPANSION_FUNS) {
 	while ($script =~ m!$RE_TBFUN!gim) {
 	    print "TBFUN($label): $1\n" if (DBG);
