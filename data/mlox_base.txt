@@ -1,11 +1,12 @@
 ;; -*- mode: emacs-lisp -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; WARNING - the rules in this file are ALPHA! they may give incorrect
-;; advice on conflicts and pre-requisites they may hose up your load
-;; order. Read mlox_readme.txt for safe testing procedures.
+;; NOTE - the rules in this file are BETA! While they have been fairly well
+;; tested, it's still possible they may give incorrect advice on conflicts and
+;; pre-requisites, and they may not sort your load order correctly. Read
+;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-01-09 02:38:28 (UTC)]
+[Version 2009-01-10 01:56:58 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -46,7 +47,7 @@
 ;; the file, and to generate some happy statistics.
 ;;
 ;; Highlighting:
-;; When a comment message on a rule begins with exclamation points,
+;; When a warning message on a rule begins with exclamation points,
 ;; that comment will be highlighted in the GUI Messages pane.
 ;; ! - one bang is highlighted blue for low priority
 ;;     use low priority for stuff that should be "noticed", but probably
@@ -68,7 +69,7 @@
 ;; So "Mashed Lists.esp" should always be the first in the NearEnd
 ;; rule in order to ensure it loads very near the end of the load order.
 ;;
-;; Note: overuse of NearStart/NearEnd will render them meaningless.
+;; Note: overuse of NearStart/NearEnd may render them meaningless.
 ;; They are intended to be used only for very special circumstances.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -407,6 +408,15 @@ Aduls_Arsenal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Package [Noran the Axe]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 12834 Ingredient Fix (Tribunal).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alchemy Storage Helper v2.0 [scruggs]
 
 [Requires]
@@ -414,6 +424,11 @@ Aduls_Arsenal.esp
 ASH 2.0.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ The latest version of Alchemy Storage Helper is 2.0:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1649
+AlchemyStorageHelper10.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -689,8 +704,8 @@ Better Bodies.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- "AreaEffectArrows.esp" is the original plugin from Bethesda
- "Area Effect Arrows.esp" from Particle_Arrow_Replacer_v30 adds particle effects
+ "AreaEffectArrows.esp" is the original plugin from Bethesda.
+ "Area Effect Arrows.esp" from Particle_Arrow_Replacer_v30 adds particle effects.
  "AreaEffectArrows XB Edition.esp" by Xeth-Ban makes the plugin harder to abuse.
 AreaEffectArrows.esp
 AreaEffectArrows XB Edition.esp
@@ -770,6 +785,8 @@ Bloodmoon.esm
 Assassins Armory.esm
 Assassins Armory - No Scripts.esp
 AreaEffectArrows.esp
+Clean Official Plugins v1.1.esp
+OfficialMods_v5.esp
 Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
 
@@ -778,7 +795,9 @@ Assassins Armory - Bolt Rifles.esp
  (Ref: "Assassin's Armory readme.doc")
 Assassins Armory - Arrows.esp
 [ANY AreaEffectArrows.esp
-     AreaEffectArrows XB Edition.esp]
+     AreaEffectArrows XB Edition.esp
+     Clean Official Plugins v1.1.esp
+     OfficialMods_v5.esp]
 
 [Patch]
  "Assassins Armory - Unofficial Patch 7.7" is a patch for a couple small glitches in Assassin's Armory. It's available here:
@@ -840,6 +859,32 @@ Tribunal.esm
 [Order]
 Unique Banners and Signs.esp
 Authentic Signs IT 1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Auto Alchemy Lab Beta [andoreth]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "Readme - Auto Alchemy Lab.txt")
+Auto Alchemy Lab - Trib & BM Mages Guild Offices Compatible.esp
+Auto Alchemy Lab - Trib & BM.esp
+Auto Alchemy Lab - Trib Only Mages Guild Offices Compatible.esp
+Auto Alchemy Lab - Trib Only.esp
+
+[Note]
+ Since you have Bloodmoon, you should use the version with "BM" in the name.
+ (Ref: "Readme - Auto Alchemy Lab.txt")
+[ALL Bloodmoon.esm
+     [ANY Auto Alchemy Lab - Trib Only Mages Guild Offices Compatible.esp
+	  Auto Alchemy Lab - Trib Only.esp]]
+
+[Requires]
+ These versions are for use with Cheyenne's "Vivec Mages Guild Offices v1.0" mod.
+ (Ref: "Readme - Auto Alchemy Lab.txt")
+[ANY Auto Alchemy Lab - Trib & BM Mages Guild Offices Compatible.esp
+     Auto Alchemy Lab - Trib Only Mages Guild Offices Compatible.esp]
+Vivec, Guild of Mages Offices.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1697,6 +1742,18 @@ Sris_Alchemy_BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Boxes [PawPrintExpress]
+
+[Note]
+ These are modder's resources and do not add anything to the game. You probably do not want to load them in a game you are playing.
+ (Ref: Their respective readmes)
+CAB_AlchemyBoxes-MW.esp
+CAB_AlchemyBoxes-TB.esp
+CAB_AlchemyBoxes-BM.esp
+CAB_Alchemy Boxes-SrisAlchemy.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CactusSeaElf v1.0 [CactusBoy]
 
 [Note]
@@ -1840,6 +1897,15 @@ CharGen Revamped delay2.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 9278532 C0N2 v1.01.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Classic Stories by Eric Carle V1.0 [Cassadyr]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 118862 Classic Stories by Eric Carle.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2394,6 +2460,16 @@ Dragon rider's armor, by Mandamus.esp
 Better Bodies.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Drinking Water [fleck1974]
+
+[Conflict]
+ This plugin is not compatible with NOM.
+ (Ref: "Drinking Water Readme.txt")
+Drinking Water.esp
+NOM 2.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dungeon of Death [Hegzx]
 
 [Note]
@@ -2417,7 +2493,7 @@ pcc_di_vo_bridge_06.esp
  (Ref: "pcc_dungeon_island_19_readme.txt")
 pcc_d_island_2_xindaz_02.esp
 [ALL pcc_dungeon_island_19.esp
-     xindex_veft_05.esp]
+     pcc_Xindaz_Veft_05.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2485,6 +2561,63 @@ Dwarves! MCA addon v2.1.esp
 Dwarves!.esp
 Dwarves! BB.esp
 Dwarves! MCA addon v2.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Coin Gun 4.3 [DoubleBrewski]
+
+[Requires]
+ "Dwemer Coin Gun-CB'S Icons.esp" requires Cantina Boy's "New Dwemer Coins" mod:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5294
+ (Ref: "Dwemer Coin Gun-Readme.txt")
+Dwemer Coin Gun-CB'S Icons.esp
+[ALL Dwemer Coin Gun Tribute.esp
+     New Dwemer Coins.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Fire Launcher 1.3 [DoubleBrewski]
+
+[Conflict]
+ Use only one of these different versions of the Dwemer Fire Gun.
+DwemerFireGunV1.2 Scripted.esp
+CleanDwemerFireGunV1.1.esp
+Dwemer Fire Gun Tribute.esp
+
+[Note]
+ There is a newer version (1.3) of the Dwemer Fire Gun:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5002
+DwemerFireGunV1.2 Scripted.esp
+CleanDwemerFireGunV1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Ice Gun Tribute 3.3 [DoubleBrewski]
+
+[Note]
+ The latest version of this mod is 3.3, you may want to upgrade:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5033
+[SIZE !11264 Dwemer Ice Gun Tribute.esp]
+Dave's FrozenDwemerGunV3.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Pod Launcher Patch [DoubleBrewski]
+; for original Temp_Dwmr_gun by Tempered
+
+[Requires]
+ (Ref: "Scripted Patch for Tempered's Spore Gun.txt")
+Temp_Dwmr_gun Scripted Patch.esp
+Temp_Dwmr_gun.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Shock Gun Tribute 2.3 [DoubleBrewski]
+
+[Note]
+ The latest version of "Dwemer Shock Gun" is 2.3:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5006
+Dwemer Shock GunV2.2 Scripted.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3529,6 +3662,22 @@ H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Hunter Modification [Martin Bohnet a.k.a Garak]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 376805 huntermodtrib.esp]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "For the tribunal version, use the huntermodtrib.esp file, which is identical exept for the added quest titles and end marks."
+ (Ref: "readme_huntermod.txt")
+huntermod.esp
+huntermodtrib.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @IceNioLiv_RobeReplacer [CanadianIce & NioLiv]
 
 [Conflict]
@@ -4470,6 +4619,15 @@ Madd Leveler - Base.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magic Alembic v1.1 [Crystaltips]
+
+[Note]
+ !! This plugin contains one evil GMST (sEffectSummonFabricant)
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6220  Magic Alembic v1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mannequins for Sale v1.2 [ManaUser]
 
 [Conflict]
@@ -5243,6 +5401,22 @@ Mundane Weaps-Both.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mysthaven Manor [William The Taffer]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "READ ME - Mysthaven Manor.txt")
+Mysthaven Manor- Necessities of Morrowind 2.0 Edition.esp
+Mysthaven Manor.esp
+
+[Requires]
+ "This version of the plugin requires NOM"
+ (Ref: "READ ME - Mysthaven Manor.txt")
+Mysthaven Manor- Necessities of Morrowind 2.0 Edition.esp
+NOM 2.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities of Morrowind (NOM) [Taddeus & Nymeria]
 
 [Note]
@@ -5905,6 +6079,46 @@ OBs MWE_Magicka patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @OfficialMods_v5
+
+[Conflict]
+ "OfficialMods_v5.esp" is a compilation of all the official Bethesda mods. You should deactivate the individual mods it includes.
+OfficialMods_v5.esp
+[ANY AdamantiumArmor.esp
+     Area Effect Arrows.esp
+     AreaEffectArrows XB Edition.esp
+     AreaEffectArrows.esp
+     BCsounds.esp
+     EBQ_Artifact.esp
+     Entertainers.esp
+     LeFemmArmor.esp
+     Master_Index.esp
+     Siege at Firemoth.esp]
+
+[Conflict]
+ Choose ONLY ONE of these plugins. These are both compilations of the official Bethesda mods.
+OfficialMods_v5.esp
+Clean Official Plugins v1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Official Plugins v1.0 [Combined by Murlocke]
+
+[Conflict]
+Clean Official Plugins v1.1.esp
+[ANY AdamantiumArmor.esp
+     Area Effect Arrows.esp
+     AreaEffectArrows XB Edition.esp
+     AreaEffectArrows.esp
+     BCsounds.esp
+     EBQ_Artifact.esp
+     Entertainers.esp
+     LeFemmArmor.esp
+     Master_Index.esp
+     Siege at Firemoth.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ordinator Armour Replacer v1.2 [VagabondAngel]
 
 [Conflict]
@@ -6408,6 +6622,15 @@ RTS_FaeriesSeydaNeen.esp
  (Ref: "RTS Healing Faeries Ver1 - readme.rtf")
 RTS_FaeriesSeydaNeen.esp
 RTS_HealingFaeries.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RuneScape Style Ice Barrage [The Legend]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6420 ice barrage part1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8442,6 +8665,15 @@ Vertical limit climbing mod 1.02.esp
 ;;                         (requires Tribunal & Bloodmoon)
 ;; "VGreetings-Thief.esp" - changes affecting the Thief Voice
 ;;                          section (requires Tribunal)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vivec Mages Guild Offices v1.0 [Cheyenne]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 90577 Vivec, Guild of Mages Offices.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
