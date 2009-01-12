@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-01-10 01:56:58 (UTC)]
+[Version 2009-01-10 19:40:49 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -474,6 +474,8 @@ MW_Children_1_0.esm
 ;; (Ref: "Ald-Vendras_V3_readme.txt")
 [Order]
 Illuminated Order v1.0.esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 Korobal v1.2.esp
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
@@ -3147,7 +3149,9 @@ Havish.esm
  The Glory Road conflicts with Illuminated Order, you should probably use only one or the other.
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
-Illuminated Order v1.0.esp
+[ANY Illuminated Order v1.0.esp
+     Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+     Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
 
 [Conflict]
  The Glory Road conflicts with Legends of Ydumea, you should probably use only one or the other.
@@ -3723,6 +3727,12 @@ Altmer Town.esp
 Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
 [ALL Illuminated Order v1.0.esp
      Bloodmoon.esm]
+
+[Conflict]
+ These are alternate versions of "Illuminated Order", the latter two fix a conflict of overlapping houses when using Illuminated Order together with Balmora Expanded and Indybank. Only use one of the following alternatives.
+Illuminated Order v1.0.esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4578,7 +4588,9 @@ Madd Leveler - Assassin's Armory Fix.esp
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Illuminated Order Fix.esp
 [ALL Madd Leveler - Base.esp
-     Illuminated Order v1.0.esp]
+     [ANY Illuminated Order v1.0.esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
 [Note]
  ! "KNOWN ISSUE: Do NOT reset/restart the madd leveler when you have any of the following powers (from Illuminated Order) active:
@@ -4588,7 +4600,9 @@ Madd Leveler - Illuminated Order Fix.esp
  (Ref: "Madd Leveler Readme.txt")
 [ALL Madd Leveler - Illuminated Order Fix.esp
      Madd Leveler - Base.esp
-     Illuminated Order v1.0.esp]
+     [ANY Illuminated Order v1.0.esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
 [Patch]
  "Makes the Madd Leveler compatible with Lichcraft 1.0."
@@ -5252,10 +5266,6 @@ Molag Mar Revisited - Illuminated Windows Enhancements.esp
 TarMar.esp
 
 [Conflict]
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
-Molag Mar Revisited - Illuminated Windows Enhancements.esp
-
-[Conflict]
  "Daedric Sorcery (Daedric Sorcery.esp) adds a shop to the Molag Mar exterior which will be floating high above the town (but be accessible with levitation) wwhen Molag Mar Revisited is loaded too."
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
 Molag Mar Revisited - Illuminated Windows Enhancements.esp
@@ -5265,7 +5275,9 @@ Daedric Sorcery.esp
  'Illuminated Order ("Illuminated Order v1.0 (IndyBank-BE Compatible-hill)" - this is an esp crafted by Pseron Wyrd which solved a conflict between Illuminated order and Indybank, but the following obviously applies to other versions of IO too) adds a door to a fresco in the Molag Mar waistworks (which Molag mar Revisited disconnects too).'
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
 Molag Mar Revisited - Illuminated Windows Enhancements.esp
-Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+[ANY Illuminated Order v1.0.esp
+     Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+     Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
 
 [Conflict]
  "Molag Mar Revisited" disconnects the Molag Mar Canalworks from the game, so that the character Eltoria, placed there by "Korobal", cannot be reached. You may need to edit one of these plugins in the CS, or else use either the console command:
@@ -9160,6 +9172,30 @@ Wolf Manor bloodmoon addon.esp
  (Ref: "World_Of_Faces readme.txt")
 World_Of_Faces_Master.esm
 World_Of_Faces.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @X-jiit [Regan]
+
+[Requires]
+ (Ref: "X-jiit Readme.txt")
+X-jiitTails.esp
+X-jiit.esp
+
+[Conflict]
+ "DO NOT use both the companion ESPs, only one."
+ "X-jiitCompanionsTB.esp" should be used if you only have Tribunal.
+ "X-jiitCompanionsBM.esp" should be used if you only have Bloodmoon.
+ If you have both expansion, just pick one of the two.
+ (Ref: "X-jiit Readme.txt")
+X-jiitCompanionsTB.esp
+X-jiitCompanionsBM.esp
+
+[Requires]
+ (Ref: "X-jiit Readme.txt")
+[ANY X-jiitCompanionsTB.esp
+     X-jiitCompanionsBM.esp]
+X-jiit.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
