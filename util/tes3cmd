@@ -24,18 +24,19 @@ OPTIONS
  -D   turn on debug output
  -1   only test to see if dialog in the first plugin is overlapped. (by default
       all plugins are checked against all other plugins, which is an n-squared
-      operation).
+      operation, meaning "possibly very slow").
 
 Prints the IDs of dialog records that overlap from the set of given plugins.
-An overlap is defined as a dialog (DIAL) Topic from one plugin that entirely
-contains a dialog Topic from another plugin. For example, White Wolf of Lokken
-has a dialog topic "to rescue me" which overlaps with the dialog topic "rescue
-me" from Suran Underworld, which causes the "Special Guest" quest to get stuck
-because Ylarra won't offer the topic "rescue me" when you find her in her
-cell.
 
-Overlap would only be a problem if the plugins are loaded in the order they
-are listed in the output.
+An overlap is defined as a dialog (DIAL) Topic from one plugin that entirely
+contains a dialog Topic from another plugin as a substring. For example, the
+mod "White Wolf of Lokken" has a dialog topic "to rescue me" which overlaps
+with the dialog topic "rescue me" from "Suran Underworld", which causes the
+"Special Guest" quest from SU to get stuck because Ylarra won't offer the
+topic "rescue me" when you find her in her cell.
+
+Note that overlap is only a potential problem if the plugins are loaded in the
+order they are listed in the output.
 
 Example:
 
@@ -58,7 +59,7 @@ Prints the IDs of records that the 2 given plugins have in common.
 
 Example:
 
-# Show what is common between my plugin and Morrowind.esm:
+# Show the records in common between my plugin and Morrowind.esm:
 tes3cmd common myplugin.esp Morrowind.esm
 };
 
@@ -72,21 +73,27 @@ my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 
 OPTIONS
  -D        turn on debug output
- -i ids    only print out the ids matching the given comma-delimited list
-           of regular expression patterns.
+ -i ids    only print out the records with ids matching the given comma-delimited
+           list of regular expression patterns.
  -m regex  only print records that match given regular expression.
- -t types  only print out the records matching the given comma-delimted
+ -t types  only print out the records matching the given comma-delimited
            list of record types.
 
 Dumps the plugin to stdout in text form for easy perusal. For large plugins,
 the output can be voluminous.
 
+Note: tes3cmd uses Perl regular expressions for matching, the full documentation
+can be found here:   http://www.perl.com/doc/manual/html/pod/perlre.html
+You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
+meaning in a regular expression and that they are unlike characters used for
+matching on a Windows command line.
+
 Examples:
 
-# Dump all records from a plugin:
+# Dump all records from a plugin (this could generate a lot of output):
 tes3cmd dump plugin.esp
 
-# Dump all records whos IDs match "foo":
+# Dump all records with IDs matching "foo":
 tes3cmd dump -i foo plugin.esp
 
 # Dump all the CELL records from a plugin:
@@ -492,12 +499,18 @@ my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin..
 This first form of the command renames all records of type RECTYPE, replacing
 the Perl regular expression FROM with the value of TO (which may contain
 backreferences). The rename only happens if the CELL.NAME subrecord matches
-the given FROM regular expression. For more on regular expressions, see:
-http://www.perl.com/doc/manual/html/pod/perlre.html
+the given FROM regular expression.
+
+Note: tes3cmd uses Perl regular expressions for matching, the full documentation
+can be found here:   http://www.perl.com/doc/manual/html/pod/perlre.html
+You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
+meaning in a regular expression and that they are unlike characters used for
+matching on a Windows command line.
 
 tes3cmd rename -l RECTYPE.SUBTYPE plugin...
 
-When the -l switch is given, records of the given type are only listed.
+When the -l switch is given, records of the given type are only listed. (You
+do not give a FROM or TO when using the -l option).
 
 OPTIONS
  -D   turn on debug output
@@ -507,21 +520,22 @@ OPTIONS
  -w   size of printable window for record contents printed with -l switch.
 
 The original input file is never modified, the changes are made in a new file
-"<plugin_name>_new.esp".
+"<plugin_name>_new.esp". This file is OVERWRITTEN if it exists.
 
 Examples:
 
 # rename all exterior cells to the null string:
-tes3cmd rename -e CELL.NAME '.*' '' plugin.esp
+tes3cmd rename -e CELL.NAME ".*" "" plugin.esp
 
-# do a caseless comparison:
-tes3cmd rename cell.name '(?i)pelagaid' 'Pelagiad' plugin.esp
+# do a caseless comparison with the FROM pattern:
+tes3cmd rename cell.name "(?i)pelagaid" "Pelagiad" plugin.esp
 (This would rename any name that has the string "pelagaid" in it with any form
 of capitalization, to "Pelagiad").
 
-# substitute backreferences:
-tes3cmd rename npc_.fnam '^(\S+)\s(\S+)$' '$2 $1' plugin.esp
-(This would swap the first and last name of all NPCs).
+# The following command will swap the first and last name of all NPCs using
+# substitution backreferences (a very powerful feature of regular expressions):
+tes3cmd rename npc_.fnam "^(\S+)\s(\S+)$" "$2 $1" plugin.esp
+(Note that on Linux you may need to use single-quotes instead of double-quotes).
 };
 
 my($REN_FROM, $REN_TO, $REN_TYPE, $REN_SUBTYPE);
@@ -532,7 +546,7 @@ my @ren_valid_types = qw(GMST.NAME CLAS.NAME CLAS.FNAM FACT.NAME FACT.FNAM RACE.
 		     ENCH.NAME NPC_.NAME NPC_.FNAM ARMO.NAME ARMO.FNAM CLOT.NAME CLOT.FNAM
 		     REPA.NAME REPA.FNAM ACTI.NAME ACTI.FNAM APPA.NAME APPA.FNAM LOCK.NAME
 		     LOCK.FNAM PROB.NAME PROB.FNAM INGR.NAME INGR.FNAM BOOK.NAME BOOK.FNAM
-		     ALCH.NAME ALCH.FNAM LEVI.NAME CELL.NAME DIAL.NAME);
+		     ALCH.NAME ALCH.FNAM LEVI.NAME CELL.NAME DIAL.NAME SCPT.SCHD SCPT.SCTX);
 my %VALID_TYPES;
 $VALID_TYPES{$_}++ foreach (@ren_valid_types);
 
@@ -550,8 +564,8 @@ sub opts_rename {
     ($REN_TYPE, $REN_SUBTYPE) = split(/\./, $type);
 
     unless ($::opt_l) {
-	$REN_FROM = shift(@ARGV) or die "Missing required FROM\n$REN_USAGE";
-	$REN_TO = shift(@ARGV) or die "Missing required TO\n$REN_USAGE";
+	defined($REN_FROM = shift(@ARGV)) or die "Missing required FROM\n$REN_USAGE";
+	defined($REN_TO = shift(@ARGV)) or die "Missing required TO\n$REN_USAGE";
     }
 }
 
@@ -559,17 +573,21 @@ my $HDR_USAGE = q{Usage: tes3cmd header OPTIONS plugin...
 
 OPTIONS
  -D      turn on debug output
- -a XXX  set the Author field to XXX
- -d YYY  set the Desciption field to YYY
+ -a XXX  set the Author field to the value XXX
+ -d YYY  set the Desciption field to value YYY
  -m      multiline output for listing field contents.
 
 When -a and -d are not given, the current Author/Description field contents
 are printed.
 
 Field values are normally replaced by the given string. But if the string
-begins with a "+", the field is appended with the new value.
+begins with a "+", the existing value is appended with the new given value.
 
-If a field value contains the string \\n, it will be replaced by a CRLF.
+If a given value contains the string "\\n", it will be replaced by a CRLF.
+
+Note:
+ - the Author value should fit in 31 bytes.
+ - the Description value should fit in 255 bytes.
 
 If the value supplied won't fit into the plugin header field, you will be
 warned.
@@ -1016,7 +1034,7 @@ sub cmd_rename {
 	warn "Error, $plugin name does not end in .esm or .esp?\n";
 	return;
     }
-    print "\n$plugin: RENAMING CELLS:\n" unless ($::opt_l);
+    print "\n$plugin: RENAMING Records:\n" unless ($::opt_l);
     open_input_plugin($plugin);
     unless($::opt_l) {
 	unless(open(OUT, ">$newplugin")) {
@@ -1034,7 +1052,57 @@ sub cmd_rename {
 	$expected = undef;
 	last if not defined $rec_type;
 	print "REC=$rec_type flags=$flags\n" if (DBG);
-	if ($rec_type eq $REN_TYPE) {
+	if ($rec_type eq 'SCPT') {
+	    my $renamed_schd = 0;
+	    my $renamed_sctx = 0;
+	    my($subrecs) = parse_subrec_list($rec);
+	    foreach my $subrec (@{$subrecs}) {
+		my $subtype = $subrec->[0];
+		if ($subtype eq "SCHD") {
+		    my($name, @schd_longs) = unpack("Z32L5", $subrec->[1]);
+		    if ($::opt_l) {	# only list records
+			printf qq{  $rec_type.$subtype  %-30s\n}, $name;
+		    } else {
+			my $newname;
+			eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
+			if (length($newname) < 32) {
+			    if ($name ne $newname) {
+				$subrec->[1] = pack("Z32L5", $newname, @schd_longs);
+				$renamed_schd = 1;
+				printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
+			    }
+			} else {
+			    warn qq{New name for script: "$newname" is too long, must be less than 32 bytes\n};
+			}
+		    }
+		} elsif ($subtype eq "SCTX") {
+		    my $script = $subrec->[1];
+		    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+		    if ($::opt_l) {	# only list records
+			printf qq{  $rec_type.$subtype  %-30s\n}, $name;
+		    } else {
+			my $newname;
+			eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
+			if ($name ne $newname) {
+			    $script =~ s/^[^;]*?\bbegin\s+(\S+)/Begin $newname/im;
+			    $subrec->[1] = $script;
+			    $renamed_sctx = 1;
+			    printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
+			}
+		    }
+		}
+	    }
+	    if (not $::opt_l) {
+		if ($renamed_schd and $renamed_sctx) {
+		    $rec = new_rec($subrecs);
+		} else {
+		    my $what = "";
+		    $what .= " SCHD" unless $renamed_schd;
+		    $what .= " SCTX" unless $renamed_sctx;
+		    warn "Error renaming$what, record NOT updated.\n";
+		}
+	    }
+	} elsif ($rec_type eq $REN_TYPE) {
 	    my $renamed = 0;
 	    my($subrecs, $name_idx) = parse_subrec_list($rec);
 	    if (defined($name_idx) and
@@ -1090,7 +1158,7 @@ sub cmd_header {
     }
     my $magic = substr($block, 0, 4);
     if ($magic eq "TES3") {
-	if ($nread >= 362) { 	# minimum TES3 plugin size
+	if ($nread >= 324) { 	# minimum TES3 plugin size
 	    my $auth = chop_nulls(substr($block, $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH));
 	    my $desc = chop_nulls(substr($block, $HDR_DESC_OFFSET, $HDR_DESC_LENGTH));
 	    if ($::opt_a or $::opt_d) {
