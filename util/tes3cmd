@@ -1,11 +1,13 @@
 #!/usr/bin/perl
-#Version: 0.2
+#Version: 0.31
 # tes3cmd: command line tool to do various hackage on a TES3 plugin
 # Copyright 2009 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
+# Documentation:
+#   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 use Getopt::Std;
 use Data::Dumper;
@@ -521,6 +523,10 @@ OPTIONS
 
 The original input file is never modified, the changes are made in a new file
 "<plugin_name>_new.esp". This file is OVERWRITTEN if it exists.
+
+Note that when renaming scripts, you can use either SCPT.SCTX or SCPT.SCHD as
+the RECTYPE.SUBTYPE parameter, and the script name is changed in both
+subrecords.
 
 Examples:
 
