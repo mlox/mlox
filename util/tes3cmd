@@ -20,6 +20,42 @@ BEGIN {
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
 
+my $DELETE_USAGE = q{Usage: tes3cmd delete OPTIONS plugin...
+
+OPTIONS
+ -D        turn on debug output
+ -i ids    only delete the records with ids matching the given comma-delimited
+           list of regular expression patterns.
+ -m regex  only delete records that match given regular expression.
+ -s        only delete the subrecords that matched.
+ -t types  only delete the records matching the given comma-delimited
+           list of record types.
+
+Deletes records/subrecords from the plugin. You can really damage things with
+this command, so be careful!
+
+Note: tes3cmd uses Perl regular expressions for matching, the full documentation
+can be found here:   http://www.perl.com/doc/manual/html/pod/perlre.html
+You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
+meaning in a regular expression and that they are unlike characters used for
+matching on a Windows command line.
+
+Examples:
+
+# Delete all records with IDs matching "foo":
+tes3cmd delete -i foo plugin.esp
+
+# Delete all subrecords of type npc_.npc0 that match "Ring des Skeletts" from
+# savegame: quicksave.ess
+tes3cmd delete -s npc_.npc0 -m "Ring des Skeletts" quicksave.ess
+};
+
+sub opts_delete {
+    $_[0] && do { warn $DELETE_USAGE; exit(0); };
+    getopts('Di:m:st:') or die $DELETE_USAGE;
+}
+
+
 my $OVERDIAL_USAGE = q{Usage: tes3cmd overdial OPTIONS plugin...
 
 OPTIONS
@@ -50,7 +86,6 @@ sub opts_overdial {
     $_[0] && do { warn $OVERDIAL_USAGE; exit(0); };
     getopts('1D') or die $OVERDIAL_USAGE;
 }
-
 
 my $COM_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
 
@@ -319,6 +354,25 @@ my @NPC_FLAGS = ([0x0001, "Female"],
 my %LEVI_DATA = (1 => "Calc from all levels <= PC level",
 		 2 => "Calc for each item");
 
+my @AIDT_FLAGS = ([0x00001, "Weapon"],
+		  [0x00002, "Armor"],
+		  [0x00004, "Clothing"],
+		  [0x00008, "Books"],
+		  [0x00010, "Ingredient"],
+		  [0x00020, "Picks"],
+		  [0x00040, "Probes"],
+		  [0x00080, "Lights"],
+		  [0x00100, "Apparatus"],
+		  [0x00200, "Repair"],
+		  [0x00400, "Misc"],
+		  [0x00800, "Spells"],
+		  [0x01000, "Magic Items"],
+		  [0x02000, "Potions"],
+		  [0x04000, "Training"],
+		  [0x08000, "Spellmaking"],
+		  [0x10000, "Enchanting"],
+		  [0x20000, "Repair Item"]);
+
 sub decode_flags {
     my($flags, $flagdefs) = @_;
     my @list = ();
@@ -425,6 +479,9 @@ my %UNPACK =
 			      $MAGIC_SCHOOL{$school}, $base, decode_flags($flags, \@MGEF_FLAGS), $red, $blue, $green, $size, $sizecap },
      "MISC.MCDT" => sub { sprintf "Weight: %0.2f  Value: %d", unpack("fL", $_[0]) },
      "NPC_.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@NPC_FLAGS) },
+     "NPC_.AIDT" => sub { my($hello, $unk1, $fight, $flee, $alarm, $unk2, $unk3, $unk4, $flags) = unpack("C8L", $_[0]);
+			  sprintf "Hello: %d  Fight: %d  Flee: %d  Alarm: %d  Flags: %s",
+			      $hello, $fight, $flee, $alarm, decode_flags($flags, \@AIDT_FLAGS); },
      "NPC_.NPDT" => sub { my $len = length($_[0]);
 			  if ($len == 12) {
 			      my($lev, $disp, $fact, $rank, $gold) = unpack("SC3x[C3]L", $_[0]);
@@ -580,8 +637,8 @@ my $HDR_USAGE = q{Usage: tes3cmd header OPTIONS plugin...
 OPTIONS
  -D      turn on debug output
  -a XXX  set the Author field to the value XXX
- -d YYY  set the Desciption field to value YYY
- -m      multiline output for listing field contents.
+ -d YYY  set the Description field to value YYY
+ -m      multi-line output for listing field contents.
 
 When -a and -d are not given, the current Author/Description field contents
 are printed.
@@ -631,6 +688,7 @@ sub opts_header {
 my %CMDS = (
 	    "common"   => [ \&opts_com,      \&cmd_com ],
 	    "overdial" => [ \&opts_overdial, \&cmd_overdial ],
+	    "delete"   => [ \&opts_delete,   \&cmd_delete ],
 	    "dump"     => [ \&opts_dump,     \&cmd_dump ],
 	    "header"   => [ \&opts_header,   \&cmd_header ],
 	    "help"     => [ \&opts_help,     undef ],
@@ -655,6 +713,7 @@ add_alias("header", "hdr");
 add_alias("rename", "ren");
 add_alias("common", "com");
 add_alias("overdial", "od");
+add_alias("delete", "del");
 
 sub opts_help {
     if (my $cmd_name = shift(@ARGV)) {
@@ -873,7 +932,7 @@ sub read_object_ids {
     my($plugin, $fun) = @_;
     open_input_plugin($plugin);
     my %plugin_id = ();
-    while(my($rec_type, $rec, $flags) = read_rec(undef)) {
+    while(my($rec_type, $rec, $unk, $flags) = read_rec(undef)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
 	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
@@ -893,7 +952,7 @@ sub read_object_ids {
 sub read_dialogs {
     my($plugin, $dialref) = @_;
     open_input_plugin($plugin);
-    while(my($rec_type, $rec, $flags) = read_rec(undef)) {
+    while(my($rec_type, $rec, $unk, $flags) = read_rec(undef)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
 	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
@@ -948,6 +1007,111 @@ sub cmd_com {
     read_object_ids($plugin2, $compare_fun);
 }
 
+sub cmd_delete {
+    my($plugin) = @_;
+    open_input_plugin($plugin);
+    my $newplugin = $plugin;
+    $newplugin =~ s/(\.es[smp])$/_new$1/i;
+    if ($newplugin eq $plugin) {
+	warn "Error, $plugin name does not end in .esm/.esp/.ess?\n";
+	return;
+    }
+    unless(open(OUT, ">$newplugin")) {
+	warn qq{Error opening "$newplugin" for output ($!)\n};
+	return;
+    }
+    unless(binmode(OUT, ':raw')) {
+	warn qq{Error setting binmode on "$newplugin" ($!)\n};
+	close(OUT);
+	return;
+    }
+    my $expected = "TES3";
+    my $delete_ids;
+    if ($::opt_i) {
+	$delete_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
+    }
+    my %delete_types;
+    my %delete_subtypes;
+    if ($::opt_t) {
+	foreach (split(/,/, $::opt_t)) {
+	    # TBD - validate types?
+	    my($type, $subtype) = split(/\./, $_);
+	    if (length($type) != 4) {
+		warn qq{Invalid record type: "$_" (must be 4 characters long)\n};
+		next;
+	    }
+	    $delete_types{lc($type)}++;
+	    if ($subtype) {
+		if (length($subtype) == 4) {
+		    $delete_subtypes{lc("$type.$subtype")}++ if ($subtype);
+		} else {
+		    warn qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
+		    next;
+		}
+	    }
+	}
+    }
+    while (my($rec_type, $rec, $unk, $flags) = read_rec($expected)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	print "REC=$rec_type flags=$flags\n" if (DBG);
+	my $nodelete = 0;
+	if ($flags & 0x1000) {
+	    print "REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    $nodelete = 1;
+	}
+	if ($delete_ids) {
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    $nodelete = 1 if ($id !~ /$delete_ids/i);
+	}
+	$nodelete = 1 if (%delete_types and not $delete_types{lc($rec_type)});
+	if ($nodelete) {
+	    write_rec($rec_type, $rec, $unk, $flags);
+	    next;
+	}
+	my $p = 0;
+	my $rec_len = length($rec);
+	my $name_idx;
+	my $first = 1;
+	my $print_rec = "";
+	my $newrec = "";
+	while ($p < $rec_len) {
+	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	    $p += 8;
+	    my $subrec = substr($rec, $p, $subrec_len);
+	    $p += $subrec_len;
+	    if (defined $subrec) {
+		my $full_type = "${rec_type}.${subrec_type}";
+		my $match = 0;
+		if (not (%delete_subtypes and not $delete_subtypes{lc($full_type)})) {
+		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
+		    my $subrec_str = $unpack->($subrec);
+		    if ($::opt_s and $::opt_m and $subrec_str =~ /$::opt_m/) {
+			$match = 1;
+			print "DELETED SUBRECORD: $subrec_str\n";
+		    }
+		    $print_rec .= "   $full_type: $subrec_str\n";
+		}
+		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec) unless ($match);
+	    } else {
+		warn "$plugin: Error: malformed subrec $subrec_type\n";
+	    }
+	}
+	if ($::opt_s) {
+	    write_rec($rec_type, $newrec, $unk, $flags);
+	} else {
+	    if ($print_rec =~ /$::opt_m/) {
+		print "DELETED RECORD:\n$print_rec\n";
+	    } else {
+		write_rec($rec_type, $rec, $unk, $flags);
+	    }
+	}
+    }
+    close(INP);
+    close(OUT);
+    print "Output saved in: $newplugin\n";
+}
+
 sub cmd_dump {
     my($plugin) = @_;
     #my $plugin = (split(m![\\/]!, $plugin))[-1];
@@ -955,7 +1119,6 @@ sub cmd_dump {
     open_input_plugin($plugin);
     my $expected = "TES3";
     my $wanted_ids;
-    my $match;
     if ($::opt_i) {
 	$wanted_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
     }
@@ -982,7 +1145,7 @@ sub cmd_dump {
     }
     my $plugin_banner = "\n$plugin:\n";
     my $n = 1;
-    while (my($rec_type, $rec, $flags) = read_rec($expected)) {
+    while (my($rec_type, $rec, $unk, $flags) = read_rec($expected)) {
 	$expected = undef;
 	last if not defined $rec_type;
 	print "REC=$rec_type flags=$flags\n" if (DBG);
