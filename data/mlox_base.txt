@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-01-12 18:05:02 (UTC)]
+[Version 2009-01-12 19:09:23 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -553,6 +553,18 @@ Ald-Vendras_V3.esp
 Ald-Vendras_V3-LoKKen.esp
 Ald-Vendras_V3-LoKKen-SC.esp
 Castle_Dragonfall.esp
+
+[NOTE]
+ !! Ald-Vendras V31 erroneously includes three scripts which handle the end of Morrowind's
+ !! main quest: DagothUrCreature1, EndGame, and LorkhanHeart. These scripts are
+ !! taken from a French version of Morrowind, which means that Dagoth Ur will speak
+ !! French, and that he will not be teleported to the endgame location (because the
+ !! script tries to teleport him to the *French* version of that cell, which has a different
+ !! name than the English version). This will also break mods that modify these scripts
+ !! intentionally. Solution: Remove the three scripts from the esp.
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5223,6 +5235,25 @@ MCA - Vampire Realism Patch.esp
 [ALL MCA.esm
      Vampire Realism II.esp]
 
+[Note]
+ Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace".
+ See: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5983
+[ALL [NOT Vampire Embrace MCA Patch.esp]
+     [SIZE !2519851 MCA.esm] ;this is NOT the MCA/Undead 3.0 compatible version
+     Vampire_Embrace.esp]
+
+[Note]
+ Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace". However, "Vampire Embrace MCA Patch" is NOT compatible with the version of MCA 5.2 that is compatible with "The Undead 3.0", unless it is edited to remove some scripts.
+ See: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5983
+[ALL [NOT Vampire Embrace MCA Patch.esp]
+     [SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
+     Vampire_Embrace.esp]
+
+[Conflict]
+ This version of MCA 5.2, which has been made compatible with The Undead 3.0, is incompatible with "Vampire Embrace MCA Patch" which reintroduces scripts that were removed from MCA.esm. You can either deactivate the patch (losing its functionality), or you can remove the following scripts from "Vampire Embrace MCA Patch.esp": mca_bm_draugr, mca_bm_draugr_reavers, mca_bm_skel_reavers, mca_bm_skeletons, mca_bm_wraiths, mca_necromancers, mca_skeletons, mca_undead, mca_wraiths, mca_zombies, mca_zombies_weak.
+[SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
+Vampire Embrace MCA Patch.esp
+
 [Requires]
  (Ref: "MCA - Readme.txt")
 MCA - NOM Patch.esp
@@ -5545,6 +5576,12 @@ Nevena's Clubs & Courtiers 1.0.esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Conflict]
+ "Dogmeat's Servant Repository" (and GS_SEYDA NEEN COMPLETE, which includes it) makes a very minor change to the slave script, it adds a "companion" variable so that slaves can act as companions. "Nevena's Twin Lamps & Slave Hunters 1.5" makes many changes to the slave script and won't work if these are overwritten by Dogmeat's script. If you want to play Nevena's Twin Lamps mod, load it afterwards. (Further investigation may be needed to see what effect this will have on Dogmeat's servants.)
+Nevena's Twin Lamps & Slave Hunters 1.5.esp
+[ANY GS_SEYDA NEEN COMPLETE.esp
+     Dogmeat's Servant Repository.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
