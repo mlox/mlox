@@ -14,8 +14,11 @@ UPLOAD    := googlecode_upload.py -u john.moonsugar -p mlox
 TES3LINTFILES  := $(wildcard util/tes3lint util/tes3lint*.bat util/tes3lint*.txt)
 TES3LINTVER    := $(shell grep "^\#Version: " util/tes3lint | cut -f 2 -d ' ')
 TES3LINTARC    := tes3lint-$(TES3LINTVER).7z
+TES3CMDFILES  := util/tes3cmd
+TES3CMDVER    := $(shell grep "^\#Version: " util/tes3cmd | cut -f 2 -d ' ')
+TES3CMDARC    := tes3cmd-$(TES3CMDVER).7z
 
-all: mlox-dist data-dist test-dist tes3lint-dist
+all: mlox-dist data-dist test-dist tes3lint-dist tes3cmd-dist
 
 upload: upload-mlox upload-exe upload-data
 
@@ -35,6 +38,9 @@ upload-tes3lint:
 	@echo "Uploading dist/$(TES3LINTARC)"
 	$(UPLOAD) -s "[tes3lint $(TES3LINTVER)]" dist/$(TES3LINTARC)
 
+upload-tes3cmd:
+	@echo "Uploading dist/$(TES3CMDARC)"
+	$(UPLOAD) -s "[tes3cmd $(TES3CMDVER)]" dist/$(TES3CMDARC)
 
 # update the version strings in mlox_readme.txt, mlox.py
 version: $(README) $(PROGRAM)
@@ -83,6 +89,21 @@ dist/$(TES3LINTARC): dist/tes3lint $(TES3LINTFILES)
 	@echo "CREATED distibution archive for tes3lint: $@"
 
 dist/tes3lint:
+	@echo "Creating $@"
+	@mkdir -p $@
+
+tes3cmd-dist: dist/$(TES3CMDARC)
+
+dist/$(TES3CMDARC): dist/tes3cmd $(TES3CMDFILES)
+	@rsync -uvaC $(TES3CMDFILES) dist/tes3cmd/ > /dev/null 2>&1
+	@cp License.txt dist/tes3cmd
+	@echo "Adding DOS line endings .txt files in staging directory"
+	@for i in dist/tes3cmd/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
+	@(cd dist && 7z a $(TES3CMDARC) tes3cmd) > /dev/null 2>&1
+	@rm -rf dist/tes3cmd/
+	@echo "CREATED distibution archive for tes3cmd: $@"
+
+dist/tes3cmd:
 	@echo "Creating $@"
 	@mkdir -p $@
 
