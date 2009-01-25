@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.50
+Version: 0.53
 Copyright 2009 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -219,7 +219,7 @@ plugin filename.
 So, if the filename stays the same from version to version, then if the
 description field of the plugin contains a version string:
 
-Version: 0.50
+Version: 0.53
 
 (on a line by itself) mlox will be able to use it. (Wrye Mash can report that
 version too, so it's just a generally useful thing to have in the description).

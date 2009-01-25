@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.52"
+Version = "0.53"
 
 import locale
 import os
@@ -130,6 +130,9 @@ class logger:
     def get(self):
         return("\n".join(map(unify, self.log)) + "\n")
 
+    def get_u(self):
+        return("\n".join(self.log) + "\n")
+
     def flush(self):
         self.log = []
 
@@ -231,6 +234,7 @@ class caseless_dirlist:
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
 Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
+Encoding = locale.getpreferredencoding()
 
 class dyndict(dict):
     """if item is in dict, return value, otherwise return item. for soft failure when looking up translations."""
@@ -249,12 +253,6 @@ _ = load_translations(Lang)
 
 def unify(s):
     """For GUI text areas that may contain filenames, we guess at the encoding."""
-    for encoding in ("utf-8", "latin-1"):
-        try:
-            return(unicode(s, encoding))
-        except:
-            pass
-    # punt!
     return(s.decode("ascii", "replace").encode("ascii", "replace"))
 
 def format_version(ver):
@@ -1424,7 +1422,7 @@ class mlox_gui():
     def highlight_hello(self, txt):
         happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
         highlighters = { re.compile(r'Version[^\]]+\]\t+(.+)', re.IGNORECASE): happy }
-        text = Stats.get()
+        text = Stats.get_u()
         for (re_pat, style) in highlighters.items():
             for match in re.finditer(re_pat, text):
                 (start, end) = match.span(1)
@@ -1492,7 +1490,7 @@ class mlox_gui():
             self.can_update = False
         if not self.can_update:
             self.btn_update.Disable()
-        self.txt_stats.SetValue(Stats.get())
+        self.txt_stats.SetValue(Stats.get_u())
         self.highlight_hello(self.txt_stats)
         self.txt_msg.SetValue(Msg.get())
         self.highlight_warnings(self.txt_msg)
@@ -1605,7 +1603,7 @@ def get_mlox_base_version():
 
 
 def print_version():
-    print "%s (%s)" % (full_version, Lang)
+    print "%s (%s/%s)" % (full_version, Lang, Encoding)
     print "Python Version: %s" % pyversion
     import wx.__version__
     print "wxPython Version: %s" % wx.__version__
