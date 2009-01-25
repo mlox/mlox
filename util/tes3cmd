@@ -373,6 +373,8 @@ my @AIDT_FLAGS = ([0x00001, "Weapon"],
 		  [0x10000, "Enchanting"],
 		  [0x20000, "Repair Item"]);
 
+my @CREA_TYPE = qw(Creature Daedra Undead Humanoid);
+
 sub decode_flags {
     my($flags, $flagdefs) = @_;
     my @list = ();
@@ -447,13 +449,21 @@ my %UNPACK =
 		      },
      "CONT.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CONTAINER_FLAGS) },
      "CREA.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CREATURE_FLAGS) },
+     "CREA.NPDT" => sub { my($typ_i, $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
+			     $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
+			     $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold) = unpack("L24", $_[0]);
+			  sprintf "Type: %s  Lev: %d  Str: %d  Int: %d  Wil: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tHealth: %d  SpellPts: %d  Fatigue: %d  Soul: %d  Combat: %d  Magic: %d  Stealth: %d\n\t\tAttackMin1: %d AttackMax1: %d  AttackMin2: %d AttackMax2: %d  AttackMin3: %d AttackMax3: %d  Gold: %d",
+			      $CREA_TYPE[$typ_i], $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
+				  $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
+				      $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold;
+		      },
      "DIAL.DATA" => sub { $DIAL_TYPE{unpack("C", $_[0])} },
      "ENCH.ENDT" => sub { my($type, $cost, $chrg, $auto) = unpack("LLLL", $_[0]);
 		      sprintf "Type: %s  Cost: %d  Charge: %d  Autocalc: %d", $ENCHANT_TYPE{$type}, $cost, $chrg, $auto },
      "ENCH.ENAM" => sub { my($effect, $skill, $attr, $range, $area, $dur, $mmin, $mmax) = unpack("SccLLLLL", $_[0]);
 		      sprintf "EffectID: %d  Skill: %s  Attribute: %s  RangeType: %s  Area: %d  Duration: %d  Magnitude Min: %d  Max: %d",
 			  $effect, $SKILL{$skill}, $ATTRIBUTE{$attr}, $RANGE_TYPE{$range}, $area, $dur, $mmin, $mmax },
-     "INFO.INAM" => sub { sprintf qq{"%s"}, unpack("Z*", $_[0]) },
+     "INFO.INAM" => sub { unpack("Z*", $_[0]) },
      "INFO.DATA" => sub { my($disp, $rank, $sex, $pcrank) = unpack("x[L]LCCC", $_[0]);
 			  "Disp:$disp  Rank:$rank  Sex:$SEX{$sex}  PCRank:$pcrank"; },
      "INFO.ANAM" => sub { sprintf qq{Cell:       "%s"}, unpack("Z*", $_[0]) },
@@ -472,6 +482,7 @@ my %UNPACK =
      "LEVC.DATA" => sub { "List Data: %d (1 = Calc from all levels <= PC level)", unpack("L", $_[0]) },
      "LEVC.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
      "LEVI.DATA" => sub { "List Data: %s ", $LEVI_DATA{unpack("L", $_[0])} },
+     "LEVI.INAM" => sub { unpack("Z*", $_[0]) },
      "LEVI.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
      "LTEX.DATA" => sub { unpack("Z*", $_[0]) },
      "MGEF.MEDT" => sub { my($school, $base, $flags, $red, $blue, $green, $speed, $size, $sizecap) = unpack("LfLLLLfff", $_[0]);
