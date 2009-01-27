@@ -1095,7 +1095,7 @@ sub cmd_fogpatch {
 			if ($fog_den_data == 0.0 and not $cell{$name}) {
 			    warn "    FOGPATCH: $plugin\t\tCELL: $name\n";
 			    # write NAME, DATA, AMBI
-			    my $newrec = subrec("NAME", $name);
+			    my $newrec = subrec("NAME", "$name\000");
 			    substr($data, 8, 4) = pack("f", 0.01);
 			    $newrec .= subrec("DATA", $data);
 			    $newrec .= subrec("WHGT", $r->{WHGT}[0]);
