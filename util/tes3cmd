@@ -1098,6 +1098,7 @@ sub cmd_fogpatch {
 			    my $newrec = subrec("NAME", $name);
 			    substr($data, 8, 4) = pack("f", 0.01);
 			    $newrec .= subrec("DATA", $data);
+			    $newrec .= subrec("WHGT", $r->{WHGT}[0]);
 			    substr($ambi, 12, 4) = pack("f", 0.01);
 			    $newrec .= subrec("AMBI", $ambi);
 			    write_rec($rec_type, $newrec, $unk, $flags);
