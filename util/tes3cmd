@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#Version: 0.31
+#Version: 0.32
 # tes3cmd: command line tool to do various hackage on a TES3 plugin
 # Copyright 2009 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -9,6 +9,7 @@
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
+use Cwd;
 use Getopt::Std;
 use Data::Dumper;
 use strict;
@@ -19,6 +20,26 @@ BEGIN {
     # debug/help code into the program when it it actually needed.
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
+
+my $FOGPATCH_USAGE = q{Usage: tes3cmd fogpatch
+
+OPTIONS
+ -D        turn on debug output
+
+Creates a patch plugin to fix all cells in your plugins that would trigger the fogbug.
+
+Examples:
+
+# Create the patch plugin fogpatch.esp
+tes3cmd fogpatch
+
+};
+
+sub opts_fogpatch {
+    $_[0] && do { warn $FOGPATCH_USAGE; exit(0); };
+    getopts('D') or die $FOGPATCH_USAGE;
+}
+
 
 my $DELETE_USAGE = q{Usage: tes3cmd delete OPTIONS plugin...
 
@@ -139,6 +160,48 @@ tes3cmd dump -t cell plugin.esp
 # Dump all cells from bradhia_v1_4.esp containing NPC named: "Maeve Jaste"
 tes3cmd dump -t cell -m "NAME:.*maeve.jaste" bradhia_v1_4.esp
 };
+
+# return a dictionary of all the files found in the given directory.
+# keys are lowercased for caseless file finding.
+sub list_files {
+    my($dir) = @_;
+    my %files = ();
+    if (opendir(DH, $dir)) {
+	while (my $file = readdir(DH)) {
+	    next if (($file eq '.') or ($file eq '..'));
+	    $files{lc $file} = $file;
+	}
+	closedir(DH);
+    } else {
+	warn qq{ERROR opening "$dir" ($!)\n};
+    }
+    return(\%files);
+}
+
+# assuming the program is run somewhere under the Morrowind game directory, find the
+# location of the "Data Files" directory by walking up the hierarchy.
+sub find_datadir {
+    my $dirlist = list_files(".");
+    if ($dirlist->{"morrowind.esm"}) {
+	return(".");
+    }
+    my $dir = Cwd::getcwd();
+    print "DBG: checking for data dir in: $dir\n" if (DBG);
+    while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
+	my $datadir = list_files($dir)->{"data files"};
+	if ($datadir) {
+	    print "DBG: found datadir: $dir/$datadir\n" if (DBG);
+	    return("$dir/$datadir");
+	}
+	my @parts = split(m![\\/]!, $dir);
+	pop(@parts);
+	$dir = join("/", @parts);
+	print "DBG: checking for data dir in: $dir\n" if (DBG);
+    }
+    warn qq{Can't find "Data Files" directory. Won't be able to find masters\n};
+    return(undef);		# not running under morrowind directory
+}
+
 
 my @CELL_FLAGS = ([0x02, "Has Water"],
 		  [0x041, "Illegal to Sleep Here"],
@@ -701,6 +764,7 @@ my %CMDS = (
 	    "overdial" => [ \&opts_overdial, \&cmd_overdial ],
 	    "delete"   => [ \&opts_delete,   \&cmd_delete ],
 	    "dump"     => [ \&opts_dump,     \&cmd_dump ],
+	    "fogpatch" => [ \&opts_fogpatch, \&cmd_fogpatch ],
 	    "header"   => [ \&opts_header,   \&cmd_header ],
 	    "help"     => [ \&opts_help,     undef ],
 	    "rename"   => [ \&opts_rename,   \&cmd_rename ],
@@ -725,6 +789,7 @@ add_alias("rename", "ren");
 add_alias("common", "com");
 add_alias("overdial", "od");
 add_alias("delete", "del");
+add_alias("fogpatch", "fog");
 
 sub opts_help {
     if (my $cmd_name = shift(@ARGV)) {
@@ -801,6 +866,11 @@ sub read_rec {
 sub write_rec {
     my($rec_type, $rec, $unk, $flags) = @_;
     print OUT pack("a4LLLa*", $rec_type, length($rec), $unk, $flags, $rec);
+}
+
+sub subrec {
+    my($type, $val) = @_;
+    return(pack("a4La*", $type, length($val), $val));
 }
 
 sub parse_subrec_list {
@@ -976,6 +1046,73 @@ sub read_dialogs {
 	$dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
     }
     close(INP);
+}
+
+my $fogpatch_header = 'TES34          HEDR,    €?    tes3cmd                         Fogbug Patch                                                                                                                                                                                                                                                       ';
+
+sub cmd_fogpatch {
+    my $datadir = find_datadir();
+    warn "Data Files = $datadir\n";
+    my $datafiles = list_files($datadir);
+    my $fogpatch = "$datadir/fogpatch.esp";
+    unless(open(OUT, ">$fogpatch")) {
+	warn qq{Error opening "$fogpatch" for output ($!)\n};
+	return;
+    }
+    unless(binmode(OUT, ':raw')) {
+	warn qq{Error setting binmode on "$fogpatch" ($!)\n};
+	close(OUT);
+	return;
+    }
+    my $n = 0;
+    print OUT $fogpatch_header;
+    my %cell;
+    foreach my $plugin (keys %{$datafiles}) {
+	next unless ($plugin =~ /\.es[mp]$/i);
+	$plugin = $datafiles->{$plugin};
+	warn "Scanning plugin: $plugin\n" if (DBG);
+	open_input_plugin($plugin);
+	my $expected = "TES3";
+	while (my($rec_type, $rec, $unk, $flags) = read_rec($expected)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    next unless ($rec_type eq 'CELL');
+	    my $r = parse_subrec_hash($rec);
+	    my $data = $r->{DATA}[0];
+	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
+	    if ($flags & 1) {	# interior cells
+		if (not $flags & 128) { # behave like exterior
+		    my $name = chop_nulls($r->{NAME}[0]);
+		    my $ambi = $r->{AMBI}[0];
+		    my $fog_den_ambi;
+		    my $ambilen = length($ambi);
+		    if ($ambilen == 16) {
+			my $fog_den_ambi = unpack("x[L3]f", $ambi);
+			if ($fog_den_ambi != $fog_den_data) {
+			    $fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
+			    warn "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
+			}
+			if ($fog_den_data == 0.0 and not $cell{$name}) {
+			    warn "    FOGPATCH: $plugin\t\tCELL: $name\n";
+			    # write NAME, DATA, AMBI
+			    my $newrec = subrec("NAME", $name);
+			    substr($data, 8, 4) = pack("f", 0.01);
+			    $newrec .= subrec("DATA", $data);
+			    substr($ambi, 12, 4) = pack("f", 0.01);
+			    $newrec .= subrec("AMBI", $ambi);
+			    write_rec($rec_type, $newrec, $unk, $flags);
+			    $n++;
+			    $cell{$name} = 1;
+			}
+		    } else {
+			warn "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
+			    if ($ambilen != 0);
+		    }
+		}
+	    }
+	}
+    }
+    warn "Patched $n cells\n";
 }
 
 sub cmd_overdial {
@@ -1380,7 +1517,7 @@ sub main {
     die $USAGE_ALL unless ($cmd_ref = $CMDS{$cmd_name});
     my($cmd_getopts, $cmd) = @{$cmd_ref};
     $cmd_getopts->();
-    if ($cmd_name =~ /^(com(mon)?|overdial|od)$/i) {
+    if ($cmd_name =~ /^(com(mon)?|overdial|od|fog(patch)?)$/i) {
 	$cmd->(@ARGV);
     } else {
 	for my $plugin (@ARGV) {
