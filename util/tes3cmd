@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#Version: 0.32
+#Version: 0.33
 # tes3cmd: command line tool to do various hackage on a TES3 plugin
 # Copyright 2009 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -1071,7 +1071,7 @@ sub cmd_fogpatch {
 	next unless ($plugin =~ /\.es[mp]$/i);
 	$plugin = $datafiles->{$plugin};
 	warn "Scanning plugin: $plugin\n" if (DBG);
-	open_input_plugin($plugin);
+	open_input_plugin("$datadir/$plugin");
 	my $expected = "TES3";
 	while (my($rec_type, $rec, $unk, $flags) = read_rec($expected)) {
 	    $expected = undef;
@@ -1113,7 +1113,7 @@ sub cmd_fogpatch {
 	    }
 	}
     }
-    warn "Patched $n cells\n";
+    warn qq{Patched $n cells in "$fogpatch"\n};
 }
 
 sub cmd_overdial {
