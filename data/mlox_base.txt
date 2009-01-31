@@ -1531,6 +1531,7 @@ Blood and Gore Wilderness add-on.esp
 [Order]
 Bloodmoon.esm
 Bloodmoon Landscape Overhaul 1.0.esm
+BT_Whitewolf_2_0.esm ;(Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=947130&view=findpost&p=13694991 )
 
 [Conflict]
  No need to have both these activated as the Overhaul was built on 
@@ -3773,8 +3774,8 @@ Illuminated Windows.esp
  Illuminated Windows includes ModMan's Windowlights
  (Ref. Illuminated Windows.zip/"DrkAngel readme.doc")
 Illuminated Windows.esp
-[ANY Windowlights_Full_2.esp
-     Windowlights_Purist_2.esp]
+[ANY Modman_windowlights_Full_2.esp
+     Modman_windowlights_Purist_2.esp]
 
 ; The ASE Expansions are included in the Illuminated Windows archive, they're
 ; add-ons for Atmospheric Sound Effects
@@ -4690,11 +4691,21 @@ newarrowsLITE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Meadow Fae [Korana]
+
+; "Korana's Meadow Fae race needs to load after Vality's Ascadian Isles Mod or the the little hill
+; that the shop is placed in disappears, leaving the door and rocks hanging in mid air." - mystery05
+; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13721982
+[Order]
+Vality's Ascadian Isles Addon.esp
+The Meadow Fae.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Melee Missiles v1.2 [scruggs]
 
 [Requires]
- This plugin uses a Startup script so it requires at least one of
- the expansions.
+ This plugin uses a Startup script so it requires at least one of the expansions.
 Melee Missiles v1.2.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
@@ -4878,16 +4889,16 @@ Unarmored_Corrector_V01_TRIB.esp
 
 [Conflict]
  Choose only ONE of these plugins.
- "Windowlights_Full_2.esp" - Includes lights added to Telvanni architecture
- "Windowlights_Purist_2.esp" - Does not include Telvanni lights
-Windowlights_Full_2.esp
-Windowlights_Purist_2.esp
+ "Modman_windowlights_Full_2.esp" - Lights added to Telvanni architecture
+ "Modman_windowlights_Purist_2.esp" - Does not include Telvanni lights
+Modman_windowlights_Full_2.esp
+Modman_windowlights_Purist_2.esp
 
 [Note]
  ! Modman suggests changing your morrowind.ini so quadratic lighting is used.
  ! See "readme_modman_lights_2.txt"
-Windowlights_Full_2.esp
-Windowlights_Purist_2.esp
+Modman_windowlights_Full_2.esp
+Modman_windowlights_Purist_2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5955,6 +5966,16 @@ Bloodmoon.esm
 Ninja_Girl_JapHouse_teleport.esp
 [ALL Ninja_Girl_Companion_v1B.esp
      Japanese_House.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NPC Enhanced MWSE add-on by Charles Cooley
+
+[Note]
+ The NPC Enhanced MWSE add-on was made primarily for those who do not run both MWE and MWSE. There is only one script in the original mod that uses MWE functions, and the MWSE version is the same way. That script is the one that cycles through NPCs searching for those in combat with the player. MWE handles that function a little bit better...it's a bit faster and requires less CPU power. So if you are using MWE anyway, you do not need the MWSE version.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=816189&view=findpost&p=11869393 )
+[ALL MWE_Base.esp
+     npce_mwse_patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
