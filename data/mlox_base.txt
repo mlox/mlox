@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-02-28 23:37:43 (UTC)]
+[Version 2009-03-02 01:08:38 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -698,6 +698,36 @@ Appropriate Greetings M - T - 1.5.2.esp
  (Ref: "Read me Aradia's Needle.txt")
 Clean Aradia's Needle.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Aragon Ashlander Tent MWSE Patch [Bjam]
+
+[Requires]
+[ANY bjam_Aragon_at_MWSEpatch_v1.0.esp
+     bjam_at_MWSE_patch.esp]
+AshlanderTent.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+[ANY bjam_Aragon_at_MWSEpatch_v1.0.esp
+     bjam_at_MWSE_patch.esp]
+[ANY AshlanderTent-AldVendras.esp
+     AshlanderTent-Annastia.esp
+     AshlanderTent-BloodyOath.esp
+     AshlanderTent-BootyIsland.esp
+     AshlanderTent-Con2.esp
+     AshlanderTent-Havish.esp
+     AshlanderTent-InfernoIsland.esp
+     AshlanderTent-Korobal.esp
+     AshlanderTent-LothavorsLegacy.esp
+     AshlanderTent-SeaOfDestiny.esp
+     AshlanderTent-StanegauIsland.esp
+     AshlanderTent-SwordOfPerithia.esp
+     AshlanderTent-TheBlackMill.esp
+     AshlanderTent-Veldion.esp
+     AshlanderTent-Ysgramor.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2435,6 +2465,15 @@ FireHeaven Deora.esp
 Distant Land Fix for MGE.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dongle Ranger Tent MWSE Patch [Bjam]
+
+; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+[Requires]
+Bjam_DGL_rt_MWSEpatch_v1.0.esp
+Ranger Tent.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4694,6 +4733,13 @@ Melee Missiles v1.2.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+[Note]
+ !! This mod will cause a crash if it is active when you start a new game.
+ !! You must load it after finishing character generation.
+ !! It happens because a new NPC with the ID 'Player' is added in the mod.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+Melee Missiles v1.2.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Merkin's Multi-mod v1 [Merkin]
@@ -5003,6 +5049,30 @@ Spell Timer MWE Addon.esp
 Morrowind Decapitated.esp
 MWE_SneakEye.esp
 MWE_Base.esp
+MWE_GoldBurden.esp
+
+[Requires]
+ (Ref: "Gold Burden Readme.txt")
+MWE_GoldBurden.esp
+MWE_Base.esp
+
+; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245
+[Order]
+MWE_Base.esp
+Spell Timer.esp
+Spell Timer MWE Addon.esp
+
+[Requires]
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+Spell Timer MWE Addon.esp
+[ALL Spell Timer.esp
+     MWE_Base.esp]
+
+[Note]
+ The Spell Timer mod requires MWE, MGE and MWSE.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+Spell Timer.esp
+Spell Timer MWE Addon.esp
 
 [Requires]
  (Ref: "Morrowind Enhanced Manual.mht" and "Combat Enhanced.htm")
@@ -8083,18 +8153,6 @@ Building Up Uvirith's Grave 1.1.esp
 soundfix.esp
 [ALL Morrowind Patch v1.6.4 (WIP).esm
      AscendedSleeperSFX.esp]
-
-[Patch]
- "UUMPP LGNPC wild nix hounds fix.esp" fixes a compatibility issue between the UUMPP and LGNPC Pax Redoran.
-UUMPP LGNPC wild nix hounds fix.esp
-[ALL Morrowind Patch v1.6.4 (WIP).esm
-     LGNPC_PaxRedoran_v1_12.esp]
-
-[Patch]
- "UUMPP LGNPC Andus Tradehouse fix.esp" fixes a compatability issue between the UUMPP and LGNPC Maar Gan (it removes the lock from the Andus Tradehouse rent room door).
-UUMPP LGNPC Andus Tradehouse fix.esp
-[ALL Morrowind Patch v1.6.4 (WIP).esm
-     LGNPC_MaarGan_v1_10.esp]
 
 [Order]
 Bloodmoon.esm
