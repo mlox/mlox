@@ -542,6 +542,7 @@ my %UNPACK =
      "INFO.SCVR" => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack("aaa2aZ*", $_[0]);
 			  sprintf "Index:$idx  Type:%s  Fun:%s  Cmp:%s  Name:$nam",
 			      dump_lookup($fun, \%INFO_FUN), dump_lookup($typ, \%INFO_SCVR_type), dump_lookup($cmp, \%INFO_SCVR_cmp); },
+     "LAND.INTV" => sub { sprintf qq{Coordinates: (%d, %d)}, unpack("ll", $_[0]) },
      "LEVC.DATA" => sub { "List Data: %d (1 = Calc from all levels <= PC level)", unpack("L", $_[0]) },
      "LEVC.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
      "LEVI.DATA" => sub { "List Data: %s ", $LEVI_DATA{unpack("L", $_[0])} },
@@ -1098,7 +1099,6 @@ sub cmd_fogpatch {
 			    my $newrec = subrec("NAME", "$name\000");
 			    substr($data, 8, 4) = pack("f", 0.01);
 			    $newrec .= subrec("DATA", $data);
-			    $newrec .= subrec("WHGT", $r->{WHGT}[0]);
 			    substr($ambi, 12, 4) = pack("f", 0.01);
 			    $newrec .= subrec("AMBI", $ambi);
 			    write_rec($rec_type, $newrec, $unk, $flags);
@@ -1521,6 +1521,10 @@ sub main {
     if ($cmd_name =~ /^(com(mon)?|overdial|od|fog(patch)?)$/i) {
 	$cmd->(@ARGV);
     } else {
+	if (scalar(@ARGV) == 0) {
+	    print $USAGE_ALL;
+	    exit(0);
+	}
 	for my $plugin (@ARGV) {
 	    $cmd->($plugin);
 	}
