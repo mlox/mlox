@@ -127,6 +127,36 @@ sub opts_com {
 }
 
 
+my $DIFF_USAGE = q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
+
+OPTIONS
+ -D   turn on debug output
+
+Prints a report on the differences between the two TES3 files.
+A summary report is printed to standard output that gives an overview
+of differences, as lists of record IDs:
+ - objects in plugin1 that do not exist in plugin2
+ - objects in plugin2 that do not exist in plugin1
+ - objects in plugin1 that are equal in plugin2
+ - objects in plugin1 that are different in plugin2
+
+When objects in plugin1 are different in plugin2, each of these objects
+is printed in detail to a file "plugin1.diff" and "plugin2.diff", which
+can then be compared textually using a tool such as WinMerge or Emacs'
+ediff function.
+
+Example:
+
+# Print report on differences between 2 savegames:
+tes3cmd diff save1000.ess save2000.ess > diff.out
+};
+
+sub opts_diff {
+    $_[0] && do { warn $DIFF_USAGE; exit(0); };
+    getopts('D') or die $DIFF_USAGE;
+}
+
+
 my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 
 OPTIONS
@@ -769,6 +799,7 @@ my %CMDS = (
 	    "header"   => [ \&opts_header,   \&cmd_header ],
 	    "help"     => [ \&opts_help,     undef ],
 	    "rename"   => [ \&opts_rename,   \&cmd_rename ],
+	    "diff"     => [ \&opts_diff,     \&cmd_diff ],
 	   );
 
 my $USAGE_ALL = qq{Usage: tes3cmd COMMAND OPTIONS plugins...
@@ -1156,6 +1187,99 @@ sub cmd_com {
     read_object_ids($plugin2, $compare_fun);
 }
 
+sub read_objects {
+    my($plugin, $fun) = @_;
+    open_input_plugin($plugin);
+    my %plugin_id = ();
+    while(my($rec_type, $rec, $unk, $flags) = read_rec(undef)) {
+	last if not defined $rec_type;
+	if ($flags & 0x1000) {
+	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    next;
+	}
+	my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	if ($fun) {
+	    $fun->($rec_type, $id);
+	} else {
+	    $plugin_id{$rec_type}->{$id} = $rec if (defined $id);
+	}
+    }
+    close(INP);
+    return(\%plugin_id) unless ($fun);
+}
+
+sub cmd_diff {
+    my($plugin1, $plugin2) = @_;
+    my $obj1 = read_objects($plugin1);
+    my $obj2 = read_objects($plugin2);
+    my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
+    my @p2_not_p1;	     # objects in plugin2 that do not exist in plugin1
+    my @p1_equal_p2;	     # objects in plugin1 that are equal in plugin2
+    my @p1_diff_p2;	     # objects in plugin1 that are different in plugin2
+    my @diffs;		     # detailed diffs
+    my(@diff1, @diff2);
+    foreach my $rec_type (sort keys %{$obj1}) {
+	foreach my $id (sort keys %{$obj1->{$rec_type}}) {
+	    if (defined(my $rec2 = $obj2->{$rec_type}->{$id})) {
+		my $rec1 = $obj1->{$rec_type}->{$id};
+		if ($rec1 eq $rec2) {
+		    push(@p1_equal_p2, "$rec_type - $id");
+		} else {
+		    push(@p1_diff_p2, "$rec_type - $id");
+		    my $print_rec1 = rec_to_string($rec1, $rec_type, $plugin1);
+		    push(@diff1, "$rec_type - $id\n");
+		    push(@diff1, $print_rec1);
+		    my $print_rec2 = rec_to_string($rec2, $rec_type, $plugin2);
+		    push(@diff2, "$rec_type - $id\n");
+		    push(@diff2, $print_rec2);
+		}
+	    } else {
+		push(@p1_not_p2, "$rec_type - $id");
+	    }
+	}
+    }
+    foreach my $rec_type (sort keys %{$obj2}) {
+	foreach my $id (sort keys %{$obj2->{$rec_type}}) {
+	    if (not defined $obj1->{$rec_type}->{$id}) {
+		push(@p2_not_p1, "$rec_type - $id");
+	    }
+	}
+    }
+    # now print the diff report
+    if (my $n = @p1_not_p2) {
+	print qq{\nRecords in "$plugin1" not in "$plugin2" ($n):\n};
+	foreach (@p1_not_p2) { print "$_\n"; }
+    }
+    if (my $n = @p2_not_p1) {
+	print qq{\nRecords in "$plugin2" not in "$plugin1" ($n):\n};
+	foreach (@p2_not_p1) { print "$_\n"; }
+    }
+    if (my $n  = @p1_equal_p2) {
+	print qq{\nRecords that are equal in "$plugin1" and "$plugin2" ($n):\n};
+	foreach (@p1_equal_p2) { print "$_\n"; }
+    }
+    if (my $n = @p1_diff_p2) {
+	print qq{\nRecords that are different between "$plugin1" and "$plugin2" ($n):\n(Compare $plugin1.diff to $plugin2.diff)\n};
+	foreach (@p1_diff_p2) { print "$_\n"; }
+    }
+    if (@diff1) {
+	if (open(OUT, ">$plugin1.diff")) {
+	    print OUT join("\n", @diff1);
+	    close(OUT);
+	} else {
+	    warn "Error opening $plugin1.diff for output ($!)\n";
+	}
+    }
+    if (@diff2) {
+	if (open(OUT, ">$plugin2.diff")) {
+	    print OUT join("\n", @diff2);
+	    close(OUT);
+	} else {
+	    warn "Error opening $plugin2.diff for output ($!)\n";
+	}
+    }
+}
+
 sub cmd_delete {
     my($plugin) = @_;
     open_input_plugin($plugin);
@@ -1261,6 +1385,31 @@ sub cmd_delete {
     print "Output saved in: $newplugin\n";
 }
 
+sub rec_to_string {
+    my($rec, $rec_type, $plugin, $wanted_subtypes) = @_;
+    my $p = 0;
+    my $rec_len = length($rec);
+    my $print_rec;
+    while ($p < $rec_len) {
+	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	$p += 8;
+	my $subrec = substr($rec, $p, $subrec_len);
+	$p += $subrec_len;
+	if (defined $subrec) {
+	    my $full_type = "${rec_type}.${subrec_type}";
+	    if (not ($wanted_subtypes and not $wanted_subtypes->{lc($full_type)})) {
+		my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
+		my $subrec_str = $unpack->($subrec);
+		$print_rec .= "   $full_type: $subrec_str\n";
+	    }
+	} else {
+	    warn "$plugin: Error: malformed subrec $subrec_type\n";
+	}
+    }
+    return($print_rec);
+}
+
+
 sub cmd_dump {
     my($plugin) = @_;
     #my $plugin = (split(m![\\/]!, $plugin))[-1];
@@ -1272,7 +1421,7 @@ sub cmd_dump {
 	$wanted_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
     }
     my %wanted_types;
-    my %wanted_subtypes;
+    my $wanted_subtypes;
     if ($::opt_t) {
 	foreach (split(/,/, $::opt_t)) {
 	    # TBD - validate types?
@@ -1284,7 +1433,7 @@ sub cmd_dump {
 	    $wanted_types{lc($type)}++;
 	    if ($subtype) {
 		if (length($subtype) == 4) {
-		    $wanted_subtypes{lc("$type.$subtype")}++ if ($subtype);
+		    $wanted_subtypes->{lc("$type.$subtype")}++ if ($subtype);
 		} else {
 		    warn qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
 		    next;
@@ -1308,27 +1457,9 @@ sub cmd_dump {
 	}
 	next if (%wanted_types and not $wanted_types{lc($rec_type)});
 	$n = 0 if ($rec_type eq "TES3");
-	my $p = 0;
-	my $rec_len = length($rec);
 	my $name_idx;
 	my $first = 1;
-	my $print_rec = "";
-	while ($p < $rec_len) {
-	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	    $p += 8;
-	    my $subrec = substr($rec, $p, $subrec_len);
-	    $p += $subrec_len;
-	    if (defined $subrec) {
-		my $full_type = "${rec_type}.${subrec_type}";
-		if (not (%wanted_subtypes and not $wanted_subtypes{lc($full_type)})) {
-		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
-		    my $subrec_str = $unpack->($subrec);
-		    $print_rec .= "   $full_type: $subrec_str\n";
-		}
-	    } else {
-		warn "$plugin: Error: malformed subrec $subrec_type\n";
-	    }
-	}
+	my $print_rec = rec_to_string($rec, $rec_type, $plugin, $wanted_subtypes);
 	next if ($::opt_m and not $print_rec =~ /$::opt_m/i);
 	if ($print_rec and $plugin_banner) {
 	    print $plugin_banner;
@@ -1518,7 +1649,7 @@ sub main {
     die $USAGE_ALL unless ($cmd_ref = $CMDS{$cmd_name});
     my($cmd_getopts, $cmd) = @{$cmd_ref};
     $cmd_getopts->();
-    if ($cmd_name =~ /^(com(mon)?|overdial|od|fog(patch)?)$/i) {
+    if ($cmd_name =~ /^(com(mon)?|overdial|diff|od|fog(patch)?)$/i) {
 	$cmd->(@ARGV);
     } else {
 	if (scalar(@ARGV) == 0) {
