@@ -130,37 +130,49 @@ sub opts_com {
 my $DIFF_USAGE = q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
 OPTIONS
- -D   turn on debug output
+ -D   turn on debug output.
+ -i   comma-delimited list of field names to ignore.
 
 Prints a report on the differences between the two TES3 files.
-A summary report is printed to standard output that gives an overview
-of differences, as lists of record IDs:
+A summary report with up to four sections is printed to standard output
+that gives an overview of differences, as lists of record IDs:
  - objects in plugin1 that do not exist in plugin2
  - objects in plugin2 that do not exist in plugin1
  - objects in plugin1 that are equal in plugin2
  - objects in plugin1 that are different in plugin2
+(Sections that would have no items are not printed).
 
 When objects in plugin1 are different in plugin2, each of these objects
 is printed in detail to a file "plugin1.diff" and "plugin2.diff", which
 can then be compared textually using a tool such as WinMerge or Emacs'
 ediff function.
 
+To reduce a great deal of "uninteresting" differences when diffing savegames,
+CELL.FRMR records are automatically ignored when the ModIndex is zero. (Note
+that in this case, the ObjIndex appears to only be incremented by one).
+
+
 Example:
 
 # Print report on differences between 2 savegames:
 tes3cmd diff save1000.ess save2000.ess > diff.out
+
+# You can also use the -i switch to ignore further subfields in order to help
+# reduce the amount of differences as in the following example.
+# Report on differences, but ignore the subfields CREA.AIDT and CELL.ND3D:
+tes3cmd diff -i crea.aidt,cell.nd3d testa0000.ess testb0000.ess > diff.out
 };
 
 sub opts_diff {
     $_[0] && do { warn $DIFF_USAGE; exit(0); };
-    getopts('D') or die $DIFF_USAGE;
+    getopts('Di:') or die $DIFF_USAGE;
 }
 
 
 my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 
 OPTIONS
- -D        turn on debug output
+ -D        turn on debug output.
  -i ids    only print out the records with ids matching the given comma-delimited
            list of regular expression patterns.
  -m regex  only print records that match given regular expression.
@@ -1211,6 +1223,11 @@ sub read_objects {
 
 sub cmd_diff {
     my($plugin1, $plugin2) = @_;
+    my $ignore;
+    if ($::opt_i) {
+	$ignore = '^(\s+(?:' . join('|', split(/,/, $::opt_i)) . '):)\s.*$';
+    }
+    warn "IGNORE = $ignore\n" if (DBG);
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
     my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
@@ -1224,9 +1241,11 @@ sub cmd_diff {
 	    if (defined(my $rec2 = $obj2->{$rec_type}->{$id})) {
 		my $rec1 = $obj1->{$rec_type}->{$id};
 		my $print_rec1 = rec_to_string($rec1, $rec_type, $plugin1);
-		$print_rec1 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/g;
+		$print_rec1 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
+		$print_rec1 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/gm;
 		my $print_rec2 = rec_to_string($rec2, $rec_type, $plugin2);
-		$print_rec2 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/g;
+		$print_rec2 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
+		$print_rec2 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/gm;
 		if ($print_rec1 eq $print_rec2) {
 		    push(@p1_equal_p2, "$rec_type - $id");
 		} else {
