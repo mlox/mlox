@@ -521,6 +521,7 @@ my %UNPACK =
 	     $coord . $data_fog_str . $flags_str;
 	 }
      },
+     "CELL.FRMR" => sub { sprintf "ObjInd: %d ModInd: %d", unpack("Sx[C]C", $_[0]); },
      "CLAS.CLDT" => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
 			      unpack("L15", $_[0]);
 			  "  " . join("\n\t\t",
@@ -640,7 +641,7 @@ foreach (qw(INTV)) {
     $UNPACK{$_} = sub { unpack("l", $_[0]) }; }
 
 # subrecords that decode as unsigned 32-bit longs:
-foreach (qw(FRMR INDX NAM0))
+foreach (qw(INDX NAM0))
     { $UNPACK{$_} = sub { unpack("L", $_[0]) }; }
 
 # subrecords that decode as 32-bit floats:
@@ -1222,14 +1223,16 @@ sub cmd_diff {
 	foreach my $id (sort keys %{$obj1->{$rec_type}}) {
 	    if (defined(my $rec2 = $obj2->{$rec_type}->{$id})) {
 		my $rec1 = $obj1->{$rec_type}->{$id};
-		if ($rec1 eq $rec2) {
+		my $print_rec1 = rec_to_string($rec1, $rec_type, $plugin1);
+		$print_rec1 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/g;
+		my $print_rec2 = rec_to_string($rec2, $rec_type, $plugin2);
+		$print_rec2 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/g;
+		if ($print_rec1 eq $print_rec2) {
 		    push(@p1_equal_p2, "$rec_type - $id");
 		} else {
 		    push(@p1_diff_p2, "$rec_type - $id");
-		    my $print_rec1 = rec_to_string($rec1, $rec_type, $plugin1);
 		    push(@diff1, "$rec_type - $id\n");
 		    push(@diff1, $print_rec1);
-		    my $print_rec2 = rec_to_string($rec2, $rec_type, $plugin2);
 		    push(@diff2, "$rec_type - $id\n");
 		    push(@diff2, $print_rec2);
 		}
