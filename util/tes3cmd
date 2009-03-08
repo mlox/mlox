@@ -175,9 +175,11 @@ OPTIONS
  -D        turn on debug output.
  -i ids    only print out the records with ids matching the given comma-delimited
            list of regular expression patterns.
+ -l        only list the ids of the records to be printed, instead of the entire record.
  -m regex  only print records that match given regular expression.
  -t types  only print out the records matching the given comma-delimited
            list of record types.
+ -s string specify field separator string for single-line output.
 
 Dumps the plugin to stdout in text form for easy perusal. For large plugins,
 the output can be voluminous.
@@ -668,7 +670,7 @@ TEXT TNAM WNAM))
 
 sub opts_dump {
     $_[0] && do { warn $DUMP_USAGE; exit(0); };
-    getopts('Dt:i:m:') or die $DUMP_USAGE;
+    getopts('Di:lm:s:t:') or die $DUMP_USAGE;
 }
 
 my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
@@ -1411,7 +1413,8 @@ sub rec_to_string {
     my($rec, $rec_type, $plugin, $wanted_subtypes) = @_;
     my $p = 0;
     my $rec_len = length($rec);
-    my $print_rec;
+    my @print_rec;
+    my $separator = $::opt_s || "\n    ";
     while ($p < $rec_len) {
 	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
 	$p += 8;
@@ -1422,13 +1425,13 @@ sub rec_to_string {
 	    if (not ($wanted_subtypes and not $wanted_subtypes->{lc($full_type)})) {
 		my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $DEFAULT_UNPACK;
 		my $subrec_str = $unpack->($subrec);
-		$print_rec .= "   $full_type: $subrec_str\n";
+		push(@print_rec, "$full_type: $subrec_str");
 	    }
 	} else {
 	    warn "$plugin: Error: malformed subrec $subrec_type\n";
 	}
     }
-    return($print_rec);
+    return(join($separator, @print_rec));
 }
 
 
@@ -1480,18 +1483,23 @@ sub cmd_dump {
 	next if (%wanted_types and not $wanted_types{lc($rec_type)});
 	$n = 0 if ($rec_type eq "TES3");
 	my $name_idx;
-	my $first = 1;
 	my $print_rec = rec_to_string($rec, $rec_type, $plugin, $wanted_subtypes);
 	next if ($::opt_m and not $print_rec =~ /$::opt_m/i);
 	if ($print_rec and $plugin_banner) {
 	    print $plugin_banner;
 	    $plugin_banner = undef;
 	}
-	if ($first) {
-	    print "\nRecord: $n\n";
-	    $first = 0;
+	if ($::opt_l) {
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    print "$rec_type: $id\n";
+	} else {
+	    if ($::opt_s) {
+		print "Record: $n$::opt_s";
+	    } else {
+		print "\nRecord: $n\n    ";
+	    }
+	    print "$print_rec\n";
 	}
-	print $print_rec;
 	$n++;
     }
     close(INP);
