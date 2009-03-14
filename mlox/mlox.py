@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.53"
+Version = "0.54"
 
 import locale
 import os
@@ -1039,7 +1039,8 @@ class loadorder:
                 Opt._Game = "None"
                 self.datadir = cwd
                 self.gamedir = caseless_dirlist("..")
-        Dbg.add("plugin directory: \"%s\"" % self.datadir.dirpath())
+        Dbg.add("Data directory: \"%s\"" % self.datadir.dirpath())
+        #Stats.add("Data Directory: \"%s\"" % self.datadir.dirpath())
 
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates
@@ -1158,6 +1159,14 @@ class loadorder:
         if len(self.order) < 2:
             return
         Dbg.add("adding edges from CURRENT ORDER")
+        # make ordering pseudo-rules for esms to follow official .esms
+        if Opt._Game == "Morrowind":
+            self.graph.add_edge("", "morrowind.esm", "tribunal.esm")
+            self.graph.add_edge("", "tribunal.esm", "bloodmoon.esm")
+            for p in self.active: # foreach of the user's .esms
+                if p[-4:] == ".esm":
+                    if p not in ("morrowind.esm", "tribunal.esm", "bloodmoon.esm"):
+                        self.graph.add_edge("", "bloodmoon.esm", p)
         # make ordering pseudo-rules from nearend info
         kingyo_fun = [x for x in self.graph.nearend if x in self.active]
         for p_end in kingyo_fun:
