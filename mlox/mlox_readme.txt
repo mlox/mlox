@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.53
+Version: 0.54
 Copyright 2009 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -219,7 +219,7 @@ plugin filename.
 So, if the filename stays the same from version to version, then if the
 description field of the plugin contains a version string:
 
-Version: 0.53
+Version: 0.54
 
 (on a line by itself) mlox will be able to use it. (Wrye Mash can report that
 version too, so it's just a generally useful thing to have in the description).
@@ -413,6 +413,8 @@ what happened.
 
 o ChangeLog
 
+Version 0.54 - 2009/03/14
+	* Now official .esms are automagically moved to top of load order.
 Version 0.52 - 2009/01/08
 	* Implemented spoiler hiding for messages with <hide></hide>
 Version 0.51 - 2009/01/08
