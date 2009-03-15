@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-03-14 18:46:56 (UTC)]
+[Version 2009-03-15 19:04:15 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -97,7 +97,9 @@ GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
 Merged_Dialogs.esp
 Merged_Objects.esp
 Merged_Leveled_Lists.esp
+fogpatch.esp
 Mashed Lists.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bethsoft
@@ -1564,15 +1566,15 @@ Bloodmoon Landscape Overhaul 1.0.esm
 BT_Whitewolf_2_0.esm ;(Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=947130&view=findpost&p=13694991 )
 
 [Conflict]
- No need to have both these activated as the Overhaul was built on 
- "Texture Fix - Bloodmoon".
+ No need to have both these activated as the Overhaul includes "Texture Fix - Bloodmoon".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5268 )
 Bloodmoon Landscape Overhaul 1.0.esm
-Texture Fix - Bloodmoon 1.1.esm
+Texture Fix - Bloodmoon 1.?.esm
 
 [Note]
- "Texture Fix - Bloodmoon" is superceded by "Bloodmoon Landscape Overhaul":
+ "Texture Fix - Bloodmoon" is included in the newer "Bloodmoon Landscape Overhaul":
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5268
+ However, if you do not want the land sculpting done in the Overhaul, the author recommends you stick with "Texture Fix - Bloodmoon 1.1.esm" which just fixes seams.
 Texture Fix - Bloodmoon 1.?.esm
 
 
@@ -3070,7 +3072,7 @@ GCD_VH_patch2.esp
 [ALL Galsiahs Character Development.esp
      Vampiric Hunger Base.esp]
 
-;; Note: Brittlewind fix is included in UUMPP, see UUMPP rules
+;; Note: Brittlewind fix is included in MPP, see MPP rules
 ;; Brittlewind fix
 ;; "This fixes the Brittlewind bug introduced by Bloodmoon. This bug
 ;; gives all NPCs a powerful frost damage spell (10pts for 10 seconds)
@@ -3084,8 +3086,7 @@ Brittlewind fix.esp
 Bloodmoon.esm
 
 [Note]
- The UUMPP (Unofficial Unoffical Morrowind Patch Project) includes
- the Brittlewind fix, and it is recommended you use that instead.
+ The MPP (Morrowind Patch Project) includes the Brittlewind fix, and it is recommended you use that instead.
 [ALL Brittlewind fix.esp
      [NOT Morrowind Patch v1.6.4.esm]]
 
@@ -3639,18 +3640,12 @@ Herbalism Redux ES Patch.esp
 [Conflict]
  Choose ONLY ONE of these Herbalism Redux plugins.
  (Ref: "Herbalism Redux 1.12a readme.txt")
- Recommended, use these 2 together:
- "Morrowind Patch v1.6.4.esm" (includes Bloated Morrowind)
- "Herbalism Redux 1.12a - Bloated MW.esp"
 Herbalism Redux 1.12a - Bloated MW.esp
 Herbalism Redux 1.12a.esp
 
 [Conflict]
  When using "Bloated Morrowind.esp", you should use "Herbalism Redux 1.12a - Bloated MW.esp" instead.
  (Ref: "Herbalism Redux 1.12a readme.txt")
- Or even better, just use these 2:
- "Morrowind Patch v1.6.4.esm" (includes Bloated Morrowind)
- "Herbalism Redux 1.12a - Bloated MW.esp"
 [ALL Herbalism Redux 1.12a.esp
      [NOT Herbalism Redux 1.12a - Bloated MW.esp]]
 Bloated Morrowind.esp
@@ -4107,6 +4102,15 @@ Guarded GhostGate.esp
  (Ref: "Julan_Ashlander_Companion_1.3_Readme.txt")
 KS_Julan_Ashlander Companion_1.3.esp
 Armingers_at_Ghostgate.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Kahleigh's Retreat [kwshipman]
+
+; if CoV loads after Kahleigh's Retreat, the house and front gate/wall are partially floating in air.
+[Order]
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+Kahleigh's Retreat v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5457,6 +5461,12 @@ S_Inn_th.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MTT (Magical Trinkets of Tamriel) [Chris Woods]
 
+; MTT should load after WGI as they both change the MGEF which MTT uses for the floating ioun stone
+[Order]
+Wakim's Game Improvement 9.esp
+MTT_IV_Master.esp			; patched version by JMS
+MTT IV Master.esp
+
 [Conflict]
  "MTT_IV_Master.esp" is a replacement for "MTT IV Master.esp",
  so you should remove the latter.
@@ -6716,17 +6726,6 @@ Bloodmoon.esm
 Ring Capability Shop - TR+BM.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Ring Texture Fix [random name]
-
-[Conflict]
- The Unofficial Patch includes Ring Texture Fix
- (Ref: "Morrowind patch changes.htm")
-Ring Texture Fix.esp
-[ANY Morrowind Patch v1.6.3.esm
-     Morrowind Patch v1.6.4.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8201,21 +8200,28 @@ Building Up Uvirith's Grave 1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @UUMPP [TES Morrowind Community, ThePal, Baldurdash, and quorn]
+;; @MPP [TES Morrowind Community, ThePal, Baldurdash, and quorn]
 
 [Note]
  The latest version of the Morrowind Patch (updated by quorn) is "Morrowind Patch v1.6.4.esm". "Morrowind Patch v1.6.4 (WIP).esm" is the older Work in Progress version. (mlox only tracks the latest version, so it's strongly suggested that you upgrade).
 Morrowind Patch v1.6.4 (WIP).esm
 
 [Note]
- The latest UUMPP Release 1.6.4 no longer needs or provides these patch files.
+ The latest MPP Release 1.6.4 no longer needs or provides these patch files.
 UUMPP LGNPC Andus Tradehouse fix.esp
 UUMPP LGNPC wild nix hounds fix.esp
 UUMPP Bloated Morrowind removal patch.esp
 UUMPP Bloated Morrowind Patch v1.6.4.esp
 
 [Conflict]
- Using the UUMPP and Ascended Sleeper SFX together invalidates the need for Warlord Jim's Creature Sound Fix plugin.
+ The MPP (1.6.3/1.6.4) includes Ring Texture Fix
+ (Ref: "Morrowind patch changes.htm")
+Ring Texture Fix.esp
+[ANY Morrowind Patch v1.6.3.esm
+     Morrowind Patch v1.6.4.esm]
+
+[Conflict]
+ Using the MPP and Ascended Sleeper SFX together invalidates the need for Warlord Jim's Creature Sound Fix plugin.
  (Ref: "Sound Fix readme.txt", "UUMPP-full-readme.txt", "AscendedSleeperSFX.txt")
 soundfix.esp
 [ALL Morrowind Patch v1.6.4.esm
@@ -8226,54 +8232,54 @@ Bloodmoon.esm
 Morrowind Patch v1.6.4.esm
 
 [Note]
- The UUMPP now contains the Baldurdash Text Patch (with the exception of corrections to books).
+ The MPP now contains the Baldurdash Text Patch (with the exception of corrections to books).
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=924590&view=findpost&p=13409684 )
 [ALL Morrowind Patch v1.6.4.esm
      Text Patch for Morrowind with Tribunal & Bloodmoon.esp]
 
 [Conflict]
- The UUMPP fixes the fog density parameter in the cell "Sotha Sil, Dome of Serlyn", so you don't also need the plugin "Dome of Serlyn fix.esp".
+ The MPP fixes the fog density parameter in the cell "Sotha Sil, Dome of Serlyn", so you don't also need the plugin "Dome of Serlyn fix.esp".
 Morrowind Patch v1.6.4.esm
 Dome of Serlyn fix.esp
 
 [Conflict]
- The UUMPP also fixes the problem with Trebonius challenging you when you are only a wizard, so the ArchMage_Fix_0604.esp is obsolete.
+ The MPP also fixes the problem with Trebonius challenging you when you are only a wizard, so the ArchMage_Fix_0604.esp is obsolete.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=122 )
 Morrowind Patch v1.6.4.esm
 ArchMage_Fix_0604.esp
 
 [Conflict]
- The UUMPP also fixes the problem with the Medium Armor Master Trainer. So the UUMPP makes "SecretMasterFix.esp" obsolete.
+ The MPP also fixes the problem with the Medium Armor Master Trainer. So the MPP makes "SecretMasterFix.esp" obsolete.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=130 )
 Morrowind Patch v1.6.4.esm
 SecretMasterFix.esp
 
 [Conflict]
- The UUMPP also fixes the problem with advancement to Telvanni magister.
+ The MPP also fixes the problem with advancement to Telvanni magister.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=157 )
 Morrowind Patch v1.6.4.esm
 Telvanni_Archmagister_Fix.esp
 
 [Conflict]
- The UUMPP also fixes all the same bugs as Questfix-1.2.esp.
+ The MPP also fixes all the same bugs as Questfix-1.2.esp.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1123 )
 Morrowind Patch v1.6.4.esm
 Questfix-1.2.esp
 
 [Conflict]
- !! "Nerevarine Greeting tweaks.esp" contains Evil GMSTs and is obsoleted by the UUMPP 1.64 or greater. You should use just the UUMPP instead.
+ !! "Nerevarine Greeting tweaks.esp" contains Evil GMSTs and is obsoleted by the MPP 1.64 or greater. You should use just the MPP instead.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 Morrowind Patch v1.6.4.esm
 Nerevarine Greeting tweaks.esp
 
 [Conflict]
- !! "lfx_nerevarine_greetings.esp" and "ExcuseMe.esp" both try to solve the problem of too many "Excuse me, Nerevarine" greetings. The UUMPP has also addressed this by filtering that dialogue better. It is recommended you use the UUMPP instead.
+ !! "lfx_nerevarine_greetings.esp" and "ExcuseMe.esp" both try to solve the problem of too many "Excuse me, Nerevarine" greetings. The MPP has also addressed this by filtering that dialogue better. It is recommended you use the MPP instead.
 Morrowind Patch v1.6.4.esm
 lfx_nerevarine_greetings.esp
 ExcuseMe.esp
 
 [Conflict]
- The UUMPP contains AlphaX's ten pace boot fix (lfx_tenpace_tribunal) and also obsoletes Tenpacebootsfix by 'DIE CLIFFRACER DIE DIE'
+ The MPP contains AlphaX's ten pace boot fix (lfx_tenpace_tribunal) and also obsoletes Tenpacebootsfix by 'DIE CLIFFRACER DIE DIE'
 Morrowind Patch v1.6.4.esm
 lfx_tenpace_tribunal.esp
 Tenpacebootsfix.esp
@@ -8284,15 +8290,15 @@ Morrowind Patch v1.6.4.esm
 Morrowind Patch v1.6.3.esm
 
 [Conflict]
- The UUMPP contains Daleth's Book Placement Fix
+ The MPP contains Daleth's Book Placement Fix
 Morrowind Patch v1.6.4.esm
 [ANY Book Placement Fix - Bloodmoon.esp
      Book Placement Fix - Morrowind.esp
      Book Placement Fix - Tribunal.esp]
 
 [Note]
- !! Morrowind Patch v1.2.2.esm is old and should only be run by people who do not have the expansions. Since you have Tribunal and Bloodmoon, it is highly recommended that you upgrade to the UUMPP! (Unofficial 'Unofficial Morrowind Patch' Project by quorn)
- !! (See: http://www.bethsoft.com/bgsforums/index.php?showtopic=899830 )
+ !! Morrowind Patch v1.2.2.esm is old and should only be run by people who do not have the expansions. Since you have Tribunal and Bloodmoon, it is highly recommended that you upgrade to the MPP!
+ !! (See: http://www.bethsoft.com/bgsforums/index.php?showtopic=966509 )
 [ALL Morrowind Patch v1.2.2.esm
      Tribunal.esm
      Bloodmoon.esm]
@@ -8302,7 +8308,7 @@ Morrowind.esm
 Morrowind Patch v1.2.2.esm
 
 [Note]
- ! All of these plugins are either included in, or the problems they address are also addressed by the latest UUMPP by quorn [Morrowind Patch v1.6.4 (WIP)]. It is recommended that you replace them with the UUMPP.
+ ! All of these plugins are either included in, or the problems they address are also addressed by the latest MPP by quorn [Morrowind Patch v1.6.4]. It is recommended that you replace them with the MPP.
 ArchMage_Fix_0604.esp
 BM-Armor-FIX.esp
 BMFemArmorFix.esp
@@ -8328,6 +8334,7 @@ Pelagiad Fix.esp
 Pieces of the Blade Fix.esp
 Questfix-1.2.esp
 Ralen_Hlaalo_reward_fix.esp
+Ring Texture Fix.esp
 SecretMasterFix.esp
 Snow Bear boot fix.esp
 Solstien_undialog.esp
@@ -8352,42 +8359,42 @@ shvBugFix02.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; START UUMPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
+;; START MPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
 ;; http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [Conflict]
- The UUMPP obsoletes BM Armor Fix v1.0 [Misty Moon].
+ The MPP obsoletes BM Armor Fix v1.0 [Misty Moon].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 BM-Armor-FIX.esp
 
 [Conflict]
- The UUMPP obsoletes Bloodmoon Female Armor Fix v0.3 [The Other Felix].
+ The MPP obsoletes Bloodmoon Female Armor Fix v0.3 [The Other Felix].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 BMFemArmorFix.esp
 
 [Conflict]
- The UUMPP obsoletes BM Wolf Greaves Fix [Aedroth].
+ The MPP obsoletes BM Wolf Greaves Fix [Aedroth].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 bm_wolf_greaves_fix.esp
 
 [Conflict]
- The UUMPP obsoletes Snow Bear Boot Fix [Corrodedsoul].
+ The MPP obsoletes Snow Bear Boot Fix [Corrodedsoul].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Snow Bear boot fix.esp
 
 [Conflict]
- The UUMPP obsoletes BugFix01 [shiva7663].
+ The MPP obsoletes BugFix01 [shiva7663].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 shvBugFix01.esp
 
 [Conflict]
- The UUMPP obsoletes BugFix02 [shiva7663].
+ The MPP obsoletes BugFix02 [shiva7663].
  "abyssmal terror" reports: mostly the same, though there's a few
  differences, like with the light spell, and elemental shields, so it
  looks like user preference here. the other fixes are the same.
@@ -8396,171 +8403,171 @@ Morrowind Patch v1.6.4.esm
 shvBugFix02.esp
 
 [Conflict]
- The UUMPP obsoletes Cattle Fix [ps33/Peter].
+ The MPP obsoletes Cattle Fix [ps33/Peter].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 cattle_fix.esp
 
 [Conflict]
- The UUMPP obsoletes Corprus Bugfix [Inki].
+ The MPP obsoletes Corprus Bugfix [Inki].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 corpusbugfix.esp
 
 [Conflict]
- The UUMPP obsoletes Ebony Armor Fixes v1.1 [Sapphron].
+ The MPP obsoletes Ebony Armor Fixes v1.1 [Sapphron].
  "abyssmal terror" reports: both replace the same meshes, but have
- different textures for the groin piece. the UUMPP one matches the
+ different textures for the groin piece. the MPP one matches the
  ground greaves. user preference for the groin mesh
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Ebony Armor Fixes.esp
 
 [Conflict]
- The UUMPP obsoletes Eisenfaust's "Crusader Class Fix.esp".
+ The MPP obsoletes Eisenfaust's "Crusader Class Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Crusader Class Fix.esp
 
 [Conflict]
- The UUMPP obsoletes Eisenfaust's "Ebonheart Warehouse Fix.esp".
+ The MPP obsoletes Eisenfaust's "Ebonheart Warehouse Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Ebonheart Warehouse Fix.esp
 
 [Conflict]
- The UUMPP obsoletes Eisenfaust's "Pieces of the Blade Fix.esp".
+ The MPP obsoletes Eisenfaust's "Pieces of the Blade Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Pieces of the Blade Fix.esp
 
 [Conflict]
- The UUMPP obsoletes Eisenfaust's "St Llothis Fix.esp"
+ The MPP obsoletes Eisenfaust's "St Llothis Fix.esp"
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 St Llothis Fix.esp
 
 [Conflict]
- The UUMPP obsoletes Eisenfaust's "Telvanni Guard Fix.esp".
- "abyssmal terror" reports that the UUMPP fix is a little different, so which one you use is a matter of preference.
+ The MPP obsoletes Eisenfaust's "Telvanni Guard Fix.esp".
+ "abyssmal terror" reports that the MPP fix is a little different, so which one you use is a matter of preference.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Telvanni Guard Fix.esp
 
 [Conflict]
- The UUMPP obsoletes Factor Fix v1.0 [Mithrim].
- "abyssmal terror" reports: the UUMPP sort of fixes it, but doesn't have an activator that corrects the rank if you already are the factor of the EEC before the fix. Use this one if you are already the factor of the EEC in Bloodmoon.
+ The MPP obsoletes Factor Fix v1.0 [Mithrim].
+ "abyssmal terror" reports: the MPP sort of fixes it, but doesn't have an activator that corrects the rank if you already are the factor of the EEC before the fix. Use this one if you are already the factor of the EEC in Bloodmoon.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Factor_fix.esp
 
 [Conflict]
- The UUMPP obsoletes Hasphat's Books v1.0 [Monica21].
- "abyssmal terror" reports: the UUMPP changes hasphat's note, it says the books can be found in vivec, which they are placed in the secret library. This mod adds them to the bookseller in Balmora. there's no issues using both, except the note no longer mentions the bookseller.
+ The MPP obsoletes Hasphat's Books v1.0 [Monica21].
+ "abyssmal terror" reports: the MPP changes hasphat's note, it says the books can be found in vivec, which they are placed in the secret library. This mod adds them to the bookseller in Balmora. there's no issues using both, except the note no longer mentions the bookseller.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 HasphatsBooks.esp
 
 [Conflict]
- The UUMPP obsoletes "Pelagiad Fix.esp" from MiniMods Collection [ManaUser].
+ The MPP obsoletes "Pelagiad Fix.esp" from MiniMods Collection [ManaUser].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Pelagiad Fix.esp
 
 [Conflict]
- The UUMPP obsoletes NoLore Solstheim [Adam]
+ The MPP obsoletes NoLore Solstheim [Adam]
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 NoLore Solstheim.esp
 
 [Conflict]
- The UUMPP does something similar to Solstheim Undialog [SeekerVI].
+ The MPP does something similar to Solstheim Undialog [SeekerVI].
  "abyssmal terror" reports: Solstheim Undialog integrates the topic into morrowind better, and should be used if preferred.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Solstien_undialog.esp
 
 [Conflict]
- The UUMPP obsoletes Ralen Hlaalo Quest Reward Fix [Stephane Geney].
+ The MPP obsoletes Ralen Hlaalo Quest Reward Fix [Stephane Geney].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Ralen_Hlaalo_reward_fix.esp
 
 [Conflict]
- The UUMPP obsoletes Templar Pauldrons Fix v1.1 [Counciler].
+ The MPP obsoletes Templar Pauldrons Fix v1.1 [Counciler].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Clean_Templar_Pauldron_Fix_v11.esp
 
 [Conflict]
- The UUMPP obsoletes Tribunal Quest Fix v1.0 [Enmesharra].
+ The MPP obsoletes Tribunal Quest Fix v1.0 [Enmesharra].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 TribunalQuestFix.esp
 
 [Conflict]
- The UUMPP obsoletes Uupse Fyr Bug Fix [Wormlore].
+ The MPP obsoletes Uupse Fyr Bug Fix [Wormlore].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 UupseFix.esp
 
 [Conflict]
- The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
+ The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 lfx_rare_heartwood.esp
 
 [Conflict]
- The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
+ The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 lfx_rare_holly.esp
 
 [Conflict]
- The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
+ The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 lfx_rare_hornlily.esp
 
 [Conflict]
- The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
+ The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 lfx_rare_ingredients.esp
 
 [Conflict]
- The UUMPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
+ The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 lfx_rare_merged.esp
 
 [Conflict]
- The UUMPP does something similar to Almalexia Undialog [SeekerVI].
- "abyssmal terror" reports: the UUMPP adds nolore to the unfiltered topics, Almalexia Undialog filters those dialog to temple members, so it's removed from more NPCs. Use the Almalexia Undialog to get rid of the tribunal almalexia dialog from most NPCs.
+ The MPP does something similar to Almalexia Undialog [SeekerVI].
+ "abyssmal terror" reports: the MPP adds nolore to the unfiltered topics, Almalexia Undialog filters those dialog to temple members, so it's removed from more NPCs. Use the Almalexia Undialog to get rid of the tribunal almalexia dialog from most NPCs.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Almalexia_undialog.esp
 
 [Conflict]
- The UUMPP obsoletes Bloodmoon Ammo Fix v1.0609 [Srikandi].
- "abyssmal terror" reports: both fixes the single counts of ammo, but in different ways. Srikandi adds more ammo in general in varying stacks, while the UUMPP adds less ammo in general, but in stacks of 20 like in the rest of containers. both modify the same lists, and Srikandi's fix can be used over the UUMPP.
+ The MPP obsoletes Bloodmoon Ammo Fix v1.0609 [Srikandi].
+ "abyssmal terror" reports: both fixes the single counts of ammo, but in different ways. Srikandi adds more ammo in general in varying stacks, while the MPP adds less ammo in general, but in stacks of 20 like in the rest of containers. both modify the same lists, and Srikandi's fix can be used over the MPP.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 BloodmoonAmmoFix.esp
 
 [Conflict]
- The UUMPP obsoletes Brittlewind Fix [64057]. ("Brittlewind Fix.esp" is also distributed in "Galsiahs Character Development").
+ The MPP obsoletes Brittlewind Fix [64057]. ("Brittlewind Fix.esp" is also distributed in "Galsiahs Character Development").
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
 Brittlewind Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; END UUMPP Conflicts reported by "abyssmal terror"
+;; END MPP Conflicts reported by "abyssmal terror"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; End of UUMPP section
+;; End of MPP section
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -8816,6 +8823,14 @@ Vertical limit climbing mod 1.02.esp
 ;; "VGreetings-Thief.esp" - changes affecting the Thief Voice
 ;;                          section (requires Tribunal)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vivec Flat 2.0 [Occam]
+
+[Conflict]
+ Vivec Flat conflicts with Clothiers of Vvardenfell, since it deletes one of the bedrooms off of the stairs in the Vivec Mages Guild where the merchant "Targin" the sorceress from CoV lives. She ends up embedded in a ceiling/wall.
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+Vivec Flat 2.0.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vivec Mages Guild Offices v1.0 [Cheyenne]
