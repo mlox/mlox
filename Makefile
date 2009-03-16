@@ -58,8 +58,6 @@ mlox-dist: dist/$(MLOXARC)
 dist/$(MLOXARC): version dist/mlox $(wildcard mlox/*)
 	@rsync -uvaC mlox/ dist/mlox/ > /dev/null 2>&1
 	@cp License.txt dist/mlox
-	@echo "Adding DOS line endings to .bat and .txt files in staging directory"
-	@for i in dist/mlox/*.bat dist/mlox/*.txt ; do perl -p -i -e "s/\015?$$/\015/" $$i ; done
 	@(cd dist && rm -f $(MLOXARC) && 7z a $(MLOXARC) mlox) > /dev/null 2>&1
 	@rm -rf dist/mlox/
 	@echo "CREATED distibution archive for mlox: $@"
