@@ -279,7 +279,7 @@ later should you decide that you do not like the results you get from mlox.
 mlox only updates your load order in GUI mode if you press the update button,
 (or in command-line mode if you use the -u switch). So you should let mlox
 tell you what it's going to do first, then decide whether or not you like the
-results before you actually let mlox update you load order.
+results before you actually let mlox update your load order.
 
 ------------------------------------------------------------
 o Note to Wrye Mash users
