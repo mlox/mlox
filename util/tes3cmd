@@ -555,6 +555,7 @@ my %UNPACK =
 				      "Flags: " . (($flags) ? "Playable" : "Non-playable"),
 				      "AutoCalc Flags: " . decode_flags($autoflags, \@AUTOCALC_FLAGS));
 		      },
+     "CONT.CNDT" => sub { sprintf "Weight: %0.2f", unpack("f", $_[0]) },
      "CONT.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CONTAINER_FLAGS) },
      "CREA.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CREATURE_FLAGS) },
      "CREA.NPDT" => sub { my($typ_i, $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
