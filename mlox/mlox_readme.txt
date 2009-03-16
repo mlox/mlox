@@ -31,23 +31,23 @@ o Features
 
 - optimally reorders your load order to avoid known problems, where
 "optimally" is relative to the quality and coverage of the rule-base.
-(Currently the rule-base knows about many of the popular Morrowind mods,
-but there is more work to be done to include more mods).
+(As of March 2009 the rule-base knows about many of the popular Morrowind
+mods, but there is more work to be done to include more mods).
 - warns about missing pre-requisites
 - warns about plugin conflicts
 - prints notes for things you might want to know about a mod, but may
 have overlooked in the Readme, or things discussed in forum posts you
 may have missed.
 - mlox is customizable via a separate user rules file.
-- can also check someone else's load list, you can paste the list into
-the mlox GUI, or load the list from a file.
+- can also check someone else's load list, you can paste their load ordr into
+the mlox GUI, or load it from a file.
 - it runs on Windows or Linux! :)
 
 (Note that mlox does not tell you if you have missing Meshes or Textures, it
 is only a load order tool, and does not report problems with resources).
 
 ------------------------------------------------------------
-o Installation and quick start
+o Installation and Quick Start
 
 oo Requirements
 
@@ -245,7 +245,7 @@ important, and normally you can consider these "errors" that should be fixed.
 But in some case, they are warnings about patches that are available to make
 two plugins work better together.
 
-[PATCH] warnings specify mutual dependencies as in the case of a patch plugin.
+[PATCH] warnings specify mutual dependencies as in the case of a patch plugin
 where you'd like to know if the patch is missing or if the thing that's
 supposed to be patched is missing. These are usually pretty important warnings
 since proper functioning of a mod sometimes means getting patches properly
@@ -413,6 +413,8 @@ what happened.
 
 o ChangeLog
 
+Version 0.55 - 2009/03/16
+	* Documentation update: DOS line endings.
 Version 0.54 - 2009/03/14
 	* Now official .esms are automagically moved to top of load order.
 Version 0.52 - 2009/01/08
