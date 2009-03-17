@@ -299,7 +299,8 @@ These commands will start mlox in GUI mode. If the proposed load order looks
 good to you, press the "Update Load Order" button.
 
 Here is the full command-line usage for mlox from "mlox -h" (You can ignore
-this if you only want to run mlox in GUI mode):
+this if you only want to run mlox in GUI mode) (Note that the .exe version
+does not support command line mode):
 
 Usage: mlox [OPTIONS]
 
