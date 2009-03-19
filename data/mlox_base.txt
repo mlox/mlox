@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-03-16 22:26:45 (UTC)]
+[Version 2009-03-19 21:12:42 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -3042,27 +3042,28 @@ GCD - Cult of the Clouds patch.esp
 [ALL Galsiahs Character Development.esp
      MW_CultOfTheClouds_v10.esp]
 
-;; Havish patch
-;; "Only use this with Havish (works with version 1.2, and almost
-;; certainly with others). Should be after Havish in the load order."
-;; (Ref: "GCD Readme first 107c.txt")
-[Order]
-Bloodmoon.esm
-Havish.esm
-GCD_Havish_patch.esp
-
-[Patch]
- (Ref: "GCD Readme first 107c.txt")
-GCD_Havish_patch.esp
-[ALL Galsiahs Character Development.esp
-     Havish.esm]
-
+; Deprecated in deference to: havish_scimitar_gcd_update.rar
+;;; Havish patch
+;;; "Only use this with Havish (works with version 1.2, and almost
+;;; certainly with others). Should be after Havish in the load order."
+;;; (Ref: "GCD Readme first 107c.txt")
+;[Order]
+;Bloodmoon.esm
+;Havish.esm
+;GCD_Havish_patch.esp
+;
+;[Patch]
+; (Ref: "GCD Readme first 107c.txt")
+;GCD_Havish_patch.esp
+;[ALL Galsiahs Character Development.esp
+;     Havish.esm]
+;
 ;; expdep
-[Requires]
- This plugin uses the Tribunal function getweapondrawn.
-GCD_Havish_patch.esp
-[ANY Tribunal.esm
-     Bloodmoon.esm]
+;[Requires]
+; This plugin uses the Tribunal function getweapondrawn.
+;GCD_Havish_patch.esp
+;[ANY Tribunal.esm
+;     Bloodmoon.esm]
 
 ;; GCD_SS_patch
 ;; "Only use with Scripted Spells (Cortex). Should be after Scripted
@@ -3546,6 +3547,72 @@ Silgrad_Tower_internal_build_1-4_3.esp
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Havish.esm
 morrowind4fishBETA.esm
+
+[Note]
+ ! JOG provides an update (havish_scimitar_gcd_update.rar) for Havish that includes a better compatibility fix for GCD than GCD_Havish_patch.esp:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=706
+GCD_Havish_patch.esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ If you run MWE and have GCD + Booty Island, use: "Havish - Scimitar Update.esp"
+ If you do not run MWE, then use "Havish - Scimitar Update + GCD (no MWE).esp" if you use GCD, or
+ "Havish - Scimitar Update (no MWE).esp" if you do not use GCD.
+ (Ref: "Havish - Scimitar.txt")
+Havish - Scimitar Update.esp
+Havish - Scimitar Update + GCD (no MWE).esp
+Havish - Scimitar Update (no MWE).esp
+
+; Rules for "Havish - Scimitar Update.esp"
+[Requires]
+ ! If you have Havish and MWE and either Booty Island or GCD (or both), then use "Havish - Scimitar Update.esp" from "havish_scimitar_gcd_update.rar":
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=706
+ (Ref: "Havish - Scimitar.txt")
+[ALL Havish.esm
+     MWE_Base.esp
+     [ANY Booty.esp
+	  Galsiahs Character Development.esp]]
+Havish - Scimitar Update.esp
+
+[Requires]
+ "The complete update with the compatibility fixes for Booty Island and GCD as well as improved Akaviri Scimitar scripts. Can be run with or without GCD, works with similar mods as well. REQUIRES MORROWIND ENHANCED (MWE) V1.21+ !!!"
+ (Ref: "Havish - Scimitar.txt")
+Havish - Scimitar Update.esp
+[ALL Havish.esm
+     MWE_Base.esp]
+
+; Rules for "Havish - Scimitar Update + GCD (no MWE).esp"
+[Requires]
+ ! If you have Havish and GCD but not MWE, then use "Havish - Scimitar Update + GCD (no MWE).esp" from "havish_scimitar_gcd_update.rar":
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=706
+ (Ref: "Havish - Scimitar.txt")
+[ALL Havish.esm
+     [NOT MWE_Base.esp]
+     Galsiahs Character Development.esp]
+Havish - Scimitar Update + GCD (no MWE).esp
+
+[Requires]
+ (Ref: "Havish - Scimitar.txt")
+Havish - Scimitar Update + GCD (no MWE).esp
+[ALL Havish.esm
+     [NOT MWE_Base.esp]]
+
+; Rules for "Havish - Scimitar Update (no MWE).esp"
+[Requires]
+ ! If you have Havish and Booty Island, but neither MWE nor GCD, then use "Havish - Scimitar Update (no MWE).esp" from "havish_scimitar_gcd_update.rar":
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=706
+ (Ref: "Havish - Scimitar.txt")
+[ALL Havish.esm
+     Booty.esp
+     [NOT MWE_Base.esp]
+     [NOT Galsiahs Character Development.esp]]
+Havish - Scimitar Update (no MWE).esp
+
+[Requires]
+ (Ref: "Havish - Scimitar.txt")
+Havish - Scimitar Update (no MWE).esp
+[ALL Havish.esm
+     [NOT MWE_Base.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8225,6 +8292,8 @@ Building Up Uvirith's Grave 1.1.esp
 
 [Note]
  The latest version of the Morrowind Patch (updated by quorn) is "Morrowind Patch v1.6.4.esm". "Morrowind Patch v1.6.4 (WIP).esm" is the older Work in Progress version. (mlox only tracks the latest version, so it's strongly suggested that you upgrade).
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
 Morrowind Patch v1.6.4 (WIP).esm
 
 [Note]
@@ -8307,6 +8376,8 @@ Tenpacebootsfix.esp
 
 [Note]
  The latest version of the Morrowind Patch 1.6.4 (updated by quorn) supercedes Thepal's UMP, use the new 1.6.4 version instead.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
 Morrowind Patch v1.6.2.esm
 Morrowind Patch v1.6.3.esm
 
@@ -8319,7 +8390,8 @@ Morrowind Patch v1.6.4.esm
 
 [Note]
  !! Morrowind Patch v1.2.2.esm is old and should only be run by people who do not have the expansions. Since you have Tribunal and Bloodmoon, it is highly recommended that you upgrade to the MPP!
- !! (See: http://www.bethsoft.com/bgsforums/index.php?showtopic=966509 )
+ !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
+ !! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
 [ALL Morrowind Patch v1.2.2.esm
      Tribunal.esm
      Bloodmoon.esm]
@@ -8329,7 +8401,9 @@ Morrowind.esm
 Morrowind Patch v1.2.2.esm
 
 [Note]
- ! All of these plugins are either included in, or the problems they address are also addressed by the latest MPP by quorn [Morrowind Patch v1.6.4]. It is recommended that you replace them with the MPP.
+ ! All of these plugins are either included in, or the problems they address are also addressed by the latest MPP by quorn [Morrowind Patch v1.6.4]. It is recommended that you replace them with the MPP:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
 ArchMage_Fix_0604.esp
 BM-Armor-FIX.esp
 BMFemArmorFix.esp
