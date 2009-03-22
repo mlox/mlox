@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-03-19 21:12:42 (UTC)]
+[Version 2009-03-22 03:28:19 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2000,6 +2000,11 @@ CharGen Revamped delay2.esp
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 NOM 2.13.esp
 
+; These two plugins alter the same LAND in Caldera, and if CoV comes first, there's a landscape tear.
+[Order]
+Clean Zelda Estate Renovation Version Two.esp
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Combat Moves [GhanBuriGhan]
@@ -2208,6 +2213,11 @@ Cragonmoor v 1.1.esp
      Balanced NSE 1.5.esp
      New Suran Extended CoM 1.5.esp
      Balanced NSE CoM 1.5.esp]
+
+[Conflict]
+ "Cragonmoor" and "Suran Hillside Manor" occupy overlapping locations.
+Cragonmoor v 1.1.esp
+Suran Hillside Manor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3128,8 +3138,8 @@ GCD_WE_patch.esp
      Werewolf_Evolution.esp]
 
 [Patch]
- Get the following patch to make GCD work well with BigMod2:
- http://upload.worldofplayers.de/files/1wPmrGCD_BigMod2_patch.rar
+ You many need to get the following patch to make GCD work well with BigMod2:
+ http://www.mediafire.com/file/zmnr0gzzwy5/GCD_BigMod2_patch.zip
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=913903&st=0&p=13269662&;entry13269662 )
 GCD_BigMod2_patch.esp
 [ALL Galsiahs Character Development.esp
@@ -4195,9 +4205,19 @@ Armingers_at_Ghostgate.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kahleigh's Retreat [kwshipman]
 
-; if CoV loads after Kahleigh's Retreat, the house and front gate/wall are partially floating in air.
+[Conflict]
+ CoV and Kahleigh's Retreat make incompatible landscape changes to the Caldera cell (-2, 2). When CoV is loaded first, a landscape tear appears on the side of the Wailing Wench Tavern. When CoV is loaded after, then the front of Kahleigh's Retreat is floating up in the air.
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+Kahleigh's Retreat v1.1.esp
+
+; Kahleigh's Retreat needs to load after CoV, otherwise the house and front gate/wall are partially floating in air.
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
+Kahleigh's Retreat v1.1.esp
+
+; Kahleigh's Retreat needs to load after GAC, otherwise the house and front gate/wall are partially floating in air.
+[Order]
+Gothic Attire Complete v1-1.esp
 Kahleigh's Retreat v1.1.esp
 
 
@@ -4460,6 +4480,13 @@ LGNPC_Pelagiad_v1_13.esp
  A newer version is available, check the LGNPC download site:
  http://lgnpc.sabregirl.com/downloads.php
 [VER < 0.31 Lgnpc_SN.esp]
+
+[Conflict]
+ LGNPC Seyda Neen 1.3 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
+[SIZE 178346 Lgnpc_SN.esp]
+[ANY Alternate Beginnings 2.esp
+     CharGen_Revamped_v14.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -6397,6 +6424,15 @@ VA_OrdReplace_openhelm1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Parasol House [Lenne]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 23365 parasolhouse.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Passing Time While Reading [Jac]
 
 [Conflict]
@@ -7581,6 +7617,12 @@ Clean Suran Extended.esp
 ;NOM 2.13.esp
 ;Suran_Underworld_2.5.esp
 
+[Conflict]
+ Suran Underworld places its Abandoned House in the same spot as Suran Archery Store.
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+Suran_Underworld_2.5.esp
+Suran Archery Store_v3.0.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TR - Tamriel Rebuilt (Maps 1 and 2) [Tamriel Rebuilt team]
@@ -7593,6 +7635,11 @@ TR_Map2.esm
 [Requires]
 TR_Map1.esm
 TR_Data.esm
+
+[Note]
+ ! This is an older version of TR Map1. There is a newer version included in "Tamriel Rebuilt: Map 2 - Antediluvian Secrets", which fixes some bugs, including the dialog loop when joining the Thieves Guild via Sugar-Lips Habasi:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=276723&id=7040
+[SIZE 30000464 TR_Map1.esm]
 
 [Requires]
 TR_Map2.esm
@@ -8023,6 +8070,15 @@ TravelingMerchants_v2.2_Update.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 385188 Tree_of_Life.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @treehouse [Lenne]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 36600 treehouse.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
