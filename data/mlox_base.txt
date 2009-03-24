@@ -1759,6 +1759,11 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 Clean Black Queen Chronicles Ver 2.5.esp
 
 [Conflict]
+ When these two plugins are loaded together, a landscape tear appears between the cells (-6, -7) and (-5, -7) just West of the little bridge over the Odai. A simple fix that seems to work okay is to delete the LAND record (-6, -7) from "Juniper's Twin Lamps (1.1 Tribunal).esp".
+[SIZE 1536911 Juniper's Twin Lamps (1.1 Tribunal).esp]
+Texture Fix 1.8.esm
+
+[Conflict]
  "Brother Juniper's Twin Lamps" conflicts with "Nevana's Twin Lamps
  and Slave Hunters" - has overlaps in changes on many NPCs.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
@@ -5028,6 +5033,7 @@ Minions of House Dagoth - No Undead.esp
 [Note]
  There is no need to activate these mods in your game.
  (Ref: "Distant Activators fix readme (!!!).txt")
+ You do not need to use these plugins if you are using MGE v3.7.2 or later.
 Pov_Distant_Activator_Fix_BloodmoonStones.esp
 Pov_Distant_Activator_Fix_GhostFence.esp
 Pov_Distant_Activator_Fix_Holamayan.esp
@@ -5042,6 +5048,8 @@ Pov_Distant_Activator_Fix_TelvanniStoneDoor.esp
 Pov_Distant_Activator_Fix_TR1_BigDoors.esp
 Pov_Distant_Activator_Fix_TR1_Striders.esp
 Pov_Distant_Activator_Fix_TR1_Waterfalls.esp
+Pov_Distant_Activator_Fix_TR2_Striders.esp
+Pov_Distant_Activator_Fix_TR2_Waterfalls.esp
 Pov_Distant_Activator_Fix_Vivec.esp
 Pov_Distant_Activator_Fix_Waterfalls.esp
 
@@ -5059,6 +5067,9 @@ Morrowind Code Patch Showcase.esp
  !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Fashionable Merchants 1.0.esp"
  !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
 Fashionable Merchants 1.0.esp
+Fashionable Merchants (TheMikrobe).esp
+Fashionable Merchants (TheMikrobe Trib).esp
+Fashionable Merchants (TheMikrobe BM).esp
 
 [Note]
  !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Merchant Unequip v1.0.esp"
@@ -6706,6 +6717,40 @@ RealSignposts.esp
 WeatheredSigns.esp
 Textured_Signs.esp
 dxm_metallic_signs.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Wildlife 2b [Nedius]
+
+[Conflict]
+ Choose ONLY ONE of these plugins
+ "Real_wildlife_2b.esp" - if you only have Morrowind.
+ "Real_wildlife_2b_Tribunal.esp" - if you have Morrowind and Tribunal 
+ "Real_Wildlife_2b_Bloodmoon.esp" - if you have Morrowind and Bloodmoon
+ "Real_wildlife_2b Complete.esp" - if you have Morrowind and both expansions
+ (Ref: "readme real wildlife 2.txt")
+Real_wildlife_2b_Tribunal.esp
+Real_wildlife_2b Complete.esp
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+
+[Requires]
+ (Ref: "readme real wildlife 2.txt")
+Real_wildlife_2b_Tribunal.esp
+[ALL Tribunal.esm
+     [NOT Bloodmoon.esm]]
+
+[Requires]
+ (Ref: "readme real wildlife 2.txt")
+Real_wildlife_2b_Bloodmoon.esp
+[ALL Bloodmoon.esm
+     [NOT Tribunal.esm]]
+
+[Requires]
+ (Ref: "readme real wildlife 2.txt")
+Real_wildlife_2b Complete.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8470,6 +8515,7 @@ Book Placement Fix - Morrowind.esp
 Book Placement Fix - Tribunal.esp
 Brittlewind Fix.esp
 Clean_Templar_Pauldron_Fix_v11.esp
+Clean Templar Pauldron Fix.esp
 Crusader Class Fix.esp
 Dome of Serlyn fix.esp
 Ebonheart Warehouse Fix.esp
@@ -8645,10 +8691,11 @@ Morrowind Patch v1.6.4.esm
 Ralen_Hlaalo_reward_fix.esp
 
 [Conflict]
- The MPP obsoletes Templar Pauldrons Fix v1.1 [Counciler].
+ The MPP obsoletes Templar Pauldrons Fix [Counciler].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
 Morrowind Patch v1.6.4.esm
-Clean_Templar_Pauldron_Fix_v11.esp
+[ANY Clean_Templar_Pauldron_Fix_v11.esp
+     Clean Templar Pauldron Fix.esp]	;and the earlier version too
 
 [Conflict]
  The MPP obsoletes Tribunal Quest Fix v1.0 [Enmesharra].
