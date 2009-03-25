@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-03-24 19:06:43 (UTC)]
+[Version 2009-03-25 14:43:51 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2527,13 +2527,54 @@ FireHeaven Deora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Distant Land Fix for MGE version 1.7 [harlanrm]
+;; @Distant Land Fix for MGE version 1.8 [harlanrm]
 
 [Requires]
  (Ref: "Distant Land Fix for MGE.txt")
 Distant Land Fix for MGE.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ Version 3.6.0 of MGE added weather, wind and interior detection. This means that distant land is always off in interiors, including Mournhold, and that MGE's fog distance changes in response to the weather.
+ If you using 3.6.0 or a later version you should disable harlanrm's "Distant Land Fix for MGE.esp"
+ (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
+Distant Land Fix for MGE.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Distant Land Weather Fix 1.2 [Supernatural]
+
+[Requires]
+ (Ref: "Distant Land Weather Fix 1.2 - ReadMe.txt")
+Distant Land Weather Fix.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE". Instead of simply turning distant land off harlanrm's plugin smoothly alters the fog distance based on the weather, it also turns distant land off in interiors.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
+ If you are using MGE 3.6.0 or greater then you do not need Supernatural's or harlanrm's plugins. Version 3.6.0 of MGE added weather, wind and interior detection so that MGE itself adjusts fog distance in response to the weather and turns off distant land in interiors.
+ (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log
+Distant Land Weather Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Distant Land Interior Fix [Yacoby]
+
+; Dragon32: Not mentioned in the readme, but MGE needs the expansions.
+[Requires]
+[ANY Distant Land Interior Fix.esp
+     Distant Land Interior Fix No Lag.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ Version 3.6.0 of MGE added interior detection. This means that distant land is always off in interiors, including Mournhold. If you using 3.6.0 or a later version you should disable Yacoby's "Distant Land Interior Fix".
+ (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log
+ If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE", as well as turning distant land off in interiors it smoothly alters the fog distance based on the weather.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
+[ANY Distant Land Interior Fix.esp
+     Distant Land Interior Fix No Lag.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8502,6 +8543,12 @@ UUMPP Bloated Morrowind removal patch.esp
 UUMPP Bloated Morrowind Patch v1.6.4.esp
 
 [Conflict]
+ The MPP obsoletes Tribunal Crimson Plague Quest Tweaker v0.01 (Max a.k.a. ~NOBODY~).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=946462&view=findpost&p=13837411
+Morrowind Patch v1.6.4.esm
+Tribunal Crimson Plague tweaker.esp
+
+[Conflict]
  The MPP (1.6.3/1.6.4) includes Ring Texture Fix
  (Ref: "Morrowind patch changes.htm")
 Ring Texture Fix.esp
@@ -8651,6 +8698,7 @@ Telvanni Quest fix v.1.0.esp
 Telvanni_Archmagister_Fix.esp
 Tenpacebootsfix.esp
 TreboniusAntabolisFix_0606.esp
+Tribunal Crimson Plague tweaker.esp
 TribunalQuestFix.esp
 UupseFix.esp
 acsEbonyGreaves.esp
