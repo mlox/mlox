@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-03-26 03:59:21 (UTC)]
+[Version 2009-03-27 00:51:37 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2021,6 +2021,16 @@ NOM 2.13.esp
 Clean Zelda Estate Renovation Version Two.esp
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 
+[Conflict]
+ CoV and Night Gallery make conflict landscape changes around Caldera. If Night Gallery loads first, it ends up floating in the air. If it loads after, then a landscape tear appears along the side of the Wailing Wench Tavern. A reasonable fix is to delete the 2 LAND records from CoV: (-1, 2) and (-2, 2) from BB_Clothiers_of_Vvardenfell_v1.1.esp.
+[SIZE 851243 BB_Clothiers_of_Vvardenfell_v1.1.esp]
+night gallery.esp
+
+[Conflict]
+ CoV and Kahleigh's Retreat make incompatible landscape changes to the Caldera cell (-2, 2). When CoV is loaded first, a landscape tear appears on the side of the Wailing Wench Tavern. When CoV is loaded after, then the front of Kahleigh's Retreat is floating up in the air. A reasonable fix is to delete the 2 LAND records from CoV: (-1, 2) and (-2, 2) from BB_Clothiers_of_Vvardenfell_v1.1.esp.
+[SIZE 851243 BB_Clothiers_of_Vvardenfell_v1.1.esp]
+Kahleigh's Retreat v1.1.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Combat Moves [GhanBuriGhan]
@@ -3996,6 +4006,21 @@ Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Illuminated order lich particles [Boethiah539]
+
+[Requires]
+ (Ref: Illuminated_order_particle_lich_addon.rar\readme.txt)
+Boe_lich_particle.esp
+[ALL Illuminated Order v1.0.esp
+     Tribunal.esm]
+
+; Dragon 32: not mentioned in readme. My guess
+[Order]
+Illuminated Order v1.0.esp
+Boe_lich_particle.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Illuminated Windows [DrkAngl66]
 
 [Requires]
@@ -4289,16 +4314,6 @@ Armingers_at_Ghostgate.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kahleigh's Retreat [kwshipman]
 
-[Conflict]
- CoV and Kahleigh's Retreat make incompatible landscape changes to the Caldera cell (-2, 2). When CoV is loaded first, a landscape tear appears on the side of the Wailing Wench Tavern. When CoV is loaded after, then the front of Kahleigh's Retreat is floating up in the air.
-BB_Clothiers_of_Vvardenfell_v1.1.esp
-Kahleigh's Retreat v1.1.esp
-
-; Kahleigh's Retreat needs to load after CoV, otherwise the house and front gate/wall are partially floating in air.
-[Order]
-BB_Clothiers_of_Vvardenfell_v1.1.esp
-Kahleigh's Retreat v1.1.esp
-
 ; Kahleigh's Retreat needs to load after GAC, otherwise the house and front gate/wall are partially floating in air.
 [Order]
 Gothic Attire Complete v1-1.esp
@@ -4419,6 +4434,36 @@ Laby connection EV.esp
 ;;Tribun_Laura_3_0.esp
 ;;Merged_Objects.esp
 ;;Ebony_fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lazarus Manor [Srdjan Pokorni a.k.a. Spok]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "Lazarus_Manor-README.html")
+Lazarus_Manor-Ascadian_Isles.esp
+Lazarus_Manor-Ashlands.esp
+Lazarus_Manor-Caldera.esp
+Lazarus_Manor-Gnisis.esp
+Lazarus_Manor-Grazelands.esp
+Lazarus_Manor-Solstheim.esp
+Lazarus_Manor-multiext.esp
+Lazarus_Manor-multiext_TB.esp
+
+[Requires]
+ (Ref: "Lazarus_Manor-README.html")
+Lazarus_Manor-TB_sorter.esp
+[ALL Lazarus_Manor.esm
+     Tribunal.esm
+     Bloodmoon.esm]
+
+; If Lazarus Manor loads before Vvardenfell Libraries, a land tear appears behind the manor facade just outside Caldera.
+[Order]
+The_Vvardenfell_Libraries.esp
+Lazarus_Manor-multiext.esp
+Lazarus_Manor-multiext_TB.esp
+Lazarus_Manor-Caldera.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4769,6 +4814,43 @@ Complete Doors and Locks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lost Artifacts of Tamriel: MWSE Add-on [Fliggerty]
+
+; Note: LA_MWSE Addon.esp is dependent on the ESM version of Lost Artifacts of Tamriel
+[Requires]
+LA_MWSE Addon.esp
+[ANY Clean The Lost Artifacts of Morrowind.esm
+     Clean The Lost Artifacts of Morrowind.esp]
+
+[Patch]
+ When using Improved Teleportation with "Lost Artifacts of Tamriel: MWSE Add-on" you should enable the "LA_MWSE IT Patch.esp" patch otherwise some of the quests will not work.
+ (Ref: Lost Artifacts of Tamriel MWSE Add-on.txt)
+LA_MWSE IT Patch.esp
+[ALL LA_MWSE Addon.esp
+     ImprovedTeleportation2.0.esp]
+
+; Dragon32: Examined using TESPCD to deduce order
+[Order]
+Clean The Lost Artifacts of Morrowind.esp
+LA_MWSE Addon.esp
+
+; Dragon32: Examined using TESPCD to deduce order
+[Order]
+ImprovedTeleportation2.0.esp
+LA_MWSE Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lots of Rings [Wulfgar]
+
+[Conflict]
+ Choose only one plugin
+ (Ref: LotsOfRingsReadMe.txt)
+LotsOfRings.esp
+LotsOfRingsPlus.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Louis' Beauty Shop (Rin's BeautyShop ver. 1.5) [Rin]
 
 [Requires]
@@ -4958,6 +5040,57 @@ newarrows - crossbow realism.esp
  (Ref: "Marksmanmod README.doc")
 newarrows.esp
 newarrowsLITE.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Master Index Journalfix [DeusXMachina]
+
+; Dragon32: Not mentioned in readme but logically, Journalfix has to load later
+; than the Master Index plugin. Examined plugins and this seems to be the case.
+[Order]
+master_index.esp
+DXM_masterindex_journalfix.esp
+
+; Dragon32: Master Index plugin included in Wilderness mod, OfficialMods_v5 and
+; Official Plugins v1.0
+[Order]
+Wilderness Sounds.esp
+DXM_masterindex_journalfix.esp
+
+[Order]
+Wilderness Sounds Bloodmoon.esp
+DXM_masterindex_journalfix.esp
+
+[Order]
+Wilderness Sounds Tribunal.esp
+DXM_masterindex_journalfix.esp
+
+[Order]
+Wilderness Sounds T & B.esp
+DXM_masterindex_journalfix.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+DXM_masterindex_journalfix.esp
+
+[Order]
+OfficialMods_v5.esp
+DXM_masterindex_journalfix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Max's Quest Fixes Mod [Max a.k.a. ~NOBODY~]
+
+[Note]
+ Of the four quest fixes contained in Max's Quest Fixes only one has not been fixed by the Unofficial Morrowind Patch (UMP) and since included in the Morrowind Patch Project (MPP).
+ # Sul-Senipul's Longbow Quest: Included in UMP v1.6.3b.
+ # Recovering CloudCleaver: Included in UMP v1.6.3b.
+ # Museum of Artifacts (Tribunal): Included in UMP v1.6.3b. Although uses a different method to Max's Quest Fixes.
+ # The Patchwork Airship quest (Bloodmoon): Not included in the MPP.
+ It is your choice whether you want to continue using this plugin if you also use the MPP.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
+Max's Quest Fixes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6022,6 +6155,39 @@ NEDE WGI patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Gnaar Mok 1.0 [Melchior]
+
+[Patch]
+ (Ref: New Gnaar Mok ReadMe.txt)
+New Gnaar Mok BY Patch.esp
+[ALL New Gnaar Mok.esp
+     Beyond YsGramor v2.5.esm]
+
+[Patch]
+ (Ref: New Gnaar Mok ReadMe.txt)
+New Gnaar Mok COM Patch.esp
+[ALL New Gnaar Mok.esp 
+     MW_Children_1_0.esm]
+
+[Patch]
+ (Ref: New Gnaar Mok ReadMe.txt)
+New Gnaar Mok COV Patch.esp
+[ALL New Gnaar Mok.esp
+     BB_Clothiers_of_Vvardenfell_v1.1.esp]
+
+; ordering based on filetimes
+[Order]
+New Gnaar Mok.esp
+New Gnaar Mok BY Patch.esp
+New Gnaar Mok COM Patch.esp
+New Gnaar Mok COV Patch.esp
+
+[Order]
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+New Gnaar Mok COV Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Icons [ManaUser]
 
 [Conflict]
@@ -6455,6 +6621,15 @@ Nude_SB.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 10215 NWkimono_01_final.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nymeria's Mages' guild fix [Nymeria]
+
+[Note]
+ The Morrowind Patch Project (MPP) fixes the ownership of the potion chest in Sadrith Mora Mages Guild.
+ If you can live without the Supply Chest added to Caldera Mages Guild then you do not need this plugin.
+Nymeria's mages'guild fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6992,6 +7167,24 @@ Bloodmoon.esm
 Ring Capability Shop - TR+BM.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rise of the Illuminated Lich 1.1 [Psycholex, the Architect]
+
+[Requires]
+ (Ref: Rise_of_the_Illuminated_Lich.rar\readme.txt)
+Rise of the Illuminated Lich.esp
+[ALL Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
+     Illuminated Order v1.0.esp
+     Boe_lich_particle.esp]
+
+; Dragon 32: not mentioned in readme. My guess
+[Order]
+Illuminated Order v1.0.esp
+Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
+Boe_lich_particle.esp
+Rise of the Illuminated Lich.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8010,6 +8203,19 @@ MW_Children_1_0.esm
 TirThalor.esp
 SAFIX.esp
 
+; Aerie of Tir Thalor Quest 1.2
+[Requires]
+ (Ref: Readme_TirThalorQuest.txt)
+Tir Thalor Quest.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     TirThalor.esp]
+
+; Ref: Readme_TirThalorQuest.txt
+[Order]
+TirThalor.esp
+Tir Thalor Quest.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TLM - The Lighting Mod (Modular + Complete) [Sensei]
@@ -8442,6 +8648,26 @@ Underground Manor 3.0.esp
 Undress For Me.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Jewelry and Accessories [Tealpanda]
+
+[Conflict]
+ Unique Jewelry and Accessories contains the changes made by Ring Texture Fix by Random Name.
+ (Ref: Readme - Unique Jewelry and Accessories by tealpanda)
+Unique Jewelry and Accessories.esp
+Ring Texture Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Items 1.1 [Danjb]
+
+[Conflict]
+ Choose only one plugin
+ (Ref: "Unique Items.txt")
+Unique Items - Monster Specific.esp
+Unique Items.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
