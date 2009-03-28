@@ -1134,7 +1134,8 @@ class loadorder:
         """Get the load order by reading an input file. This is mostly to help
         others debug their load order."""
         file = myopen_file(fromfile, 'r')
-        if fromfile == None:
+        if file == None:
+            Dbg.add("Failed to open input file: %s" % fromfile)
             return
         self.order = []
         for line in file:
