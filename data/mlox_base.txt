@@ -4458,13 +4458,6 @@ Lazarus_Manor-TB_sorter.esp
      Tribunal.esm
      Bloodmoon.esm]
 
-; If Lazarus Manor loads before Vvardenfell Libraries, a land tear appears behind the manor facade just outside Caldera.
-[Order]
-The_Vvardenfell_Libraries.esp
-Lazarus_Manor-multiext.esp
-Lazarus_Manor-multiext_TB.esp
-Lazarus_Manor-Caldera.esp
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LCV (Living Cities of Vvardenfell [Wrye]
@@ -4512,13 +4505,6 @@ NPC LCV Schedules 03.esp
  (Ref: "Leaves of Lorien Readme 1.3.txt")
 Leaves of Lorien.esp
 Better Bodies.esp
-
-;; "the mod Leaves of Lorien, needs to load after The Vvardenfell Libraries, as it
-;; causes a landscape conflict the other way around." - lettuceman44
-;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13469885 )
-[Order]
-The_Vvardenfell_Libraries.esp
-Leaves of Lorien.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9665,13 +9651,33 @@ Vivec Outdoor Mall CoM_v2.esp
      Clean SECRET GARDEN V2.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Vvardenfell Library [The Wanderer]
+;; @The Vvardenfell Libraries [The Wanderer]
 
 [Requires]
  (Ref: "wl_library_quickstart.txt")
 The_Vvardenfell_Libraries.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+; JMS
+[Conflict]
+ Kagrenac's Penguin Mod makes some landscape edits around Ebonheart that conflict with Vvardenfel Libraries. One possible fix is to remove these CELL and LAND records from "Clean PENGUINS.esp" for coordinates: (near Ebonheart): (1, -13), (2, -13).
+The_Vvardenfell_Libraries.esp
+Clean PENGUINS.esp
+
+;; "the mod Leaves of Lorien, needs to load after The Vvardenfell Libraries, as it
+;; causes a landscape conflict the other way around." - lettuceman44
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13469885 )
+[Order]
+The_Vvardenfell_Libraries.esp
+Leaves of Lorien.esp
+
+; If Lazarus Manor loads before Vvardenfell Libraries, a land tear appears behind the manor facade just outside Caldera.
+[Order]
+The_Vvardenfell_Libraries.esp
+Lazarus_Manor-multiext.esp
+Lazarus_Manor-multiext_TB.esp
+Lazarus_Manor-Caldera.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
