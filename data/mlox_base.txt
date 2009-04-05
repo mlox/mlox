@@ -2935,6 +2935,25 @@ LOCH_Felsaad_Revamped.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Female Mage Robe Replacer [Ben Tokkin]
+
+[Requires]
+ (Ref: F_Mage_Robe_Rep.rar\readme.txt)
+F_Mage_Robe_Rep.esp
+[ALL HG_robe01.esp
+     HG_robe04.esp]
+
+;Dragon32: Order not mentioned in readme, assumed.
+[Order]
+HG_robe01.esp
+F_Mage_Robe_Rep.esp
+
+[Order]
+HG_robe04.esp
+F_Mage_Robe_Rep.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fishing Academy Mod v2.0 [MADMAX]
 
 [Note]
@@ -4500,6 +4519,17 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Left Gloves Addon - TB and BM [Alaisiagae]
+
+[Conflict]
+ !! Do NOT have "Lurlock's LeftGloves" and "LeftGloves Addon - TB and BM" running
+ !! at the same time.
+ !! (Ref: readme_LeftGloves Addon TBandBM.txt)
+Clean LeftGloves_TBandBM.esp
+LeftGloves.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Leveled Magicka [Marcel Hesselbarth]
 
 [Requires]
@@ -5803,6 +5833,16 @@ S_Inn_th.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mooses on Solsteim Addon 1.0 [Matthew and Steven Kaine]
+
+[Conflict]
+ ! "Mooses on Solstheim" adds more moose to those already added by Pseron Wyrd's
+ ! "Cait's Moose on Solstheim." There is no need to run both mods.
+ ! (Ref: readme_moose_addon.txt)
+Moose_addon.esp
+PW_Cait_Moose.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TES: Morrowind Sound Enhancement Plugin Version 1.5 [Leon "pancreas" Medado]
 
 [Note]
@@ -6009,6 +6049,27 @@ Blood and Gore Fire damage.esp
      Necessities of Morrowind 2.0.esp
      Necessities of Morrowind 2.1.esp
      NOM 2.12.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Necromantic Robe 2 [MP*Canus]
+
+[Requires]
+ (Ref: readme-IcesCNSFemaleNecromantic.html)
+Ice_CNS_FemaleNecromanticRobe.esp
+Clean_Necromantic_Robe_V2.esp
+
+; Dragon32: Examined plugins in TESPCD
+[Order]
+Clean_Necromantic_Robe_V2.esp
+Ice_CNS_FemaleNecromanticRobe.esp
+
+[Conflict]
+ ! Both "Necromantic Robe" by MP*Canus and "Rare Robes Collection" by Xanondorf
+ ! add their necromantic robes to Goris the Maggot King and Dedaenc.
+ ! (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+Clean_Necromantic_Robe_V2.esp
+xan_rare_robesv1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7689,6 +7750,22 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Skeleton Shield Replacer 1.0 [osiris]
+
+[Conflict]
+ !! Choose only one of these plugins
+ !! "osiris' Skeleton Shield Replacer - ALL v1.0.esp" - If you have both expansions
+ !! "osiris' Skeleton Shield Replacer - MW + BM v1.0.esp" - If you have Bloodmoon
+ !! "osiris' Skeleton Shield Replacer - MW + TRB v1.0.esp" - If you have Tribunal
+ !! "osiris' Skeleton Shield Replacer - MW v1.0.esp " - If you just have Morrowind
+ !! (Ref: osiris' Skeleton Shield Replacer v1.0 Readme.txt)
+osiris' Skeleton Shield Replacer - ALL v1.0.esp
+osiris' Skeleton Shield Replacer - MW + BM v1.0.esp
+osiris' Skeleton Shield Replacer - MW + TRB v1.0.esp
+osiris' Skeleton Shield Replacer - MW v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Slavers V1.01 [Ghostwalker71]
 
 [Conflict]
@@ -7722,6 +7799,13 @@ Slof's BB neck fix.esp
      [ANY Slof's Better Beasts a.esp
 	  Slof's Better Beasts b.esp
 	  Slof's Civilised Beasts.esp]]
+
+; Dragon32: Ensure neck fix loads after main Better Beasts plugins
+[Order]
+Slof's Better Beasts a.esp
+Slof's Better Beasts b.esp
+Slof's Civilised Beasts.esp
+Slof's BB neck fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7893,6 +7977,34 @@ ss_DBNRDZ_NV.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 661648 Star Wars Episode 1 The Darkness of Tamriel.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Steel Broadsword Fix v1.1 [quorn]
+
+[Conflict]
+ ! Both Sapphron's Steel Broadsword Fix and Khan raider's Weapon collection pack
+ ! 3.0 replace the steel broadsword, which uses the imperial broadsword mesh &
+ ! icon, with new, unique ones.
+Steel Broadsword Fix BM.esp
+[ANY Steel Broadsword Fix.esp
+     Weapon collection.esp]
+
+[Note]
+ ! Steel Broadsword Fix 1.0 is updated by Steel Broadsword Fix 1.1, you should upgrade!
+steel_broadsword_fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Steel Broadsword Fix [Sapphron]
+
+[Conflict]
+ ! Both quorn's Steel Broadsword Fix 1.1 and Khan raider's Weapon collection pack
+ ! 3.0 replace the steel broadsword, which uses the imperial broadsword mesh &
+ ! icon, with new, unique ones.
+Steel Broadsword Fix.esp
+[ANY Steel Broadsword Fix BM.esp
+     Weapon collection.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8359,16 +8471,18 @@ True_Lights_And_Darkness_0.5.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tombs Expanded [zappara]
 [Note]
- "Tombs Expanded - The Undead Addon" was made for The Undead v2.2, you have a later version and so the Addon will not work.
- (Ref: "readme_Tombs_Expanded_Addon.txt")
+ !! "Tombs Expanded - The Undead Addon" is only needed with The Undead v2.2. You 
+ !! have a later version and so the Addon is not needed.
+ !! (Ref: "readme_Tombs_Expanded_Addon.txt")
 [ALL Tombs Expanded - The Undead Addon.esp
      The Undead.esm]
 
 [Note]
- "Tombs Expanded - The Undead Addon" was made for The Undead v2.2, you have a later version and so the Addon will not work.
- (Ref: "readme_Tombs_Expanded_Addon.txt")
+ !! "Tombs Expanded - The Undead Addon" is only needed with The Undead v2.2. You 
+ !! have a later version, included in MCA, and so the Addon is not needed.
+ !! (Ref: "readme_Tombs_Expanded_Addon.txt")
 [ALL Tombs Expanded - The Undead Addon.esp
-     MCA.esm]
+     SIZE !2519851 MCA.esm] ;this is NOT the MCA/Undead 3.0 compatible version
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9736,7 +9850,12 @@ Indybank.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Life [abot]
+;; @Water Life 1.12 [abot]
+
+[Note]
+ !! A new version of "Water Life" is available, you should upgrade.
+[VER<1.12 abotWaterLife.esm]
+
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
 abotWaterLifeTRaddon.esp
@@ -9749,6 +9868,25 @@ abotWaterLifeTRaddon.esp
 abotWaterLife.esm
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[CONFLICT]
+ !! You do not need to use abot's "NOM2.12patch.esp" with this version of Necessities
+ !! of Morrowind.
+ !! (Ref.abotWaterLife.txt)
+NOM2.12patch.esp
+NOM2.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Weapon collection pack 3.0 [Khan raider]
+
+[Conflict]
+ ! Khan raider's Weapon collection pack 3.0 already replaces the steel 
+ ! broadsword, which uses the imperial broadsword mesh & icon, with new, unique 
+ ! ones.
+Weapon collection.esp
+[ANY Steel Broadsword Fix BM.esp
+     Steel Broadsword Fix.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9918,7 +10056,11 @@ _Mog_Race_v4b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Where Are All Birds Going? [abot]
+;; @Where Are All Birds Going? 1.12 [abot]
+
+[Note]
+ !! A new version of "Where Are All Birds Going?" is available, you should upgrade.
+[VER<1.12 abotWhereAreAllBirdsGoing.esp]
 
 [Requires]
  Tribunal/Bloodmoon engine required.
