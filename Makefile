@@ -28,8 +28,8 @@ upload-mlox:
 	$(UPLOAD) -s "[mlox $(VERSION)] - requires Python25 and wxPython" dist/$(MLOXARC)
 
 upload-data:
-	@echo "Uploading `cat dist/DATAARC`"
-	$(UPLOAD) -s "[mlox-data $(RELDATE)] - install mlox_base.txt into your mlox directory" `cat dist/DATAARC`
+	@echo "Uploading `cat dist/CURRDATA`"
+	$(UPLOAD) -s "[mlox-data $(RELDATE)] - install mlox_base.txt into your mlox directory" dist/`cat dist/CURRDATA`
 
 upload-exe:
 	@echo "Uploading dist/$(EXEARC)"
@@ -68,6 +68,7 @@ dist/$(DATAARC): $(RULES)
 	@perl -p -i -e "s/^\[Version\s+[^\]]+\]/[Version $(RELDATE)]/" $<
 	@(cd data ; 7z a ../dist/$(NEWDATAARC) $(<F)) > /dev/null 2>&1
 	@echo "CREATED distibution archive for mlox rule-base: $(NEWDATAARC)"
+	@echo $(NEWDATAARC) > dist/CURRDATA
 	@echo $(NEWDATAARC) > dist/DATAARC
 
 tes3lint-dist: dist/$(TES3LINTARC)
