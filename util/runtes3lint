@@ -51,10 +51,10 @@ for arc in "$@"; do
 	*)      (cd "$tmpdir" ; 7z x "../$arc") > "../$arc.log" 2>&1 ;; # the default unpacker.
     esac
     ( echo "List of Plugins:" ; find "$tmpdir" -name "*.[eE][sS][mpMP]" ) >> "$arc.log"
-    find "$tmpdir" -name "*.[eE][sS][mpMP]" -print0 | xargs -0 $TES3LINT > "$arc.$TES3EXT" 2>&1
+    find "$tmpdir" -name "*.[eE][sS][mpMP]" -print0 | xargs -0 nice $TES3LINT > "$arc.$TES3EXT" 2>&1
     # remove the temporary directory
     rm -rf "$tmpdir"
 done
 
-echo "tes3lint output files end in $TES3EXT"
-echo "log files ending in .log can be deleted if you don't need them to diagnose a problem with this script"
+echo "tes3lint output files end in \".$TES3EXT\""
+echo "log files ending in \".log\" can be deleted if you don't need them to diagnose a problem with this script"
