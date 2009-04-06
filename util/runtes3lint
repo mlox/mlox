@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# you can change the following to invoke tes3lint with your arguments of choice
+# e.g.: "tes3lint -f EVLGMST" would only check for GMSTs (and run faster than -a, the full report).
+# refer to http://code.google.com/p/mlox/wiki/Tes3lint for command line usage and meaning of flags.
+TES3LINT="tes3lint -a"
+# TES3EXT is the file extension used for the tes3lint output report created by this script
+TES3EXT="t3l.txt"
+
+# when we are interrupted, clean up the current temporary directory
+tmpdir=""
+function cleanup {
+    echo "$0 Interrupted! Cleaning up."
+    if [ -n "$tmpdir" ] && [ -d "$tmpdir" ] ; then
+	rm -rf "$tmpdir"
+    fi
+    exit 1
+}
+trap cleanup INT HUP TERM
+
+# make sure the helper programs we need to use are available on this system
+function find_helper {
+    if [ `which "$1"` = "" ] ; then
+	echo "Unable find the helper program \"$1\" needed to run this script."
+	echo "The program needs to be installed on this system in one of the directories"
+	echo "in your PATH so this script can find it."
+	exit 1
+    fi
+}
+find_helper 7z
+find_helper unace
+find_helper tes3lint
+
+# for each mod archive on the command line, extract the files to a temporary directory
+#  and run tes3lint on any plugins found within.
+for arc in "$@"; do
+    # in case there were some obvious non-archives on the command line, we skip over them
+    case "$arc" in
+    *.$TES3EXT|*.log|*.dir) echo "Skipping: $arc" ; continue ;;
+    esac
+    # temp directory name is the archive name suffixed with ".dir" and is created in the current directory (".")
+    tmpdir="./${arc##*/}.dir" ;
+    echo "#### Examining:  $arc"
+    if ! mkdir "$tmpdir" ; then
+	echo "Error creating temporary directory $tmpdir"
+	exit 1
+    fi
+    # unpack the different archive types. Others could be added here if 7z is not sufficient.
+    case "$arc" in
+	*.ace)  (cd "$tmpdir" ; unace x "../$arc") > "../$arc.log" 2>&1 ;;
+	*)      (cd "$tmpdir" ; 7z x "../$arc") > "../$arc.log" 2>&1 ;; # the default unpacker.
+    esac
+    ( echo "List of Plugins:" ; find "$tmpdir" -name "*.[eE][sS][mpMP]" ) >> "$arc.log"
+    find "$tmpdir" -name "*.[eE][sS][mpMP]" -print0 | xargs -0 $TES3LINT > "$arc.$TES3EXT" 2>&1
+    # remove the temporary directory
+    rm -rf "$tmpdir"
+done
+
+echo "tes3lint output files end in $TES3EXT"
+echo "log files ending in .log can be deleted if you don't need them to diagnose a problem with this script"
