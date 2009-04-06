@@ -45,11 +45,15 @@ for arc in "$@"; do
 	echo "Error creating temporary directory $tmpdir"
 	exit 1
     fi
-    # unpack the different archive types. Others could be added here if 7z is not sufficient.
-    case "$arc" in
-	*.ace)  (cd "$tmpdir" ; unace x "../$arc") > "../$arc.log" 2>&1 ;;
-	*)      (cd "$tmpdir" ; 7z x "../$arc") > "../$arc.log" 2>&1 ;; # the default unpacker.
-    esac
+    (   cd "$tmpdir"
+        # unpack the different archive types. Others could be added here if 7z is not sufficient.
+	case "$arc" in
+	    *.ace)  unace x "../$arc" ;;
+	    *)      7z x "../$arc" ;;
+	esac ) > "../$arc.log" 2>&1
+    # enforce readability permissions on the extracted files
+    find "$tmpdir" -type d -print0 | xargs -0 chmod 755 > /dev/null 2>&1
+    find "$tmpdir" -type f -print0 | xargs -0 chmod 644 > /dev/null 2>&1
     ( echo "List of Plugins:" ; find "$tmpdir" -name "*.[eE][sS][mpMP]" ) >> "$arc.log"
     find "$tmpdir" -name "*.[eE][sS][mpMP]" -print0 | xargs -0 nice $TES3LINT > "$arc.$TES3EXT" 2>&1
     # remove the temporary directory
