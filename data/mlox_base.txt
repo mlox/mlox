@@ -345,6 +345,22 @@ GUARD-Remover.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Advanced Herbalism [andoreth]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Advanced Herbalism - MO.esp" if you have Morrowind only
+ "Advanced Herbalism - TR & BM.esp" if you have both Tribunal and Bloodmoon
+ "Advanced Herbalism - TR.esp" if you have Tribunal only
+ "Advanced Herbalism - BM.esp" if you have Bloodmoon only
+ (Ref. Advanced Herbalism Readme.txt)
+Advanced Herbalism - MO.esp
+Advanced Herbalism - TR & BM.esp
+Advanced Herbalism - TR.esp
+Advanced Herbalism - BM.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurer's Tanktops 2 v.1.0 [Hurdy Gurdy]
 
 [Note]
@@ -563,6 +579,24 @@ Castle_Dragonfall.esp
 Alice.esp
 Nevena's Assistants & Apprentices 1.0.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @All That Glitters [Indigo]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 39814 ind_new_gems.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alternate Leveling (Forgetfulness) [Balor]
+
+[Requires]
+ This plugin uses a Startup script, so it requires either expansion.
+Levelling.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Amazon War Boots 1.0 [Durgoth]
@@ -932,6 +966,49 @@ Vivec, Guild of Mages Offices.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @AVENGER'S female armor [Avenger]
+
+[Conflict]
+ Both "AVENGER'S female armor - Tribunal" by Avenger and "Divine Domina Part 3 Tribunal" by Jeremy McGuinn provide female versions of the Tribunal armors, you should decide which plugin to use.
+AV_fem_armor_Trib.esp
+Divine_domina_part_3_Tribunal.esp
+
+[Conflict]
+ "AVENGER'S female armor" by Avenger provides female versions of the Morrowind armors. Other plugins (including Jeremy McGuinn's Divine Domina series and CanadianIce's Glass Cuirass Mod) also add female versions of the same armors, you should decide which plugins to use.
+AV_female_armor.esp
+[ANY Divine_domina_part_4.esp
+     Divine_domina_part_5.esp
+     Ice's Glass Cuirass.esp
+     Divine_domina_part_2.esp
+     Divine_domina_part_1.esp]
+
+[Conflict]
+ "AVENGER'S female armor" by Avenger already uses Sheikizza Icemane's female Templar cuirass, there is no need to run both plugins.
+ (Ref: AV_female_armor.esp)
+AV_female_armor.esp
+FEMALE_TEMPLAR_CUIRASS_V0.1.esp
+
+[Conflict]
+ "AVENGER'S female armor" by Avenger already uses a number of Cyanvoid's female cuirasses (iron, Helseth Guard, glass, Adamantium, Ebony and Indoril). There is no need to run both plugins.
+ (Ref: AV_female_armor.esp)
+AV_female_armor.esp
+female_cuirasses_2.0.esp
+
+[Requires]
+ (Ref: AV_female_armor.esp)
+AV_fem_Armor_Trib.esp
+Tribunal.esm
+
+; "OfficialMods_v5.esp" and "Clean Official Plugins v1.1.esp" are compilations of all official Bethesda mods
+[Requires]
+ (Ref: AV_female_armor.esp)
+AV_female_armor.esp
+[ANY LeFemmArmor.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Academy of Stripology [Necrobard]
 
 [Note]
@@ -985,26 +1062,6 @@ Balmora Thieves' Hideout 3.1.esp
  (Ref: "BTH 3.0 readme.txt")
 Weapons to Add to Bal, Thieves' Hideout 3.1.esp
 Balmora Thieves' Hideout 3.1.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @All That Glitters [Indigo]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 39814 ind_new_gems.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Alternate Leveling (Forgetfulness) [Balor]
-
-[Requires]
- This plugin uses a Startup script, so it requires either expansion.
-Levelling.esp
-[ANY Tribunal.esm
-     Bloodmoon.esm]
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Baron's Partners [Baron Of Hell]
@@ -2580,6 +2637,44 @@ Distant Land Weather Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Divine Domina [Jeremy McGuinn]
+
+; Dragon32: Examining plugins in TESPCD shows a conflict between these two plugins, DD part 5 was released after DD part 2 and has a later modified date in the archive, so I've set it to load last
+[Order]
+Divine_domina_part_2.esp
+Divine_domina_part_5.esp
+
+[Requires]
+Divine_domina_part_3_Tribunal.esp
+Tribunal.esm
+
+[Conflict]
+ Both these plugins provide a female version of the Templar cuirass, Divine Domina by Jeremy McGuinn uses the domina mesh and Sheikizza Icemane's female Templar cuirass uses one of Sheikizza's own meshes. You should choose which of these two plugins to use
+Divine_domina_part_1.esp
+FEMALE_TEMPLAR_CUIRASS_V0.1.esp
+
+[Conflict]
+ Both Jeremy McGuinn's Divine Domina and Cyanvoid's Female Cuirasses 2.0 provide female versions of the same cuirasses. You should choose which plugin to use.
+female_cuirasses_2.0.esp
+[ANY Divine_domina_part_3_Tribunal.esp
+     Divine_domina_part_1.esp]
+
+; (Ref: DivDomCompatibility.txt from "Divine Domina Compatibility Patches" by iamnone)
+; Dragon32: DD part 4 contains the chain armour
+[Order]
+Divine_domina_part_4.esp
+Imperial Chain Boots n Gauntlets.ESP
+DivDom_ImperialChain.esp
+
+; (Ref: DivDomCompatibility.txt from "Divine Domina Compatibility Patches" by iamnone)
+; Dragon32: DD part 3 contains the adamantium armour
+[Order]
+Divine_domina_part_3_Tribunal.esp
+ImprovedAdamantiumArmor.esp
+DivDom_ImprovedAdamantium.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dongle Ranger Tent MWSE Patch [Bjam]
 
 ; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
@@ -3510,6 +3605,10 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 Herbalism_Lite_v1.0.esp
 Herbalismv1.3(Tribunal).esp
 Ultra Light Herbalism.esp ; by Rogue_Shadow?
+Advanced Herbalism - MO.esp
+Advanced Herbalism - TR & BM.esp
+Advanced Herbalism - TR.esp
+Advanced Herbalism - BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3927,6 +4026,21 @@ H.E.L.L.U.V.A. Complete Weapons.esp
  ! You are using an old version of HELLUVA Complete Weapons. Download the latest version.
 H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 
+[Conflict]
+ ! Sandman101's H.E.L.L.U.V.A. Armor Completion provides female versions of all of Morrowind's (including expansions) armors. H.E.L.L.U.V.A. Armor Completion also adds many other armor items to complete the armor sets. There is no need to run any of the other plugins that add female versions.
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+[ANY AV_fem_armor_Trib.esp
+     AV_female_armor.esp
+     Divine_domina_part_1.esp
+     Divine_domina_part_2.esp
+     Divine_domina_part_3_Tribunal.esp
+     Divine_domina_part_4.esp
+     Divine_domina_part_5.esp
+     FEMALE_TEMPLAR_CUIRASS_V0.1.esp
+     female_cuirasses_2.0.esp
+     Ice's Glass Cuirass.esp
+     Ice_FemaleSteelCuirass.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Huleeya, Morag Tong Bugfix [Escee]
@@ -3973,6 +4087,17 @@ IceNioLivRobeReplacerMW.esp
 IceNioLivRobeReplacerTB.esp
 IceNioLivRobeReplacerBM.esp
 IceNioLivRobeReplacerPLUS.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ice's Glass Cuirass [CanadianIce]
+
+[Conflict]
+ Both CanadianIce's Glass Cuirass and Cyanvoid's Female Cuirasses provide a female version of the glass cuirass. You should decide which plugin to use.
+Ice's Glass Cuirass.esp
+female_cuirasses_2.0.esp
+
+; Dragon32 note: conflict with Avenger's Female Armor covered under that plugin.
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5163,9 +5288,11 @@ Melee Missiles v1.2.esp
 ; (Ref: "multimodreadme.txt")
 
 [Conflict]
- "Passive_Healthy_Wildlife.esp" and "animalbehave.esp" from "Merkin's Multi-mod" have very similar function, you should probably choose only one or the other.
+ "Passive_Healthy_Wildlife.esp", "Rational Wildlife", "Passive Wildlife Vvardenfell" and "animalbehave.esp" from "Merkin's Multi-mod" have very similar function, you should probably choose only one or the other.
 animalbehave.esp
-Passive_Healthy_Wildlife.esp
+[ANY Passive_Healthy_Wildlife.esp
+     Rational Wildlife.esp
+     Passive Wildlife Vvardenfell.esp]
 
 ;;encumbrance.esp
 ;;magicbalance.esp
@@ -6821,6 +6948,17 @@ Jac_Passing time while reading -  BRBJ patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Passive Wildlife Vvardenfell 1.1 [Lucror]
+
+[Conflict]
+ "Passive Wildlife Vvardenfell" is not needed if you use Sabregirl's ecology, as they both do the same thing.
+Passive Wildlife Vvardenfell.esp
+[ANY SG-MW-ecology-BM-plugin.esp
+     SG-MW-ecology-WW-plugin.esp
+     SG-MW-ecology-carnivore-plugin.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Pearls Enhanced [Melchior]
 
 [Conflict]
@@ -7027,6 +7165,24 @@ Bloodmoon.esm
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 266531 quarraclan.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rational Wildlife [Max]
+
+[Conflict]
+ "Rational Wildlife" by Max does a similar job to "Passive Healthy Wildlife", "Passive Wildlife Vvardenfell" and "animalbehave.esp" from "Merkin's Multi-mod", you should probably choose one of these and not all. "Rational Wildlife" covers Bloodmoon creatures too.
+Rational Wildlife.esp
+[ANY animalbehave.esp
+     Passive_Healthy_Wildlife.esp
+     Passive Wildlife Vvardenfell.esp]
+
+[Conflict]
+ "Rational Wildlife" is not needed if you use Sabregirl's ecology, as they both do the same thing.
+Rational Wildlife.esp
+[ANY SG-MW-ecology-BM-plugin.esp
+     SG-MW-ecology-WW-plugin.esp
+     SG-MW-ecology-carnivore-plugin.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7399,6 +7555,13 @@ SG-MW-ecology-carnivore-plugin.esp
 [Conflict]
  Passive Healthy Wildlife is not needed if you use Sabregirl's ecology, as they both do the same thing.
 Passive_Healthy_Wildlife.esp
+[ANY SG-MW-ecology-BM-plugin.esp
+     SG-MW-ecology-WW-plugin.esp
+     SG-MW-ecology-carnivore-plugin.esp]
+
+[Conflict]
+ "animalbehave.esp" from "Merkin's Multi-mod" is not needed if you use Sabregirl's ecology, as they both do the same thing.
+animalbehave.esp
 [ANY SG-MW-ecology-BM-plugin.esp
      SG-MW-ecology-WW-plugin.esp
      SG-MW-ecology-carnivore-plugin.esp]
