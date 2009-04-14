@@ -482,6 +482,7 @@ Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 Korobal v1.2.esp
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 BT_Whitewolf_2_0.esp
 Clean Solstheim_Castle_v1.1.esp
@@ -558,7 +559,7 @@ Ald-Vendras_V3-LoKKen-SC.esp
 Castle_Dragonfall.esp
 
 [NOTE]
- !! Ald-Vendras V31 erroneously includes three scripts which handle the end of Morrowind's
+ !! Ald-Vendras V30 and V31 erroneously includes three scripts which handle the end of Morrowind's
  !! main quest: DagothUrCreature1, EndGame, and LorkhanHeart. These scripts are
  !! taken from a French version of Morrowind, which means that Dagoth Ur will speak
  !! French, and that he will not be teleported to the endgame location (because the
@@ -567,7 +568,10 @@ Castle_Dragonfall.esp
  !! intentionally. Solution: Remove the three scripts from the esp.
 [ANY Ald-Vendras_V31.esp
      Ald-Vendras_V31-LoKKen.esp
-     Ald-Vendras_V31-LoKKen-SC.esp]
+     Ald-Vendras_V31-LoKKen-SC.esp
+     Ald-Vendras_V3.esp
+     Ald-Vendras_V3-LoKKen.esp
+     Ald-Vendras_V3-LoKKen-SC.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -646,6 +650,7 @@ Bloodmoon.esm
 Annastia V3.3.esp
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 
 
@@ -1009,6 +1014,20 @@ AV_female_armor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Azriel the Merchant [Andyguy]
+
+[Requires]
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3040 )
+Azriel Addon.esp
+Azriel the Merchant.esp
+
+; Dragon32: Examined plugins in TESPCD, I believe this to be the correct order.
+[Order]
+Azriel the Merchant.esp
+Azriel Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Academy of Stripology [Necrobard]
 
 [Note]
@@ -1020,18 +1039,72 @@ AV_female_armor.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Expansion [Gorg, CanadianIce and Jeremy]
 
-[Requires]
- (Ref: "Balmora Expansion - LITE 1.0.txt")
-Balmora Expansion - LITE 1.0.esp
-Balmora Expansion v1.4.esp
+; ** Dragon32: "Balmora Expansion - LITE 1.0.txt" actually says to deactivate "Balmora Expansion v1.4.esp" when using "Balmora Expansion - LITE 1.0.esp"
+; [Requires]
+;  (Ref: "Balmora Expansion - LITE 1.0.txt")
+; Balmora Expansion - LITE 1.0.esp
+; Balmora Expansion v1.4.esp
 
-; Vality's Balmora Addon.esp conflicts with Balmora Expansion but it should
-; work okay if you load it before BE.
-; (Ref: "http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13485819 )
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] A Good Place to Stay"
 [Order]
-Vality's Balmora Addon.esp
+A good place to stay, Ver 1,8.esp
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Armorer by Indestructible"
+; (Ref: Balmora_expansion v1.4\readme.txt)
+[Order]
+armorer.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Asgard 3.0"
+[Order]
+Clean Asgard3.3.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Ashland Traders"
+[Order]
+Ashlander Traders.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Azriel the Merchant"
+[Order]
+Azriel the Merchant.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Balmora Extras"
+[Order]
+Balmora Extras.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; Dragon32: PrincessStomper's "Balmora Ghetto" alters some of the Dave Humphrey furniture, the "Balmora Ghetto" versions of the furniture don't include the scripts.
+[Order]
+BE_ghetto_BE.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 
 ;; Ordering:
@@ -1041,8 +1114,221 @@ BE+(1.4) Better Looking Morrowind.esp
 Grandmaster of Hlaalu.esp
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 BE-Callenwald.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] ICE's Hideaway"
+[Order]
+Ice's Hideaway.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Illuminated Order"
+; Dragon32: The two compatibility ESPs ("Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp" and "Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp") are mentioned elsewhere in mlox_base. Not included here.
+[Order]
+Illuminated Order v1.0.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Petshop by Jdooby"
+[Order]
+Petshop_4.1.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Private Mobil Base"
+; Dragon32: No load order for the PMB plugins specified elsewhere in mlox_base or in plugin readme; but this matches their numbering and modified date
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; Vality's Balmora Addon.esp conflicts with Balmora Expansion but it should work okay if you load it before BE.
+; (Ref: "http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13485819 )
+[Order]
+Vality's Balmora Addon.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=978167&view=findpost&p=14137890 )
+[Order]
+Vality's Bitter Coast Addon.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+; Dragon32: "BE_Windows_Glow2_Addon.esp" doesn't have Max's scripts included. Suggest load after WG.
+; Windows Glow needs to load before Balmora Expansion
+; (Ref: Balmora_expansion v1.4\readme.txt)
+[Order]
+Windows Glow.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+BE_Windows_Glow2_Addon.esp
+
+[Conflict]
+ !! Use "BE_dh_homes.esp" with "Balmora Expansion" by Gorg et al and use "dh_homes.esp" if you do not have Balmora Expansion.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+BE_dh_homes.esp
+dh_homes.esp
+
+; Dragon32: "Copy of HousesForSale.esp" is the mod name in the archive.
+[Conflict]
+ !! Use "BE_HousesForSale.esp" with "Balmora Expansion" by Gorg et al and use HousesForSale if you do not have Balmora Expansion.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+BE_HousesForSale.esp
+[ANY Copy of HousesForSale.esp
+     HousesForSale.esp]
+
+[Conflict]
+ !! You should be using the Balmora Expansion-compatible version "BE_HousesForSale.esp", included with "Balmora Expansion" by Gorg et al.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+[ANY Copy of HousesForSale.esp
+     HousesForSale.esp]
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! Use "BE_The Soothsayer ver 1.1.esp" with "Balmora Expansion" by Gorg et al and use "The Soothsayer ver 1.1.esp" if you do not have "Balmora Expansion".
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+The Soothsayer ver 1.1.esp
+BE_The Soothsayer ver 1.1.esp
+
+[Conflict]
+ !! You should be using the Balmora Expansion-compatible version "BE_The Soothsayer ver 1.1.esp", included with "Balmora Expansion" by Gorg et al.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+The Soothsayer ver 1.1.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! "Balmora Keep" (unknown author) and "Balmora Expansion" by Gorg et al are incompatible.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+Balmora Keep.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! "Balmora Market" by thehelm2002 and "Balmora Expansion" by Gorg et al are incompatible.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+Balmora Market.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! "Balmora Farmers Market" by EchoFlame and "Balmora Expansion" by Gorg et al are incompatible.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+EchoFlames Balmora Farmers market 1.1.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! "Private Tower Balmora" by henkbein and "Balmora Expansion" by Gorg et al are incompatible.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+Private_Tower_Balmora.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! "KFM Castle" by Tito13KFM and "Balmora Expansion" by Gorg et al are incompatible.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+Clean KFM Castle.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+; Dragon32: Unsure on the validity of Gorg's load order
+; [Order]
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; "NOTE---The following mods must be installed before Balmora Expansion in order to guarantee that they will work properly.[...] Neccessities of Morrowind 2"
+; Necessities of Morrowind 2.0.esp
+; Necessities of Morrowind 2.1.esp
+; NOM 2.12.esp
+; NOM2.13.esp
+; Balmora Expansion v1.4.esp
+; Balmora Expansion v1.4+(1.4).esp
+; Balmora Expansion - LITE 1.0.esp
+; BE+(1.4) Better Looking Morrowind.esp
+
+; [Conflict]
+; Balmora Trade City
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; Dragon32: I've been unable to find ESP name for this, Gorg based Balmora Expanded on this mod. Appears to have only been released on the BSF.
+
+; [Conflict]
+; Balmora House
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; Dragon32: Unable to work out *which* Balmora House this is. Options: Balmora House by eqaddikt1, Balmora House by Hanno, Balmora House by Blith Erring Idio.
+
+
+;[Conflict]
+; Home Sweet Home
+; (Ref: Balmora_expansion v1.4\readme.txt)
+; Dragon32: Unsure *which* Home Sweet Home mod in Balmora this is. Two candidates: one by redruM.rD ("Home Sweet Home") and one by Jinx Talaris ("Home Sweet Home Balmora"). Both mod's upload dates preced BE.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Farmers Market [EchoFlame]
+
+;[Requires]
+; EchoFlames Balmora Farmers market 1.1.esp
+; Sils_Argonian_Faces_v1.0
+; Aduls Aresenal
+; Daduke's Arsenal
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Ghetto [PrincessStomper]
+
+[Conflict]
+ !! Install only one plugin:
+ !! "BE_ghetto_BE.esp" if you have "Balmora Expansion" by Gorg et al.
+ !! "BE_ghetto_No_BE.esp" if you do not use "Balmora Expansion".
+ !! (Ref: readme BE_Ghetto.esp)
+BE_ghetto_BE.esp
+BE_ghetto_No_BE.esp
+
+[Requires]
+ !! "BE_ghetto_BE.esp" requires "Balmora Expansion" by Gorg et al, you do not have "Balmora Expansion" loaded so you should use "BE_ghetto_No_BE.esp"
+ !! (Ref: readme BE_Ghetto.esp)
+BE_ghetto_BE.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1156,6 +1442,30 @@ NOM 2.13.esp
 BLLDV_ALL.esp
 BLLDV_MW_ONLY.esp
 BLLDV_MW_TR.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Looking Morrowind [Misty Moon]
+
+[Conflict]
+ ! Choose either "BL-Morrowind.esm" or "BL-Morrowind.esp" not both. If you get conflicts with other mods try "BL-Morrowind.esp".
+ ! (Ref: Better Looking Morrowind.txt)
+BL-Morrowind.esm 
+BL-Morrowind.esp
+
+[Conflict]
+ !! To prevent conflicts use "BE+(1.4) Better Looking Morrowind.esp" from Slartibartfast's "Texture Fix - Balmora Expansion"
+ !! (Ref: Readme - Texture Fix- Balmora Expansion.txt)
+[ALL [ANY BL-Morrowind.esm 
+          BL-Morrowind.esp]
+     [ANY Balmora Expansion v1.4.esp
+          Balmora Expansion - LITE 1.0.esp
+          Balmora Expansion v1.4+(1.4).esp]]
+[NOTE]
+ You are using an older version of Better Looking Morrowind, you should upgrade to v1.3:
+ http://www.ringen.net/~ajs/mw/pluginsmods.html
+[ANY [VER < 1.3 BL-Morrowind.esm]
+     [VER < 1.3 BL-Morrowind.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1681,6 +1991,7 @@ The Boatmaster.esp
 The Boatmaster.esp
 [ANY Balmora Expansion v1.4.esp
      Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
      BE+(1.4) Better Looking Morrowind.esp]
 
 
@@ -2503,6 +2814,31 @@ dh_furn.esp
 [Order]
 Vality's Ascadian Isles Addon.esp
 dh_homes.esp
+
+; Bizarrely added by Dragon32 :-)
+; (Ref: dh_furn-jms_patch.txt)
+[Order]
+dh_furn.esp
+dh_furn_stores.esp
+dh_furn-jms_patch.esp
+
+[Conflict]
+ !! Use "BE_dh_homes.esp" rather than "dh_homes.esp" when using "Balmora Expansion" by Gorg et al.
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+dh_homes.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
+ !! As you are using Slartibartfast's updated Balmora Expansion (either the full or the lite version) you do not need to run "dh_furn_stores.esp", Balmora Expansion includes the Balmora furniture shop and "BE_dh_furn_stores .esp" adds the remaining two shops near Hla Oad and Vivec.
+ !! (Ref: Balmora Expansion - LITE 1.0.txt and Readme - Texture Fix- Balmora Expansion.txt)
+dh_furn_stores.esp
+[ALL BE_dh_furn_stores .esp
+     [ANY Balmora Expansion v1.4+(1.4).esp
+          BE+(1.4) Better Looking Morrowind.esp
+          Balmora Expansion - LITE 1.0.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4101,6 +4437,42 @@ female_cuirasses_2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ice's Hideaway [CanadianIce]
+
+[Requires]
+ !! (Ref: "readme-IcesHideaway.doc")
+Ice's Hideaway Buster.esp
+Ice's Hideaway.esp
+
+[Requires]
+ !! (Ref: "readme-IcesHideawayHESwimtopFix.txt)
+IcesHideawayHESwimTopFix.esp
+Ice's Hideaway.esp
+
+[Requires]
+ !! (Ref: Dragon32 - examined plugins, "Ice's Hideaway Patch" requires "Ice's Hideaway")
+Ice'sHideawayBBpatch.esp
+Ice's Hideaway.esp
+
+[Conflict]
+ !! With CanadianIce's "Ice's Hideaway Patch" you do not need her "High Elf Swimsuit top fix".
+ !! (Ref: Dragon32 - examined plugins using TESPCD, the Patch includes the swimsuit fix and was released later)
+IcesHideawayHESwimTopFix.esp
+Ice'sHideawayBBpatch.esp
+
+[Order]
+; Dragon32: Deduced from file dates and TESPCD
+Ice's Hideaway.esp
+IcesHideawayHESwimTopFix.esp
+Ice'sHideawayBBpatch.esp
+
+[Order]
+; (Ref: "readme-IcesHideaway.doc")
+Ice's Hideaway.esp
+Ice's Hideaway Buster.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Iliandria, an Altmer Town [PirateLord]
 
 [Note]
@@ -4302,6 +4674,15 @@ Bloodmoon.esm
  !! says it was cleaned).
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1004489 Indarys Unleashed.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Indoril Greaves [Smite_Plight]
+
+[Conflict]
+ ! Both Smite_Plight's "Indoril Greaves" and Sandman101's "H.E.L.L.U.V.A. Armor Completion" add Indoril greaves to the Ordinators. You should choose which plugin to use.
+Indoril Greaves.esp
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8214,6 +8595,7 @@ BE_Bathing_Patch.esp
 [Order]
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 BE_Bathing_Patch.esp
 
@@ -8223,6 +8605,7 @@ BE_Bathing_Patch.esp
 [ALL Stinkers.esp
      [ANY Balmora Expansion v1.4.esp
 	  Balmora Expansion v1.4+(1.4).esp
+          Balmora Expansion - LITE 1.0.esp
 	  BE+(1.4) Better Looking Morrowind.esp]]
 
 
@@ -8436,6 +8819,14 @@ Tenience's Rare Items.esp
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
 BE+(1.4) Better Looking Morrowind.esp
+Balmora Expansion - LITE 1.0.esp
+
+[Requires]
+ !! "BE+(1.4) Better Looking Morrowind.esp" requires "Better Looking Morrowind" by Misty Moon.
+ !! (Ref: Readme - Texture Fix- Balmora Expansion.txt)
+BE+(1.4) Better Looking Morrowind.esp
+[ANY BL-Morrowind.esm 
+     BL-Morrowind.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10038,6 +10429,15 @@ Walled_City_v1.2.esp
 WalledCity_IndyBank.esp
 Indybank.esp
 
+[Conflict]
+ !! Balmora Expansion is not compatible with the Walled City of Balmora
+ !! (Ref: Balmora_expansion v1.4\readme.txt)
+[ANY Walled_City_v1.2.esp
+     WalledCity_IndyBank.esp]
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Water Life 1.12 [abot]
