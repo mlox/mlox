@@ -16,6 +16,7 @@ o How Rules work
 oo Filename Expansion
 o Ordering Rules
 oo The Order Rule
+oo Customizing your Load Order
 oo The NearStart Rule
 oo The NearEnd Rule
 o Warning Rules
@@ -108,6 +109,21 @@ plugin-N.esp". It means that plugin-1.esm must precede plugin-2.esp
 AND plugin-2.esp must precede plugin-N.esp in the load order. This
 relationship is transitive, so plugin-1 must also precede plugin-N.
 
+oo Customizing your Load Order
+
+For people that want to customize their load order, the [Order] rule is
+probably all that is needed. Here is a simple example:
+
+Let's say you want to make sure that mlox always puts plugin "Foo.esp" before
+"Bar.esp". Just create a simple text file called "mlox_user.txt" in your mlox
+directory (using Notepad or whatever) containing the following:
+
+[Order]
+Foo.esp
+Bar.esp
+
+From now on, when you press the mlox update button, mlox will make sure that
+this is the order for those 2 plugins.
 
 ------------------------------------------------------------
 oo The NearStart Rule
