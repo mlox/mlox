@@ -461,6 +461,26 @@ NOM 2.13.esp
 Ald Redaynia Extended COM.esp
 Ald Redaynia Extended.esp
 
+[Conflict]
+ !! You should use the version of Darkelfguy's "Redaynia Village" that is compatible with Princess Stomper's "Ald Redaynia Extended"
+ !! Redaynia_Village_v11.rar:  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6638
+ !! (Ref: See Planet Elder Scrolls download page.
+[ALL [ANY Ald Redaynia Extended COM.esp
+          Ald Redaynia Extended.esp]
+     [SIZE 304650 Redaynia Village.esp]]
+
+[Conflict]
+ !! There is a landscape conflict when using Princess Stomper's "Ald Redaynia Extended" with Centurion's "Ald Vendras". The easiest way to fix this is to remove the LAND record for cell -4,22 from "Ald Redaynia Extended".
+ !! (Ref: Dragon32, found this out using TESPCD and examining in game).
+[ALL [ANY [SIZE 1106213 Ald Redaynia Extended.esp]
+          [SIZE 1114009 Ald Redaynia Extended COM.esp]]
+     [ANY Ald-Vendras_V3.esp
+          Ald-Vendras_V3-LoKKen.esp
+          Ald-Vendras_V3-LoKKen-SC.esp
+          Ald-Vendras_V31.esp
+          Ald-Vendras_V31-LoKKen.esp
+          Ald-Vendras_V31-LoKKen-SC.esp]]
+
 [Requires]
 Ald Redaynia Extended COM.esp
 MW_Children_1_0.esm
@@ -574,12 +594,12 @@ Castle_Dragonfall.esp
  !! script tries to teleport him to the *French* version of that cell, which has a different
  !! name than the English version). This will also break mods that modify these scripts
  !! intentionally. Solution: Remove the three scripts from the esp.
-[ANY Ald-Vendras_V31.esp
-     Ald-Vendras_V31-LoKKen.esp
-     Ald-Vendras_V31-LoKKen-SC.esp
-     Ald-Vendras_V3.esp
-     Ald-Vendras_V3-LoKKen.esp
-     Ald-Vendras_V3-LoKKen-SC.esp]
+[ANY [SIZE 10204798 Ald-Vendras_V31.esp]
+     [SIZE 9978740 Ald-Vendras_V31-LoKKen.esp]
+     [SIZE 9789132 Ald-Vendras_V31-LoKKen-SC.esp]
+     [SIZE 10053493 Ald-Vendras_V3.esp]
+     [SIZE 9827301 Ald-Vendras_V3-LoKKen.esp]
+     [SIZE 9630441 Ald-Vendras_V3-LoKKen-SC.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -944,6 +964,14 @@ Tribunal.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Authentic Signs: Inns and Taverns 1.1 [Nigedo]
+
+[Note]
+ ! "Unique Banners and Signs" by Bart Notelaers modifies five of the six inn and tavern signs altered by "Authentic Signs: Inns & Taverns" by Nigedo:
+ ! Dirty Muriel's Cornerclub in Sadrith Mora, Halfway Tavern in Pelagiad, The End of the World in Dagon Fel, Shenk's Shovel in Caldera and Six Fishes in Ebonheart.
+ ! mlox's suggested load order means that Nigedo's "Authentic Signs: Inns & Taverns" will overwrite the changes to these signs by Bart Notelaers' "Unique Banners and Signs"
+ ! You can change this load order, if you wish, by adding an Order rule into "mlox_user.txt"
+[ALL Authentic Signs IT 1.1.esp
+     Unique Banners and Signs.esp]
 
 ;; "Load this one after Unique Banners and Signs below if you want to use both."
 ;; (Ref: http://www.mwmythicmods.com/telesphoros.htm )
@@ -1517,11 +1545,13 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Farmers Market [EchoFlame]
 
-;[Requires]
-; EchoFlames Balmora Farmers market 1.1.esp
-; Sils_Argonian_Faces_v1.0
-; Aduls Aresenal
-; Daduke's Arsenal
+[Requires]
+ !! "Balmora Farmers Market" by EchoFlame requires a number of mods be installed:
+ !! "Sils Argonian Faces and Horn Styles" by Silaria, "Adul's Arsenal" by Adul and "The Arsenal 0.9" by Daduke.
+EchoFlames Balmora Farmers market 1.1.esp
+[ALL Sils_Argonian_Heads_v1.0.esp
+     Aduls_Arsenal.esp
+     The Arsenal.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2933,52 +2963,72 @@ GDR_MasterFile.esm
      Bloodmoon.esm]
 
 [Note]
- If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
-[ALL DN-GDRv1.esp
+ ! If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1_NOM.esp]
      Merged_Objects.esp]
 
 [Conflict]
- DN-GDRv1 is not compatible with Princess Stomper's Ghostgate
- (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1.esp
-Clean Ghostgate.esp
+ !! Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
+ !! (Ref: DNGDRv1.zip/"readme.htm")
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1_NOM.esp]
+     Clean Ghostgate.esp]
 
 [Conflict]
- DN-GDRv1 is not compatible with Sabregirls' Tougher Sixth House
- (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1.esp
-SG-toughersixth.esp
+ !! Darknut's "Greater Dwemer Ruins" is not compatible with Sabregirls' "Tougher Sixth House"
+ !! (Ref: DNGDRv1.zip/"readme.htm")
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1_NOM.esp]
+     SG-toughersixth.esp]
 
 [Conflict]
- DN-GDRv1 is not compatible with Great House Dagoth
- (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1.esp
+ !! The NOM (Necessities of Morrowind) version of Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
+ !! (Ref: DNGDRv1.zip/"readme.htm")
+DN-GDRv1_NOM.esp
 Great House Dagoth.esp
 
 [Conflict]
- DN-GDRv1 is not compatible with Dagoth Ur Voice Addon v1.0
- (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1.esp
-Dagoth Ur Voice Addon v1.0.esp
+ !! Darknut's "Greater Dwemer Ruins" includes "Dagoth Ur Voice Addon v1.0"
+ !! (Ref: DNGDRv1.zip/"readme.htm")
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1_NOM.esp]
+     Dagoth Ur Voice Addon v1.0.esp]
 
 [Conflict]
- If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp,
- otherwise, use DN-GDRv1.esp.
- (Ref: DNGDRv1.zip/"readme.htm")
+ !! If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp, otherwise, use DN-GDRv1.esp.
+ !! (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1.esp
 DN-GDRv1_NOM.esp
 
 [Patch]
- If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
- (Ref: DNGDRv1.zip/"readme.htm")
+ !! If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
+ !! (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1_NOM.esp
 [ALL GDR_MasterFile.esm
      NOM 2.13.esp]
 
+[Patch]
+ !! MoonAndStar's "Great House Dagoth/ Darknut's Greater Dwemer Ruins Compatibility Patch" patches TheMadGod's "Great House Dagoth" for use with Darknut's "Greater Dwemer Ruins".
+ !! (Ref.Readme GHD-DNGDR Patch.txt)
+[ANY DNGDR-GHD Patch OV.esp
+          DNGDR-GHD Patch.esp]
+[ALL Great House Dagoth.esp
+     DN-GDRv1.esp]
+
 [Requires]
- (Ref: DNGDRv1.zip/"readme.htm")
+ !! (Ref: DNGDRv1.zip/"readme.htm")
 DN-GDRv1.esp
 GDR_MasterFile.esm
+
+; Dragon32: Included conflict here for MoonAndStar's patch rather than a new section.
+[Conflict]
+ !! Use only one plugin
+ !!  DNGDR-GHD Patch OV.esp - Use this mod if you want to keep Dagoth Ur's original voices
+ !!  DNGDR-GHD Patch.esp - Use this mod if you want to use the voices from "Dagoth Ur Voice Addon v1.0"
+ !! (Ref.Readme GHD-DNGDR Patch.txt)
+DNGDR-GHD Patch OV.esp
+DNGDR-GHD Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3139,32 +3189,42 @@ FireHeaven Deora.esp
 ;; @Distant Land Fix for MGE version 1.8 [harlanrm]
 
 [Requires]
- (Ref: "Distant Land Fix for MGE.txt")
+ !! (Ref: "Distant Land Fix for MGE.txt")
 Distant Land Fix for MGE.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
 
 [Note]
- Version 3.6.0 of MGE added weather, wind and interior detection. This means that distant land is always off in interiors, including Mournhold, and that MGE's fog distance changes in response to the weather.
- If you using 3.6.0 or a later version you should disable harlanrm's "Distant Land Fix for MGE.esp"
- (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
+ ! Version 3.6.0 of MGE added weather, wind and interior detection. This means that distant land is always off in interiors, including Mournhold, and that MGE's fog distance changes in response to the weather.
+ ! If you are using 3.6.0 or a later version you should disable harlanrm's "Distant Land Fix for MGE.esp"
+ ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
 Distant Land Fix for MGE.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Distant Land Weather Fix 1.2 [Supernatural]
 
 [Requires]
- (Ref: "Distant Land Weather Fix 1.2 - ReadMe.txt")
+ !! (Ref: "Distant Land Weather Fix 1.2 - ReadMe.txt")
 Distant Land Weather Fix.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
 
 [Note]
- If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE". Instead of simply turning distant land off harlanrm's plugin smoothly alters the fog distance based on the weather, it also turns distant land off in interiors.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
- If you are using MGE 3.6.0 or greater then you do not need Supernatural's or harlanrm's plugins. Version 3.6.0 of MGE added weather, wind and interior detection so that MGE itself adjusts fog distance in response to the weather and turns off distant land in interiors.
- (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log
+ ! If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE". Instead of simply turning distant land off harlanrm's plugin smoothly alters the fog distance based on the weather, it also turns distant land off in interiors.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
+ ! If you are using MGE 3.6.0 or greater then you do not need Supernatural's or harlanrm's plugins. Version 3.6.0 of MGE added weather, wind and interior detection so that MGE itself adjusts fog distance in response to the weather and turns off distant land in interiors.
+ ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
 Distant Land Weather Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Distant Land Weather Fog [XBV]
+
+[Note]
+ ! Version 3.6.0 of MGE added weather, wind and interior detection. This means that distant land is always off in interiors, including Mournhold, and that MGE's fog distance changes in response to the weather.
+ ! If you are using 3.6.0 or a later version you should disable XBV's "Distant Land Weather Fog"
+ ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
+Distant Land Weather Fog.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3178,10 +3238,10 @@ Distant Land Weather Fix.esp
      Bloodmoon.esm]
 
 [Note]
- Version 3.6.0 of MGE added interior detection. This means that distant land is always off in interiors, including Mournhold. If you using 3.6.0 or a later version you should disable Yacoby's "Distant Land Interior Fix".
- (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log
- If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE", as well as turning distant land off in interiors it smoothly alters the fog distance based on the weather.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
+ ! Version 3.6.0 of MGE added interior detection. This means that distant land is always off in interiors, including Mournhold. If you using 3.6.0 or a later version you should disable Yacoby's "Distant Land Interior Fix".
+ ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
+ ! If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE", as well as turning distant land off in interiors it smoothly alters the fog distance based on the weather.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
 [ANY Distant Land Interior Fix.esp
      Distant Land Interior Fix No Lag.esp]
 
@@ -6679,6 +6739,17 @@ Mundane Weaps-Both.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Museum of Artifacts Improved Expanded [Princess Stomper]
+
+[Conflict]
+ !! Princess Stomper's "Museum of Artifacts Improved Expanded" is a merge of both her "Museum of Artifacts Improvements" mod and "Expanded Museum of Artifacts" by TheOtherFelix.
+ !! You only need to run "Museum of Artifacts Improved Expanded".
+[ALL Museum of Artifacts Improved Expanded.esp
+     [ANY ExpandedMoA.esp
+          Clean Museum of Artifacts Improvements.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @My Favorites Compatible and Combined ver 1.4 [Dale French]
 
 ;[Conflict]
@@ -7704,6 +7775,18 @@ PTE - BC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Printing Press [Aquan and dongle]
+
+[Conflict]
+ !! Only use one plugin
+ !!  PrintingPress_MW_only.esp - if you only have Morrowind
+ !!  PrintingPress_Tribunal.esp - if you have Tribunal
+ !! (Ref. PrintingPress_Tribunal_readme.txt and PrintingPress_MW_only_readme.txt)
+PrintingPress_MW_only.esp
+PrintingPress_Tribunal.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Prison Ship Escape [Tenaka]
 
 [Conflict]
@@ -7858,6 +7941,35 @@ Real_wildlife_2b_Bloodmoon.esp
 Real_wildlife_2b Complete.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Realistic Weather [Mal'isirion]
+
+[Conflict]
+ !! "Realistic Weather v2.0" by Mal'isirion is a compilation of Mal'isirion's "Realistic Weather v1.0" and "Expansion Weather" by Tarnsman. You do not need to run "Isirion_RealisticWeather.esp" or "Isirion_ExpansionWeather.esp" with "Realistic Weather v2.0.esp".
+ !! (Ref: Realistic Weather - readme.doc)
+[ALL Realistic Weather v2.0.esp
+     [ANY Isirion_RealisticWeather.esp
+          Isirion_ExpansionWeather.esp]]
+
+[Conflict]
+ ! ManaUser's Mini mod "Sol-Weather Tweak" and Mal'isirion's "Realistic Weather" both make changes to the weather in Solstheim. You should decide which plugin to use.
+[ALL Sol-Weather Tweak.esp
+     [ANY Realistic Weather v2.0.esp
+          Isirion_ExpansionWeather.esp]]
+
+[Requires]
+ !! (Ref: Dragon32: Examined plugin in Enchanted Editor)
+Isirion_ExpansionWeather.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ !! (Ref: Realistic Weather - readme.doc)
+Realistic Weather v2.0.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8073,6 +8185,11 @@ Bloodmoon.esm
  (Ref: "Royal Chargen Readme.txt")
 Royal Chargen Calvus add-on.esp
 Bloodmoon.esm
+
+[Conflict]
+ !! Princess Stomper's "Royal Chargen" includes the improvements to the Mournhold palace made by her "Mournhold Palace Revamped", there is no need to run both mods.
+Clean Royal Chargen.esp
+Mournhold Palace Revamped.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9041,6 +9158,10 @@ Tenience's Rare Items.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Texture Fix - Balmora Expansion [Slartibartfast]
+
+[NOTE]
+ ! The latest version of Slartibartfast's Texture Fix - Balmora Expansion is 1.4 
+[SIZE !4495981 Balmora Expansion v1.4+(<VER>).esp]
 
 [Conflict]
   Choose ONLY ONE of these plugins.
@@ -10309,6 +10430,16 @@ Brittlewind Fix.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End of MPP section
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vacant Telvanni Manor [Aquatakat]
+
+[Conflict]
+ !! Use "A Portcullis for Wolverine Hall (v1.0) [VTM].esp" to fix a landscape problem when using "Vacant Telvanni Manor" with the normal version of "A Portcullis for Wolverine Hall (v1.0)" by Nonsuch 
+ !! (Ref: A_Portcullis_for_Wolverine_Hall_v10.zip\Extras\Fix for 'Vacant Telvanni Manor' Readme.txt)
+Vacant Telvanni Manor.esp
+A Portcullis for Wolverine Hall (v1.0).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
