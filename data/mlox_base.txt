@@ -441,6 +441,13 @@ ASH 2.0.esp
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1649
 AlchemyStorageHelper10.esp
 
+[Note]
+ You may see an error message:
+    Unable to find script 'ASH_Zombie_S' on object 'ASH_Dead'
+ The non-existent script "ASH_Zombie_S" is assigned to "ASH_Dead", a leftover NPC not used by the mod. You can delete the "ASH_Dead" NPC from the mod using the Construction Set. The mod works fine without it.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?act=findpost&hl=ASH_Zombie_S&pid=13726158 )
+ASH2.0.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ald Redaynia Extended [Princess Stomper]
@@ -1047,6 +1054,15 @@ AV_female_armor.esp
 [ANY LeFemmArmor.esp
      OfficialMods_v5.esp
      Clean Official Plugins v1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Avenge Your Death! [Fliggerty]
+
+[Requires]
+ (Ref: Avenge Your Death!.esp)
+Avenge Your Death!.esp
+AYD Spells.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2664,6 +2680,16 @@ BAR_Comp_Arya_v1.3_NoCap.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Companion Health Bars [Yacoby]
+
+[Conflict]
+ Do not load both "Companion Health Bars.esp" and "CHBFix.esp" at the same time.
+ (Ref: Readme - Companion Health Bars.txt)
+Companion Health Bars.esp
+CHBFix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Companion Hilda 1.01 [Dixon]
 
 [Requires]
@@ -3138,8 +3164,7 @@ io_deadite_race-1.4b.esp
 [Conflict]
  Choose ONLY ONE of these plugins.
  "Decorator+.esp" - resurrecting has no negative side-effects
- "Decorator+ (Balanced).esp" - resurrecting a being has major side
- effects.
+ "Decorator+ (Balanced).esp" - resurrecting a being has major side effects.
  (Ref: "Decorator+ (Readme).txt")
 Decorator+ (Balanced).esp
 Decorator+.esp
@@ -3200,6 +3225,30 @@ Distant Land Fix for MGE.esp
  ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
 Distant Land Fix for MGE.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Distant Land Interior Fix [Yacoby]
+
+; Dragon32: Not mentioned in the readme, but MGE needs the expansions.
+[Requires]
+[ANY Distant Land Interior Fix.esp
+     Distant Land Interior Fix No Lag.esp
+     Distant Land Interior Fix FPSFix.esp
+     MGE Distant Land.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ ! Version 3.6.0 of MGE added interior detection. This means that distant land is always off in interiors, including Mournhold. If you using 3.6.0 or a later version you should disable Yacoby's "Distant Land Interior Fix".
+ ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
+ ! If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE", as well as turning distant land off in interiors it smoothly alters the fog distance based on the weather.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
+[ANY Distant Land Interior Fix.esp
+     Distant Land Interior Fix No Lag.esp
+     Distant Land Interior Fix FPSFix.esp
+     MGE Distant Land.esp]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Distant Land Weather Fix 1.2 [Supernatural]
 
@@ -3225,25 +3274,6 @@ Distant Land Weather Fix.esp
  ! If you are using 3.6.0 or a later version you should disable XBV's "Distant Land Weather Fog"
  ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
 Distant Land Weather Fog.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Distant Land Interior Fix [Yacoby]
-
-; Dragon32: Not mentioned in the readme, but MGE needs the expansions.
-[Requires]
-[ANY Distant Land Interior Fix.esp
-     Distant Land Interior Fix No Lag.esp]
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-[Note]
- ! Version 3.6.0 of MGE added interior detection. This means that distant land is always off in interiors, including Mournhold. If you using 3.6.0 or a later version you should disable Yacoby's "Distant Land Interior Fix".
- ! (Ref: http://morrgraphext.wiki.sourceforge.net/Change+Log )
- ! If you use a version of MGE lower than 3.6.0 it's suggested you use harlanrm's "Distant Land Fix for MGE", as well as turning distant land off in interiors it smoothly alters the fog distance based on the weather.
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5868
-[ANY Distant Land Interior Fix.esp
-     Distant Land Interior Fix No Lag.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3324,8 +3354,7 @@ C0N2 v1.01.esp
 ;; @Dragon rider's armor [Mandamus]
 
 [Requires]
- "Don't try this mod without Better Bodies, it would be horrible
- from an esthetic point of view!"
+ "Don't try this mod without Better Bodies, it would be horrible from an esthetic point of view!"
  (Ref: "Dragon rider's armor, by Mandamus.txt")
 Dragon rider's armor, by Mandamus.esp
 Better Bodies.esp
@@ -3522,6 +3551,23 @@ Enchantable Gloves of the Bal Molagmer (uber).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Encumbrance Bar [Yacoby]
+
+[Requires]
+ (Ref: Readme - Encumbrance Bar.txt)
+Encumbrance Bar.esp
+MWE_Base.esp
+
+[Order]
+MWE_base.esp
+Encumbrance Bar.esp
+
+[Note]
+ There is a newer version of Yacoby's "Encumbrance Bar" available, you should upgrade.
+[VER<0.4 Encumbrance Bar.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Exotics Boutique 1.1 [TommyKhajiit]
 
 ;; expdep
@@ -3534,8 +3580,7 @@ Enchantable Gloves of the Bal Molagmer (uber).esp
      Bloodmoon.esm]
 
 [Conflict]
- Choose ONLY ONE of these plugins. "ExoticsBoutique.esp" is 
- recommended if you've installed the Exotics Boutique Music Pack:
+ Choose ONLY ONE of these plugins. "ExoticsBoutique.esp" is recommended if you've installed the Exotics Boutique Music Pack:
  http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3082
  (Ref: "ExoticsBoutique Readme.txt")
 ExoticsBoutique.esp
@@ -3546,10 +3591,7 @@ ExoticsBoutiqueNoMusic.esp
 ;; @Expanded Birthsigns for Purists [Tyrthyllanos]
 
 [Conflict]
- "(ExpandedBirthsigns4Purists.esp) was originally designed for use
- with Galsiah's Character Development, and is based off of the .esp
- for birthsigns balanced for GCD. If you've been using that, you'll
- need to disable it when you enable this."
+ "(ExpandedBirthsigns4Purists.esp) was originally designed for use with Galsiah's Character Development, and is based off of the .esp for birthsigns balanced for GCD. If you've been using that, you'll need to disable it when you enable this."
  (Ref: "ExpandedBirthsigns4Purists-Readme.txt")
 ExpandedBirthsigns4Purists.esp
 GCD better balanced birthsigns.esp
@@ -4420,6 +4462,19 @@ Havish - Scimitar Update (no MWE).esp
 [ALL Havish.esm
      [NOT MWE_Base.esp]]
 
+[Requires]
+ (Ref: Havish Patch Readme.txt)
+Havish Mini Patch.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     [VER = 1.3 Havish.esm]]
+
+[Patch]
+ ! Havish Mini-Patch by Tyraa Rane fixes errors within the "Fighters Guild: A Visitor from Havish" and "Thieves Guild: The Damsel in Distress" quests that would cause Morrowind to crash.
+ ! (Ref: Havish Patch Readme.txt)
+Havish Mini Patch.esp
+Havish.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Hazaeki Shapeshifter Race v. 1.2 [Sabregirl]
@@ -4438,6 +4493,16 @@ SG_ hazaeki_race-1_2.esp
 [Order]
 Scripted_Spells.esp
 SG_ hazaeki_race-1_2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Health Indicators [Fliggerty]
+
+[Conflict]
+ Do NOT use both.
+ (Ref: Health Indicators Readme.txt)
+Health Indicators.esp
+Health Indicators MWSE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4880,6 +4945,16 @@ ImprovedFollowers.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Improved Hand to Hand [Fliggerty]
+
+[Conflict]
+ It appears you are running version 1.0 of "Improved Hand to Hand" that conflicts with Vampire Embrace's "Vampire Bite Mode". You should upgrade to version 1.1
+ (Ref: Improved Hand to hand.txt)
+[ALL [SIZE !10306 Improved Hand to Hand.esp]
+     Vampire_Embrace.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Inns [taddeus]
 
 [Conflict]
@@ -4938,6 +5013,23 @@ No-Glo_0709.esp
  (Ref: "Improved Positioning Readme.txt")
 Improved Postitioning.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Improved Teleportation [cdcooley]
+
+[Note]
+ The Greater Mark and Greater Recall spells of "Improved Teleportation" are incompatible with Marcel Hesselbarth's "Multiple Teleport Marking", but the companion teleportation feature works. If you want to use Marcel's MultiMark spells which can store 12 locations instead of Greater Mark's 9, you should not buy the Greater Mark and Greater Recall spells from J'Rasha.
+ (Ref: Improved Teleportation 2.0 ReadMe.txt)
+[ALL MultiMark.esp
+     ImprovedTeleportation2.0.esp]
+
+;Dragon32: need to get plugin names for these. Version check too?
+;[Patch]
+;IT Beryl and Constance Fix.esp
+;[ALL ImprovedTeleportation2.0.esp
+;     [ANY Beryl v1.0
+;          Constance v1.0]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5834,6 +5926,20 @@ Madd Leveler - Base.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magicka Based Skill Progression [HotFusion4]
+
+[Conflict]
+ !! HotFusion4's "Magicka Based Skill Progression" includes a modified version of Horatio's "Spellcasting Mod". You do not need to load Horatio's mod (or Aragon's "Reduce spell casting costs" mod, based on Horatio's original).
+ !! (Ref: MagickaBasedSkillProgressionv2.1.txt)
+MBSPv21.esp
+[ANY CastReduce-v30.esp
+     horatio_casting2.esp
+     horatio_casting.esp
+     horatio_casting_trib.esp
+     horatio_casting_trib_2.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mannequins for Sale v1.2 [ManaUser]
 
 [Conflict]
@@ -6267,6 +6373,12 @@ Morrowind Decapitated.esp
 MWE_SneakEye.esp
 MWE_Base.esp
 MWE_GoldBurden.esp
+MWE_MagickaSpells.esp
+Oblivion-Style Spellcasting.esp
+
+[Requires]
+MWE_MagickaSpells.esp
+MWE_Base.esp
 
 [Requires]
  (Ref: "Gold Burden Readme.txt")
@@ -6391,6 +6503,20 @@ HoratioNPCEnhanced12-VE.esp
 Vampire_Embrace.esp
 HoratioNPCEnhanced12-VE.esp
 
+[Requires]
+ The "NPC Enhanced MWSE patch" by cdcooley requires Horatio's NPC Enhanced to be running.
+npce_mwse_patch.esp
+[ANY HoratioNPCEnhanced12-Trib.esp
+     HoratioNPCEnhanced12-BM.esp
+     HoratioNPCEnhanced12-VE.esp]
+
+; Ref: npce_mwse_patch.txt
+[Order]
+HoratioNPCEnhanced12-Trib.esp
+HoratioNPCEnhanced12-BM.esp
+HoratioNPCEnhanced12-VE.esp
+npce_mwse_patch.esp
+
 [Order]
 MWE_Base.esp
 MWE_Combat.esp
@@ -6438,6 +6564,27 @@ MWE_SneakEye.esp
 [Order]
 MWE_Combat.esp
 ACE_Subtitles.esp
+
+[Order]
+MWE_Base.esp
+MWE_MagickaSpells.esp
+
+[Conflict]
+ !! Azrael the Drooling's "Magicka Based Spell Advancement" duplicates the functionality of Horatio's "Spellcasting Mod". You do not need to load Horatio's mod or Aragorn's "Reduce spell casting costs", which is based on Horatio's mod.
+ !! (Ref: MWE_MagickaSpells.txt)
+MWE_MagickaSpells.esp
+[ANY CastReduce-v30.esp
+     horatio_casting2.esp
+     horatio_casting.esp
+     horatio_casting_trib.esp
+     horatio_casting_trib_2.esp]
+
+[Conflict]
+ !! Azrael the Drooling's "Magicka Based Spell Advancement", HotFusion4's "Magicka Based Skill Progression" and Piratelord's "Improved Skill Magicka" all change the way spell-based skill progression happens in Morrowind. Choose a mod to use, there is no need to run all of them.
+ !! (Ref: MWE_MagickaSpells.txt)
+MWE_MagickaSpells.esp
+MBSPv21.esp
+Improved Skilled Magicka.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6634,6 +6781,136 @@ S_Inn_th.esp
  ! (Ref: readme_moose_addon.txt)
 Moose_addon.esp
 PW_Cait_Moose.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Graphics Extender [Various]
+; Dragon32: Suggest that this section is just used for MGE & MWSE versioning Notes. Specific plugin rules should go in their own section
+; Some of these MGE plugins (particularly Timeslip's) will work with earlier versions of MGE. However, v3.0.3 of MGE is the effective minimum version.
+
+[Note]
+ These mods require Morrowind Graphics Extender (MGE) v3.0.3 or later, with MWSE enabled.
+Close Inspection.esp
+Companion Health Bars.esp
+DN_1st_Person_Helm1.1.esp
+Encumbrance Bar.esp
+Fatigued Bar.esp
+LOCH_Brass_Telescope_(1.1).esp
+Ownership Indicator.esp
+Rage Indicator.esp
+Short Ranged Teleport.esp
+Time Display.esp
+Timeslip's trinkets.esp
+TS_BetterBooze.esp
+zooming bows (v2).esp
+
+[Note]
+ These mods require Morrowind Graphics Extender (MGE) v3.3.2 or later, with MWSE enabled.
+The Gambler.esp
+
+;Unknown versions required:
+; Better Boots of Blinding Speed.esp
+; ToggleSneak.esp
+; Zoom 1.0 MSE + MGE.esp and Zoom 1.0.esp
+; Moonlight.esp
+; WaterBlur.esp and WaterBlurDNW.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Inhabitants [scruggs]
+
+[Note]
+ Do not try to start a new game while "Morrowind Inhabitants" is enabled. Wait until you have finished character creation before using MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+
+[Patch]
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform PATCH.01.esp
+MWInhabitants Freeform (Vol 1).esp
+
+[Conflict]
+ The unpatched version of "Morrowind Inhabitants" conflicts with "Galsiah's Character Development". Ensure you apply the "Morrowind Inhabitants" patch.
+  (Ref: MWInhabitants PATCH.01 README.txt)
+[ALL MWInhabitants Freeform (Vol 1).esp
+     Galsiahs Character Development.esp
+     [NOT MWInhabitants Freeform PATCH.01.esp]]
+
+[Order]
+MWInhabitants Freeform (Vol 1).esp
+MWInhabitants Freeform PATCH.01.esp
+
+[Note]
+ The optional "Flee AI Patch" from "Morrowind Inhabitants: Pickpocket!" by scruggs changes flee AI settings, Wakim's Game Improvements also changes AI flee settings.
+  (Ref: MWInhabitants - Pickpockets README!.doc)
+[ALL MWInhabitants Flee AI Patch.esp
+     [ANY Wakim's Game Improvement 9.esp
+          Balance - game settings.esp]]
+
+; Dragon32: Only Herbalism mentioned in readme. Perhaps other herbalism mods are affected too.
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+[ANY Herbalismv1.3(Bloodmoon addon).esp
+     Herbalismv1.3(Tribunal).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Script Extender [Various]
+
+; Dragon32: Suggest that this section is just used for MWSE versioning Notes. Specific plugin rules should go in their own section
+
+[Note]
+ These mods require Morrowind Script Extender (MWSE) v0.9.1 or later, or MGE v3.0.3 or later.
+ImprovedTeleportation2.0.esp
+
+[Note]
+ These mods require Morrowind Script Extender (MWSE) v0.9.2 or later, or MGE v3.0.3 or later.
+ASH2.0.esp
+Better Telekinesis.esp
+Controlled Jumps.esp
+Decorator+.esp
+Decorator+ (Balanced).esp
+Enhanced Detection.esp
+Fliggerty's Fleeing Fetchers.esp
+Health Indicators MWSE.esp
+Improved Bartering.esp
+Improved Hand to Hand.esp
+Inventory Helpers.esp
+Morrowind Battle Cry.esp
+Morrowind Narcissism.esp
+MWInhabitants Freeform (Vol 1).esp
+MWInhabitants - Pickpockets!.esp
+npce_mwse_patch.esp
+Oblivion-Style Spellcasting.esp
+Protective Guards.esp
+Raven Wings.esp
+
+[Note]
+ These mods require Morrowind Script Extender (MWSE) v0.9.2a or later, or MGE v3.1 or later.
+Arrow De-nocker.esp
+Blasphemous Revenants.esp
+Enhanced Summoning.esp
+Keyring.esp
+LA_MWSE Addon.esp
+Merchant Investments.esp
+More Quick-Keys.esp
+Visceral Discernment.esp
+
+;Dragon32: I couldn't find when MGE introduced v0.9.3 of MWSE. MGE v3.5.6 adds MWSE v0.9.4 script functions
+[Note]
+ These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
+Avenge Your Death!.esp
+
+;Dragon32: Unknown MWSE versions required:
+; Loot Sack.esp
+; Alchemist's Arsenal v1.0.esp
+; Detect Owner.esp
+; Gravedigger.esp
+; Melee Missiles v1.2.esp
+; Pursuit Enhanced
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TES: Morrowind Sound Enhancement Plugin Version 1.5 [Leon "pancreas" Medado]
@@ -7533,6 +7810,15 @@ OBs MWE_Magicka patch.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+[Requires]
+ (Ref: Oblivion-Style Spellcasting.txt)
+Oblivion-Style Spellcasting.esp
+MWE_base.esp
+
+[Order]
+MWE_base.esp
+Oblivion-Style Spellcasting.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @OfficialMods_v5
@@ -7848,12 +8134,41 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Pursuit Enhanced [Yacoby]
+
+[Note]
+ The latest version of "Pursuit Enhanced" is 1.2.4, you should upgrade.
+[VER<1.2.4 Pursuit Enhanced.esp]
+
+[Conflict]
+ !! With version 1.2.4 of "Pursuit Enhanced" the Go To Jail patch is no longer required.
+ !! (Ref. Readme - Pursuit Enhanced.htm)
+[ALL Pursuit Enhanced -Go To Jail Patch.esp
+     [VER=1.2.4 Pursuit Enhanced.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @QuarraClan v1.1 [Jonathan Nash]
 
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 266531 quarraclan.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rage Indicator [Yacoby]
+
+[Requires]
+ (Ref: Readme - Rage Indicator.esp)
+Rage Indicator.esp
+MWE_Combat.esp
+
+[Conflict]
+ You should use v0.3 or better of Yacoby's "Encumbrance Bar" with "Rage Indicator", otherwise the bars will conflict.
+ (Ref: Readme - Rage Indicator.esp)
+Rage Indicator.esp
+[VER<0.3 Encumbrance Bar.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8833,6 +9148,31 @@ Spel1.2.esp
 Spel1.1.esp
 Spel1.2(cheat).esp
 Spel1.1(cheat).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Spellcasting Mod [Horatio]
+
+[Conflict]
+ !! Use only one mod:
+  !! horatio_casting.esp - If you do not have Tribunal, cast reduction increases with the square of your skill.
+  !! horatio_casting2.esp - If you do not have Tribunal, cast reduction increases linearly with your skill.
+  !! horatio_casting_trib.esp -  If you have Tribunal, cast reduction increases with the square of your skill.
+  !! horatio_casting_trib_2.esp - If you have Tribunal, cast reduction increases linearly with your skill.
+ !! (Ref: horatio_spellcasting.txt
+horatio_casting2.esp
+horatio_casting.esp
+horatio_casting_trib.esp
+horatio_casting_trib_2.esp
+
+[Conflict]
+ !! Aragon's "Reduce spell casting costs" is a completely rewritten version of Horatio's "Spellcasting Mod". You do not need to load both.
+ !! (Ref: CastReduceReadme-v30.txt)
+CastReduce-v30.esp
+[ANY horatio_casting2.esp
+     horatio_casting.esp
+     horatio_casting_trib.esp
+     horatio_casting_trib_2.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
