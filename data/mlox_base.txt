@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-05-04 20:51:37 (UTC)]
+[Version 2009-05-11 02:08:47 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -5759,6 +5759,15 @@ Mr Cellophane's Lovers and Legends V0.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+; Load order info from Jac:
+; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14294420 )
+[Order]
+Romance_v37EV.esp
+Romance_Follow_v10EV.esp
+Mr Cellophane's Lovers and Legends V0.esp
+L&L Addon.esp
+L&L_TRM_patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lovers And Legends addon [Jac and Axel]
@@ -5768,10 +5777,11 @@ Mr Cellophane's Lovers and Legends V0.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 197571 L&L Addon.esp]
 
-[Requires]
+[Conflict]
+ Jac instructs that the L&L Addon should not be used with Cello's original mod, as it will cause doubling.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14294420 )
+Mr Cellophane's Lovers and Legends V0.esp
 L&L Addon.esp
-[ALL Mr Cellophane's Lovers and Legends V0.esp
-     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7602,6 +7612,12 @@ NightElvesBBPatch1.2.esp
 [Note]
  This plugin contains a bug, when you enter "Under Skar" (the manor district) in Ald'ruhn, you end up stuck in the rope railing next to the wooden walkway. One fix is to load up the .esp in TESAME, and delete the CELL Ald-ruhn that contains in_ar_door_01. You can tell which cell that is by looking at the detail view for that cell record in TESAME.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13495433 )
+NighttimeDoorLocks-LD 1.1a.esp
+
+; load order from JoelR:
+; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14283523 )
+[Order]
+Homes To Let.esp
 NighttimeDoorLocks-LD 1.1a.esp
 
 
@@ -9609,6 +9625,16 @@ Tir Thalor Quest.esp
 ;; @TLM - The Lighting Mod (Modular + Complete) [Sensei]
 ;; (Ref: "TLM - ~Readme.htm")
 
+;Order tweaks From Black Crow King:
+; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14292111 )
+[Order]
+Piratelords Trade Enhancements.esp
+TLM - Ambient Light + Fog Update.esp
+
+[Order]
+TLM - NPC Light Sources.esp
+Merged_Objects.esp
+
 [Order]
 TLM - Ambient Light + Fog Update.esp
 TLM - Light Sources (Clearer Lighting).esp
@@ -9618,6 +9644,7 @@ TLM - External Lights Ownership.esp
 TLM - NPC Light Sources.esp
 TLM - Sneak Modifiers (Code).esp
 TLM - Sneak Modifiers (Locations).esp
+
 
 [Note]
  In order to retain the modified interior light settings of TLM, "TLM - Ambient Light + Fog Update.esp" must load later than any mod that might change a pre-existing interior cell.
