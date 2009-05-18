@@ -1592,6 +1592,57 @@ BE_ghetto_BE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora River House [Calislahn]
+
+[Requires]
+ (Ref: Cali_RiverHouse_Readme.txt)
+Cali_ RiverHouse.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ (Ref: Cali_RiverHouse_Readme.txt)
+Cali_ RiverHouse_BE.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     [ANY Balmora Expansion v1.4.esp
+          Balmora Expansion v1.4+(1.4).esp
+          Balmora Expansion - LITE 1.0.esp
+          BE+(1.4) Better Looking Morrowind.esp]]
+
+[Conflict]
+ Use only one plugin:
+  Cali_ RiverHouse.esp - if you do not use Gorg's "Balmora Expansion"
+  Cali_ RiverHouse_BE.esp - if you do use Gorg's "Balmora Expansion"
+ (Ref: Cali_RiverHouse_Readme.txt)
+Cali_ RiverHouse.esp
+Cali_ RiverHouse_BE.esp
+
+[Conflict]
+ "Balmora River House" by Calislahn is not compatible with Gorg's Balmora Expansion", use "Balmora River House - Balmora Expansion Version" instead.
+ (Ref: Cali_RiverHouse_Readme.txt)
+Cali_ RiverHouse.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
+
+[Requires]
+ (Ref: Cali_RiverHouse_NoMKitchenReadme.txt)
+Cali_RiverHouse_NoMKitchen.esp
+[ALL [ANY Cali_ RiverHouse.esp
+          Cali_ RiverHouse_BE.esp]
+     NOM2.13.esp]     
+
+; Ref: Cali_RiverHouse_NoMKitchenReadme.txt
+[Order]
+Cali_ RiverHouse.esp
+Cali_ RiverHouse_BE.esp
+Cali_RiverHouse_NoMKitchen.esp
+NOM2.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Thieves' Hideout 3.1 UPDATE [sentinal]
 
 [Requires]
@@ -3532,6 +3583,59 @@ Dwemer_Cyborgs.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dynamic Magicka Regeneration 2.0 [Duncan]
+
+[Conflict]
+ Use only one plugin:
+  DynamicMagickaRegeneration-2.0.esp - If you just have Morrowind
+  DynamicMagickaRegeneration-2.0-Tribunal.esp - If you have Tribunal
+ (Ref: readme_dmr20.htm)
+DynamicMagickaRegeneration-2.0.esp
+DynamicMagickaRegeneration-2.0-Tribunal.esp
+
+[Requires]
+ Dynamic Magicka Regeneration (Tribunal) uses Startup scripts so it requires one of the expansions.
+ (Ref: readme_dmr20.htm)
+DynamicMagickaRegeneration-2.0-Tribunal.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;Dragon32: Information on Greevar's updated version of Duncan's plugin:
+[Conflict]
+ Use only one plugin:
+  DynamicMagickaRegeneration-2.1.esp - If you just have Morrowind
+  DynamicMagickaRegeneration-2.1-Tribunal.esp - If you have Tribunal
+ (Ref: readme_dmr21.htm)
+DynamicMagickaRegeneration-2.1.esp
+DynamicMagickaRegeneration-2.1-Tribunal.esp
+
+[Requires]
+ Dynamic Magicka Regeneration (Tribunal) uses Startup scripts so it requires one of the expansions.
+ (Ref: readme_dmr21.htm)
+DynamicMagickaRegeneration-2.1-Tribunal.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;Dragon32: Conflict information for the various magicka regeneration mods
+[Conflict]
+ All of these plugins allow the player to regenerate lost magicka, you only need one of these plugins running.
+[ANY DynamicMagickaRegeneration-2.0.esp
+     DynamicMagickaRegeneration-2.0-Tribunal.esp]
+; Dynamic Magicka Regeneration 2.1 [Greevar]
+[ANY DynamicMagickaRegeneration-2.1.esp
+     DynamicMagickaRegeneration-2.1-Tribunal.esp]
+; Fair Magicka Regen [Glassboy]
+[ANY Adj_Magicka Regen (0.10%).esp
+     Adj_Magicka Regen (0.25%).esp
+     Adj_Magicka Regen (0.50%).esp
+     Adj_Magicka Regen (1.00%).esp]
+; Magicka Regeneration [Aragon]
+MagickaRegen-v20.esp
+; Mana Regen v1.3 [Fuku]
+Mana_Regen_v13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @East Knaarus [PCC aka Blockhead]
 
 [Requires]
@@ -3640,6 +3744,14 @@ Eylurian Manor-NO TRIBUNAL.esp
      Adj_Magicka Regen (1.00%).esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Conflict]
+ Use only one plugin
+ (Ref: Readme Fair Magicka Regen.txt)
+Adj_Magicka Regen (0.10%).esp
+Adj_Magicka Regen (0.25%).esp
+Adj_Magicka Regen (0.50%).esp
+Adj_Magicka Regen (1.00%).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5402,14 +5514,17 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Left Gloves Addon - TB and BM [Alaisiagae]
+;; @Left Gloves Addon [Alaisiagae]
 
 [Conflict]
- !! Do NOT have "Lurlock's LeftGloves" and "LeftGloves Addon - TB and BM" running
- !! at the same time.
- !! (Ref: readme_LeftGloves Addon TBandBM.txt)
-Clean LeftGloves_TBandBM.esp
+ !! Do NOT have "Lurlock's Left Gloves" and "Left Gloves Addon" running at the same time.
+ !! (Ref: readme_LeftGloves Addon.txt)
+LeftGloves_Addon_v2.esp
 LeftGloves.esp
+
+[Note]
+ A new version of Left Gloves Addon is available (version 2), it includes new ground meshes for Bloodmoon and Tribunal. You should upgrade.
+Clean LeftGloves_TBandBM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6385,6 +6500,7 @@ MWE_Base.esp
 MWE_GoldBurden.esp
 MWE_MagickaSpells.esp
 Oblivion-Style Spellcasting.esp
+Dodge_Mod1.11(MWE).esp 
 
 [Requires]
 MWE_MagickaSpells.esp
@@ -6473,7 +6589,16 @@ MWE_SneakEye.esp
 MWE_Base.esp
 
 [Requires]
-ACE_Subtitles.esp
+Dodge_Mod1.11(MWE).esp 
+MWE_Base.esp
+
+[Requires]
+ Hitto's "ACE Addons" require Aerelorn's "Combat Enhanced" to be loaded
+ (Ref: ACE - addons xxxxxxx.txt)
+[ANY ACE_Subtitles.esp
+     ACE_Airattack.esp
+     ACE_Charge.esp
+     ACE_Backstab.esp]
 MWE_Combat.esp
 
 [Conflict]
@@ -6572,12 +6697,28 @@ MWE_Base.esp
 MWE_SneakEye.esp
 
 [Order]
+MWE_Base.esp
+MWE_MagickaSpells.esp
+
+[Order]
+MWE_Base.esp
+Dodge_Mod1.11(MWE).esp
+
+[Order]
 MWE_Combat.esp
 ACE_Subtitles.esp
 
 [Order]
-MWE_Base.esp
-MWE_MagickaSpells.esp
+MWE_Combat.esp
+ACE_Airattack.esp
+
+[Order]
+MWE_Combat.esp
+ACE_Charge.esp
+
+[Order]
+MWE_Combat.esp
+ACE_Backstab.esp
 
 [Conflict]
  !! Azrael the Drooling's "Magicka Based Spell Advancement" duplicates the functionality of Horatio's "Spellcasting Mod". You do not need to load Horatio's mod or Aragorn's "Reduce spell casting costs", which is based on Horatio's mod.
@@ -6817,10 +6958,11 @@ zooming bows (v2).esp
 [Note]
  These mods require Morrowind Graphics Extender (MGE) v3.3.2 or later, with MWSE enabled.
 The Gambler.esp
+ToggleSneak.esp
 
 ;Unknown versions required:
 ; Better Boots of Blinding Speed.esp
-; ToggleSneak.esp
+; Spell Timer.esp
 ; Zoom 1.0 MSE + MGE.esp and Zoom 1.0.esp
 ; Moonlight.esp
 ; WaterBlur.esp and WaterBlurDNW.esp
@@ -6912,6 +7054,7 @@ Visceral Discernment.esp
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
 Avenge Your Death!.esp
+Pursuit Enhanced.esp
 
 ;Dragon32: Unknown MWSE versions required:
 ; Loot Sack.esp
@@ -9192,6 +9335,56 @@ CastReduce-v30.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @SpellFix [Petrus Octavianus]
+
+; ref: SpellFix_WGI.txt
+; all-in-one Wakim
+[Order]
+Wakim's Game Improvement 9.esp
+SpellFix_WGI.esp
+
+; ref: SpellFix_WGI.txt
+; modular
+[Order]
+Balance - spells.esp
+SpellFix_WGI.esp
+
+[Requires]
+ "SpellFix_WGI.esp" requires "Wakim's Game Improvements", if you do not use Wakim's mod then use "SpellFix_No-WGI.esp" instead.
+ (Ref: SpellFix_WGI.txt)
+SpellFix_WGI.esp
+[ANY Wakim's Game Improvement 9.esp
+     Balance - spells.esp]
+
+[Conflict]
+ Only run one version of the "SpellFix" mod.
+  SpellFix_WGI.esp - if you use "Wakim's Game Improvements"
+  SpellFix_No-WGI.esp - if you do not.
+SpellFix_WGI.esp
+SpellFix_No-WGI.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Spuzzum's Interior Daylight [Spuzzum]
+
+[Requires]
+ (Ref: readme_spzdl.txt)
+SpzInteriorDaylight.esp
+Tribunal.esm
+
+[Conflict]
+ Both Spuzzum's "Interior Daylight" and Dark Angel’s "Illuminated Windows" add daylight to interior windows. You only need to run one of these plugins.
+ (Ref: readme_spzdl.txt and Illuminated Windows.zip\DrkAngel Readme.doc)
+SpzInteriorDaylight.esp
+Illuminated Windows.esp
+
+; Dragon32 - If someone wants to run them both then Spuzzum's should load after Dark Angel's
+[Order]
+Illuminated Windows.esp
+SpzInteriorDaylight.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sri's Alchemy [Srikandi]
 
 [Order]
@@ -10066,6 +10259,23 @@ Underground Manor 3.0.esp
 Undress For Me.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Ghosts [Arcimaestro Antares]
+
+[Conflict]
+ Choose only one plugin:
+  Unique Ghosts - M.esp - If you only have Morrowind
+  Unique Ghosts - M - T.esp - If you have Morrowind and Tribunal
+ (Ref: Unique Ghosts - README.txt)
+Unique Ghosts - M.esp
+Unique Ghosts - M - T.esp
+
+[Requires]
+ (Ref: Unique Ghosts - README.txt)
+Unique Ghosts - M - T.esp
+Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
