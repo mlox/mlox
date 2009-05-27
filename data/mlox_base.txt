@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-05-19 00:29:30 (UTC)]
+[Version 2009-05-27 03:21:21 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -87,12 +87,19 @@ Mashed Lists.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Bethsoft
+;; @Bethsoft [Bethesda]
 
 [Order]
 Morrowind.esm
 Tribunal.esm
 Bloodmoon.esm
+
+[Note]
+ These official plugins have some GMSTs (game settings) that are duplicates of those in the masters. This means that they can be safely removed. However, if you choose to leave them in they should not cause any problems unless they mask intentional changes to those GMSTs that are made higher in your load order.
+ (See also: What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 29311 EBQ_Artifact.esp]
+[SIZE 131705 entertainers.esp]
+[SIZE 51830 master_index.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -131,6 +138,70 @@ Stinkers.esp
  !!! These files contain merged leveled lists, you should use only use one at a time. Wrye Mash's "Mashed Lists.esp" is the recommended way to merge leveled lists.
 Mashed Lists.esp
 Merged_Leveled_Lists.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wrye Patches [Wrye]
+; (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
+
+[Requires]
+ All of the Wrye Patches require both Tribunal and Bloodmoon be installed.
+ (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
+[ANY Wrye Patches A.esp
+     Wrye Patches A1.esp
+     Wrye Patches B.esp
+     Wrye Patches C.esp
+     Wrye Patches C1.esp
+     Wrye Patches G.esp
+     Wrye Patches M.esp
+     Wrye Patches M1.esp
+     Wrye Patches W.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ The "A" version is for vanilla Morrowind, the "A1" version depends on Avenger's female armor.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches A.esp
+Wrye Patches A1.esp
+
+[Conflict]
+ According to Wrye's documentation, you shoud not load Avenger's female armor plugins along with the A1 patch.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches A1.esp
+[ANY AV_female_armor.esp
+     AV_fem_armor_Trib.esp]
+
+[Conflict]
+ According to Wrye's documentation, you shoud not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches C1.esp
+[ANY AV_fem_shirts.esp
+     AV_fem_robes.esp
+     AV_fem_robes_BM.esp
+     AV_fem_robes_Trib.esp
+     Prosey female pants replace.esp]
+
+[Conflict]
+ According to Wrye's documentation, you shoud not load Daduke's key replacer plugin along with the M1 patch.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches M1.esp
+Key Replacer Trib & BM.esp
+
+[Requires]
+Wrye Patches A1.esp
+LeFemmArmor.esp
+
+[Conflict]
+ The "C" version is for vanilla Morrowind, the "C1" version depends on Avenger's female shirts/robes, and Prosey's female pants.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches C.esp
+Wrye Patches C1.esp
+
+[Conflict]
+ The "M" version is for vanilla Morrowind, the "M1" version depends on Daduke's Key Replacer.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches M.esp
+Wrye Patches M1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -199,6 +270,20 @@ A_flock_of_seagulls.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 569273 Abandoned Flat.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Abandoned Well at Dagon Fel (v2) [jman0war]
+
+[Note]
+ The latest version of Abandoned Well at Dagon Fel (DagonFel_Well_v2.esp) is available from:
+ http://www.angelfire.com/folk/joesfaithweb/Morrowind.htm
+DagonFel_Well.esp
+
+[Conflict]
+ DagonFel_Well_v2.esp is a replacement for DagonFel_Well.esp.
+DagonFel_Well_v2.esp
+DagonFel_Well.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -647,7 +732,7 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Anastasio The Great's Hideout [VÎKIÑG_LÖRÐ]
+;; @Anastasio The Great's Hideout [Anastasio Alexiou]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -1673,6 +1758,19 @@ CM_Partners_3.0.esp
 ;;Readme says:
 ;;3.Known conflicts:  Wakim's Game Improvements, Twin Lamps, Nevenna's Exslaves and Partners, Nevenna's Club and Courtiers, and Friends and Rivals.
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BC_Palla_Quest_Lite  [Big Chief]
+
+[Requires]
+ (Ref: "Palla Quest readme2.txt")  
+BC_Palla_Quest_Lite-Tribunal.esp
+Tribunal.esm
+
+[Conflict]
+ Use only one of these two .esps
+BC_Palla_Quest_Lite-Tribunal.esp
+BC_Palla_Quest_Lite-Morrowind.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Bedroll Shop 2 [Princess Stomper and RedwoodTreeSprite]
@@ -1839,6 +1937,11 @@ Better Clothes_v1.1_nac.esp
  ! Better Clothes 1.0 is updated by Better Clothes 1.1, you should upgrade!
 Better Clothes_v1.0.esp
 
+[Note]
+ When using TESTOOL's "Merged_Objects.esp", it is recommended to omit Keazen's BC patch from the merge.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
+[ALL BetterClothes_Patch.esp
+     Merged_Objects.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Heads [Motoki, et.al.]
@@ -2769,22 +2872,20 @@ Comp RPP CoverUp Add-on.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Complete Morrowind [Max also known as ~NOBODY~]
 
-[Conflict]
- Choose ONLY ONE of these plugins.
+[Requires]
  The replacer version is if you want to be able to cut down trees for logs and mine ore, but it has higher potential for conflicts.
  (Ref: "Readme - Complete Morrowind.txt")
 Complete Morrowind - Replacer.esp
 Complete Morrowind.esp
 
-[Conflict]
- Choose ONLY ONE of these plugins.
+[Requires]
  The replacer version is if you want to be able to cut down trees for logs and mine ore, but it has higher potential for conflicts.
  (Ref: "Readme - Complete Morrowind TB & BM.txt")
 Complete Morrowind - Tribunal & Bloodmoon.esp
 Complete Morrowind TB & BM - Replacer.esp
 
 [Conflict]
- You should only use "Complete Morrowind.esp" or "Complete Morrowind - Replacer.esp" if you do not have Tribunal and Bloodmoon.
+ You should only use "Complete Morrowind.esp" and "Complete Morrowind - Replacer.esp" if you do not have Tribunal and Bloodmoon.
 [ANY Complete Morrowind.esp
      Complete Morrowind - Replacer.esp]
 [ANY Complete Morrowind - Tribunal & Bloodmoon.esp
@@ -3847,6 +3948,12 @@ Fishing Academy v2.54.esp
 Fliggerty's Armor Project 2.esp
 FAP Low Chance.esp
 
+[Conflict]
+ Fliggerty's Armor Project (FAP) and Crystal Forge by EJ!AZ both use the ID crystal_cuirass to define different things (Armor in Crystal Forge and Body Part in FAP). This will result in Morrowind failing to load. The same problem may effect additional IDs shared by both mods. Editing FAP to make all Body Part IDs starting with "crystal_" unique will solve this problem. ;Editing FAP worked for me without problems, as TESCS seems to update the armor in FAP to reflect my changes.
+Crystal_Forge.esp
+[ANY Fliggerty's Armor Project 2.esp
+     FAP Low Chance.esp] ;I am assuming that FAP Low Chance uses the same Body Part IDs as Fliggerty's Armor Project 2.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Flying Carpet v1.3 [MADMAX]
@@ -4373,6 +4480,12 @@ Advanced Herbalism - MO.esp
 Advanced Herbalism - TR & BM.esp
 Advanced Herbalism - TR.esp
 Advanced Herbalism - BM.esp
+
+[Conflict]
+ These plugins conflict because they modify some of the same objects (e.g.: kollops).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
+Graphic Herbalism.esp
+Resources Enhanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6997,6 +7110,7 @@ MWInhabitants Freeform PATCH.01.esp
   (Ref: MWInhabitants - Pickpockets README!.doc)
 [ALL MWInhabitants Flee AI Patch.esp
      [ANY Wakim's Game Improvement 9.esp
+	  Wakim's Game Improvements with No-glo v9.esp
           Balance - game settings.esp]]
 
 ; Dragon32: Only Herbalism mentioned in readme. Perhaps other herbalism mods are affected too.
@@ -7080,6 +7194,7 @@ Pursuit Enhanced.esp
 ; MTT should load after WGI as they both change the MGEF which MTT uses for the floating ioun stone
 [Order]
 Wakim's Game Improvement 9.esp
+Wakim's Game Improvements with No-glo v9.esp
 MTT_IV_Master.esp			; patched version by JMS
 MTT IV Master.esp
 
@@ -7124,6 +7239,7 @@ MultiMark.esp
 MultiMark_FiremothPlugin.esp
 MultiMark_TribunalPlugin.esp
 MultiMark_BloodmoonPlugin.esp
+MultiMark-jms_patch.esp
 
 [Requires]
  (Ref: MultipleTeleportMarking.txt)
@@ -7147,6 +7263,12 @@ MultiMark_BloodmoonPlugin.esp
 MultiMark.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Requires]
+ MultiMark-jms_patch.esp is an add-on patch that requires the original to be active.
+ (Ref: MultiMark-jms_patch.txt)
+MultiMark-jms_patch.esp
+MultiMark.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7341,6 +7463,30 @@ Clean Nerevar Say Nerevar Again_v1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NerevarArmor  [armor by Enlightened_Daedroth and Soulshade, quests either by Aragon or by Greevar]
+
+[Requires]
+ (Ref: "Readme")  ; Readme of original mod as copied into readmes of expanded mods
+[Any NerevarArmor-v30.esp  ; Aragon's version
+     St. Nerevar's Armor.esp]  ; Greevar's version
+Tribunal.esm
+
+[Note]
+ Both these mods add the same Armor of St Nerevar (as created by Enlightened_Daedroth and Soulshade), though the (short) quests to obtain it are different <hide>and they also add different enchantments to the armor</hide>.
+[ALL NerevarArmor-v30.esp
+     St. Nerevar'S Armor.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs (despite it being described as "clean" in the Readme).
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 37922 NerevarArmor-v30.esp]
+
+[Note]
+ This plugin contains several empty cells and should be cleaned with TESTool.
+[SIZE 387343 St. Nerevar's Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nevena's Clubs & Courtiers v1.0 [Nevena]
 
 ;; expdep
@@ -7369,7 +7515,7 @@ Nevena's Twin Lamps & Slave Hunters 1.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @New Beast Bodies 3.0 [LizTail]
+;; @New Beast Bodies 3.3 [LizTail]
 
 [Conflict]
  Choose ONLY ONE of these plugins. "Mature" is for anatomically correct, "Clean" is for a more asexual look.
@@ -7387,8 +7533,8 @@ New Khajiit Bodies - Clean.esp
 New Khajiit Bodies (Slof Textures) - Mature.esp
 New Khajiit Bodies (Slof Textures) - Clean.esp
 
-[Requires]
- To use this mod, you must have both Slof's Better Beasts (reptile version) and New Beast Bodies mod installed. Activate Slof's Better Beasts and this mod at the same time to replace the Argonians and/or Khajiit in the game with ones that use the new mesh with Slof's textures and heads.
+[Conflict]
+ To use this mod, you must have both Slof's Better Beasts (reptile version) and New Beast Bodies mod installed, however New Beast Bodies no longer reqires that Slof's Better Beasts plugins be active.
  (Ref: "new_beast_bodies-slof-tex-readme.txt")
 [ANY New Khajiit Bodies (Slof Textures) - Mature.esp
      New Khajiit Bodies (Slof Textures) - Clean.esp
@@ -7397,21 +7543,6 @@ New Khajiit Bodies (Slof Textures) - Clean.esp
 [ANY Slof's Better Beasts a.esp
      Slof's Better Beasts b.esp
      Slof's Civilised Beasts.esp]
-
-; For Slof's you need to enable Slof's Better Beasts Reptile
-; version as well as the New Argonian Bodies (Slof Textures) mod in
-; order to get her heads and my bodies. Her mod needs to load first
-; before mine, but unless her mod is updated, it should always load
-; before mine due to the modification date being earlier.
-; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=921269&view=findpost&p=13470588 )
-[Order]
-Slof's Better Beasts a.esp
-Slof's Better Beasts b.esp
-Slof's Civilised Beasts.esp
-New Khajiit Bodies (Slof Textures) - Mature.esp
-New Khajiit Bodies (Slof Textures) - Clean.esp
-New Argonian Bodies (Slof Textures) - Mature.esp
-New Argonian Bodies (Slof Textures) - Clean.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7441,23 +7572,18 @@ NewBlood_MwTbBm1.1.esp
 ;; both WGI Magic Effects and NEDE v1.1"
 ;; (Ref: "Readme New Elemental Damage Effects v1.2.txt")
 
-;; for the complete WGI
 [Order]
-Wakim's Game Improvement 9.esp
+Wakim's Game Improvement 9.esp		     ;\
+Wakim's Game Improvements with No-glo v9.esp ; } these are actually mutally exclusive
+Balance - Magic Effects.esp		     ;/
 NEDE v1.2.esp
-NEDE WGI patch.esp
-
-;; for the modular WGI
-[Order]
-Balance - Magic Effects.esp
-NEDE v1.2.esp
-NEDE WGI patch.esp
 
 [Patch]
  (Ref: "Readme New Elemental Damage Effects v1.2.txt")
 NEDE WGI patch.esp
 [ALL NEDE v1.2.esp
      [ANY Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp
 	  Balance - Magic Effects.esp]]	; WGI 9 Modular
 
 
@@ -7517,6 +7643,7 @@ New Icons - BM Add-on.esp
 
 [Order]
 Wakim's Game Improvement 9.esp
+Wakim's Game Improvements with No-glo v9.esp
 New Icons - WGI Compat.esp
 
 [Order]
@@ -8038,6 +8165,17 @@ VA_OrdReplace_openhelm1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Particle Arrow Replacer [ghostnull]
+
+[Conflict]
+ use only one of the two .esps.
+Particle Arrows.esp
+[ANY AreaEffectArrows.esp
+     AreaEffectArrows XB Edition.esp
+     Area Effect Arrows.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Passing Time While Reading [Jac]
 
 [Conflict]
@@ -8281,6 +8419,14 @@ PrivateersHold.esp
 [Requires]
 PrivateersHold.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Propylons 1.1 [Charles Cooley]
+
+[Note]
+ According to the Readme "This will run with or without the Master Index plugin. If you load this without the Master Index plugin you may see dialog warnings in the Warnings file and in the Construction Set, but the dialog should still work correctly." 
+propylons1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8647,6 +8793,15 @@ Romance_v37EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @ROV World [RodrigoVinholo]
+
+[Requires]
+ROV World.esp
+[All Wrye Base.esp 
+     Wrye Travel.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Royal Chargen version 1.2 [Princess Stomper]
 
 ;; expdep
@@ -8969,6 +9124,23 @@ SMSadrithMora.esp
 SMSeydaNeen.esp
 SMTelAruhn.esp
 SMTelVos.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Service Requirements [Vanhikes, some updates by makeshiftwings]
+
+; JMS - Note that user vio reports that version 1.4.3 exists, but I was unable to find it.
+[Note]
+ Service Requirements is compatibale with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude Gameplay - Faction.esp. If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer. (Ref: Service_Requirements.txt)
+[ALL [ANY Service_Requirements.esp
+          Service_Requirements&WGI.esp]
+     [ANY Gameplay - Faction.esp 
+          Wakim's Game Improvement 9.esp 
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+[Conflict]
+ Use only one of these two .esps.
+Service_Requirements.esp
+Service_Requirements+WGI.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9341,6 +9513,7 @@ CastReduce-v30.esp
 ; all-in-one Wakim
 [Order]
 Wakim's Game Improvement 9.esp
+Wakim's Game Improvements with No-glo v9.esp
 SpellFix_WGI.esp
 
 ; ref: SpellFix_WGI.txt
@@ -9354,6 +9527,7 @@ SpellFix_WGI.esp
  (Ref: SpellFix_WGI.txt)
 SpellFix_WGI.esp
 [ANY Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp
      Balance - spells.esp]
 
 [Conflict]
@@ -9373,7 +9547,7 @@ SpzInteriorDaylight.esp
 Tribunal.esm
 
 [Conflict]
- Both Spuzzum's "Interior Daylight" and Dark Angel�s "Illuminated Windows" add daylight to interior windows. You only need to run one of these plugins.
+ Both Spuzzum's "Interior Daylight" and Dark Angel's "Illuminated Windows" add daylight to interior windows. You only need to run one of these plugins.
  (Ref: readme_spzdl.txt and Illuminated Windows.zip\DrkAngel Readme.doc)
 SpzInteriorDaylight.esp
 Illuminated Windows.esp
@@ -9391,13 +9565,13 @@ SpzInteriorDaylight.esp
 Sris_Alchemy_BM.esp
 Sri Alchemy BM List Patch.esp
 
-[Patch]
- "Sris_Alchemy_BM.esp" (Version 1.1109) uses deprecated AddToLev* function to modify Bethsoft leveled lists.
+[Requires]
+ You are missing "Sri Alchemy BM List Patch". "Sris_Alchemy_BM.esp" (Version 1.1109) uses deprecated AddToLev* function to modify Bethsoft leveled lists.
  For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
  Some patches may be available at that link.
  You can also get a replacement Sris_Alchemy_BM.esp that includes the patch here: http://www.tesnexus.com/downloads/file.php?id=20882
-Sri Alchemy BM List Patch.esp
 [VER = 1.1109 Sris_Alchemy_BM.esp]
+Sri Alchemy BM List Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9421,7 +9595,7 @@ ss_DBNRDZ_NV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Steel Broadsword Fix v1.1 [quorn]
+;; @Steel Broadsword Fix v1.2 [quorn]
 
 [Conflict]
  ! Both Sapphron's Steel Broadsword Fix and Khan raider's Weapon collection pack
@@ -9432,7 +9606,8 @@ Steel Broadsword Fix BM.esp
      Weapon collection.esp]
 
 [Note]
- ! Steel Broadsword Fix 1.0 is updated by Steel Broadsword Fix 1.1, you should upgrade!
+ ! Steel Broadsword Fix 1.0 is updated by Steel Broadsword Fix 1.2, you should upgrade!
+ ! ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6233 )
 steel_broadsword_fix.esp
 
 
@@ -9440,7 +9615,7 @@ steel_broadsword_fix.esp
 ;; @Steel Broadsword Fix [Sapphron]
 
 [Conflict]
- ! Both quorn's Steel Broadsword Fix 1.1 and Khan raider's Weapon collection pack
+ ! Both quorn's Steel Broadsword Fix and Khan raider's Weapon collection pack
  ! 3.0 replace the steel broadsword, which uses the imperial broadsword mesh &
  ! icon, with new, unique ones.
 Steel Broadsword Fix.esp
@@ -9553,6 +9728,122 @@ Suran Archery Store_v3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Alchemy [Taddeus]
+
+[Order]
+Taddeus'BalancedAlchemy.esp
+Sri Alchemy BM List Patch.esp
+
+[Requires]
+ You are missing "Sri Alchemy BM List Patch". Srikandy's Alchemy for Bloodmoon, upon which Taddeus' Balanced Alchemy "is heavily based" (see Taddeus'BalancedAlchemy - Readme.txt), uses deprecated AddToLev* function to modify Bethsoft leveled lists, and this function is included in Taddeus'Balanced Alchemy. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists Some patches may be available at that link. Patches for Sri's Alchemy should work for Taddeus' Balanced Alchemy, as the offending script has the same ID in both mods.
+Taddeus'BalancedAlchemy.esp
+Sri Alchemy BM List Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Armor [Taddeus]
+
+[Conflict]
+ Taddeus'BalancedArmors includes balanced versions of the following plugins: (official) LeFemme Armors, (official) Adamantium Armor, (official) Adamantium Helm of Tohan, Aedroth's Bloodmoon Wolf Greaves Fix, Avenger's Female Armors (some meshes), Canadianice's Domina Madnness Armors, Dongle's Adamantium Round and Tower Shields, Jeremy's Divine Domina (part 1, 2, 3, 4 and 5), TommyKhajiit's Ebony Greaves fix, Venymora's Red Leather (Tribunal version). (Ref: Taddeus'BalancedArmors - Readme.txt)
+[ANY Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
+[ANY LeFemmArmor.esp 
+     adamantiumarmor.esp 
+     EBQ_Artifact.esp 
+     bm_wolf_greaves_fix.esp 
+     acsEbonyGreaves.esp
+     DGLAdamantiumShields.esp
+     DivineDomina1.esp
+     DivineDomina2.esp
+     DivineDomina3.esp
+     DivineDomina4.esp
+     DivineDomina5.esp
+     AV_female_armor.esp
+     AV_fem_armor_Trib.esp]
+
+[Conflict]
+ Use only one of these two .esps.
+Taddeus'BalancedArmors.esp
+Taddeus'BalancedArmors_Rotate.esp
+
+[Note]
+ Taddeus'BalancedArmors is compatibale with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedArmors - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+[ALL [ANY Taddeus'BalancedArmors.esp 
+          Taddeus'BalancedArmors_Rotate.esp]
+     [ANY Balance - items.esp 
+          Wakim's Game Improvement 9.esp 
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+[Note]
+ !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 266943 Taddeus'BalancedArmors.esp]
+
+[Requires]
+ (Ref: "Taddeus'BalancedArmors - Readme.txt")
+[ANY Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
+[All Tribunal.esm 
+     Bloodmoon.esm]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Objects [Taddeus]
+
+[Conflict]
+ Taddeus'BalancedObjects includes balanced versions of the following plugins: Erasmus' Potion Icons, Erasmus' Scroll Icons, Srikandi's Potion Sorter. (Ref: Taddeus'BalancedObjects - Readme.txt)
+[ANY Taddeus'BalancedObjects.esp 
+     Taddeus'BalancedObjects_Rotate.esp]
+[ANY Erasmus' Potion Icons.esp 
+     Erasmus' Scroll Icons.esp 
+     Srikandi's Potion Sorter.esp]
+
+[Conflict]
+ Use only one of these two .esps
+Taddeus'BalancedObjects.esp
+Taddeus'BalancedObjects_Rotate.esp
+
+[Note]
+ Taddeus'BalancedObjects is compatibale with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedObjects - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+[All [ANY Taddeus'BalancedObjects.esp 
+          Taddeus'BalancedObjects_Rotate.esp]
+     [ANY Balance - items.esp 
+          Wakim's Game Improvement 9.esp 
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Weapons [Taddeus]
+
+[Conflict]
+ Taddeus'BalancedWeapons includes a balanced version of the following plugin: (official) Area Effect Arrows. (Ref: Taddeus'BalancedWeapons - Readme.txt)
+[ANY Taddeus'BalancedWeapons.esp
+     Taddeus'BalancedWeapons_Rotate.esp]
+[ANY AreaEffectArrows.esp
+     AreaEffectArrows XB Edition.esp
+     Area Effect Arrows.esp]
+
+[Note]
+ Taddeus'BalancedWeapons is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedWeapons - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+[All [ANY Taddeus'BalancedWeapons.esp 
+          Taddeus'BalancedWeapons_Rotate.esp] 
+     [ANY Balance - items.esp 
+          Wakim's Game Improvement 9.esp 
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+[Conflict]
+ Use only one of these two .esps
+Taddeus'BalancedWeapons.esp
+Taddeus'BalancedWeapons_Rotate.esp
+
+[Requires]
+ (Ref: "Taddeus'BalancedWeapons - Readme.txt")
+[ANY Taddeus'BalancedWeapons.esp
+     Taddeus'BalancedWeapons_Rotate.esp]
+[All Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TR - Tamriel Rebuilt (Maps 1 and 2) [Tamriel Rebuilt team]
 
 [Order]
@@ -9635,18 +9926,18 @@ Oluhan v1.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Tejón's Fatigue Effects v1.2 [tanuki]
+;; @Tejon's Fatigue Effects v1.2 [tanuki]
 
 [Requires]
  This plugin uses Startup scripts so it requires one of the expansions.
-Tejn's Fatigue Effects - Blackout.esp
+Tej�n's Fatigue Effects - Blackout.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
 [Requires]
  Sleep! requires Bloodmoon.
- (Ref: "Tejón's Fatigue Effects v1.21.txt")
-Tejn's Fatigue Effects - .esp
+ (Ref: "Tejon's Fatigue Effects v1.21.txt")
+Tej�n's Fatigue Effects - .esp
 Bloodmoon.esm
 
 
@@ -9693,6 +9984,14 @@ TelMagus-Ingredients-TB-BM.esp
 Teleportation Spells.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Telperion - Ascadian Isles Tree House [Calislahn]
+
+[Requires]
+Telperion Basement Addon.esp
+Telperion.V1.03.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11324,6 +11623,21 @@ Vivec Outdoor Mall CoM_v2.esp
      Clean SECRET GARDEN V2.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vvardenfell Druglord [Fliggerty]
+
+[Requires]
+ (Ref: Vvardenfell Druglord Skooma Anonymous Add-on_Readme.txt)
+Skooma Anonymous.esp
+Vvardenfell Druglord.esp
+
+; Note that the readme says: "Included Skooma Anonymous add-on in zip file to prevent load-order problems."
+; and the dates in the archive show that "Skooma Anonymous" should load after.
+[Order]
+Vvardenfell Druglord.esp
+Skooma Anonymous.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Vvardenfell Libraries [The Wanderer]
 
 [Requires]
@@ -11357,8 +11671,10 @@ Lazarus_Manor-Caldera.esp
 ;; @Wakim's Game Improvments 9 (WGI) [Wakim]
 
 [Conflict]
- "Wakim's Game Improvement 9.esp" combines all of the modular WGI plugins, so you should only run one or the other.
+ "Wakim's Game Improvement 9.esp" combines all of the modular WGI plugins
+ "Wakim's Game Improvements with No-glo v9.esp" also combines all of the modular WGI plugins and adds No-Glo
 Wakim's Game Improvement 9.esp
+Wakim's Game Improvements with No-glo v9.esp
 [ANY Balance - Character.esp
      Balance - Magic Effects.esp
      Balance - NPC Spellcasting.esp
@@ -11373,7 +11689,13 @@ Wakim's Game Improvement 9.esp
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Weapon Range Balance.esp
 [ANY Balance - items.esp
-     Wakim's Game Improvement 9.esp]
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+[Conflict]
+ Use only one of these two .esps.
+Wakim's Game Improvement 9.esp
+Wakim's Game Improvements with No-glo v9.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11881,6 +12203,14 @@ X-jiit.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 13207 Zaddam Cave.esp]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Zyndaar's Bows [Luchaire, meshes by Zyndaar]
+
+[Note]
+ !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 3900 Zyndaar's Bows.esp]
 
 
 ;;TBD
