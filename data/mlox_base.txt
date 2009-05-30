@@ -5681,13 +5681,12 @@ LGNPC_SoulSicknessPatch_v?_??.esp
 Less_Generic_Nerevarine.esp
 LGNPC_PaxRedoran_v?_??.esp
 
-; JMS - need to confirm if still needed for MCA5.2
-;[Patch]
-; "For users of MCA 5/5.1, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
-; (Ref: "LGNPC Secret Masters readme.txt")
-;LGNPC_SM_MCA5.esp
-;[ALL LGNPC_Secret_Masters_v1_21.esp
-;     MCA.esm]
+[Patch]
+ "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
+ (Ref: "LGNPC Secret Masters readme.txt")
+LGNPC_SM_MCA5.esp
+[ALL LGNPC_Secret_Masters_v1_21.esp
+     MCA.esm]
 
 ;; expdep
 [Requires]
@@ -9526,11 +9525,6 @@ Tribunal.esm
  (Ref: readme_spzdl.txt and Illuminated Windows.zip\DrkAngel Readme.doc)
 SpzInteriorDaylight.esp
 Illuminated Windows.esp
-
-; Dragon32 - If someone wants to run them both then Spuzzum's should load after Dark Angel's
-[Order]
-Illuminated Windows.esp
-SpzInteriorDaylight.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
