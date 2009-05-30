@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-05-27 03:21:21 (UTC)]
+[Version 2009-05-30 23:54:07 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -188,8 +188,13 @@ Wrye Patches M1.esp
 Key Replacer Trib & BM.esp
 
 [Requires]
+ "Wrye Patches A1.esp" requires "LeFemmArmor.esp" or any compilation that includes it.
 Wrye Patches A1.esp
-LeFemmArmor.esp
+[ANY LeFemmArmor.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
 
 [Conflict]
  The "C" version is for vanilla Morrowind, the "C1" version depends on Avenger's female shirts/robes, and Prosey's female pants.
@@ -799,24 +804,27 @@ Antares' Big Mod <VER>.esp
 [Note]
  ! A newer version of this plugin exists, you may want to upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892
-[VER < 4.0 Antares' Big Mod <VER>.esp]
+[VER < 5.0 Antares' Big Mod <VER>.esp]
 
 [Requires]
  Uses Bloodmoon function: placeatme.
-Antares' Big Mod 4.esp
+Antares' Big Mod 5.esp
 Bloodmoon.esm
 
 [Patch]
- "Some functions of ABM, if used with Npc from MCA, will crash the game. With this patch, these new functions are not available for Npcs from MCA."
+ "Some functions of ABM, if used with NPC from MCA, will crash the game. With this patch, these new functions are not available for NPCs from MCA."
+ (Note that the patch works with version 5 of Antares' Big Mod also).
  (Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt")
 Antares' Big Mod 4 - MCA 5.2 - patch.esp
-[ALL Antares' Big Mod 4.esp
+[ALL [ANY Antares' Big Mod 4.esp
+	  Antares' Big Mod 5.esp]
      MCA.esm]
 
 
 ; Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt"
 [Order]
 Antares' Big Mod 4.esp
+Antares' Big Mod 5.esp ; The patch works for the new version 5 too.
 Antares' Big Mod 4 - MCA 5.2 - patch.esp
 
 
@@ -1604,7 +1612,7 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 ; Necessities of Morrowind 2.0.esp
 ; Necessities of Morrowind 2.1.esp
 ; NOM 2.12.esp
-; NOM2.13.esp
+; NOM 2.13.esp
 ; Balmora Expansion v1.4.esp
 ; Balmora Expansion v1.4+(1.4).esp
 ; Balmora Expansion - LITE 1.0.esp
@@ -1690,7 +1698,7 @@ Cali_ RiverHouse.esp
 Cali_ RiverHouse_BE.esp
 
 [Conflict]
- "Balmora River House" by Calislahn is not compatible with Gorg's Balmora Expansion", use "Balmora River House - Balmora Expansion Version" instead.
+ "Balmora River House" by Calislahn is not compatible with Gorg's "Balmora Expansion", use "Balmora River House - Balmora Expansion Version" instead.
  (Ref: Cali_RiverHouse_Readme.txt)
 Cali_ RiverHouse.esp
 [ANY Balmora Expansion v1.4.esp
@@ -1703,14 +1711,14 @@ Cali_ RiverHouse.esp
 Cali_RiverHouse_NoMKitchen.esp
 [ALL [ANY Cali_ RiverHouse.esp
           Cali_ RiverHouse_BE.esp]
-     NOM2.13.esp]     
+     NOM 2.13.esp]     
 
 ; Ref: Cali_RiverHouse_NoMKitchenReadme.txt
 [Order]
 Cali_ RiverHouse.esp
 Cali_ RiverHouse_BE.esp
 Cali_RiverHouse_NoMKitchen.esp
-NOM2.13.esp
+NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9102,18 +9110,25 @@ SMTelVos.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Service Requirements [Vanhikes, some updates by makeshiftwings]
 
-; JMS - Note that user vio reports that version 1.4.3 exists, but I was unable to find it.
 [Note]
- Service Requirements is compatibale with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude Gameplay - Faction.esp. If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer. (Ref: Service_Requirements.txt)
-[ALL [ANY Service_Requirements.esp
-          Service_Requirements&WGI.esp]
+ The latest version of Service Requirements is 1.4.3, available from Elricm:
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4524
+[ANY Service_Requirements+WGI.esp
+     Service_Requirements.esp]
+
+; from: vio
+[Note]
+ Service Requirements is compatible with Wakin's Game Improvements, but it is recommended to use the modular version and to exclude Gameplay - Faction.esp. If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ (Ref: Service_Requirements.txt)
+[ALL [ANY Service_Requirements_V1.4.3.esp
+          Service_Requirements_V1.4.3&WGI.esp]
      [ANY Gameplay - Faction.esp 
           Wakim's Game Improvement 9.esp 
           Wakim's Game Improvements with No-glo v9.esp]]
 
 [Conflict]
  Use only one of these two .esps.
-Service_Requirements.esp
+Service_Requirements_V1.4.3.esp
 Service_Requirements+WGI.esp
 
 
@@ -11713,7 +11728,7 @@ abotWaterLife.esm
  !! of Morrowind.
  !! (Ref.abotWaterLife.txt)
 NOM2.12patch.esp
-NOM2.13.esp
+NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
