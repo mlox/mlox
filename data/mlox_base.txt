@@ -95,7 +95,7 @@ Tribunal.esm
 Bloodmoon.esm
 
 [Note]
- These official plugins have some GMSTs (game settings) that are duplicates of those in the masters. This means that they can be safely removed. However, if you choose to leave them in they should not cause any problems unless in the unlikely event that they mask intentional changes to those GMSTs that are made higher in your load order.
+ These official plugins have some GMSTs (game settings) that are duplicates of those in the masters. This means that they can be safely removed. However, if you choose to leave them in they should not cause any problems unless they mask intentional changes to those GMSTs that are made higher in your load order.
  (See also: What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 29311 EBQ_Artifact.esp]
 [SIZE 131705 entertainers.esp]
@@ -209,6 +209,10 @@ Wrye Patches C1.esp
  (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches M.esp
 Wrye Patches M1.esp
+
+[Note]
+ "Wrye Patches M.esp" incorrectly defines the NIF model for object "misc_dwrv_ark_key00" (key to Arkngthand) as "dd\misc_dwrv_Ark_key00.nif". It should be: "m\misc_dwrv_Ark_key00.nif". This model is supposed to be used for the version "Wrye Patches M1.esp", but apparently got used in "Wrye Patches M.esp" by mistake. So you may run across this as a missing or incorrect model in your game. It is easy to correct the name of the model in the Construction Set should you encounter this problem.
+[SIZE 63823 Wrye Patches M.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
