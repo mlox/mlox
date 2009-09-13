@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-07-30 23:57:18 (UTC)]
+[Version 2009-09-13 17:47:35 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -373,7 +373,13 @@ Clean Children V2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @abotGuars 1.07 [abot]
+;; @abotGuars 1.12 [abot]
+
+[Note]
+ ! There is a newer version of abot's Guars available, you may want to upgrade:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6112
+[VER < 1.12 abotGuars.esp]
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  "abotGuars.esp" if you have both Tribunal.esm and Bloodmoon.esm loaded
@@ -454,10 +460,67 @@ Acheron's Camping Gear 2.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Advanced Guards [Marty V. aka "The Puma Man"]
 
+;Morrowind version
 [Requires]
  (Ref: "Advanced GUARDS IV.doc")
-GUARD-Remover.esp
+[ANY [SIZE 30455 GUARD-Remover.esp] ;uncleaned
+     [SIZE 27647 GUARD-Remover.esp]] ;cleaned
+[ANY [SIZE 137740 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 133788 ADVANCED GUARDS.esm]] ;cleaned
+
+[Conflict]
+ You are using the Morrowind only version of Advanced Guards, but are using Tribunal and/or Bloodmoon as well. Please change to the appropriate version of Advanced Guards.
+[ANY [SIZE 137740 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 133788 ADVANCED GUARDS.esm]] ;cleaned
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 137740 ADVANCED GUARDS.esm]
+
+;Bloodmon version
+[Requires]
+ (Ref: "Advanced GUARDS IV.doc")
+[ANY [SIZE 30455 GUARD-Remover.esp] ;uncleaned
+     [SIZE 27647 GUARD-Remover.esp]] ;cleaned
+[ANY [SIZE 154780 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 149538 ADVANCED GUARDS.esm]] ;cleaned
+ 
+[Conflict]
+ You are using the Bloodmoon version of Advanced Guards, but are using Tribunal as well. Please change to the appropriate version of Advanced Guards.
+[ANY [SIZE 154780 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 149538 ADVANCED GUARDS.esm]] ;cleaned
+Tribunal.esm
+
+;Tribunal version
+[Requires]
+ (Ref: "Advanced GUARDS IV.doc")
+[ANY [SIZE 30759 GUARD-Remover.esp] ;uncleaned
+     [SIZE 27915 GUARD-Remover.esp]] ;cleaned
+[ANY [SIZE 132755 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 129530 ADVANCED GUARDS.esm]] ;cleaned
+ 
+[Conflict]
+ You are using the Tribunal only version of Advanced Guards, but are using Bloodmoon as well. Please change to the appropriate version of Advanced Guards.
+[ANY [SIZE 132755 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 129530 ADVANCED GUARDS.esm]] ;cleaned
+Bloodmoon.esm
+
+;TB+BM version
+[Requires]
+ (Ref: "Advanced GUARDS IV.doc")
+[ANY [SIZE 30759 GUARD-Remover.esp] ;uncleaned
+     [SIZE 27915 GUARD-Remover.esp]] ;cleaned
+[ANY [SIZE 158340 ADVANCED GUARDS.esm] ;uncleaned
+     [SIZE 152725 ADVANCED GUARDS.esm]] ;cleaned
+ 
+;All versions
+[Note]
+ According to its readme "ADVANCED GUARDS IV DOES NOT affect third party mods. So the guards from the Bank mod, for example, will not be affected. If you are concerned about this, you must check the special GUARDS.esp as well. This will make the low-level spawns of guards just as strong as the high level spawns of guards, however."
 ADVANCED GUARDS.esm
+NOT GUARDS.esp
 
 ;; (Ref: "Advanced GUARDS IV.doc")
 [Order]
@@ -12472,11 +12535,12 @@ _Mog_Race_v4b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Where Are All Birds Going? 1.12 [abot]
+;; @Where Are All Birds Going? 1.13 [abot]
 
 [Note]
- !! A new version of "Where Are All Birds Going?" is available, you should upgrade.
-[VER < 1.12 abotWhereAreAllBirdsGoing.esp]
+ ! A new version of "Where Are All Birds Going?" is available, you should upgrade:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2786
+[VER < 1.13 abotWhereAreAllBirdsGoing.esp]
 
 [Requires]
  Tribunal/Bloodmoon engine required.
