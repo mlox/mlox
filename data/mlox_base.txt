@@ -621,6 +621,42 @@ AdvTC_TribunalAddon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Airship Mod [qwert and Lingarn]
+
+;; Dragon32: The readme's are er... somewhat sparse.
+
+[Requires]
+ (Ref: Holo-Deck2+FIX!!!!.ace\Holo_Deck2\readme.txt)
+Airship5_Holo-Deck2.esp
+Airship5.esp
+
+[Requires]
+ For the "Airship_multi_ support.esp" plugin to work you need to have Marcel Hesslebarth's "Multiple Teleport Marking" mod enabled.
+Airship_multi_ support.esp
+MultiMark.esp
+
+;; Plugin ordering as per other MultiMark plugins
+[Order]
+MultiMark.esp
+Airship_multi_ support.esp
+
+[Conflict]
+ "Airship5_Holo-Deck.esp" is an earlier version of the Holo-Deck addon. Use "Airship5_Holo-Deck2.esp" from the archive "Holo-Deck2+FIX!!!!.ace", it is the most recent version.
+Airship5_Holo-Deck2.esp
+Airship5_Holo-Deck.esp
+
+[Note]
+ ! Use the Holo-Deck plugin from the archive "Holo-Deck2+FIX!!!!.ace", it is the most recent version. The plugin should be dated 11th May 2003.
+[ANY [SIZE 40618 Airship5_Holo-Deck2.esp]
+     Airship5_Holo-Deck.esp]
+
+;; Dragon32: Not specified but logical
+[Order]
+Airship5.esp
+Airship5_Holo-Deck2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @AK_47 mod [Justin]
 
 [Requires]
@@ -1082,6 +1118,121 @@ AshlanderTent.esp
 AreaEffectArrows.esp
 AreaEffectArrows XB Edition.esp
 Area Effect Arrows.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Armor: Integrative Modifications - Morrowind and Tribunal and Bloodmoon 1.0 [Alaisiagae]
+
+[Conflict]
+ Use only one plugin:
+  AIM_MW_1dot0.esp - if you only have Morrowind
+  AIM_MW_TB_1dot0.esp - if you have Morrowind and Tribunal
+  AIM_MW_BM_1dot0.esp - if you have Morrowind and Bloodmoon
+  AIM_MW_TB_BM_1dot0.esp - if you have Morrowind and both expansions
+ (Ref: readme_Armor Integrative Modifications - MW.txt
+       readme_Armor Integrative Modifications - MWandTB.txt
+       readme_Armor Integrative Modifications - MWandBM.txt
+       readme_Armor Integrative Modifications - MWandTBandBM.txt)
+AIM_MW_1dot0.esp
+AIM_MW_TB_BM_1dot0.esp
+AIM_MW_TB_1dot0.esp
+AIM_MW_1dot0.espAIM_MW_BM_1dot0.esp
+
+;; Dragon32: The TR addon isn't mentioned in the readme.
+;; The TR addon has dependencies on Map 1 and Map 2 as well. For this rule we'll just check for TR_Data.esm, which is where the armour information is held
+[Requires]
+ The "AIM- TR Compatability Patch.esp" should only be loaded if you have Tamriel Rebuilt installed.
+AIM- TR Compatability Patch.esp
+[ALL AIM_MW_TB_BM_1dot0.esp
+     TR_Data.esm]
+
+[Requires]
+ (Ref: readme_Armor Integrative Modifications - MWandTBandBM.txt)
+AIM_MW_TB_BM_1dot0.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ (Ref: readme_Armor Integrative Modifications - MWandTB.txt)
+AIM_MW_TB_1dot0.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: readme_Armor Integrative Modifications - MWandBM.txt)
+AIM_MW_BM_1dot0.esp
+Bloodmoon.esm
+
+; Dragon32 - Not too sure about this; the TR patch does make some changes to four armour types changed by the main AIM plugin, I *assume* that's intentional so the TR addon should load later. To check.
+[Order]
+AIM_MW_TB_BM_1dot0.esp
+AIM- TR Compatability Patch.esp
+
+[Conflict]
+ Load only one of the Unarmored Booster plugins 
+ (Ref: AIM - Unarmored Boosters.txt)
+AIM- Unarmored Booster MW.esp
+AIM- Unarmored Booster MW_BM.esp
+Aim- Unarmored Booster MW_TB.esp
+AIM- Unarmored Booster Tamriel Rebuilt.esp
+AIM- Unarmored BoosterMY_TB_BM.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 4924 AIM- Unarmored Booster MW.esp]
+
+;; Dragon32 - Counciler's mod is invalidated by the MPP, see the MPP entry
+[Conflict]
+ Alaisiagae's "Armor: Integrative Modifications" includes the fixes for the missing Templar armor pauldrons included in Counciler's "Templar Pauldrons Fix".
+[ANY AIM_MW_TB_BM_1dot0.esp
+     AIM_MW_TB_1dot0.esp
+     AIM_MW_1dot0.esp
+     AIM_MW_BM_1dot0.esp]
+[ANY Clean Templar Pauldron Fix.esp
+     Clean_Templar_Pauldron_Fix_v11.esp]
+
+;; Dragon32 - Aedroth's mod is invalidated by the MPP, see the MPP entry
+[Conflict]
+ Alaisiagae's "Armor: Integrative Modifications" includes the fix for the Wolf armor's backwards groin mesh that's included in Aedroth's "BM Wolf Greaves Fix".
+[ANY AIM_MW_TB_BM_1dot0.esp
+     AIM_MW_BM_1dot0.esp]
+bm_wolf_greaves_fix.esp
+
+[Conflict]
+ Alaisiagae's "Armor: Integrative Modifications" includes the "Left Gloves Addon" (based on Lurlock's "Left Gloves"), there is no need to run these mods and AIM at the same time.
+ (Ref: readme_Armor Integrative Modifications - MW.txt
+       readme_Armor Integrative Modifications - MWandTB.txt
+       readme_Armor Integrative Modifications - MWandBM.txt
+       readme_Armor Integrative Modifications - MWandTBandBM.txt)
+[ANY AIM_MW_TB_BM_1dot0.esp
+     AIM_MW_TB_1dot0.esp
+     AIM_MW_1dot0.esp
+     AIM_MW_BM_1dot0.esp]
+[ANY LeftGloves.esp
+     LeftGloves_Addon_v2.esp
+     Clean LeftGloves_TBandBM.esp]
+
+;; Dragon32 - The two ebony fixing mods are invalidated by the MPP, see the MPP entry
+[Conflict]
+ Alaisiagae's "Armor: Integrative Modifications" includes the fixes for the greenish tinged Ebony armor included in TommyKhajiit's "Ebony Greaves" and Sapphron's "Ebony Armor Fixes v1.1"
+[ANY AIM_MW_TB_BM_1dot0.esp
+     AIM_MW_TB_1dot0.esp
+     AIM_MW_1dot0.esp
+     AIM_MW_BM_1dot0.esp]
+[ANY acsEbonyGreaves.esp
+     Ebony Armor Fixes.esp]
+
+[Conflict]
+ Alaisiagae's "Armor: Integrative Modifications" changes the Imperial Newtscale Cuirass, Imperial Studded Leather Cuirass, Imperial Silver Cuirass, and Imperial Dragonscale Cuirass so they are recognized as Imperial Legion uniforms.
+ The other mods identified (NukeouT's "Imperial Uniforms", Santtu Pajukanta's "Imperial Legion Uniforms" and Maelstrom's "More Legion Uniforms") do a similar thing, there's is no need to run them with Alaisiagae's "Armor: Integrative Modifications"
+[ANY AIM_MW_TB_BM_1dot0.esp
+     AIM_MW_TB_1dot0.esp
+     AIM_MW_1dot0.esp
+     AIM_MW_BM_1dot0.esp]
+[ANY Imperial Uniforms T B (v1.2).esp
+     Imperial Uniforms (v1.1).esp
+     ImperialLegionUniform.esp
+     More Legion Uniforms.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1999,62 +2150,6 @@ Balmora Expansion V1.4.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Looking Liquor, Drugs, and Vials [Korana]
-
-[Conflict]
- "BLLDV_MW_ONLY.esp" Use this plugin ONLY if you do not have the expansions.
- "BLLDV_MW_TR.esp"   Use this plugin ONLY if you have ONLY Morrowind
-                     and Tribunal installed.
- "BLLDV_ALL.esp"     Use this plugin ONLY if you have Morrowind, Tribunal.
-                     AND Bloodmoon installed.
- (Ref: "BLLDV_README.txt")
-BLLDV_ALL.esp
-BLLDV_MW_ONLY.esp
-BLLDV_MW_TR.esp
-
-;; load BLLDV after NOM, to ensure that labels are on the bottles.
-;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13484010 )
-[Order]
-NOM 2.13.esp
-BLLDV_ALL.esp
-BLLDV_MW_ONLY.esp
-BLLDV_MW_TR.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Looking Morrowind [Misty Moon]
-
-[Conflict]
- ! Choose either "BL-Morrowind.esm" or "BL-Morrowind.esp" not both. If you get conflicts with other mods try "BL-Morrowind.esp".
- ! (Ref: Better Looking Morrowind.txt)
-BL-Morrowind.esm 
-BL-Morrowind.esp
-
-[Conflict]
- !! To prevent conflicts use "BE+(1.4) Better Looking Morrowind.esp" from Slartibartfast's "Texture Fix - Balmora Expansion"
- !! (Ref: Readme - Texture Fix- Balmora Expansion.txt)
-[ALL [ANY BL-Morrowind.esm 
-          BL-Morrowind.esp]
-     [ANY Balmora Expansion v1.4.esp
-          Balmora Expansion - LITE 1.0.esp
-          Balmora Expansion v1.4+(1.4).esp]]
-[NOTE]
- You are using an older version of Better Looking Morrowind, you should upgrade to v1.3:
- http://www.ringen.net/~ajs/mw/pluginsmods.html
-[ANY [VER < 1.3 BL-Morrowind.esm]
-     [VER < 1.3 BL-Morrowind.esp]]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Looking Weapons Katanas Tantos Wakizashis [Kagemaru]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 7422 Better Looking Weapons Katanas Tantos Wakizashis.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Beryl's Head Replacer v1.0 [Beryllium]
 
 [Order]
@@ -2134,6 +2229,62 @@ Better Heads Bloodmoon addon.esm
 Better Heads Tribunal addon.esm
 [ALL Tribunal.esm
      Better Heads.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Looking Liquor, Drugs, and Vials [Korana]
+
+[Conflict]
+ "BLLDV_MW_ONLY.esp" Use this plugin ONLY if you do not have the expansions.
+ "BLLDV_MW_TR.esp"   Use this plugin ONLY if you have ONLY Morrowind
+                     and Tribunal installed.
+ "BLLDV_ALL.esp"     Use this plugin ONLY if you have Morrowind, Tribunal.
+                     AND Bloodmoon installed.
+ (Ref: "BLLDV_README.txt")
+BLLDV_ALL.esp
+BLLDV_MW_ONLY.esp
+BLLDV_MW_TR.esp
+
+;; load BLLDV after NOM, to ensure that labels are on the bottles.
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13484010 )
+[Order]
+NOM 2.13.esp
+BLLDV_ALL.esp
+BLLDV_MW_ONLY.esp
+BLLDV_MW_TR.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Looking Morrowind [Misty Moon]
+
+[Conflict]
+ ! Choose either "BL-Morrowind.esm" or "BL-Morrowind.esp" not both. If you get conflicts with other mods try "BL-Morrowind.esp".
+ ! (Ref: Better Looking Morrowind.txt)
+BL-Morrowind.esm 
+BL-Morrowind.esp
+
+[Conflict]
+ !! To prevent conflicts use "BE+(1.4) Better Looking Morrowind.esp" from Slartibartfast's "Texture Fix - Balmora Expansion"
+ !! (Ref: Readme - Texture Fix- Balmora Expansion.txt)
+[ALL [ANY BL-Morrowind.esm 
+          BL-Morrowind.esp]
+     [ANY Balmora Expansion v1.4.esp
+          Balmora Expansion - LITE 1.0.esp
+          Balmora Expansion v1.4+(1.4).esp]]
+[NOTE]
+ You are using an older version of Better Looking Morrowind, you should upgrade to v1.3:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7494
+[ANY [VER < 1.3 BL-Morrowind.esm]
+     [VER < 1.3 BL-Morrowind.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Looking Weapons Katanas Tantos Wakizashis [Kagemaru]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 7422 Better Looking Weapons Katanas Tantos Wakizashis.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2512,6 +2663,18 @@ Blood and Gore Wilderness add-on.esp
 [ALL Blood and Gore.esp
      [ANY The Wilderness Mod 2.0.esm
 	  The Wilderness Mod 2.0 T & B.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @ Bloodmoon Extras - Fixed levelled lists v0.2 [Dragon32, TheOtherFelix]
+
+;; Dragon32 - Information about TheOtherFelix's original mod's use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+
+[Conflict]
+ Do not enable both plugins, only enable the version with the fixed levelled lists: "BMExtrasFixedLL.esp"
+BMExtras.esp
+BMExtrasFixedLL.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon Landscape Overhaul 1.0 [Slartibartfast]
@@ -4799,6 +4962,11 @@ Advanced Herbalism - BM.esp
 Graphic Herbalism.esp
 Resources Enhanced.esp
 
+[Conflict]
+ Both ManaUser's "Bloated Caves" and MagicNakor's "Bloated Morrowind" add bloatspores to the game world. ManaUser's mod adds them to caves whilst MagicNakor's mod adds them to both caves and the wilderness (primarily the Bitter Coast). Choose which plugin you want to use.
+Bloated Caves.esp
+Bloated Morrowind.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism / Expanded Sounds Patch [philologos]
@@ -5511,9 +5679,11 @@ ASE Tribunal Expansion.esp
 
 ; The Imperial Legion Badge Readme.txt
 [Conflict]
- "The Imperial Legion Badge" by Rodrigo Ortiz and "Imperial legion shirt" by Dagoth Ur both do the same thing: allow you to be in the legion without having to wear legion armor. You probably only want to activate one or the other.
+ "The Imperial Legion Badge" by Rodrigo Ortiz and "Imperial legion shirt" by Dagoth Ur both do the same thing: allow you to be in the legion without having to wear legion armor. "Imperial Legion Uniforms" by Santtu Pajukanta as well as its other changes also includes a legion shirt.
+ You probably only want to activate one of these plugins.
 The Imperial Legion Badge.esp
 Legion Shirt.esp
+ImperialLegionUniform.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5523,6 +5693,25 @@ Legion Shirt.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 159855 Imp_Tomb_1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Imperial Uniforms 1.2 [NukeouT]
+
+[Note]
+ You should download version 1.2 of NukeouT's plugin, the updated version makes every piece of Imperial Templar armor an Imperial uniform. 
+Imperial Uniforms (v1.1).esp
+
+[Conflict]
+ You should only enable "Imperial Uniforms T B (v1.2).esp", the latest version of NukeouT's mod
+ (Ref: Imperial Uniforms Readme.txt)
+Imperial Uniforms T B (v1.2).esp
+Imperial Uniforms (v1.1).esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 14889 Imperial Uniforms T B (v1.2).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5814,6 +6003,85 @@ Armingers_at_Ghostgate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Jury-rig Wraithguard Replacer [Alaisiagae]
+
+[Conflict]
+ You should only enable one version of this plugin, consult the readme and download page for the version that suits your needs.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6783
+ (Ref: readme_JWR_Dark_L_Lefty.txt
+       readme_JWR_Dark_L.txt
+       readme_JWR_Dark_R.txt
+       readme_JWR_Dwemer_L_Lefty.txt
+       readme_JWR_Dwemer_L.txt
+       readme_JWR_Dwemer_R.txt
+       readme_JWR_Pack_AIM_1dot0.txt)
+JWR_Dark_L_Lefty.esp
+JWR_Dark_L.esp
+JWR_Dark_R.esp
+JWR_Dwemer_L_Lefty.esp
+JWR_Dwemer_L.esp
+JWR_Dwemer_R.esp
+JWR_Dark_L_AIM1dot0.esp
+JWR_Dark_L_Lefty_AIM1dot0.esp
+JWR_Dark_R_AIM_1dot0.esp
+JWR_Dwemer_R_AIM_1dot0.esp
+
+[Conflict]
+ Alaisiagae's "Jury-rig Wraithguard Replacer" will conflict with "JEB_wraithguard v1.1" by Braddock.
+ (Ref: readme_JWR_Dark_L_Lefty.txt
+       readme_JWR_Dark_L.txt
+       readme_JWR_Dark_R.txt
+       readme_JWR_Dwemer_L_Lefty.txt
+       readme_JWR_Dwemer_L.txt
+       readme_JWR_Dwemer_R.txt
+       readme_JWR_Pack_AIM_1dot0.txt)
+[ANY JWR_Dark_L_Lefty.esp
+     JWR_Dark_L.esp
+     JWR_Dark_R.esp
+     JWR_Dwemer_L_Lefty.esp
+     JWR_Dwemer_L.esp
+     JWR_Dwemer_R.esp
+     JWR_Dark_L_AIM1dot0.esp
+     JWR_Dark_L_Lefty_AIM1dot0.esp
+     JWR_Dark_R_AIM_1dot0.esp
+     JWR_Dwemer_R_AIM_1dot0.esp]
+JEB_wraithguard.esp
+
+[Note]
+ For consistency you should use Alaisiagae's "JWR_Dark_L_Lefty.esp" instead of "JWR_Dark_L.esp". In "JWR_Dark_L_Lefty.esp" the ground mesh and icon have been rotated to be compatible with Lurlock's "Left Gloves" and Alaisiagae's "Left Gloves Addon" mods
+ (Ref: readme_JWR_Dark_L_Lefty.txt)
+[ALL [ANY LeftGloves_Addon_v2.esp
+          LeftGloves.esp]
+     JWR_Dark_L.esp]
+
+[Note]
+ For consistency you should use Alaisiagae's "JWR_Dwemer_L_Lefty.esp" instead of "JWR_Dwemer_L.esp". In "JWR_Dwemer_L_Lefty.esp" the ground mesh and icon have been rotated to be compatible with Lurlock's "Left Gloves" and Alaisiagae's "Left Gloves Addon" mods
+ (Ref: readme_JWR_Dwemer_L_Lefty.txt)
+[ALL [ANY LeftGloves_Addon_v2.esp
+          LeftGloves.esp]
+     JWR_Dwemer_L.esp]
+
+[Note]
+ For consistency you should use Alaisiagae's "JWR_Dark_L_Lefty_AIM1dot0.esp" instead of "JWR_Dark_L_AIM1dot0.esp". In "JWR_Dark_L_Lefty_AIM1dot0.esp" the ground mesh and icon have been rotated to be compatible with Lurlock's "Left Gloves" and Alaisiagae's "Left Gloves Addon" mods
+ (Ref: readme_JWR_Dark_L_Lefty.txt)
+[ALL [ANY LeftGloves_Addon_v2.esp
+          LeftGloves.esp]
+     JWR_Dark_L_AIM1dot0.esp]
+
+[Note]
+ Alaisiagae has released "Armor: Integrative Modifications"-compatible versions of the "Jury-rig Wraithguard Replacer" mod.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6783
+[ALL [ANY JWR_Dark_L.esp
+          JWR_Dark_L_Lefty.esp
+          JWR_Dark_R.esp
+          JWR_Dwemer_R.esp]
+     [ANY AIM_MW_TB_BM_1dot0.esp
+          AIM_MW_TB_1dot0.esp
+          AIM_MW_1dot0.esp
+          AIM_MW_BM_1dot0.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kahleigh's Retreat [kwshipman]
 
 ; Kahleigh's Retreat needs to load after GAC, otherwise the house and front gate/wall are partially floating in air.
@@ -5828,6 +6096,82 @@ Kahleigh's Retreat v1.1.esp
  There is a newer version of Kat's Kastle (1.2) available:
  http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3628
 [SIZE !4448885 KatsKastle.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Key Replacer 1.4 [Daduke]
+
+[Conflict]
+ Only activate one plugin:
+  Key Replacer MW.esp - If you have Morrowind only
+  Key Replacer Tribunal.esp - If you have Morrowind and Tribunal
+  Key Replacer Bloodmoon.esp - If you have Morrowind and Bloodmoon
+  Key Replacer Trib & BM.esp - If you have Morrowind and both expansions
+ (ref: dd_readme_key.htm)
+Key Replacer MW.esp
+Key Replacer Tribunal.esp
+Key Replacer Bloodmoon.esp
+Key Replacer Trib & BM.esp
+
+[Note]
+ You should enable just "Key Replacer Trib & BM.esp" if you have Morrowind and both expansions
+ (ref: dd_readme_key.htm)
+[ALL Key Replacer MW.esp
+     Key Replacer Tribunal.esp
+     Key Replacer Bloodmoon.esp]
+
+[Requires]
+ (ref: dd_readme_key.htm)
+Key Replacer Tribunal.esp
+Tribunal.esm
+
+[Requires]
+ (ref: dd_readme_key.htm)
+Key Replacer Bloodmoon.esp
+Bloodmoon.esm
+
+[Requires]
+ (ref: dd_readme_key.htm)
+Key Replacer Trib & BM.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Key Replacer MW Renamer [Shadowriath]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+ !! Use "Clean Key Replacer MW Renamer.esp" instead
+[SIZE 14404 Key Replacer MW Renamer.esp]
+
+[Conflict]
+ Only use "Clean Key Replacer MW Renamer.esp", it is the same plugin as "Key Replacer MW Renamer.esp" but without the evil GMSTs.
+ (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+Key Replacer MW Renamer.esp
+Clean Key Replacer MW Renamer.esp
+
+[Conflict]
+ Shadowriath's "Key Replacer MW Renamer" includes the changes made to key names by Lurlock's "Key Namer" plugin, you do not need to load Lurlock's mod as well as Shadowriath's.
+ (Ref: "MW Renamer Addon.txt")
+KeyNamer.esp
+Clean Key Replacer MW Renamer.esp
+
+[Requires]
+ Shadowriath's "Key Replacer MW Renamer" gives unique names (from Lurlock's "Key Namer" mod) to 70 of the keys in Morrowind. It also sets the models used by these 70 keys to those assigned by Daduke's "Key Replacer" mod. However, Daduke's mod changes the models used by 322 keys. Whilst the readme is not particularly clear you should enable both Daduke's and Shadowriath's plugins; mlox will ensure that Shadowriath's mod loads after Daduke's to ensure the full effect.
+Clean Key Replacer MW Renamer.esp
+[ANY Key Replacer MW.esp
+     Key Replacer Trib & BM.esp]
+
+;; Dragon32 - As above, load Daduke's first and then Shadowriath's
+[Order]
+Key Replacer MW.esp
+Clean Key Replacer MW Renamer.esp
+
+[Order]
+Key Replacer Trib & BM.esp
+Clean Key Replacer MW Renamer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6735,6 +7079,16 @@ animalbehave.esp
 ;;time.esp - deprecated in favor of abot's Tempus Fugit ring or console
 ;;training.esp
 ;;underwatertime.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MGE Foggy Weather [Varana]
+
+;; Dragon32 - September 2009, had this rule written for months. A non-beta MGE version hasn't been released in months so I thought it'd be worth capturing this now rather than continuing to wait for the next non-beta.
+
+[Note]
+ "MGE Foggy Weather" is no longer needed with the latest test versions of MGE (version 3.8.0 rev-0104 and later). If you are still using the stable, 3.8.0, version then continue to use "MGE Foggy Weather".
+MGE_Foggy_weather.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7684,9 +8038,25 @@ Mournhold Farms.esp
 ;; @Mournhold Merc Transportation Fix [Nick Cowan]
 
 [Note]
- ! It is recommended  that you replace Nick Cowan's Mournhold Merc Transportation Fix with Baratheon79's Mournhold Teleportation Fix. Both mods change Asciene Rane and Effe-Tei to provide Mages Guild-style teleportation service. However, Nick Cowan's plugin contains dirty references which could needlessly interfere with your game.
+ ! It is recommended  that you replace Nick Cowan's "Mournhold Merc Transportation Fix" with Baratheon79's "Mournhold Teleportation Fix". Both mods change Asciene Rane and Effe-Tei to provide Mages Guild-style teleportation service. However, Nick Cowan's plugin contains dirty references which could needlessly interfere with your game.
  ! (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
+[SIZE 2652 MH Transportation.esp]
+
+[Conflict]
+ Nick Cowan's "Mournhold Merc Transportation Fix", Baratheon79's "Mournhold Teleportation Fix" and Grumpy's "MournholdTransport" (from his Asgard mod) all change Asciene Rane and Effe-Tei to provide a Mages Guild-style teleportation service. You only need to enable one of these mods.
+BAR_MournholdTeleportationFix.esp
 MH Transportation.esp
+MournholdTransport.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mournhold Overhaul (New Textures) [Bob Smolders]
+
+[Conflict]
+ Do not activate both ESPs.
+ (Ref: Mournhold_Overhaul_New_Textures.rar\Readme.txt)
+Mournhold Overhaul - No NPC's.ESP
+Mournhold Overhaul - NPC's.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7804,6 +8174,24 @@ NOM 2.13.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 48584 Narcatas Shop.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @N'dib Treehouse Travel Add-on [lochnarus]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8329 N'dib_Treehouse_add_on.esp]
+
+[Requires]
+ (Ref: N'dib_Treehouse_Travel_add-onREADME.txt)
+N'dib_Treehouse_add_on.esp
+Ndib_TreeHouse_beta_0.6_complete.esp
+
+[Order]
+Ndib_TreeHouse_beta_0.6_complete.esp
+N'dib_Treehouse_add_on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8874,6 +9262,121 @@ The Prison Ship Escape High Level V2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Private Mobile Base Addon pack 1.1 [N3M0]
+
+;; Alchemy Sorter
+[Requires]
+ You need to enable all the "Portable Mobile Base" plugins.
+ (Ref: "Read me PMB Addon pack.txt")
+PMB Addon AlchemySorter.esp
+[ALL Private_Mobile_Base.esp
+     Private_Mobile_Base2.esp
+     Private_Mobile_Base3.esp
+     Private_Mobile_Base4.esp]
+
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+PMB Addon AlchemySorter.esp
+
+;; Cyborg Creator
+[Requires]
+ You need to enable Henkbein's "Dwemer Cyborg" plugin and all the "Portable Mobile Base" plugins.
+ (Ref: "Read me PMB Addon pack.txt")
+PMB Addon Cyborg Creator.esp
+[ALL Private_Mobile_Base.esp
+     Private_Mobile_Base2.esp
+     Private_Mobile_Base3.esp
+     Private_Mobile_Base4.esp
+     Dwemer_Cyborgs.esp]
+
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+PMB Addon Cyborg Creator.esp
+
+;; Inscription
+[Requires]
+ You need to enable all the "Portable Mobile Base" plugins.
+ (Ref: "Read me PMB Addon pack.txt")
+PMB Addon Inscription.esp
+[ALL Private_Mobile_Base.esp
+     Private_Mobile_Base2.esp
+     Private_Mobile_Base3.esp
+     Private_Mobile_Base4.esp]
+
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+PMB Addon Inscription.esp
+
+;; Dragon32: from the readme "Same kind of system, It should not conflict."
+;; Added this so if that's wrong we've got the plugin name for TheDopeHatMan's Inscription mod
+;; [Conflict]
+;; PMB Addon Inscription.esp
+;; Clean Inscription 2.0.esp
+
+
+;; Remote Storage
+[Requires]
+ You need to enable all the "Portable Mobile Base" plugins.
+ (Ref: "Read me PMB Addon pack.txt")
+PMB Addon Remote Storage.esp
+[ALL Private_Mobile_Base.esp
+     Private_Mobile_Base2.esp
+     Private_Mobile_Base3.esp
+     Private_Mobile_Base4.esp]
+
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+PMB Addon Remote Storage.esp
+
+;; Supply
+[Requires]
+ You need to enable all the "Portable Mobile Base" plugins.
+ (Ref: "Read me PMB Addon pack.txt")
+PMB Addon Supply.esp
+[ALL Private_Mobile_Base.esp
+     Private_Mobile_Base2.esp
+     Private_Mobile_Base3.esp
+     Private_Mobile_Base4.esp]
+
+
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+PMB Addon Supply.esp
+
+;; Transport
+[Requires]
+ You need to enable all the "Portable Mobile Base" plugins.
+ (Ref: "Read me PMB Addon pack.txt")
+PMB Patch Transport.esp
+[ALL Private_Mobile_Base.esp
+     Private_Mobile_Base2.esp
+     Private_Mobile_Base3.esp
+     Private_Mobile_Base4.esp]
+
+[Order]
+Private_Mobile_Base.esp
+Private_Mobile_Base2.esp
+Private_Mobile_Base3.esp
+Private_Mobile_Base4.esp
+PMB Patch Transport.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Private Mobile Base Tribunal-Bloodmoon V4.2 [henkbein]
 
 [Requires]
@@ -9375,6 +9878,26 @@ SG_Ryukaissen-M.esp
      SG_Ryukaissen-M.esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Sable Dragon [Pluto]
+
+[Requires]
+ (Ref: The Sable Dragon, Read Me.txt)
+The Sable Dragon.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+;;  (Ref: The Sable Dragon, Read Me.txt)
+[Order]
+Vality's Bitter Coast Addon.esp
+The Sable Dragon.esp
+
+;;  (Ref: The Sable Dragon, Read Me.txt)
+[Order]
+The Sable Dragon.esp
+NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10003,6 +10526,104 @@ CDR_SmootherBodies_M_OldUWear.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Soldier Belts Fix [Alaisiagae]
+
+[Note]
+ Both Alaisiagae's "Soldier Belts Fix" and Alphax's "Imperial, Indoril, Templar Belt Icons" give the belts their own icons. Alaisiagae's mod also adds ground meshes. Alphax's mod makes some changes to enchantment values and adds the Imperial and Templar belts and skirts as rewards for advancement in the Imperial Legion faction.
+[ALL SoldierBeltsFix.esp
+     lfx_faction_belts.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @South Wall, Den of Iniquity [Balathustrius]
+
+[Patch]
+ If you are using "Morrowind Comes Alive 5.2" by Neoptolemus then use the patch that rearranges MCA's additions to the South Wall Cornerclub
+ (Ref: SWReadme.txt)
+SW_MCA5.2_Patch.esp
+[ALL MCA.esm
+     South Wall.ESP]
+
+;; Dragon32: Whilst not specified in the readme it makes sense to load the patch after the main ESP
+[Order]
+South Wall.ESP
+SW_MCA5.2_Patch.esp
+
+[Note]
+ ! Balathustrius suggests deleting the changes to the cell 'Balmora, South Wall Cornerclub' made by Duncan's "Atmospheric Sound Effects". Otherwise Juju will appear, and the ambient music from "Atmospheric Sound Effects" will conflict with the ambient music added by "South Wall, Den of Iniquity".
+ (Ref: SWReadme.txt)
+[ALL South Wall.ESP
+     [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
+          AtmosphericSoundEffects-3.0-TBM.esp
+          AtmosphericSoundEffects-3.0.esp]]
+
+[Patch]
+ The "Atmospheric Sound Effects" patch is an optional add-on for "South Wall, Den of Iniquity". It adds "Atmospheric Sound Effects" activators to the new areas added by "South Wall, Den of Iniquity".
+ (Ref: SWReadme.txt)
+SW_ASE_ADDON.esp
+[ALL [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
+          AtmosphericSoundEffects-3.0-TBM.esp
+          AtmosphericSoundEffects-3.0.esp]
+      South Wall.ESP]
+
+[Requires]
+ The "Atmospheric Sound Effects" patch for "South Wall, Den of Iniquity" requires that "Atmospheric Sound Effects" by Duncan is loaded.
+ (Ref: SWReadme.txt)
+SW_ASE_ADDON.esp
+[ALL [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
+          AtmosphericSoundEffects-3.0-TBM.esp
+          AtmosphericSoundEffects-3.0.esp]
+      South Wall.ESP]
+
+;; Dragon32: Logically, if the addon uses ASE activators then those activators need to be defined first
+[Order]
+AtmosphericSoundEffects-3.0.esp
+AtmosphericSoundEffects-3.0-Tribunal.esp
+AtmosphericSoundEffects-3.0-TBM.esp
+SW_ASE_ADDON.esp
+
+;; Dragon32: Similarly, the "new areas" included in this mod should be defined before the addon adds activators to them.
+[Order]
+South Wall.ESP
+SW_ASE_ADDON.esp
+
+[Note]
+ ! Balathustrius suggests deleting the changes to the cell 'Balmora, South Wall Cornerclub' made by GhanBuriGhan's "The Regulars 2.02". Otherwise you will end up with an orc sitting incongruously in the center of the room
+ (Ref: SWReadme.txt)
+[ALL South Wall.ESP
+     The regulars - Sitting NPC's v2.02.esp]
+
+[Patch]
+ If you are using "Living Cities of Vvardenfell" by Helios and Wrye then you should use the "South Wall, Den of Iniquity" patch. It will prevent NPCs appearing in weird and unfitting locations.
+ (Ref: SWReadme.txt)
+SW_LivingCitiesofVvardenfell03-13Patch.esp
+[ALL NPC LCV Schedules 03.esp
+     South Wall.ESP]
+
+[Requires]
+ The "Living Cities of Vvardenfell" patch for "South Wall, Den of Iniquity" requires that "Living Cities of Vvardenfell" by Helios and Wrye is loaded.
+ (Ref: SWReadme.txt)
+SW_LivingCitiesofVvardenfell03-13Patch.esp
+[ALL NPC LCV Schedules 03.esp
+     South Wall.ESP]
+
+;; Ref: SWReadme.txt
+[Order]
+NPC LCV Schedules 03.esp
+SW_LivingCitiesofVvardenfell03-13Patch.esp
+
+;; Dragon32: Again, makes sense to load a patch after the main mod
+[Order]
+South Wall.ESP
+SW_LivingCitiesofVvardenfell03-13Patch.esp
+
+[Note]
+ Using kkleven's "Thief Quests" mod with "South Wall, Den of Iniquity" means that Sugar-Lips Habasi will be in her usual location rather than where "South Wall, Den of Iniquity" places her. If this causes you problems then remove the "Thief Quests" mod.
+[ALL Thief_quests.esp
+     South Wall.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Spartan Armoury [Ultimate Bushido]
 
 [Note]
@@ -10146,6 +10767,27 @@ Sri Alchemy BM List Patch.esp
  (Ref: "ss_DBNRDZ_readme.txt")
 ss_DBNRDZ.esp
 ss_DBNRDZ_NV.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Standard Legion Uniforms [Arthmodeus]
+
+;; Dragon32 - No readme, ESPs are distributed "loose".
+
+[Conflict]
+ Only enable one plugin.
+  Standard_Uniforms_MW.esp - If you only have Morrowind.
+  Standard_Uniforms.esp - If you have Morrowind and both expansions
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6457 )
+Standard_Uniforms.esp
+Standard_Uniforms_MW.esp
+
+[Requires]
+ This version of "Standard Legion Uniforms" requires both Bloodmoon and Tribunal.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6457 )
+Standard_Uniforms.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10305,7 +10947,9 @@ Clean Suran Extended.esp
 [Conflict]
  Suran Underworld places its Abandoned House in the same spot as Suran Archery Store.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
-Suran_Underworld_2.5.esp
+ Pseron Wyrd has created an alternative version of Suran Underworld that resolves this conflict by moving the Abandoned House outside the gates of Suran.
+ ( http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4534 ).
+[SIZE 2086615 Suran_Underworld_2.5.esp]
 Suran Archery Store_v3.0.esp
 
 
@@ -10432,6 +11076,16 @@ Taddeus'BalancedWeapons_Rotate.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 55498 Tales of Tel Branora.esp]
+
+[Requires]
+ "Tales of Tel Branora" requires "LeFemmArmor.esp" or any compilation that includes it.
+ (Ref: Tales of Tel Branora Read Me.txt)
+Tales of Tel Branora.esp
+[ANY LeFemmArmor.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10885,6 +11539,39 @@ True_Lights_And_Darkness_0.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tools Integrative Modifications [Alaisiagae]
+
+[Conflict]
+ If you wish to use the meshes and textures from "Sir Luthor's Tools" then use "TIM_MW_SirLuthor.esp" instead of "TIM_MW.esp" and deactivate "SirLuthor-Tools.esp"
+ (Ref: readme_Tools Integrative Modifications.txt)
+TIM_MW.esp
+SirLuthor-Tools.esp
+
+[Conflict]
+ If you wish to use the meshes and textures from "JamesW's Lockpicks, Probes, and Repair Items Retex" then use "TIM_MW_JamesW.esp" instead of "TIM_MW.esp" and deactivate "JamesW's Lockpicks And Probes Retextures.esp" and "JamesW's Repairs Retex.esp"
+ (Ref: readme_Tools Integrative Modifications.txt)
+TIM_MW.esp
+[ANY JamesW's Lockpicks And Probes Retextures.esp
+     JamesW's Repairs Retex.esp]
+
+[Conflict]
+ You should only enable one plugin:
+  TIM_MW_JamesW.esp - If you wish to use the meshes and textures from "JamesW's Lockpicks, Probes, and Repair Items Retex"
+  TIM_MW_SirLuthor.esp - If you wish to use the textures from "Sir Luthor's Tools"
+  TIM_MW.esp - If you use neither "JamesW's Lockpicks, Probes, and Repair Items Retex" or "Sir Luthor's Tools"
+ (Ref: readme_Tools Integrative Modifications.txt)
+TIM_MW.esp
+[ANY TIM_MW_JamesW.esp
+     TIM_MW_SirLuthor.esp]
+
+[Note]
+ Ensure you have the meshes and/or textures from "JamesW's Lockpicks, Probes, and Repair Items Retex" or "Sir Luthor's Tools" installed.
+ (Ref: readme_Tools Integrative Modifications.txt)
+[ANY TIM_MW_JamesW.esp
+     TIM_MW_SirLuthor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tougher Sixth House version 1.0 [Sabregirl]
 
 ;; expdep
@@ -10987,6 +11674,17 @@ TravelingMerchants_v2.2_Update.esp
  This plugin needs to be cleaned, it has "mega dirty refs and many extra cells".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2317 )
 Treetop Village.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tribunal Integration - Fixed levelled lists v0.5 [Dragon32, TheOtherFelix]
+
+;; Dragon32 - Information about TheOtherFelix's original mod's use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+
+[Conflict]
+ Do not enable both plugins, only enable the version with the fixed levelled lists: "TribIntegrationFixedLL.esp"
+TribIntegration.esp
+TribIntegrationFixedLL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12329,11 +13027,11 @@ Indybank.esp
      Balmora Expansion - LITE 1.0.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Life 1.12 [abot]
+;; @Water Life 1.13 [abot]
 
 [Note]
  !! A new version of "Water Life" is available, you should upgrade.
-[VER < 1.12 abotWaterLife.esm]
+[VER < 1.13 abotWaterLife.esm]
 
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
@@ -12348,12 +13046,17 @@ abotWaterLife.esm
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-[CONFLICT]
- !! You do not need to use abot's "NOM2.12patch.esp" with this version of Necessities
- !! of Morrowind.
+[Conflict]
+ !! You do not need to use abot's "NOM2.12patch.esp" with this version of Necessities of Morrowind.
  !! (Ref.abotWaterLife.txt)
 NOM2.12patch.esp
 NOM 2.13.esp
+
+[Conflict]
+ Version 1.13 of Water Life includes Arcimaestro Antares' gondoliers
+ (Ref: abotWaterLife.txt)
+[VER = 1.13 abotWaterLife.esm]
+Gondliers.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12532,6 +13235,16 @@ _Mog_Race_v4b.esp
 [Requires]
 Westly's Mog Head Pack.esp
 _Mog_Race_v4b.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wharf v2.0 [Samurai]
+
+[Conflict]
+ Version 1.1 of "Wharf v2.0" includes "Seyda Neen Floating House" by Lachaln
+ (Ref: "Wharf v2.0.txt")
+Wharf v2.0.esp
+Seyda Neen Floating Home.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
