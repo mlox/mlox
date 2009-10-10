@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-10-10 16:05:05 (UTC)]
+[Version 2009-10-10 16:46:56 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2380,6 +2380,14 @@ TheBlackMill11.esp
 [ANY Seyda Neen Docks and Haldershore Tribunal V1.1.esp
      Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp]
 
+[Conflict] ; reported by Amenophis
+ The BlackMill normally conflicts with Tamriel Rebuilt, but abot has created a version that is compatible here:
+ http://abot.silgrad.com/guppy/download.php?lng=en&cat=Morrowind%20Mods.%3a%50atches&dn=1
+ You must have the BlackMill already installed, then replace TheBlackMill11.esp with TheBlackMill11fixedtransposedNOMified.esp.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15063847 )
+TR_Map2.esm
+TheBlackMill11.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Black Queen Chronicles Ver 2.5 [Tenaka]
@@ -3554,6 +3562,12 @@ GDR_MasterFile.esm
 DNGDR-GHD Patch OV.esp
 DNGDR-GHD Patch.esp
 
+[Conflict]
+ The "DNGDR-GHD Patch.esp" plugin refers to a "DNO_dreamer guard00" that does not exist in "DN-GDRv1_NOM.esp". To make the patch compatible, you may need to edit the patch in the CS to comment out this line of the calmcorprus script: "DNO_dreamer guard00->setfight 10".
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=981265&view=findpost&p=14193898 )
+DN-GDRv1_NOM.esp
+DNGDR-GHD Patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dark Brotherhood Armor Replacer v1.1 [Dimitri Mazieres]
@@ -4288,6 +4302,15 @@ F_Mage_Robe_Rep.esp
 [Order]
 HG_robe04.esp
 F_Mage_Robe_Rep.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fligg's Slave Mod [Fliggerty]
+
+[Conflict] ; reported by MrDarkSim
+ These two plugins conflict as they both modify the slave script. When used together, you may find that slaves never quit following you.
+Fligg's Slave Mod.esp
+Give your orders v13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9882,6 +9905,7 @@ SG_Ryukaissen-M.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Sable Dragon [Pluto]
+; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15129126
 
 [Requires]
  (Ref: The Sable Dragon, Read Me.txt)
@@ -11145,11 +11169,11 @@ Beyond YsGramor v2.5.esm
  http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg
  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610 )
 TR_Map2.esm
-[ANY TheBlackMill.esp
-     Moons_Spawn_V1.3.3_Non_Patched.esp
+[ANY Moons_Spawn_V1.3.3_Non_Patched.esp
      Booty.esp
      From Hell To Heaven.esm		; Morrowland
      Wizards Islands - Scourge of the Frost Bringer.esm]
+;; moved the TR/Blackmill conflict to the BlackMill section - JMS
 
 [Conflict]
  Landmass conflict. Sorefoot Enterprises puts it's "Sorefoot Basecamp" in the same cell as Firewatch.
