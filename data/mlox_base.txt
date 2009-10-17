@@ -373,12 +373,12 @@ Clean Children V2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @abotGuars 1.12 [abot]
+;; @abotGuars 1.13 [abot]
 
 [Note]
  ! There is a newer version of abot's Guars available, you may want to upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6112
-[VER < 1.12 abotGuars.esp]
+[VER < 1.13 abotGuars.esp]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -1481,6 +1481,33 @@ AYD Spells.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 69536 baos.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Council Club [Princess Stomper]
+
+[Conflict]
+ Choose one plugin:
+  "Balmora Council Club.esp" - Normal version
+  "Balmora Council Club EV.esp" - Easy version
+ (Ref: "Balmora Council CLub readme.rtf")
+Balmora Council Club EV.esp
+Balmora Council Club.esp
+
+[Requires]
+ (Ref: "Balmora Council CLub readme.rtf")
+[ANY Balmora Council Club EV.esp
+     Balmora Council Club.esp]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 628341 Balmora Council Club.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 630063 Balmora Council Club EV.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2951,6 +2978,33 @@ Sris_Alchemy_BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Building Up Uvirith's Legacy [Artimis Fowl the 3rd]
+
+[Conflict]
+ "Building Up Uvirith's Legacy" replaces Acheron's "Building Up Uvirith's Grave", you should not run both  plugins.
+ (Ref: Building Up Uvirith's Legacy Readme.txt)
+Building Up Uvirith's Grave 1.1.esp
+Building Up Uvirith's Legacy1.0.ESP
+
+[Order]
+Building Up Uvirith's Legacy1.0.ESP
+BUUG Alchemy- Bloodmoon.esp
+BUUG Alchemy- Tribunal.esp
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 915698 Building Up Uvirith's Legacy1.0.ESP]
+
+;; Dragon32: Not checked to the same level as John.Moonsugar did with BuUG, quick scan and placeitem function  *is*
+;; used in one of the scripts. Still only dependent on Morrowind.esm
+[Requires]
+ This plugin uses some Tribunal scripting functions.
+Building Up Uvirith's Legacy1.0.ESP
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CactusSeaElf v1.0 [CactusBoy]
 
 [Note]
@@ -4119,6 +4173,31 @@ pcc_knaarus_02.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Elders of Vvardenfell [Tarnsman]
+
+[Conflict]
+ Only use one plugin:
+  Elders of Vvardenfell.esp - This is a modder's resource and adds nothing to the game world.
+  Elders 0 Count NPC add-on.esp - Use this if you only have Morrowind.
+  Elders 0 Count NPC add-on (Trib & BM).esp - Use this if you have both expansions.
+ (Ref: Elders 0 Count Add-on_readme.txt & Elders of Vvardenfell_readme.txt)
+Elders of Vvardenfell.esp
+Elders 0 Count NPC add-on (Trib & BM).esp
+Elders 0 Count NPC add-on.esp
+
+[Requires]
+ (Ref: Elders 0 Count Add-on_readme.txt
+Elders 0 Count NPC add-on (Trib & BM).esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ This is a modder's resource and adds nothing to the game world.
+ (Ref: Elders of Vvardenfell_readme.txt)
+Elders of Vvardenfell.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Elias' Amulet of Charm  [Tenaka]
 
 [Note]
@@ -4223,6 +4302,241 @@ Eylurian Manor-NO TRIBUNAL.esp
 Eylurian Manor-NO TRIBUNAL.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @THE Facepack Compilation [Tarnsman]
+
+;; THE Argonian & Khajiit Facepack
+[Requires]
+ (Ref: THE A & K Facepack_readme.doc)
+[ANY THE Argonian & Khajiit Facepack.esm
+     THE Argonian & Khajiit Facepack.esp]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Conflict]
+ You should only use either the ESM or the ESP version of "THE Argonian & Khajiit Facepack", not both.
+ (Ref: THE A & K Facepack_readme.doc)
+THE Argonian & Khajiit Facepack.esm
+THE Argonian & Khajiit Facepack.esp
+
+[Conflict]
+ Tarnsman's "THE Argonian & Khajiit Facepack" incorporates Alien Slof's "Better Beasts", realistic reptile  version. There is no need to run Alien Slof's mod if you are using Tarnsman's.
+ (Ref: THE A & K Facepack_readme.doc)
+[ANY THE Argonian & Khajiit Facepack.esm
+     THE Argonian & Khajiit Facepack.esp
+     THE Facepack Compilation.esp
+     THE Facepack Compilation.esm]
+Slof's Better Beasts b.esp
+
+[Note]
+ Tarnsman's "THE Argonian & Khajiit Facepack" incorporates Alien Slof's "Better Beasts", realistic reptile  version. As you are using the ESM version of "THE Argonian & Khajiit Facepack" the changes  made by Tarnsman's mod are overwritten by the other body replacer mod(s) in your mod list.
+ If you wish to keep Alien Slof’s bodies use the ESP file for "THE Argonian & Khajiit Facepack" and change its  load order, by adding an Order rule into "mlox_user.txt", so that it loads after any other body replacer mod.
+ (Ref: THE A & K Facepack_readme.doc)
+[ALL [ANY THE Argonian & Khajiit Facepack.esm
+          THE Facepack Compilation.esm]
+     [ANY Slof's Better Beasts a.esp
+          Slof's Civilsed Beasts.esp
+          New Argonian Bodies - G Rated.esp
+          New Argonian Bodies.esp
+          New Argonian Bodies - Clean.esp
+          New Khajiit Bodies - Clean.esp
+          New Argonian Bodies - Mature.esp
+          New Khajiit Bodies - Mature.esp
+          New Argonian Bodies (Silaria Textures) - Clean.esp
+          New Argonian Bodies (Silaria Textures) - Mature.esp
+          New Argonian Bodies (Slof Textures) - Clean.esp
+          New Khajiit Bodies (Slof Textures) - Clean.esp
+          New Argonian Bodies (Slof Textures) - Mature.esp
+          New Khajiit Bodies (Slof Textures) - Mature.esp
+          BetterBeasts.esp
+          BetterBeasts_Non-Beast.esp]]
+
+[Conflict]
+ Tarnsman's "THE Argonian & Khajiit Facepack" includes Ghoul’s "Shadow Argonian" race. There is no need to run Ghoul's mod with Tarnsman's.
+ (Ref: THE A & K Facepack_readme.doc)
+[ANY THE Argonian & Khajiit Facepack.esm
+     THE Argonian & Khajiit Facepack.esp
+     THE Facepack Compilation.esp
+     THE Facepack Compilation.esm]
+Shadow Argonians Final.esp
+
+;; THE Breton, Imperial & Redguard Facepack
+[Requires]
+ (Ref: THE B,I & R Facepack_readme.doc)
+[ANY THE BrImRg Facepack.esm
+     THE BrImRg Facepack.esp]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Conflict]
+ You should only use either the ESM or the ESP version of "THE Breton, Imperial & Redguard Facepack", not both.
+ (Ref: THE B,I & R Facepack_readme.doc)
+THE BrImRg Facepack.esm
+THE BrImRg Facepack.esp
+
+;;THE Elven Facepack
+[Requires]
+ (Ref: THE Elven Facepack_readme.doc)
+[ANY THE Elven Facepack.esm
+     THE Elven Facepack.esp]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Conflict]
+ You should only use either the ESM or the ESP version of "THE Elven Facepack", not both.
+ (Ref: THE Elven Facepack_readme.doc)
+THE Elven Facepack.esm
+THE Elven Facepack.esp
+
+;;THE Nord & Orc Facepack
+[Requires]
+ (Ref: THE N & O Facepack_readme.doc)
+[ANY THE Nord & Orc Facepack.esm
+     THE Nord & Orc Facepack.esp]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Conflict]
+ You should only use either the ESM or the ESP version of "THE Nord & Orc Facepack", not both.
+ (Ref: THE N & O Facepack_readme.doc)
+THE Nord & Orc Facepack.esm
+THE Nord & Orc Facepack.esp
+
+[Requires]
+ Tarnsman's "MCA Goblin-Men Addon.esp" adds NPCs from the Goblin-Men race to the levelled lists of Morrowind Comes Alive.
+ (Ref: THE N & O Facepack_readme.doc)
+MCA Goblin-Men Addon.esp
+MCA.esm
+
+;;THE Facepack Compilation
+[Requires]
+ (Ref: THE Facepack Compilation_readme.doc)
+[ANY THE Facepack Compilation.esp
+     THE Facepack Compilation.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Conflict]
+ You should only use either the ESM or the ESP version of "THE Facepack Compilation", not both.
+ (Ref: THE Facepack Compilation_readme.doc)
+THE Facepack Compilation.esp
+THE Facepack Compilation.esm
+
+[Conflict]
+ It is not recommended to use "THE Facepack Compilation" with any of the ESM or ESP files from its four companion facepacks.
+ (Ref: THE Facepack Compilation_readme.doc)
+[ANY THE Facepack Compilation.esp
+     THE Facepack Compilation.esm]
+[ANY THE Argonian & Khajiit Facepack.esm
+     THE Argonian & Khajiit Facepack.esp
+     THE BrImRg Facepack.esm
+     THE BrImRg Facepack.esp
+     THE Elven Facepack.esm
+     THE Elven Facepack.esp
+     THE Nord & Orc Facepack.esm
+     THE Nord & Orc Facepack.esp]
+
+;;THE Morrowind NPC Makeover
+[Requires]
+ Tarnsman's "THE Morrowind NPC Makeover" requires that both expansions and Tarnsman's "THE Facepack Compilation" are loaded.
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     THE Facepack Compilation.esm]
+
+[Conflict]
+ You should only use one of the ESM or the ESP version of "THE Morrowind NPC Makeover", not both.
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+THE Facepack Compilation.esp
+THE Facepack Compilation.esm
+
+[Note]
+ ! Tarnsman recommends you use the ESM of the "THE Morrowind NPC Makeover" to minimise potential conflicts.
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+THE Facepack Compilation.esp
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes aerelorn's "Less Annoying Guards", there is no need to run aerelorn's mod and "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+[ANY Less Annoying Guards - Tribunal.esp
+     Less Annoying Guards - Bloodmoon.esp
+     Less Annoying Guards - Tribunal and Bloodmoon.esp]
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes Enmesharra's "Light The Way", there is no need to run Enmesharra's mod and "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+[ANY LightTheWay.esp
+     LightTheWayBMAddon.esp]
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes Khan Raider’s "Imperial helms", there is no need to run Khan Raider's mod and "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+Imperial helms.esp
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes The Puma Man's "Gnisis Guard Fix", there is no need to run The Puma Man's mod and "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+Gnisis Gaurd Fix.esp
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes Soti's "Better Dreamers", there is no need to run Soti's mod and "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+Soti_BetterDreamers.esp
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes TheLys' "Imperial Guards Anticlone", there is no need to run TheLys' mod and "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+Imp Guard anticlone.esm
+
+[Conflict]
+ Tarnsman's "THE Morrowind NPC Makeover" includes his "Elders 0 count add-on", there is no need to run both mods.
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ANY THE Morrowind NPC Makeover.esp
+     THE Morrowind NPC Makeover.esm]
+[ANY Elders 0 Count NPC add-on (Trib & BM).esp
+     Elders 0 Count NPC add-on.esp]
+
+[Conflict]
+ Rather than the original GUARDS.esp from The Puma Man's "Advanced Guards" you should use Advanced Guards.esp from Tarnsman's "THE Morrowind NPC Makeover."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+GUARDS.esp
+THE Morrowind NPC Makeover.esm
+
+[Requires]
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+Advanced Guards.esp
+[ALL THE Morrowind NPC Makeover.esm
+     THE Facepack Compilation.esm
+     Bloodmoon.esm
+     Tribunal.esm
+     ADVANCED GUARDS.esm]
+
+[Note]
+ To preserve the changes made to guards made by Tarnsman's "THE Morrowind NPC Makeover" you should load his Advanced Guards.esp when running The Puma Man's "Advanced Guards."
+ (Ref: THE Morrowind NPC Makeover_readme.doc)
+[ALL ADVANCED GUARDS.esm
+     THE Morrowind NPC Makeover.esm]
+
+;; Dragon32: As Tarnsman's mod duplicates the functionality of The Puma Man's GUARDS.esp we should duplicate its load order rules.
+[Order]
+Advanced Guards.esp
+GUARD-Remover.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4346,6 +4660,52 @@ Final Fantasy Spells- Materia v2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fire Hurt [sisco]
+
+[Conflict]
+ Use only one plugin:
+  Fire_Hurt_All.esp - Use this version if you have both expansions
+  Fire_Hurt_bloodmoon.esp - Use this version if you only have Bloodmoon
+  Fire_Hurt_morrowind.esp - Use this version if you only have Morrowind
+  Fire_Hurt_Tribunal.esp - Use this version if you only have Tribunal
+ (Ref: Fire_Hurt_readme.txt)
+Fire_Hurt_All.esp
+Fire_Hurt_bloodmoon.esp
+Fire_Hurt_morrowind.esp
+Fire_Hurt_Tribunal.esp
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with  TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 7388 Fire_Hurt_Tribunal.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 5374 Fire_Hurt_All.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 3871 Fire_Hurt_bloodmoon.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8686 Fire_Hurt_morrowind.esp]
+
+[Conflict]
+ "Necessities of Morrowind" adds fire damage in a similar way to sisco's "Fire Hurt". There is no need to run  "Fire Hurt" with "Necessities of Morrowind".
+ (Ref: "Fire_Hurt_readme.txt" and "NOM 2.13.txt")
+[ANY Fire_Hurt_All.esp
+     Fire_Hurt_bloodmoon.esp
+     Fire_Hurt_morrowind.esp
+     Fire_Hurt_Tribunal.esp]
+[ANY NOM 2.13.esp
+     Necessities of Morrowind 2.0.esp
+     Necessities of Morrowind 2.1.esp
+     NOM 2.12.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fishing Academy Mod v2.0 [MADMAX]
 
 [Note]
@@ -4427,14 +4787,41 @@ FollowMeMWOnly.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Forested Morrowind Readme 1.0 [Max]
+;; @Forested Morrowind 1.0 [Max]
 
-[Requires]
- You MUST have the Leafy Morrowind mod installed in order to use
- Forested Morrowind
+;; Dragon32: Original rule, believe this is inaccurate, see below.
+;; [Requires]
+;; You MUST have the Leafy Morrowind mod installed in order to use
+;; Forested Morrowind
+;;  (Ref: "readme - forested morrowind.txt")
+;; Forested Morrowind.esp
+;; Leafy Morrowind.esp
+
+[Conflict]
+ Do not run "Leafy Morrowind" or "Green Morrowind" in conjunction with "Forested Morrowind"; enable only the  Forested Morrowind.esp of this series. You must have the models and textures from "Leafy Morrowind" installed,  but do not activate Leafy Morrowind.esp or Green Morrowind.esp
  (Ref: "readme - forested morrowind.txt")
 Forested Morrowind.esp
+[ANY Leafy Morrowind.esp
+     Green Morrowind.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 6220169 Forested Morrowind.esp]
+
+;; Dragon32 - I'll include these notes about Green and Leafy Morrowind here.
+[Conflict]
+ Do not run "Leafy Morrowind" in conjunction with "Green Morrowind". "Leafy Morrowind" builds on the work done in "Green Morrowind" and supercedes it.
+ (Ref: "readme - leafy morrowind.txt")
 Leafy Morrowind.esp
+Green Morrowind.esp
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 2301172 Green Morrowind.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 5193104 Leafy Morrowind.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5256,6 +5643,14 @@ Health Indicators MWSE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Heartwood [Midgetalien]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 933 heartwood.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism [balor]
 
 [Requires]
@@ -5686,6 +6081,23 @@ AtmosphericSoundEffects-3.0-Tribunal.esp
 AtmosphericSoundEffects-3.0-TBM.esp
 ASE Bloodmoon Expansion.esp
 ASE Tribunal Expansion.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Imperial Guards Anticlone [TheLys]
+
+[Requires]
+ (Ref: ImpGuardsAnticlone.txt)
+Imp Guard anticlone BH add-on.esp
+[ALL Imp Guard anticlone.esm
+     Better Heads.esm]
+
+[Note]
+ As you have "Better Heads" loaded TheLys recommends using the AntiClone addon.
+ (Ref: ImpGuardsAnticlone.txt)
+[ALL Imp Guard anticlone.esm
+     Better Heads.esm
+     [NOT Imp Guard anticlone BH add-on.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6415,6 +6827,49 @@ Clean LeftGloves_TBandBM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Less Annoying Guards [aerelorn]
+
+[Conflict]
+ Choose only one plugin:
+  Less Annoying Guards - Tribunal.esp - If you only have Tribunal.
+  Less Annoying Guards - Bloodmoon.esp - If you only have Bloodmoon.
+  Less Annoying Guards - Tribunal and Bloodmoon.esp - If you have both expansions.
+ (Ref: Readme - Less Annoying Guards v1.0.txt)
+Less Annoying Guards - Tribunal.esp
+Less Annoying Guards - Bloodmoon.esp
+Less Annoying Guards - Tribunal and Bloodmoon.esp
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 162204 Less Annoying Guards - Bloodmoon.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 98715 Less Annoying Guards - Tribunal.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 200380 Less Annoying Guards - Tribunal and Bloodmoon.esp]
+
+[Requires]
+ (Ref: Readme - Less Annoying Guards v1.0.txt)
+Less Annoying Guards - Bloodmoon.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: Readme - Less Annoying Guards v1.0.txt)
+Less Annoying Guards - Tribunal.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: Readme - Less Annoying Guards v1.0.txt)
+Less Annoying Guards - Tribunal and Bloodmoon.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Leveled Magicka [Marcel Hesselbarth]
 
 [Requires]
@@ -6602,6 +7057,22 @@ Less Lore.esp
 LGNPC_NoLore_v<VER>.esp
 Uvirith Inside.esp
 LGNPC_TelUvirith_UI_v<VER>.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Light The Way [Enmesharra]
+
+[Note]
+ As you have the Bloodmoon expansion you should enable the Bloodmoon addition to "Light The Way".
+ (Ref: LightTheWay_ReadMe.txt)
+[ALL LightTheWay.esp
+     Bloodmoon.esm
+     [NOT LightTheWayBMAddon.esp]]
+
+[Requires]
+ (Ref: LightTheWay_ReadMe.txt)
+LightTheWayBMAddon.esp
+Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6935,6 +7406,12 @@ Madd Leveler - Base.esp
 [ANY CapRemover 1.2 alpha.esp
      CapRemover 1.1c.esp]
 
+[Conflict]
+ aerelorn's "Blocking Enhanced" constantly changes the base value of the Block skill and so conflicts with "Madd Leveler".
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=987437&view=findpost&p=14289093 )
+Madd Leveler - Base.esp
+MWE_Blocking.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Magic Alembic v1.1 [Crystaltips]
@@ -7256,62 +7733,6 @@ Pov_Distant_Activator_Fix_Waterfalls.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Monk Items: Armshields  [Talcos Stormweaver]
-
-[Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 19890 MonkItemsMod A_Armshields.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morgiah's Destiny  [Tenaka]
-
-[Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 2920417 Clean Morgiah's Destiny Version 3.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MCP (Morrowind Code Patch) [Hrnchamd]
-
-[Note]
- ! The Morrowind Code Patch Showcase does not need to be loaded for MCP to function. Disable the mod after you have compared how patched Morrowind differs from normal Morrowind.
- ! (Ref: "MCP Readme.txt")
-Morrowind Code Patch Showcase.esp
-
-;; rules for mods obsoleted by the MCP
-[Note]
- !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Fashionable Merchants 1.0.esp"
- !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
-Fashionable Merchants 1.0.esp
-Fashionable Merchants (TheMikrobe).esp
-Fashionable Merchants (TheMikrobe Trib).esp
-Fashionable Merchants (TheMikrobe BM).esp
-
-[Note]
- !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Merchant Unequip v1.0.esp"
- !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
-Merchant Unequip v1.0.esp
-
-[Note]
- !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of the "missing month" of Morning Star. The MCP fix also may be slightly easier on the CPU as it does not require scripting. If you install the MCP, you will not need these plugins.
- !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
-Calendar_Fix.esp
-Month Bugfix - NoExp.esp
-Month Bugfix.esp
-SpzYearPatch.esp
-SpzYearPatchTrib.esp
-
-[Note]
- !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the Unarmored Bug. If you install the MCP, you will not need these plugins.
- !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
-Unarmored_Corrector_V01_BM.esp
-Unarmored_Corrector_V01_TRIB.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @ModMan's Windowlights [ModMan]
 
 [Conflict]
@@ -7326,6 +7747,77 @@ Modman_windowlights_Purist_2.esp
  ! See "readme_modman_lights_2.txt"
 Modman_windowlights_Full_2.esp
 Modman_windowlights_Purist_2.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mokbar [Dalibor "Sahardoom" Brankov]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 72605 Mokbar.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Molag Mar Revisited [The_Nordavarine and Kaophyre]
+
+[Conflict]
+ "Molag Mar Revisited" modifies Molag Mar in such a way that the NPC "Acherone" from "Acheron's Camping Gear" goes missing from the waistworks. You may need to edit one of these plugins in the CS, or else use the console command:
+  placeatpc acheron_camp,1,20,1
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13543380 )
+Molag Mar Revisited - Illuminated Windows Enhancements.esp
+Acheron's Camping Gear 2.esp
+
+[Conflict]
+ "TarMar adds a the home of a quest-relevant sorcerer to the Molag Mar canalworks (which Molag Mar revisited disconnect)"
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
+Molag Mar Revisited - Illuminated Windows Enhancements.esp
+TarMar.esp
+
+[Conflict]
+ "Daedric Sorcery (Daedric Sorcery.esp) adds a shop to the Molag Mar exterior which will be floating high above the town (but be accessible with levitation) wwhen Molag Mar Revisited is loaded too."
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
+Molag Mar Revisited - Illuminated Windows Enhancements.esp
+Daedric Sorcery.esp
+
+[Conflict]
+ 'Illuminated Order ("Illuminated Order v1.0 (IndyBank-BE Compatible-hill)" - this is an esp crafted by Pseron Wyrd which solved a conflict between Illuminated order and Indybank, but the following obviously applies to other versions of IO too) adds a door to a fresco in the Molag Mar waistworks (which Molag mar Revisited disconnects too).'
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
+Molag Mar Revisited - Illuminated Windows Enhancements.esp
+[ANY Illuminated Order v1.0.esp
+     Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+     Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
+
+[Conflict]
+ "Molag Mar Revisited" disconnects the Molag Mar Canalworks from the game, so that the character Eltoria, placed there by "Korobal", cannot be reached. You may need to edit one of these plugins in the CS, or else use either the console command:
+   placeatpc jec_e_eltoria,1,20,1  (to place a copy of Eltoria next to you)
+ or:
+   coc "Molag Mar, Canalworks"	(to teleport to the canalworks)
+Molag Mar Revisited - Illuminated Windows Enhancements.esp
+Korobal v1.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Moldy Horker [Grumpy]
+
+[Conflict]
+ BM_S_Inn.esp is the newer version of the Moldy Horker
+BM_S_Inn.esp
+S_Inn_th.esp
+
+[Note]
+ ! S_Inn_th.esp is the older version of the Moldy Horker. Seek out the newer version that contains an exterior sign by Nigedo:
+ ! http://lovkullen.net/Emma/Apartement.htm;MoldyHorker
+ ! http://emma.ufrealms.net/index.php?dir=&file=BM_S_Inn.zip
+S_Inn_th.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Monk Items: Armshields  [Talcos Stormweaver]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 19890 MonkItemsMod A_Armshields.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7347,6 +7839,17 @@ Moonshadow Temple WD.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mooses on Solsteim Addon 1.0 [Matthew and Steven Kaine]
+
+[Conflict]
+ ! "Mooses on Solstheim" adds more moose to those already added by Pseron Wyrd's
+ ! "Cait's Moose on Solstheim." There is no need to run both mods.
+ ! (Ref: readme_moose_addon.txt)
+Moose_addon.esp
+PW_Cait_Moose.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More trees and foliage [ayse, updated by Skyfire76]
 
 [Conflict]
@@ -7359,17 +7862,12 @@ More trees and foliage autumn v1-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowland - From Hell to Heaven [Various]
+;; @Morgiah's Destiny  [Tenaka]
 
 [Note]
- !! This plugin contains evil GMSTs.
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 70727475 From Hell To Heaven.esm]
-
-[Requires]
-From Hell To Heaven.esm
-[ALL From Hell To Heaven part 2.esp
-     From Hell To Heaven part 3.esp]
+[SIZE 2920417 Clean Morgiah's Destiny Version 3.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7418,6 +7916,140 @@ Morrowind Advanced.esp
 MW_Adv_PHW.esp
 [ALL MW_Adv_Required.esp
      Passive_Healthy_Wildlife.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCP (Morrowind Code Patch) [Hrnchamd]
+
+[Note]
+ ! The Morrowind Code Patch Showcase does not need to be loaded for MCP to function. Disable the mod after you have compared how patched Morrowind differs from normal Morrowind.
+ ! (Ref: "MCP Readme.txt")
+Morrowind Code Patch Showcase.esp
+
+;; rules for mods obsoleted by the MCP
+[Note]
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Fashionable Merchants 1.0.esp"
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+Fashionable Merchants 1.0.esp
+Fashionable Merchants (TheMikrobe).esp
+Fashionable Merchants (TheMikrobe Trib).esp
+Fashionable Merchants (TheMikrobe BM).esp
+
+[Note]
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Merchant Unequip v1.0.esp"
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+Merchant Unequip v1.0.esp
+
+[Note]
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of the "missing month" of Morning Star. The MCP fix also may be slightly easier on the CPU as it does not require scripting. If you install the MCP, you will not need these plugins.
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+Calendar_Fix.esp
+Month Bugfix - NoExp.esp
+Month Bugfix.esp
+SpzYearPatch.esp
+SpzYearPatchTrib.esp
+
+[Note]
+ !! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the Unarmored Bug. If you install the MCP, you will not need these plugins.
+ !! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+Unarmored_Corrector_V01_BM.esp
+Unarmored_Corrector_V01_TRIB.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA - Morrowind Comes Alive [Neoptolemus]
+
+[Note]
+ ! "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you have not already done so, install "MCA 5.2 - The Undead 3.0 Compatible" from:
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354
+ ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=847583&view=findpost&p=12338232 )
+The Undead - MCA5.2 Compatibility Patch.esp
+
+[Note]
+ If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=868942&view=findpost&p=12668875 )
+[ALL MCA - COV Addon.esp
+     Merged_Objects.esp]
+
+[Order]
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+MCA - COV Addon.esp
+
+[Patch]
+ MCA - COV Addon.esp is recommended when you have both MCA and COV. It adds nice COV clothes to the MCA NPCs.
+MCA - COV Addon.esp
+[ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
+     MCA.esm]
+
+[Conflict]
+ "MCA.esm" is the newer version, you do not need to run "Morrowind Comes Alive.esm" with it.
+MCA.esm
+Morrowind Comes Alive.esm
+
+;; MCA - NOM Patch.esp modifieds NOM's Bed_Standard script, so it should come after NOM - JMS
+[Order]
+NOM 2.13.esp
+MCA - NOM Patch.esp
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - Vampire Realism Patch.esp
+[ALL MCA.esm
+     Vampire Realism II.esp]
+
+[Note]
+ Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace".
+ See: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5983
+[ALL [NOT Vampire Embrace MCA Patch.esp]
+     [SIZE !2519851 MCA.esm] ;this is NOT the MCA/Undead 3.0 compatible version
+     Vampire_Embrace.esp]
+
+[Note]
+ Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace". However, "Vampire Embrace MCA Patch" is NOT compatible with the version of MCA 5.2 that is compatible with "The Undead 3.0", unless it is edited to remove some scripts.
+ See: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5983
+[ALL [NOT Vampire Embrace MCA Patch.esp]
+     [SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
+     Vampire_Embrace.esp]
+
+[Conflict]
+ This version of MCA 5.2, which has been made compatible with The Undead 3.0, is incompatible with "Vampire Embrace MCA Patch" which reintroduces scripts that were removed from MCA.esm. You can either deactivate the patch (losing its functionality), or you can remove the following scripts from "Vampire Embrace MCA Patch.esp": mca_bm_draugr, mca_bm_draugr_reavers, mca_bm_skel_reavers, mca_bm_skeletons, mca_bm_wraiths, mca_necromancers, mca_skeletons, mca_undead, mca_wraiths, mca_zombies, mca_zombies_weak.
+[SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
+Vampire Embrace MCA Patch.esp
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - NOM Patch.esp
+[ALL MCA.esm
+     NOM 2.13.esp]
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - Guards Patch.esp
+MCA.esm
+
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - More Enemies.esp
+MCA.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Companions Improved [Grant McDorman]
+
+[Requires]
+ (Ref: "MCA_Companions_Enhanced-ReadMe.txt")
+MCA_Companions_Enhanced.esp
+[ALL MCA.esm
+     ImprovedTeleportation2.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCAFix [Aeven]
+
+; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=14026278
+[Order]
+Mashed Lists.esp
+MCAFix.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7688,202 +8320,6 @@ Improved Skilled Magicka.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Public Library v1.5 [DrSilent]
-
-;; No-glo, for instance, should be loaded after this mod
-;;(Ref: "MWlib_readme.txt")
-[Order]
-MW_Public_Library.esp
-Improved_No_Glow_v1-MW_Only.esp
-Improved_No_Glow_v1-MW_Trib.esp
-Improved_No_Glow_v1-MW_Blood.esp
-Improved_No_Glow_v1-MW_Trib_Blood.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Relighted [PirateLord]
-
-[Requires]
-Tribunal Relighted.esp
-Tribunal.esm
-
-[Requires]
-Bloodmoon Relighted.esp
-Bloodmoon.esm
-
-;; expdep
-[Requires]
- This plugin uses the Bloodmoon function: placeatme.
-Mushroom Lights Tribunal.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-;[Patch]
-;RV with MR.esp
-;Morrowind Relighted exVivec.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MCA - Morrowind Comes Alive [Neoptolemus]
-
-[Note]
- ! "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you have not already done so, install "MCA 5.2 - The Undead 3.0 Compatible" from:
- ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354
- ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=847583&view=findpost&p=12338232 )
-The Undead - MCA5.2 Compatibility Patch.esp
-
-[Note]
- If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=868942&view=findpost&p=12668875 )
-[ALL MCA - COV Addon.esp
-     Merged_Objects.esp]
-
-[Order]
-BB_Clothiers_of_Vvardenfell_v1.1.esp
-MCA - COV Addon.esp
-
-[Patch]
- MCA - COV Addon.esp is recommended when you have both MCA and COV. It adds nice COV clothes to the MCA NPCs.
-MCA - COV Addon.esp
-[ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
-     MCA.esm]
-
-[Conflict]
- "MCA.esm" is the newer version, you do not need to run "Morrowind Comes Alive.esm" with it.
-MCA.esm
-Morrowind Comes Alive.esm
-
-;; MCA - NOM Patch.esp modifieds NOM's Bed_Standard script, so it should come after NOM - JMS
-[Order]
-NOM 2.13.esp
-MCA - NOM Patch.esp
-
-[Requires]
- (Ref: "MCA - Readme.txt")
-MCA - Vampire Realism Patch.esp
-[ALL MCA.esm
-     Vampire Realism II.esp]
-
-[Note]
- Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace".
- See: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5983
-[ALL [NOT Vampire Embrace MCA Patch.esp]
-     [SIZE !2519851 MCA.esm] ;this is NOT the MCA/Undead 3.0 compatible version
-     Vampire_Embrace.esp]
-
-[Note]
- Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace". However, "Vampire Embrace MCA Patch" is NOT compatible with the version of MCA 5.2 that is compatible with "The Undead 3.0", unless it is edited to remove some scripts.
- See: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5983
-[ALL [NOT Vampire Embrace MCA Patch.esp]
-     [SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
-     Vampire_Embrace.esp]
-
-[Conflict]
- This version of MCA 5.2, which has been made compatible with The Undead 3.0, is incompatible with "Vampire Embrace MCA Patch" which reintroduces scripts that were removed from MCA.esm. You can either deactivate the patch (losing its functionality), or you can remove the following scripts from "Vampire Embrace MCA Patch.esp": mca_bm_draugr, mca_bm_draugr_reavers, mca_bm_skel_reavers, mca_bm_skeletons, mca_bm_wraiths, mca_necromancers, mca_skeletons, mca_undead, mca_wraiths, mca_zombies, mca_zombies_weak.
-[SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
-Vampire Embrace MCA Patch.esp
-
-[Requires]
- (Ref: "MCA - Readme.txt")
-MCA - NOM Patch.esp
-[ALL MCA.esm
-     NOM 2.13.esp]
-
-[Requires]
- (Ref: "MCA - Readme.txt")
-MCA - Guards Patch.esp
-MCA.esm
-
-[Requires]
- (Ref: "MCA - Readme.txt")
-MCA - More Enemies.esp
-MCA.esm
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MCAFix [Aeven]
-
-; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=14026278
-[Order]
-Mashed Lists.esp
-MCAFix.ESP
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Mokbar [Dalibor "Sahardoom" Brankov]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 72605 Mokbar.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Molag Mar Revisited [The_Nordavarine and Kaophyre]
-
-[Conflict]
- "Molag Mar Revisited" modifies Molag Mar in such a way that the NPC "Acherone" from "Acheron's Camping Gear" goes missing from the waistworks. You may need to edit one of these plugins in the CS, or else use the console command:
-  placeatpc acheron_camp,1,20,1
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13543380 )
-Molag Mar Revisited - Illuminated Windows Enhancements.esp
-Acheron's Camping Gear 2.esp
-
-[Conflict]
- "TarMar adds a the home of a quest-relevant sorcerer to the Molag Mar canalworks (which Molag Mar revisited disconnect)"
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
-Molag Mar Revisited - Illuminated Windows Enhancements.esp
-TarMar.esp
-
-[Conflict]
- "Daedric Sorcery (Daedric Sorcery.esp) adds a shop to the Molag Mar exterior which will be floating high above the town (but be accessible with levitation) wwhen Molag Mar Revisited is loaded too."
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
-Molag Mar Revisited - Illuminated Windows Enhancements.esp
-Daedric Sorcery.esp
-
-[Conflict]
- 'Illuminated Order ("Illuminated Order v1.0 (IndyBank-BE Compatible-hill)" - this is an esp crafted by Pseron Wyrd which solved a conflict between Illuminated order and Indybank, but the following obviously applies to other versions of IO too) adds a door to a fresco in the Molag Mar waistworks (which Molag mar Revisited disconnects too).'
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
-Molag Mar Revisited - Illuminated Windows Enhancements.esp
-[ANY Illuminated Order v1.0.esp
-     Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
-     Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
-
-[Conflict]
- "Molag Mar Revisited" disconnects the Molag Mar Canalworks from the game, so that the character Eltoria, placed there by "Korobal", cannot be reached. You may need to edit one of these plugins in the CS, or else use either the console command:
-   placeatpc jec_e_eltoria,1,20,1  (to place a copy of Eltoria next to you)
- or:
-   coc "Molag Mar, Canalworks"	(to teleport to the canalworks)
-Molag Mar Revisited - Illuminated Windows Enhancements.esp
-Korobal v1.2.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Moldy Horker [Grumpy]
-
-[Conflict]
- BM_S_Inn.esp is the newer version of the Moldy Horker
-BM_S_Inn.esp
-S_Inn_th.esp
-
-[Note]
- ! S_Inn_th.esp is the older version of the Moldy Horker. Seek out the newer version that contains an exterior sign by Nigedo:
- ! http://lovkullen.net/Emma/Apartement.htm;MoldyHorker
- ! http://emma.ufrealms.net/index.php?dir=&file=BM_S_Inn.zip
-S_Inn_th.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Mooses on Solsteim Addon 1.0 [Matthew and Steven Kaine]
-
-[Conflict]
- ! "Mooses on Solstheim" adds more moose to those already added by Pseron Wyrd's
- ! "Cait's Moose on Solstheim." There is no need to run both mods.
- ! (Ref: readme_moose_addon.txt)
-Moose_addon.esp
-PW_Cait_Moose.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Graphics Extender [Various]
 ; Dragon32: Suggest that this section is just used for MGE & MWSE versioning Notes. Specific plugin rules should go in their own section
 ; Some of these MGE plugins (particularly Timeslip's) will work with earlier versions of MGE. However, v3.0.3 of MGE is the effective minimum version.
@@ -7959,6 +8395,42 @@ MWInhabitants Freeform (Vol 1).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Public Library v1.5 [DrSilent]
+
+;; No-glo, for instance, should be loaded after this mod
+;;(Ref: "MWlib_readme.txt")
+[Order]
+MW_Public_Library.esp
+Improved_No_Glow_v1-MW_Only.esp
+Improved_No_Glow_v1-MW_Trib.esp
+Improved_No_Glow_v1-MW_Blood.esp
+Improved_No_Glow_v1-MW_Trib_Blood.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Relighted [PirateLord]
+
+[Requires]
+Tribunal Relighted.esp
+Tribunal.esm
+
+[Requires]
+Bloodmoon Relighted.esp
+Bloodmoon.esm
+
+;; expdep
+[Requires]
+ This plugin uses the Bloodmoon function: placeatme.
+Mushroom Lights Tribunal.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+;[Patch]
+;RV with MR.esp
+;Morrowind Relighted exVivec.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Script Extender [Various]
 
 ; Dragon32: Suggest that this section is just used for MWSE versioning Notes. Specific plugin rules should go in their own section
@@ -7976,6 +8448,7 @@ Decorator+.esp
 Decorator+ (Balanced).esp
 Enhanced Detection.esp
 Fliggerty's Fleeing Fetchers.esp
+GRM_Companion_Recall_Ring.esp
 Health Indicators MWSE.esp
 Improved Bartering.esp
 Improved Hand to Hand.esp
@@ -8006,13 +8479,16 @@ Visceral Discernment.esp
 Avenge Your Death!.esp
 Pursuit Enhanced.esp
 
+[Note]
+ These mods require Morrowind Script Extender (MWSE) v0.9.4a and will not run with MGE v3.8.0's inbuilt version of MWSE.
+MCA_Companions_Enhanced.esp
+
 ;Dragon32: Unknown MWSE versions required:
 ; Loot Sack.esp
 ; Alchemist's Arsenal v1.0.esp
 ; Detect Owner.esp
 ; Gravedigger.esp
 ; Melee Missiles v1.2.esp
-; Pursuit Enhanced
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8022,6 +8498,20 @@ Pursuit Enhanced.esp
  !! The "No Tribunal" version of this plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 33373 Sound Enhancements.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowland - From Hell to Heaven [Various]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 70727475 From Hell To Heaven.esm]
+
+[Requires]
+From Hell To Heaven.esm
+[ALL From Hell To Heaven part 2.esp
+     From Hell To Heaven part 3.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8080,6 +8570,32 @@ MournholdTransport.esp
  (Ref: Mournhold_Overhaul_New_Textures.rar\Readme.txt)
 Mournhold Overhaul - No NPC's.ESP
 Mournhold Overhaul - NPC's.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Muffinwind [Cow Guru]
+
+[Requires]
+ (Ref: Muffinwind Readme.rtf)
+Muffinwind.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ There is an updated version of "Muffinwind" (version 1.2) available.
+ ( http://cowguru.silgrad.com/downloads.html )
+[SIZE 1582308 Muffinwind.esp]
+
+[Conflict]
+ "Muffinwind" has landscape conflicts with Centurion's "Ald Vendras" mod.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=984080&view=findpost&p=14243169 )
+Muffinwind.esp
+[ANY Ald-Vendras_V3.esp
+     Ald-Vendras_V3-LoKKen.esp
+     Ald-Vendras_V3-LoKKen-SC.esp
+     Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9322,6 +9838,11 @@ Private_Mobile_Base3.esp
 Private_Mobile_Base4.esp
 PMB Addon Cyborg Creator.esp
 
+;; Dragon32: Not in readme, logical to load addon after main cyborg mod
+[Order]
+Dwemer_Cyborgs.esp
+PMB Addon Cyborg Creator.esp
+
 ;; Inscription
 [Requires]
  You need to enable all the "Portable Mobile Base" plugins.
@@ -9769,6 +10290,102 @@ Ring Capability Shop - TR+BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rise of House Telvanni [Pozzo, Karpik777, bhl et al.]
+
+[Requires]
+ (Ref: "Rise of House Telvanni Readme.txt)
+Rise of House Telvanni.esm
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 2193647 Rise of House Telvanni.esm]
+
+[Note]
+ There is a newer version of "Rise of House Telvanni" available, you should upgrade.
+[VER<1.3 Rise of House Telvanni.esm]
+
+[Patch]
+ You should use "RoHT CoM Addon.esp", the addon for both RoHT and Emma's "Children of Morrowind" (CoM). It will move some children to safety in critical situations. It was made for CoM v2 but should also work with v1.
+ (Ref: "Rise of House Telvanni Readme.txt)
+RoHT CoM Addon.esp
+[ALL Rise of House Telvanni.esm
+     MW_Children_1_0.esm]
+
+[Patch]
+ You should use "RoHT GDR Aleft Patch.esp" a patch for Julian K. Spire's "Greater Dwemer Ruins: Aleft" (GDR  Aleft). GDR Aleft completely redesigns Aleft. This plugin moves a couple of RoHT's items so that RoHT remains  playable in conjunction with GDR: Aleft. It was made for GDR: Aleft v1.
+ (Ref: "Rise of House Telvanni Readme.txt)
+RoHT GDR Aleft Patch.esp
+[ALL Rise of House Telvanni.esm
+     GDR09_Aleft.ESP]
+
+;;Dragon32: Logical to have the RoHT patch load before GDR Aleft. In case GDR Aleft throws a tizzy about moved  references. Might not be needed but, hey.
+[Order]
+RoHT GDR Aleft Patch.esp
+GDR09_Aleft.ESP
+
+[Patch]
+ You should use "RoHT Havish Patch.esp" a patch for JOG's "Havish". Some of Havish's quests require members of  the Mages Guild. This mod makes RoHT and Havish completely compatible with each other, even if you decide to  destroy the Mages Guild. It was made for Havish v1.2 but should also work with v1.0, v1.1, and v1.3.
+ (Ref: "Rise of House Telvanni Readme.txt)
+RoHT Havish Patch.esp
+[ALL Rise of House Telvanni.esm
+     Havish.esm]
+
+[Patch]
+  You should use "RoHT TLSH Patch.esp" a patch for Nevena's "Twin Lamps and Slave Hunters" (TLSH). TLSH requires Ilmeni Dren and Duke Dren. During RoHT's questline, Duke Dren will die, and Ilmeni Dren will become Vvardenfell's Duchess. This patch copies Duke Vedam Dren's dialogue over to Duchess Ilmeni Dren in order to restore full compatibility between RoHT and TLSH. It was made for TLSH v1.5.
+ (Ref: "Rise of House Telvanni Readme.txt)
+RoHT TLSH Patch.esp
+[ALL Rise of House Telvanni.esm
+     Nevena's Twin Lamps & Slave Hunters 1.5.esp]
+
+[Note]
+ Both these mods make changes to Fast Eddie, "Building Up Uvirith's Grave" moves Fast Eddie to Uvirith's Grave  and "Rise of House Telvanni" might move him back or vice versa. This does not affect each mod's functionality.
+ (Ref: "Rise of House Telvanni Readme.txt)
+[ALL Building Up Uvirith's Grave 1.1.esp
+     Rise of House Telvanni.esm]
+
+[Note]
+ Bethesda Softwork's "Master Index Plugin" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
+ (Ref: "Rise of House Telvanni Readme.txt)
+[ALL master_index.esp
+     Rise of House Telvanni.esm]
+
+[Note]
+ Charles Cooley's "Propylons v1.1" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
+ (Ref: "Rise of House Telvanni Readme.txt)
+[ALL propylons1.1.esp
+     Rise of House Telvanni.esm]
+
+[Note]
+ ! Princess Stomper's "Balmora Council Club" requires that the player talks to Duke Dren a lot which will become impossible during the questline of "Rise of House Telvanni".
+ ! (Ref: "Rise of House Telvanni Readme.txt)
+[ALL [ANY Balmora Council Club EV.esp
+          Balmora Council Club.esp]
+     Rise of House Telvanni.esm]
+
+[Note]
+ ! Princess Stomper's "Ebonheart Interior Expansion" requires that the player talks to Duke Dren a lot which will become impossible during the questline of "Rise of House Telvanni".
+ ! (Ref: "Rise of House Telvanni Readme.txt)
+[ALL Clean Ebonheart Interior Expansion.esp
+     Rise of House Telvanni.esm]
+
+[Note]
+ !! There are undescribed and unresolved critical conflicts between "Rise of House Telvanni" and "Less Generic  NPCs (LGNPC) Pax Redoran", v1.12 and earlier, and "Less Generic NPCs (LGNPC) Tel Uvirith", v1.10 and earlier.
+ !! Patches for the LGNOC mods will be made with the next versions.
+ !! (Ref: "Rise of House Telvanni Readme.txt)
+[ALL [ANY [VER <1.13 LGNPC_PaxRedoran_v<VER>.esp]
+          [VER <1.11 LGNPC_TelUvirith_v<VER>.esp]]
+     Rise of House Telvanni.esm]
+
+[Note]
+ ! The Pixie's "Ushindra Beach" requires that the player talks to Ald'ruhn's Mages Guild guide, Estirdalin. In  RoHT, she might be forced to leave.
+ ! (Ref: "Rise of House Telvanni Readme.txt)
+[ALL UshindraBeach.esp
+     Rise of House Telvanni.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rise of the Illuminated Lich 1.1 [Psycholex, the Architect]
 
 [Requires]
@@ -10181,6 +10798,38 @@ Sea-of-Destiny.esm
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Sea-of-Destiny.esm
 The Runaway ver 1 2.esp
+
+[Requires]
+ (Ref: \Sea of Destiny Manual\Manual.htm)
+Sea-of-Destiny.esm
+Tribunal.esm
+
+[Conflict]
+ If you are using the official Siege at Firemoth plugin, disable it before you use Sea of Destiny.
+ (Ref: \Sea of Destiny Manual\Manual.htm)
+Siege at Firemoth.esp
+Sea-of-Destiny.esm
+
+[Requires]
+ (Ref: Sea of Destiny - Frost Fall\Manual.htm)
+SoD Frost Fall.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Before playing Frost Fall remove the Amaurea.esp plugin for Sea of Destiny.
+ (Ref: Sea of Destiny - Frost Fall\Manual.htm)
+SoD Frost Fall.esp
+Amaurea.esp
+
+[Requires]
+Amaurea.esp
+Sea-of-Destiny.esm
+
+;;Dragon32: No readme for DaggerSoul-Addon.esp or Description in file header. Found *some*  information on a  Czech site ( http://www.doupe.cz/vaulty/teseditor/down/mordeth/SOD.htm ) "new  business and NPCs in and around  DaggerSoul"
+[Requires]
+DaggerSoul-Addon.esp
+Sea-of-Destiny.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11155,7 +11804,8 @@ TR_Map1.esm
      Korobal v1.2.esp
      Tree_of_Life.esp
      Inferno's Island Revisited.esp
-     Wizards Islands - Scourge of the Frost Bringer.esm]
+     Wizards Islands - Scourge of the Frost Bringer.esm
+     N'Dib_5.esp]		; N'Dib's Twilight
 
 [Conflict]
  Landmass conflict.
@@ -11265,6 +11915,25 @@ Teleportation Spells.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Telos Rin Graveyard [dalin]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 337508 Telos Rin Graveyard.esp]
+
+[Requires]
+ (Ref: Telos Rin Graveyard.doc)
+Telos Rin Graveyard.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ ! With "Telos Rin Graveyard" activated you may not be able to complete the quest to build the second stage of  the Redoran stronghold, Indarys Manor. Frelene Acques, in the Hlaalu prison cells, may have no response to the  dialogue topic "escape".
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=1035923 )
+Telos Rin Graveyard.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Telperion - Ascadian Isles Tree House [Calislahn]
 
 [Requires]
@@ -11291,10 +11960,11 @@ Tenience's Rare Items.esp
 [SIZE !4495981 Balmora Expansion v1.4+(<VER>).esp]
 
 [Conflict]
-  Choose ONLY ONE of these plugins.
- "Balmora Expansion v1.4.esp" is the original Balmora Expansion.
- "Balmora Expansion v1.4+(1.4).esp" is the Texture fix version.
- "BE+(1.4) Better Looking Morrowind.esp" is the Better Looking Morrowind version, with Texture fix.
+ Choose ONLY ONE of these plugins.
+  "Balmora Expansion v1.4.esp" is the original Balmora Expansion.
+  "Balmora Expansion v1.4+(1.4).esp" is the Texture Fix version.
+  "BE+(1.4) Better Looking Morrowind.esp" is the Better Looking Morrowind version, with Texture Fix.
+  "Balmora Expansion - LITE 1.0.esp" is the Texture Fix version edited for better FPS.
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
 BE+(1.4) Better Looking Morrowind.esp
@@ -11674,6 +12344,61 @@ TravelingMerchants_v2.2_Update.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Travel Tent [Aftershock]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 20012 Travel Tent V1_95b.esp]
+
+[Requires]
+Travel Tent V1_95b.esp
+Tribunal.esm
+
+;;Addons by MasterNetra
+[Requires]
+ (Ref: TravelTentAddon Readme.txt)
+TravelTent_Furnished.esp
+Travel Tent V1_95b.esp
+
+[Requires]
+ (Ref: TravelTentAddon Readme.txt)
+EasierFind Travel Tent.esp
+Travel Tent V1_95b.esp
+
+[Requires]
+ (Ref: TravelTentAddon Readme.txt)
+NOM Travel Tent Patch.esp
+[ALL Travel Tent V1_95b.esp
+     TravelTent_Furnished.esp
+     NOM 2.13.esp
+     Bloodmoon.esm]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 3144 TravelTent_Furnished.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 1041 EasierFind Travel Tent.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 1374 NOM Travel Tent Patch.esp]
+
+[Order]
+Travel Tent V1_95b.esp
+TravelTent_Furnished.esp
+
+[Order]
+Travel Tent V1_95b.esp
+EasierFind Travel Tent.esp
+
+[Order]
+Travel Tent V1_95b.esp
+NOM Travel Tent Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tree of Life [Matt]
 
 [Note]
@@ -11729,6 +12454,18 @@ TribIntegrationFixedLL.esp
 The_Tylwyth.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Twin Lamps and Slave Hunters [Nevena]
+
+[Note]
+ There is a newer version of "Twin Lamps and Slave Hunters" available, you should upgrade.
+[VER<1.5 Nevena's Twin Lamps & Slave Hunters *.esp]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 971153 Nevena's Twin Lamps & Slave Hunters 1.5.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11929,17 +12666,52 @@ Unique Items.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ushindra Beach [The Pixie]
+
+[Requires]
+ (Ref: "ushindra-v10-readme.txt")
+UshindraBeach.esp
+Better Bodies.esp
+
+
+[Requires]
+ (Ref: "ushindra-v10-readme.txt")
+UshindraMH.esp
+[ALL Tribunal.esm
+     UshindraBeach.esp]
+
+[Requires]
+ (Ref: "ushindra-v10-readme.txt")
+UshindraHeads.esp
+[ALL UshindraBeach.esp
+     Westly's Master Headpack X.esp]
+
+;; Ref: "ushindra-v10-readme.txt"
+[Order]
+UshindraBeach.esp
+UshindraMH.esp
+
+[Order]
+UshindraBeach.esp
+UshindraHeads.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Uvirith's Legacy [StuporStar]
+
+[Note]
+ A new version of Uvirith's Legacy is available, you should upgrade.
+Uvirith's Legacy_ALPHA1.08.esp
 
 [Patch]
  Use "UL_Srikandy_patch_2.1.esp" when using Sri's Alchemy BM with Uvirith's Legacy.
  (Ref: "Uvrith's Legacy_beta_README.txt")
 UL_Srikandy_patch_2.1.esp
-[ALL Uvirith's Legacy_ALPHA1.08.esp
+[ALL Uvirith's Legacy_BETA1.09.esp
      Sris_Alchemy_BM.esp]
 
 [Order]
-Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy_BETA1.09.esp
 UL_Srikandy_patch_2.1.esp
 
 [Order]
@@ -11950,7 +12722,7 @@ UL_Srikandy_patch_2.1.esp
  Use "Uvirith's Legacy Book Jackets Add-on.esp" when using Book Jackets with Uvirith's Legacy.
  (Ref: "Uvrith's Legacy_beta_README.txt")
 Uvirith's Legacy Book Jackets Add-on.esp
-[ALL Uvirith's Legacy_ALPHA1.08.esp
+[ALL Uvirith's Legacy_BETA1.09.esp
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
 	       Librarian with Jackets BM Trib.esp]
 	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
@@ -11961,56 +12733,70 @@ Uvirith's Legacy Book Jackets Add-on.esp
 		    Book Jackets - Bloodmoon.esp]]]]
 
 [Order]
-Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy_BETA1.09.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
 [Order]
 Book Jackets - *.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
-[Requires]
- (Ref: "Uvrith's Legacy_beta_README.txt")
-UL_Obliv&LGNPC_Booksorter.esp
-Uvirith's Legacy_ALPHA1.08.esp
-
-[Patch]
- Use "UL_RoHT_Compatibility.esp" when using Pozzo's Rise of House Telvanni with Uvirith's Legacy.
- (Ref: "Uvrith's Legacy_beta_README.txt")
-UL_RoHT_Compatibility.esp
-[ALL Uvirith's Legacy_ALPHA1.08.esp
-     Pozzo's RoHT v1.25.esp]
+[Note]
+ ! The RoHT compatibility patch is no longer needed with beta 1.09 of Uvirith's Legacy.
+ ! (Ref: "Uvrith's Legacy_beta_README.txt")
+[ALL Uvirith's Legacy_BETA1.09.esp
+     UL_RoHT_Compatibility.esp]
 
 [Order]
-Uvirith's Legacy_ALPHA1.08.esp
-UL_RoHT_Compatibility.esp
-
-[Order]
-Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy_BETA1.09.esp
 Pozzo's RoHT v1.25.esp
 
 [Patch]
  Use "UL_TLM_ambiance.esp" when using The Lighing Mod with Uvirith's Legacy, otherwise the light in interiors will be very bright.
  (Ref: "Uvrith's Legacy_beta_README.txt")
 UL_TLM_ambiance.esp
-[ALL Uvirith's Legacy_ALPHA1.08.esp
+[ALL Uvirith's Legacy_BETA1.09.esp
      TLM - Ambient Light + Fog Update.esp]
 
 [Order]
-Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy_BETA1.09.esp
 UL_TLM_ambiance.esp
 
 [Conflict]
  Uvirith's Legacy is not compatible with Uvirith Inside, as it has been derived from that mod and does many of the same things.
  (Ref: "Uvrith's Legacy_beta_README.txt")
-Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy_BETA1.09.esp
 Uvirith Inside.esp
 
 [Conflict]
  Uvirith's Legacy and Building Up Uvirith's Grave are not currently compatible as they both make changes to Tel Uvirith.
  (Ref: "Uvrith's Legacy_beta_README.txt")
-Uvirith's Legacy_ALPHA1.08.esp
+Uvirith's Legacy_BETA1.09.esp
 Building Up Uvirith's Grave 1.1.esp
 
+;; Dragon32: Asked StuporStar about the lack of this plugin. "UL_Obliv&LGNPC_Booksorter.esp" is for Ostar's
+;; "Oblivion and LGNPC Books." That plugin's been removed from circulation due to problems in circulating  Oblivion
+;; content for Morrowind. So StuporStar removed the Booksorter addon with BETA1.09 of Uvirith's Legacy.
+;; It *can* still be used, StuporStar's left the space designated for the LGNPC books unoccupied, so it will still
+;; work.
+;; Name of Ostar's mod "Oblivion and LGNPC Books", Oblivion_and_LGNPC_Books.esp
+;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1037470&view=findpost&p=15186646
+;; [Requires]
+;;  (Ref: "Uvrith's Legacy_beta_README.txt")
+;; UL_Obliv&LGNPC_Booksorter.esp
+;; Uvirith's Legacy_BETA1.09.esp
+;;
+;; Dragon32: v1.09 readme: "RoHT Compatibility patch: UL_RoHT_Compatibility.esp REMOVED!! -- This is no longer
+;; required for RoHT compatibility."
+;; [Patch]
+;;  Use "UL_RoHT_Compatibility.esp" when using Pozzo's Rise of House Telvanni with Uvirith's Legacy.
+;;  (Ref: "Uvrith's Legacy_beta_README.txt")
+;; UL_RoHT_Compatibility.esp
+;; [ALL Uvirith's Legacy_ALPHA1.08.esp
+;;     Pozzo's RoHT v1.25.esp]
+;;
+;; [Order]
+;; Uvirith's Legacy_ALPHA1.08.esp
+;; UL_RoHT_Compatibility.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MPP [TES Morrowind Community, ThePal, Baldurdash, and quorn]
@@ -12164,6 +12950,26 @@ Morrowind Patch v1.6.4.esm
 lfx_tenpace_tribunal.esp
 Tenpacebootsfix.esp
 
+[Conflict]
+ The MPP obsoletes "Heartwood" by Midgetalien. Both plugins modify the Spriggans so that the Heartwood ingredient is dropped.
+Morrowind Patch v1.6.4.esm
+heartwood.esp
+
+[Conflict]
+ The MPP obsoletes "Ash Ghoul Hearts" by Denina. Both plugins modify the Ash Ghouls so ghoul hearts are randomly dropped.
+Morrowind Patch v1.6.4.esm
+Ash Ghoul Hearts.esp
+
+[Conflict]
+ The MPP obsoletes "Wild Rare Ingredients v1.00" by Alphax.
+Morrowind Patch v1.6.4.esm
+lfx_rare_merged-uniques.esp
+
+[Conflict]
+ The MPP obsoletes "Wild Rare Ingredients v1.00" by Alphax..
+Morrowind Patch v1.6.4.esm
+lfx_rare_ingredients-uniques.esp
+
 [Note]
  The latest version of the Morrowind Patch 1.6.4 (updated by quorn) supersedes Thepal's UMP, use the new 1.6.4 version instead.
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
@@ -12196,6 +13002,7 @@ Morrowind Patch v1.2.2.esm
  ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
 ARJAN_VampireFly_Fix.esp
 ArchMage_Fix_0604.esp
+Ash Ghoul Hearts.esp
 BM-Armor-FIX.esp
 BMFemArmorFix.esp
 Bal Molagmer Fix.esp
@@ -12223,6 +13030,7 @@ Ghostgate_Shrine_fix.esp
 Glass arrow fix.esp
 Gnisis Gaurd Fix.esp
 HasphatsBooks.esp
+heartwood.esp
 Master Trainer Fix v.01.esp
 Morrowind Patch v1.6.3.esm
 Nerevarine Greeting tweaks.esp
@@ -12262,7 +13070,9 @@ lfx_rare_heartwood.esp
 lfx_rare_holly.esp
 lfx_rare_hornlily.esp
 lfx_rare_ingredients.esp
+lfx_rare_ingredients-uniques.esp
 lfx_rare_merged.esp
+lfx_rare_merged-uniques.esp
 lfx_tenpace_tribunal.esp
 milyn_faram_fix_0529.esp
 shakti_secret_masters_fix.esp
@@ -12999,6 +13809,14 @@ Lazarus_Manor-Caldera.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @W3_Taxi [MasterW3]
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE  17001 W3_Taxi_01.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wakim's Game Improvments 9 (WGI) [Wakim]
 
 [Conflict]
@@ -13460,6 +14278,45 @@ Wilderness Sounds Bloodmoon.esp
 Wilderness Sounds T & B.esp
 Wilderness Sounds Tribunal.esp
 Wilderness Sounds.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wild Rare Ingredients [Alphax]
+
+[Conflict]
+ Alphax's merged versions of "Wild Rare Ingredients" contain the "Bloodmoon Heartwood addon", "Bloodmoon Holly  addon" and "Tribunal Horn Lily addon".
+ (Ref: "lfx_rare_ingredients.txt")
+[ANY lfx_rare_merged.esp
+     lfx_rare_merged-uniques.esp]
+[ANY lfx_rare_heartwood.esp
+     lfx_rare_holly.esp
+     lfx_rare_hornlily.esp]
+
+[Conflict]
+ Alphax's merged version ("lfx_rare_merged-uniques.esp") contains the changes made by the "Unique creatures  addon"
+ (Ref: "lfx_rare_ingredients.txt")
+lfx_rare_merged-uniques.esp
+lfx_rare_ingredients-unique.esp
+
+[Conflict]
+ Both Midgetalien's "Heartwood" and Alphax's "Wild Rare Ingredients, Bloodmoon Heartwood addon" modify the  Spriggans so that the Heartwood ingredient is dropped.
+ (Ref: "lfx_rare_ingredients.txt" and "Heartwood readme.esp")
+heartwood.esp
+[ANY lfx_rare_heartwood.esp
+     lfx_rare_merged.esp
+     lfx_rare_merged-uniques.esp]
+
+[Conflict]
+ Both Denina's "Ash Ghoul Hearts" and Alphax's "Wild Rare Ingredients" modify the Ash Ghouls so ghoul hearts  are randomly dropped.
+[ANY lfx_rare_merged.esp
+     lfx_rare_merged-uniques.esp]
+Ash Ghoul Hearts.esp
+
+[Requires]
+ The "Unique creatures addon" is an addon to Alpahx's main mod: "lfx_rare_ingredients.esp"
+ (Ref: "lfx_rare_ingredients.txt")
+lfx_rare_ingredients.esp
+lfx_rare_ingredients-uniques.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
