@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- mode: python -*-
-# mlox - the elder scrolls mod load order eXpert
+# mlox - the elder scrolls Mod Load Order eXpert
 # Copyright 2009 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.55"
+Version = "0.56"
 
 import locale
 import os
@@ -66,16 +66,17 @@ re_gamefile = re.compile(r'GameFile\d+=([^\r\n]*)', re.IGNORECASE)
 # and remove that if present on all lines.
 re_sloppy_plugin = re.compile(r'^(?:(?:DBG:\s+)?[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
-re_plugin = re.compile(r'^(\S[^\[]*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
+# TBD: allow brackets in filenames (oops)
+re_plugin = re.compile(r'^(\S.*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
 # (we allow '*' and '?' for filename matching).
-re_plugin_illegal = re.compile(r'[\"\[\]\\/=+<>:;|\^]')
+# TBD: allow brackets in filenames (oops)
+re_plugin_illegal = re.compile(r'[\"\\/=+<>:;|\^]')
 # metacharacters for filename expansion
 re_plugin_meta = re.compile(r'([*?])')
 re_plugin_metaver = re.compile(r'(<VER>)', re.IGNORECASE)
 re_escape_meta = re.compile(r'([()+.])')
 # for recognizing our functions:
-re_start_fun = re.compile(r'^\[')
 re_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER|SIZE)\s*', re.IGNORECASE)
 re_end_fun = re.compile(r'^\]\s*')
 re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s+([^\]]+)\]', re.IGNORECASE)
@@ -350,6 +351,20 @@ def find_appdata():
         return(os.path.expandvars(appdata))
     except ImportError:
         return None
+
+# given a list of files, return a new list without dups (caseless), plus a list of any dups
+def filter_dup_files(files):
+    tmpfiles = []               # new list
+    filtered = []               # any filtered dups from original list
+    seen = {}
+    for f in files:
+        c = C.cname(f)
+        if c in seen:
+            filtered.append(f)
+        else:
+            tmpfiles.append(f)
+        seen[c] = True
+    return(tmpfiles, filtered)
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
@@ -710,7 +725,7 @@ class rule_parser:
                 return(None, None)
             if Opt.ParseDBG: self.pdbg("parse_expression NOTREACHED")
         else:
-            if re_start_fun.match(self.buffer):
+            if re_fun.match(self.buffer):
                 self.parse_error(_["Invalid function expression"])
                 return(None, None)
             if Opt.ParseDBG: self.pdbg("parse_expression parsing plugin: \"%s\"" % self.buffer)
@@ -1095,6 +1110,9 @@ class loadorder:
         else:
             # not running under a game directory (e.g.: doing testing)
             return
+        (files, dups) = filter_dup_files(files)
+        for f in dups:
+            Dbg.add("get_active_plugins: dup plugin: %s" % f)
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
@@ -1108,6 +1126,9 @@ class loadorder:
         """Get the list of plugins from the data files directory. Updates self.active.
         If called,"""
         files = [f for f in self.datadir.filelist() if os.path.isfile(self.datadir.find_path(f))]
+        (files, dups) = filter_dup_files(files)
+        for f in dups:
+            Dbg.add("get_data_files: dup plugin: %s" % f)
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         self.order = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
@@ -1137,12 +1158,16 @@ class loadorder:
         if file == None:
             Dbg.add("Failed to open input file: %s" % fromfile)
             return
-        self.order = []
+        files = []
         for line in file:
             plugin_match = re_sloppy_plugin.match(line)
             if plugin_match:
                 p = plugin_match.group(1)
-                self.order.append(C.cname(p))
+                cname = C.cname(p)
+                files.append(cname)
+        (self.order, dups) = filter_dup_files(files)
+        for f in dups:
+            Dbg.add("read_from_file: dup plugin: %s" % f)
         Stats.add("%-50s (%3d plugins)" % (_["Reading plugins from file: \"%s\""] % fromfile, len(self.order)))
         for p in self.order:
             self.active[p] = True
