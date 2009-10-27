@@ -13,9 +13,10 @@ import os
 import sys
 import re
 import codecs
+import time
+import traceback
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
-from time import time
 import cPickle
 
 class dynopt(dict):
@@ -1248,8 +1249,10 @@ class loadorder:
         Stats.flush()
         New.flush()
         Old.flush()
+        Msg.add("Starting: %s" % time.ctime())
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
+            Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
             self.read_from_file(fromfile)
             if len(self.order) == 0:
                 Msg.add(_["No plugins detected. mlox.py understands lists of plugins in the format\nused by Morrowind.ini or Wrye Mash. Is that what you used for input?"])
@@ -1349,7 +1352,7 @@ class mlox_gui():
     def __init__(self):
         wx.Locale(wx.LOCALE_LOAD_DEFAULT)
         self.app = wx.App(True, "mlox.err")
-        print_version()
+        sys.excepthook = lambda typ, val, tb: self.error_handler(typ, val, tb)
         self.can_update = True
         self.dir = os.getcwd()
         # setup widgets
@@ -1362,8 +1365,11 @@ class mlox_gui():
         self.frame = wx.Frame(None, wx.ID_ANY, ("mlox %s" % Version))
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
-        self.logo = wx.Panel(self.frame, -1)
-        wx.StaticBitmap(self.logo, bitmap=wx.BitmapFromImage(wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF)))
+        # logo doubles as a "reset" button
+        img = wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+        self.logo = wx.BitmapButton(self.frame, -1, img, (0,0), (img.GetWidth()+5, img.GetHeight()+5))
+        self.logo.Bind(wx.EVT_BUTTON, self.on_reset)
+        self.logo.SetToolTip(wx.ToolTip(_["Click to Reset"]))
         self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
         self.label_stats.SetFont(self.label_font)
         self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
@@ -1453,6 +1459,27 @@ class mlox_gui():
         self.frame_vbox.Fit(self.frame)
         # setup up rightclick menu handler for original load order pane
         self.txt_cur.Bind(wx.EVT_RIGHT_DOWN, self.right_click_handler)
+
+    def error_handler(self, type, value, tb):
+        # pop up a window containing the error output
+        err_frame = wx.Frame(None, wx.ID_ANY, (_["%s - Error"] % full_version))
+        err_frame.SetSizeHints(500,800)
+        err_label = wx.StaticText(err_frame, -1, _["An Error ocurred."])
+        err_label.SetFont(self.label_font)
+        err_txt = wx.TextCtrl(err_frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+        err_btn_close = wx.Button(err_frame, -1, _["Close"], size=(90,60))
+        err_btn_close.Bind(wx.EVT_BUTTON, lambda x: err_frame.Destroy())
+        err_btn_close.SetFont(self.button_font)
+        err_frame_vbox = wx.BoxSizer(wx.VERTICAL)
+        err_frame_vbox.Add(err_label, 0, wx.EXPAND)
+        err_frame_vbox.Add(err_txt, 1, wx.EXPAND)
+        err_frame_vbox.Add(err_btn_close, 0, wx.EXPAND)
+        err_frame.Bind(wx.EVT_CLOSE, lambda x: err_frame.Destroy())
+        err_txt.SetValue(version_info() + "\n" + "".join(traceback.format_exception(type, value, tb)))
+        err_frame.SetSizer(err_frame_vbox)
+        err_frame_vbox.Fit(err_frame)
+        err_frame.Show(True)
+        self.app.MainLoop()
 
     def highlight_hello(self, txt):
         happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
@@ -1545,6 +1572,11 @@ class mlox_gui():
     def on_quit(self, e):
         sys.exit(0)
 
+    def on_reset(self, e):
+        self.can_update = True
+        Opt.FromFile = False
+        self.analyze_loadorder(None)
+
     def on_update(self, e):
         if not self.can_update:
             return
@@ -1589,6 +1621,7 @@ class mlox_gui():
                     out = myopen_file(clip_file, 'w')
                     if out != None:
                         # sometimes some unicode muck can get in there, as when pasting from web pages.
+                        # TBD, this needs review as pasting some encodings will dump
                         out.write(data.GetText().encode("utf-8"))
                         out.close()
                         Opt.FromFile = True
@@ -1637,11 +1670,12 @@ def get_mlox_base_version():
     return(_["(Not Found)"])
 
 
-def print_version():
-    print "%s (%s/%s)" % (full_version, Lang, Encoding)
-    print "Python Version: %s" % pyversion
+def version_info():
     import wx.__version__
-    print "wxPython Version: %s" % wx.__version__
+    return "%s (%s/%s)\nPython Version: %s\nwxPython Version: %s\n" % (full_version, Lang, Encoding, pyversion, wx.__version__)
+
+def print_version():
+    print version_info()
 
 
 def main():
