@@ -1249,7 +1249,7 @@ class loadorder:
         Stats.flush()
         New.flush()
         Old.flush()
-        Msg.add("Starting: %s" % time.ctime())
+        Stats.add("Starting: %s" % time.ctime())
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
             Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
