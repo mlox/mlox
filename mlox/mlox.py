@@ -1249,7 +1249,6 @@ class loadorder:
         Stats.flush()
         New.flush()
         Old.flush()
-        Stats.add("Starting: %s" % time.ctime())
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
             Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
@@ -1279,7 +1278,7 @@ class loadorder:
         parser.read_rules("mlox_user.txt")
         # secondary rules from mlox_base.txt
         if not parser.read_rules("mlox_base.txt"):
-            Msg.add(_["Error: unable to open mlox_base.txt. You must run mlox in the directory where mlox_base.txt lives."])
+            Msg.add(_["Error: unable to open mlox_base.txt database. You must run mlox in the directory where mlox_base.txt lives. If you have not already done so, please download it from http://code.google.com/p/mlox/downloads/list and install mlox_base.txt in your mlox directory."])
             return(self)
         # now do the topological sort of all known plugins (rules + load order)
         if Opt.Explain == None:
@@ -1365,11 +1364,11 @@ class mlox_gui():
         self.frame = wx.Frame(None, wx.ID_ANY, ("mlox %s" % Version))
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
-        # logo doubles as a "reset" button
+        # logo doubles as a "reload" button
         img = wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF).ConvertToBitmap()
         self.logo = wx.BitmapButton(self.frame, -1, img, (0,0), (img.GetWidth()+5, img.GetHeight()+5))
-        self.logo.Bind(wx.EVT_BUTTON, self.on_reset)
-        self.logo.SetToolTip(wx.ToolTip(_["Click to Reset"]))
+        self.logo.Bind(wx.EVT_BUTTON, self.on_reload)
+        self.logo.SetToolTip(wx.ToolTip(_["Click to Reload"]))
         self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
         self.label_stats.SetFont(self.label_font)
         self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
@@ -1572,7 +1571,7 @@ class mlox_gui():
     def on_quit(self, e):
         sys.exit(0)
 
-    def on_reset(self, e):
+    def on_reload(self, e):
         self.can_update = True
         Opt.FromFile = False
         self.analyze_loadorder(None)
