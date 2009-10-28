@@ -106,8 +106,7 @@ is to post on the BethSoft forums:
 http://www.bethsoft.com/bgsforums/index.php?showforum=12
 You can search for the latest mlox thread by using the forum Search function.
 
-Please include in your problem report a copy of file "mlox.err" from your mlox
-directory.
+If you get a popup error window, please include the contents in your report.
 
 ------------------------------------------------------------
 o Introduction - Why mlox?

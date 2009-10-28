@@ -375,6 +375,7 @@ class rule_parser:
         self.datadir = datadir
         self.line_num = 0
         self.rule_file = None
+        self.bytesread = 0
         self.input_handle = None
         self.buffer = ""        # the parsing buffer
         self.message = []       # the comment for the current rule
@@ -391,6 +392,7 @@ class rule_parser:
         try:
             while True:
                 line = self.input_handle.next()
+                self.bytesread += len(line)
                 self.line_num += 1
                 line = re_comment.sub('', line) # remove comments
                 line = line.rstrip() # strip whitespace from end of line, include CRLF
@@ -838,6 +840,14 @@ class rule_parser:
         add order rules to graph, and print warnings."""
         n_rules = 0
         self.rule_file = rule_file
+
+        progress = None
+        inputsize = os.path.getsize(rule_file)
+        pmsg = "Loading: %s" % rule_file
+        if Opt.GUI:
+            progress = wx.ProgressDialog("Progress", pmsg, 100, None,
+                                         wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+
         if Opt.ParseDBG: self.pdbg("READING RULES FROM: \"%s\"" % self.rule_file)
         self.input_handle = myopen_file(self.rule_file, 'r')
         if self.input_handle == None:
@@ -847,6 +857,10 @@ class rule_parser:
             if self.buffer == "":
                 if not self.readline():
                     break
+            if progress != None:
+                pct = int(100*self.bytesread/inputsize)
+                if pct % 3 == 0:
+                    progress.Update(pct-1, pmsg)
             self.parse_dbg_indent = ""
             self.curr_rule = ""
             new_rule = re_rule.match(self.buffer)
@@ -866,6 +880,8 @@ class rule_parser:
             else:
                 self.parse_error(_["expected start of rule"])
         loadup_msg(_["Read rules from: \"%s\""] % self.rule_file, n_rules, "rules")
+        if progress != None:
+            progress.Destroy()
         return True
 
 
@@ -1693,8 +1709,6 @@ def main():
         loadorder().update(None)
 
 if __name__ == "__main__":
-    try: os.remove("mlox.err")
-    except: pass
     Dbg.add("\nmlox DEBUG DUMP:\n")
     def usage(status):
         print _["Usage"]
