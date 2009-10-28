@@ -842,7 +842,11 @@ class rule_parser:
         self.rule_file = rule_file
 
         progress = None
-        inputsize = os.path.getsize(rule_file)
+        inputsize = 0
+        try:
+            inputsize = os.path.getsize(rule_file)
+        except: 
+            pass
         pmsg = "Loading: %s" % rule_file
         if Opt.GUI:
             progress = wx.ProgressDialog("Progress", pmsg, 100, None,
