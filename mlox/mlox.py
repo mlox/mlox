@@ -13,7 +13,7 @@ import os
 import sys
 import re
 import codecs
-import time
+from time import time
 import traceback
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
@@ -45,9 +45,9 @@ Opt._Game = None
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         Opt.GUI = True
-#        if not hasattr(sys, 'frozen'):
-#            import wxversion
-#            wxversion.select('2.8.7.1')
+        import wxversion
+#        wxversion.ensureMinimal('2.8.7.1')
+        wxversion.select('2.8.7.1')
         import wx
         import wx.richtext as rt
         import webbrowser
@@ -1350,7 +1350,7 @@ class loadorder:
 class mlox_gui():
     def __init__(self):
         wx.Locale(wx.LOCALE_LOAD_DEFAULT)
-        self.app = wx.App(True, "mlox.err")
+        self.app = wx.App(True, None)
         sys.excepthook = lambda typ, val, tb: self.error_handler(typ, val, tb)
         self.can_update = True
         self.dir = os.getcwd()
