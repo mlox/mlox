@@ -45,9 +45,6 @@ Opt._Game = None
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         Opt.GUI = True
-        import wxversion
-#        wxversion.ensureMinimal('2.8.7.1')
-        wxversion.select('2.8.7.1')
         import wx
         import wx.richtext as rt
         import webbrowser
