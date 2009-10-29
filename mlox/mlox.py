@@ -832,22 +832,18 @@ class rule_parser:
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         if Opt.ParseDBG: self.pdbg("parse_statement RETURNING")
 
-    def read_rules(self, rule_file):
+    def read_rules(self, rule_file, progress):
         """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
         add order rules to graph, and print warnings."""
         n_rules = 0
         self.rule_file = rule_file
 
-        progress = None
         inputsize = 0
         try:
             inputsize = os.path.getsize(rule_file)
         except: 
             pass
         pmsg = "Loading: %s" % rule_file
-        if Opt.GUI:
-            progress = wx.ProgressDialog("Progress", pmsg, 100, None,
-                                         wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
 
         if Opt.ParseDBG: self.pdbg("READING RULES FROM: \"%s\"" % self.rule_file)
         self.input_handle = myopen_file(self.rule_file, 'r')
@@ -861,7 +857,7 @@ class rule_parser:
             if progress != None:
                 pct = int(100*self.bytesread/inputsize)
                 if pct % 3 == 0:
-                    progress.Update(pct-1, pmsg)
+                    progress.Update(pct, pmsg)
             self.parse_dbg_indent = ""
             self.curr_rule = ""
             new_rule = re_rule.match(self.buffer)
@@ -881,8 +877,6 @@ class rule_parser:
             else:
                 self.parse_error(_["expected start of rule"])
         loadup_msg(_["Read rules from: \"%s\""] % self.rule_file, n_rules, "rules")
-        if progress != None:
-            progress.Destroy()
         return True
 
 
@@ -1292,11 +1286,17 @@ class loadorder:
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
         parser = rule_parser(self.active, self.graph, self.datadir)
-        parser.read_rules("mlox_user.txt")
+        progress = None
+        if Opt.GUI:
+            progress = wx.ProgressDialog("Progress", "", 100, None,
+                                         wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+        parser.read_rules("mlox_user.txt", progress)
         # secondary rules from mlox_base.txt
-        if not parser.read_rules("mlox_base.txt"):
+        if not parser.read_rules("mlox_base.txt", progress):
             Msg.add(_["Error: unable to open mlox_base.txt database. You must run mlox in the directory where mlox_base.txt lives. If you have not already done so, please download it from http://code.google.com/p/mlox/downloads/list and install mlox_base.txt in your mlox directory."])
             return(self)
+        if progress != None:
+            progress.Destroy()
         # now do the topological sort of all known plugins (rules + load order)
         if Opt.Explain == None:
             self.add_current_order() # tertiary order "pseudo-rules" from current load order
