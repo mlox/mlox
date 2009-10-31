@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-10-22 21:58:16 (UTC)]
+[Version 2009-10-31 17:51:07 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -263,6 +263,26 @@ A good place to stay, Ver 1,8.esp
 A_flock_of_seagulls.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @A Portcullis for Wolverine Hall (v1.0) [Nonsuch]
+
+[Conflict]
+ !! Use only one plugin, not both.
+ !! (Ref: Fix for 'Vacant Telvanni Manor' Readme.txt)
+A Portcullis for Wolverine Hall (v1.0).esp
+A Portcullis for Wolverine Hall (v1.0) [VTM].esp
+
+[Requires]
+ !! (Ref: Fix for 'Vacant Telvanni Manor' Readme.txt)
+A Portcullis for Wolverine Hall (v1.0) [VTM].esp
+Vacant Telvanni Manor.esp
+
+;; Dragon32: Order implied by "Fix for 'Vacant Telvanni Manor' Readme.txt" and file dates
+[Order]
+Vacant Telvanni Manor.esp
+A Portcullis for Wolverine Hall (v1.0) [VTM].esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -968,6 +988,35 @@ BE+(1.4) Better Looking Morrowind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Another Balmora [basswalker]
+
+[Requires]
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7995 )
+Another Balmora.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7995 )
+Another Balmora (illuminated order version.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     Illuminated Order v1.0.esp]
+
+;; Dragon32: Not sure if "Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp" or "Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp" would work this was mod. See the main Illuminated Order entry.
+[Conflict]
+ You should use the "Illuminated Order"-compatible version of basswalker's "Another Balmora": 'Another Balmora (illuminated order version.esp'
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7995 )
+Another Balmora.esp
+Illuminated Order v1.0.esp
+
+[Conflict]
+ Use only ONE plugin. Most people should use 'Another Balmora.esp' and only those running LDones' "Illuminated Order" should use 'Another Balmora (illuminated order version.esp'
+Another Balmora.esp
+Another Balmora (illuminated order version.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Antares' Big Mod [Arcimaestro Antares]
 
 [Conflict]
@@ -1342,6 +1391,50 @@ Assassins Armory.esm
 Syc_AtHomeAlchemy.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Atmospheric Balmora [Lucien Fairfax]
+
+[Conflict]
+ Lucien Fairfax's "Atmospheric Balmora" conflicts with Vality's "Balmora Addon." You should use Enzo Dragon's "Atmospheric Balmora for Vality's Balmora Addon"
+ (Ref: Atmospheric Balmora for VBA.RAR\readme.txt)
+ ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7959 )
+Clean Atmospheric Balmora.ESP
+Vality's Balmora Addon.esp
+
+[Note]
+ This plugin contains dirty references. It is recommended that you clean it with TESTool.
+[SIZE 84866 Clean Atmospheric Balmora.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Atmospheric Balmora for Vality's Balmora Addon [Enzo Dragon]
+
+[Conflict]
+ Enable only ONE plugin
+  Atmospheric Balmora for VBAnIW.ESP - If you use both Vality's "Balmora Addon" and DrkAngl66's "Illuminated Windows"
+  Atmospheric Balmora for VBA.ESP - If you just use Vality's "Balmora Addon". 
+Atmospheric Balmora for VBA.ESP
+Atmospheric Balmora for VBAnIW.ESP
+
+[Conflict]
+ Do not run Lucien Fairfax's "Atmospheric Balmora" with Enzo Dragon's modified version.
+ (Ref: Atmospheric Balmora for VBA.RAR\readme.txt)
+Clean Atmospheric Balmora.ESP
+[ANY Atmospheric Balmora for VBA.ESP
+     Atmospheric Balmora for VBAnIW.ESP]
+
+[Requires]
+ (Ref: Atmospheric Balmora for VBA.RAR\readme.txt)
+Atmospheric Balmora for VBA.ESP
+Vality's Balmora Addon.esp
+
+[Requires]
+ (Ref: Atmospheric Balmora for VBA.RAR\readme.txt)
+Atmospheric Balmora for VBAnIW.ESP
+[ALL Vality's Balmora Addon.esp
+     Illuminated Windows.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2981,27 +3074,31 @@ Sris_Alchemy_BM.esp
 ;; @Building Up Uvirith's Legacy [Artimis Fowl the 3rd]
 
 [Conflict]
- "Building Up Uvirith's Legacy" replaces Acheron's "Building Up Uvirith's Grave", you should not run both  plugins.
+ "Building Up Uvirith's Legacy" replaces Acheron's "Building Up Uvirith's Grave", you should not run both plugins.
  (Ref: Building Up Uvirith's Legacy Readme.txt)
 Building Up Uvirith's Grave 1.1.esp
-Building Up Uvirith's Legacy1.0.ESP
+Building Up Uvirith's Legacy1.01.ESP
 
 [Order]
-Building Up Uvirith's Legacy1.0.ESP
+Building Up Uvirith's Legacy1.01.ESP
 BUUG Alchemy- Bloodmoon.esp
 BUUG Alchemy- Tribunal.esp
 
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
-[SIZE 915698 Building Up Uvirith's Legacy1.0.ESP]
+[SIZE 915853 Building Up Uvirith's Legacy1.01.ESP]
 
-;; Dragon32: Not checked to the same level as John.Moonsugar did with BuUG, quick scan and placeitem function  *is*
+;; Dragon32: Not checked to the same level as John.Moonsugar did with BuUG, quick scan and placeitem function *is*
 ;; used in one of the scripts. Still only dependent on Morrowind.esm
 [Requires]
  This plugin uses some Tribunal scripting functions.
-Building Up Uvirith's Legacy1.0.ESP
+Building Up Uvirith's Legacy1.01.ESP
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ A new version of Building Up Uvirith's legacy is available. You should upgrade. 
+Building Up Uvirith's Legacy1.0.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3128,6 +3225,7 @@ CharGen_Revamped_v14.esp
 Chargen_Revamped_v2_1.esp
 Character Maker (qs).esp
 Character Maker.esp
+Clean Chargen_Revamped_v2_3.esp
 Clean Royal Chargen.esp
 ComprehensiveChargen.esp
 Immersive Chargen.esp
@@ -3135,18 +3233,23 @@ Quick Char.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Chargen Revamped v2.1a [Pwin/Eisenfaust]
+;; @Chargen Revamped v2.3 [Pwin/Eisenfaust]
 
-[Patch]
- "This patch changes several aspects of Pwin's original integration of CharMaker (Zerocyde) and Alternate Beginnings 2 (BlueBit) to make the plugin work more seamlessly with mods that use startscripts (NoM, Abot's Water Life, GCD, etc)."
- (Ref: "CharGen_Revamped_v2_1a_patch.txt")
-Chargen Revamped Patch 2.1a.esp
+[Note]
+ A new version of "Chargen Revamped", version 2.3, is available. You should upgrade.
 Chargen_Revamped_v2_1.esp
 
 [Conflict]
+ You do not need to use Eisenfaust's "CharGen Revamped patch" with version 2.3.
+ (Ref: CharGen_Revamped_v2_3.txt)
+Chargen Revamped Patch 2.1a.esp
+Clean Chargen_Revamped_v2_3.esp
+
+; Dragon32: Assume this is still the same for v2,3 as it was for v2.1 (the version covered by Forum post).
+[Conflict]
  You need to disable "CharGen Revamped delay2.esp" when using "Chargen Revamped v2".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=874116&st=0&start=0 )
-Chargen_Revamped_v2_1.esp
+Chargen_Revamped_v2_3.esp
 CharGen Revamped delay2.esp
 
 
@@ -3643,6 +3746,17 @@ DM_DB Armor Replacer-ExpRanksDDBA.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 298958 Dark_Stone_Fortress.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Uvirith Exterior for BuUG [Stuporstar]
+
+[Requires]
+ Stuporstar's "Dark Uvirith Exterior for BuUG" requires either Building up Uvirith's Grave or Building up Uvirith's Legacy.
+ (Ref: DarkUvirithExteriorBuUG_README.txt)
+Dark Uvirith Exterior BuUG 1.0.esp
+[ANY Building Up Uvirith's Grave 1.1.esp
+     Building Up Uvirith's Legacy1.01.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8471,6 +8585,7 @@ Keyring.esp
 LA_MWSE Addon.esp
 Merchant Investments.esp
 More Quick-Keys.esp
+Useful Summoned Creatures.esp
 Visceral Discernment.esp
 
 ;Dragon32: I couldn't find when MGE introduced v0.9.3 of MWSE. MGE v3.5.6 adds MWSE v0.9.4 script functions
@@ -11208,6 +11323,15 @@ CDR_SmootherBodies_M_OldUWear.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Souly Soulgems(!) [Earth Wyrm]
+
+[Note]
+ ! Souly Soulgems 1.0 has now been updated to v1.1, and no longer requires an .esp. You should upgrade and stop using the .esp!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5161
+WA_SoulGems(!).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @South Wall, Den of Iniquity [Balathustrius]
 
 [Patch]
@@ -11625,6 +11749,14 @@ Clean Suran Extended.esp
 [SIZE 2086615 Suran_Underworld_2.5.esp]
 Suran Archery Store_v3.0.esp
 
+[Patch]
+ You should use the compatiblity patch as you are running both "White Wolf of Lokken" and "Suran Underworld." These mods conflict through the dialog topics "to rescue me" and "rescue me".
+ (Ref: Suran_underworld_2.5-jms_patch.txt)
+ ( http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods )
+Suran_Underworld_2.5-jms_patch.esp
+[ALL Suran_Underworld_2.5.esp
+     [ANY BT_Whitewolf_2_0.esp
+          BT_Whitewolf_2_0.esm]]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Taddeus' Balanced Alchemy [Taddeus]
@@ -12663,6 +12795,27 @@ Ring Texture Fix.esp
  (Ref: "Unique Items.txt")
 Unique Items - Monster Specific.esp
 Unique Items.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Useful Summoned Creatures [ElderScroller]
+
+[Requires]
+ (Ref: Useful Summoned Creatures Readme.txt)
+Useful Summoned Creatures.esp
+CI_Global.esp
+
+;; (Ref: Useful Summoned Creatures Readme.txt)
+[Order]
+CI_Global.esp
+Janine.esp
+Useful Summoned Creatures.esp
+
+[Note]
+ Ensure you use the copy of "CI_Global.esp" from the "Useful Summoned Creatures" archive.
+ (Ref: Useful Summoned Creatures Readme.txt)
+[ALL Useful Summoned Creatures.esp
+     [SIZE !3471 CI_Global.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
