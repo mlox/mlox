@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.56"
+Version = "0.57"
 
 import locale
 import os
@@ -856,7 +856,7 @@ class rule_parser:
                     break
             if progress != None:
                 pct = int(100*self.bytesread/inputsize)
-                if pct % 3 == 0:
+                if pct % 3 == 0 and pct < 100:
                     progress.Update(pct, pmsg)
             self.parse_dbg_indent = ""
             self.curr_rule = ""
