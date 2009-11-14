@@ -29,6 +29,7 @@ OPTIONS
  -i ids    only modify the records with ids matching the given comma-delimited
            list of regular expression patterns.
  -m regex  only modify records that match given regular expression.
+ -M regex  only modify records that do not match given regular expression.
  -s        only modify the subrecords that matched.
  -t types  only modify the records matching the given comma-delimited
            list of record types.
@@ -56,7 +57,7 @@ tes3cmd modify -s npc_.npc0 -m "Ring des Skeletts" -f myprogram quicksave.ess
 
 sub opts_modify {
     $_[0] && do { print $MODIFY_USAGE; exit(0); };
-    getopts('De:f:i:m:st:') or die $MODIFY_USAGE;
+    getopts('De:f:i:m:M:st:') or die $MODIFY_USAGE;
 }
 
 my $CELLNAMEPATCH_USAGE = q{Usage: tes3cmd cellnamepatch
@@ -106,6 +107,7 @@ OPTIONS
  -i ids    only delete the records with ids matching the given comma-delimited
            list of regular expression patterns.
  -m regex  only delete records that match given regular expression.
+ -M regex  only delete records that do not match given regular expression.
  -s        only delete the subrecords that matched.
  -t types  only delete the records matching the given comma-delimited
            list of record types.
@@ -131,7 +133,7 @@ tes3cmd delete -s npc_.npc0 -m "Ring des Skeletts" quicksave.ess
 
 sub opts_delete {
     $_[0] && do { print $DELETE_USAGE; exit(0); };
-    getopts('Di:m:st:') or die $DELETE_USAGE;
+    getopts('Di:m:M:st:') or die $DELETE_USAGE;
 }
 
 
@@ -235,6 +237,7 @@ OPTIONS
            list of regular expression patterns.
  -l        only list the ids of the records to be printed, instead of the entire record.
  -m regex  only print records that match given regular expression.
+ -M regex  only print records that do not match given regular expression.
  -n        do not print banner identifying the current plugin.
  -R        print raw records, instead of as text, as an .esp including a TES3 header.
  -r        print raw records, instead of as text.
@@ -863,11 +866,12 @@ sub indent_result {
     return("\t\t$str");
 }
 
-sub dbg_long {
+sub dbg_ulong {
     my($long) = @_;
     my $longstr = pack("L", $long);
-    sprintf qq{[%d (%s) (%d %d) (%d %d %d %d)]},
-	$long, unpack("H*", $longstr), unpack("S2", $longstr), unpack("C4", $longstr);
+    #, unpack("l", $longstr)
+    sprintf qq{[%s (%d)  (%d %d) (%d %d %d %d)]},
+	unpack("H*", $longstr), $long, unpack("S2", $longstr), unpack("C4", $longstr);
 }
 
 sub decode_flags {
@@ -888,12 +892,12 @@ sub dump_lookup {
 
 my $NREC;
 
-my $UNPACK_DEBUG = 
+my $UNPACK_UNKNOWN =
     sub { my $buff = $_[0];
-	  sprintf qq{DEBUG len:%d  hex:%s  str:"%s"}, length($buff),
+	  sprintf qq{len:%d  hex:%s  str:"%s"}, length($buff),
 	      unpack("H*", $buff), substr((($_ = $buff) =~ tr/\000-\037\177-\377//d, $_), 0, 60) };
-my $UNPACK_UNKNOWN = 
-    sub { "len:@{[length($_[0])]} hex:" . unpack("H*", $_[0]) . '  str:"' . substr((($_ = $_[0]) =~ tr/\000-\037\177-\377//d, $_), 0, 60) . '"' };
+my $UNPACK_DEBUG = sub { sprintf qq{DEBUG %s}, $UNPACK_UNKNOWN->($_[0]); };
+
 my $DIALTYPE;
 my %UNPACK =
     ("TES3.HEDR" => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack("fLZ32Z256L", $_[0]);
@@ -1129,7 +1133,7 @@ my %UNPACK =
 			      unpack("C8", $_[0]) },
      "REGN.CNAM" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack("C3", $_[0]) },
      "REGN.SNAM" => sub { "Chance: %3d  SoundName: %s", unpack("Z32C", $_[0]) },
-     "REGN.WNAM" => $UNPACK_UNKNOWN, # .ess
+     "REGN.WNAM" => sub { unpack("L", $_[0]); },
      "REPA.RIDT" => sub { sprintf "Weight: %0.2f  Value: %d  Uses: %d  Quality: %0.2f", unpack("fLLf", $_[0]); },
      "SCPT.RNAM" => sub { sprintf "Unk:%x", unpack("L", $_[0]) },
      "SCPT.SCDT" => sub { "(Compiled script data)" },
@@ -1149,13 +1153,13 @@ my %UNPACK =
 	 # SPDT is 160 bytes long
 	 my($type, $spell, $long2, $long3, $caster, $item) = unpack("LZ40L2Z32Z*", $_[0]);
 	 sprintf qq{Type: %s  Name: "%s"  long2:%s  long3: %d  caster: "%s"  Item: "%s"},
-	     $SPLM_TYPE{$type}, $spell, dbg_long($long2), $long3, $caster, $item;
+	     $SPLM_TYPE{$type}, $spell, dbg_ulong($long2), $long3, $caster, $item;
      },
      "SPLM.NPDT" => sub {
 	 # NPDT is 56 bytes long
 	 my($name, $mag, $long2, $long3, $long4) = unpack("Z40l4", $_[0]);
 	 sprintf qq{name: "%s"  magnitude: %d  long2:%s  long3: %d  long4: %d},
-	     $name, $mag, dbg_long($long2), $long3, $long4;
+	     $name, $mag, dbg_ulong($long2), $long3, $long4;
      },
      "SPLM.XNAM" => sub { sprintf "%d", unpack("L", $_[0]); },
      "SPLM.TNAM" => sub { sprintf "Target: %s", unpack("Z*", $_[0]); },
@@ -1165,6 +1169,12 @@ my %UNPACK =
      "WEAP.WPDT" => sub { my($wght, $value, $type, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $flags) = unpack("fLSSffSC6L", $_[0]);
 		      sprintf " Wght: %0.2f  Val: %d  Typ: %s  Hlth: %d  Spd: %0.2f  Rch: %0.2f\n\t\tEnchant_Points: %d  Chop: %d-%d  Slash: %d-%d Thrust: %d-%d  Flags: %s",
 			  $wght, $value, $WEAPON_TYPE{$type}, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $WEAPON_FLAGS{$flags}},
+     "VFXM.VNAM" => sub {
+	 my($long1, $long2, $long3, $long4, $long5, $long6, $short1, $hex1, $name2, $name3) =
+	     unpack("L6SZ22Z36Z68", $_[0]);
+	 sprintf "\n  long1:%s\n  long2:%s\n  long3:%s\n  long4:%s\n  long5:%s\n  long6:%s\n  short1:%d\n  unk1:[%s]\n  name2: %s\n  name3: %s\n",
+	     dbg_ulong($long1), dbg_ulong($long2), dbg_ulong($long3), dbg_ulong($long4), dbg_ulong($long5), dbg_ulong($long6), $short1, $UNPACK_UNKNOWN->($hex1), $name2, $name3;
+     },
 
      # The following are common subrecord formats
      DELE => sub { "DELETED" },
@@ -1206,7 +1216,7 @@ TEXT TNAM WNAM))
 
 sub opts_dump {
     $_[0] && do { print $DUMP_USAGE; exit(0); };
-    getopts('Di:lm:nRrs:t:') or die $DUMP_USAGE;
+    getopts('Di:lm:M:nRrs:t:') or die $DUMP_USAGE;
 }
 
 my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
@@ -2027,10 +2037,11 @@ sub cmd_delete {
 		if (not (%delete_subtypes and not $delete_subtypes{lc($full_type)})) {
 		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $UNPACK_UNKNOWN;
 		    my $subrec_str = $unpack->($subrec);
-		    if ($::opt_s and $::opt_m and $subrec_str =~ /$::opt_m/i) {
-			$match = 1;
-			print "DELETED SUBRECORD: $subrec_str\n";
+		    if ($::opt_s) {
+			$match = 1 if ($::opt_m and $subrec_str =~ /$::opt_m/i);
+			$match = 1 if ($::opt_M and $subrec_str !~ /$::opt_M/i);
 		    }
+		    print "DELETED SUBRECORD: $subrec_str\n" if ($match);
 		    $print_rec .= "   $full_type: $subrec_str\n";
 		}
 		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec) unless ($match);
@@ -2042,7 +2053,8 @@ sub cmd_delete {
 	if ($::opt_s) {
 	    write_rec($rec_type, $newrec, $unk, $flags);
 	} else {
-	    if ($print_rec =~ /$::opt_m/i) {
+	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
+		($::opt_M and $print_rec !~ /$::opt_M/i)) {
 		print "DELETED RECORD:\n$print_rec\n";
 	    } else {
 		write_rec($rec_type, $rec, $unk, $flags);
@@ -2124,12 +2136,15 @@ sub cmd_modify {
 		if (not (%modify_subtypes and not $modify_subtypes{lc($full_type)})) {
 		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $UNPACK_UNKNOWN;
 		    my $subrec_str = $unpack->($subrec);
-		    if ($::opt_s and $::opt_m and $subrec_str =~ /$::opt_m/i) {
-			$match = 1;
-			# subrecord matches, so run our code on it ...
-			if ((my $newsubrec = run_code($subrec)) ne $subrec) {
+		    if ($::opt_s) {
+			$match = 1 if ($::opt_m and $subrec_str =~ /$::opt_m/i);
+			$match = 1 if ($::opt_M and $subrec_str !~ /$::opt_M/i);
+			if ($match) {
+			    # subrecord matches, so run our code on it ...
+			    if ((my $newsubrec = run_code($subrec)) ne $subrec) {
+				$subrec = $newsubrec;
+			    }
 			    print "MODIFIED SUBRECORD: $subrec_str\n";
-			    $subrec = $newsubrec;
 			}
 		    }
 		    $print_rec .= "   $full_type: $subrec_str\n";
@@ -2143,7 +2158,8 @@ sub cmd_modify {
 	if ($::opt_s) {
 	    write_rec($rec_type, $newrec, $unk, $flags);
 	} else {
-	    if ($print_rec =~ /$::opt_m/i) {
+	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
+		($::opt_M and $print_rec !~ /$::opt_M/i)) {
 		if ((my $newrec = run_code($rec)) ne $rec) {
 		    print "MODIFIED RECORD:\n$print_rec\n";
 		    $rec = $newrec;
@@ -2236,7 +2252,8 @@ sub cmd_dump {
 	$n = 0 if ($rec_type eq "TES3");
 	my $name_idx;
 	my $print_rec = rec_to_string($rec, $rec_type, $plugin, $flags, $unk, $n, $wanted_subtypes);
-	next if ($::opt_m and not $print_rec =~ /$::opt_m/i);
+	next if ($::opt_m and $print_rec !~ /$::opt_m/i);
+	next if ($::opt_M and $print_rec =~ /$::opt_M/i);
 	if ($print_rec and $plugin_banner) {
 	    print $plugin_banner;
 	    $plugin_banner = undef;
