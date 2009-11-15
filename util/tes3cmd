@@ -1136,7 +1136,7 @@ my %UNPACK =
      "REGN.WNAM" => sub { unpack("L", $_[0]); },
      "REPA.RIDT" => sub { sprintf "Weight: %0.2f  Value: %d  Uses: %d  Quality: %0.2f", unpack("fLLf", $_[0]); },
      "SCPT.RNAM" => sub { sprintf "Unk:%x", unpack("L", $_[0]) },
-     "SCPT.SCDT" => sub { "(Compiled script data)" },
+     "SCPT.SCDT" => sub { if (DBG) { unpack("H*", $_[0]) } else { "(Compiled script data)" }; },
      "SCPT.SCHD" => sub { sprintf "Name: %s  NumShorts: %d  NumLongs: %d  NumFloats: %d  ScriptDataSize: %d  LongVarSize: %d",
 			      unpack("Z32LLLLL", $_[0]); },
      "SCPT.SCVR" => sub { "Script Variables: " . join(',', split(/\000/, unpack('a*', $_[0]))) },
@@ -1435,7 +1435,7 @@ sub write_header_field {
 }
 
 my @REC_FLAGS = ([0x0020, "Deleted"],
-		 [0x0400, "Persistant"],
+		 [0x0400, "Persistent"],
 		 [0x1000, "Ignored"],
 		 [0x2000, "Blocked"]);
 
