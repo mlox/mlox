@@ -36,7 +36,7 @@ OPTIONS
  -f file   specify a file that contain Perl code to run on each matched record.
  -e 'code' specify a string of Perl code to run on each matched record.
 
-Modifys records/subrecords from the plugin. You can really damage things with
+Modifies records/subrecords from the plugin. You can really damage things with
 this command, so be careful!
 
 Note: tes3cmd uses Perl regular expressions for matching, the full documentation
@@ -892,39 +892,561 @@ sub dump_lookup {
 
 my $NREC;
 
-my $UNPACK_UNKNOWN =
+my %DECODE = ();
+my %ENCODE = ();
+my %RD = ();			# TBD switch to using the info from DECODE and get rid of RD
+sub compile_def {
+    my(@def) = @_;
+    my $format = "";
+    foreach my $ref (@def) {
+	$format .= $ref->[1];
+    }
+    return($format);
+}
+sub default_decoder {
+    my(@def) = @_;
+    my $cdef = compile_def(@def);
+    my $decoder = sub {
+	my($buff) = @_;
+	my %hr;
+	my %idx;
+	my $index = 0;
+	my @keys = map { $_->[0]; } @def;
+        my @vals = unpack($cdef, $buff);
+	foreach my $val (@vals) {
+	    my $key = shift(@keys);
+	    while (ref($key) eq 'ARRAY') {
+	    	unshift(@keys, @$key);
+		$key = shift(@keys);
+	    }
+	    my $n = 2;
+	    while (exists $hr{$key}) {
+	    	$key =~ s/_\d+$/_/;
+		$key .= $n++;
+	    }
+	    $hr{$key} = $val;
+	    $idx{$key} = $index++;
+	}
+	return(\%hr, \%idx);
+    };
+    return($decoder);
+};
+sub default_encoder {
+    my(@def) = @_;
+    my $cdef = compile_def(@def);
+    my $encoder = sub {
+	my($hr, $idx) = @_;
+	my @rec = ();
+	while (my($key, $val) = each %$hr) {
+	    $rec[$idx->{$key}] = $val;
+	}
+	return(pack($cdef, @rec));
+    };
+    return($encoder);
+};
+sub default_codec {
+    my($type, @def) = @_;
+    $DECODE{$type} = default_decoder(@def);
+    $ENCODE{$type} = default_encoder(@def);
+    $RD{$type} = compile_def(@def); # for transitional code
+}
+default_codec('TES3.HEDR', (["Version", "f"],
+			    ["Unknown", "L"],
+			    ["Author", "Z32"],
+			    ["Description", "Z256"],
+			    ["N-Records", "L"]));
+default_codec('TES3.MAST', (["Master", "Z*"]));
+
+# custom codec for TES3.DATA
+$DECODE{'TES3.DATA'} = sub {
+    my($buff) = @_;
+    my($l1, $l2) = unpack("L2", $buff);
+    return({ Length => $l1 + ($l2 << 32) },
+	   {});			# indices not needed by custom encoder
+};
+$ENCODE{'TES3.DATA'} = sub {
+    my($hr, $idx) = @_;
+    my $len = $hr->{Length};
+    my $l1 = $len & 0xffffffff;
+    my $l2 = $len >> 32;
+    return(pack("L2", $l1, $l2));
+};
+
+default_codec('ALCH.ALDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Autocalc", "L"]));
+default_codec('APPA.AADT', (["Type", "L"],
+			    ["Quality", "f"],
+			    ["Weight", "f"],
+			    ["Value", "L"]));
+default_codec('ARMO.AODT', (["Type", "L"],
+			    ["Weight", "f"],
+			    ["Value", "L"],
+			    ["Health", "L"],
+			    ["Enchant_Points", "L"],
+			    ["Armor_Rating", "L"]));
+default_codec('ARMO.INDX', (["Index", "C"]));
+default_codec('BODY.BYDT', (["Body_Part", "C"],
+			    ["Vampire", "C"],
+			    ["Flags", "C"],
+			    ["Part_Type", "C"]));
+default_codec('BOOK.BKDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Scroll", "L"],
+			    ["Skill", "L"],
+			    ["Enchant_Points", "L"]));
+default_codec('CELL.AMBI', (["Ambient_Color", "l"],
+			    ["Sunlight_Color", "l"],
+			    ["Fog_Color", "l"],
+			    ["Fog_Density", "f"]));
+default_codec('CELL.CSTN', (["Target", "Z*"])); # guessing this is: "cast spell target name"
+
+# custom codec for CELL_DATA
+$DECODE{'CELL_DATA'} = sub {
+    my($buff) = @_;
+    if (length($buff) == 24) {
+	my($x, $y, $z, $xrot, $yrot, $zrot) = unpack("f6", $buff);
+	return({ X => $x, Y => $y, Z => $z,
+		 X_angle => $xrot, Y_angle => $yrot, Z_angle => $zrot },
+	       {});		# indices not needed by custom encoder
+    } else {
+	my($flags, $fog) = unpack("Lx[L]f", $buff);
+	if ($flags & 0x01) { 	# Interior
+	    return({ Flags => $flags, Fog_Density => $fog },
+		   {});		# indices not needed by custom encoder
+	} else {		# Exterior
+	    my($x, $y) = unpack("x[L]ll", $buff);
+	    return({ Flags => $flags, X => $x, Y => $y },
+		   {});		# indices not needed by custom encoder
+	}
+    }
+};
+$ENCODE{'CELL_DATA'} = sub {
+    my($hr, $idx) = @_;
+    if (exists $hr->{Flags}) {
+	if ($hr->{Flags} & 0x01) { # Interior
+	    return(pack("Lx[L]f", $hr->{Flags}, $hr->{Fog_Density}));
+	} else {		     # Exterior
+	    return(pack("Lll", $hr->{Flags}, $hr->{X}, $hr->{Y}));
+	}
+    } else {
+	return(pack("f6", $hr->{X}, $hr->{Y}, $hr->{Z},
+		    $hr->{X_angle}, $hr->{Y_angle}, $hr->{Z_angle}));
+    }
+};
+
+default_codec('CELL.FRMR', (["ObjInd", "Sx[C]"],
+			    #["Unknown", "C"],
+			    ["ModInd", "C"]));
+default_codec('CELL.NAM5', (["R", "C"],
+			    ["G", "C"],
+			    ["B", "C"])); # Map Color
+default_codec('CELL.NAM9', (["Owner", "L"]));
+default_codec('CLAS.CLDT', (["Primary_Attribute", "L"],
+			    ["Secondary_Attribute", "L"],
+			    ["Specialization", "L"],
+			    [[("Minor_Skill_1", "Major_Skill_1") x 5], "(L2)5"],
+			    ["Flags", "L"],
+			    ["AutoCalc", "L"]));
+default_codec('CLOT.CTDT', (["Type", "L"],
+			    ["Weight", "f"],
+			    ["Value", "S"],
+			    ["Enchant_Points", "S"]));
+default_codec('CLOT.INDX', (["Index", "C"]));
+default_codec('CONT.CNDT', (["Weight", "f"]));
+default_codec('CONT.FLAG', (["Container_Flags", "L"]));
+default_codec('CREA.AI_W', (["Distance", "S"],
+			    ["Duration", "C"],
+			    ["Time_of_day", "C"],
+			    [[("Idle_1") x 10], "C10"]));
+default_codec('CREA.AIDT', ([[("AI_1") x 12], "C12"]));
+default_codec('CREA.FLAG', (["Flags", "L"]));
+default_codec('CREA.NPDT', (["Type", "L"],
+			    ["Lev", "L"],
+			    ["Str", "L"],
+			    ["Int", "L"],
+			    ["Wil", "L"],
+			    ["Agi", "L"],
+			    ["Spd", "L"],
+			    ["End", "L"],
+			    ["Per", "L"],
+			    ["Lck", "L"],
+			    ["Health", "L"],
+			    ["Spell_Points", "L"],
+			    ["Fatigue", "L"],
+			    ["Soul", "L"],
+			    ["Combat", "L"],
+			    ["Magic", "L"],
+			    ["Stealth", "L"],
+			    ["Attack_1_Min", "L"],
+			    ["Attack_1_Max", "L"],
+			    ["Attack_2_Min", "L"],
+			    ["Attack_2_Max", "L"],
+			    ["Attack_3_Min", "L"],
+			    ["Attack_3_Max", "L"],
+			    ["Gold", "L"]));
+default_codec('DIAL.DATA', (["Type", "C"]));
+default_codec('ENCH.ENDT', (["Type", "L"],
+			    ["Cost", "L"],
+			    ["Charge", "L"],
+			    ["Autocalc", "L"]));
+default_codec('ENCH.ENAM', (["Spell_Effect", "S"],
+			    ["Skill", "C"],
+			    ["Attribute", "C"],
+			    ["Range", "L"],
+			    ["Area", "L"],
+			    ["Duration", "L"],
+			    ["MagMin", "L"],
+			    ["MagMax", "L"]));
+default_codec('FACT.FADT', (["Primary_Attribute", "L"],
+			    ["Secondary_Attribute", "L"],
+			    [[("At1_1", "At2_1", "Sk1_1", "Sk2_1", "Fact_1") x 10], "(L5)10"],
+			    [[("Sk_1") x 6], "L6"],
+			    ["Unknown", "L"],
+			    ["Flags", "L"]));
+#			  foreach my $rd (unpack("(a20)10", $rankdata)) {
+#			      my($at1, $at2, $sk1, $sk2, $fact) = unpack("L5", $rd);
+#			      push(@results, sprintf "\t\tAttr_1: %3d  Attr_2: %3d  Skill_1: %3d  Skill_2: %3d  Fact: %3d",
+#				  $at1, $at2, $sk1, $sk2, $fact);
+#			  }
+#			  join("\n", @results);
+
+default_codec('GMST.NAME', (["Name", "A*"]));
+default_codec('INFO.ACDT', (["Actor_Data", "Z*"])); # (only in .ess)
+default_codec('INFO.INAM', (["Name", "Z*"]));
+default_codec('INFO.DATA', (#["Unknown", "L"],
+			    ["Disposition", "x[L]L"],
+			    ["Rank", "C"],
+			    ["Sex", "C"],
+			    ["PCRank", "C"]));
+default_codec('INFO.ANAM', (["Cell", "Z*"]));
+default_codec('INFO.BNAM', (["Result", "Z*"]));
+default_codec('INFO.CNAM', (["Class", "Z*"]));
+default_codec('INFO.DNAM', (["PC_Faction", "Z*"]));
+default_codec('INFO.FNAM', (["Faction", "Z*"]));
+default_codec('INFO.NAME', (["Response", "Z*"]));
+default_codec('INFO.NNAM', (["Next_ID", "Z*"]));
+default_codec('INFO.ONAM', (["Actor", "Z*"]));
+default_codec('INFO.PNAM', (["Prev_ID", "Z*"]));
+default_codec('INFO.RNAM', (["Race", "Z*"]));
+default_codec('INFO.QSTN', (["Quest_Name", "C"]));
+default_codec('INFO.QSTF', (["Quest_Finished", "C"]));
+default_codec('INFO.QSTR', (["Quest_Restart", "C"]));
+default_codec('INFO.SCVR', (["Index", "a"],
+			    ["Type", "a"],
+			    ["Function", "a2"],
+			    ["Comparison", "a"],
+			    ["Name", "Z*"]));
+default_codec('INGR.IRDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    [[("Effect_1") x 4], "l4"],
+			    [[("Skill_1") x 4], "l4"],
+			    [[("Attribute_1") x 4], "l4"]));
+default_codec('LAND.INTV', (["X", "l"],
+			    ["Y", "l"]));
+default_codec('LEVC.DATA', (["List_Data", "L"]));
+default_codec('LEVC.INTV', (["Level", "S"]));
+default_codec('LEVC.NNAM', (["Chance_None", "C"]));
+default_codec('LEVI.DATA', (["List_Data", "L"]));
+default_codec('LEVI.INTV', (["Level", "S"]));
+default_codec('LEVI.INAM', (["Name", "Z*"]));
+default_codec('LEVI.NNAM', (["Chance_None", "C"]));
+default_codec('LIGH.LHDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Time", "L"],
+			    ["Radius", "L"],
+			    ["Red", "C"],
+			    ["Green", "C"],
+			    ["Blue", "C"],
+			    ["Unknown", "C"],
+			    ["Flags", "L"]));
+default_codec('LOCK.LKDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Quality", "f"],
+			    ["Uses", "L"]));
+default_codec('LTEX.DATA', (["Data", "Z*"]));
+default_codec('MGEF.MEDT', (["School", "L"],
+			    ["Base_Cost", "f"],
+			    ["Flags", "L"],
+			    ["Red", "L"],
+			    ["Green", "L"],
+			    ["Blue", "L"],
+			    ["Speed", "f"],
+			    ["Size", "f"],
+			    ["SizeCap", "f"]));
+default_codec('MISC.MCDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Unknown", "L"]));
+default_codec('NPC_.CNDT', (["Data", "Z*"]));
+default_codec('NPC_.FLAG', (["Flags", "L"]));
+default_codec('NPC_.AIDT', (["Hello", "C"],
+			    ["Unknown", "C"],
+			    ["Fight", "C"],
+			    ["Flee", "C"],
+			    ["Alarm", "C"],
+			    [[("Unknown_1") x 3], "C3"],
+			    ["Flags", "L"]));
+default_codec('NPC_.AI_W', (["Distance", "S"],
+			    ["Duration", "S"],
+			    ["Time_of_day", "C"],
+			    [[("Idle_1") x 8], "C8"],
+			    ["Unknown", "C"]));
+
+$DECODE{'NPC_.NPDT'} = sub {
+    my($buff) = @_;
+    my %hr;
+    my $len = length($buff);
+    if ($len == 12) {
+	my($lev, $disp, $fact, $rank, $gold) = unpack("SC3x[C3]L", $_[0]);
+	return({ Level => $lev, Disposition => $disp, Faction => $fact, Rank => $rank, Gold => $gold },
+	       {});
+    } elsif ($len == 52) {
+	my $i = 0;
+	my %hr;
+	foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
+	    $hr{$SKILL{$i++}} = $skill_level;
+	}
+	($hr{Level}, $hr{Str}, $hr{Int}, $hr{Wil}, $hr{Agi}, $hr{Spd}, $hr{End},
+	 $hr{Per}, $hr{Lck}, $hr{Rep}, $hr{Health}, $hr{Magicka}, $hr{Fatigue},
+	 $hr{Disposition}, $hr{Faction}, $hr{Rank}, $hr{Gold}) = unpack("SC8x[C27]CSSSCCCCxCL", $buff);
+	return(\%hr, {});
+    } else {
+	warn "BAD NPC_.NPDT length ($len) is not 12 or 52!\n";
+    }
+};
+$ENCODE{'NPC_.NPDT'} = sub {
+    my($hr, $idx) = @_;
+    if (exists $hr->{Magicka}) {
+	return(pack("SC8C27CSSSCCCCxCL",
+		    $hr->{Level}, $hr->{Str}, $hr->{Int}, $hr->{Wil}, $hr->{Agi},
+		    $hr->{Spd}, $hr->{End}, $hr->{Per}, $hr->{Lck},
+		    $hr->{"Block"}, $hr->{"Armorer"}, $hr->{"MediumArmor"}, $hr->{"HeavyArmor"},
+		    $hr->{"BluntWeapon"}, $hr->{"LongBlade"}, $hr->{"Axe"}, $hr->{"Spear"},
+		    $hr->{"Athletics"}, $hr->{"Enchant"}, $hr->{"Destruction"}, $hr->{"Alteration"},
+		    $hr->{"Illusion"}, $hr->{"Conjuration"}, $hr->{"Mysticism"}, $hr->{"Restoration"},
+		    $hr->{"Alchemy"}, $hr->{"Unarmored"}, $hr->{"Security"}, $hr->{"Sneak"},
+		    $hr->{"Acrobatics"}, $hr->{"LightArmor"}, $hr->{"ShortBlade"}, $hr->{"Marksman"},
+		    $hr->{"Mercantile"}, $hr->{"SpeechCraft"}, $hr->{"HandToHand"},
+		    $hr->{Rep}, $hr->{Health}, $hr->{Magicka}, $hr->{Fatigue},
+		    $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold}));
+    } else {
+	return(pack("SC3x[C3]L", $hr->{Level}, $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold}));
+    }
+};
+
+#     "PCDT.SNAM" => $TOSTR_UNKNOWN, # .ess
+#     "PCDT.ENAM" => $TOSTR_UNKNOWN, # .ess
+#     "PCDT.FNAM" => $TOSTR_UNKNOWN, # .ess
+
+default_codec('PROB.PBDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Quality", "f"],
+			    ["Uses", "L"]));
+default_codec('QUES.DATA', (["Info_ID", "Z*"])); # only in .ess (relates back to Actor in INFO)
+default_codec('RACE.RADT', ([[("Skill_1", "Bonus_1") x 7]],
+			    [[("Attr_Male_1", "Attr_Female_1") x 8]],
+			    ["Male_Height", "f"],
+			    ["Female_Height", "f"],
+			    ["Male_Weight", "f"],
+			    ["Female_Weight", "f"],
+			    ["Flags", "L"]));
+default_codec('REGN.WEAT', (["Clear", "C"],
+			    ["Cloudy", "C"],
+			    ["Foggy", "C"],
+			    ["Overcast", "C"],
+			    ["Rain", "C"],
+			    ["Thunder", "C"],
+			    ["Ash", "C"],
+			    ["Blight", "C"]));
+default_codec('REGN.CNAM', (["Red", "C"],
+			    ["Green", "C"],
+			    ["Blue", "C"]));
+default_codec('REGN.SNAM', (["Sound_Name", "Z32"],
+			    ["Chance", "C"]));
+default_codec('REGN.WNAM', (["Name", "L"]));
+default_codec('REPA.RIDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Uses", "L"],
+			    ["Quality", "f"]));
+default_codec('SCPT.RNAM', (["Unknown", "L"]));
+default_codec('SCPT.SCDT', (["Bytecode", "H*"]));
+default_codec('SCPT.SCHD', (["Name", "Z32"],
+			    ["Num_Shorts", "L"],
+			    ["Num_Longs", "L"],
+			    ["Num_Floats", "L"],
+			    ["Data_Size", "L"],
+			    ["Long_Var_Size", "L"]));
+default_codec('SCPT.SCVR', (["Variables", "a*"]));
+default_codec('SCPT.SCTX', (["Script", "Z*"]));
+default_codec('SKIL.SKDT', (["Attribute", "L"],
+			    ["Specialization", "L"],
+			    [[("Use_Values_1") x 4], "f4"]));
+default_codec('SNDG.DATA', (["Data", "L"]));
+default_codec('SPEL.SPDT', (["Type", "L"],
+			    ["Cost", "L"],
+			    ["Flags", "L"]));
+default_codec('SPLM.NAME', (["Name", "L"]));
+default_codec('SPLM.SPDT', (["Type", "L"],
+			    ["Name", "Z40"],
+			    [[("Long_1") x 2, "L2"]],
+			    ["Caster", "Z32"],
+			    ["Item", "Z*"]));
+default_codec('SPLM.NPDT', (["Name", "Z40"],
+			    ["Magnitude", "l"],
+			    [[("Long_1") x 3], "l3"]));
+default_codec('SPLM.XNAM', (["Name", "L"]));
+default_codec('SPLM.TNAM', (["Target", "Z*"]));
+default_codec('SOUN.DATA', (["Volume", "C"],
+			    ["MinRange", "C"],
+			    ["MaxRange", "C"]));
+default_codec('SSCR.DATA', (["Name", "Z*"]));
+default_codec('STLN.ONAM', (["Name", "Z*"]));
+default_codec('WEAP.WPDT', (["Weight", "f"],
+			    ["Value", "L"],
+			    ["Type", "S"],
+			    ["Health", "S"],
+			    ["Speed", "f"],
+			    ["Reach", "f"],
+			    ["Enchant_Points", "S"],
+			    ["Chop_Min", "C"],
+			    ["Chop_Max", "C"],
+			    ["Slash_Min", "C"],
+			    ["Slash_Max", "C"],
+			    ["Thrust_Min", "C"],
+			    ["Thrust_Max", "C"],
+			    ["Flags", "L"]));
+default_codec('VFXM.VNAM', ([[("Long_1") x 6], "L6"],
+			    ["Short", "S"],
+			    ["Unknown", "H22"],
+			    ["Name_2", "Z36"],
+			    ["Name_3", "Z68"]));
+#default_codec('DELE', (["DELETED"]));
+default_codec('DODT', (["X", "f"],
+		       ["Y", "f"],
+		       ["Z", "f"],
+		       ["Angle_X", "f"],
+		       ["Angle_Y", "f"],
+		       ["Angle_Z", "f"]));
+default_codec('FLAG', (["Flags", "L"]));
+default_codec('NPCO', (["Count", "l"],
+		       ["Name", "Z*"]));
+default_codec('XCHG', (["Enchant_Charge", "L"]));
+default_codec('XHLT', (["Health", "L"]));
+default_codec('XSCL', (["Scale", "f"]));
+default_codec('XSOL', (["Soul", "Z*"]));
+default_codec('WIDX', (["Equipped_Index", "l"],
+		       ["Ammo_Flag", "l"]));
+default_codec('SLCS', (["Shorts", "L"],
+		       ["Longs", "L"],
+		       ["Floats", "L"]));
+
+$DECODE{'SLSD'} = sub {
+    my($buff) = @_;
+    my $i = 1;
+    my %hr;
+    foreach (unpack("s*", $buff)) {
+        $hr{$i} = $_;
+    }
+    return(\%hr, {});
+};
+$ENCODE{'SLSD'} = sub {
+    my($hr, $idx) = @_;
+    my @vals;
+    foreach my $key (sort { $a <=> $b } keys %$hr) { unshift(@vals, $key); }
+    return(pack("s*", @vals));
+};
+
+$DECODE{'SLLD'} = sub {
+    my($buff) = @_;
+    my $i = 1;
+    my %hr;
+    foreach (unpack("l*", $buff)) { $hr{$i} = $_; }
+    return(\%hr, {});
+};
+$ENCODE{'SLLD'} = sub {
+    my($hr, $idx) = @_;
+    my @vals;
+    foreach my $key (sort { $a <=> $b } keys %$hr) { unshift(@vals, $key); }
+    return(pack("l*", @vals));
+};
+
+$DECODE{'SLFD'} = sub {
+    my($buff) = @_;
+    my $i = 1;
+    my %hr;
+    foreach (unpack("f*", $buff)) { $hr{$i} = $_; }
+    return(\%hr, {});
+};
+$ENCODE{'SLFD'} = sub {
+    my($hr, $idx) = @_;
+    my @vals;
+    foreach my $key (sort { $a <=> $b } keys %$hr) { unshift(@vals, $key); }
+    return(pack("f*", @vals));
+};
+
+$DECODE{"SPEL.ENAM"} = $DECODE{"ENCH.ENAM"};
+$ENCODE{"SPEL.ENAM"} = $ENCODE{"ENCH.ENAM"};
+
+# subrecords that decode as signed 32-bit longs:
+foreach (qw(INTV)) {
+    $DECODE{$_} = sub{ return({ IntVal => unpack("l", $_[0]) }, {}); };
+    $ENCODE{$_} = sub{ pack("l", $_[0]->{IntVal} );
+    };
+}
+
+# subrecords that decode as unsigned 32-bit longs:
+foreach (qw(INDX NAM0 XIDX)) {
+    $DECODE{$_} = sub{ return({ IntVal => unpack("L", $_[0]) }, {}); };
+    $ENCODE{$_} = sub{ pack("L", $_[0]->{IntVal} ); };
+}
+
+# subrecords that decode as 32-bit floats:
+foreach (qw(FLTV WHGT)) {
+    $DECODE{$_} = sub{ return({ FloatVal => unpack("f", $_[0]) }, {}); };
+    $ENCODE{$_} = sub{ pack("f", $_[0]->{FloatVal} ); };
+}
+
+# subrecords that decode as variable length Z-strings:
+foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM
+HSND HVFX ITEX KNAM LSTN MNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
+TEXT TNAM WNAM)) {
+    $DECODE{$_} = sub{ return({ String => unpack("Z*", $_[0]) }, {}); };
+    $ENCODE{$_} = sub{ pack("Z*", $_[0]->{String} ); };
+}
+
+my $TOSTR_UNKNOWN =
     sub { my $buff = $_[0];
 	  sprintf qq{len:%d  hex:%s  str:"%s"}, length($buff),
 	      unpack("H*", $buff), substr((($_ = $buff) =~ tr/\000-\037\177-\377//d, $_), 0, 60) };
-my $UNPACK_DEBUG = sub { sprintf qq{DEBUG %s}, $UNPACK_UNKNOWN->($_[0]); };
+my $TOSTR_DEBUG = sub { sprintf qq{DEBUG %s}, $TOSTR_UNKNOWN->($_[0]); };
 
 my $DIALTYPE;
-my %UNPACK =
-    ("TES3.HEDR" => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack("fLZ32Z256L", $_[0]);
+my %TOSTR =
+    ("TES3.HEDR" => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack($RD{'TES3.HEDR'}, $_[0]);
 			  $NREC = $nrec;
 			  qq{  Ver:$ver  Unk:$unk\n\t\tAuthor:"$auth"\n\t\tDescription:"$desc"\n\t\tNRec:$NREC}; },
-     "TES3.MAST" => sub { unpack("Z*", $_[0]) },
-     "TES3.DATA" => sub { my($l1, $l2) = unpack("LL", $_[0]);
+     "TES3.MAST" => sub { unpack($RD{'TES3.MAST'}, $_[0]) },
+     "TES3.DATA" => sub { my($l1, $l2) = unpack($RD{'TES3.DATA'}, $_[0]);
 			  my $size = $l1 + ($l2 << 32);
 			  "Length:     $size"; },
-     "ALCH.ALDT" => sub { sprintf "Weight: %0.2d  Value: %d  Autocalc: %d", unpack("fLL", $_[0]) },
-     "APPA.AADT" => sub { my($type, $qual, $wght, $val) = unpack("LffL", $_[0]);
+     "ALCH.ALDT" => sub { sprintf "Weight: %0.2d  Value: %d  Autocalc: %d", unpack($RD{'ALCH.ALDT'}, $_[0]) },
+     "APPA.AADT" => sub { my($type, $qual, $wght, $val) = unpack($RD{'APPA.AADT'}, $_[0]);
 			  sprintf "Type: %s  Quality: %0.2f  Weight: %0.2f  Value: %d",
 			      $APPARATUS_TYPE{$type}, $qual, $wght, $val },
-     "ARMO.AODT" => sub { my($type, $wght, $value, $health, $epts, $armor) = unpack("LfLLLL", $_[0]);
+     "ARMO.AODT" => sub { my($type, $wght, $value, $health, $epts, $armor) = unpack($RD{'ARMO.AODT'}, $_[0]);
 			  sprintf "Type: %s  Weight: %0.2f  Value: %d  Health %d  Enchant_Points: %d  ArmorRating: %d",
 			      $ARMOR_TYPE{$type}, $wght, $value, $health, $epts, $armor},
-     "ARMO.INDX" => sub { $ARMOR_INDEX{unpack("C", $_[0])} },
-     "BODY.BYDT" => sub { my($part, $vamp, $flags, $ptype) = unpack("C4", $_[0]);
+     "ARMO.INDX" => sub { $ARMOR_INDEX{unpack($RD{'ARMO.INDX'}, $_[0])} },
+     "BODY.BYDT" => sub { my($part, $vamp, $flags, $ptype) = unpack($RD{'BODY.BYDT'}, $_[0]);
 			  sprintf "Bodypart: %s  Vampire: %d  Flag: %s  PartType: %s",
 			      $BYDT_PART{$part}, $vamp, dump_lookup($flags, \%BYDT_FLAGS), $BYDT_PTYP{$ptype}
 		      },
-     "BOOK.BKDT" => sub { my($wght, $val, $scrl, $skil, $epts) = unpack("fLLLL", $_[0]);
-			  sprintf "Weight: %0.2f  Value: %d  Scroll: %s  Enchant_Points: %d",
+     "BOOK.BKDT" => sub { my($wght, $val, $scrl, $skil, $epts) = unpack($RD{'BOOK.BKDT'}, $_[0]);
+			  sprintf "Weight: %0.2f  Value: %d  Scroll: %s  Skill: %d  Enchant_Points: %d",
 			      $wght, $val, (1 == $scrl) ? "Yes" : "No", $skil, $epts },
      "CELL.AMBI" => sub { sprintf("Ambient Color: 0x%08x  Sunlight Color: 0x%08x  Fog Color: 0x%08x  Fog Density: %0.2f",
-				unpack("lllf", $_[0])); },
-     "CELL.CSTN" => sub { sprintf "Target: %s", unpack("Z*", $_[0]); }, # guess this is: "cast spell target name"
+				unpack($RD{'CELL.AMBI'}, $_[0])); },
+     "CELL.CSTN" => sub { sprintf "Target: %s", unpack($RD{'CELL.CSTN'}, $_[0]); },
      "CELL.DATA" => sub {
 	 if (length($_[0]) == 24) {
 	     sprintf("Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack("f6", $_[0]));
@@ -945,11 +1467,11 @@ my %UNPACK =
 	     $coord . $data_fog_str . $flags_str;
 	 }
      },
-     "CELL.FRMR" => sub { sprintf "ObjInd: %d ModInd: %d", unpack("Sx[C]C", $_[0]); },
-     "CELL.NAM5" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack("C3", $_[0]) },
-     "CELL.NAM9" => sub { my $val = unpack("L", $_[0]); (1 == $val) ? "Owner" : "Unk:$val"; },
+     "CELL.FRMR" => sub { sprintf "ObjInd: %d ModInd: %d", unpack($RD{'CELL.FRMR'}, $_[0]); },
+     "CELL.NAM5" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'CELL.NAM5'}, $_[0]) },
+     "CELL.NAM9" => sub { my $val = unpack($RD{'CELL.NAM9'}, $_[0]); (1 == $val) ? "Owner" : "Unk:$val"; },
      "CLAS.CLDT" => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
-			      unpack("L15", $_[0]);
+			      unpack($RD{'CLAS.CLDT'}, $_[0]);
 			  "  " . join("\n\t\t",
 				      "Primary Attribute:   $ATTRIBUTE{$attr1}",
 				      "Secondary Attribute: $ATTRIBUTE{$attr2}",
@@ -967,30 +1489,30 @@ my %UNPACK =
 				      "Flags: " . (($flags) ? "Playable" : "Non-playable"),
 				      "AutoCalc Flags: " . decode_flags($autoflags, \@AUTOCALC_FLAGS));
 		      },
-     "CLOT.CTDT" => sub { my($type, $wght, $value, $epts) = unpack("LfSS", $_[0]);
+     "CLOT.CTDT" => sub { my($type, $wght, $value, $epts) = unpack($RD{'CLOT.CTDT'}, $_[0]);
 			  sprintf "Type: %s  Weight: %0.2f  Value: %d  Enchant_Points: %d",
 			      $CTDT_TYPE{$type}, $wght, $value, $epts },
-     "CLOT.INDX" => sub { unpack("C", $_[0]) },
-     "CONT.CNDT" => sub { sprintf "Weight: %0.2f", unpack("f", $_[0]) },
-     "CONT.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CONTAINER_FLAGS) },
-     "CREA.AI_W" => sub { my($dist, $dur, $time, $idles) = unpack("SCCa10", $_[0]);
-			  my $idle = join(", ", unpack("C10", $idles));
-			  sprintf "Distance: %d  Duration: %d  Time_of_day: $time, Idles: $idle",
-			      $dist, $dur, $time, $idle },
-     "CREA.AIDT" => sub { join(", ", unpack("C12", $_[0])) },
-     "CREA.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@CREATURE_FLAGS) },
+     "CLOT.INDX" => sub { unpack($RD{'CLOT.INDX'}, $_[0]) },
+     "CONT.CNDT" => sub { sprintf "Weight: %0.2f", unpack($RD{'CONT.CNDT'}, $_[0]) },
+     "CONT.FLAG" => sub { decode_flags(unpack($RD{'CONT.FLAG'}, $_[0]), \@CONTAINER_FLAGS) },
+     "CREA.AI_W" => sub { my($hr, $idx) = $DECODE{'CREA.AI_W'}->($_[0]);
+			  my $idle = join(", ", map { $hr->{"Idle_$_"} } 1..10);
+			  sprintf "Distance: %d  Duration: %d  Time_of_day: %d, Idles: $idle",
+			      $hr->{Distance}, $hr->{Duration}, $hr->{Time_of_day} },
+     "CREA.AIDT" => sub { join(", ", unpack($RD{'CREA.AIDT'}, $_[0])) },
+     "CREA.FLAG" => sub { decode_flags(unpack($RD{'CREA.FLAG'}, $_[0]), \@CREATURE_FLAGS) },
      "CREA.NPDT" => sub { my($typ_i, $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
 			     $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
-			     $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold) = unpack("L24", $_[0]);
+			     $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold) = unpack($RD{'CREA.NPDT'}, $_[0]);
 			  sprintf "Type: %s  Lev: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tHealth: %d  SpellPts: %d  Fatigue: %d  Soul: %d  Combat: %d  Magic: %d  Stealth: %d\n\t\tAttack-1 (%d, %d)  Attack-2: (%d, %d)  Attack-3 (%d, %d)  Gold: %d",
 			      $CREA_TYPE[$typ_i], $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
 				  $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
 				      $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold;
 		      },
-     "DIAL.DATA" => sub { $DIALTYPE = $DIAL_TYPE{unpack("C", $_[0])}; },
-     "ENCH.ENDT" => sub { my($type, $cost, $chrg, $auto) = unpack("LLLL", $_[0]);
+     "DIAL.DATA" => sub { $DIALTYPE = $DIAL_TYPE{unpack($RD{'DIAL.DATA'}, $_[0])}; },
+     "ENCH.ENDT" => sub { my($type, $cost, $chrg, $auto) = unpack($RD{'ENCH.ENDT'}, $_[0]);
 		      sprintf "Type: %s  Cost: %d  Charge: %d  Autocalc: %d", $ENCHANT_TYPE{$type}, $cost, $chrg, $auto },
-     "ENCH.ENAM" => sub { my($effect, $skill, $attr, $range, $area, $dur, $mmin, $mmax) = unpack("SCClllll", $_[0]);
+     "ENCH.ENAM" => sub { my($effect, $skill, $attr, $range, $area, $dur, $mmin, $mmax) = unpack($RD{'ENCH.ENAM'}, $_[0]);
 			  my $spell = $SPELL_EFFECT{$effect};
 			  if ($spell =~ /_attribute$/i) {
 			      $spell .= "/$ATTRIBUTE{$attr}";
@@ -1010,10 +1532,9 @@ my %UNPACK =
 			  }
 			  join("\n", @results);
 		      },
-
-     "INFO.ACDT" => sub { unpack("Z*", $_[0]) }, # Actor Data? (only in .ess)
-     "INFO.INAM" => sub { unpack("Z*", $_[0]) },
-     "INFO.DATA" => sub { my($disp, $rank, $sex, $pcrank) = unpack("x[L]LCCC", $_[0]);
+     "INFO.ACDT" => sub { unpack($RD{'INFO.ACDT'}, $_[0]) }, # Actor Data? (only in .ess)
+     "INFO.INAM" => sub { unpack($RD{'INFO.INAM'}, $_[0]) },
+     "INFO.DATA" => sub { my($disp, $rank, $sex, $pcrank) = unpack($RD{'INFO.DATA'}, $_[0]);
 			  $rank = "None" if $rank == 255;
 			  $pcrank = "None" if $pcrank == 255;
 			  if ($DIALTYPE == "Journal") {
@@ -1021,40 +1542,38 @@ my %UNPACK =
 			  } else {
 			      "Disp:$disp  Rank:$rank  Sex:$SEX{$sex}  PCRank:$pcrank";
 			  }},
-     "INFO.ANAM" => sub { sprintf qq{Cell:       "%s"}, unpack("Z*", $_[0]) },
-     "INFO.BNAM" => sub { sprintf qq{Result:\n%s}, indent_result(unpack("Z*", $_[0])) },
-     "INFO.CNAM" => sub { sprintf qq{Class:      "%s"}, unpack("Z*", $_[0]) },
-     "INFO.DNAM" => sub { sprintf qq{PC Faction: "%s"}, unpack("Z*", $_[0]) },
-     "INFO.FNAM" => sub { sprintf qq{Faction:    "%s"}, unpack("Z*", $_[0]) },
-     "INFO.NAME" => sub { my $str = unpack("Z*", $_[0]); $str =~ tr/\r//d; sprintf qq{Response:   "%s"}, $str },
-     "INFO.NNAM" => sub { sprintf qq{Next ID:    "%s"}, unpack("Z*", $_[0]) },
-     "INFO.ONAM" => sub { sprintf qq{Actor:      "%s"}, unpack("Z*", $_[0]) },
-     "INFO.PNAM" => sub { sprintf qq{Prev ID:    "%s"}, unpack("Z*", $_[0]) },
-     "INFO.RNAM" => sub { sprintf qq{Race:       "%s"}, unpack("Z*", $_[0]) },
-     "INFO.QSTN" => sub { my $val = unpack("C", $_[0]);
+     "INFO.ANAM" => sub { sprintf qq{Cell:       "%s"}, unpack($RD{'INFO.ANAM'}, $_[0]) },
+     "INFO.BNAM" => sub { sprintf qq{Result:\n%s}, indent_result(unpack($RD{'INFO.BNAM'}, $_[0])) },
+     "INFO.CNAM" => sub { sprintf qq{Class:      "%s"}, unpack($RD{'INFO.CNAM'}, $_[0]) },
+     "INFO.DNAM" => sub { sprintf qq{PC Faction: "%s"}, unpack($RD{'INFO.DNAM'}, $_[0]) },
+     "INFO.FNAM" => sub { sprintf qq{Faction:    "%s"}, unpack($RD{'INFO.FNAM'}, $_[0]) },
+     "INFO.NAME" => sub { my $str = unpack($RD{'INFO.NAME'}, $_[0]); $str =~ tr/\r//d; sprintf qq{Response:   "%s"}, $str },
+     "INFO.NNAM" => sub { sprintf qq{Next ID:    "%s"}, unpack($RD{'INFO.NNAM'}, $_[0]) },
+     "INFO.ONAM" => sub { sprintf qq{Actor:      "%s"}, unpack($RD{'INFO.ONAM'}, $_[0]) },
+     "INFO.PNAM" => sub { sprintf qq{Prev ID:    "%s"}, unpack($RD{'INFO.PNAM'}, $_[0]) },
+     "INFO.RNAM" => sub { sprintf qq{Race:       "%s"}, unpack($RD{'INFO.RNAM'}, $_[0]) },
+     "INFO.QSTN" => sub { my $val = unpack($RD{'INFO.QSTN'}, $_[0]);
 			  (1 == $val) ? "Quest_Name" : "Unknown($val)" },
-     "INFO.QSTF" => sub { my $val = unpack("C", $_[0]);
+     "INFO.QSTF" => sub { my $val = unpack($RD{'INFO.QSTF'}, $_[0]);
 			  (1 == $val) ? "Quest_Finished" : "Unknown($val)" },
-     "INFO.QSTR" => sub { my $val = unpack("C", $_[0]);
+     "INFO.QSTR" => sub { my $val = unpack($RD{'INFO.QSTR'}, $_[0]);
 			  (1 == $val) ? "Quest_Restart" : "Unknown($val)" },
-     "INFO.SCVR" => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack("aaa2aZ*", $_[0]);
+     "INFO.SCVR" => sub { my($idx, $typ, $fun, $cmp, $nam) = unpack($RD{'INFO.SCVR'}, $_[0]);
 			  my $name = ($typ == 1) ? "" : "  Name:$nam";
 			  sprintf "Index:$idx  Type:%s  Fun:%s  Cmp:%s$name",
 			      dump_lookup($typ, \%INFO_SCVR_type), dump_lookup($fun, \%INFO_FUN), dump_lookup($cmp, \%INFO_SCVR_cmp); },
-     "INGR.IRDT" => sub { my($wght, $value, $effects, $skills, $attrs) = unpack("fL(a16)3", $_[0]);
-			  my $result = sprintf "Weight: %0.2f  Value: %d  Effects: ", $wght, $value;
-			  my @effects = unpack("l4", $effects);
-			  my @skills = unpack("l4", $skills);
-			  my @attrs = unpack("l4", $attrs);
+     "INGR.IRDT" => sub { my($hr, $idx) = $DECODE{'INGR.IRDT'}->($_[0]);
+			  my $result = sprintf "Weight: %0.2f  Value: %d  Effects: ",
+			      $hr->{Weight}, $hr->{Value};
 			  my @results;
-			  for (my $i=0; $i<4; $i++) {
-			      if ($effects[$i] != -1) {
-				  my $eix = $effects[$i];
+			  foreach my $i (1..4) {
+			      if ($hr->{"Effect_$i"} != -1) {
+				  my $eix = $hr->{"Effect_$i"};
 				  my $effect = $SPELL_EFFECT{$eix} || "${eix}???";
 				  if ($effect =~ /_attribute$/i) {
-				      push(@results, "$effect/$ATTRIBUTE{$attrs[$i]}");
+				      push(@results, qq{$effect/$ATTRIBUTE{$hr->{"Attribute_$i"}}}); # $attrs[$i]
 				  } elsif ($effect =~ /_skill$/i) {
-				      push(@results, "$effect/$SKILL{$skills[$i]}");
+				      push(@results, qq{$effect/$SKILL{$hr->{"Skill_$i"}}}); # $skills[$i]
 				  } else {
 				      push(@results, "$effect");
 				  }
@@ -1062,157 +1581,155 @@ my %UNPACK =
 			  }
 			  $result . join(", ", @results);
 		      },
-     "LAND.INTV" => sub { sprintf qq{Coordinates: (%d, %d)}, unpack("ll", $_[0]) },
-     "LEVC.DATA" => sub { "List Data: %d (1 = Calc from all levels <= PC level)", unpack("L", $_[0]) },
-     "LEVC.INTV" => sub { sprintf "Level: %d", unpack("S", $_[0]) },
-     "LEVC.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
-     "LEVI.DATA" => sub { "List Data: %s ", $LEVI_DATA{unpack("L", $_[0])} },
-     "LEVI.INTV" => sub { sprintf "Level: %d", unpack("S", $_[0]) },
-     "LEVI.INAM" => sub { unpack("Z*", $_[0]) },
-     "LEVI.NNAM" => sub { sprintf "ChanceNone: %d", unpack("C", $_[0]) },
-     "LIGH.LHDT" => sub { my($wght, $value, $time, $radius, $red, $green, $blue, $null, $flags) = unpack("fLLLCCCCL", $_[0]);
+     "LAND.INTV" => sub { sprintf qq{Coordinates: (%d, %d)}, unpack($RD{'LAND.INTV'}, $_[0]) },
+     "LEVC.DATA" => sub { "List Data: %d (1 = Calc from all levels <= PC level)", unpack($RD{'LEVC.DATA'}, $_[0]) },
+     "LEVC.INTV" => sub { sprintf "Level: %d", unpack($RD{'LEVC.INTV'}, $_[0]) },
+     "LEVC.NNAM" => sub { sprintf "ChanceNone: %d", unpack($RD{'LEVC.NNAM'}, $_[0]) },
+     "LEVI.DATA" => sub { "List Data: %s ", $LEVI_DATA{unpack($RD{'LEVI.DATA'}, $_[0])} },
+     "LEVI.INTV" => sub { sprintf "Level: %d", unpack($RD{'LEVI.INTV'}, $_[0]) },
+     "LEVI.INAM" => sub { unpack($RD{'LEVI.INAM'}, $_[0]) },
+     "LEVI.NNAM" => sub { sprintf "ChanceNone: %d", unpack($RD{'LEVI.NNAM'}, $_[0]) },
+     "LIGH.LHDT" => sub { my($wght, $value, $time, $radius, $red, $green, $blue, $null, $flags) = unpack($RD{'LIGH.LHDT'}, $_[0]);
 			  sprintf "Weight: %0.2f  Value: %d  Time: %d  Radius: %d  RGB: (%x, %x, %x)  Flags: %s",
 			      $wght, $value, $time, $radius, $red, $green, $blue, decode_flags($flags, \@LHDT_FLAGS) },
-     "LOCK.LKDT" => sub { sprintf "Weight: %0.2f  Value: %d  Quality: %0.2f  Uses: %d", unpack("fLfL", $_[0]) },
-     "LTEX.DATA" => sub { unpack("Z*", $_[0]) },
-     "MGEF.MEDT" => sub { my($school, $base, $flags, $red, $blue, $green, $speed, $size, $sizecap) = unpack("LfLLLLfff", $_[0]);
+     "LOCK.LKDT" => sub { sprintf "Weight: %0.2f  Value: %d  Quality: %0.2f  Uses: %d", unpack($RD{'LOCK.LKDT'}, $_[0]) },
+     "LTEX.DATA" => sub { unpack($RD{'LTEX.DATA'}, $_[0]) },
+     "MGEF.MEDT" => sub { my($school, $base, $flags, $red, $blue, $green, $speed, $size, $sizecap) = unpack($RD{'MGEF.MEDT'}, $_[0]);
 			  sprintf "School: %s  BaseCost: %0.2f  Flags: %s  RGB: (%x, %x, %x)  SizeX: %0.2f  SizeCap: %0.2f",
 			      $MAGIC_SCHOOL{$school}, $base, decode_flags($flags, \@MGEF_FLAGS), $red, $blue, $green, $size, $sizecap },
-     "MISC.MCDT" => sub { sprintf "Weight: %0.2f  Value: %d  Unk:%0x", unpack("fLL", $_[0]) },
-     "NPC_.CNDT" => sub { unpack("Z*", $_[0]) },
-     "NPC_.FLAG" => sub { decode_flags(unpack("L", $_[0]), \@NPC_FLAGS) },
-     "NPC_.AIDT" => sub { my($hello, $unk1, $fight, $flee, $alarm, $unk2, $unk3, $unk4, $flags) = unpack("C8L", $_[0]);
+     "MISC.MCDT" => sub { sprintf "Weight: %0.2f  Value: %d  Unk:%0x", unpack($RD{'MISC.MCDT'}, $_[0]) },
+     "NPC_.CNDT" => sub { unpack($RD{'NPC_.CNDT'}, $_[0]) },
+     "NPC_.FLAG" => sub { decode_flags(unpack($RD{'NPC_.FLAG'}, $_[0]), \@NPC_FLAGS) },
+     "NPC_.AIDT" => sub { my($hello, $unk1, $fight, $flee, $alarm, $unk2, $unk3, $unk4, $flags) = unpack($RD{'NPC_.AIDT'}, $_[0]);
 			  sprintf "Hello: %d  Fight: %d  Flee: %d  Alarm: %d  Flags: %s",
 			      $hello, $fight, $flee, $alarm, decode_flags($flags, \@AIDT_FLAGS); },
-     "NPC_.AI_W" => sub { my($dist, $dur, $time, $idles, $unk) = unpack("SSCa8C", $_[0]);
-			  my $idle = join(", ", unpack("C8", $idles));
-			  sprintf "Distance: %d  Duration: %d  Time_of_day: $time, Idles: $idle  Unk:%s",
-			      $dist, $dur, $time, $idle, $unk },
-     "NPC_.NPDT" => sub { my $len = length($_[0]);
-			  if ($len == 12) {
-			      my($lev, $disp, $fact, $rank, $gold) = unpack("SC3x[C3]L", $_[0]);
-			      sprintf "Level: %d  Disposition: %d  Faction: %d  Rank: %d", $lev, $disp, $fact, $rank, $gold;
-			  } elsif ($len == 52) {
+     "NPC_.AI_W" => sub { my($hr, $idx) = $DECODE{'NPC_.AI_W'}->($_[0]);
+			  my $idle = join(", ", map { $hr->{"Idle_$_"} } 1..8);
+			  sprintf "Distance: %d  Duration: %d  Time_of_day: %d, Idles: $idle",
+			      $hr->{Distance}, $hr->{Duration}, $hr->{Time_of_day} },
+     "NPC_.NPDT" => sub { my($hr, $idx) = $DECODE{'NPC_.NPDT'}->($_[0]);
+			  if (exists $hr->{Str}) { # long form
 			      my $skills = "";
 			      my $n = 0;
-			      foreach (unpack('x[SC8]C27', $_[0])) {
-				  $skills .= "\n\t\t" if (($n % 7) == 0);
-				  $skills .= " $SKILL{$n}: $_";
-				  $n++;
+			      foreach my $skill (sort values %SKILL) {
+				  $skills .= "\n\t\t" if (($n++ % 7) == 0);
+				  $skills .= " $skill: $hr->{$skill}";# if (defined $hr->{$skill});
 			      }
-			      my($lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck, $rep, $hlth, $spelpts, $fat, $disp, $fact, $rank, $gold) =
-				  unpack("SC8x[C27]CSSSCCCCxCL", $_[0]);
 			      sprintf "  Level: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tRep: %d  Health: %d SpellPts: %d  Fatigue: %d  Disp: %d  Faction: %d  Rank: %d  Gold: %d\n\t\tSkills:$skills",
-				  $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck, $rep, $hlth, $spelpts, $fat, $disp, $fact, $rank, $gold;
-			  } else {
-			      "BAD NPDT length ($len) is not 12 or 52!";
+				  $hr->{Level}, $hr->{Str}, $hr->{Int}, $hr->{Wil}, $hr->{Agi}, $hr->{Spd},
+				      $hr->{End}, $hr->{Per}, $hr->{Lck}, $hr->{Rep}, $hr->{Health}, $hr->{Magicka},
+					  $hr->{Fatigue}, $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold};
+			  } else {		   # short form (autocalced)
+			      sprintf "Level: %d  Disposition: %d  Faction: %d  Rank: %d  Gold: %d",
+				  $hr->{Level}, $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold};
 			  }
 		      },
-     "PCDT.SNAM" => $UNPACK_UNKNOWN, # .ess
-     "PCDT.ENAM" => $UNPACK_UNKNOWN, # .ess
-     "PCDT.FNAM" => $UNPACK_UNKNOWN, # .ess
-     "PROB.PBDT" => sub { sprintf "Weight: %0.2f  Value: %d  Quality: %0.2f  Uses: %d", unpack("fLfL", $_[0]) },
-     "QUES.DATA" => sub { sprintf "INFO_ID: %s", unpack("Z*", $_[0]) }, # only in .ess (relates back to Actor in INFO)
-     "RACE.RADT" => sub { my($skbonus, $attrs, $mht, $fht, $mwt, $fwt, $flags) = unpack("a[(L2)7]a[(L2)8]f2f2L", $_[0]);
+     "PCDT.SNAM" => $TOSTR_UNKNOWN, # .ess
+     "PCDT.ENAM" => $TOSTR_UNKNOWN, # .ess
+     "PCDT.FNAM" => $TOSTR_UNKNOWN, # .ess
+     "PROB.PBDT" => sub { sprintf "Weight: %0.2f  Value: %d  Quality: %0.2f  Uses: %d", unpack($RD{'PROB.PBDT'}, $_[0]) },
+     "QUES.DATA" => sub { sprintf "INFO_ID: %s", unpack($RD{'QUES.DATA'}, $_[0]) }, # only in .ess (relates back to Actor in INFO)
+     "RACE.RADT" => sub { my($hr, $idx) = $DECODE{'RACE.RADT'}->($_[0]);
 			  my $result = sprintf "Flags: %s  Male_Height: %0.2f  Male_Weight: %0.2f  Female_Height: %0.2f  Female_Weight: %0.2f",
-			      decode_flags($flags, \@RADT_FLAGS), $mht, $mwt, $fht, $fwt;
+			      decode_flags($hr->{Flags}, \@RADT_FLAGS), $hr->{Male_Height}, $hr->{Male_Weight},
+				  $hr->{Female_Height}, $hr->{Female_Weight};
 			  $result .= "\n\t\tSkill Bonuses:";
-			  foreach my $skb (unpack("(a[L2])7", $skbonus)) {
-			      my($skill_id, $bonus) = unpack("LL", $skb);
+			  foreach my $i (1..7) {
+			      my($skill_id, $bonus) = ($hr->{"Skill_$i"}, $hr->{"Bonus_$i"});
 			      $result .= sprintf("\n\t\t%-12s %3d", $SKILL{$skill_id}, $bonus);
 			  }
 			  my @attr_names = qw(Strength Intelligence Willpower Agility Speed Endurance Personality Luck);
 			  $result .= "\n\t\tBase Attributes: Male/Female";
-			  foreach my $at (unpack("(a[L2])8", $attrs)) {
-			      my($male, $female) = unpack("L2", $at);
+			  foreach my $i (1..8) {
+			      my($male, $female) = ($hr->{"Attr_Male_$i"}, $hr->{"Attr_Female_$i"});
 			      $result .= sprintf("\n\t\t%-12s    %3d  %3d", shift(@attr_names), $male, $female);
 			  }
 			  $result;
 		      },
      "REGN.WEAT" => sub { sprintf "Clear: %d  Cloudy: %d  Foggy: %d  Overcast: %d  Rain: %d  Thunder: %d  Ash: %d  Blight: %d",
-			      unpack("C8", $_[0]) },
-     "REGN.CNAM" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack("C3", $_[0]) },
-     "REGN.SNAM" => sub { "Chance: %3d  SoundName: %s", unpack("Z32C", $_[0]) },
-     "REGN.WNAM" => sub { unpack("L", $_[0]); },
-     "REPA.RIDT" => sub { sprintf "Weight: %0.2f  Value: %d  Uses: %d  Quality: %0.2f", unpack("fLLf", $_[0]); },
-     "SCPT.RNAM" => sub { sprintf "Unk:%x", unpack("L", $_[0]) },
-     "SCPT.SCDT" => sub { if (DBG) { unpack("H*", $_[0]) } else { "(Compiled script data)" }; },
+			      unpack($RD{'REGN.WEAT'}, $_[0]) },
+     "REGN.CNAM" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'REGN.CNAM'}, $_[0]) },
+     "REGN.SNAM" => sub { "Chance: %3d  SoundName: %s", unpack($RD{'REGN.SNAM'}, $_[0]) },
+     "REGN.WNAM" => sub { unpack($RD{'REGN.WNAM'}, $_[0]); },
+     "REPA.RIDT" => sub { sprintf "Weight: %0.2f  Value: %d  Uses: %d  Quality: %0.2f", unpack($RD{'REPA.RIDT'}, $_[0]); },
+     "SCPT.RNAM" => sub { sprintf "Unk:%x", unpack($RD{'SCPT.RNAM'}, $_[0]) },
+     "SCPT.SCDT" => sub { if (DBG) { unpack($RD{'SCPT.SCDT'}, $_[0]) } else { "(Compiled script data)" }; },
      "SCPT.SCHD" => sub { sprintf "Name: %s  NumShorts: %d  NumLongs: %d  NumFloats: %d  ScriptDataSize: %d  LongVarSize: %d",
-			      unpack("Z32LLLLL", $_[0]); },
-     "SCPT.SCVR" => sub { "Script Variables: " . join(',', split(/\000/, unpack('a*', $_[0]))) },
-     "SCPT.SCTX" => sub { "Script:\n" . unpack("Z*", $_[0]) },
+			      unpack($RD{'SCPT.SCHD'}, $_[0]); },
+     "SCPT.SCVR" => sub { "Script Variables: " . join(',', split(/\000/, unpack($RD{'SCPT.SCVR'}, $_[0]))) },
+     "SCPT.SCTX" => sub { "Script:\n" . unpack($RD{'SCPT.SCTX'}, $_[0]) },
 
-     "SKIL.SKDT" => sub { my($attr, $spec, @usevals) = unpack("LLf4", $_[0]);
+     "SKIL.SKDT" => sub { my($attr, $spec, @usevals) = unpack($RD{'SKIL.SKDT'}, $_[0]);
 			  sprintf "Attribute: %s  Specialization: %s  UseValues: %0.2f %0.2f %0.2f %0.2f",
 			      $ATTRIBUTE{$attr}, $SPECIALIZATION{$spec}, @usevals},
-     "SNDG.DATA" => sub { qq{"$SNDG_DATA[unpack("L", $_[0])]"}; },
-     "SPEL.SPDT" => sub { my($type, $cost, $flags) = unpack("LLL", $_[0]);
+     "SNDG.DATA" => sub { qq{"$SNDG_DATA[unpack($RD{'SNDG.DATA'}, $_[0])]"}; },
+     "SPEL.SPDT" => sub { my($type, $cost, $flags) = unpack($RD{'SPEL.SPDT'}, $_[0]);
 		      sprintf "Type: %s  Cost: %d  Flags: %s", $SPEL_TYPE{$type}, $cost, decode_flags($flags, \@SPEL_FLAGS) },
-     "SPLM.NAME" => sub { unpack("L", $_[0]); },
+     "SPLM.NAME" => sub { unpack($RD{'SPLM.NAME'}, $_[0]); },
      "SPLM.SPDT" => sub {
 	 # SPDT is 160 bytes long
-	 my($type, $spell, $long2, $long3, $caster, $item) = unpack("LZ40L2Z32Z*", $_[0]);
+	 my($type, $spell, $long2, $long3, $caster, $item) = unpack($RD{'SPLM.SPDT'}, $_[0]);
 	 sprintf qq{Type: %s  Name: "%s"  long2:%s  long3: %d  caster: "%s"  Item: "%s"},
 	     $SPLM_TYPE{$type}, $spell, dbg_ulong($long2), $long3, $caster, $item;
      },
      "SPLM.NPDT" => sub {
 	 # NPDT is 56 bytes long
-	 my($name, $mag, $long2, $long3, $long4) = unpack("Z40l4", $_[0]);
+	 my($name, $mag, $long2, $long3, $long4) = unpack($RD{'SPLM.NPDT'}, $_[0]);
 	 sprintf qq{name: "%s"  magnitude: %d  long2:%s  long3: %d  long4: %d},
 	     $name, $mag, dbg_ulong($long2), $long3, $long4;
      },
-     "SPLM.XNAM" => sub { sprintf "%d", unpack("L", $_[0]); },
-     "SPLM.TNAM" => sub { sprintf "Target: %s", unpack("Z*", $_[0]); },
-     "SOUN.DATA" => sub { sprintf "Volume: %d  MinRange: %d  MaxRange: %d", unpack("CCC", $_[0]) },
-     "SSCR.DATA" => sub { unpack("Z*", $_[0]) },
-     "STLN.ONAM" => sub { unpack("Z*", $_[0]) },
-     "WEAP.WPDT" => sub { my($wght, $value, $type, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $flags) = unpack("fLSSffSC6L", $_[0]);
+     "SPLM.XNAM" => sub { sprintf "%d", unpack($RD{'SPLM.XNAM'}, $_[0]); },
+     "SPLM.TNAM" => sub { sprintf "Target: %s", unpack($RD{'SPLM.TNAM'}, $_[0]); },
+     "SOUN.DATA" => sub { sprintf "Volume: %d  MinRange: %d  MaxRange: %d", unpack($RD{'SOUN.DATA'}, $_[0]) },
+     "SSCR.DATA" => sub { unpack($RD{'SSCR.DATA'}, $_[0]) },
+     "STLN.ONAM" => sub { unpack($RD{'STLN.ONAM'}, $_[0]) },
+     "WEAP.WPDT" => sub { my($wght, $value, $type, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $flags) = unpack($RD{'WEAP.WPDT'}, $_[0]);
 		      sprintf " Wght: %0.2f  Val: %d  Typ: %s  Hlth: %d  Spd: %0.2f  Rch: %0.2f\n\t\tEnchant_Points: %d  Chop: %d-%d  Slash: %d-%d Thrust: %d-%d  Flags: %s",
 			  $wght, $value, $WEAPON_TYPE{$type}, $health, $speed, $reach, $epts, $chopmin, $chopmax, $slashmin, $slashmax, $pokemin, $pokemax, $WEAPON_FLAGS{$flags}},
      "VFXM.VNAM" => sub {
 	 my($long1, $long2, $long3, $long4, $long5, $long6, $short1, $hex1, $name2, $name3) =
-	     unpack("L6SZ22Z36Z68", $_[0]);
+	     unpack($RD{'VFXM.VNAM'}, $_[0]);
 	 sprintf "\n  long1:%s\n  long2:%s\n  long3:%s\n  long4:%s\n  long5:%s\n  long6:%s\n  short1:%d\n  unk1:[%s]\n  name2: %s\n  name3: %s\n",
-	     dbg_ulong($long1), dbg_ulong($long2), dbg_ulong($long3), dbg_ulong($long4), dbg_ulong($long5), dbg_ulong($long6), $short1, $UNPACK_UNKNOWN->($hex1), $name2, $name3;
+	     dbg_ulong($long1), dbg_ulong($long2), dbg_ulong($long3), dbg_ulong($long4), dbg_ulong($long5), dbg_ulong($long6), $short1, $TOSTR_UNKNOWN->($hex1), $name2, $name3;
      },
 
      # The following are common subrecord formats
      DELE => sub { "DELETED" },
-     DODT => sub { sprintf "Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack("f6", $_[0]) },
-     FLAG => sub { sprintf "hexflags:0x%04x", unpack("L", $_[0]) },
-     NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) },
-     XCHG => sub { sprintf "Enchant_Charge: %0.2f", unpack("f", $_[0]) },
-     XHLT => sub { sprintf "Health: %d", unpack("L", $_[0]) },
-     XSCL => sub { sprintf "Scale: %0.2f", unpack("f", $_[0]) },
-     XSOL => sub { sprintf "Soul: %s", unpack("Z*", $_[0]) },
-     WIDX => sub { my($idx, $ammo) = unpack("ll", $_[0]);
+     DODT => sub { sprintf "Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack($RD{'DODT'}, $_[0]) },
+     FLAG => sub { sprintf "hexflags:0x%04x", unpack($RD{'FLAG'}, $_[0]) },
+     NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack($RD{'NPCO'}, $_[0]) },
+     XCHG => sub { sprintf "Enchant_Charge: %0.2f", unpack($RD{'XCHG'}, $_[0]) },
+     XHLT => sub { sprintf "Health: %d", unpack($RD{'XHLT'}, $_[0]) },
+     XSCL => sub { sprintf "Scale: %0.2f", unpack($RD{'XSCL'}, $_[0]) },
+     XSOL => sub { sprintf "Soul: %s", unpack($RD{'XSOL'}, $_[0]) },
+     WIDX => sub { my($idx, $ammo) = unpack($RD{'WIDX'}, $_[0]);
 		   $ammo = ($ammo == 0) ? "" : " (Ammo)";
 		   sprintf "Equipped_Idx:%3d$ammo",  $idx }, # JMS index into NPCO inventory items of those that are equipped
-     SLCS => sub { sprintf "Shorts: %d  Longs: %d  Floats: %d", unpack("LLL", $_[0]) }, # .ess
-     SLSD => sub { sprintf "Short_Vals: " . join(", ", unpack("s*", $_[0])) }, # .ess
-     SLLD => sub { sprintf "Long_Vals: " . join(", ", unpack("l*", $_[0])) }, # .ess
-     SLFD => sub { sprintf "Float_Vals: " . join(", ", map { sprintf "%0.2f", $_ } join(", ", unpack("f*", $_[0]))) }, # .ess
+     SLCS => sub { sprintf "Shorts: %d  Longs: %d  Floats: %d", unpack($RD{'SLCS'}, $_[0]) }, # .ess
+     SLSD => sub { sprintf "Short_Vals: " . join(", ", unpack($RD{'SLSD'}, $_[0])) }, # .ess
+     SLLD => sub { sprintf "Long_Vals: " . join(", ", unpack($RD{'SLLD'}, $_[0])) }, # .ess
+     SLFD => sub { sprintf "Float_Vals: " . join(", ", map { sprintf "%0.2f", $_ } join(", ", unpack($RD{'SLFD'}, $_[0]))) }, # .ess
     );
 
-$UNPACK{"SPEL.ENAM"} = $UNPACK{"ENCH.ENAM"};
+$TOSTR{"SPEL.ENAM"} = $TOSTR{"ENCH.ENAM"};
 
 # subrecords that decode as signed 32-bit longs:
 foreach (qw(INTV)) {
-    $UNPACK{$_} = sub { unpack("l", $_[0]) }; }
+    $TOSTR{$_} = sub { unpack("l", $_[0]) }; }
 
 # subrecords that decode as unsigned 32-bit longs:
 foreach (qw(INDX NAM0 XIDX))
-    { $UNPACK{$_} = sub { unpack("L", $_[0]) }; }
+    { $TOSTR{$_} = sub { unpack("L", $_[0]) }; }
 
 # subrecords that decode as 32-bit floats:
 foreach (qw(FLTV WHGT))
-    { $UNPACK{$_} = sub { sprintf "%0.2f", unpack("f", $_[0]) }; }
+    { $TOSTR{$_} = sub { sprintf "%0.2f", unpack("f", $_[0]) }; }
 
 # subrecords that decode as variable length Z-strings:
 foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM
 HSND HVFX ITEX KNAM LSTN MNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
 TEXT TNAM WNAM))
-    { $UNPACK{$_} = sub { unpack("Z*", $_[0]) }; }
+    { $TOSTR{$_} = sub { unpack("Z*", $_[0]) }; }
 
 sub opts_dump {
     $_[0] && do { print $DUMP_USAGE; exit(0); };
@@ -1360,7 +1877,7 @@ my %CMDS = (
 	    "fogpatch" => [ \&opts_fogpatch, \&cmd_fogpatch ],
 	    "header"   => [ \&opts_header,   \&cmd_header ],
 	    "help"     => [ \&opts_help,     undef ],
-	    "modify"   => [ \&opts_mod,      \&cmd_modify ],
+	    "modify"   => [ \&opts_modify,   \&cmd_modify ],
 	    "rename"   => [ \&opts_rename,   \&cmd_rename ],
 	    "diff"     => [ \&opts_diff,     \&cmd_diff ],
 	   );
@@ -2035,8 +2552,8 @@ sub cmd_delete {
 		my $full_type = "${rec_type}.${subrec_type}";
 		my $match = 0;
 		if (not (%delete_subtypes and not $delete_subtypes{lc($full_type)})) {
-		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $UNPACK_UNKNOWN;
-		    my $subrec_str = $unpack->($subrec);
+		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
+		    my $subrec_str = $tostr->($subrec);
 		    if ($::opt_s) {
 			$match = 1 if ($::opt_m and $subrec_str =~ /$::opt_m/i);
 			$match = 1 if ($::opt_M and $subrec_str !~ /$::opt_M/i);
@@ -2063,13 +2580,25 @@ sub cmd_delete {
     }
     close(INP);
     close(OUT);
+    my($atime, $mtime) = (stat($oldplugin))[8,9];
+    utime($atime, $mtime, $plugin);
     print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+}
+
+sub run_code {
+    my($full_type, $r) = @_;
+    if ($::opt_e) {
+	my $mod = 0;
+	my $result = eval($::opt_e);
+	return($r) if ($mod);
+    }
+    return(undef);
 }
 
 sub cmd_modify {
     my($plugin) = @_;
     my $oldplugin = make_backup($plugin);
-    open_input_plugin($plugin);
+    open_input_plugin($oldplugin);
     unless(open(OUT, ">$plugin")) {
 	print qq{Error opening "$plugin" for output ($!)\n};
 	return;
@@ -2086,6 +2615,7 @@ sub cmd_modify {
     }
     my %modify_types;
     my %modify_subtypes;
+    my $plugin_modified = 0;
     if ($::opt_t) {
 	foreach (split(/,/, $::opt_t)) {
 	    # TBD - validate types?
@@ -2125,6 +2655,7 @@ sub cmd_modify {
 	my $first = 1;
 	my $print_rec = "";
 	my $newrec = "";
+	my @subrecs = ();
 	while ($p < $rec_len) {
 	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
 	    $p += 8;
@@ -2132,24 +2663,29 @@ sub cmd_modify {
 	    $p += $subrec_len;
 	    if (defined $subrec) {
 		my $full_type = "${rec_type}.${subrec_type}";
-		my $match = 0;
 		if (not (%modify_subtypes and not $modify_subtypes{lc($full_type)})) {
-		    my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $UNPACK_UNKNOWN;
-		    my $subrec_str = $unpack->($subrec);
+		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
+		    my $decoder = $DECODE{$full_type} || $DECODE{$subrec_type};
+		    my $subrec_str = $tostr->($subrec);
 		    if ($::opt_s) {
-			$match = 1 if ($::opt_m and $subrec_str =~ /$::opt_m/i);
-			$match = 1 if ($::opt_M and $subrec_str !~ /$::opt_M/i);
-			if ($match) {
+			if (($::opt_m and $subrec_str =~ /$::opt_m/i) or
+			    ($::opt_M and $subrec_str !~ /$::opt_M/i)) {
 			    # subrecord matches, so run our code on it ...
-			    if ((my $newsubrec = run_code($subrec)) ne $subrec) {
-				$subrec = $newsubrec;
+			    warn "full_type=$full_type    subrec_type=$subrec_type\n";
+			    if (my $hr = run_code($full_type, $decoder->($subrec))) {
+				my $encoder = $ENCODE{$full_type} || $ENCODE{$subrec_type};
+				$subrec = $encoder->($hr);
+				$plugin_modified = 1;
+				print "MODIFIED SUBRECORD: $subrec_str\n";
+			    } else {
+				$subrec = undef;
 			    }
-			    print "MODIFIED SUBRECORD: $subrec_str\n";
 			}
 		    }
+		    push(@subrecs, [$subrec_type, $decoder->($subrec)]);
 		    $print_rec .= "   $full_type: $subrec_str\n";
 		}
-		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec) unless ($match);
+		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
 	    } else {
 		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 		print "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
@@ -2160,9 +2696,18 @@ sub cmd_modify {
 	} else {
 	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
 		($::opt_M and $print_rec !~ /$::opt_M/i)) {
-		if ((my $newrec = run_code($rec)) ne $rec) {
+		if (my $modrec = run_code($rec_type, \@subrecs)) {
+		    $plugin_modified = 1;
 		    print "MODIFIED RECORD:\n$print_rec\n";
-		    $rec = $newrec;
+		    $rec = '';
+		    foreach my $ref (@$modrec) {
+			my($subrec_type, $hr) = @$ref;
+			my $full_type = "${rec_type}.${subrec_type}";
+			my $encoder = $ENCODE{$full_type} || $ENCODE{$subrec_type};
+			my $subrec = $encoder->($hr);
+			my $subrec_len = length($subrec);
+			$rec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+		    }
 		}
 	    }
 	    write_rec($rec_type, $rec, $unk, $flags);
@@ -2170,7 +2715,14 @@ sub cmd_modify {
     }
     close(INP);
     close(OUT);
-    print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+    if ($plugin_modified) {
+	my($atime, $mtime) = (stat($oldplugin))[8,9];
+	utime($atime, $mtime, $plugin);
+	print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+    } else {
+	unlink($plugin);
+	rename($oldplugin, $plugin);
+    }
 }
 
 sub rec_to_string {
@@ -2195,8 +2747,8 @@ sub rec_to_string {
 	if (defined $subrec) {
 	    my $full_type = "${rec_type}.${subrec_type}";
 	    if (not ($wanted_subtypes and not $wanted_subtypes->{lc($full_type)})) {
-		my $unpack = $UNPACK{$full_type} || $UNPACK{$subrec_type}  || $UNPACK_UNKNOWN;
-		my $subrec_str = $unpack->($subrec);
+		my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
+		my $subrec_str = $tostr->($subrec);
 		push(@print_rec, "$full_type: $subrec_str");
 	    }
 	} else {
@@ -2384,6 +2936,8 @@ sub cmd_rename {
     close(INP);
     unless ($::opt_l) {
 	close(OUT);
+	my($atime, $mtime) = (stat($oldplugin))[8,9];
+	utime($atime, $mtime, $plugin);
 	print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
     }
 }
