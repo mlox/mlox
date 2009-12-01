@@ -28,6 +28,8 @@ OPTIONS
  -D        turn on debug output
  -i ids    only modify the records with ids matching the given comma-delimited
            list of regular expression patterns.
+ -f file   file containing list of regexes to match, one per line.
+ -F file   file containing list of regexes to not match, one per line.
  -m regex  only modify records that match given regular expression.
  -M regex  only modify records that do not match given regular expression.
  -s        only modify the subrecords that matched.
@@ -35,6 +37,7 @@ OPTIONS
            list of record types.
  -r /a/b/  replace regex a with b. you can use any character instead of the slash.
  -e 'code' specify a string of Perl code to run on each matched record.
+ -p file   specify a file containing Perl code to load.
 
 Modifies records/subrecords from the plugin. You can really damage things with
 this command, so be careful!
@@ -52,12 +55,12 @@ tes3cmd modify -i foo -e 'TBD' plugin.esp
 
 # Modify all subrecords of type NPC_.NPCO that match "Ring des Skeletts" from
 # savegame: quicksave.ess
-tes3cmd modify -s npc_.npco -m "Ring des Skeletts" -f myprogram quicksave.ess
+tes3cmd modify -s npc_.npco -m "Ring des Skeletts" -p myprogram quicksave.ess
 };
 
 sub opts_modify {
     $_[0] && do { die $MODIFY_USAGE; };
-    getopts('De:f:i:m:M:r:st:') or die $MODIFY_USAGE;
+    getopts('Df:F:e:i:m:M:p:r:st:') or die $MODIFY_USAGE;
 }
 
 my $CELLNAMEPATCH_USAGE = q{Usage: tes3cmd cellnamepatch
@@ -106,6 +109,8 @@ OPTIONS
  -D        turn on debug output
  -i ids    only delete the records with ids matching the given comma-delimited
            list of regular expression patterns.
+ -f file   file containing list of regexes to match, one per line.
+ -F file   file containing list of regexes to not match, one per line.
  -m regex  only delete records that match given regular expression.
  -M regex  only delete records that do not match given regular expression.
  -s        only delete the subrecords that matched.
@@ -133,7 +138,7 @@ tes3cmd delete -s npc_.npco -m "Ring des Skeletts" quicksave.ess
 
 sub opts_delete {
     $_[0] && do { die $DELETE_USAGE; };
-    getopts('Di:m:M:st:') or die $DELETE_USAGE;
+    getopts('Df:i:m:M:st:') or die $DELETE_USAGE;
 }
 
 
@@ -237,9 +242,12 @@ OPTIONS
  -i ids    only print out the records with ids matching the given comma-delimited
            list of regular expression patterns.
  -l        only list the ids of the records to be printed, instead of the entire record.
+ -f file   file containing list of regexes to match, one per line.
+ -F file   file containing list of regexes to not match, one per line.
  -m regex  only print records that match given regular expression.
  -M regex  only print records that do not match given regular expression.
  -n        do not print banner identifying the current plugin.
+ -N        do not print the record numbers.
  -R        print raw records, instead of as text, as an .esp including a TES3 header.
  -r        print raw records, instead of as text.
  -s string specify field separator string for single-line output.
@@ -1061,7 +1069,14 @@ default_codec('CREA.AI_W', (["Distance", "S"],
 			    ["Duration", "C"],
 			    ["Time_of_day", "C"],
 			    [[("Idle_1") x 10], "C10"]));
-default_codec('CREA.AIDT', ([[("AI_1") x 12], "C12"]));
+#default_codec('CREA.AIDT', ([[("AI_1") x 12], "C12"]));
+default_codec('CREA.AIDT', (["Hello", "C"],
+			    ["Unknown", "C"],
+			    ["Fight", "C"],
+			    ["Flee", "C"],
+			    ["Alarm", "C"],
+			    [[("Unknown_1") x 3], "C3"],
+			    ["Flags", "L"]));
 default_codec('CREA.FLAG', (["Flags", "L"]));
 default_codec('CREA.NPDT', (["Type", "L"],
 			    ["Lev", "L"],
@@ -1503,7 +1518,10 @@ my %TOSTR =
 			  my $idle = join(", ", map { $hr->{"Idle_$_"} } 1..10);
 			  sprintf "Distance: %d  Duration: %d  Time_of_day: %d, Idles: $idle",
 			      $hr->{Distance}, $hr->{Duration}, $hr->{Time_of_day} },
-     "CREA.AIDT" => sub { join(", ", unpack($RD{'CREA.AIDT'}, $_[0])) },
+#     "CREA.AIDT" => sub { join(", ", unpack($RD{'CREA.AIDT'}, $_[0])) },
+     "CREA.AIDT" => sub { my($hello, $unk1, $fight, $flee, $alarm, $unk2, $unk3, $unk4, $flags) = unpack($RD{'NPC_.AIDT'}, $_[0]);
+			  sprintf "Hello: %d  Fight: %d  Flee: %d  Alarm: %d  Flags: %s",
+			      $hello, $fight, $flee, $alarm, decode_flags($flags, \@AIDT_FLAGS); },
      "CREA.FLAG" => sub { decode_flags(unpack($RD{'CREA.FLAG'}, $_[0]), \@CREATURE_FLAGS) },
      "CREA.NPDT" => sub { my($typ_i, $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
 			     $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
@@ -1602,6 +1620,8 @@ my %TOSTR =
 			  sprintf "School: %s  BaseCost: %0.2f  Flags: %s  RGB: (%x, %x, %x)  SizeX: %0.2f  SizeCap: %0.2f",
 			      $MAGIC_SCHOOL{$school}, $base, decode_flags($flags, \@MGEF_FLAGS), $red, $blue, $green, $size, $sizecap },
      "MISC.MCDT" => sub { sprintf "Weight: %0.2f  Value: %d  Unk:%0x", unpack($RD{'MISC.MCDT'}, $_[0]) },
+#     "NPC_.ANAM" => $TOSTR_UNKNOWN,
+#     "NPC_.KNAM" => $TOSTR_UNKNOWN,
      "NPC_.CNDT" => sub { unpack($RD{'NPC_.CNDT'}, $_[0]) },
      "NPC_.FLAG" => sub { decode_flags(unpack($RD{'NPC_.FLAG'}, $_[0]), \@NPC_FLAGS) },
      "NPC_.AIDT" => sub { my($hello, $unk1, $fight, $flee, $alarm, $unk2, $unk3, $unk4, $flags) = unpack($RD{'NPC_.AIDT'}, $_[0]);
@@ -1737,7 +1757,7 @@ TEXT TNAM WNAM))
 
 sub opts_dump {
     $_[0] && do { die $DUMP_USAGE; };
-    getopts('c:Di:lm:M:nRrs:t:') or die $DUMP_USAGE;
+    getopts('c:Df:F:i:lm:M:nNRrs:t:') or die $DUMP_USAGE;
 }
 
 my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
@@ -2490,8 +2510,42 @@ sub cmd_diff {
     output_diff($diff2_file, \@diff2);
 }
 
+sub read_match_files {
+    if ($::opt_f) {
+	my @pats;
+	unless(open(MF, "<$::opt_f")) {
+	    die qq{Error opening "$::opt_f" for input ($!)\n};
+	}
+	while (<MF>) {
+	    chomp;
+	    push(@pats, $_);
+	}
+	close(MF);
+	if (scalar(@pats) > 0) {
+	    push(@pats, $::opt_m) if ($::opt_m);
+	    $::opt_m = '(?:' . join("|", @pats) . ')';
+	}
+    }
+    if ($::opt_F) {
+	my @pats;
+	unless(open(MF, "<$::opt_F")) {
+	    die qq{Error opening "$::opt_F" for input ($!)\n};
+	}
+	while (<MF>) {
+	    chomp;
+	    push(@pats, $_);
+	}
+	close(MF);
+	if (scalar(@pats) > 0) {
+	    push(@pats, $::opt_M) if ($::opt_M);
+	    $::opt_M = '(?:' . join("|", @pats) . ')';
+	}
+    }
+}
+
 sub cmd_delete {
     my($plugin) = @_;
+    read_match_files();
     my $oldplugin = make_backup($plugin);
     open_input_plugin($oldplugin);
     unless(open(OUT, ">$plugin")) {
@@ -2636,11 +2690,12 @@ sub encoder {
 
 sub cmd_modify {
     my($plugin) = @_;
-    # load program if specified with -f
-    if ($::opt_f) {
-	unless (do $::opt_f) {
-	    die "Error reading $::opt_f ($!)\n" if ($!);
-	    die "Error processing $::opt_f ($@)\n" if ($@);
+    read_match_files();
+    # load Perl program if specified with -p
+    if ($::opt_p) {
+	unless (do $::opt_p) {
+	    die "Error reading $::opt_p ($!)\n" if ($!);
+	    die "Error processing $::opt_p ($@)\n" if ($@);
 	}
 	$::opt_e = 'main($rec_type, $r, $unk, $flags);' if (not $::opt_e);
     }
@@ -2803,7 +2858,8 @@ sub rec_to_string {
     }
     my $flagstr = decode_flags($flags, \@REC_FLAGS);
     print "REC=$rec_type flags=$flagstr\n" if (DBG);
-    my $hdr = defined($flags) ? "\n${prefix}Record: $n  Flags: $flagstr${unkstr}$separator" : "";
+    my $recnum = ($::opt_N) ? "" : $n;
+    my $hdr = defined($flags) ? "\n${prefix}Record: $recnum  Flags: $flagstr${unkstr}$separator" : "";
     my @frmr_data;
     my $first_frmr_seen = 0;
     my $frmr_match = 0;
@@ -2860,6 +2916,7 @@ sub rec_to_string {
 
 sub cmd_dump {
     my($plugin) = @_;
+    read_match_files();
     print "### Scanning $plugin\n" if ($::opt_v);
     open_input_plugin($plugin);
     my $expected = "TES3";
