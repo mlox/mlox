@@ -11,6 +11,7 @@
 
 use Cwd;
 use File::Basename;
+use File::Copy;
 use Getopt::Std;
 use Data::Dumper;
 use strict;
@@ -20,6 +21,42 @@ BEGIN {
     # reached, we define the following constants so that we only compile
     # debug/help code into the program when it it actually needed.
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
+}
+
+my $ESP_USAGE = q{Usage: tes3cmd esp OPTIONS master...
+
+OPTIONS
+ -D        turn on debug output
+
+Converts input master into a plugin (.esp).
+
+Example:
+
+# output is: plugin.esp
+tes3cmd esp plugin.esm
+};
+
+sub opts_esp {
+    $_[0] && do { die $ESP_USAGE; };
+    getopts('D') or die $ESP_USAGE;
+}
+
+my $ESM_USAGE = q{Usage: tes3cmd esm OPTIONS plugin...
+
+OPTIONS
+ -D        turn on debug output
+
+Converts input plugin into a master (.esm).
+
+Example:
+
+# output is: plugin.esm
+tes3cmd esm plugin.esp
+};
+
+sub opts_esm {
+    $_[0] && do { die $ESM_USAGE; };
+    getopts('D') or die $ESM_USAGE;
 }
 
 my $MODIFY_USAGE = q{Usage: tes3cmd modify OPTIONS plugin...
@@ -247,7 +284,7 @@ OPTIONS
  -m regex  only print records that match given regular expression.
  -M regex  only print records that do not match given regular expression.
  -n        do not print banner identifying the current plugin.
- -N        do not print the record numbers.
+ -N        print record numbers (starting from first printed == 1).
  -R        print raw records, instead of as text, as an .esp including a TES3 header.
  -r        print raw records, instead of as text.
  -s string specify field separator string for single-line output.
@@ -1128,6 +1165,7 @@ default_codec('FACT.FADT', (["Primary_Attribute", "L"],
 #			  }
 #			  join("\n", @results);
 
+default_codec('GLOB.FNAM', (["VarType", "a"]));
 default_codec('GMST.NAME', (["Name", "a*"]));
 default_codec('INFO.ACDT', (["Actor_Data", "Z*"])); # (only in .ess)
 default_codec('INFO.INAM', (["Name", "Z*"]));
@@ -1898,6 +1936,8 @@ my %CMDS = (
 	    "overdial" => [ \&opts_overdial, \&cmd_overdial ],
 	    "delete"   => [ \&opts_delete,   \&cmd_delete ],
 	    "dump"     => [ \&opts_dump,     \&cmd_dump ],
+	    "esp"      => [ \&opts_esp,      \&cmd_esp ],
+	    "esm"      => [ \&opts_esm,      \&cmd_esm ],
 	    "fogpatch" => [ \&opts_fogpatch, \&cmd_fogpatch ],
 	    "header"   => [ \&opts_header,   \&cmd_header ],
 	    "help"     => [ \&opts_help,     undef ],
@@ -2846,20 +2886,22 @@ sub cmd_modify {
 }
 
 sub rec_to_string {
-    my($rec, $rec_type, $plugin, $flags, $unk, $n, $wanted_subtypes) = @_;
+    my($rec, $rec_type, $plugin, $flags, $unk, $n, $wanted_subtypes, $dial) = @_;
     my $p = 0;
     my $rec_len = length($rec);
     my @print_rec;
     my $separator = $::opt_s || "\n    ";
     my($prefix, $unkstr);
+    $prefix = "\n" unless ($::opt_s);
     if (DBG) {
 	$prefix = "$plugin ";
 	$unkstr = sprintf "  Unk:%04x", $unk;
     }
+    my $dial_str = ($rec_type eq 'INFO') ? "  $dial" : '';
     my $flagstr = decode_flags($flags, \@REC_FLAGS);
     print "REC=$rec_type flags=$flagstr\n" if (DBG);
-    my $recnum = ($::opt_N) ? "" : $n;
-    my $hdr = defined($flags) ? "\n${prefix}Record: $recnum  Flags: $flagstr${unkstr}$separator" : "";
+    my $recnum = ($::opt_N) ? $n : "";
+    my $hdr = defined($flags) ? "${prefix}Record: $recnum  Flags: $flagstr${unkstr}${dial_str}$separator" : "";
     my @frmr_data;
     my $first_frmr_seen = 0;
     my $frmr_match = 0;
@@ -2947,6 +2989,7 @@ sub cmd_dump {
 	    }
 	}
     }
+    my $dial; 			# current dialog string, used for printing INFOs
     my $plugin_banner = ($::opt_R) ? $blank_header : "\n$plugin:\n";
     $plugin_banner = undef if ($::opt_r);
     $plugin_banner = undef if ($::opt_n);
@@ -2954,13 +2997,17 @@ sub cmd_dump {
     while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
 	$expected = undef;
 	last if not defined $rec_type;
+	my $subrec_hash = parse_subrec_hash($rec);
 	if ($wanted_ids) {
-	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    my $id = rec_id($subrec_hash, $rec_type);
 	    next if ($id !~ /$wanted_ids/i);
+	}
+	if ($rec_type eq 'DIAL') {
+	    $dial = '[' . $DIAL_TYPE{unpack("C", $subrec_hash->{DATA}->[0])} . ':' . unpack("Z*", $subrec_hash->{NAME}->[0]) . ']';
 	}
 	next if (%wanted_types and not $wanted_types{lc($rec_type)});
 	$n = 0 if ($rec_type eq "TES3");
-	my $print_rec = rec_to_string($rec, $rec_type, $plugin, $flags, $unk, $n, $wanted_subtypes);
+	my $print_rec = rec_to_string($rec, $rec_type, $plugin, $flags, $unk, $n, $wanted_subtypes, $dial);
 	next if ($::opt_m and $print_rec !~ /$::opt_m/i);
 	next if ($::opt_M and $print_rec =~ /$::opt_M/i);
 	if ($print_rec and $plugin_banner) {
@@ -3191,6 +3238,69 @@ sub cmd_header {
 	print "$plugin: Error, this does not appear to be an elder scrolls plugin\n";
     }
     close(PLUG);
+}
+
+sub convert_plugin {
+    my($input) = @_;
+    my $output;
+    my $byte_expected;
+    my $byte_new;
+    if ($input =~ /\.esp$/i) {
+	# convert plugin to master
+	$byte_expected = "\000";
+	$byte_new = "\001";
+	($output = $input) =~ s/\.esp$/.esm/i;
+    } else {
+	# convert master to plugin
+	$byte_expected = "\001";
+	$byte_new = "\000";
+	($output = $input) =~ s/\.esm$/.esp/i;
+    }
+    copy($input, $output) or die "Error, copy failed $input -> $output ($!)\n";
+    eval {
+	open(OUT, "+<$output") or die qq{Error opening "$output" for read/write ($!)};
+	binmode(OUT) or die "Error setting binmode on $output ($!)";
+	my $magic;
+	(sysread(OUT, $magic, 4) == 4) or die "$output: Error reading magic ($!)";
+	if ($magic eq "TES3") {
+	    sysseek(OUT, 28, 0) or die "sysseek";
+	    my $byte;
+	    (sysread(OUT, $byte, 1) == 1) or die "$output: Error reading master byte ($!)\n";
+	    my $val = unpack("C", $byte);
+	    #warn "masterbyte = $val\n";
+	    ($byte eq $byte_expected) or
+		die qq{Error, expected master byte value of @{[unpack("C",$byte_expected)]}, got $val instead};
+	    sysseek(OUT, 28, 0) or die "sysseek";
+	    (syswrite(OUT, $byte_new, 1) == 1) or die "$output: Error writing master byte ($!)\n";
+	} elsif ($magic eq "TES4") {
+	    die "This function is not yet implemented for TES4 files";
+	} else {
+	    die "$output: Error, this does not appear to be Morrowind plugin";
+	}
+	close(OUT);
+    };
+    if ($@) {
+	warn "$@\n";
+	close(OUT);
+	unlink($output);
+	return;
+    }
+}
+
+# convert a master to a plugin
+sub cmd_esp {
+    my($master) = @_;
+    die "Error, input must be a master (.esm)\n"
+	unless($master =~ /\.esm$/i);
+    convert_plugin($master);
+}
+
+# convert a plugin to a master
+sub cmd_esm {
+    my($plugin) = @_;
+    die "Error, input must be a plugin (.esp)\n"
+	unless($plugin =~ /\.esp$/i);
+    convert_plugin($plugin);
 }
 
 sub main {
