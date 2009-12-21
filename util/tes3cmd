@@ -232,17 +232,20 @@ sub opts_com {
 my $DIFF_USAGE = q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
 OPTIONS
- -D   turn on debug output.
- -i   comma-delimited list of field names to ignore.
+ -D          turn on debug output.
+ -i          comma-delimited list of field names to ignore.
+ -o OPTLIST  comma-delimited list of reports to give
 
 Prints a report on the differences between the two TES3 files.
 A summary report with up to four sections is printed to standard output
 that gives an overview of differences, as lists of record IDs:
- - objects in plugin1 that do not exist in plugin2
- - objects in plugin2 that do not exist in plugin1
- - objects in plugin1 that are equal in plugin2
- - objects in plugin1 that are different in plugin2
-(Sections that would have no items are not printed).
+ - (e1) objects in plugin1 that do not exist in plugin2
+ - (e2) objects in plugin2 that do not exist in plugin1
+ - (eq) objects in plugin1 that are equal in plugin2
+ - (ne) objects in plugin1 that are different in plugin2
+(The token in parentheses denotes the name of the report, which is
+selectable via the -o option. Sections that would have no items are
+not printed).
 
 When objects in plugin1 are different in plugin2, each of these objects
 is printed in detail to a file "plugin1.diff" and "plugin2.diff", which
@@ -263,11 +266,14 @@ tes3cmd diff save1000.ess save2000.ess > diff.out
 # reduce the amount of differences as in the following example.
 # Report on differences, but ignore the subfields CREA.AIDT and CELL.ND3D:
 tes3cmd diff -i crea.aidt,cell.nd3d testa0000.ess testb0000.ess > diff.out
+
+# Just print the records that differ
+tes3cmd diff -o ne plugin1.esp plugin2.esp
 };
 
 sub opts_diff {
     $_[0] && do { die $DIFF_USAGE; };
-    getopts('Di:') or die $DIFF_USAGE;
+    getopts('Di:o:') or die $DIFF_USAGE;
 }
 
 
@@ -330,7 +336,7 @@ sub list_files {
 	}
 	closedir(DH);
     } else {
-	print qq{ERROR opening "$dir" ($!)\n};
+	warn qq{ERROR opening "$dir" ($!)\n};
     }
     return(\%files);
 }
@@ -342,21 +348,21 @@ sub list_active {
     my $ini = "$datadir/../$mwfiles->{'morrowind.ini'}";
     my %active;
     if (open(INI, "<$ini")) {
-	print qq{INI is: "$ini"\n} if (DBG);
+	warn qq{INI is: "$ini"\n} if (DBG);
 	while (<INI>) {
 	    if (/GameFile\d+=([^\r\n]*)/) {
 		my $plugin = lc $1;
 		if ($datafiles->{$plugin}) {
-		    print qq{Found Gamefile: "$1"\n} if (DBG);
+		    warn qq{Found Gamefile: "$1"\n} if (DBG);
 		    $active{$plugin} = $1;
 		} else {
-		    print qq{MISSING Gamefile: "$1"\n} if (DBG);
+		    warn qq{MISSING Gamefile: "$1"\n} if (DBG);
 		}
 	    }
 	}
 	close(INI);
     } else {
-	print qq{Error opening "$ini" for input ($!)\n};
+	warn qq{Error opening "$ini" for input ($!)\n};
     }
     return(\%active);
 }
@@ -369,19 +375,19 @@ sub find_datadir {
 	return(".");
     }
     my $dir = Cwd::getcwd();
-    print "DBG: checking for data dir in: $dir\n" if (DBG);
+    warn "DBG: checking for data dir in: $dir\n" if (DBG);
     while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
 	my $datadir = list_files($dir)->{"data files"};
 	if ($datadir) {
-	    print "DBG: found datadir: $dir/$datadir\n" if (DBG);
+	    warn "DBG: found datadir: $dir/$datadir\n" if (DBG);
 	    return("$dir/$datadir");
 	}
 	my @parts = split(m![\\/]!, $dir);
 	pop(@parts);
 	$dir = join("/", @parts);
-	print "DBG: checking for data dir in: $dir\n" if (DBG);
+	warn "DBG: checking for data dir in: $dir\n" if (DBG);
     }
-    print qq{Can't find "Data Files" directory. Won't be able to find masters\n};
+    warn qq{Can't find "Data Files" directory. Won't be able to find masters\n};
     return(undef);		# not running under morrowind directory
 }
 
@@ -938,9 +944,23 @@ sub dump_lookup {
 
 my $NREC;
 
+my $DECODER_UNKNOWN = sub { return({ Unknown => unpack("H*", $_[0])}, {}); };
+my $ENCODER_UNKNOWN = sub { return(pack("H*", $_[0]->{Unknown})); };
 my %DECODE = ();
 my %ENCODE = ();
 my %RD = ();			# TBD switch to using the info from DECODE and get rid of RD
+sub dumprec {
+    my($hr, $idx) = @_;
+    my $dumpstr = "";
+    my @rec = ();
+    while (my($key, $val) = each %$hr) {
+	$rec[$idx->{$key}] = [$key, $val];
+    }
+    foreach (@rec) {
+	 $dumpstr .= "$_->[0]:\t$_->[1]\n";
+    }
+    return($dumpstr);
+}
 sub compile_def {
     my(@def) = @_;
     my $format = "";
@@ -1042,11 +1062,11 @@ default_codec('BOOK.BKDT', (["Weight", "f"],
 			    ["Scroll", "L"],
 			    ["Skill", "L"],
 			    ["Enchant_Points", "L"]));
-default_codec('CELL.AMBI', (["Ambient_Color", "l"],
-			    ["Sunlight_Color", "l"],
-			    ["Fog_Color", "l"],
+default_codec('CELL.AMBI', (["Ambient_Color", "L"],
+			    ["Sunlight_Color", "L"],
+			    ["Fog_Color", "L"],
 			    ["Fog_Density", "f"]));
-default_codec('CELL.CSTN', (["Target", "Z*"])); # guessing this is: "cast spell target name"
+default_codec('CELL.CSTN', (["Target", "Z*"])); # guessing this is: "Cast Spell Target Name"
 
 # custom codec for CELL_DATA
 $DECODE{'CELL.DATA'} = sub {
@@ -1252,8 +1272,8 @@ $DECODE{'NPC_.NPDT'} = sub {
     my %hr;
     my $len = length($buff);
     if ($len == 12) {
-	my($lev, $disp, $fact, $rank, $gold) = unpack("SC3x[C3]L", $_[0]);
-	return({ Level => $lev, Disposition => $disp, Faction => $fact, Rank => $rank, Gold => $gold },
+	my($lev, $disp, $fact, $rank, $unk1, $unk2, $unk3, $gold) = unpack("SC6L", $_[0]);
+	return({ Level => $lev, Disposition => $disp, Faction => $fact, Rank => $rank, Unk1 => $unk1, Unk2 => $unk2, Unk3 => $unk3, Gold => $gold },
 	       {});
     } elsif ($len == 52) {
 	my $i = 0;
@@ -1263,7 +1283,7 @@ $DECODE{'NPC_.NPDT'} = sub {
 	}
 	($hr{Level}, $hr{Str}, $hr{Int}, $hr{Wil}, $hr{Agi}, $hr{Spd}, $hr{End},
 	 $hr{Per}, $hr{Lck}, $hr{Rep}, $hr{Health}, $hr{Magicka}, $hr{Fatigue},
-	 $hr{Disposition}, $hr{Faction}, $hr{Rank}, $hr{Gold}) = unpack("SC8x[C27]CSSSCCCCxCL", $buff);
+	 $hr{Disposition}, $hr{Faction}, $hr{Rank}, $hr{Gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
 	return(\%hr, {});
     } else {
 	warn "BAD NPC_.NPDT length ($len) is not 12 or 52!\n";
@@ -1272,7 +1292,7 @@ $DECODE{'NPC_.NPDT'} = sub {
 $ENCODE{'NPC_.NPDT'} = sub {
     my($hr, $idx) = @_;
     if (exists $hr->{Magicka}) {
-	return(pack("SC8C27CSSSCCCCxCL",
+	return(pack("SC8C27CSSSCCCxL",
 		    $hr->{Level}, $hr->{Str}, $hr->{Int}, $hr->{Wil}, $hr->{Agi},
 		    $hr->{Spd}, $hr->{End}, $hr->{Per}, $hr->{Lck},
 		    $hr->{"Block"}, $hr->{"Armorer"}, $hr->{"MediumArmor"}, $hr->{"HeavyArmor"},
@@ -1285,7 +1305,7 @@ $ENCODE{'NPC_.NPDT'} = sub {
 		    $hr->{Rep}, $hr->{Health}, $hr->{Magicka}, $hr->{Fatigue},
 		    $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold}));
     } else {
-	return(pack("SC3x[C3]L", $hr->{Level}, $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold}));
+	return(pack("SC6L", $hr->{Level}, $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Unk1}, $hr->{Unk2}, $hr->{Unk3},  $hr->{Gold}));
     }
 };
 
@@ -1385,6 +1405,7 @@ default_codec('DODT', (["X", "f"],
 default_codec('FLAG', (["Flags", "L"]));
 default_codec('NPCO', (["Count", "l"],
 		       ["Name", "a32"]));
+default_codec('NPCS', (["String", "a32"]));
 default_codec('XCHG', (["Enchant_Charge", "L"]));
 default_codec('XHLT', (["Health", "L"]));
 default_codec('XSCL', (["Scale", "f"]));
@@ -1465,7 +1486,7 @@ foreach (qw(FLTV WHGT)) {
 
 # subrecords that decode as variable length Z-strings:
 foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM
-HSND HVFX ITEX KNAM LSTN MNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
+HSND HVFX ITEX KNAM LSTN MNAM MODL NAME PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
 TEXT TNAM WNAM)) {
     $DECODE{$_} = sub{ return({ String => unpack("Z*", $_[0]) }, {}); };
     $ENCODE{$_} = sub{ pack("Z*", $_[0]->{String} ); };
@@ -1564,7 +1585,7 @@ my %TOSTR =
      "CREA.NPDT" => sub { my($typ_i, $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
 			     $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
 			     $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold) = unpack($RD{'CREA.NPDT'}, $_[0]);
-			  sprintf "Type: %s  Lev: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tHealth: %d  SpellPts: %d  Fatigue: %d  Soul: %d  Combat: %d  Magic: %d  Stealth: %d\n\t\tAttack-1 (%d, %d)  Attack-2: (%d, %d)  Attack-3 (%d, %d)  Gold: %d",
+			  sprintf "Type: %s  Lev: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tHealth: %d  Magicka: %d  Fatigue: %d  Soul: %d  Combat: %d  Magic: %d  Stealth: %d\n\t\tAttack-1 (%d, %d)  Attack-2: (%d, %d)  Attack-3 (%d, %d)  Gold: %d",
 			      $CREA_TYPE[$typ_i], $lev, $str, $int, $wil, $agi, $spd, $end, $per, $lck,
 				  $hlth, $spelpts, $fat, $soul, $comb, $mag, $stlth,
 				      $atkmin1, $atkmax1, $atkmin2, $atkmax2, $atkmin3, $atkmax3, $gold;
@@ -1674,10 +1695,11 @@ my %TOSTR =
 			      my $skills = "";
 			      my $n = 0;
 			      foreach my $skill (sort values %SKILL) {
+				  next if ($skill eq 'None');
 				  $skills .= "\n\t\t" if (($n++ % 7) == 0);
 				  $skills .= " $skill: $hr->{$skill}";# if (defined $hr->{$skill});
 			      }
-			      sprintf "  Level: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tRep: %d  Health: %d SpellPts: %d  Fatigue: %d  Disp: %d  Faction: %d  Rank: %d  Gold: %d\n\t\tSkills:$skills",
+			      sprintf "  Level: %d  Str: %d  Int: %d  Wil: %d  Agi: %d  Spd: %d  End: %d  Per: %d  Lck: %d\n\t\tRep: %d  Health: %d Magicka: %d  Fatigue: %d  Disp: %d  Faction: %d  Rank: %d  Gold: %d\n\t\tSkills:$skills",
 				  $hr->{Level}, $hr->{Str}, $hr->{Int}, $hr->{Wil}, $hr->{Agi}, $hr->{Spd},
 				      $hr->{End}, $hr->{Per}, $hr->{Lck}, $hr->{Rep}, $hr->{Health}, $hr->{Magicka},
 					  $hr->{Fatigue}, $hr->{Disposition}, $hr->{Faction}, $hr->{Rank}, $hr->{Gold};
@@ -1997,21 +2019,21 @@ sub write_header_field {
     my $origlen = length($val);
     $val = substr($val, 0, $fieldlen - 1);
     if (length($val) < $origlen) {
-	print "Warning, input $label truncated because it exceeded field length of: $fieldlen\n";
+	warn "Warning, input $label truncated because it exceeded field length of: $fieldlen\n";
     }
     # and plop the given string value into it, with at least one ending null
     substr($valz, 0, length($val)) = $val;
     unless(seek(PLUG, $offset, 0)) {
-	print "$plugin: Error seeking to start of $label field at offset: $offset ($!)\n";
+	warn "$plugin: Error seeking to start of $label field at offset: $offset ($!)\n";
 	return(undef);
     }
     my $len = length($valz);
     my $nwritten = syswrite(PLUG, $valz);
     if ($nwritten != $len) {
-	print "$plugin: Error incomplete write to $label field ( ($!)\n";
+	warn "$plugin: Error incomplete write to $label field ( ($!)\n";
 	return(undef);
     }
-    print qq{$plugin: $label set to: "$val"\n} unless ($::opt_q);
+    warn qq{$plugin: $label set to: "$val"\n} unless ($::opt_q);
     return(1);
 }
 
@@ -2029,18 +2051,21 @@ sub read_rec {
 	return(undef);
     }
     if ($n_read != $hdr_size) {
-	print "Read Error ($plugin header): asked for $hdr_size bytes, got $n_read\n";
+	my $inp_offset = sysseek(INP, 0, 1);
+	warn qq{Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read\n};
 	return(undef);
     }
     my($rec_type, $rec_len, $unk, $flags) = unpack("a4LLL", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rec_type) {
-	print "Error ($plugin): Expected: $expected_type, got: $rec_type\n";
+	my $inp_offset = sysseek(INP, 0, 1);
+	warn qq{Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rec_type\n};
 	return(undef);
     }
     my $rec = "";
     $n_read = sysread(INP, $rec, $rec_len);
     if ($n_read != $rec_len) {
-	print "Read Error ($plugin rec): asked for $rec_len bytes, got $n_read\n";
+	my $inp_offset = sysseek(INP, 0, 1);
+	warn qq{Read Error ($plugin record at byte: $inp_offset, rec_type="$rec_type"): asked for $rec_len bytes, got $n_read\n};
 	return(undef);
     }
     return($rec_type, $rec, $unk, $flags);
@@ -2072,9 +2097,9 @@ sub parse_subrec_list {
 }
 
 # this version takes a little longer to execute
-sub parse_subrec_hash_long {
+sub parse_subrec_hash {
     my($rec) = @_;
-    print "DBG: calling parse_subrec_hash_long for rec=$rec\n" if (DBG);
+    warn "DBG: calling parse_subrec_hash_long for rec=$rec\n" if (DBG);
     my %r = ();
     my $p = 0;
     my $rec_len = length($rec);
@@ -2088,7 +2113,7 @@ sub parse_subrec_hash_long {
     return(\%r);
 }
 
-sub parse_subrec_hash {
+sub parse_subrec_hash_unused {
     my($rec) = @_;
     my %r = ();
     my @parts = eval { unpack("(a4L/a*)*", $rec); };
@@ -2134,7 +2159,7 @@ sub allowed_cell_type {
 
 sub pprec {
     my($rec, $subtype) = @_;
-    print "DBG: pprec($rec)\n" if (DBG);
+    warn "DBG: pprec($rec)\n" if (DBG);
     my $recstr = join(":", grep(!/[^[:print:]]/, map { s/[\000]+$//gm; tr/\r\n/ /; $_; } split(/\000?([A-Z][A-Z_][A-Z_][A-Z_\d])...\000/, $rec)));
     $recstr =~ s/^:$subtype:.*?:// if ($subtype);
     $recstr =~ s/:([A-Z][A-Z_][A-Z_][A-Z_\d])/|$1/g;
@@ -2211,7 +2236,7 @@ sub read_object_ids {
     while(my($rec_type, $rec, $unk, $flags) = read_rec(undef, $plugin)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
-	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
 	    next;
 	}
 	my $id = rec_id(parse_subrec_hash($rec), $rec_type);
@@ -2231,7 +2256,7 @@ sub read_dialogs {
     while(my($rec_type, $rec, $unk, $flags) = read_rec(undef, $plugin)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
-	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
 	    next;
 	}
 	next if ($rec_type ne "DIAL");
@@ -2249,15 +2274,15 @@ sub print_header { print OUT $blank_header; }
 
 sub cmd_fogpatch {
     my $datadir = find_datadir();
-    print "Data Files = $datadir\n";
+    warn "Data Files = $datadir\n";
     my $datafiles = list_active($datadir);
     my $fogpatch = "$datadir/fogpatch.esp";
     unless(open(OUT, ">$fogpatch")) {
-	print qq{Error opening "$fogpatch" for output ($!)\n};
+	warn qq{Error opening "$fogpatch" for output ($!)\n};
 	return;
     }
     unless(binmode(OUT, ':raw')) {
-	print qq{Error setting binmode on "$fogpatch" ($!)\n};
+	warn qq{Error setting binmode on "$fogpatch" ($!)\n};
 	close(OUT);
 	return;
     }
@@ -2267,7 +2292,7 @@ sub cmd_fogpatch {
     foreach my $plugin (keys %{$datafiles}) {
 	next unless ($plugin =~ /\.es[mp]$/i);
 	$plugin = $datafiles->{$plugin};
-	print "Scanning plugin: $plugin\n" if (DBG);
+	warn "Scanning plugin: $plugin\n" if (DBG);
 	open_input_plugin("$datadir/$plugin");
 	my $expected = "TES3";
 	while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
@@ -2287,10 +2312,10 @@ sub cmd_fogpatch {
 			my $fog_den_ambi = unpack("x[L3]f", $ambi);
 			if ($fog_den_ambi != $fog_den_data) {
 			    $fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
-			    print "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
+			    warn "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
 			}
 			if ($fog_den_data == 0.0 and not $cell{$name}) {
-			    print "    FOGPATCH: $plugin\t\tCELL: $name\n";
+			    warn "    FOGPATCH: $plugin\t\tCELL: $name\n";
 			    # write NAME, DATA, AMBI
 			    my $newrec = subrec("NAME", "$name\000");
 			    substr($data, 8, 4) = pack("f", 0.01);
@@ -2302,14 +2327,14 @@ sub cmd_fogpatch {
 			    $cell{$name} = 1;
 			}
 		    } else {
-			print "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
+			warn "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
 			    if ($ambilen != 0);
 		    }
 		}
 	    }
 	}
     }
-    print qq{Patched $n cells in "$fogpatch"\n};
+    warn qq{Patched $n cells in "$fogpatch"\n};
     close OUT;
     $::opt_a = "tes3cmd";
     $::opt_d = "Fogbug Patch";
@@ -2322,22 +2347,22 @@ sub sort_by_date {
     my($dir, @files) = @_;
     my $dirlist = list_files($dir);
     my @sorted = sort { (-M "$dir/$dirlist->{$b}") <=> (-M "$dir/$dirlist->{$a}") } @files;
-    print qq{DBG: sorted files:\n}, join("\n", @sorted), "\n" if (DBG);
+    warn qq{DBG: sorted files:\n}, join("\n", @sorted), "\n" if (DBG);
     return(@sorted);
 }
 
 sub cmd_cellnamepatch {
     my $datadir = find_datadir();
-    print qq{Data Files is: "$datadir"\n};
+    warn qq{Data Files is: "$datadir"\n};
     my $datafiles = list_active($datadir);
     my $patch_file = "cellnamepatch.esp";
     my $patch_path = "$datadir/$patch_file";
     unless(open(OUT, ">$patch_path")) {
-	print qq{Error opening "$patch_path" for output ($!)\n};
+	warn qq{Error opening "$patch_path" for output ($!)\n};
 	return;
     }
     unless(binmode(OUT, ':raw')) {
-	print qq{Error setting binmode on "$patch_path" ($!)\n};
+	warn qq{Error setting binmode on "$patch_path" ($!)\n};
 	close(OUT);
 	return;
     }
@@ -2350,7 +2375,7 @@ sub cmd_cellnamepatch {
     foreach my $plugin (@plugins) {
 	$plugin = $datafiles->{$plugin};
 	next if ($plugin eq $patch_file);
-	print "Scanning plugin: $plugin\n";
+	warn "Scanning plugin: $plugin\n";
 	open_input_plugin("$datadir/$plugin");
 	my $expected = "TES3";
 	while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
@@ -2366,20 +2391,20 @@ sub cmd_cellnamepatch {
 		if (exists $cell{$coord}->{NAME}) {
 		    my $prevname = $cell{$coord}->{NAME};
 		    if ($prevname ne $name) {
-			print qq{($coord) Redefined by: "$plugin" ["$prevname" -> "$name"]\n};
+			warn qq{($coord) Redefined by: "$plugin" ["$prevname" -> "$name"]\n};
 			if ($name eq $cell{$coord}->{ORIGNAME}) {
-			    print qq{Not reverting to original name: "$cell{$coord}->{ORIGNAME}"\n};
+			    warn qq{Not reverting to original name: "$cell{$coord}->{ORIGNAME}"\n};
 			    $cell{$coord}->{OUTPUTFLAG}++;
 			} elsif ($name) {
 			    my $prevname = $cell{$coord}->{NAME};
 			    my $prevplug = $cell{$coord}->{PLUG};
-			    print qq{($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
+			    warn qq{($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
 			    my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data);
 			    $cell{$coord}->{NAME} = $name;
 			    $cell{$coord}->{PLUG} = $plugin;
 			    $cell{$coord}->{REC} = [$rec_type, $newrec, $unk, $flags];
 			} else {
-			    print qq{($coord) Skipping null name: [$plugin]:"$name"\n};
+			    warn qq{($coord) Skipping null name: [$plugin]:"$name"\n};
 			}
 		    }
 		} else {
@@ -2391,12 +2416,12 @@ sub cmd_cellnamepatch {
 	    }
 	}
     }
-    print "Saving patch file: $patch_file\n";
+    warn "Saving patch file: $patch_file\n";
     foreach my $coord (%cell) {
 	if ($cell{$coord}->{OUTPUTFLAG}) {
 	    my $recref = $cell{$coord}->{REC};
 	    if ($recref) {
-		print qq{CELL: ($coord) -> NAME: "$cell{$coord}->{NAME}"\n};
+		warn qq{CELL: ($coord) -> NAME: "$cell{$coord}->{NAME}"\n};
 		write_rec(@{$recref});
 	    }
 	}
@@ -2442,7 +2467,7 @@ sub cmd_com {
     my $compare_fun = sub {
 	my($rec_type, $id) = @_;
 	if ($objects1->{$rec_type}->{$id}) {
-	    print "  $rec_type: $id\n";
+	    warn "  $rec_type: $id\n";
 	}
     };
     read_object_ids($plugin2, $compare_fun);
@@ -2455,7 +2480,7 @@ sub read_objects {
     while(my($rec_type, $rec, $unk, $flags) = read_rec(undef, $plugin)) {
 	last if not defined $rec_type;
 	if ($flags & 0x1000) {
-	    print "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+	    warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
 	    next;
 	}
 	my $id = rec_id(parse_subrec_hash($rec), $rec_type);
@@ -2476,7 +2501,7 @@ sub output_diff {
 	    print OUT join("\n", @{$diff});
 	    close(OUT);
 	} else {
-	    print "Error opening $diff_file for output ($!)\n";
+	    warn "Error opening $diff_file for output ($!)\n";
 	}
     }
 }
@@ -2487,7 +2512,9 @@ sub cmd_diff {
     if ($::opt_i) {
 	$ignore = '^(\s+(?:' . join('|', split(/,/, $::opt_i)) . '):)\s.*$';
     }
-    print "IGNORE = $ignore\n" if (DBG);
+    warn "IGNORE = $ignore\n" if (DBG);
+    $::opt_o ||= 'e1,e2,eq,ne';
+    my %rpt = map { $_, 1 } split(/,/, lc $::opt_o);
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
     my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
@@ -2507,47 +2534,51 @@ sub cmd_diff {
 		$print_rec2 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
 		$print_rec2 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/gm;
 		if ($print_rec1 eq $print_rec2) {
-		    push(@p1_equal_p2, "$rec_type - $id");
-		} else {
-		    push(@p1_diff_p2, "$rec_type - $id");
-		    push(@diff1, "\n$rec_type - $id");
+		    push(@p1_equal_p2, "$rec_type: $id") if ($rpt{eq});
+		} elsif ($rpt{ne}) {
+		    push(@p1_diff_p2, "$rec_type: $id");
+		    push(@diff1, "\n$rec_type: $id");
 		    push(@diff1, $print_rec1);
-		    push(@diff2, "\n$rec_type - $id");
+		    push(@diff2, "\n$rec_type: $id");
 		    push(@diff2, $print_rec2);
 		}
 	    } else {
-		push(@p1_not_p2, "$rec_type - $id");
+		push(@p1_not_p2, "$rec_type: $id") if ($rpt{e1});
 	    }
 	}
     }
     foreach my $rec_type (sort keys %{$obj2}) {
 	foreach my $id (sort keys %{$obj2->{$rec_type}}) {
 	    if (not defined $obj1->{$rec_type}->{$id}) {
-		push(@p2_not_p1, "$rec_type - $id");
+		push(@p2_not_p1, "$rec_type: $id") if ($rpt{e2});
 	    }
 	}
     }
     # now print the diff report
-    if (my $n = @p1_not_p2) {
+    if ($rpt{e1} and my $n = @p1_not_p2) {
 	print qq{\nRecords in "$plugin1" not in "$plugin2" ($n):\n};
 	foreach (@p1_not_p2) { print "$_\n"; }
     }
-    if (my $n = @p2_not_p1) {
+    if ($rpt{e2} and my $n = @p2_not_p1) {
 	print qq{\nRecords in "$plugin2" not in "$plugin1" ($n):\n};
 	foreach (@p2_not_p1) { print "$_\n"; }
     }
-    if (my $n  = @p1_equal_p2) {
+    if ($rpt{eq} and my $n  = @p1_equal_p2) {
 	print qq{\nRecords that are equal in "$plugin1" and "$plugin2" ($n):\n};
 	foreach (@p1_equal_p2) { print "$_\n"; }
     }
-    my $diff1_file = fileparse($plugin1) . ".diff";
-    my $diff2_file = fileparse($plugin2) . ".diff";
-    if (my $n = @p1_diff_p2) {
-	print qq{\nRecords that are different between "$plugin1" and "$plugin2" ($n):\n(Compare $diff1_file to $diff2_file)\n};
-	foreach (@p1_diff_p2) { print "$_\n"; }
+    if ($rpt{ne}) {
+	my $diff1_file = fileparse($plugin1) . ".diff";
+	my $diff2_file = fileparse($plugin2) . ".diff";
+	if (my $n = @p1_diff_p2) {
+	    print qq{\nRecords that are different between "$plugin1" and "$plugin2" ($n):\n(Compare $diff1_file to $diff2_file)\n};
+	    foreach (@p1_diff_p2) {
+		print "$_\n";
+	    }
+	}
+	output_diff($diff1_file, \@diff1);
+	output_diff($diff2_file, \@diff2);
     }
-    output_diff($diff1_file, \@diff1);
-    output_diff($diff2_file, \@diff2);
 }
 
 sub read_match_files {
@@ -2589,11 +2620,11 @@ sub cmd_delete {
     my $oldplugin = make_backup($plugin);
     open_input_plugin($oldplugin);
     unless(open(OUT, ">$plugin")) {
-	print qq{Error opening "$plugin" for output ($!)\n};
+	warn qq{Error opening "$plugin" for output ($!)\n};
 	return;
     }
     unless(binmode(OUT, ':raw')) {
-	print qq{Error setting binmode on "$plugin" ($!)\n};
+	warn qq{Error setting binmode on "$plugin" ($!)\n};
 	close(OUT);
 	return;
     }
@@ -2609,7 +2640,7 @@ sub cmd_delete {
 	    # TBD - validate types?
 	    my($type, $subtype) = split(/\./, $_);
 	    if (length($type) != 4) {
-		print qq{Invalid record type: "$_" (must be 4 characters long)\n};
+		warn qq{Invalid record type: "$_" (must be 4 characters long)\n};
 		next;
 	    }
 	    $delete_types{lc($type)}++;
@@ -2617,7 +2648,7 @@ sub cmd_delete {
 		if (length($subtype) == 4) {
 		    $delete_subtypes{lc("$type.$subtype")}++ if ($subtype);
 		} else {
-		    print qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
+		    warn qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
 		    next;
 		}
 	    }
@@ -2626,7 +2657,7 @@ sub cmd_delete {
     while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
 	$expected = undef;
 	last if not defined $rec_type;
-	print "REC=$rec_type flags=$flags\n" if (DBG);
+	warn "REC=$rec_type flags=$flags\n" if (DBG);
 	my $nodelete = 0;
 	if ($delete_ids) {
 	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
@@ -2657,13 +2688,13 @@ sub cmd_delete {
 			$match = 1 if ($::opt_m and $subrec_str =~ /$::opt_m/i);
 			$match = 1 if ($::opt_M and $subrec_str !~ /$::opt_M/i);
 		    }
-		    print "DELETED SUBRECORD: $subrec_str\n" if ($match);
+		    warn "DELETED SUBRECORD: $subrec_str\n" if ($match);
 		    $print_rec .= "   $full_type: $subrec_str\n";
 		}
 		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec) unless ($match);
 	    } else {
 		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-		print "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
+		warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
 	    }
 	}
 	if ($::opt_s) {
@@ -2671,7 +2702,7 @@ sub cmd_delete {
 	} else {
 	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
 		($::opt_M and $print_rec !~ /$::opt_M/i)) {
-		print "DELETED RECORD:\n$print_rec\n";
+		warn "DELETED RECORD:\n$print_rec\n";
 	    } else {
 		write_rec($rec_type, $rec, $unk, $flags);
 	    }
@@ -2681,7 +2712,7 @@ sub cmd_delete {
     close(OUT);
     my($atime, $mtime) = (stat($oldplugin))[8,9];
     utime($atime, $mtime, $plugin);
-    print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+    warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
 }
 
 sub search_and_replace {
@@ -2725,7 +2756,31 @@ sub run_code {
 
 sub encoder {
     my($full_type, $subrec_type) = @_;
-    return($ENCODE{$full_type} || $ENCODE{$subrec_type});
+    return($ENCODE{$full_type} || $ENCODE{$subrec_type} || $ENCODER_UNKNOWN);
+}
+
+sub decoder {
+    my($full_type, $subrec_type) = @_;
+    return($DECODE{$full_type} || $DECODE{$subrec_type} || $DECODER_UNKNOWN);
+}
+
+sub check_codec {
+    my($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec) = @_;
+    # DEBUG: sanity check codec orthogonality
+    my $newrec = encoder($full_type, $subrec_type)->($hr, $idx);
+    if ($codec_ok and ($newrec ne $subrec)) {
+	# we only print the first codec failure, it's more than enough :(
+	$codec_ok = 0;
+	warn "ERROR, codec failure on $full_type:\n";
+	if (length($newrec) != length($subrec)) {
+	    warn "Encoded length mismatch: newrec: @{[length($newrec)]}  subrec: @{[length($subrec)]}\n";
+	}
+	warn "subrec: ", unpack("H*", $subrec), "\n";
+	warn "newrec: ", unpack("H*", $newrec), "\n";
+	warn Dumper({ hr => $hr, idx => $idx});
+	warn "Full Record:\n$print_rec\n";
+    }
+    return($codec_ok);
 }
 
 sub cmd_modify {
@@ -2734,7 +2789,7 @@ sub cmd_modify {
     # load Perl program if specified with -p
     if ($::opt_p) {
 	unless (do $::opt_p) {
-	    die "Error reading $::opt_p ($!)\n" if ($!);
+#	    die "Error reading $::opt_p ($!)\n" if ($!);
 	    die "Error processing $::opt_p ($@)\n" if ($@);
 	}
 	$::opt_e = 'main($rec_type, $r, $unk, $flags);' if (not $::opt_e);
@@ -2742,11 +2797,11 @@ sub cmd_modify {
     my $oldplugin = make_backup($plugin);
     open_input_plugin($oldplugin);
     unless(open(OUT, ">$plugin")) {
-	print qq{Error opening "$plugin" for output ($!)\n};
+	warn qq{Error opening "$plugin" for output ($!)\n};
 	return;
     }
     unless(binmode(OUT, ':raw')) {
-	print qq{Error setting binmode on "$plugin" ($!)\n};
+	warn qq{Error setting binmode on "$plugin" ($!)\n};
 	close(OUT);
 	return;
     }
@@ -2763,7 +2818,7 @@ sub cmd_modify {
 	    # TBD - validate types?
 	    my($type, $subtype) = split(/\./, $_);
 	    if (length($type) != 4) {
-		print qq{Invalid record type: "$_" (must be 4 characters long)\n};
+		warn qq{Invalid record type: "$_" (must be 4 characters long)\n};
 		next;
 	    }
 	    $modify_types{lc($type)}++;
@@ -2771,7 +2826,7 @@ sub cmd_modify {
 		if (length($subtype) == 4) {
 		    $modify_subtypes{lc("$type.$subtype")}++ if ($subtype);
 		} else {
-		    print qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
+		    warn qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
 		    next;
 		}
 	    }
@@ -2781,11 +2836,14 @@ sub cmd_modify {
     while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
 	$expected = undef;
 	last if not defined $rec_type;
-	print "REC=$rec_type flags=$flags\n" if (DBG);
+	warn "REC=$rec_type flags=$flags\n" if (DBG);
 	my $nomodify = 0;
+	my $recid;
+	my $srh;
 	if ($modify_ids) {
-	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-	    $nomodify = 1 if ($id !~ /$modify_ids/i);
+	    $srh = parse_subrec_hash($rec);
+	    $recid = rec_id($srh, $rec_type);
+	    $nomodify = 1 if ($recid !~ /$modify_ids/i);
 	}
 	$nomodify = 1 if (%modify_types and not $modify_types{lc($rec_type)});
 	if ($nomodify) {
@@ -2807,10 +2865,7 @@ sub cmd_modify {
 		my $full_type = "${rec_type}.${subrec_type}";
 		if (not (%modify_subtypes and not $modify_subtypes{lc($full_type)})) {
 		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
-		    my $decoder = $DECODE{$full_type} || $DECODE{$subrec_type};
-		    if (not $decoder) {
-			die "can't find a decoder for $full_type or $subrec_type\n";
-		    }
+		    my $decoder = decoder($full_type, $subrec_type);
 		    my($hr, $idx) = $decoder->($subrec);
 		    my $subrec_str = $tostr->($subrec);
 		    if ($::opt_s) {
@@ -2819,12 +2874,12 @@ sub cmd_modify {
 			    # subrecord matches, so run our code on it ...
 			    warn "full_type=$full_type    subrec_type=$subrec_type\n";
 			    if (my $newhr = run_code($full_type, $hr, $idx)) {
-				my $encoder = $ENCODE{$full_type} || $ENCODE{$subrec_type};
+				my $encoder = encoder($full_type, $subrec_type);
 				#warn "DBG: (newhr, idx)\n", Dumper([$newhr, $idx]), "\n";
 				$subrec = $encoder->($newhr, $idx);
 				$plugin_modified = 1;
 				$subrec_str = $tostr->($subrec);
-				print "MODIFIED SUBRECORD: $subrec_str\n";
+				warn "MODIFIED SUBRECORD: $subrec_str\n";
 			    } else {
 				$subrec = undef;
 			    }
@@ -2832,42 +2887,43 @@ sub cmd_modify {
 		    }
 		    push(@subrecs, [$subrec_type, $hr, $idx]);
 		    $print_rec .= "   $full_type: $subrec_str\n";
-		    {	# DEBUG: double check codec orthogonality
-			my $encoder = $ENCODE{$full_type} || $ENCODE{$subrec_type};
-			if ($codec_ok and ($encoder->($hr, $idx) ne $subrec)) {
-			    # we only print the first codec failure, it's more than enough :(
-			    $codec_ok = 0;
-			    warn "ERROR, codec failure on $full_type:\n";
-			    warn Dumper({ hr => $hr, idx => $idx});
-			}
-		    }
+		    $codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec) if (DBG);
 		}
 		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
 	    } else {
 		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-		print "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
+		warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
 	    }
 	}
 	if ($::opt_s) {
 	    write_rec($rec_type, $newrec, $unk, $flags);
 	} elsif ($codec_ok) {
 	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
-		($::opt_M and $print_rec !~ /$::opt_M/i) or
-		((not $::opt_m or $::opt_M) and ($::opt_e or $::opt_r))) {
+		($::opt_M and $print_rec !~ /$::opt_M/i)) {
 		if (my $modrec = run_code($rec_type, \@subrecs, $unk, $flags)) {
+		    #warn "Record was modified, encoding modified record\n";
 		    $plugin_modified = 1;
-		    $rec = '';
-		    #warn "Modrec: ", Dumper($modrec), "\n";
+		    my $newrec = '';
 		    foreach my $ref (@$modrec) {
 			my($subrec_type, $hr, $idx) = @$ref;
 			my $full_type = "${rec_type}.${subrec_type}";
-			my $encoder = $ENCODE{$full_type} || $ENCODE{$subrec_type};
+			#warn "full_type=$full_type\n";
+			my $encoder = encoder($full_type, $subrec_type);
 			#warn "DBG: (hr, idx)\n", Dumper([$hr, $idx]), "\n";
 			my $subrec = $encoder->($hr, $idx);
 			my $subrec_len = length($subrec);
-			$rec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+			if ($codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec)) {
+			    #warn "appending $subrec_type to rec\n";
+			    $newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+			} else {
+			    warn "DBG: Codec Failure on $full_type!\n";
+			    last;
+			}
 		    }
-		    print "MODIFIED RECORD:\n" . rec_to_string($rec, $rec_type, $plugin) . "\n";
+		    if ($codec_ok and ($newrec ne $rec)) {
+			$rec = $newrec;
+			warn "MODIFIED RECORD:\n" . rec_to_string($rec, $rec_type, $plugin) . "\n";
+		    }
 		}
 	    }
 	    write_rec($rec_type, $rec, $unk, $flags);
@@ -2878,7 +2934,7 @@ sub cmd_modify {
     if ($plugin_modified and $codec_ok) {
 	my($atime, $mtime) = (stat($oldplugin))[8,9];
 	utime($atime, $mtime, $plugin);
-	print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+	warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
     } else {
 	unlink($plugin);
 	rename($oldplugin, $plugin);
@@ -2899,7 +2955,7 @@ sub rec_to_string {
     }
     my $dial_str = ($rec_type eq 'INFO') ? "  $dial" : '';
     my $flagstr = decode_flags($flags, \@REC_FLAGS);
-    print "REC=$rec_type flags=$flagstr\n" if (DBG);
+    warn "REC=$rec_type flags=$flagstr\n" if (DBG);
     my $recnum = ($::opt_N) ? $n : "";
     my $hdr = defined($flags) ? "${prefix}Record: $recnum  Flags: $flagstr${unkstr}${dial_str}$separator" : "";
     my @frmr_data;
@@ -2942,7 +2998,7 @@ sub rec_to_string {
 	    }
 	} else {
 	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-	    print "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
+	    warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
 	}
     }
     # if -c, check the last FRMR group
@@ -2959,7 +3015,7 @@ sub rec_to_string {
 sub cmd_dump {
     my($plugin) = @_;
     read_match_files();
-    print "### Scanning $plugin\n" if ($::opt_v);
+    warn "### Scanning $plugin\n" if ($::opt_v);
     open_input_plugin($plugin);
     my $expected = "TES3";
     my $wanted_ids;
@@ -2975,7 +3031,7 @@ sub cmd_dump {
 	    # TBD - validate types?
 	    my($type, $subtype) = split(/\./, $_);
 	    if (length($type) != 4) {
-		print qq{Invalid record type: "$_" (must be 4 characters long)\n};
+		warn qq{Invalid record type: "$_" (must be 4 characters long)\n};
 		next;
 	    }
 	    $wanted_types{lc($type)}++;
@@ -2983,7 +3039,7 @@ sub cmd_dump {
 		if (length($subtype) == 4) {
 		    $wanted_subtypes->{lc("$type.$subtype")}++ if ($subtype);
 		} else {
-		    print qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
+		    warn qq{Invalid record subtype: "$_" (must be 4 characters long)\n};
 		    next;
 		}
 	    }
@@ -3079,18 +3135,18 @@ sub cmd_rename {
     my($plugin) = @_;
     my $oldplugin = make_backup($plugin);
     if (not defined $oldplugin) {
-	print "Error: unable to form backup name for $plugin\n";
+	warn "Error: unable to form backup name for $plugin\n";
 	return;
     }
-    print "\n$plugin: RENAMING Records:\n" unless ($::opt_l);
+    warn "\n$plugin: RENAMING Records:\n" unless ($::opt_l);
     open_input_plugin($oldplugin);
     unless($::opt_l) {
 	unless(open(OUT, ">$plugin")) {
-	    print qq{Error opening "$plugin" for output ($!)\n};
+	    warn qq{Error opening "$plugin" for output ($!)\n};
 	    return;
 	}
 	unless(binmode(OUT, ':raw')) {
-	    print qq{Error setting binmode on "$plugin" ($!)\n};
+	    warn qq{Error setting binmode on "$plugin" ($!)\n};
 	    close(OUT);
 	    return;
 	}
@@ -3099,7 +3155,7 @@ sub cmd_rename {
     while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
 	$expected = undef;
 	last if not defined $rec_type;
-	print "REC=$rec_type flags=$flags\n" if (DBG);
+	warn "REC=$rec_type flags=$flags\n" if (DBG);
 	if ($rec_type eq 'SCPT') {
 	    my $renamed_schd = 0;
 	    my $renamed_sctx = 0;
@@ -3120,7 +3176,7 @@ sub cmd_rename {
 				printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
 			    }
 			} else {
-			    print qq{New name for script: "$newname" is too long, must be less than 32 bytes\n};
+			    warn qq{New name for script: "$newname" is too long, must be less than 32 bytes\n};
 			}
 		    }
 		} elsif ($subtype eq "SCTX") {
@@ -3147,7 +3203,7 @@ sub cmd_rename {
 		    my $what = "";
 		    $what .= " SCHD" unless $renamed_schd;
 		    $what .= " SCTX" unless $renamed_sctx;
-		    print "Error renaming$what, record NOT updated.\n";
+		    warn "Error renaming$what, record NOT updated.\n";
 		}
 	    }
 	} elsif ($rec_type eq $REN_TYPE) {
@@ -3173,7 +3229,7 @@ sub cmd_rename {
 		    }
 		}
 	    } else {
-		print "Error, Record has no $REN_SUBTYPE subrecord: $rec\n";
+		warn "Error, Record has no $REN_SUBTYPE subrecord: $rec\n";
 	    }
 	    $rec = new_rec($subrecs) if $renamed;
 	}
@@ -3184,25 +3240,25 @@ sub cmd_rename {
 	close(OUT);
 	my($atime, $mtime) = (stat($oldplugin))[8,9];
 	utime($atime, $mtime, $plugin);
-	print "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+	warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
     }
 }
 
 sub cmd_header {
     my($plugin) = @_;
     unless(open(PLUG, "+<$plugin")) {
-	print qq{Error opening "$plugin" for read/write ($!)\n};
+	warn qq{Error opening "$plugin" for read/write ($!)\n};
 	return;
     }
     unless(binmode(PLUG)) {
-	print "Error setting binmode on $plugin ($!)\n";
+	warn "Error setting binmode on $plugin ($!)\n";
 	close(PLUG);
 	return;
     }
     my $block;
     my $nread = read(PLUG, $block, 4096);
     if ($nread == 0) {
-	print "$plugin: Error on intial read ($!)\n";
+	warn "$plugin: Error on intial read ($!)\n";
 	close(PLUG);
 	return;
     }
@@ -3226,16 +3282,16 @@ sub cmd_header {
 		}
 	    } else {
 		if ($::opt_m) {
-		    print "$plugin:\n  AUTH=$auth\n  DESC=$desc\n";
+		    warn "$plugin:\n  AUTH=$auth\n  DESC=$desc\n";
 		} else {
-		    print "$plugin: AUTH=$auth DESC=$desc\n";
+		    warn "$plugin: AUTH=$auth DESC=$desc\n";
 		}
 	    }
 	}
     } elsif ($magic eq "TES4") {
-	print "This function is not yet implemented for TES4 files\n";
+	warn "This function is not yet implemented for TES4 files\n";
     } else {
-	print "$plugin: Error, this does not appear to be an elder scrolls plugin\n";
+	warn "$plugin: Error, this does not appear to be an elder scrolls plugin\n";
     }
     close(PLUG);
 }
@@ -3285,6 +3341,7 @@ sub convert_plugin {
 	unlink($output);
 	return;
     }
+    warn "$input copied to $output\n"
 }
 
 # convert a master to a plugin
