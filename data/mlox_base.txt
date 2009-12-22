@@ -2734,6 +2734,31 @@ BigMod 2.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Birthsigns Are More Fun [Alaisiagae]
+
+[Requires]
+ (Ref: readme_Birthsigns Are More Fun.txt)
+BirthsignsAMFun_BM.esp
+Bloodmoon.esm
+
+[Conflict]
+ Choose ONE plugin:
+  "BirthsignsAMFun_BM.esp" - Should only be used by those with Bloodmoon installed.
+  "BirthsignsAMFun_MW.esp" - Does not require Bloodmoon.
+ The only difference between the two plugins is one of the Warrior birthsign powers.
+ (Ref: readme_Birthsigns Are More Fun.txt)
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+; Dragon32: Gluby clued me onto this by PM. This mod doesn't alter existing birthsigns, it creates new ones. So, in a TESTool merge with any mod that happens to also define these birthsigns (say, WGI), you're going to get both the new power and the original one, even if you place BAMF later in load order.
+; So, BAMF needs to load after Merged Objects.
+[Order]
+Merged Objects.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Black Rose and Cedric  [Black Rose]
 
 [Note]
@@ -4595,15 +4620,6 @@ C0N2 v1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Drunken Moon [Leviathan]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 246696 levi_thedrunkenmoon.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dragon rider's armor [Mandamus]
 
 [Requires]
@@ -4623,6 +4639,16 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dreamers Awakened [HotFusion4]
+
+[Note]
+ !! HotFusion4's "Dreamers Awakened" mod contains a spell, "HFExplode", mistakenly set at AutoCalculate and AlwaysSucceed. This means the spell is available to wide number of the game's NPCs and it deals considerable damage.
+ !! You could fix the mod by removing AutoCalculate using the Construction Set.
+ !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=1049424 )
+DreamersAwakenedv1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Drinking Water [fleck1974]
 
 [Conflict]
@@ -4630,6 +4656,15 @@ Better Bodies.esp
  (Ref: "Drinking Water Readme.txt")
 Drinking Water.esp
 NOM 2.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Drunken Moon [Leviathan]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 246696 levi_thedrunkenmoon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9905,7 +9940,7 @@ NOM 2.12.esp
 [Conflict]
  NOM conflicts with the Bethesda plugin "entertainers.esp". If you load NOM after entertainers, then Dulnea Ralaal in the Eight Plates no longer has the topic "entertain the guests". If you load entertainers after NOM, then you will lose some NOM functionality in the Eight Plates.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13546227 )
-NOM 2.12.esp
+NOM 2.13.esp
 entertainers.esp
 
 [Conflict]
@@ -10960,6 +10995,16 @@ PTE - BC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Playable Children [Emma]
+
+[Note]
+ ! Be aware that you still need to download Emma's "Morrowind Children" mod and install the BSA package in order to get all the meshes and textures needed for "Playable Children".
+ ! (Ref: Playablechildren2_0_readme.txt)
+[ALL PlayableChildren2.0.esp
+     [NOT MW_Children_1_0.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Printing Press [Aquan and dongle]
 
 [Conflict]
@@ -11181,6 +11226,75 @@ propylons1.1.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 266531 quarraclan.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Races Are More Fun [Alaisiagae]
+
+[Conflict]
+ You don't need Taehl's "Khajiit Eye of Night Toggle" when running "Races Are More Fun" by Alaisiagae.
+ (Ref: readme_Races Are More Fun - *.txt)
+[ALL Khajiit Eye of Night Toggle.esp
+     [ANY RAMF.esp
+          RAMF_Mer_for_NPCs.esp
+          RAMF_for_NPCs.esp
+          RAMF_Mer.esp]]
+
+[Conflict]
+ Choose ONE plugin:
+  "RAMF_for_NPCs.esp" - Use this if you want NPCs to be able to use racial powers and spells.
+  "RAMF_Mer.esp" - Use this if you want the Elf names to change to Mer names.
+  "RAMF_Mer_for_NPCs.esp" - Use this if you want Elf names to change to Mer names AND you want NPCs to be able to use racial powers and spells.
+  "RAMF.esp" - Use this if you don't want the other versions.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7154 )
+RAMF_Mer_for_NPCs.esp
+RAMF.esp
+RAMF_for_NPCs.esp
+RAMF_Mer.esp
+
+; Dragon32: Gluby clued me onto this by PM. This mod has a similar issue with Merged Objects as Alaisiagae's Birthsigns Are More Fun, q.v. So, in a TESTool merge with any mod that happens to also alter racial abilities (say, WGI), you're going to get both the new ones from RAMF and the original one, even if you place RAMF later in load order.
+; So, BAMF needs to load after Merged Objects.
+[Order]
+Merged Objects.esp
+RAMF_Mer_for_NPCs.esp
+RAMF.esp
+RAMF_for_NPCs.esp
+RAMF_Mer.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Races Are More Fun (RAMF) - Playable Children Edition [Kefke the Wren]
+
+[Note]
+ ! It is recommended not to load Alaisiagae's "Races Are More Fun (RAMF) for NPCs" when using "Races Are More Fun (RAMF) - Playable Children Edition" by Kefke the Wren
+ ! (Ref: Readme RAMF_Playable_Children.rtf)
+[ALL [ANY RAMF_Playable_Children (M).esp
+          RAMF_Playable_Children.esp]
+     RAMF_for_NPCs.esp]
+
+[Note]
+ ! Only the version of "Races Are More Fun (RAMF)" that is loaded last will take effect. If you wish to use a different version of "Races Are More Fun (RAMF)", it must load after "Races Are More Fun (RAMF) - Playable Children Edition".
+ ! To ensure your desired load order you should create a custom [Order] rule in "mlox_user.txt" for your game.
+ ! (Ref: Readme RAMF_Playable_Children.rtf)
+[ALL [ANY RAMF_Playable_Children (M).esp
+          RAMF_Playable_Children.esp]
+     [ANY RAMF.esp
+          RAMF_Mer_for_NPCs.esp
+          RAMF_Mer.esp]]
+
+[Conflict]
+ You do not need to load Emma's "Playable Children" when using "Races Are More Fun (RAMF) - Playable Children Edition" by Kefke the Wren
+ (Ref: Readme RAMF_Playable_Children.rtf)
+[ALL [ANY RAMF_Playable_Children (M).esp
+          RAMF_Playable_Children.esp]
+     PlayableChildren2.0.esp]
+
+[Conflict]
+ Choose ONE plugin:
+  "RAMF_Playable_Children (M).esp" - Use this if you want the Elf names to change to Mer names.
+  "RAMF_Playable_Children.esp" - Use this if you do not.
+RAMF_Playable_Children (M).esp
+RAMF_Playable_Children.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11634,9 +11748,11 @@ RoHT TLSH Patch.esp
      Rise of House Telvanni.esm]
 
 [Note]
- !! There are undescribed and unresolved critical conflicts between "Rise of House Telvanni" and "Less Generic  NPCs (LGNPC) Pax Redoran", v1.12 and earlier, and "Less Generic NPCs (LGNPC) Tel Uvirith", v1.10 and earlier.
- !! Patches for the LGNOC mods will be made with the next versions.
+ !! There are conflicts between "Rise of House Telvanni" and "Less Generic  NPCs (LGNPC) Pax Redoran", v1.12 and earlier, and "Less Generic NPCs (LGNPC) Tel Uvirith", v1.10 and earlier.
+ !! The LGNPC quests requires that the player talks to Duke Dren, which will become impossible during the questline of "Rise of House Telvanni".
+ !! Patches for the LGNPC mods will be made with the next versions.
  !! (Ref: "Rise of House Telvanni Readme.txt)
+ !! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1045818&view=findpost&p=15175288 )
 [ALL [ANY [VER <1.13 LGNPC_PaxRedoran_v<VER>.esp]
           [VER <1.11 LGNPC_TelUvirith_v<VER>.esp]]
      Rise of House Telvanni.esm]
@@ -13209,6 +13325,18 @@ TR_Map2.esm
 TR_Map1.esm
 Sorefoot Enterprises, Inc. v1.5a.esp
 
+[Conflict]
+ Landmass conflict. One of Havish's Mage Guild quests involves a small island that conflicts with Tamriel Rebuilt.
+ http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1047679&view=findpost&p=15257619
+TR_Map1.esm
+Havish.esm
+
+[Conflict]
+ Landmass conflict.
+ http://www.bethsoft.com/bgsforums/index.php?showtopic=1057546&st=0&p=15350660&#entry15350660
+TR_Map1.esm
+The Zone (Tribunal).esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TarMar [Ravensong]
@@ -14134,17 +14262,23 @@ UshindraHeads.esp
 
 [Note]
  A new version of Uvirith's Legacy is available, you should upgrade.
-Uvirith's Legacy_ALPHA1.08.esp
+[ANY Uvirith's Legacy_ALPHA1.08.esp
+     Uvirith's Legacy_BETA1.09.esp]
+
+[Note]
+ Uvirith's Legacy Beta 1.10 is missing meshes in the main archive. Uvirith'sLegacy_HotFix.rar is available for download from the Uvirith's Legacy entry at PES, and contains these missing files. This archive is continually updated as bug reports come in.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
+Uvirith's Legacy_ALPHA1.10.esp
 
 [Patch]
  Use "UL_Srikandy_patch_2.1.esp" when using Sri's Alchemy BM with Uvirith's Legacy.
  (Ref: "Uvrith's Legacy_beta_README.txt")
 UL_Srikandy_patch_2.1.esp
-[ALL Uvirith's Legacy_BETA1.09.esp
+[ALL Uvirith's Legacy_BETA1.10.esp
      Sris_Alchemy_BM.esp]
 
 [Order]
-Uvirith's Legacy_BETA1.09.esp
+Uvirith's Legacy_BETA1.10.esp
 UL_Srikandy_patch_2.1.esp
 
 [Order]
@@ -14155,7 +14289,7 @@ UL_Srikandy_patch_2.1.esp
  Use "Uvirith's Legacy Book Jackets Add-on.esp" when using Book Jackets with Uvirith's Legacy.
  (Ref: "Uvrith's Legacy_beta_README.txt")
 Uvirith's Legacy Book Jackets Add-on.esp
-[ALL Uvirith's Legacy_BETA1.09.esp
+[ALL Uvirith's Legacy_BETA1.10.esp
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
 	       Librarian with Jackets BM Trib.esp]
 	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
@@ -14166,7 +14300,7 @@ Uvirith's Legacy Book Jackets Add-on.esp
 		    Book Jackets - Bloodmoon.esp]]]]
 
 [Order]
-Uvirith's Legacy_BETA1.09.esp
+Uvirith's Legacy_BETA1.10.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
 [Order]
@@ -14174,36 +14308,62 @@ Book Jackets - *.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
 [Note]
- ! The RoHT compatibility patch is no longer needed with beta 1.09 of Uvirith's Legacy.
- ! (Ref: "Uvrith's Legacy_beta_README.txt")
-[ALL Uvirith's Legacy_BETA1.09.esp
-     UL_RoHT_Compatibility.esp]
+ Use the optional "UL_RoHT_Compatibility_1.3.esp" when using "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al. The compatability patch adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter.
+ (Ref: "Uvrith's Legacy_beta_README.txt")
+[ALL Uvirith's Legacy_BETA1.10.esp
+     UL_RoHT_Compatibility_1.3.esp]
 
-[Order]
-Uvirith's Legacy_BETA1.09.esp
-Pozzo's RoHT v1.25.esp
+[Requires]
+ The optional "UL_RoHT_Compatibility_1.3.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, should only be used if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+UL_RoHT_Compatibility_1.3.esp
+[ALL Uvirith's Legacy_BETA1.10.esp
+     Rise of House Telvanni.esm]
+
+[Note]
+ ! This RoHT compatibility patch is no longer needed with beta 1.09 of "Uvirith's Legacy". A new version of the patch is available for beta 1.10 of "Uvirith's Legacy" and should be used instead.
+ ! (Ref: "Uvrith's Legacy_beta_README.txt")
+[ALL UL_RoHT_Compatibility.esp
+     [ANY Uvirith's Legacy_BETA1.10.esp
+          Uvirith's Legacy_BETA1.09.esp]]
 
 [Patch]
  Use "UL_TLM_ambiance.esp" when using The Lighing Mod with Uvirith's Legacy, otherwise the light in interiors will be very bright.
  (Ref: "Uvrith's Legacy_beta_README.txt")
 UL_TLM_ambiance.esp
-[ALL Uvirith's Legacy_BETA1.09.esp
-     TLM - Ambient Light + Fog Update.esp]
+[ALL Uvirith's Legacy_BETA1.10.esp
+     [ANY TLM - Ambient Light + Fog Update.esp
+          TLM - Complete.esp]]
 
 [Order]
-Uvirith's Legacy_BETA1.09.esp
+Uvirith's Legacy_BETA1.10.esp
 UL_TLM_ambiance.esp
+
+; Dragon32: This order from Stuporstar forum post
+; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15273304
+[Order]
+Uvirith's Legacy_BETA1.10.esp
+TLM - Complete.esp
+
+; Dragon32: Based on above Order, enforce same load order for this module of TLM too
+[Order]
+Uvirith's Legacy_BETA1.10.esp
+TLM - Ambient Light + Fog Update.esp
+
+; Dragon32: See "Uvrith's Legacy_beta_README.txt", refers to v1.10 of "Less Generic NPCs (LGNPC) Tel Uvirith"
+[Order]
+LGNPC_TelUvirith_v<VER>.esp
+Uvirith's Legacy_BETA1.10.esp
 
 [Conflict]
  Uvirith's Legacy is not compatible with Uvirith Inside, as it has been derived from that mod and does many of the same things.
  (Ref: "Uvrith's Legacy_beta_README.txt")
-Uvirith's Legacy_BETA1.09.esp
+Uvirith's Legacy_BETA1.10.esp
 Uvirith Inside.esp
 
 [Conflict]
  Uvirith's Legacy and Building Up Uvirith's Grave are not currently compatible as they both make changes to Tel Uvirith.
  (Ref: "Uvrith's Legacy_beta_README.txt")
-Uvirith's Legacy_BETA1.09.esp
+Uvirith's Legacy_BETA1.10.esp
 Building Up Uvirith's Grave 1.1.esp
 
 ;; Dragon32: Asked StuporStar about the lack of this plugin. "UL_Obliv&LGNPC_Booksorter.esp" is for Ostar's
@@ -14218,18 +14378,10 @@ Building Up Uvirith's Grave 1.1.esp
 ;; UL_Obliv&LGNPC_Booksorter.esp
 ;; Uvirith's Legacy_BETA1.09.esp
 ;;
-;; Dragon32: v1.09 readme: "RoHT Compatibility patch: UL_RoHT_Compatibility.esp REMOVED!! -- This is no longer
-;; required for RoHT compatibility."
-;; [Patch]
-;;  Use "UL_RoHT_Compatibility.esp" when using Pozzo's Rise of House Telvanni with Uvirith's Legacy.
-;;  (Ref: "Uvrith's Legacy_beta_README.txt")
-;; UL_RoHT_Compatibility.esp
-;; [ALL Uvirith's Legacy_ALPHA1.08.esp
-;;     Pozzo's RoHT v1.25.esp]
-;;
 ;; [Order]
 ;; Uvirith's Legacy_ALPHA1.08.esp
 ;; UL_RoHT_Compatibility.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Uvirith Outpost  [Akura]
@@ -15920,6 +16072,15 @@ X-jiit.esp
 Shinigami (tribunal scripts).esp
 Tribunal.esm
 ;Script uses 'equip' function, if this is also fixed in Bloodmoon either expansion could be used, but author seemed unsure about this. Requirement not listed in mod header.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Zone [Tarazaurus Rex]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 495574 The Zone (Tribunal).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
