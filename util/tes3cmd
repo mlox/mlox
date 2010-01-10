@@ -2200,6 +2200,7 @@ sub ext_cell_name {
     return("$rgnn ($x, $y)", $x, $y);
 }
 
+# $r is rec representation returned by parse_subrec_hash
 sub rec_id {
     my($r, $rec_type) = @_;
     if ($rec_type eq "INFO") {
@@ -2226,6 +2227,73 @@ sub rec_id {
 	my($x, $y) = unpack("ll", $r->{INTV}->[0]);
 	return("($x, $y)");
     }
+    return(undef);
+}
+
+# given a reference to object returned by a decoder, return printable name
+sub get_id {
+    my($rec_type, $r) = @_;
+    if ($rec_type eq "INFO") {
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'INAM') {
+		return($subr->[1]->{Name});
+	    }
+	}
+    } elsif ($rec_type eq "CELL") {
+	my($name, $rgnn, $coord);
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'NAME') {
+		$name = $subr->[1]->{String};
+		last;
+	    }
+	    last if ($subr->[0] eq 'FRMR');
+	}
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'RGNN') {
+		$rgnn = $subr->[1]->{String};
+		last;
+	    }
+	    last if ($subr->[0] eq 'FRMR');
+	}
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'DATA') {
+		if (defined $subr->[1]->{X}) {
+		    $coord = "$subr->[1]->{X}, $subr->[1]->{Y}"; # External Cell
+		}
+		last;
+	    }
+	    last if ($subr->[0] eq 'FRMR');
+	}
+	if (defined $coord) {
+	    # External Cell
+	    $name ||= $rgnn;
+	    return("$name ($coord)");
+	} else {
+	    # Internal Cell
+	    return($name);
+	}
+    } elsif ($rec_type eq "SCPT") {
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'SCHD') {
+		return(chop_nulls($subr->[1]->{Name}));
+	    }
+	}
+    } elsif ($rec_type eq "LAND") {
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'INTV') {
+		my $x = $subr->[1]->{X};
+		my $y = $subr->[1]->{Y};
+		return("($x, $y)");
+	    }
+	}
+    } else {
+	foreach my $subr (@$r) {
+	    if ($subr->[0] eq 'NAME') {
+		return($subr->[1]->{String});
+	    }
+	}
+    }
+    warn "get_id(): don't know how to make ID for: $rec_type\n";
     return(undef);
 }
 
@@ -2794,6 +2862,7 @@ sub cmd_modify {
 	}
 	$::opt_e = 'main($rec_type, $r, $unk, $flags);' if (not $::opt_e);
     }
+    $::opt_m ||= '.'; 		# default is to match any record.
     my $oldplugin = make_backup($plugin);
     open_input_plugin($oldplugin);
     unless(open(OUT, ">$plugin")) {
