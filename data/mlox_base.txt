@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2009-12-23 05:23:26 (UTC)]
+[Version 2010-01-14 00:29:58 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -3797,6 +3797,15 @@ Comp RPP CoverUp Add-on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Comes-By-Road Healer Companion [melian]
+
+[Requires]
+mel_ComesByRoad_1_0.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Complete Morrowind [Max also known as ~NOBODY~]
 
 [Requires]
@@ -4137,6 +4146,28 @@ Better Bodies.esp
 Daedric Sorcery.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Daedric Teleport Stones
+
+[Requires]
+ (At least one expansion must be installed, but neither has to be active)
+mel_DaedricTeleportStones_v1.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ (Tribunal must be installed AND ACTIVE to run this version)
+mel_DaedricTeleportStones_v1TRIB.esp
+Tribunal.esm
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "mel_DaedricTeleportStones_v1.esp" if you DO NOT have Tribunal active in your load list
+ "mel_DaedricTeleportStones_v1TRIB.esp" provides support for Tribunal locations
+mel_DaedricTeleportStones_v1.esp
+mel_DaedricTeleportStones_v1TRIB.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8688,6 +8719,23 @@ Melee Missiles v1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Melian's Teleport Mod [melian]
+
+[Order]
+mel_teleportPlugin_1_0.esp
+mel_teleportPlugin_1_0_Patches.esp
+mel_teleportPlugin_1_0_JulanAddon.esp
+
+[Requires]
+mel_teleportPlugin_1_0_Patches.esp
+mel_teleportPlugin_1_0.esp
+
+[Requires]
+mel_teleportPlugin_1_0_JulanAddon.esp
+mel_teleportPlugin_1_0_Patches.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Merkin's Multi-mod v1 [Merkin]
 
 ; (Ref: "multimodreadme.txt")
@@ -9638,6 +9686,7 @@ Pursuit Enhanced.esp
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a and will not run with MGE v3.8.0's inbuilt version of MWSE.
 MCA_Companions_Enhanced.esp
+mel_teleportPlugin_1_0.esp
 
 ;Dragon32: Unknown MWSE versions required:
 ; Loot Sack.esp
@@ -10966,6 +11015,32 @@ Clean_AK_PCClothier_patch_v1.67.esp
 Clean_AK_PCSmithy_v1.0.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Phijama's Sheathing Weapons for Companions [melian]
+
+[Requires]
+ (Bloodmoon must be installed, but doesn't have to be active)
+PhijamaWeaponsCompanions_FreeArrows.esp
+Bloodmoon.esm
+
+[Requires]
+ (Bloodmoon must be installed, but doesn't have to be active)
+PhijamaWeaponsCompanions_NoFreebies.esp
+Bloodmoon.esm
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "PhijamaWeaponsCompanions_FreeArrows.esp" gives arrows to your companions to prevent a game glitch
+ "PhijamaWeaponsCompanions_NoFreebies.esp" no free arrows - you need to make sure your companions have another weapon to use if they run out
+PhijamaWeaponsCompanions_FreeArrows.esp
+PhijamaWeaponsCompanions_NoFreebies.esp
+
+[Order]
+PhijamaWeaponsCompanions_FreeArrows.esp
+PhijamaWeaponsCompanions_NoFreebies.esp
+NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13848,11 +13923,6 @@ TradeDisputes.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Traveling Merchants [GhanBuriGhan; Revised by Cyrano]
-[Note]
- Do not use quick-save [F5] while in the vicinity of a running travel script. This habit is associated with corrupted saved games that can be very difficult to repair.
- (Ref: "TM22Readme.txt")
-TravelingMerchants_v2.2.esp
-TravelingMerchants_v2.2_Update.esp
 
 ;; expdep
 [Requires]
