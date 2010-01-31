@@ -363,6 +363,37 @@ DagonFel_Well.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Abigail's Petshop v5.5 [yati]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ Clean Abigail's Petshop_v5.5_NG.esp: Pets stay young and cute
+ Clean Abigail's Petshop_v5.5_SN_E.esp: for Seyda Neen Expanded or Seyda Neen Docks (By Lonnie) together.
+ (Ref: "Abigail's Petshop readme.doc")
+Clean Abigail's Petshop_v5.5.esp
+Clean Abigail's Petshop_v5.5_NG.esp
+Clean Abigail's Petshop_v5.5_SN_E.esp
+
+;; Load Abigail's Petshop after Seyda Neen Docks & Haldenshore with the
+;; Better Seyda Neen Lighthouse.
+;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+[Order]
+Seyda Neen Docks and Haldershore Tribunal V1.1.esp
+Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp
+Clean Abigail's Petshop_v5.5.esp
+Clean Abigail's Petshop_v5.5_NG.esp
+Clean Abigail's Petshop_v5.5_SN_E.esp
+
+; reported by Snargelfargen, confirmed by JMS.
+[Conflict]
+ Children of the Night adds a boat just west of Seyda Neen that ends up overlapping one side of the corral where Abigail's Petshop keeps its pets outside, making it look like the boat has run aground.
+[ANY Clean Abigail's Petshop_v5.5.esp
+     Clean Abigail's Petshop_v5.5_NG.esp
+     Clean Abigail's Petshop_v5.5_SN_E.esp]
+Clean Children V2.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Abot's Tempus Fugit Ring [Abot]
 
 [Requires]
@@ -398,43 +429,12 @@ time.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Abigail's Petshop v5.5 [yati]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- Clean Abigail's Petshop_v5.5_NG.esp: Pets stay young and cute
- Clean Abigail's Petshop_v5.5_SN_E.esp: for Seyda Neen Expanded or Seyda Neen Docks (By Lonnie) together.
- (Ref: "Abigail's Petshop readme.doc")
-Clean Abigail's Petshop_v5.5.esp
-Clean Abigail's Petshop_v5.5_NG.esp
-Clean Abigail's Petshop_v5.5_SN_E.esp
-
-;; Load Abigail's Petshop after Seyda Neen Docks & Haldenshore with the
-;; Better Seyda Neen Lighthouse.
-;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
-[Order]
-Seyda Neen Docks and Haldershore Tribunal V1.1.esp
-Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp
-Clean Abigail's Petshop_v5.5.esp
-Clean Abigail's Petshop_v5.5_NG.esp
-Clean Abigail's Petshop_v5.5_SN_E.esp
-
-; reported by Snargelfargen, confirmed by JMS.
-[Conflict]
- Children of the Night adds a boat just west of Seyda Neen that ends up overlapping one side of the corral where Abigail's Petshop keeps its pets outside, making it look like the boat has run aground.
-[ANY Clean Abigail's Petshop_v5.5.esp
-     Clean Abigail's Petshop_v5.5_NG.esp
-     Clean Abigail's Petshop_v5.5_SN_E.esp]
-Clean Children V2.0.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @abotGuars 1.13 [abot]
+;; @abotGuars 1.15 [abot]
 
 [Note]
  ! There is a newer version of abot's Guars available, you may want to upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6112
-[VER < 1.13 abotGuars.esp]
+[VER < 1.15 abotGuars.esp]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -2695,6 +2695,15 @@ BL-Morrowind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Necomancer Amulet [Michael "HelioS" Bennett]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 2028 HelioS - Better Necromancers Amulet.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Vivec  [Wisva]
 
 [Note]
@@ -2703,9 +2712,28 @@ BL-Morrowind.esp
 [SIZE 23825 Expansion to Gladiator.esp]
 
 [Requires]
+ (Ref: EtG ReadMe.txt)
 Expansion to Gladiator.esp
 Gladiator.esp  ;by Endrek
 ;header has dependency on both TB and Bm, readme only states TB required
+
+;;Dragon32: Load order not specified but logical to load this expansion after Endrek's original mod
+[Order]
+Gladiator.esp
+Expansion to Gladiator.esp
+
+;;People to streets of Vivec 0.6
+;;Dragon32: Both 0.5 and 0.6 included in the download so worth this Conflict rule
+[Conflict]
+ Only load one version of Wisva's "People to streets of Vivec", v0.6 is the most recent.
+People to streets of Vivec 0.5.esp
+People to streets of Vivec 0.6.esp
+
+;;We Sell Houses 0.5.1
+[NOTE]
+ !! This plugin suffers from "SignRotate Contamination." It includes five "dirty" scripts (DagothUrCreature1, EndGame, Float, LorkhanHeart and SignRotate). The ESP needs editing to  remove these "dirty" scripts.
+ !! Ref: http://wryemusings.com/GMST%20Vaccine.html
+[SIZE 185437 We sell houses 0.5.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3337,6 +3365,23 @@ Book Rotate - Morrowind v1.1.esp
      Book Rotate - Bloodmoon v5.3.esp]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Boyfriend, Imperial [Emma]
+
+[Conflict]
+ Choose only one plugin:
+  boyfriend_imp2_1.esp - If you only have Morrowind
+  Tribun_iboyfriend_2_1.esp - If you have Morrowind and Tribunal
+ (Ref: Readme Boyfriend_imp2_1.txt and Readme Tribun_boyfriend_2_1.txt)
+boyfriend_imp2_1.esp
+Tribun_iboyfriend_2_1.esp
+
+[Requires]
+ (Ref: Readme Tribun_boyfriend_2_1.txt)
+Tribun_iboyfriend_2_1.esp
+Tribunal.esm
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bricks  [Bill]
 
@@ -3661,12 +3706,34 @@ CharGen Revamped delay2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Child add-on for The White Wolf of the Lokken Mountain [Emma]
+
+[Requires]
+ (Ref: LokkenChildAddon1_1-readme.txt)
+BT_Lokken_child1.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     BT_Whitewolf_2_0.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Children of the Night 2 [John Barbosa]
 
 [Note]
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 9278532 C0N2 v1.01.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Christmas at Lokken [Princess Stomper]
+
+[Requires]
+ (Ref: Christmas At Lokken Readme.txt)
+Christmas At Lokken.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     BT_Whitewolf_2_0.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4149,6 +4216,32 @@ Daedric Sorcery.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Daedric Statue Replacer Pack [Astion]
+
+[Conflict]
+ Use only one of the plugins from Astion's "Daedric Statue Replacer Pack"
+ (Ref: ReadMe_statue Replacer.txt)
+Statue Replacer - Gold.esp
+Statue Replacer - Marble.esp
+Statue Replacer - Normal.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 2409 Statue Replacer - Gold.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 2543 Statue Replacer - Marble.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1444 Statue Replacer - Normal.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Daedric Teleport Stones
 
 [Requires]
@@ -4245,6 +4338,13 @@ Great House Dagoth.esp
 [ALL [ANY DN-GDRv1.esp
           DN-GDRv1_NOM.esp]
      Dagoth Ur Voice Addon v1.0.esp]
+
+[Conflict]
+ !! Darknut's "Greater Dwemer Ruins" includes "Darknut's Unique Ash Vampires"
+ !! (Ref: DNGDRv1.zip/"readme.htm")
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1_NOM.esp]
+     DN_AshVampires.esp]
 
 [Conflict]
  !! If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp, otherwise, use DN-GDRv1.esp.
@@ -6016,12 +6116,21 @@ Frozen Forest Plug-in.esp
  !! CHARACTER YOU DO NOT INTEND TO PLAY THE MAIN QUEST WITH, OR WHO HAS
  !! ALREADY DEFEATED DAGOTH UR.***"
  !! (Ref: "Ghostgate readme.txt")
-Clean Ghostgate.esp
+[ANY Clean Ghostgate COM.esp
+     Clean Ghostgate.esp]
 
 [Requires]
  (Ref: "Ghostgate readme.txt")
 Clean Ghostgate COM.esp
 MW_Children_1_0.esm
+
+[Conflict]
+ Only use one plugin:
+  Clean Ghostgate COM.esp - If you also use Emma's "Children of Morrowind"
+  Clean Ghostgate.esp - If you do not use Emma's "Children of Morrowind"
+ (Ref: Ghostgate readme.txt)
+Clean Ghostgate COM.esp
+Clean Ghostgate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6067,6 +6176,15 @@ GIANTS.esm
  (Ref: "GIANTS Patch Readme.txt")
 [SIZE 1841362 GIANTS.esm]
 HelioS - Giants Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gladiator [Endrek]
+
+[Requires]
+ (Ref: gladiator(final).zip\readme.txt)
+Gladiator.esp
+Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6251,6 +6369,15 @@ Golden Gold.esp
 [Order]
 Golden Gold.esp
 Golden Gold Patch v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Golden Katana [AcidBasick]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1279 GoldBrand_EltonBrand_Replacer.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6539,6 +6666,23 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Guide to... replacer [Stalker]
+
+[Conflict]
+ Use only one of the plugins from Stalker's "Guide to... replacer"
+  STA_guides_replacer.esp - Has a script allowing the scrolls to be accurately positioned.
+  STA_guides_replacer_NoScript.esp - Does not include the rotation script
+STA_guides_replacer.esp
+STA_guides_replacer_NoScript.esp
+
+[Conflict]
+ Stalker's "Guide to... replacer" plugin adds rotate scripts to the Guide to... scrolls. As you are using Cydine & Maboroshi Daikon's "Book Rotate", which adds rotate scripts to all books and  scrolls, there is no need to use this version of Stalker's "Guide to... replacer". You should use Stalker's alternative plugin: STA_guides_replacer_NoScript.esp
+[ALL STA_guides_replacer.esp
+     [ANY Book Rotate - Morrowind v1.1.esp
+          Book Rotate.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Haunted Tavern of the West Gash [Darkelfguy]
 
 [Conflict]
@@ -6563,6 +6707,12 @@ Anya's Directions.esp
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Havish.esm
 Silgrad_Tower_internal_build_1-4_3.esp
+
+[Conflict]
+ landmass conflict.
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+Havish.esm
+silgrad_tower_internal_release_1-4_6.6.esp
 
 [Conflict]
  morrowind4fish conflicts with Havish:
@@ -6700,6 +6850,19 @@ Health Indicators MWSE.esp
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 933 heartwood.esp]
+
+;;Dragon32: See also MPP rules section.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Heaven's Lookout [Andy!]
+
+[Requires]
+ (Ref: read Me of Heaven's Lookout.txt)
+Heaven's Lookout.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     Better Bodies.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7503,6 +7666,18 @@ Wyr Jeweler v1.01 c.250.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @J-ninja 1.0 [Joel Braddock (a.k.a. Mantodea)]
+
+; Dragon32: Not sure but I think the NoQuest version was made by lochnarus for the "Morag Tong Armor Replacer"
+[Conflict]
+ Only use one "J-Ninja" plugin.
+  J-ninja_v.1.0_m.esp - Adds Mantodea's "J-Ninja" armor into the game world
+  J-ninja_v.1.0_m_NoQuest.esp - The "J-Ninja" armor is defined but not added into the game  world
+J-ninja_v.1.0_m.esp
+J-ninja_v.1.0_m_NoQuest.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Journey's End [lochnarus]
 
 [Order]
@@ -7544,7 +7719,8 @@ House of Mannequins v1.0.esp
 [Conflict]
  (Ref: "Julan_Ashlander_Companion_1.3_Readme.txt")
 KS_Julan_Ashlander Companion_1.3.esp
-Clean Ghostgate.esp ; [Princess Stomper]
+[ANY Clean Ghostgate.esp
+     Clean Ghostgate COM.esp] ; [Princess Stomper]
 
 [Conflict]
  (Ref: "Julan_Ashlander_Companion_1.3_Readme.txt")
@@ -7664,6 +7840,15 @@ Kahleigh's Retreat v1.1.esp
  There is a newer version of Kat's Kastle (1.2) available:
  http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3628
 [SIZE !4448885 KatsKastle.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Keening Replacer 1.1 [lochnarus]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5058 LOCH_Keening_Replacer_1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7872,6 +8057,85 @@ Laby connection EV.esp
 ;;Tribun_Laura_3_0.esp
 ;;Merged_Objects.esp
 ;;Ebony_fix.esp
+;;
+;;Dragon32 - above is original entry for this plugin. Below is rules I've created based on readmes. I have *not* included the load order rule for laura_ebony_fix.esp to load after Merged Objects.esp
+
+[Requires]
+ (Ref: Readme_Laura_Craft_romance_mod_2_2.txt)
+Tribun_Laura_3_0.esp
+Tribunal.esm
+
+[Conflict]
+ Emma's "Laura Craft" is not compatible with Indiana James added by Emma's "Boyfriend, Imperial".
+ (Ref: Readme_Laura_Craft_romance_mod_2_2.txt)
+Tribun_Laura_3_0.esp
+[ANY boyfriend_imp2_1.esp
+     Tribun_iboyfriend_2_1.esp]
+
+;;Dragon32: Really not sure if Laura needs to load after *all* these Blood & Gore mods but Emma's readme says to load Laura after so I've just duplicated the load order from the Blood &  Gore rules and stuck Laura at the end
+;;Ref: Readme_Laura_Craft_romance_mod_2_2.txt
+[Order]
+Blood and Gore.esp
+Blood and Gore Adventurer's TC add-on.esp
+Blood and Gore BM add-on.esp
+Blood and Gore Cait Critters add-on.esp
+Blood and Gore CoN 2 add-on.esp
+Blood and Gore Combat Moves add-on.esp
+Blood and Gore Deadite add-on.esp
+Blood and Gore Fire damage.esp
+Blood and Gore GIANTS add-on.esp
+Blood and Gore Hunting Isle add-on.esp
+Blood and Gore MW Additions Rev add-on.esp
+Blood and Gore MW Advanced add-on.esp
+Blood and Gore MW-TB-VGreetings add-on.esp
+Blood and Gore Mephisto CP11 add-on.esp
+Blood and Gore Morrowind alone add-on.esp
+Blood and Gore Morrowind-Tribunal add-on.esp
+Blood and Gore Petshop add-on.esp
+Blood and Gore TEMPLATE add-on.esp
+Blood and Gore Wilderness add-on.esp
+Blood and Gore patch for GIANTS Trib.esp
+Tribun_Laura_3_0.esp
+
+;;Dragon32 - According to readme Laura should load after Giants by The Pumaman too. Giants is an ESM so should load first anyway. No load order rule created.
+
+;;Various addons for Laura Craft
+[Patch]
+ "laura_ebony_fix.esp" changes Laura's ebony armor to fit with the values for generic ebony armor in Taddeus' Balanced Armors. Additionally it adds the female meshes of the generic ebony  armor from Taddeus' mod to Laura's armor
+ (Ref: Readme_laura_ebony_fix.txt)
+laura_ebony_fix.esp
+[ALL Tribun_Laura_3_0.esp
+     [ANY Taddeus'BalancedArmors.esp
+          Taddeus'BalancedArmors_Rotate.esp]]
+
+[Order]
+Tribun_Laura_3_0.esp
+laura_ebony_fix.esp
+
+[Order]
+Taddeus'BalancedArmors.esp
+laura_ebony_fix.esp
+
+[Order]
+Taddeus'BalancedArmors_Rotate.esp
+laura_ebony_fix.esp
+
+[Requires]
+ (Ref: Laura-VampireEmbrace-Readme.txt)
+laura_vembrace_fix.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Patch]
+ (Ref: Laura-VampireEmbrace-Readme.txt)
+laura_vembrace_fix.esp
+[ALL Tribun_Laura_3_0.esp
+     Vampire_Embrace.esp]
+
+;;Dragon23: Patch only affects Laura's telepathy ring, no need to take VE into account in load order.
+[Order]
+Tribun_Laura_3_0.esp
+laura_vembrace_fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8721,18 +8985,74 @@ Melee Missiles v1.2.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Melian's Teleport Mod [melian]
 
+;;Dragon32- Ref: mel_tpp_1_2_readme.html
 [Order]
-mel_teleportPlugin_1_0.esp
-mel_teleportPlugin_1_0_Patches.esp
-mel_teleportPlugin_1_0_JulanAddon.esp
+mel_teleportPlugin_1_2.esp
+mel_teleportPlugin_1_2_Patches.esp
+mel_teleportPlugin_1_2_JulanAddon.esp
 
 [Requires]
-mel_teleportPlugin_1_0_Patches.esp
-mel_teleportPlugin_1_0.esp
+ (Ref: mel_tpp_1_2_readme.html)
+mel_teleportPlugin_1_2_Patches.esp
+mel_teleportPlugin_1_2.esp
+
+[Patch]
+ "mel_teleportPlugin_1_2_Patches.esp" patches the companions from Emma's "The White Wolf of the Lokken Mountain" so that they are compatible with "Melian's Teleport Mod"
+ (Ref: mel_tpp_1_2_readme.html)
+mel_teleportPlugin_1_2_Patches.esp
+[ALL mel_teleportPlugin_1_2.esp
+     [ANY BT_Whitewolf_2_0.esp
+          BT_Whitewolf_2_0.esm]]
+
+;; Dragon32- Changes made to two scripts (AA_LokkTeleportDetection and AA_LokkTeleportDetectionsmall) in Lokken, so load patch after Lokken
+[Order]
+BT_Whitewolf_2_0.esp
+mel_teleportPlugin_1_2_Patches.esp
+
+[Patch]
+ "mel_teleportPlugin_1_2_Patches.esp" patches the companions from Qarl's "The Underground" so that they are compatible with "Melian's Teleport Mod"
+ (Ref: mel_tpp_1_2_readme.html)
+mel_teleportPlugin_1_2_Patches.esp
+[ALL mel_teleportPlugin_1_2.esp
+     THE_UNDERGROUND_2.esp]
+
+;; Dragon32- Changes made to two scripts (A11SmileyTele and A11Tele) in The Underground, load patch after The Underground
+[Order]
+THE_UNDERGROUND_2.esp
+mel_teleportPlugin_1_2_Patches.esp
+
+[Patch]
+ "mel_teleportPlugin_1_2_Patches.esp" patches Laura Craft from Emma's "Laura Craft Romance and Adventure mod" so that she is compatible with "Melian's Teleport Mod"
+mel_teleportPlugin_1_2_Patches.esp
+[ALL mel_teleportPlugin_1_2.esp
+     Tribun_Laura_3_0.esp]
+
+;; Dragon32- Changes made to a script (11AA_TeleportDetection) in Laura Craft, load patch after Laura Craft
+[Order]
+Tribun_Laura_3_0.esp
+mel_teleportPlugin_1_2_Patches.esp
 
 [Requires]
-mel_teleportPlugin_1_0_JulanAddon.esp
-mel_teleportPlugin_1_0_Patches.esp
+ (Ref: mel_tpp_1_2_readme.html)
+mel_teleportPlugin_1_2_JulanAddon.esp
+mel_teleportPlugin_1_2_Patches.esp
+
+;;Dragon32- Added this check for Kateri's mod
+[Requires]
+ "mel_teleportPlugin_1_2_JulanAddon.esp" enables other companions to travel with the player and Julan at two points in his quest. If you do not have Kateri's "Julan, Ashlander Companion" mod  you do not need to load this addon.
+ (Ref: mel_tpp_1_2_readme.html)
+mel_teleportPlugin_1_2_JulanAddon.esp
+KS_Julan_Ashlander Companion_1.3.esp
+
+;;Dragon32- Ref: mel_tpp_1_2_readme.html
+[Order]
+Heaven's Lookout.esp
+mel_teleportPlugin_HeavensLookoutPatch.esp
+
+[Requires]
+ (Ref: mel_tpp_1_2_readme.html)
+mel_teleportPlugin_HeavensLookoutPatch.esp
+Heaven's Lookout.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9032,6 +9352,26 @@ Moonshadow Temple WD.esp
  ! (Ref: readme_moose_addon.txt)
 Moose_addon.esp
 PW_Cait_Moose.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morag Tong Armor Replacer [lochnarus]
+
+[Requires]
+ lochnarus' "Morag Tong Armor Replacer" requires Braddock's "J-Ninja" mod
+ (Ref: Morag Tong Armor Replacer_README.txt)
+Morag_Tong_Armor_Replacer.esp
+[ANY J-ninja_v.1.0_m.esp
+     J-ninja_v.1.0_m_NoQuest.esp]
+
+; Dragon32: Need to load Braddock's "J-Ninja" before lochnarus' replacer
+[Order]
+J-ninja_v.1.0_m.esp
+Morag_Tong_Armor_Replacer.esp
+
+[Order]
+J-ninja_v.1.0_m_NoQuest.esp
+Morag_Tong_Armor_Replacer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9682,11 +10022,13 @@ Visceral Discernment.esp
  These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
 Avenge Your Death!.esp
 Pursuit Enhanced.esp
+mel_teleportPlugin_1_2.esp
+
+;;Dragon32 - On Melian's teleport mod, above. Original (1.0) said it wasn't compatible with MGE's built-in MWSE. Latest version (1.2) changes this to say its compatible with MGE 3.8.0-rev118, however AFAIK the last change to MGE's inbuilt MWSE came in v3.5.6 of MGE when MWSE 0.9.4 functions were added.
 
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a and will not run with MGE v3.8.0's inbuilt version of MWSE.
 MCA_Companions_Enhanced.esp
-mel_teleportPlugin_1_0.esp
 
 ;Dragon32: Unknown MWSE versions required:
 ; Loot Sack.esp
@@ -9999,20 +10341,20 @@ NOM 2.13.esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
 
 [Conflict]
- Nom already contains "The Moldy Horker" by Grumpy.
+ NOM already contains "The Moldy Horker" by Grumpy.
  (Ref: "NOM 2.13.txt")
 NOM 2.13.esp
 [ANY BM_S_Inn.esp
      S_Inn_th.esp]
 
 [Conflict]
- Nom already contains Beds for Rent by Havokk.
+ NOM already contains "Beds for Rent" by Havokk.
  (Ref: "NOM 2.13.txt")
 NOM 2.13.esp
 Beds4Rent.esp
 
 [Conflict]
- Nom already contains Improved Inns by Taddeus.
+ NOM already contains "Improved Inns" by Taddeus.
  (Ref: "NOM 2.13.txt")
 NOM 2.13.esp
 [ANY Improved Inns BM.esp
@@ -10087,6 +10429,7 @@ Clean Nerevar Say Nerevar Again_v1.01.esp
 [ALL MW_CHILDREN_NSN_PATCH.esp
      MW_Children_1_0.esm]
 
+;;Dragon32 - based on the dependency ("Morrowind Comes Alive.esm") the patch is for MCA v4.x
 [Patch]
  MCA_NSN_Patch.esp is a compatibility patch for these two mods.
  (Ref: "Readme - Nerevar Say Nerevar.txt")
@@ -11077,6 +11420,17 @@ PTE - BC Patch.esp
  ! (Ref: Playablechildren2_0_readme.txt)
 [ALL PlayableChildren2.0.esp
      [NOT MW_Children_1_0.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Princess Lokken Post-Main Quest Improvements [Princess Stomper]
+
+[Requires]
+ (ref: readme Princess Lokken Post-Main Quest Improvements.txt)
+Princess Lokken PostQuest Improvements.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     BT_Whitewolf_2_0.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12427,6 +12781,24 @@ SkeldaleHouseMTM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Shield Placer [Monica21]
+
+[Conflict]
+ Choose only one plugin:
+  ShieldPlacer_MW.esp - If you only have Morrowind
+  ShieldPlacer_MWTribBM.esp- If you have Morrowind and both expansions
+ (Ref: readme ShieldPlacer.txt)
+ShieldPlacer_MWTribBM.esp
+ShieldPlacer_MW.esp
+
+[Requires]
+ (Ref: readme ShieldPlacer.txt)
+ShieldPlacer_MWTribBM.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ships of the Imperial Navy [Neoptolemus]
 
 [Conflict]
@@ -13208,7 +13580,8 @@ Sri Alchemy BM List Patch.esp
 ;; @Taddeus' Balanced Armor [Taddeus]
 
 [Conflict]
- Taddeus'BalancedArmors includes balanced versions of the following plugins: (official) LeFemme Armors, (official) Adamantium Armor, (official) Adamantium Helm of Tohan, Aedroth's Bloodmoon Wolf Greaves Fix, Avenger's Female Armors (some meshes), Canadianice's Domina Madnness Armors, Dongle's Adamantium Round and Tower Shields, Jeremy's Divine Domina (part 1, 2, 3, 4 and 5), TommyKhajiit's Ebony Greaves fix, Venymora's Red Leather (Tribunal version). (Ref: Taddeus'BalancedArmors - Readme.txt)
+ Taddeus'BalancedArmors includes balanced versions of the following plugins: (official) LeFemme  Armors, (official) Adamantium Armor, (official) Adamantium Helm of Tohan, Aedroth's Bloodmoon  Wolf Greaves Fix, Avenger's Female Armors (some meshes), Canadianice's Domina Madnness Armors, Dongle's Adamantium Round and Tower Shields, Jeremy's Divine Domina (part 1, 2, 3, 4 and 5), TommyKhajiit's Ebony Greaves fix, Venymora's Red Leather (Tribunal version).
+ (Ref:  Taddeus'BalancedArmors - Readme.txt)
 [ANY Taddeus'BalancedArmors.esp 
      Taddeus'BalancedArmors_Rotate.esp]
 [ANY LeFemmArmor.esp 
@@ -13223,7 +13596,9 @@ Sri Alchemy BM List Patch.esp
      DivineDomina4.esp
      DivineDomina5.esp
      AV_female_armor.esp
-     AV_fem_armor_Trib.esp]
+     AV_fem_armor_Trib.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
 
 [Conflict]
  Use only one of these two .esps.
@@ -13526,6 +13901,28 @@ ring_teleport v3_Tealpanda.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Teleport Ring - Add-on for The White Wolf of Lokken Mountain [Emma]
+
+;;Dragon32 - Readme or file header don't mandate ESM version.
+[Requires]
+ (ref: WWLokken-teleportring.txt)
+b_WWLteleport1_0.esp
+[ALL Bloodmoon.esm
+     [ANY BT_Whitewolf_2_0.esm
+          BT_Whitewolf_2_0.esp]]
+
+;;Dragon32 - Logical to load this after the ESP version of Lokken
+[Order]
+BT_Whitewolf_2_0.esp
+b_WWLteleport1_0.esp
+
+[Note]
+ !! If you use "Teleport Ring - Add-on" before you have completed the main quest of "The White Wolf of Lokken Mountain" you might break the story line.
+ (ref: WWLokken-teleportring.txt)
+b_WWLteleport1_0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Telos Rin Graveyard [dalin]
 
 [Note]
@@ -13550,6 +13947,36 @@ Telos Rin Graveyard.esp
 [Requires]
 Telperion Basement Addon.esp
 Telperion.V1.03.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Temperature [zappara]
+
+[Requires]
+ (Ref: readme_Temperature_mod.txt)
+Temperature 1.13.esp
+[ALL Bloodmoon.esm
+     Tribual.esm]
+
+[Note]
+ "Temperature modder's resource addon.esp" is a modder's resource and does not need to be loaded for the main "Temperature" mod to work.
+ (Ref: readme_Temperature_mod.txt)
+Temperature modder's resource addon.esp
+
+[Patch]
+ (Ref: readme_Temperature_to_Lokken_Mountain_Addon.txt)
+Temperature LoKKen addon.esp
+[ALL Temperature 1.13.esp
+     [ANY BT_Whitewolf_2_0.esm
+          BT_Whitewolf_2_0.esp]]
+
+[Order]
+Temperature 1.13.esp
+Temperature LoKKen addon.esp
+
+[Order]
+BT_Whitewolf_2_0.esp
+Temperature LoKKen addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15577,11 +16004,11 @@ Indybank.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Life 1.13 [abot]
+;; @Water Life 1.15 [abot]
 
 [Note]
- !! A new version of "Water Life" is available, you should upgrade.
-[VER < 1.13 abotWaterLife.esm]
+ ! A new version of "Water Life" is available, you should upgrade.
+[VER < 1.15 abotWaterLife.esm]
 
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
@@ -15603,9 +16030,9 @@ NOM2.12patch.esp
 NOM 2.13.esp
 
 [Conflict]
- Version 1.13 of Water Life includes Arcimaestro Antares' gondoliers
+ Version 1.13 and above of abot's "Water Life" includes Arcimaestro Antares' "Gondoliers"
  (Ref: abotWaterLife.txt)
-[VER = 1.13 abotWaterLife.esm]
+[VER > 1.12 abotWaterLife.esm]
 Gondliers.esp
 
 
@@ -15848,6 +16275,31 @@ BT_Whitewolf_2_0.esm
  White Wolf of Lokken conflicts with Inn of the Whispering Wood.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Inn Whisp Wood BM.esp
+[ANY BT_Whitewolf_2_0.esm
+     BT_Whitewolf_2_0.esp]
+
+[Patch]
+ The "NoM-add-on for White Wolf of Lokken" allows users of "Necessities of Morrowind" by Taddeus to buy NoM-food and equipment in Lokken, to cook and to get water.
+ (Ref: NOM-add-on_Lokken-readme.txt)
+BT_Whitewolf_2_0NOMaddon.esp
+[ALL BT_Whitewolf_2_0.esm
+     NOM 2.13.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @White Wolf of Lokken and Srikandi's Solstheim Transport mod compatibility patch [Tim]
+
+[Requires]
+ (ref: SolstheimTransport and White Wolf ReadMe.txt)
+SolstheimTransport_LokkenComp.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     BT_Whitewolf_2_0.esm]
+
+[Conflict]
+ Srikandi's "Solstheim Transport" conflicts with Emma's "White Wolf of Lokken". A Lokken-compatible version of Srikandi's mod is available: http://lovkullen.net/Emma/lokken.htm
+ (ref: SolstheimTransport and White Wolf ReadMe.txt)
+SolstheimTransport.esp
 [ANY BT_Whitewolf_2_0.esm
      BT_Whitewolf_2_0.esp]
 
@@ -16143,10 +16595,17 @@ Tribunal.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Zone [Tarazaurus Rex]
 
+[Requires]
+ (Ref: The Zone readme.txt)
+The Zone (Tribunal).esp
+Tribunal.esm
+
 [Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 495574 The Zone (Tribunal).esp]
+ "The Zone" replaces two of the stock daedric ruin textures:
+  Tx_Daed_metal_02.dds
+  Tx_Daed_wall_03.dds
+ This will interfere with any daedric texture replacers you are using and cause problems with  MGE rendering the Daedric ruins as distant statics. It is recommended that you delete these two  texture files.
+The Zone (Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
