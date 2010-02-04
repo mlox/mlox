@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2010-02-01 01:46:19 (UTC)]
+[Version 2010-02-04 02:55:19 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -2510,8 +2510,13 @@ Leggings set 1.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BEER! [Tarnsman]
 
+;; JMS - Note that the final clause of the following rule used to be [NOT [ANY a b c]], which
+;; executed correctly, but printed a confusing message lacking plugin names due to mlox's 
+;; overaggressive desire to simplify printed expressions (they're hard enough to read for
+;; people who are familiar with boolean logic). However, changing the clause to [ALL [NOT a b c]]
+;; avoids the overaggressive simplification. Next version of mlox will try to fix this problem.
 [Note]
- BEER! strongly recommends using ASE.
+ BEER! strongly recommends using ASE: (one of the following plugins: "AtmosphericSoundEffects-3.0.esp", "AtmosphericSoundEffects-3.0-Tribunal.esp", "AtmosphericSoundEffects-3.0-TBM.esp").
  (Ref: "Readme - BEER!.rtf")
 [ALL [ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
 	  BEER! Combo v1.12-03a (PR esp v2.4fix).esp
@@ -2523,31 +2528,9 @@ Leggings set 1.esp
 	  NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
 	  NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 	  NoM 2.12-03a with BEER!.esp]
-     [NOT AtmosphericSoundEffects-3.0.esp]]
-
-;Dragon32: Try this rule and the message is:
-;
-;[NOTE]
-; > [ALL [ANY 'BEER!.esp', 'NoM 2.12-03a with BEER!.esp'], [NOT ['ANY']]]
-; | BEER! strongly recommends using ASE.
-; | (Ref: "Readme - BEER!.rtf")
-;[Note]
-; BEER! strongly recommends using ASE.
-; (Ref: "Readme - BEER!.rtf")
-;
-;[ALL [ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
-;	  BEER! Combo v1.12-03a (PR esp v2.4fix).esp
-;	  BEER! Combo v1.12-03a.esp
-;	  BEER! Combo.esp
-;	  BEER! with MCA.esp
-;	  BEER!.esp
-;	  NoM 2.1 with BEER!.esp
-;	  NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
-;	  NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
-;	  NoM 2.12-03a with BEER!.esp]
-;     [NOT [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
-;               AtmosphericSoundEffects-3.0-TBM.esp
-;               AtmosphericSoundEffects-3.0.esp]]]
+     [ALL [NOT AtmosphericSoundEffects-3.0-Tribunal.esp
+               AtmosphericSoundEffects-3.0-TBM.esp
+               AtmosphericSoundEffects-3.0.esp]]]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -5154,6 +5137,12 @@ Elders 0 Count NPC add-on (Trib & BM).esp
  (Ref: Elders of Vvardenfell_readme.txt)
 Elders of Vvardenfell.esp
 
+[Requires]
+ Elders MCA Add-on requires "Elders of Vvardenfell.esp" and "MCA.esm".
+ (Ref: "Elders MCA addon_readme.txt")
+Elders MCA Add-on v2.0.esp
+[ALL Elders of Vvardenfell.esp
+     MCA.esm]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Elias' Amulet of Charm  [Tenaka]
@@ -9623,6 +9612,18 @@ MCA_Companions_Enhanced.esp
 [Order]
 Mashed Lists.esp
 MCAFix.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Lore Correct 5.1 [Denunci]
+
+[Conflict]
+ "MCA Lore Correct 5.1.esp" requires MCA version 5.1, and is not compatible with version 5.2.
+ You might want to try "MCA 5.2 Lore Correct Name" by MrE_Man which is compatible with MCA 5.2:
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3726
+MCA Lore Correct 5.1.esp
+[ANY [SIZE 2519851 MCA.esm] ; The Undead 3.0 compatible version
+     [SIZE 2707833 MCA.esm]] ; Original version
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
