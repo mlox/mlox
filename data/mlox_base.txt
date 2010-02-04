@@ -2525,6 +2525,30 @@ Leggings set 1.esp
 	  NoM 2.12-03a with BEER!.esp]
      [NOT AtmosphericSoundEffects-3.0.esp]]
 
+;Dragon32: Try this rule and the message is:
+;
+;[NOTE]
+; > [ALL [ANY 'BEER!.esp', 'NoM 2.12-03a with BEER!.esp'], [NOT ['ANY']]]
+; | BEER! strongly recommends using ASE.
+; | (Ref: "Readme - BEER!.rtf")
+;[Note]
+; BEER! strongly recommends using ASE.
+; (Ref: "Readme - BEER!.rtf")
+;
+;[ALL [ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+;	  BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+;	  BEER! Combo v1.12-03a.esp
+;	  BEER! Combo.esp
+;	  BEER! with MCA.esp
+;	  BEER!.esp
+;	  NoM 2.1 with BEER!.esp
+;	  NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
+;	  NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
+;	  NoM 2.12-03a with BEER!.esp]
+;     [NOT [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
+;               AtmosphericSoundEffects-3.0-TBM.esp
+;               AtmosphericSoundEffects-3.0.esp]]]
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  (Ref: "Readme - BEER!.rtf")
@@ -2554,6 +2578,9 @@ NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
 Indybank.esp
 Balmora Expansion V1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3763,6 +3790,15 @@ Christmas At Lokken.esp
 [SIZE 118862 Classic Stories by Eric Carle.esp]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Clear Glass Equipment [millinghordesman]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 11713 Clear Glass.esp]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Clothiers of Vvardenfell Version 1.1 [Korana, BadKarma, and Lady Rae]
 
@@ -3825,6 +3861,21 @@ Tribunal.esm
  (Ref: "Companion Arya v1.3 Readme.txt")
 BAR_Comp_Arya_v1.3.esp
 BAR_Comp_Arya_v1.3_NoCap.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Companion Beryl [Grumpy and Emma]
+
+[Conflict]
+ Version 1.01 and above of Grumpy and Emma's "Companion Beryl" are fully compatible with cdcooley's "Improved Teleportation", there is no need for cdcooley's "IT Beryl and Constance Fix.esp"
+ (Ref: Readme-Beryl.txt)
+[VER>1.0 1gr_Comp_Beryl.esp]
+IT Beryl and Constance Fix.esp
+
+[Requires]
+ (Ref: Readme-Beryl.txt)
+1gr_Comp_Beryl.esp
+Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7529,12 +7580,23 @@ Bloodmoon.esm
 [ALL MultiMark.esp
      ImprovedTeleportation2.0.esp]
 
-;Dragon32: need to get plugin names for these. Version check too?
-;[Patch]
-;IT Beryl and Constance Fix.esp
-;[ALL ImprovedTeleportation2.0.esp
-;     [ANY Beryl v1.0
-;          Constance v1.0]]
+;;Dragon32: The fix included with Improved Teleportation is for v1.0 of the Constance and Beryl mods. I can only find downloads for v1.2 and v1.1,respectively. Constance v1.0 seems to be called "constance1_0.esp" and 1.2 has "Ver 1.1" in file header. Beryl 1.1 has "Ver 1_1" in file header
+;; See their separate entries for other rules
+[Patch]
+IT Beryl and Constance Fix.esp
+[ALL ImprovedTeleportation2.0.esp
+     [ANY [VER<1.1 1gr_Comp_Beryl.esp]
+          [VER<1.1 constance1_0.esp]]]
+
+;;Dragon32: IT Beryl and Constance Fix.esp changes "AA_ConAlmDiv" script
+[Order]
+Constance1_0.esp
+IT Beryl and Constance Fix.esp
+
+;;Dragon32: IT Beryl and Constance Fix.esp changes "1gr_newAlmDivRecall" script
+[Order]
+1gr_Comp_Beryl.esp
+IT Beryl and Constance Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8998,36 +9060,25 @@ mel_teleportPlugin_1_2_JulanAddon.esp
 mel_teleportPlugin_1_2_Patches.esp
 mel_teleportPlugin_1_2.esp
 
-[Patch]
- "mel_teleportPlugin_1_2_Patches.esp" patches the companions from Emma's "The White Wolf of the Lokken Mountain" so that they are compatible with "Melian's Teleport Mod"
+[Requires]
+ "mel_teleportPlugin_1_2_Patches.esp" patches the companions from Emma's "The White Wolf of the Lokken Mountain", Qarl's "The Underground" and Emma's "Laura Craft Romance and Adventure mod" so that they are compatible with "Melian's Teleport Mod"
  (Ref: mel_tpp_1_2_readme.html)
-mel_teleportPlugin_1_2_Patches.esp
 [ALL mel_teleportPlugin_1_2.esp
      [ANY BT_Whitewolf_2_0.esp
-          BT_Whitewolf_2_0.esm]]
+          BT_Whitewolf_2_0.esm
+          THE_UNDERGROUND_2.esp
+          Tribun_Laura_3_0.esp]]
+mel_teleportPlugin_1_2_Patches.esp
 
 ;; Dragon32- Changes made to two scripts (AA_LokkTeleportDetection and AA_LokkTeleportDetectionsmall) in Lokken, so load patch after Lokken
 [Order]
 BT_Whitewolf_2_0.esp
 mel_teleportPlugin_1_2_Patches.esp
 
-[Patch]
- "mel_teleportPlugin_1_2_Patches.esp" patches the companions from Qarl's "The Underground" so that they are compatible with "Melian's Teleport Mod"
- (Ref: mel_tpp_1_2_readme.html)
-mel_teleportPlugin_1_2_Patches.esp
-[ALL mel_teleportPlugin_1_2.esp
-     THE_UNDERGROUND_2.esp]
-
 ;; Dragon32- Changes made to two scripts (A11SmileyTele and A11Tele) in The Underground, load patch after The Underground
 [Order]
 THE_UNDERGROUND_2.esp
 mel_teleportPlugin_1_2_Patches.esp
-
-[Patch]
- "mel_teleportPlugin_1_2_Patches.esp" patches Laura Craft from Emma's "Laura Craft Romance and Adventure mod" so that she is compatible with "Melian's Teleport Mod"
-mel_teleportPlugin_1_2_Patches.esp
-[ALL mel_teleportPlugin_1_2.esp
-     Tribun_Laura_3_0.esp]
 
 ;; Dragon32- Changes made to a script (11AA_TeleportDetection) in Laura Craft, load patch after Laura Craft
 [Order]
@@ -9035,16 +9086,11 @@ Tribun_Laura_3_0.esp
 mel_teleportPlugin_1_2_Patches.esp
 
 [Requires]
+ "mel_teleportPlugin_1_2_JulanAddon.esp" enables other companions to travel with the player and Julan, from Kateri's "Julan, Ashlander Companion" mod, at two points in his quest.
  (Ref: mel_tpp_1_2_readme.html)
 mel_teleportPlugin_1_2_JulanAddon.esp
-mel_teleportPlugin_1_2_Patches.esp
-
-;;Dragon32- Added this check for Kateri's mod
-[Requires]
- "mel_teleportPlugin_1_2_JulanAddon.esp" enables other companions to travel with the player and Julan at two points in his quest. If you do not have Kateri's "Julan, Ashlander Companion" mod  you do not need to load this addon.
- (Ref: mel_tpp_1_2_readme.html)
-mel_teleportPlugin_1_2_JulanAddon.esp
-KS_Julan_Ashlander Companion_1.3.esp
+[ALL mel_teleportPlugin_1_2_Patches.esp
+     KS_Julan_Ashlander Companion_1.3.esp]
 
 ;;Dragon32- Ref: mel_tpp_1_2_readme.html
 [Order]
@@ -10024,6 +10070,10 @@ Visceral Discernment.esp
  These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
 Avenge Your Death!.esp
 Pursuit Enhanced.esp
+
+;;Dragon32: As I understand things MGE 3.5.6 added the functions from MWSE v0.9.4. *However* there remains one MWSE function that could not be implemented in MGE. At the time of writing there is only one mod that makes use of that function (MCA_Companions_Enhanced.esp). According to the MWSE v0.9.4a release notes "contains no new features over 0.9.4. However, one bug [...] has been fixed."
+[Note]
+ These mods require Morrowind Script Extender (MWSE) v0.9.4a, or MGE v3.5.6 or later.
 mel_teleportPlugin_1_2.esp
 
 ;;Dragon32 - On Melian's teleport mod, above. Original (1.0) said it wasn't compatible with MGE's built-in MWSE. Latest version (1.2) changes this to say its compatible with MGE 3.8.0-rev118, however AFAIK the last change to MGE's inbuilt MWSE came in v3.5.6 of MGE when MWSE 0.9.4 functions were added.
@@ -14061,6 +14111,54 @@ Thescrib_Leather_breton-v3.esp
      Thescrib_Leather_breton-addon02.esp
      Thescrib_Leather_breton-addon03.esp]
 Thescrib_Leather_breton-v3.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Thief companion Constance [Grumpy and Emma]
+
+[Conflict]
+ Version 1.1 and above of Grumpy and Emma's "Thief companion Constance" are fully compatible with cdcooley's "Improved Teleportation", there is no need for cdcooley's "IT Beryl and Constance Fix.esp"
+ (Ref: Constance_ver1_2_readme.txt)
+[VER<1.1 Constance1_0.esp]
+IT Beryl and Constance Fix.esp
+
+[Requires]
+ (Ref: Constance_ver1_2_readme.txt)
+Constance1_0.esp
+Tribunal.esm
+
+[Requires]
+ "Constance's Amulet" by Dyn_Sol requires "Thief companion Constance" by Grumpy and Emma
+ (Ref: Constance's Amulet.txt)
+Constance's Amulet.esp
+Constance1_0.esp
+
+;;Dragon32: Really not sure if Constance needs to load after *all* these Blood & Gore mods but Emma's readme says to load Constance after so I've just duplicated the load order from the Blood &  Gore rules and stuck Constance at the end
+;;Ref: Constance_ver1_2_readme.txt
+[Order]
+Blood and Gore.esp
+Blood and Gore Adventurer's TC add-on.esp
+Blood and Gore BM add-on.esp
+Blood and Gore Cait Critters add-on.esp
+Blood and Gore CoN 2 add-on.esp
+Blood and Gore Combat Moves add-on.esp
+Blood and Gore Deadite add-on.esp
+Blood and Gore Fire damage.esp
+Blood and Gore GIANTS add-on.esp
+Blood and Gore Hunting Isle add-on.esp
+Blood and Gore MW Additions Rev add-on.esp
+Blood and Gore MW Advanced add-on.esp
+Blood and Gore MW-TB-VGreetings add-on.esp
+Blood and Gore Mephisto CP11 add-on.esp
+Blood and Gore Morrowind alone add-on.esp
+Blood and Gore Morrowind-Tribunal add-on.esp
+Blood and Gore Petshop add-on.esp
+Blood and Gore TEMPLATE add-on.esp
+Blood and Gore Wilderness add-on.esp
+Blood and Gore patch for GIANTS Trib.esp
+Constance1_0.esp
+
+;;Dragon32 - According to readme Constance should load after Giants by The Pumaman too. Giants is an ESM so should load first anyway. No load order rule created.
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
