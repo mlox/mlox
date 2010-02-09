@@ -514,6 +514,32 @@ Acheron's Camping Gear 2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adul's Leggings [Adul]
+
+[Requires]
+ (Ref: Readme_Aduls_Leggings.txt)
+Aduls_Leggings.esp
+Aduls_Master_Mod.esm
+
+[Requires]
+ (Ref: Readme_Aduls_Leggings.txt)
+Aduls_Leggings_Tribunal.esp
+[ALL Tribunal.esm
+     Aduls_Master_Mod.esm]
+
+[Requires]
+ (Ref: Readme_Aduls_Leggings.txt)
+Aduls_Leggings_Bloodmoon.esp
+[ALL Bloodmoon.esm
+     Aduls_Master_Mod.esm]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 23905 Aduls_Leggings.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Advanced Guards [Marty V. aka "The Puma Man"]
 
 ;Morrowind version
@@ -7190,6 +7216,42 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
      Ice's Glass Cuirass.esp
      Ice_FemaleSteelCuirass.esp]
 
+;;Dragon32: Unable to find plugin name for "Left wraithguard by Smite Plight", its resources're used so should be included in this Note
+[Note]
+ Sandman101's "H.E.L.L.U.V.A. Armor Completion" uses the resources from the following mods to complete the armor sets. Whilst "H.E.L.L.U.V.A. Armor Completion" does not duplicate these mods completely you may want to consider disabling them as "H.E.L.L.U.V.A. Armor Completion" already adds their armor to the game world.
+[ALL H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+     [ANY Dragonscale.esp
+          chain_armor_set.esp
+          Adamantium Roundshield.esp
+          Adamantium Towershield.esp
+          Dragonbone Armor [v.1.2].esp
+          dreugh_armor_set.esp
+          tenpace_remix.esp
+          newtscale_armor_set.esp
+          Dragonbone_Pauldrons.esp
+          acsSaviorArmor.esp
+          Aduls_Leggings.esp
+          Aduls_Leggings_Tribunal.esp
+          Aduls_Leggings_Bloodmoon.esp
+          TemplarSheild.esp
+          studded_armor_set.esp
+          Helseth_Shield.esp
+          Helseth_Shield_notAdded.esp]]
+
+;;Dragon32 - See "H.E.L.L.U.V.A. Armor Completion read me.rtf"
+[Order]
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+Clean Museum of Artifacts Improvements.esp
+
+[Order]
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+Museum of Artifacts Improved Expanded.esp
+
+;; Dragon32: TheOtherFelix's "Expanded Museum of Artifacts" not mentioned in readme but as P_S's mod ("Museum of Artifacts Improved Expanded") that includes it is mentioned I've added a similar Order rule
+[Order]
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+ExpandedMoA.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Huleeya, Morag Tong Bugfix [Escee]
@@ -8346,16 +8408,13 @@ LeveledMagicka.esp
 ;; each other, I would recommend having Less Lore load first." (cyrano)
 ;; (Ref: http://escf.rethan-manor.net/index.php?topic=1909.msg20857;msg20857 )
 
-;; Those that have been recently updated have date stamps that
-;; assures the mods will load in the appropriate order. In short,
-;; LGNPC NoLore should load first (perhaps before any
-;; dialog-extensive mod), LGNPC Vivec Redoran loads second to last
-;; and LGNPC Pax Redoran last (excepting the Soul Sickness Patch
-;; which should load after Pax Redoran if used). The order of the
-;; other installments is not critical, but LGNPC Indarys Manor,
-;; LGNPC Tel Uvirith and LGNPC Secret Masters would do better to
-;; load later in the order.
-;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=929185&view=findpost&p=13463743 )
+;; LGNPC NoLore must be the first in the series to load. Its date stamp assures
+;; this, but if a mod manager such as Wrye Mash are used be certain that NoLore
+;; loads before any other LGNPC mod. Most others can load in any order and then
+;; Tel Uvirith, Secret Masters, Indarys Manor, Vivec Redoran and finally Pax
+;; Redoran. If the Pax Redoran Soul Sickness patch is uses, it must load after
+;; Pax Redoran for it to have effect.
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15604326 )
 
 [Order]
 Less Lore.esp
@@ -8366,14 +8425,15 @@ LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan_v?_??.esp
 LGNPC_HlaOad_v?_??.esp
 LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_v?_??_suppl.esp
 LGNPC_Pelagiad_v?_??.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ_v?_??.esp
-LGNPC_Indarys_Manor_v?_??.esp
-LGNPC_Secret_Masters_v?_??.esp
 LGNPC_TelUvirith_v?_??.esp
 LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_Secret_Masters_v?_??.esp
+LGNPC_Indarys_Manor_v?_??.esp
 LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
@@ -8387,31 +8447,31 @@ LGNPC_PaxRedoran_v?_??.esp
  "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
  (Ref: "LGNPC Secret Masters readme.txt")
 LGNPC_SM_MCA5.esp
-[ALL LGNPC_Secret_Masters_v1_21.esp
+[ALL LGNPC_Secret_Masters_v?_??.esp
      MCA.esm]
 
 ;; expdep
 [Requires]
  Uses Tribunal function: forcerun.
-LGNPC_PaxRedoran_v1_12.esp
+LGNPC_PaxRedoran_v1_20.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
 ;; expdep
 [Requires]
  Uses Tribunal function: hasitemequipped.
-LGNPC_Pelagiad_v1_13.esp
+LGNPC_Pelagiad_v1_22.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
+ http://www.lgnpc.org/downloads
 [VER < 0.83 LGNPC_NoLore_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
+ http://www.lgnpc.org/downloads
 [VER < 0.31 Lgnpc_SN.esp]
 
 [Conflict]
@@ -8423,78 +8483,85 @@ LGNPC_Pelagiad_v1_13.esp
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
+ http://www.lgnpc.org/downloads
 [VER < 1.10 LGNPC_GnaarMok_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
+ http://www.lgnpc.org/downloads
 [VER < 1.20 LGNPC_AldVelothi_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.11 LGNPC_MaarGan_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_MaarGan_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
+ http://www.lgnpc.org/downloads
 [VER < 1.32 LGNPC_HlaOad_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Aldruhn_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_Aldruhn_v<VER>.esp]
+
+;; Dragon32: Designed to be used alongside LGNPC_Aldruhn_v1_20, but it will stand on its own.
+;; (Ref: LGNPC_Aldruhn_Suppl_Readme.txt)
+[Note]
+ A newer version is available, check the LGNPC download site:
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_Aldruhn_v<VER>_suppl.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.13 LGNPC_Pelagiad_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.22 LGNPC_Pelagiad_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.11 LGNPC_TelMora_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_TelMora_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 2.01 LGNPC_Khuul_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 2.10 LGNPC_Khuul_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 2.03 LGNPC_VivecFQ_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 2.10 LGNPC_VivecFQ_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.45 LGNPC_Indarys_Manor_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.50 LGNPC_Indarys_Manor_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.21 LGNPC_Secret_Masters_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.30 LGNPC_Secret_Masters_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_TelUvirith_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_TelUvirith_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.10 LGNPC_TelUvirith_UI_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_TelUvirith_UI_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.42 LGNPC_VivecRedoran_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.50 LGNPC_VivecRedoran_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
- http://lgnpc.sabregirl.com/downloads.php
-[VER < 1.12 LGNPC_PaxRedoran_v<VER>.esp]
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_PaxRedoran_v<VER>.esp]
 
 [Note]
  A newer version is available to download on PES.
@@ -8517,13 +8584,70 @@ LGNPC_TelUvirith_v<VER>.esp
 LGNPC_TelUvirith_UI_v<VER>.esp
 Uvirith Inside.esp
 
-;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
-;; See Order notes for other LGNPC mods
+;; Since Stuporstar has made some accommodation for this, certainly Uvirith's Legacy should load after LGNPC Tel Uvirith.
+;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15607572
 [Order]
-Less Lore.esp
-LGNPC_NoLore_v<VER>.esp
-Uvirith Inside.esp
 LGNPC_TelUvirith_UI_v<VER>.esp
+Uvirith Inside.esp
+
+[Note]
+ ! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in unexpected problems in both mods.
+ ! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
+[ALL Vampire_Embrace.esp
+     [ANY LGNPC_Aldruhn_v?_??_suppl.esp
+          LGNPC_Indarys_Manor_v?_??.esp
+          LGNPC_Khuul_v?_??.esp
+          LGNPC_PaxRedoran_v?_??.esp
+          LGNPC_Secret_Masters_v?_??.esp
+          LGNPC_TelUvirith_v?_??.esp
+          LGNPC_TelUvirith_UI_v?_??.esp
+          LGNPC_VivecFQ_v?_??.esp
+          LGNPC_VivecRedoran_v?_??.esp]]
+
+;; Dragon32: Recommended to load after HotFusion's "Dreamers Awakened".
+;; (Ref: LGNPC_IndarysManor_Readme.txt)
+[Order]
+DreamersAwakenedv1.0.esp
+LGNPC_Indarys_Manor_v?_??.esp
+
+[Conflict]
+ "Join All Houses" by Heph will break some Pax Redoran quests, and likely create other odd results.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC_PaxRedoran_v?_??.esp
+Join All Houses.esp
+
+[Conflict]
+ "Marandus Abode" by Princess Stomper will break the 'Marandus' quests.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC_PaxRedoran_v?_??.esp
+[ANY Marandus Abode.esp
+     Marandus Abode MCA Patch.esp]
+
+;;There is a possible conflict with other mods that add the medium Armor master trainer. Compatibility may be restored if LGNPC Secret Masters loads after them. A script disables all but one of her.
+;; Ref: LGNPC_SecretMasters_Readme.txt
+;;Cyran0: "LGNPC Secret Masters places Cinia Urtius at the docks of Tel Fyr. Since other mods also restore this missing master trainer (not limited to the Unofficial Morrowind Patch/Morrowind Patch Project), we added a script to her that would disable all but one of her. Which copy of Cinia Urtius survives the purge depends upon the order in which they are encountered. The UMP placed her at the docks of Tel Fyr so that is where LGNPC placed her. However I have heard of another mod, [Elders of Vvardenfell], that places a copy of Cinia Urtius in Seyda Neen." 
+;; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1067011&view=findpost&p=15505958
+;;Dragon32: Thought about a Note, couldn't word it (*if* you are starting a new game you should be ok, *if* you are in the middle of a game you may not be...) too complex.
+[Order]
+Elders 0 Count NPC add-on (Trib & BM).esp
+Elders 0 Count NPC add-on.esp
+LGNPC_Secret_Masters_v?_??.esp
+
+;;Theoretical conflict with other plugins that fix the Nerevarine greeting. While the method may be different from other mods, the result is pretty much the same. LGNPC's early date stamp will allow the changes by other mods to prevail
+;; (Ref: LGNPC_NoLore_Readme.txt)
+;; Dragon32: So, I'm not sure if these Order rules are needed, to be reviewed.
+;; lfx_nerevarine_greetings by Alphax
+;;[Order]
+;;LGNPC_NoLore_v?_??.esp
+;;lfx_nerevarine_greetings.esp
+;; Nerevarine Greeting tweaks by Glassboy
+;;[Order]
+;;LGNPC_NoLore_v?_??.esp
+;;Nerevarine Greeting tweaks.esp
+;; No More 'Excuse Me Nerevarine' by Raptormeat
+;;[Order]
+;;LGNPC_NoLore_v?_??.esp
+;;ExcuseMe.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8932,6 +9056,42 @@ Mannequins Resource.esp
  (Ref: "Map - Deluxe - Readme.txt")
 Map - Deluxe.esp
 Map - Deluxe - NoQuest.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Marandus Abode [Princess Stomper]
+
+[Requires]
+ (Ref: Marandus Abode 2.0 readme.txt)
+Marandus Abode.esp
+[ANY Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ (Ref: Marandus Abode 2.0 readme.txt and Marandus Abode MCA Patch.txt)
+[SIZE 101249 Marandus Abode MCA Patch.esp]
+[ALL [ANY Bloodmoon.esm
+          Tribunal.esm]
+     Morrowind Comes Alive.esm]
+
+[Requires]
+ (Ref: Marandus Abode 2.0 readme.txt and Marandus Abode MCA Patch.txt)
+[SIZE 101439 Marandus Abode MCA Patch.esp]
+[ALL [ANY Bloodmoon.esm
+          Tribunal.esm]
+     MCA.esm]
+
+[Conflict]
+ Use only one plugin, "Marandus Abode MCA Patch.esp" is an alternative plugin for users of "Morrowind Comes Alive" by Neoptolemus.
+ (Ref: Marandus Abode MCA Patch.txt)
+Marandus Abode.esp
+Marandus Abode MCA Patch.esp
+
+[Note]
+ !! This version of "Marandus Abode MCA Patch" is for users of v4.* of "Morrowind Comes Alive" by Neoptolemus. The version for "Morrowind Comes Alive" v5.* users should be used instead.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4876
+[ALL [SIZE 101249 Marandus Abode MCA Patch.esp]
+     MCA.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16479,6 +16639,32 @@ GIANTS_Ultimate_Official_Fixes.esp
 GIANTS_Ultimate_Official_Fixes.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Conflict]
+ The Puma Man's "The Wilderness Mod" includes Hoghead the Horrible's "Cait's Critters Unleashed", in modified form. "Cait's Critters Unleashed" should be disabled.
+ (Ref: Wilderness  Mod 2.1.doc)
+[ANY The Wilderness Mod 2.0.esm
+     The Wilderness Mod 2.0 T & B.esm]
+[ANY Cait's Critters Unleashed 2.0 (Tribunal).esp
+     Cait's Critters Unleashed 2.0.esp]
+
+[Conflict]
+ The Puma Man's "The Wilderness Mod" includes TheLys' "Water nymphes and other creatures", in modified form. "Water nymphes and other creatures" should be disabled.
+ (Ref: Wilderness  Mod 2.1.doc)
+[ANY The Wilderness Mod 2.0.esm
+     The Wilderness Mod 2.0 T & B.esm]
+Water nymphes and other creatures v101.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wilderness Mod Rectifier [Eisenfaust]
+
+[Requires]
+ Note that Eisenfaust's "Wilderness Mod Rectifier" will not work with the non-Tribunal version of The Puma Man's "The Wilderness Mod"
+Wilderness Mod Rectifier.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     The Wilderness Mod 2.0 T & B.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
