@@ -1576,6 +1576,19 @@ Assassins Armory - Arrows.esp
 Assassins Armory - Unofficial Patch 7.7.esp
 Assassins Armory.esm
 
+;;Dragon32: Seems the best place for this rather than a whole new rule.
+[Note]
+ You should use The Mad God's "Assassins Armory - Unofficial Patch 7.7" instead of The Happy Anarchist's "Assassin's Bastard Fix", the unofficial patch includes the fix to the icon path as well as fixing another glitch. Available here:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=644
+ (Ref: "readme_AssassinsArmoryUnofficialPatch_7_7.txt")
+[ALL Assassins Bastard Fix.esp
+     NOT Assassins Armory - Unofficial Patch 7.7.esp]
+
+[Conflict]
+ You do not need The Happy Anarchist's "Assassin's Bastard Fix" if you are running The Mad God's "Assassins Armory - Unofficial Patch 7.7." The unofficial patch includes The Happy Anarchist's  fix.
+Assassins Bastard Fix.esp
+Assassins Armory - Unofficial Patch 7.7.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @At Home Alchemy 1.0 [Syclonix]
@@ -2733,6 +2746,12 @@ BL-Morrowind.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Necomancer Amulet [Michael "HelioS" Bennett]
 
+[Conflict]
+ Daduke's "Amulets and Rings" already includes Michael "HelioS" Bennett's "Better Necromancers Amulet", there is no need to load both plugins.
+ (Ref: Amuletsrings Upgrade A.txt)
+HelioS - Better Necromancers Amulet.esp
+Amulets and Rings 2.1 Upgrade A.esp
+
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
@@ -2939,6 +2958,53 @@ Clean Black Queen Chronicles Ver 2.5.esp
      The Prison Ship Escape V2.esp
      The Prison Ship Escape High Level V2.esp
      SavantArmorV4.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Blasphemous Revenants [Fliggerty]
+
+[Requires]
+ (Ref: Blasphemous Revenants Readme.txt)
+Blasphemous Revenants.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+;;Dragon32: Fliggerty's "Blasphemous Revenants" sets the DELE flag for the mudcrab creature. This can mess things up. Apparently loading another mod that affects mudcrabs after BR will fix things.
+;;  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15673238
+
+;;Creatures X adds a scipt
+[Order]
+Blasphemous Revenants.esp
+Creatures X.esp
+
+;;These are all the 'passive wildlife' mods in mlox_base at the moment, modifying Mudcrab's Fight values
+[Order]
+Blasphemous Revenants.esp
+Rational Wildlife.esp
+
+[Order]
+Blasphemous Revenants.esp
+Passive_Healthy_Wildlife.esp
+
+[Order]
+Blasphemous Revenants.esp
+SG-MW-ecology-WW.esp
+
+[Order]
+Blasphemous Revenants.esp
+SG-MW-ecology-BM.esp
+
+[Order]
+Blasphemous Revenants.esp
+SG-MW-ecology-carnivore.esp
+
+[Order]
+Blasphemous Revenants.esp
+animalbehave.esp
+
+[Order]
+Blasphemous Revenants.esp
+Passive Wildlife Vvardenfell.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3837,6 +3903,33 @@ Kahleigh's Retreat v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cloth Additions 1.1 [Max a.k.a. ~NOBODY~]
+
+;; Dragon32: Usable with "Complete Morrowind Part 2", but the "Cloth Additions" plugin must be newer than CMP2. v1.1 is compatible with Complete Morrowind Full.
+;; (Ref: Readme - Cloth Additions.txt)
+
+[Order]
+Complete Morrowind Part 2.esp
+Cloth Additions.esp
+
+[Order]
+Complete Morrowind TB & BM - Replacer.esp
+Cloth Additions.esp
+
+[Order]
+Complete Morrowind - Tribunal & Bloodmoon.esp
+Cloth Additions.esp
+
+[Order]
+Complete Morrowind.esp
+Cloth Additions.esp
+
+[Order]
+Complete Morrowind - Replacer.esp
+Cloth Additions.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Colt M4-M203  [PizzasRgooD]
 
 [Note]
@@ -4341,6 +4434,24 @@ mel_DaedricTeleportStones_v1TRIB.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 39675 Daemer Home.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Daggerfall Book Collection [Michael Damon, aka Launcelot]
+
+[Conflict]
+ Use only one:
+  Daggerfall Collection Ver 1.0.esp - If you only have Morrowind
+  Daggerfall Collection Ver 1.1.esp - If you have both expansions.
+ (Ref: readme_DaggerfallBookCollection.doc)
+Daggerfall Collection Ver 1.1.esp
+Daggerfall Collection Ver 1.0.esp
+
+[Requires]
+ (Ref: readme_DaggerfallBookCollection.doc)
+Daggerfall Collection Ver 1.1.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5278,6 +5389,15 @@ GCD better balanced birthsigns.esp
  ! The latest version of Expanded Sounds is 1.3, you may want to upgrade:
  ! http://z13.invisionfree.com/Pirate_Lords_Mods/index.php?showtopic=35
 [SIZE !439651 Expanded Sounds.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Extra Artifacts [ ]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 31878 Extra Artifacts.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7081,6 +7201,12 @@ Hold it - MCA addon.esp
           Hold it ressource.esp]
      MCA.esm]
 
+;; Dragon 32: 'Hold it - MCA addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+[Order]
+Hold it ressource.esp
+Hold it replacer.esp
+Hold it - MCA addon.esp
+
 [Requires]
  (Ref: Hold it-Read me.doc)
 Hold it - NOM addon.esp
@@ -7116,6 +7242,45 @@ Hold it - SF npc addon.esp
 [Order]
 Starfires NPC Additions ver-1.11.esp
 Hold it - SF npc addon.esp
+
+[Requires]
+ (Ref: Hold it-Read me.doc)
+Hold it-COM addon.esp
+[ALL [ANY Hold it replacer.esp
+          Hold it ressource.esp]
+     MW_Children_1_0.esm]
+
+;; Dragon 32: 'Hold it-COM addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+[Order]
+Hold it ressource.esp
+Hold it replacer.esp
+Hold it-COM addon.esp
+
+;;Dragon32: Purported solution is to merge Hold It with appropriate LGNPC mods. I'm loath to do that, so just load order changes here. See Amenophis' original reports earlier in thread and Merge Objects solution later.
+;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15663093
+;; So, load Hold It before all LGNPC mods.
+[Order]
+Hold it replacer.esp
+Less Lore.esp
+LGNPC_NoLore_v?_??.esp
+Lgnpc_SN.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan_v?_??.esp
+LGNPC_HlaOad_v?_??.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_v?_??_suppl.esp
+LGNPC_Pelagiad_v?_??.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ_v?_??.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_Secret_Masters_v?_??.esp
+LGNPC_Indarys_Manor_v?_??.esp
+LGNPC_VivecRedoran_v?_??.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8536,7 +8701,7 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://www.lgnpc.org/downloads
-[VER < 1.50 LGNPC_Indarys_Manor_v<VER>.esp]
+[VER < 1.51 LGNPC_Indarys_Manor_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -8584,11 +8749,25 @@ LGNPC_TelUvirith_v<VER>.esp
 LGNPC_TelUvirith_UI_v<VER>.esp
 Uvirith Inside.esp
 
-;; Since Stuporstar has made some accommodation for this, certainly Uvirith's Legacy should load after LGNPC Tel Uvirith.
+;; Cyran0: "Since Stuporstar has made some accommodation for this, certainly Uvirith's Legacy should load after LGNPC Tel Uvirith".
+;;Dragon32: Duplicated rest of load order, just in case.
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15607572
 [Order]
-LGNPC_TelUvirith_UI_v<VER>.esp
+LGNPC_TelUvirith_UI_v?_??.esp
+LGNPC_Secret_Masters_v?_??.esp
+LGNPC_Indarys_Manor_v?_??.esp
+LGNPC_VivecRedoran_v?_??.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+Uvirith's Legacy_BETA1.10.esp
+
+;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
+;; See Order notes for other LGNPC mods
+[Order]
+Less Lore.esp
+LGNPC_NoLore_v<VER>.esp
 Uvirith Inside.esp
+LGNPC_TelUvirith_UI_v<VER>.esp
 
 [Note]
  ! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in unexpected problems in both mods.
@@ -9423,6 +9602,15 @@ Pov_Distant_Activator_Fix_Waterfalls.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 4683283 MJY RIVERBOAT CASINO FINISH.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MMOs Tomb Loot [Magic Motor Ola (?)]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 7476 MMO's_Tomb_Loot.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10506,6 +10694,33 @@ NX9_Guards_Complete.ESP
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 69323 NX9Guards_Redoran.esp]
+
+[Patch]
+ NazoX9's "NX9_Guard_LGRedoran_Patch.ESP" fixes dialogue incompatibilities between LGNPC Pax Redoran and NazoX9's "Guards"
+ http://tesnexus.com/downloads/file.php?id=27765
+NX9_Guard_LGRedoran_Patch.ESP
+[ALL LGNPC_PaxRedoran_v?_??.esp
+     NX9_Guards_Complete.ESP]
+
+;; Dragon32: Not specified (no readme) but a check in TESPCD shows the patch changing the 'lost sister' dialogue topic from LGNPC, hence this load order. No apparent change to the Guards mod
+;; Also: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1049492&view=findpost&p=15677494
+;; Duplicated part of LGNPC load order here (soul sickness patch), just in case.
+[Order]
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+NX9_Guard_LGRedoran_Patch.ESP
+
+[Patch]
+ NazoX9's "NX9_Guard_LGRedoran_Patch.ESP" fixes incompatibilities between ostar's "Less Generic Tribunal" and NazoX9's "Guards"
+ http://tesnexus.com/downloads/file.php?id=27765
+NX9_Guard_LGTrib_patch.ESP
+[ALL Less Generic Tribunal.esp
+     NX9_Guards_Complete.ESP]
+
+;; Dragon32: Not specified (no readme) but a check in TESPCD shows the patch changing a NPC from the "Guards mod, hence this load order. No apparent change to Less Generic Tribunal. Also, think the NPC is a "dirty" reference and not actually needed.
+[Order]
+NX9_Guards_Complete.ESP
+NX9_Guard_LGTrib_patch.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13563,6 +13778,37 @@ Starfires NPC Additions VR patch.esp
 [Order]
 Vampire Realism II.esp
 Starfires NPC Additions VR patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Starfire's NPC - Hilgya Exp1 Addon [baikanp]
+
+[Requires]
+ baikanp's "Starfire's NPC - Hilgya Exp1 Addon" requires Starfire's "NPC Addition 1.11" as well as Plangkye's "Hilgya the Seamstress" and "Hilgya Expansion 1"
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8010 )
+SF NPC111 - Hilgya Exp1 Addon.esp
+[ALL Hilgya the Seamstress.esm
+     Hilgya the Seamstress Expansion 1.esp
+     Starfires NPC Additions ver-1.11.esp]
+
+;;Dragon32: Recommended by author; see PES link, above.
+[Order]
+Mashed Lists.esp
+SF NPC111 - Hilgya Exp1 Addon.esp
+
+[Order]
+Merged_Leveled_Lists.esp
+SF NPC111 - Hilgya Exp1 Addon.esp
+
+;;Dragon32 - Checking in TESPCD shows that baikanp's "Starfire's NPC - Hilgya Exp1 Addon" changes some ARMO, CLOT and a CONT record from "Hilgya Expansion 1". So, loading baikanp's mod after Plangkye's
+[Order]
+Hilgya the Seamstress Expansion 1.esp
+SF NPC111 - Hilgya Exp1 Addon.esp
+
+;;Dragon32 - Checking in TESPCD shows that baikanp's "Starfire's NPC - Hilgya Exp1 Addon" changes some NPC_ records in "NPC Addition 1.11". So, loading baikanp's mod after Starfire's
+[Order]
+Starfires NPC Additions ver-1.11.esp
+SF NPC111 - Hilgya Exp1 Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
