@@ -8596,9 +8596,9 @@ LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ_v?_??.esp
 LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_UI_v?_??.esp
-LGNPC_Secret_Masters_v?_??.esp
-LGNPC_Indarys_Manor_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
@@ -8610,9 +8610,9 @@ LGNPC_PaxRedoran_v?_??.esp
 
 [Patch]
  "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
- (Ref: "LGNPC Secret Masters readme.txt")
-LGNPC_SM_MCA5.esp
-[ALL LGNPC_Secret_Masters_v?_??.esp
+ (Ref: "LGNPC_SecretMasters_Readme.txt")
+LGNPC_SecretMasters_MCA5.esp
+[ALL LGNPC_SecretMasters_v?_??.esp
      MCA.esm]
 
 ;; expdep
@@ -8640,7 +8640,7 @@ LGNPC_Pelagiad_v1_22.esp
 [VER < 0.31 Lgnpc_SN.esp]
 
 [Conflict]
- LGNPC Seyda Neen 1.3 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
+ LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
 [SIZE 178346 Lgnpc_SN.esp]
 [ANY Alternate Beginnings 2.esp
@@ -8701,22 +8701,29 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  A newer version is available, check the LGNPC download site:
  http://www.lgnpc.org/downloads
-[VER < 1.51 LGNPC_Indarys_Manor_v<VER>.esp]
+[VER < 1.51 LGNPC_Indarys*Manor_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://www.lgnpc.org/downloads
-[VER < 1.30 LGNPC_Secret_Masters_v<VER>.esp]
+[VER < 1.30 LGNPC_Secret*Masters_v<VER>.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
  http://www.lgnpc.org/downloads
 [VER < 1.20 LGNPC_TelUvirith_v<VER>.esp]
 
+;;Dragon32: Old naming convention
 [Note]
  A newer version is available, check the LGNPC download site:
  http://www.lgnpc.org/downloads
 [VER < 1.20 LGNPC_TelUvirith_UI_v<VER>.esp]
+
+;;Dragon32: New naming convention
+[Note]
+ A newer version is available, check the LGNPC download site:
+ http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_TelUvirith_v<VER>_UI.esp]
 
 [Note]
  A newer version is available, check the LGNPC download site:
@@ -8738,24 +8745,24 @@ LGNPC_Pelagiad_v1_22.esp
 
 [Conflict]
  Use only one plugin:
- "LGNPC_TelUvirith_UI_*.esp" for users of Uvirith Inside
+ "LGNPC_TelUvirith_*_UI.esp" for users of Uvirith Inside
  "LGNPC_TelUvirith_*.esp" for everyone else
  (Ref: "LGNPC_TelUvirith_Readme.txt")
-LGNPC_TelUvirith_UI_v<VER>.esp
+LGNPC_TelUvirith_v<VER>_UI.esp
 LGNPC_TelUvirith_v<VER>.esp
 
 [Requires]
  (Ref: "LGNPC_TelUvirith_Readme.txt") 
-LGNPC_TelUvirith_UI_v<VER>.esp
+LGNPC_TelUvirith_v<VER>_UI.esp
 Uvirith Inside.esp
 
 ;; Cyran0: "Since Stuporstar has made some accommodation for this, certainly Uvirith's Legacy should load after LGNPC Tel Uvirith".
 ;;Dragon32: Duplicated rest of load order, just in case.
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15607572
 [Order]
-LGNPC_TelUvirith_UI_v?_??.esp
-LGNPC_Secret_Masters_v?_??.esp
-LGNPC_Indarys_Manor_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
@@ -8767,19 +8774,19 @@ Uvirith's Legacy_BETA1.10.esp
 Less Lore.esp
 LGNPC_NoLore_v<VER>.esp
 Uvirith Inside.esp
-LGNPC_TelUvirith_UI_v<VER>.esp
+LGNPC_TelUvirith_v<VER>_UI.esp
 
 [Note]
  ! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in unexpected problems in both mods.
  ! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
 [ALL Vampire_Embrace.esp
      [ANY LGNPC_Aldruhn_v?_??_suppl.esp
-          LGNPC_Indarys_Manor_v?_??.esp
+          LGNPC_IndarysManor_v?_??.esp
           LGNPC_Khuul_v?_??.esp
           LGNPC_PaxRedoran_v?_??.esp
-          LGNPC_Secret_Masters_v?_??.esp
+          LGNPC_SecretMasters_v?_??.esp
           LGNPC_TelUvirith_v?_??.esp
-          LGNPC_TelUvirith_UI_v?_??.esp
+          LGNPC_TelUvirith_v?_??_UI.esp
           LGNPC_VivecFQ_v?_??.esp
           LGNPC_VivecRedoran_v?_??.esp]]
 
@@ -8787,7 +8794,7 @@ LGNPC_TelUvirith_UI_v<VER>.esp
 ;; (Ref: LGNPC_IndarysManor_Readme.txt)
 [Order]
 DreamersAwakenedv1.0.esp
-LGNPC_Indarys_Manor_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
 
 [Conflict]
  "Join All Houses" by Heph will break some Pax Redoran quests, and likely create other odd results.
