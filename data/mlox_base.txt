@@ -627,6 +627,16 @@ Advanced Herbalism - BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adventurer Clothing [kalikut]
+
+[Requires]
+ kalikut's "Adventurer Clothing" requires Better Bodies.
+ (Ref: "kalikut's adventurer clothing readme.txt")
+kalikut's adventurer clothing.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurer's Hideout  [SlugZ]
 
 [Note]
@@ -2506,6 +2516,15 @@ new_bathing_mod.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Battle Skirts [Cutthroat Mods]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 4017 CM_BattleSkirts_1.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BC_Palla_Quest_Lite  [Big Chief]
 
 [Requires]
@@ -4278,6 +4297,21 @@ Crusaders_of_Tamriel_NO_NPCs.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cutthroat Armory [Cutthroat Mods]
+
+[Note]
+ If you are running "Cutthroat Armory" by Cutthroat Mods you do need to load any of these other mods of theirs.
+ (Ref: CM_Cutthroat_Armory_Readme.doc
+[ALL CM_Cutthroat_Armory.esp
+     [ANY CM_BattleShields_1.0.esp
+          CM_BattleSkirts_1.0.esp
+          CM_BattleShields_Light.esp
+          Clean CM_Quality_Swords.esp
+          Clean_CM_Fine_Leather_Armor.esp
+          Clean CM_Wooden_Shields.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CV Indarys Manor  [Chron Ventri]
 
 [Note]
@@ -4924,6 +4958,15 @@ C0N2 v1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dragonbone Complete Set [Jayson]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 11778 Dragonbone Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dragon rider's armor [Mandamus]
 
 [Requires]
@@ -5076,10 +5119,11 @@ Dwarves! BB.esp
 Better Bodies.esp
 
 [Requires]
- "Dwarves! MCA add-on" requires Morrowind, Bloodmoon, Tribunal and MCA.esm
+ "Dwarves! MCA add-on" requires Morrowind, Bloodmoon, Tribunal and "Morrowind Comes Alive" v5.2 by Neoptolemus.
  (Ref: "Dwarves! MCA addon_readme.txt")
 Dwarves! MCA addon v2.1.esp
-[ALL MCA.esm
+[ALL [ANY [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]
      Morrowind.esm
      Tribunal.esm
      Bloodmoon.esm
@@ -5274,12 +5318,46 @@ Elders 0 Count NPC add-on (Trib & BM).esp
  (Ref: Elders of Vvardenfell_readme.txt)
 Elders of Vvardenfell.esp
 
+;;Dragon32: Tarnsman's "THE Morrowind NPC Makeover" includes his "Elders 0 count add-on"
 [Requires]
- Elders MCA Add-on requires "Elders of Vvardenfell.esp" and "MCA.esm".
+ "Elders MCA Add-on" version 1.0 requires "Elders of Vvardenfell" and "Morrowind Comes Alive" v4.1 by Neoptolemus.
  (Ref: "Elders MCA addon_readme.txt")
-Elders MCA Add-on v2.0.esp
-[ALL Elders of Vvardenfell.esp
-     MCA.esm]
+Elders MCA Add-on.esp
+[ALL [ANY THE Morrowind NPC Makeover.esp
+          THE Morrowind NPC Makeover.esm
+          Elders of Vvardenfell.esp
+          Elders 0 Count NPC add-on (Trib & BM).esp
+          Elders 0 Count NPC add-on.esp]
+     Morrowind Comes Alive.esm]
+
+[Requires]
+ "Elders MCA Add-on" version 2.0 requires "Elders of Vvardenfell" and "Morrowind Comes Alive" v5.0 by Neoptolemus.
+ (Ref: "Elders MCA addon_readme.txt")
+[VER = 2.0 Elders MCA Add-on v2.0.esp]
+[ALL [ANY THE Morrowind NPC Makeover.esp
+          THE Morrowind NPC Makeover.esm
+          Elders of Vvardenfell.esp
+          Elders 0 Count NPC add-on (Trib & BM).esp
+          Elders 0 Count NPC add-on.esp]
+     [SIZE 2303212 MCA.esm]]
+
+[Requires]
+ "Elders MCA Add-on" version 2.02 requires "Elders of Vvardenfell" and "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: "Elders MCA addon_readme.txt")
+[VER = 2.02 Elders MCA Add-on v2.0.esp]
+[ALL [ANY THE Morrowind NPC Makeover.esp
+          THE Morrowind NPC Makeover.esm
+          Elders of Vvardenfell.esp
+          Elders 0 Count NPC add-on (Trib & BM).esp
+          Elders 0 Count NPC add-on.esp]
+     [ANY [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]] ;The Undead-compatible version
+
+[Note]
+ ! "Elders MCA Add-on" version 2.02 needs to be edited before it will work without errors with Neoptolemus' "Morrowind Comes Alive" v5.2.
+ ! You need to edit the NPCs "_elder_ashlander_f1" and "_elder_ashlander_m1" to remove the levelled item "_MCA_ashlander_scarf_random"
+[ALL [SIZE 123422 Elders MCA Add-on v2.0.esp]
+     [VER = 2.02 Elders MCA Add-on v2.0.esp]]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Elias' Amulet of Charm  [Tenaka]
@@ -7462,6 +7540,19 @@ huntermodtrib.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @IceBradyHurdy_RobeReplacer [CanadianIce, Brady228 & Hurdy Gurdy]
+
+[Conflict]
+ Use ONLY ONE of these plugins.
+ (Ref: "readme_IceNioLivRobeReplacer.txt")
+IceBradyHurdyRobeReplacerALL.esp
+IceBradyHurdyRobeReplacerMW.esp
+IceBradyHurdyRobeReplacerTB.esp
+IceBradyHurdyRobeReplacerBM.esp
+IceBradyHurdyRobeReplacerPLUS.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @IceNioLiv_RobeReplacer [CanadianIce & NioLiv]
 
 [Conflict]
@@ -7829,7 +7920,8 @@ IT Beryl and Constance Fix.esp
 
 [Conflict]
  ! Both Smite_Plight's "Indoril Greaves" and Sandman101's "H.E.L.L.U.V.A. Armor Completion" add Indoril greaves to the Ordinators. You should choose which plugin to use.
-Indoril Greaves.esp
+[ANY Indoril Greaves.esp
+     Indoril Greaves w_Better Bodies.esp]
 H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
 
 
@@ -7923,6 +8015,12 @@ tusar_v1.2.1.esp
 [Order]
 Vality's Ascadian Isles Addon.esp
 Japanese_House.esp
+
+[Conflict]
+ Sniper Daria's "Japanese House" includes his "Japanese Armor." There is no need to load both plugins.
+ (Ref: readme_japan_house_V1.4.txt)
+[ALL Clean Japanese_Armor.esp
+     Japanese_House.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8257,6 +8355,72 @@ Syc_HerbalismforPurists_TB-ONLY.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 124964 Balmora Marketplace.esp]
 ; included in Kirstenhaas archive but not dependant on each other.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Knights of Tamriel [Jeremy McGuinn]
+
+[Conflict]
+ Choose ONE plugin:
+  Arkay.esp - If you have the Tribunal expansion
+  Arkay_non_Tribunal.esp - If you do not have Tribunal
+Arkay.esp
+Arkay_non_Tribunal.esp
+
+[Requires]
+ (Ref: "Readme_arkay.txt")
+Arkay.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "Readme_KoT_6.txt")
+Clean Mara.esp
+Tribunal.esm
+
+[Requires]
+ Whilst not mandated by the readme, Jeremy McGuinn's "The Armor of Jet and Gold" requires Tribunal.
+ (Ref: "Readme_JetGold.txt")
+jet_gold_armor.esp
+Tribunal.esm
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 64535 kynareth.esp]
+
+;;Dragon32: No reference, from a note I made for myself back in June 2004 :-)
+[Note]
+ !! "The Kynarian Knights" has a script error in the 'adddivine' script, which is attached to the 'kynarian_priestess' NPC.
+ !! To fix this you need to edit the script. Change the line that reads 'kynarian_priestess->AddTopic, "divine items"' to 'AddTopic, "divine items"'
+[ANY [SIZE 64535 kynareth.esp]
+     [SIZE 324570 Knights of Tamriel.esp]] ;Tarnsman's merged mod doesn't fix this
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 98330 akatosh.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 56323 Arkay.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 18888 Dibella.esp]
+
+[Conflict]
+ Tarnsman's "Knights of Tamriel" is a merged plugin containing all of Jeremy McGuinn's released "Knights of Tamriel" mods, there is no need to load the individual mods.
+ (Ref: "Readme_Knights of Tamriel.txt")
+Knights of Tamriel.esp
+[ANY Akatosh.esp
+     Arkay.esp
+     Arkay_non_Tribunal.esp
+     Clean Mara.esp
+     Dibella.esp
+     jet_gold_armor.esp
+     kynareth.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9439,6 +9603,22 @@ Heaven's Lookout.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Merged MCA Files [elfwanderer]
+
+;;Dragon32: For MCA 4.1
+;;Also includes v1.0 of Tarnsman's Dwarves MCA addon, can't find a plugin name for that.
+[Conflict]
+ elfwanderer's "Merged MCA Files" is a collection of addons for "Morrowind Comes Alive" v4.1 by Neoptolemus, there is no need to load the constituent MCA addons with elfwanderer's mod.
+Merged MCA Files.esp
+[ANY [SIZE 112173 MCA Wizard Hats Addon.esp]
+     MCA Chainmail Addon.esp
+     MCA Dragonbone Addon.esp
+     MCA Elven Armor Addon.esp
+     MCA Corinthian Helms and Arsenal Addon.esp
+     Elders MCA Add-on.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Merkin's Multi-mod v1 [Merkin]
 
 ; (Ref: "multimodreadme.txt")
@@ -9747,6 +9927,17 @@ PW_Cait_Moose.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morag Tong Compatible MCA [Eisenfaust]
+
+[Requires]
+ "Morag Tong Compatible MCA" by Eisenfaust requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: Morag Tong Compatible MCA Readme.txt)
+Morag Tong Compatible MCA 5.2.esp
+[ANY [SIZE 2707833 MCA.esm]
+     [SIZE 2519851 MCA.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morag Tong Armor Replacer [lochnarus]
 
 [Requires]
@@ -9949,6 +10140,82 @@ MCA.esm
 MCA - More Enemies.esp
 MCA.esm
 
+;;v4.1 rules
+;;Dragon32: Added rules for 4.1 as, from talk on the Forums, a number of people still use this version.
+
+[Conflict]
+ Do not run both v4.1 and v5.* of Neoptolemus' "Morrowind Comes Alive" at the same time.
+MCA.esm
+Morrowind Comes Alive.esm
+
+;; MCA - NOM Patch.esp modifieds NOM's Bed_Standard script, so it should come after NoM
+[Order]
+NOM 2.13.esp
+Morrowind Comes Alive NOM Patch.esp
+
+[Requires]
+ (Ref: "Morrowind Comes Alive - Readme.txt")
+Morrowind Comes Alive Vampire Realism Patch.esp
+[ALL Morrowind Comes Alive.esm
+     Vampire Realism II.esp]
+
+[Requires]
+ (Ref: "Morrowind Comes Alive - Readme.txt")
+Morrowind Comes Alive NOM Patch.esp
+[ALL Morrowind Comes Alive.esm
+     NOM 2.13.esp]
+
+[Requires]
+ (Ref: "Morrowind Comes Alive - Readme.txt")
+Morrowind Comes Alive Guards Patch.esp
+Morrowind Comes Alive.esm
+
+[Requires]
+ (Ref: "Morrowind Comes Alive Recruitable NPCs - Readme.txt")
+Morrowind Comes Alive Recruitable NPCs.esp
+Morrowind Comes Alive.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA 5.2 Additional Companions [Grant McDorman]
+
+[Conflict]
+ Grant McDorman's "MCA 5.2 Additional Companions" reinstates 22 companion NPCs that were available in v5.0 and v5.1 of "Morrowind Comes Alive" by Neoptolemus. As you are using v5.0 or v5.1 of "Morrowind Comes Alive" there is no need to run this mod.
+ (Ref: "MCA_5.2_Additional_Companions_Readme.txt")
+MCA_5.2_Additional_Companions.esp
+[ANY [SIZE 2303212 MCA.ESM]
+     [SIZE 2458536 MCA.ESM]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Adventurer Clothing Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Adventurer Clothing Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+MCA Adventurer Clothing Addon.esp
+Morrowind Comes Alive.esm
+
+;; Dragon32: Marbred's mod defines the CLOTH and ARMO records, there's no need to actually load kalikut's mod
+[Note]
+ Ensure you have installed the resources from kalikut's "Adventurer Clothing" mod to ensure that Marbred's "MCA Adventurer Clothing Addon" functions correctly.
+[ALL MCA Adventurer Clothing Addon.esp
+     [NOT kalikut's adventurer clothing.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Chainmail Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Chainmail Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+MCA Chainmail Addon.esp
+Morrowind Comes Alive.esm
+
+;; Dragon32: Marbred's mod defines the ARMO and BODY records, there's no need to actually load ReflectioN's mod
+[Note]
+ Ensure you have installed the resources from ReflectioN's "Chainmail Armor Merchant" mod to ensure that Marbred's "MCA Chainmail Addon" functions correctly.
+[ALL MCA Chainmail Addon.esp
+     NOT Chainmail Armor Merchant V1.1.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA Companions Improved [Grant McDorman]
@@ -9961,12 +10228,239 @@ MCA_Companions_Enhanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Corinthian Helms and Arsenal Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Corinthian Helms and Arsenal Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+MCA Corinthian Helms and Arsenal Addon.esp
+Morrowind Comes Alive.esm
+
+;; Dragon32: Marbred's mod defines the WEAP, BODY and ARMO records, there's no need to actually load Daduke's mods
+[Note]
+ Ensure you have installed the resources from Daduke's "Corinthian Helms" and "The Arsenal" mods to ensure that Marbred's "MCA Corinthian Helms and Arsenal Addon" functions correctly.
+[ALL MCA Adventurer Clothing Addon.esp
+     [NOT [ANY Corinthian Helms.esp
+               The Arsenal.esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA CM Armory Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA CM Armory Addon" requires version 5.* of Neoptolemus' "Morrowind Comes Alive". Whilst the readme mandates version 5.1 "MCA CM Armory Addon" will work with versions 5.0 and 5.2 of "Morrowind Comes Alive".
+ (Ref: Readme - MCA cm armory Addon.txt)
+MCA cm Armory Addon.esp
+MCA.esm
+
+;; Dragon32: Marbred's mod defines the appropriate records from the Cutthroat mod, there's no need to actually load it
+[Note]
+ Ensure you have installed the resources from Cutthroat Mods's "Cutthroat Armory" mod to ensure that Marbred's "MCA CM Armory Addon" functions correctly.
+[ALL MCA cm Armory Addon.esp
+     NOT CM_Cutthroat_Armory.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Dragonbone Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Dragonbone Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+MCA Dragonbone Addon.esp
+Morrowind Comes Alive.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Elven Armor Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Elven Armor Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+MCA Elven Armor Addon.esp
+Morrowind Comes Alive.esm
+
+;; Dragon32: Marbred's mod defines the ARMO and BODY records, there's no need to actually load The General's mod
+[Note]
+ Ensure you have installed the resources from The General's "TG's Elven Armor" mod to ensure that Marbred's "MCA Elven Armor Addon" functions correctly.
+[ALL MCA Elven Armor Addon.esp
+     NOT TG's Elven Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCAFix [Aeven]
 
 ; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=14026278
 [Order]
 Mashed Lists.esp
 MCAFix.ESP
+
+[Requires]
+ Aeven's "Morrowind Comes Alive - Fix" requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: MCA Fix -ReadMe.txt)
+MCAFix.ESP
+[ANY [SIZE 2707833 MCA.esm] ;standard 5.2
+     [SIZE 2519851 MCA.esm]] ;The Undead-compatible version
+
+[Conflict]
+ Both Aeven's "Morrowind Comes Alive - Fix" and Qawsed Asap's "MCA Zero Town Baddies Alpha" remove the chance of the player being ambushed by bandits in towns. There is no need to run both mods.
+ (Ref: "MCA Fix -ReadMe.txt" and "MCANoBaddiesReadme.txt")
+MCAFix.ESP
+MCA - Zero Town Baddies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA - HELLUVA Wicked Weapons Patch [Fliggerty]
+
+[Requires]
+ Fliggerty's "MCA - HELLUVA Wicked Weapons Patch" requires v5.2 of Neoptolemus' "Morrowind Comes Alive"
+ (Ref: MCA - HELLUVA Wicked Weapons Patch.txt)
+MCA - H.E.L.L.U.V.A. Wicked Weapons.esp
+[ALL [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]
+     H.E.L.L.U.V.A. Complete Weapons.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA 5.1 Lighter [Jeoshua]
+
+[Requires]
+ "MCA 5.1 Lighter" by Jeoshua requires "Morrowind Comes Alive" v5.1 by Neoptolemus.
+ (Ref: "Readme - MCA 5.1 Lighter.txt")
+MCA 5.1 - Lighter.esp
+[SIZE 2458536 MCA.esm]
+
+;; Ref: "Readme - MCA 5.1 Lighter.txt" says to load MCA Lighter after Mashed Lists, but:
+;; Dragon32 - From Wrye Mash version history (0.72, 5th January 2007):
+;; "Tweaked list merging so that chance none is set to the chance none of the last mod to load rather than to the mimimum chance none. Tweak needed for MCA 5.1 Lighter to work with Mash."
+;; Note, Wrye Mash 0.72 released *after* this mod.
+[Order]
+MCA 5.1 Lighter.esp
+Mashed Lists.esp
+
+;; Ref: "Readme - MCA 5.1 Lighter.txt"
+[Order]
+MCA 5.1 Lighter.esp
+Merged Leveled Lists.esp
+
+;; Ref: "Readme - MCA 5.1 Lighter.txt" & see Dragon32's note for Mashed Lists
+[Order]
+[SIZE 143700 MCA Wizard Hats Addon.esp] ;MCA 5.1 version
+MCA 5.1 Lighter.esp
+
+[Order]
+MCA cm Armory Addon.esp
+MCA 5.1 Lighter.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Lite [Marbred]
+
+[Requires]
+ "MCA Lite" by Marbred requires v4.1 of "Morrowind Comes Alive" by Neoptolemus.
+ (Ref: "Readme - MCA Lite.txt")
+MCA Lite.esp
+Morrowind Comes Alive.esm
+
+;; Dragon32: "make sure this esp is loaded AFTER any other MCA Addons"
+;; Ref: Readme - MCA Lite.txt
+[Order]
+MCA Tamriel Knights Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Corinthian Helms and Arsenal Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Adventurer Clothing Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Suran Archery Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Salusas Staves Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Elven Armor Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Dragonbone Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Chainmail Addon.esp
+MCA Lite.esp
+
+[Order]
+MCA Wizard Hats Addon.esp
+MCA Lite.esp
+
+;Tarnsman's mod
+[Order]
+Elders MCA Add-on.esp
+MCA Lite.esp
+
+;;elfwanderer's merged mod of 4.1 Addons
+[Order]
+Merged MCA Files.esp
+MCA Lite.esp
+
+[Requires]
+ "MCA 5 Lite" by Marbred requires v5.0 of "Morrowind Comes Alive" by Neoptolemus.
+ (Ref: "Readme MCA 5 Lite.txt")
+MCA 5 Lite.esp
+[SIZE 2303212 MCA.ESM]
+
+;; Dragon32: "make sure this esp is loaded AFTER any other MCA Addons"
+;; Ref: Readme MCA 5 Lite.txt
+[Order]
+MCA cm Armory Addon.esp
+MCA 5 Lite.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA 5.2 - Lite [MrE_Man]
+
+;;Dragon32: This is an updated version of Jeoshua's "MCA 5.1 Lighter"
+
+[Requires]
+ "MCA 5.2 - Lite" by MrE_Man requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: "Readme - MCA v5.2 - Lite.txt")
+MCA v5.2 - Lite.esp
+[ANY [SIZE 2707833 MCA.esm]
+     [SIZE 2519851 MCA.esm]]
+
+;;Dragon23: Jeoshua's  "MCA 5.1 Lighter" said to load hos version before any merged levelled list plugin. I assume this is the case with MrE_Man's mod too.
+[Order]
+MCA v5.2 - Lite.esp
+Mashed Lists.esp
+
+;; Ref: "Readme - MCA 5.1 Lighter.txt"
+[Order]
+MCA v5.2 - Lite.esp
+Merged Leveled Lists.esp
+
+;;Dragon32: Again, Jeoshua's  "MCA 5.1 Lighter" said to load his mod after any mods that affect MCA's creature levelled lists, again assumed it's the same with MrE_Man's mod too
+[Order]
+MCA_5.2_Additional_Companions.esp
+MCA v5.2 - Lite.esp
+
+[Order]
+MCA cm Armory Addon.esp
+MCA v5.2 - Lite.esp
+
+[Order]
+MCA Tamriel Knights Addon.esp
+MCA v5.2 - Lite.esp
+
+[Order]
+Dwarves! MCA addon v2.1.esp
+MCA v5.2 - Lite.esp
+
+[Order]
+Elders MCA Add-on v2.0.esp
+MCA v5.2 - Lite.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9979,6 +10473,172 @@ MCAFix.ESP
 MCA Lore Correct 5.1.esp
 [ANY [SIZE 2519851 MCA.esm] ; The Undead 3.0 compatible version
      [SIZE 2707833 MCA.esm]] ; Original version
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Names 5.2 [AJB4]
+
+[Requires]
+ "MCA Names 5.2" by AJB4 requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: "MCA Names 5.2 Readme.txt")
+MCA Names 5.2.esp
+[ANY [SIZE 2707833 MCA.esm]
+     [SIZE 2519851 MCA.esm]]
+
+;:Dragon32: Seem to be 2 different-named versions of the same plugin
+[Requires]
+ "MCA Lore Correct Names for MCA 5.2" by AJB4 requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: "MCA Lore Correct 5.2 Readme.txt")
+MCA v5.2 - Lore Correct Named NPC v1.1.esp
+[ANY [SIZE 2707833 MCA.esm]
+     [SIZE 2519851 MCA.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA - NoM Courtesan Patch [Malius]
+
+;;For MCA 4.1
+
+;;Dragon32: Makes a *slight* change to the 'Bed_Standard' script (an extra EndIf)
+[Order]
+Morrowind Comes Alive NOM Patch.esp
+MCA and NOM Courtesan Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA - NoM Food and Drink Patch [Malius]
+
+;;For MCA 4.1
+
+;;Dragon32: Changes the following NoM scripts: 'NOM_eat_3','NOM_eat_4', 'NOM_eatfood_4', 'NOM_master_alcol' and 'NOM_thirst_alcol'
+[Order]
+NOM 2.13.esp
+MCA and NOM Food and Drink Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Salusa Staves Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Salusa Staves Addon" requires Kalisperas' "Salusa's Staves" and "Morrowind Comes Alive" v4.1 by Neoptolemus.
+ (Ref: Readme - MCA Salusa Staves Addon.txt)
+MCA Salusas Staves Addon.esp
+[ALL Morrowind Comes Alive.esm
+     Salusa's Staves.esp]
+
+[Order]
+Salusa's Staves.esp
+MCA Salusas Staves Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Script Fix [ ]
+
+[Conflict]
+ The "MCA Script Fix" for the error in the 'mca_outlaws_rogues' script should only be used with version 5.0 of Neoptolemus' "Morrowind Comes Alive." The error is fixed in version 5.1 and later versions.
+MCA ScriptFix.esp
+[SIZE !2303212 MCA.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Suran Archery Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA Suran Archery Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+MCA Suran Archery Addon.esp
+Morrowind Comes Alive.esm
+
+;; Dragon32: Marbred's mod defines the WEAP records, there's no need to actually load Wizbang's mod
+[Note]
+ Ensure you have installed the resources from Wizbang's "Suran Archery Tradehouse" mod to ensure that Marbred's "MCA Suran Archery Addon" functions correctly.
+[ALL MCA Suran Archery Addon.esp
+     [NOT [ANY Suran Archery Store_v3.0.esp
+               Suran Archery Store_v3.0 NSE.esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Tamriel Knights Addon [Marbred and Tarnsman]
+
+[Requires]
+ Marbred's "MCA Tamriel Knights Addon" requires "Morrowind Comes Alive" v4.1 by Neoptolemus.
+[ANY [SIZE 56487 MCA Tamriel Knights Addon.esp]
+     [SIZE 96642 MCA Tamriel Knights Addon.esp]]
+Morrowind Comes Alive.esm
+
+[Note]
+ You should use v1.5 of Marbred's "MCA Tamriel Knights Addon", v1.0 did not actually add the knights themselves into the MCA Knights list
+ (Ref: "MCA_KoT_Addon v1.5.zip\Readme - MCA KoT Addon.txt")
+ http://www.tesnexus.com/downloads/file.php?id=1643
+[SIZE 56487 MCA Tamriel Knights Addon.esp]
+
+[Requires]
+ Marbred's "MCA Tamriel Knights Addon" requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+[SIZE 56269 MCA Tamriel Knights Addon.esp]
+[ANY [SIZE 2707833 MCA.ESM]
+     [SIZE 2519851 MCA.ESM]] ;The Undead-compatible version
+
+; Dragon32: MCA 5.2 includes all the resources from Jeremy McGuinn's "Knights of Tamriel" mods
+[Note]
+ Ensure you have installed the resources from Jeremy McGuinn's "Knights of Tamriel" mods so that "MCA Tamriel Knights Addon" functions correctly.
+[ALL [ANY [SIZE 56487 MCA Tamriel Knights Addon.esp]
+          [SIZE 96642 MCA Tamriel Knights Addon.esp]]
+     [NOT [ANY [ALL Akatosh.esp
+                   Arkay.esp
+                   Arkay_non_Tribunal.esp
+                   Clean Mara.esp
+                   Dibella.esp
+                   jet_gold_armor.esp
+                   kynareth.esp]
+               Knights of Tamriel.esp]]] ;Tarnsman's merged version
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @mca_5.2_vivec_redux [fleck1974]
+
+[Requires]
+ "mca_5.2_vivec_redux" was made for "Morrowind Comes Alive" v5.2 by Neoptolemus, "Redesigned Vivec" by Piratelord and "Vivec Expansion" by Hoghead the Horrible.
+ (Ref: mca_5.2_vivec_redux.txt)
+mca_5.2_vivec_redux.esp
+[ALL [ANY [SIZE 2707833 MCA.esm] ;standard 5.2
+          [SIZE 2519851 MCA.esm]] ;The Undead-compatible version
+     [ANY PW_Redesigned Vivec-Vivec_Expansion.esp ;Pseron Wyrd's merged mod
+          [ALL Vivec Expansion 2.0.esp
+               Redesigned Vivec.esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Wizard Hats Addon [Marbred]
+
+[Requires]
+ Marbred's "MCA 5.1 Wizard Hats Addon" requires both version 5.1 of Neoptolemus' "Morrowind Comes Alive"
+ If you wish to use it with version 5.2 of "Morrowind Comes Alive" then you need to remove the '_MCA_illusionist_alt_m' NPC record from Marbred's mod.
+ If you wish to use it with The Undead-compatible version of MCA v5.2 then as well you will need to remove the following NPC records: '_MCA_BM_skel_shaman', '_MCA_dremora_battlemage', '_MCA_phan_mage', '_MCA_phan_sorceror', '_MCA_skel_mage', '_MCA_skel_sorceror', '_MCA_zombie_mage01' and '_MCA_zombie_mage02'
+ (Ref: MCA51WizHatsAddon.zip\Readme - MCA Wizard Hats Addon.txt)
+[SIZE 143700 MCA Wizard Hats Addon.esp]
+[SIZE 2458536 MCA.esm]
+
+[Requires]
+ Marbred's "MCA WizardHats Addon" requires version 4.1 of Neoptolemus' "Morrowind Comes Alive"
+ (Ref: MCA WizardHats Addon.zip\Readme - MCA Wizard Hats Addon.txt)
+[SIZE 112173 MCA Wizard Hats Addon.esp]
+Morrowind Comes Alive.esm
+
+;; Dragon32: Marbred's mod defines the Wizard Hats as CLOTH and BODY records, there's no need to actually load Daduke's mod
+[Note]
+ Ensure you have installed the resources from Daduke's "Wizard Hats" mod to ensure that Marbred's "MCA 5.1 Wizard Hats Addon" functions correctly.
+[ALL MCA Wizard Hats Addon.esp
+     NOT Wizard Hats 1.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Zero Town Baddies Alpha [Qawsed Asap]
+
+[Requires]
+ Qawsed Asap's "MCA Zero Town Baddies Alpha" requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+ (Ref: MCANoBaddiesReadme.txt)
+MCA - Zero Town Baddies.esp
+[ANY [SIZE 2707833 MCA.esm] ;standard 5.2
+     [SIZE 2519851 MCA.esm]] ;The Undead-compatible version
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12084,6 +12744,21 @@ propylons1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @PW_Redesigned Vivec-Vivec_Expansion.esp [Pseron Wyrd]
+
+[Note]
+ Pseron Wyrd has released a plugin combining Piratelord's "Redesigned Vivec" with Hoghead the Horrible's "Vivec Expansion"
+ ( http://www.morrowind4kids.com/pseronwyrd/PW_Redesigned_Vivec-Vivec_Expansion.zip )
+[ALL Redesigned Vivec.esp
+     Vivec Expansion 2.0.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 2056524 PW_Redesigned Vivec-Vivec_Expansion.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @QuarraClan v1.1 [Jonathan Nash]
 
 [Note]
@@ -12183,6 +12858,15 @@ MWE_Combat.esp
  (Ref: Readme - Rage Indicator.esp)
 Rage Indicator.esp
 [VER<0.3 Encumbrance Bar.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rare Robes Collection + Dwemer Robe FIX [Xanondorf]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 29394 xan_rare_robesv1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12294,6 +12978,16 @@ RF - Furniture shop.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Katana Lite [iamnone]
+
+[Conflict]
+ "Real Katana Lite" by iamnone is an edit of Karstux's "Real Katana 1.2" There is no need to load both plugins.
+ (Ref: RKLreadme.txt)
+Real_Katana_Lite.esp
+ktx_real_katana_1.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @RealSignposts [ElBundeee]
 
 [Conflict]
@@ -12379,6 +13073,47 @@ Realistic Weather v2.0.esp
           Ald Redaynia Extended.esp]
      [ANY 	[SIZE 304650 Redaynia Village.esp]	;uncleaned
 		[SIZE 302981 Redaynia Village.esp]]]	;cleaned
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Redesigned Vivec [Piratelord]
+
+[Patch]
+ "Redesigned Vivec CoM Changes.esp" moves the children from Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec."
+ (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+Redesigned Vivec CoM Changes.esp
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp]
+     MW_Children_1_0.esm]
+
+[Patch]
+ "Redesigned Vivec MCA Changes.esp" moves the NPCs from version 4.1 of Neoptolemus's "Morrowind Comes Alive" so they are compatible with Piratelord's "Redesigned Vivec."
+ (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+Redesigned Vivec MCA Changes.esp
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp]
+     Morrowind Comes Alive.esm]
+
+[Note]
+ ! "Redesigned Vivec MCA Changes.esp" is not compatible with version 5.* of Neoptolemus's "Morrowind Comes Alive."
+[ALL Redesigned Vivec MCA Changes.esp
+     MCA.esm]
+
+[Conflict]
+ The standard version of Grumblepunk's "House of Mannequins" is not compatible with Piratelord's "Redesigned Vivec", Piratelord has released a replacement plugin.
+ (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp]
+     [SIZE 457977 House of Mannequins v1.0.esp]]
+
+[Conflict]
+ Piratelord has released a "Redesigned Vivec"-compatible version of the "Area Effect Arrows" plugin by Bethesda. You should use this plugin instead.
+ (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp]
+     [ANY AreaEffectArrows XB Edition.esp
+          Area Effect Arrows.esp
+          [SIZE !30094 AreaEffectArrows.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12678,6 +13413,18 @@ Romance_v37EV.esp
 [Requires]
 Prostitution_v12EV.esp
 Romance_v37EV.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rose Cottage/Wayfarer's Rest Landscape Fix [Tabula Rasa]
+
+[Patch]
+ Tabula Rasa's "Rose Cottage/Wayfarer's Rest Landscape Fix" will fix the seams and gaps in the landscape around the Wayfarer's Rest Inn and the Ascadian Rose Cottage when the two mods are used simultaneously.
+ (Ref: TR-RWLF Readme.txt)
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8162
+Clean TR Rose-Wayfarer Landscape Fix.esp
+[ALL Ascadian_Rose_Cottage_ver1.0.esp
+     Wayfarer's Rest v1.21.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13962,6 +14709,21 @@ MMSugarMoon-b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Suran Archery Tradehouse [Wizbang]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 143034 Suran Archery Store_v3.0.esp]
+
+[Conflict]
+ Wizbang's "Archer's Leather Armor" is included in "Suran Archery Tradehouse." You should uncheck "Archer's Leather Armor" from your mod list, "Suran Archery Tradehouse" includes an updared version of the armor.
+ (Ref: Readme_SuranArcheryStore_v3.0.txt)
+Suran Archery Store_v3.0.esp
+Archer's Leather Armor.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Suran Extended v1.2 [Princess Stomper]
 
 [Requires]
@@ -14413,6 +15175,19 @@ Telos Rin Graveyard.esp
 [Requires]
 Telperion Basement Addon.esp
 Telperion.V1.03.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Telvanni Robe Version 2 [MP*Canus]
+
+[Requires]
+Ice_CNS_FemaleTelvanniRobeV2.esp
+Clean Telvanni_Robe_V2.esp
+
+;; Dragon32: Examined plugins in TESPCD
+[Order]
+Clean Telvanni_Robe_V2.esp
+Ice_CNS_FemaleTelvanniRobeV2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15102,6 +15877,40 @@ THE_UNDERGROUND.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Undead [Neoptolemus]
+
+[Conflict]
+ Version 4.1 and up of Neoptolemus' "Morrowind Comes Alive" have integrated version 2.2 of his "The Undead" mod. There is no need to run "The Undead.esp" with your current version of "Morrowind Comes Alive."
+ (Ref: "MCA - Readme.txt" and "Morrowind Comes Alive - Readme.txt")
+The Undead.esp
+[ANY Morrowind Comes Alive.esm
+     [SIZE !2519851 MCA.ESM]]
+
+[Note]
+ The version of Neoptolemus' "Morrowind Comes Alive" you are running is compatible with v3.0 of his "The Undead" mod, not version 2.2 that you have enabled.
+[ALL The Undead.esp
+     [SIZE 2519851 MCA.ESM]]
+
+[Conflict]
+ There is no need to run both version 2.2 and 3.0 of Neoptolemus' "The Undead" mod.
+The Undead.esm
+The Undead.esp
+
+;;Dragon32: Noticed some conflicts (e.g. in the 'NP Phantom' RACE record) between these two. I assume that 'The Undead.esm' should load after 'MCA.esm' as "The Undead" was released after 5.2 of "Morrowind Comes Alive"
+[Order]
+MCA.esm
+The Undead.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Undead Dungeons [Qwert]
+
+[Requires]
+Teleport_plugin_The Undead Dungeons.esp
+The  Undead Dungeons.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Undead Vetooch & More Undead Vetooch [Blockhead aka Peter Capasso]
 
 [Requires]
@@ -15114,14 +15923,6 @@ pcc_undead_vetooch_10.esp
 pcc_undead_vetooch_10.esp
 [ALL Aard_Vetooch_20.esp
      The  Undead Dungeons.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Undead Dungeons [Qwert]
-
-[Requires]
-Teleport_plugin_The Undead Dungeons.esp
-The  Undead Dungeons.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15210,6 +16011,24 @@ Ring Texture Fix.esp
  (Ref: "Unique Items.txt")
 Unique Items - Monster Specific.esp
 Unique Items.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unofficial Morrowind Comes Alive - City Attack Patches [businessman332211]
+
+[Requires]
+ "Unofficial Morrowind Comes Alive - City Attack Patches" by businessman332211 requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
+[ANY Unofficial Morrowind Comes Alive - City Attack Patch 1.ESP
+     Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP]
+[ANY [SIZE 2707833 MCA.esm]
+     [SIZE 2519851 MCA.esm]]
+
+[Conflict]
+ Only use ONE plugin
+  Unofficial MCA - City Attack Patch 1 - Significantly reduces the chances for a bandit to attack you in the city.
+  Unofficial MCA - City Attack Patch 2 - Removes the chance for a bandit to attack you altogether.
+Unofficial Morrowind Comes Alive - City Attack Patch 1.ESP
+Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15620,6 +16439,7 @@ Book Placement Fix - Morrowind.esp
 Book Placement Fix - Tribunal.esp
 BouyantClassFix.esp
 Brittlewind Fix.esp
+Cjad's Templar Pauldron Fix.esp
 Clean Devil_Tanto_Bug_Fix.esp
 Clean Templar Pauldron Fix.esp
 Clean_Templar_Pauldron_Fix_v11.esp
@@ -15842,6 +16662,12 @@ vampfix.esp
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
 Morrowind Patch v1.6.4.esm
 word_use_fix.esp
+
+[Conflict]
+ The MPP obsoletes Cjad's Templar Pauldron Fix.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
+Morrowind Patch v1.6.4.esm
+Cjad's Templar Pauldron Fix.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; START MPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
@@ -16342,6 +17168,18 @@ Vertical limit climbing mod 1.02.esp
 ;;                         (requires Tribunal & Bloodmoon)
 ;; "VGreetings-Thief.esp" - changes affecting the Thief Voice
 ;;                          section (requires Tribunal)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vivec Expansion [Hoghead the Horrible]
+
+;;Dragon32: Also conflicts with the 'Dwemer Warship' mod, can't find a download
+[Conflict]
+ "Vivec Expansion" by Hoghead the Horrible conflicts with Sniper Daria's "Japanese House mod." StaticNation has made a version of "Vivec Expansion" that is compatible with Sniper Daria's "Japanese House mod."
+ http://www.tesnexus.com/downloads/file.php?id=1616
+[ALL [ANY [SIZE !1482242 Vivec Expansion 2.0.esp] ;Japanese House-compatible version
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+          Japanese_House.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17023,6 +17861,15 @@ Ash Ghoul Hearts.esp
  (Ref: "lfx_rare_ingredients.txt")
 lfx_rare_ingredients.esp
 lfx_rare_ingredients-uniques.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wizard Hats [Daduke]
+
+[Note]
+ Daduke's Wizard Hats mod uses the wizard hat mesh created by Lieawen and distributed in his "Wizard Hat" mod. There is no need to run both plugins.
+[ALL Wizard Hats 1.0.esp
+     Leias_Wizard_Hat.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
