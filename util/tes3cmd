@@ -63,14 +63,14 @@ my $MODIFY_USAGE = q{Usage: tes3cmd modify OPTIONS plugin...
 
 OPTIONS
  -D        turn on debug output
- -i ids    only modify the records with ids matching the given comma-delimited
+ -i ids    only modify the records with ids matching the given /-delimited
            list of regular expression patterns.
  -f file   file containing list of regexes to match, one per line.
  -F file   file containing list of regexes to not match, one per line.
  -m regex  only modify records that match given regular expression.
  -M regex  only modify records that do not match given regular expression.
  -s        only modify the subrecords that matched.
- -t types  only modify the records matching the given comma-delimited
+ -t types  only modify the records matching the given /-delimited
            list of record types.
  -r /a/b/  replace regex a with b. you can use any character instead of the slash.
  -e 'code' specify a string of Perl code to run on each matched record.
@@ -144,18 +144,21 @@ my $DELETE_USAGE = q{Usage: tes3cmd delete OPTIONS plugin...
 
 OPTIONS
  -D        turn on debug output
- -i ids    only delete the records with ids matching the given comma-delimited
+ -i ids    only delete the records with ids matching the given /-delimited
            list of regular expression patterns.
  -f file   file containing list of regexes to match, one per line.
  -F file   file containing list of regexes to not match, one per line.
  -m regex  only delete records that match given regular expression.
  -M regex  only delete records that do not match given regular expression.
  -s        only delete the subrecords that matched.
- -t types  only delete the records matching the given comma-delimited
+ -t types  only delete the records matching the given /-delimited
            list of record types.
 
 Deletes records/subrecords from the plugin. You can really damage things with
 this command, so be careful!
+
+Note: you must specify either -m or -M (or both) to ensure deletions are
+intentional.
 
 Note: tes3cmd uses Perl regular expressions for matching, the full documentation
 can be found here:   http://www.perl.com/doc/manual/html/pod/perlre.html
@@ -176,6 +179,40 @@ tes3cmd delete -s npc_.npco -m "Ring des Skeletts" quicksave.ess
 sub opts_delete {
     $_[0] && do { die $DELETE_USAGE; };
     getopts('Df:i:m:M:st:') or die $DELETE_USAGE;
+}
+
+
+my $OBJDELETE_USAGE = q{Usage: tes3cmd objectdelete OPTIONS plugin...
+
+OPTIONS
+ -D        turn on debug output
+ -i ids    only delete the objects from cells matching the given /-delimited
+           list of regular expression patterns.
+ -m regex  only delete objects that match given regular expression.
+ -M regex  only delete objects that do not match given regular expression.
+ -l        just list cell objects to be deleted, do not actually delete.
+
+Deletes objects from cells in the given plugin. You can really damage things with
+this command, so be careful!
+
+Note: you must specify either -m or -M (or both) to ensure deletions are
+intentional.
+
+Note: tes3cmd uses Perl regular expressions for matching, the full documentation
+can be found here:   http://www.perl.com/doc/manual/html/pod/perlre.html
+You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
+meaning in a regular expression and that they are unlike characters used for
+matching on a Windows command line.
+
+Examples:
+
+# Delete all 
+tes3cmd objectdelete 
+};
+
+sub opts_objdelete {
+    $_[0] && do { die $OBJDELETE_USAGE; };
+    getopts('Di:lm:M:') or die $OBJDELETE_USAGE;
 }
 
 
@@ -233,8 +270,8 @@ my $DIFF_USAGE = q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
 OPTIONS
  -D          turn on debug output.
- -i          comma-delimited list of field names to ignore.
- -o OPTLIST  comma-delimited list of reports to give
+ -i          /-delimited list of field names to ignore.
+ -o OPTLIST  /-delimited list of reports to give
 
 Prints a report on the differences between the two TES3 files.
 A summary report with up to four sections is printed to standard output
@@ -282,7 +319,7 @@ my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 OPTIONS
  -D        turn on debug output.
  -c regex  when dumping cells, only dump the matching objects in the cell.
- -i ids    only print out the records with ids matching the given comma-delimited
+ -i ids    only print out the records with ids matching the given /-delimited
            list of regular expression patterns.
  -l        only list the ids of the records to be printed, instead of the entire record.
  -f file   file containing list of regexes to match, one per line.
@@ -294,7 +331,7 @@ OPTIONS
  -R        print raw records, instead of as text, as an .esp including a TES3 header.
  -r        print raw records, instead of as text.
  -s string specify field separator string for single-line output.
- -t types  only print out the records matching the given comma-delimited
+ -t types  only print out the records matching the given /-delimited
            list of record types.
 
 Dumps the plugin to stdout in text form for easy perusal. For large plugins,
@@ -1066,7 +1103,7 @@ default_codec('CELL.AMBI', (["Ambient_Color", "L"],
 			    ["Sunlight_Color", "L"],
 			    ["Fog_Color", "L"],
 			    ["Fog_Density", "f"]));
-default_codec('CELL.CSTN', (["Target", "Z*"])); # guessing this is: "Cast Spell Target Name"
+default_codec('CELL.CSTN', (["Target", "Z*"])); # guessing this is: "Cast/Current Spell Target Name"
 
 # custom codec for CELL_DATA
 $DECODE{'CELL.DATA'} = sub {
@@ -1485,9 +1522,9 @@ foreach (qw(FLTV WHGT)) {
 }
 
 # subrecords that decode as variable length Z-strings:
-foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM
-HSND HVFX ITEX KNAM LSTN MNAM MODL NAME PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
-TEXT TNAM WNAM)) {
+foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FGTN FNAM
+HSND HVFX ITEX KNAM LSHN LSTN MNAM MODL NAME PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
+TEXT TGTN TNAM WNAM)) {
     $DECODE{$_} = sub{ return({ String => unpack("Z*", $_[0]) }, {}); };
     $ENCODE{$_} = sub{ pack("Z*", $_[0]->{String} ); };
 }
@@ -1742,7 +1779,8 @@ my %TOSTR =
 			      unpack($RD{'SCPT.SCHD'}, $_[0]); },
      "SCPT.SCVR" => sub { "Script Variables: " . join(',', split(/\000/, unpack($RD{'SCPT.SCVR'}, $_[0]))) },
      "SCPT.SCTX" => sub { "Script:\n" . unpack($RD{'SCPT.SCTX'}, $_[0]) },
-
+     "SKIL.INDX" => sub { my $skill = unpack("L", $_[0]) ;
+			  sprintf("%d (%s)", $skill, $SKILL{$skill});  },
      "SKIL.SKDT" => sub { my($attr, $spec, @usevals) = unpack($RD{'SKIL.SKDT'}, $_[0]);
 			  sprintf "Attribute: %s  Specialization: %s  UseValues: %0.2f %0.2f %0.2f %0.2f",
 			      $ATTRIBUTE{$attr}, $SPECIALIZATION{$spec}, @usevals},
@@ -1810,9 +1848,9 @@ foreach (qw(FLTV WHGT))
     { $TOSTR{$_} = sub { sprintf "%0.2f", unpack("f", $_[0]) }; }
 
 # subrecords that decode as variable length Z-strings:
-foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FNAM
-HSND HVFX ITEX KNAM LSTN MNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
-TEXT TNAM WNAM))
+foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FGTN FNAM
+HSND HVFX ITEX KNAM LSHN LSTN MNAM MODL NAME NPCS PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
+TEXT TGTN TNAM WNAM))
     { $TOSTR{$_} = sub { unpack("Z*", $_[0]) }; }
 
 sub opts_dump {
@@ -1964,6 +2002,7 @@ my %CMDS = (
 	    "header"   => [ \&opts_header,   \&cmd_header ],
 	    "help"     => [ \&opts_help,     undef ],
 	    "modify"   => [ \&opts_modify,   \&cmd_modify ],
+	    "objectdelete" => [ \&opts_objdelete, \&cmd_objdelete ],
 	    "rename"   => [ \&opts_rename,   \&cmd_rename ],
 	    "diff"     => [ \&opts_diff,     \&cmd_diff ],
 	   );
@@ -1985,8 +2024,9 @@ sub add_alias {
 add_alias("header", "hdr");
 add_alias("rename", "ren");
 add_alias("common", "com");
-add_alias("overdial", "od");
+add_alias("overdial", "over");
 add_alias("delete", "del");
+add_alias("objectdelete", "objdel");
 add_alias("fogpatch", "fog");
 add_alias("cellnamepatch", "cnp");
 add_alias("modify", "mod");
@@ -2371,7 +2411,7 @@ sub cmd_fogpatch {
 	    my $data = $r->{DATA}[0];
 	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
 	    if ($flags & 1) {	# interior cells
-		if (not $flags & 128) { # behave like exterior
+		unless ($flags & 128) { # behave like exterior
 		    my $name = chop_nulls($r->{NAME}[0]);
 		    my $ambi = $r->{AMBI}[0];
 		    my $fog_den_ambi;
@@ -2578,11 +2618,11 @@ sub cmd_diff {
     my($plugin1, $plugin2) = @_;
     my $ignore;
     if ($::opt_i) {
-	$ignore = '^(\s+(?:' . join('|', split(/,/, $::opt_i)) . '):)\s.*$';
+	$ignore = '^(\s+(?:' . join('|', split(m!/!, $::opt_i)) . '):)\s.*$';
     }
     warn "IGNORE = $ignore\n" if (DBG);
     $::opt_o ||= 'e1,e2,eq,ne';
-    my %rpt = map { $_, 1 } split(/,/, lc $::opt_o);
+    my %rpt = map { $_, 1 } split(m!/!, lc $::opt_o);
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
     my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
@@ -2617,7 +2657,7 @@ sub cmd_diff {
     }
     foreach my $rec_type (sort keys %{$obj2}) {
 	foreach my $id (sort keys %{$obj2->{$rec_type}}) {
-	    if (not defined $obj1->{$rec_type}->{$id}) {
+	    unless (defined $obj1->{$rec_type}->{$id}) {
 		push(@p2_not_p1, "$rec_type: $id") if ($rpt{e2});
 	    }
 	}
@@ -2684,6 +2724,10 @@ sub read_match_files {
 
 sub cmd_delete {
     my($plugin) = @_;
+    unless ($::opt_m and not $::opt_M) {
+	die qq{Error: you must specify either -m or -M (or both) to ensure deletions are intentional.\n};
+	return;
+    }
     read_match_files();
     my $oldplugin = make_backup($plugin);
     open_input_plugin($oldplugin);
@@ -2699,12 +2743,12 @@ sub cmd_delete {
     my $expected = "TES3";
     my $delete_ids;
     if ($::opt_i) {
-	$delete_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
+	$delete_ids = '(' . join('|', split(m!/!, $::opt_i)) . ')';
     }
     my %delete_types;
     my %delete_subtypes;
     if ($::opt_t) {
-	foreach (split(/,/, $::opt_t)) {
+	foreach (split(m!/!, $::opt_t)) {
 	    # TBD - validate types?
 	    my($type, $subtype) = split(/\./, $_);
 	    if (length($type) != 4) {
@@ -2749,12 +2793,12 @@ sub cmd_delete {
 	    if (defined $subrec) {
 		my $full_type = "${rec_type}.${subrec_type}";
 		my $match = 0;
-		if (not (%delete_subtypes and not $delete_subtypes{lc($full_type)})) {
+		unless (%delete_subtypes and not $delete_subtypes{lc($full_type)}) {
 		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
 		    my $subrec_str = $tostr->($subrec);
 		    if ($::opt_s) {
-			$match = 1 if ($::opt_m and $subrec_str =~ /$::opt_m/i);
-			$match = 1 if ($::opt_M and $subrec_str !~ /$::opt_M/i);
+			$match = 1 if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
+				       ((not $::opt_M) or ($subrec_str !~ /$::opt_M/i)));
 		    }
 		    warn "DELETED SUBRECORD: $subrec_str\n" if ($match);
 		    $print_rec .= "   $full_type: $subrec_str\n";
@@ -2768,8 +2812,8 @@ sub cmd_delete {
 	if ($::opt_s) {
 	    write_rec($rec_type, $newrec, $unk, $flags);
 	} else {
-	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
-		($::opt_M and $print_rec !~ /$::opt_M/i)) {
+	    if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
+		((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
 		warn "DELETED RECORD:\n$print_rec\n";
 	    } else {
 		write_rec($rec_type, $rec, $unk, $flags);
@@ -2781,6 +2825,102 @@ sub cmd_delete {
     my($atime, $mtime) = (stat($oldplugin))[8,9];
     utime($atime, $mtime, $plugin);
     warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+}
+
+sub cmd_objdelete {
+    my($plugin) = @_;
+    unless ($::opt_m and not $::opt_M) {
+	die qq{Error: you must specify either -m or -M (or both) to ensure deletions are intentional.\n};
+    }
+    my $oldplugin;
+    unless ($::opt_l) {
+	$oldplugin = make_backup($plugin);
+	open_input_plugin($oldplugin);
+	unless(open(OUT, ">$plugin")) {
+	    warn qq{Error opening "$plugin" for output ($!)\n};
+	    return;
+	}
+	unless(binmode(OUT, ':raw')) {
+	    warn qq{Error setting binmode on "$plugin" ($!)\n};
+	    close(OUT);
+	    return;
+	}
+    } else {
+	open_input_plugin($plugin);
+    }
+    my $expected = "TES3";
+    my $delete_ids;
+    if ($::opt_i) {
+	$delete_ids = '(' . join('|', split(m!/!, $::opt_i)) . ')';
+    }
+    while (my($rec_type, $rec, $unk, $flags) = read_rec($expected, $plugin)) {
+	$expected = undef;
+	last if not defined $rec_type;
+	my $nodelete = 0;
+	my $cell_id;
+	if ($rec_type eq 'CELL') {
+	    $cell_id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    warn "REC=$rec_type flags=$flags CELL_ID=[$cell_id] DELETE_IDS=$delete_ids\n" if (DBG);
+	    $nodelete = 1 if ($delete_ids and $cell_id !~ /$delete_ids/i);
+	} else {
+	    $nodelete = 1;
+	}
+	if ($nodelete) {
+	    write_rec($rec_type, $rec, $unk, $flags) unless ($::opt_l);
+	    next;
+	}
+	my $p = 0;
+	my $rec_len = length($rec);
+	my $print_obj = "";
+	my $newrec;
+	my $objrec;	# group of subrecs for current object
+	while ($p < $rec_len) {
+	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	    $p += 8;
+	    my $subrec = substr($rec, $p, $subrec_len);
+	    $p += $subrec_len;
+	    if (defined $subrec) {
+		my $full_type = "${rec_type}.${subrec_type}";
+		my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
+		my $subrec_str = $tostr->($subrec);
+		if ($subrec_type eq 'FRMR') {
+		    # start of a new group of subrecs for new object
+		    if (((not $::opt_m) or ($print_obj =~ /$::opt_m/i)) and
+			((not $::opt_M) or ($print_obj !~ /$::opt_M/i))) {
+			unless ($::opt_l) {
+			    warn "DELETED OBJECT FROM CELL: $cell_id\n$print_obj\n";
+			    $objrec = '';
+			} else {
+			    warn "MATCHED OBJECT IN CELL: $cell_id\n$print_obj\n";
+			}
+		    } else {
+			$newrec .= $objrec; # save last object group
+		    }
+		    $objrec = pack("a4La*", $subrec_type, $subrec_len, $subrec); # initialize new object group
+		    $print_obj = "   $full_type: $subrec_str\n";
+		} elsif ($objrec) {
+		    $objrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec); # append to object group
+		    $print_obj .= "   $full_type: $subrec_str\n";
+		} else {
+		    # this block only for header subrecs (until first FRMR)
+		    $newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+		}
+	    } else {
+		warn "$plugin: Error, malformed subrec for ($rec_type $cell_id) type=$subrec_type pos=$p len=$subrec_len\n";
+	    }
+	}
+	unless ($::opt_l) {
+	    $newrec .= $objrec if ($objrec);
+	    write_rec($rec_type, $newrec, $unk, $flags);
+	}
+    }
+    close(INP);
+    close(OUT);
+    unless ($::opt_l) {
+	my($atime, $mtime) = (stat($oldplugin))[8,9];
+	utime($atime, $mtime, $plugin);
+	warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+    }
 }
 
 sub search_and_replace {
@@ -2860,7 +3000,7 @@ sub cmd_modify {
 #	    die "Error reading $::opt_p ($!)\n" if ($!);
 	    die "Error processing $::opt_p ($@)\n" if ($@);
 	}
-	$::opt_e = 'main($rec_type, $r, $unk, $flags);' if (not $::opt_e);
+	$::opt_e = 'main($rec_type, $r, $unk, $flags);' unless ($::opt_e);
     }
     $::opt_m ||= '.'; 		# default is to match any record.
     my $oldplugin = make_backup($plugin);
@@ -2877,13 +3017,13 @@ sub cmd_modify {
     my $expected = "TES3";
     my $modify_ids;
     if ($::opt_i) {
-	$modify_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
+	$modify_ids = '(' . join('|', split(m!/!, $::opt_i)) . ')';
     }
     my %modify_types;
     my %modify_subtypes;
     my $plugin_modified = 0;
     if ($::opt_t) {
-	foreach (split(/,/, $::opt_t)) {
+	foreach (split(m!/!, $::opt_t)) {
 	    # TBD - validate types?
 	    my($type, $subtype) = split(/\./, $_);
 	    if (length($type) != 4) {
@@ -2932,14 +3072,14 @@ sub cmd_modify {
 	    $p += $subrec_len;
 	    if (defined $subrec) {
 		my $full_type = "${rec_type}.${subrec_type}";
-		if (not (%modify_subtypes and not $modify_subtypes{lc($full_type)})) {
+		unless (%modify_subtypes and not $modify_subtypes{lc($full_type)}) {
 		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
 		    my $decoder = decoder($full_type, $subrec_type);
 		    my($hr, $idx) = $decoder->($subrec);
 		    my $subrec_str = $tostr->($subrec);
 		    if ($::opt_s) {
-			if (($::opt_m and $subrec_str =~ /$::opt_m/i) or
-			    ($::opt_M and $subrec_str !~ /$::opt_M/i)) {
+			if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
+			    ((not $::opt_M) or ($subrec_str !~ /$::opt_M/i))) {
 			    # subrecord matches, so run our code on it ...
 			    warn "full_type=$full_type    subrec_type=$subrec_type\n";
 			    if (my $newhr = run_code($full_type, $hr, $idx)) {
@@ -2967,8 +3107,8 @@ sub cmd_modify {
 	if ($::opt_s) {
 	    write_rec($rec_type, $newrec, $unk, $flags);
 	} elsif ($codec_ok) {
-	    if (($::opt_m and $print_rec =~ /$::opt_m/i) or
-		($::opt_M and $print_rec !~ /$::opt_M/i)) {
+	    if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
+		((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
 		if (my $modrec = run_code($rec_type, \@subrecs, $unk, $flags)) {
 		    #warn "Record was modified, encoding modified record\n";
 		    $plugin_modified = 1;
@@ -3038,7 +3178,7 @@ sub rec_to_string {
 	$p += $subrec_len;
 	if (defined $subrec) {
 	    my $full_type = "${rec_type}.${subrec_type}";
-	    if (not ($wanted_subtypes and not $wanted_subtypes->{lc($full_type)})) {
+	    unless ($wanted_subtypes and not $wanted_subtypes->{lc($full_type)}) {
 		my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNKNOWN;
 		my $subrec_str = $tostr->($subrec);
 		if ($::opt_c and ($rec_type eq 'CELL')) {
@@ -3076,7 +3216,7 @@ sub rec_to_string {
 	    $frmr_match++;
 	    push(@print_rec, @frmr_data);
 	}
-	return("") if (not $frmr_match);
+	return("") unless ($frmr_match);
     }
     return($hdr . join($separator, @print_rec));
 }
@@ -3089,12 +3229,12 @@ sub cmd_dump {
     my $expected = "TES3";
     my $wanted_ids;
     if ($::opt_i) {
-	$wanted_ids = '(' . join('|', split(/,/, $::opt_i)) . ')';
+	$wanted_ids = '(' . join('|', split(m!/!, $::opt_i)) . ')';
     }
     my %wanted_types;
     my $wanted_subtypes;
     if ($::opt_t or $::opt_c) {
-	my @type = split(/,/, $::opt_t);
+	my @type = split(m!/!, $::opt_t);
 	push(@type, 'CELL') if ($::opt_c);
 	foreach (@type) {
 	    # TBD - validate types?
@@ -3203,7 +3343,7 @@ sub cmd_dump {
 sub cmd_rename {
     my($plugin) = @_;
     my $oldplugin = make_backup($plugin);
-    if (not defined $oldplugin) {
+    unless (defined $oldplugin) {
 	warn "Error: unable to form backup name for $plugin\n";
 	return;
     }
@@ -3265,7 +3405,7 @@ sub cmd_rename {
 		    }
 		}
 	    }
-	    if (not $::opt_l) {
+	    unless ($::opt_l) {
 		if ($renamed_schd and $renamed_sctx) {
 		    $rec = new_rec($subrecs);
 		} else {
@@ -3338,13 +3478,13 @@ sub cmd_header {
 	    my $desc = chop_nulls(substr($block, $HDR_DESC_OFFSET, $HDR_DESC_LENGTH));
 	    if ($::opt_a or $::opt_d) {
 		if ($::opt_a) {
-		    if (not defined write_header_field($plugin, $auth, $::opt_a, "AUTHOR", $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH)) {
+		    unless (defined write_header_field($plugin, $auth, $::opt_a, "AUTHOR", $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH)) {
 			close(PLUG);
 			return;
 		    }
 		}
 		if ($::opt_d) {
-		    if (not defined write_header_field($plugin, $desc, $::opt_d, "DESCRIPTION", $HDR_DESC_OFFSET, $HDR_DESC_LENGTH)) {
+		    unless (defined write_header_field($plugin, $desc, $::opt_d, "DESCRIPTION", $HDR_DESC_OFFSET, $HDR_DESC_LENGTH)) {
 			close(PLUG);
 			return;
 		    }
