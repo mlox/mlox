@@ -9,7 +9,10 @@
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3lint
 
-# TBD: OVR-REC specials: PGRD.????
+# TBD:
+# - add a check for signrotate contamination
+# - check for use of position(cell) in INFO results!
+# - OVR-REC specials: PGRD.????
 
 use Cwd;
 use Data::Dumper;
@@ -165,9 +168,9 @@ about the flagged items.
              http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
     JUNKCEL: These are bogus external CELL records that crop up in many
-             plugins, possibly due to a Construction Set bug. They contain
-             only NAME, DATA and sometimes RGNN subrecords, and the flags in
-             the DATA subrecord are unchanged from the flags in the Master.
+             plugins, due to a Construction Set bug. They contain only NAME,
+             DATA and sometimes RGNN subrecords, and the flags in the DATA
+             subrecord are unchanged from the flags in the Master.
 
     MASTERS: Checks the plugin is in sync with its masters by checking their
              size against the size recorded in the plugin header. This is
