@@ -108,8 +108,9 @@ Bloodmoon.esm
 ;; @Plugins using Deprecated Leveled List Functions on Bethsoft lists
 
 [Note]
- !! Uses deprecated AddToLev* function to modify Bethsoft leveled lists. For an explanation of why the functions AddToLev*/RemoveFromLev* are  deprecated, please see (Some patches may be available at that link):
+ !! Uses deprecated AddToLev* function to modify Bethsoft leveled lists. Using any of these plugins will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one. If you have used one of these plugins, you can clean modified leveled lists from your savegame using the "Repair All" feature of "Wrye Mash". For an explanation of why the functions AddToLev*/RemoveFromLev* are  deprecated, please see (Some patches may be available at that link):
  !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+Undead arise from death 2.0.esp
 MWInhabitants Freeform (Vol 1).esp
 BMExtras.esp
 Clean Black Queen Chronicles Ver 2.5.esp
@@ -1228,6 +1229,18 @@ Antares' Big Mod 4 - MCA 5.2 - patch.esp
 Antares' Big Mod 4.esp
 Antares' Big Mod 5.esp ; The patch works for the new version 5 too.
 Antares' Big Mod 4 - MCA 5.2 - patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @AOF Potions Recolored 1.1 [Bycote]
+
+[Conflict]
+ You should only activate one of these plugins, depending on which expansions you have activated.
+ (Ref: "AOF Potions Recolored 1.1 Readme.txt")
+AOF Potions Recolored.esp
+AOF Potions Recolored Tribunal.esp
+AOF Potions Recolored Bloodmoon.esp
+AOF Potions Recolored T+B.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2396,6 +2409,15 @@ BE_ghetto_BE.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora River House [Calislahn]
 
+; "Cali_ RiverHouse_BE.esp" needs to load before BE.
+; (Ref: reported by Marcus La Tendresse)
+[Order]
+Cali_ RiverHouse_BE.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
 [Requires]
  (Ref: Cali_RiverHouse_Readme.txt)
 Cali_ RiverHouse.esp
@@ -2469,6 +2491,38 @@ Balmora Thieves' Hideout 3.1.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 146547 balmora,Tomb.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora University [Ravensong, Stoned, Crlsniper]
+
+[Note]
+ A newer of "Balmora University" from Crlsniper is available.
+ Check: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8321
+[VER < 2.3 Balmora University V<VER>.esp]
+
+[Note]
+ An updated version of "Balmora University" is available from Crlsniper.
+ Check: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8321
+balmorau.esp
+
+[Conflict]
+ These are versions of the same mod: "Balmora University". Ravensong did the first version: "balmorau.esp". Stoned updated it to: "Balmora University V.1.9..esp". And Crlsniper has updated it to: "Balmora University V2.30.esp".
+balmorau.esp ; Ravensong
+Balmora University V.1.9..esp ; Stoned
+Balmora University V2.30.esp ; Crlsniper
+
+; JMS - I assumed that all the various BE's would have a similar conflict.
+[Conflict]
+ Balmora University has a major conflict with Balmora Expansion. According a the comment by Crlsniper at PES, perhaps a future version of Balmora U. will be compatible BE.
+ (Ref: reported by Marcus La Tendresse)
+[ANY balmorau.esp
+     Balmora University V.1.9..esp
+     Balmora University V2.30.esp]
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2981,6 +3035,12 @@ Clean Black Queen Chronicles Ver 2.5.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Blasphemous Revenants [Fliggerty]
+
+[Conflict]
+ Do not use "BR Dead Heros.esp" since version 2 of Blasphemous Revenants.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=19&t=1498#p24284 )
+BR Dead Heros.esp
+[SIZE 1027569 Blasphemous Revenants.esp] ; version 2.2
 
 [Requires]
  (Ref: Blasphemous Revenants Readme.txt)
@@ -3726,6 +3786,15 @@ New_Carnithus'_Armamentarium.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1574745 Castle of Balmora.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Hestatur [Srdjan Pokorni a.k.a. Spok]
+
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Syc_HerbalismforPurists.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4573,6 +4642,22 @@ DN-GDRv1_NOM.esp
           DNGDR-GHD Patch.esp]
 [ALL Great House Dagoth.esp
      DN-GDRv1.esp]
+
+[Patch]
+ !! Darknut's "Greater Dwemer Ruins" has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by the patch: "LAMW_GDRv1_Patch.esp".
+ !! (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
+LAMW_GDRv1_Patch.esp
+[ALL DN-GDRv1.esp
+     [ANY Clean The Lost Artifacts of Morrowind.esm
+	  Clean The Lost Artifacts of Morrowind.esp]]
+
+[Patch]
+ !! Darknut's "Greater Dwemer Ruins" (NOM version) has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by the patch: "LAMW_GDRv1_NOM_Patch.esp".
+ !! (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
+LAMW_GDRv1_NOM_Patch.esp
+[ALL DN-GDRv1_NOM.esp
+     [ANY Clean The Lost Artifacts of Morrowind.esm
+	  Clean The Lost Artifacts of Morrowind.esp]]
 
 [Requires]
  !! (Ref: DNGDRv1.zip/"readme.htm")
@@ -7143,6 +7228,21 @@ Herbalismv1.3(Tribunal).esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism for Purists [Syclonix]
 
+; JMS - to ensure that HFP flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08)
+[Order]
+DN-GDRv1.esp
+Syc_HerbalismforPurists.esp
+
+; JMS - to ensure that HFP flora container behavior isn't overridden by Sris Alchemy.
+[Order]
+Sri Alchemy BM List Patch.esp
+Syc_HerbalismforPurists.esp
+
+; JMS - to ensure that HFP flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Syc_HerbalismforPurists.esp
+
 ;; (Ref: "Readme - Herbalism for Purists.txt")
 [Order]
 Expanded Sounds.esp
@@ -7378,6 +7478,14 @@ LGNPC_SoulSicknessPatch_v?_??.esp
  (Ref: "HoMfix.txt")
 House of Mannequins - Mistform fix.esp
 House of Mannequins v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @House of Spears [Nazz]
+
+[Note]
+ This plugin contains a script "TMstart_HOS" that refers to a non-existant journal entry "DA_Agamemnon" which will cause an error when the plugin is loaded. Since the script is not used in the plugin, it should be safe to delete it to be able to play the plugin without that error.
+[SIZE 123894 House_spear.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8493,6 +8601,83 @@ Laby connection EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Laszlo Manor [latendresse76]
+
+[Order]
+Lazslo_Manor.esp
+Lazslo_Manor_TR.esp
+
+[Order]
+Lazslo_Manor.esp
+Lazslo_Manor_PE.esp
+
+[Order]
+Lazslo_Manor.esp
+Lazslo_Manor_ABOT.esp
+
+[Order]
+Lazslo_Manor.esp
+Laszlo Manor Abot Birds.esp
+
+[Order]
+Lazslo_Manor.esp
+Laszlo Manor CX Containers.esp
+
+[Order]
+Lazslo_Manor.esp
+Laszlo Manor CMF.esp
+
+[Order]
+Lazslo_Manor.esp
+Laszlo Manor MC.esp
+
+[Order]
+Lazslo_Manor.esp
+Lazslo_Manor_NOM.esp
+
+[Requires]
+Lazslo_Manor_TR.esp
+[ALL Lazslo_Manor.esp
+     TR_Data.esm]
+
+[Requires]
+Lazslo_Manor_PE.esp
+[ALL Lazslo_Manor.esp
+     [ANY Pearls Enhanced.esp
+	  Pearls Enhanced - Colored Pearls Add-on.ESP]]
+
+[Requires]
+Lazslo_Manor_ABOT.esp
+[ALL Lazslo_Manor.esp
+     abotWaterLife.esm]
+
+[Requires]
+Laszlo Manor Abot Birds.esp
+[ALL Lazslo_Manor.esp
+     abotWhereAreAllBirdsGoing.esp]
+
+[Requires]
+Laszlo Manor CX Containers.esp
+[ALL Lazslo_Manor.esp
+     Creatures.esp]
+
+[Requires]
+Laszlo Manor CMF.esp
+[ALL Lazslo_Manor.esp
+     Complete Morrowind.esp]
+
+[Requires]
+Laszlo Manor MC.esp
+[ALL Lazslo_Manor.esp
+     Morrowind Crafting 2-1.esp]
+
+[Requires]
+Lazslo_Manor_NOM.esp
+[ALL Lazslo_Manor.esp
+     NOM 2.13.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Laura Craft Romance and Adventure mod ver 2.2 [Emma]
 ;; TBD
 ;;recommended load order:
@@ -8571,6 +8756,7 @@ laura_vembrace_fix.esp
      Tribunal.esm]
 
 [Patch]
+ There is a compatibility patch available for Laura and Vampire embrace: http://lovkullen.net/Emma/laura.htm
  (Ref: Laura-VampireEmbrace-Readme.txt)
 laura_vembrace_fix.esp
 [ALL Tribun_Laura_3_0.esp
@@ -9979,6 +10165,16 @@ More trees and foliage autumn v1-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mormegil Manor [Calislahn]
+
+; Mormegil Manor needs to load after Suran Waterfront, they alter same LTEX records
+; (Ref: reported by Marcus La Tendresse)
+[Order]
+Suran-Waterfront-v-4.4.esp
+Cali_MormegilManor.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Advanced [Gary Noonan/WormGod]
 
 [Note]
@@ -10122,7 +10318,7 @@ MCA - Vampire Realism Patch.esp
 [Conflict]
  This version of MCA 5.2, which has been made compatible with The Undead 3.0, is incompatible with "Vampire Embrace MCA Patch" which reintroduces scripts that were removed from MCA.esm. You can either deactivate the patch (losing its functionality), or you can remove the following scripts from "Vampire Embrace MCA Patch.esp": mca_bm_draugr, mca_bm_draugr_reavers, mca_bm_skel_reavers, mca_bm_skeletons, mca_bm_wraiths, mca_necromancers, mca_skeletons, mca_undead, mca_wraiths, mca_zombies, mca_zombies_weak.
 [SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
-Vampire Embrace MCA Patch.esp
+[SIZE 150081 Vampire Embrace MCA Patch.esp] ; JMS - added size predicate so warning goes away if user deletes unneeded scripts.
 
 [Requires]
  (Ref: "MCA - Readme.txt")
@@ -10648,6 +10844,12 @@ MCA - Zero Town Baddies.esp
  (Ref: "Morrowind Crafting ReadMe.rtf")
 Morrowind Crafting Equipment.esp
 Morrowind Crafting 2-1.esp
+
+[Conflict]
+ Morrowind Crafting and Resources enhanced modify various rocks with different scripts, and are not compatible.
+ (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__15859457 )
+Morrowind Crafting 2-1.esp
+Resources Enhanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12730,6 +12932,16 @@ propylons1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Provincial Bath Shoppe v.1 [Korana]
+
+; (Ref: reported by Marcus La Tendress)
+; both of the plugins modify Pelagiad (0, -7) and Pelagiad (0, -8).
+[Order]
+Clean Ascadian Styles.esp
+Provincial_Bath _Shoppe_v1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Pursuit Enhanced [Yacoby]
 
 [Note]
@@ -13078,20 +13290,64 @@ Realistic Weather v2.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Redesigned Vivec [Piratelord]
 
-[Patch]
- "Redesigned Vivec CoM Changes.esp" moves the children from Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec."
- (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+[Conflict]
+ Use only one of these patches, depending on whether you have COM, MCA or both installed.
+ (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt")
+Clean Redesigned Vivec - com_mca patch.esp
+Clean Redesigned Vivec - MCA patch.esp
+Clean Redesigned Vivec - COM patch.esp
+
+[Conflict]
+ Use only one of these patches. They both move NPCs added by COM in a way that is compatible with Redesigned Vivec.
+Clean Redesigned Vivec - COM patch.esp
 Redesigned Vivec CoM Changes.esp
+
+[Patch]
+ COM and MCA add NPCs to Vivec that will be out of place in Redesigned Vivec unless you use this patch:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
+ (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt")
+Clean Redesigned Vivec - com_mca patch.esp
 [ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp]
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+     MCA.esm
      MW_Children_1_0.esm]
+
+[Patch]
+ MCA adds NPCs to Vivec that will be out of place in Redesigned Vivec unless you use this patch:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
+ (Ref: "Redesigned Vivec - MCA patch readme.txt")
+Clean Redesigned Vivec - MCA patch.esp
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+     MCA.esm]
+
+[Patch]
+ COM adds NPCs to Vivec that will be out of place in Redesigned Vivec unless you use either of these patches:
+ 1: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
+ (Ref: "Redesigned Vivec_Children of Morrowind Readme.txt")
+ 2: "Redesigned Vivec CoM Changes.esp" moves the children from Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec."
+ (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+[ANY Clean Redesigned Vivec - COM patch.esp
+     Redesigned Vivec CoM Changes.esp]
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+     MW_Children_1_0.esm]
+
+; JMS - TBD remove this later
+;[Patch]
+; "Redesigned Vivec CoM Changes.esp" moves the children from Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec."
+; (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+;Redesigned Vivec CoM Changes.esp
+;[ALL [ANY Redesigned Vivec.esp
+;          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+;     MW_Children_1_0.esm]
 
 [Patch]
  "Redesigned Vivec MCA Changes.esp" moves the NPCs from version 4.1 of Neoptolemus's "Morrowind Comes Alive" so they are compatible with Piratelord's "Redesigned Vivec."
  (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
 Redesigned Vivec MCA Changes.esp
 [ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp]
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
      Morrowind Comes Alive.esm]
 
 [Note]
@@ -13103,14 +13359,14 @@ Redesigned Vivec MCA Changes.esp
  The standard version of Grumblepunk's "House of Mannequins" is not compatible with Piratelord's "Redesigned Vivec", Piratelord has released a replacement plugin.
  (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
 [ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp]
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
      [SIZE 457977 House of Mannequins v1.0.esp]]
 
 [Conflict]
  Piratelord has released a "Redesigned Vivec"-compatible version of the "Area Effect Arrows" plugin by Bethesda. You should use this plugin instead.
  (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
 [ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp]
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
      [ANY AreaEffectArrows XB Edition.esp
           Area Effect Arrows.esp
           [SIZE !30094 AreaEffectArrows.esp]]]
@@ -13854,6 +14110,26 @@ SMSeydaNeen.esp
 SMTelAruhn.esp
 SMTelVos.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Serabul [Rellac]
+
+[Patch]
+ "Serabul has a slight incompatability with Redesigned Vivec. The Docks added by Redesigned Vivec are located in a cell occupied by Serabul. The docks aren't actually in the way of serabul, there's just a bit of land that needs editing."
+ (Ref: "Serabul Patch Notes.txt")
+Serabul Redesigned Vivec Patch.esp
+[ALL Serabul.esp
+     [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp]] ;Pseron Wyrd's merged mod]
+
+[Patch]
+ "Serabul - NOM Patch.esp" adds NOM compatability to Serabul. It adds a well in the trader's tier of town, a well near the egg mine, a water spout in the egg mine caverns, and stocks the White Nix with some NOM food.
+ (Ref: "Serabul Patch Notes.txt")
+Serabul - NOM Patch.esp
+[ALL Serabul.esp
+     NOM 2.13.esp]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Service Requirements [Vanhikes, some updates by makeshiftwings]
 
@@ -14076,6 +14352,11 @@ Gondola_Fix.esp
  Uses Bloodmoon function: placeatme.
 Sixth House Advanced 2.1.esp
 Bloodmoon.esm
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 45151 Sixth House Advanced 2.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14575,6 +14856,28 @@ SF NPC111 - Hilgya Exp1 Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Starstone Outpost [Calislahn]
+;; http://www.calislahn.com/elder-scrolls/clothing/
+
+[Order]
+Cali_StarstoneOutpost.esp
+Cali_StarstoneOutpost_RobeTunicPatch.esp
+
+[Requires]
+Cali_StarstoneOutpost_RobeTunicPatch.esp
+Cali_StarstoneOutpost.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Starstone Shields [Wulfgar]
+;; http://www.calislahn.com/elder-scrolls/clothing/
+
+[Order]
+Cali_StarstoneOutpost.esp
+StarstoneShields.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Steel Broadsword Fix v1.2 [quorn]
 
 [Conflict]
@@ -14735,6 +15038,13 @@ MW_Children_1_0.esm
  (Ref: "Suran Extended v1.2 readme.rtf")
 Suran Extended Family.esp
 Clean Suran Extended.esp
+
+; Suran Extended needs to load before Suran Waterfront. They conflict in land/cell (6, -7)
+; (Ref: reported by Marcus La Tendress)
+[Order]
+Clean Suran Extended.esp
+Suran Extended Family.esp
+Suran-Waterfront-v-4.4.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14964,7 +15274,8 @@ TR_Map2.esm
  Landmass conflict.
  (Ref: TR_Map2_Readme.txt and
  http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg
- http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610 )
+ http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610
+ http://forums.bethsoft.com/index.php?/topic/1098622-tamriel-rebuilt-script-error/ )
 TR_Map1.esm
 [ANY The Goblin Lab v1.1.esp
      tusar_v1.2.1.esp
@@ -14973,6 +15284,7 @@ TR_Map1.esm
      Tree_of_Life.esp
      Inferno's Island Revisited.esp
      Wizards Islands - Scourge of the Frost Bringer.esm
+     Season of the Harvest v1.1.esp
      N'Dib_5.esp]		; N'Dib's Twilight
 
 [Conflict]
@@ -14999,11 +15311,12 @@ TR_Map2.esm
 TR_Map1.esm
 Sorefoot Enterprises, Inc. v1.5a.esp
 
-[Conflict]
- Landmass conflict. One of Havish's Mage Guild quests involves a small island that conflicts with Tamriel Rebuilt.
- http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1047679&view=findpost&p=15257619
-TR_Map1.esm
-Havish.esm
+;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
+;[Conflict]
+; Landmass conflict. One of Havish's Mage Guild quests involves a small island that conflicts with Tamriel Rebuilt.
+; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1047679&view=findpost&p=15257619
+;TR_Map1.esm
+;Havish.esm
 
 [Conflict]
  Landmass conflict.
@@ -15172,9 +15485,25 @@ Telos Rin Graveyard.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Telperion - Ascadian Isles Tree House [Calislahn]
 
+; Telperion and Vvardenfell Druglord conflict in cell (6, -13) and (5, -13)
+; (Ref: reported by Marcus La Tendresse)
+[Order]
+Vvardenfell Druglord.esp
+Telperion.V1.03.esp
+
+; Telperion and Vibrant Trees conflict in land/cell (6, -12), (6, -13) and (5, -12)
+; (Ref: reported by Marcus La Tendresse)
+[Order]
+Clean VIBRANT TREES 1.0.esp 
+Telperion.V1.03.esp
+
 [Requires]
 Telperion Basement Addon.esp
 Telperion.V1.03.esp
+
+[Order]
+Telperion.V1.03.esp
+Telperion Basement Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15926,24 +16255,25 @@ pcc_undead_vetooch_10.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Undeads: arise from death 1.5 [Arcimaestro Antares]
+;; @Undeads: arise from death 2.0 [Arcimaestro Antares]
 
 [Note]
  A newer version of "Undeads: arise from death" is available:
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6777
 Undeads arise from death 1.4*.esp
+Undeads arise from death 1.5.esp
 
 [Conflict]
- "Undeads arise from death 1.5" includes "Unique Ghosts")
- (Ref: "Undeads arise from death 1.45- README (only text).txt" (this is the name of the readme for 1.5))
-Undeads arise from death 1.5.esp
+ "Undeads arise from death" includes "Unique Ghosts")
+ (Ref: "Undead arise from death 2.0- README.txt")
+Undead arise from death 2.0.esp
 [ANY Unique Ghosts - M - T.esp
      Unique Ghosts - M.esp]
 
 [Conflict]
  Arcimaestro Antares' "Undeads arise from death" is not compatible with Neoptolemus' "The Undead 3.0".
  (Ref: http://forums.bethsoft.com/index.php?/topic/847583-relz-the-undead-v30/page__st__60__p__15461806&#entry15461806 )
-Undeads arise from death 1.5.esp
+Undead arise from death 2.0.esp
 The Undead.esm
 
 
@@ -17320,6 +17650,17 @@ Weapon Range Balance.esp
 Wakim's Game Improvement 9.esp
 Wakim's Game Improvements with No-glo v9.esp
 
+; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
+; in particular: "Your kind is not welcome here, vampire. Ask me what you will, and be on your way." which does: ModDisposition -10
+[Order]
+Gameplay - Dialogue.esp
+Vampire_Embrace.esp
+
+; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
+[Order]
+Wakim's Game Improvement 9.esp
+Vampire_Embrace.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Walled City of Balmora [Hargreth]
@@ -17350,6 +17691,18 @@ Indybank.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 51368 warriorhouse.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Wanderers Lodge [The Wanderer]
+
+[Conflict]
+ Use only one of these plugins.
+ (Ref: "wl_lodge_quickstart.txt")
+wl_lodge_eb.esp
+wl_lodge_sn.esp
+wl_lodge_snX.esp
+wl_lodge_vi.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
