@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #Version: 0.37
 # tes3cmd: command line tool to do various hackage on a TES3 plugin
-# Copyright 2009 by John Moonsugar
+# Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
@@ -10,7 +10,8 @@
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD
-# - change "common" command to show ID/type conflicts
+# - add "conflict" command to show detailed ID/type conflicts
+# - add "clean" command to clean GMSTs and dirty cells
 
 use Cwd;
 use File::Basename;
@@ -25,6 +26,8 @@ BEGIN {
     # debug/help code into the program when it it actually needed.
     use constant DBG => grep(/^(?:-D)$/, @ARGV);
 }
+
+my $GLOBCHARS = '*?';
 
 my $ESP_USAGE = q{Usage: tes3cmd esp OPTIONS master...
 
@@ -1060,6 +1063,7 @@ default_codec('TES3.HEDR', (["Version", "f"],
 default_codec('TES3.MAST', (["Master", "Z*"]));
 
 # custom codec for TES3.DATA
+$RD{'TES3.DATA'} = "L2";
 $DECODE{'TES3.DATA'} = sub {
     my($buff) = @_;
     my($l1, $l2) = unpack("L2", $buff);
@@ -2721,6 +2725,13 @@ sub read_match_files {
     }
 }
 
+sub fix_output {
+    my($plugin, $oldplugin) = @_;
+    my($atime, $mtime) = (stat($oldplugin))[8,9];
+    utime($atime, $mtime, $plugin);
+    warn qq{Output saved in: "$plugin"\nOriginal backed up to: "$oldplugin"\n};
+}
+
 sub cmd_delete {
     my($plugin) = @_;
     unless ($::opt_m and not $::opt_M) {
@@ -2821,9 +2832,7 @@ sub cmd_delete {
     }
     close(INP);
     close(OUT);
-    my($atime, $mtime) = (stat($oldplugin))[8,9];
-    utime($atime, $mtime, $plugin);
-    warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+    fix_output($plugin, $oldplugin);
 }
 
 sub cmd_objdelete {
@@ -2916,9 +2925,7 @@ sub cmd_objdelete {
     close(INP);
     close(OUT);
     unless ($::opt_l) {
-	my($atime, $mtime) = (stat($oldplugin))[8,9];
-	utime($atime, $mtime, $plugin);
-	warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+	fix_output($plugin, $oldplugin);
     }
 }
 
@@ -3215,9 +3222,7 @@ sub cmd_modify {
     close(INP);
     close(OUT);
     if ($plugin_modified and $codec_ok) {
-	my($atime, $mtime) = (stat($oldplugin))[8,9];
-	utime($atime, $mtime, $plugin);
-	warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+	fix_output($plugin, $oldplugin);
     } else {
 	unlink($plugin);
 	rename($oldplugin, $plugin);
@@ -3521,9 +3526,7 @@ sub cmd_rename {
     close(INP);
     unless ($::opt_l) {
 	close(OUT);
-	my($atime, $mtime) = (stat($oldplugin))[8,9];
-	utime($atime, $mtime, $plugin);
-	warn "Output saved in: $plugin, Original backed up to: $oldplugin\n";
+	fix_output($plugin, $oldplugin);
     }
 }
 
@@ -3650,11 +3653,19 @@ sub main {
     die $USAGE_ALL unless ($cmd_ref = $CMDS{$cmd_name});
     my($cmd_getopts, $cmd) = @{$cmd_ref};
     $cmd_getopts->();
+    my @plugins;
+    foreach my $arg (@ARGV) {
+	if ($arg =~ /[$GLOBCHARS]/) {
+	    push(@plugins, glob($arg));
+	} else {
+	    push(@plugins, $arg);
+	}
+    }
     if ($cmd_name =~ /^(com(mon)?|overdial|diff|od|fog(patch)?|cnp|cellnamepatch)$/i) {
-	$cmd->(@ARGV);
+	$cmd->(@plugins);
     } else {
-	die $USAGE_ALL if (scalar(@ARGV) == 0);
-	for my $plugin (@ARGV) {
+	die $USAGE_ALL if (scalar(@plugins) == 0);
+	for my $plugin (@plugins) {
 	    $cmd->($plugin);
 	}
     }
