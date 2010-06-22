@@ -9,6 +9,9 @@
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
+# TBD
+# - change "common" command to show ID/type conflicts
+
 use Cwd;
 use File::Basename;
 use File::Copy;
@@ -79,6 +82,16 @@ OPTIONS
 Modifies records/subrecords from the plugin. You can really damage things with
 this command, so be careful!
 
+tes3cmd includes 2 builtin functions to help you make your modifications:
+dumprec() and setrec(). Use dumprec() to print out a view of the records. If
+you just use: "-e 'dumprec($r)'", you will get an idea of the record
+structure. dumprec() takes 2 arguments, the first is '$r', the pointer to the
+current record, the second is a reference to hash containing any or all of
+these keys: "index", "type", "field". "index" will constrain matching of
+subrecords to one index. "type" specifies a subrecord type match, and "field"
+specifies a field name to match. setrec() adds one more argument, which is the
+value to assign to matching fields.
+
 Note: tes3cmd uses Perl regular expressions for matching, the full documentation
 can be found here:   http://www.perl.com/doc/manual/html/pod/perlre.html
 You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
@@ -87,12 +100,8 @@ matching on a Windows command line.
 
 Examples:
 
-# Modify all records with IDs matching "foo":
-tes3cmd modify -i foo -e 'TBD' plugin.esp
-
-# Modify all subrecords of type NPC_.NPCO that match "Ring des Skeletts" from
-# savegame: quicksave.ess
-tes3cmd modify -s npc_.npco -m "Ring des Skeletts" -p myprogram quicksave.ess
+# Change all the count fields for the containers in Aleanne's Clothing to -3 (for restocking wares)
+tes3cmd mod -t cont -e 'setrec($r, {field=>"Count"}, -3)' ale_clothing_v1.esp
 };
 
 sub opts_modify {
@@ -986,18 +995,7 @@ my $ENCODER_UNKNOWN = sub { return(pack("H*", $_[0]->{Unknown})); };
 my %DECODE = ();
 my %ENCODE = ();
 my %RD = ();			# TBD switch to using the info from DECODE and get rid of RD
-sub dumprec {
-    my($hr, $idx) = @_;
-    my $dumpstr = "";
-    my @rec = ();
-    while (my($key, $val) = each %$hr) {
-	$rec[$idx->{$key}] = [$key, $val];
-    }
-    foreach (@rec) {
-	 $dumpstr .= "$_->[0]:\t$_->[1]\n";
-    }
-    return($dumpstr);
-}
+
 sub compile_def {
     my(@def) = @_;
     my $format = "";
@@ -1069,7 +1067,7 @@ $DECODE{'TES3.DATA'} = sub {
 	   {});			# indices not needed by custom encoder
 };
 $ENCODE{'TES3.DATA'} = sub {
-    my($hr, $idx) = @_;
+    my($hr) = @_;
     my $len = $hr->{Length};
     my $l1 = $len & 0xffffffff;
     my $l2 = $len >> 32;
@@ -1126,7 +1124,7 @@ $DECODE{'CELL.DATA'} = sub {
     }
 };
 $ENCODE{'CELL.DATA'} = sub {
-    my($hr, $idx) = @_;
+    my($hr) = @_;
     if (exists $hr->{Flags}) {
 	if ($hr->{Flags} & 0x01) { # Interior
 	    return(pack("Lx[L]f", $hr->{Flags}, $hr->{Fog_Density}));
@@ -1327,7 +1325,7 @@ $DECODE{'NPC_.NPDT'} = sub {
     }
 };
 $ENCODE{'NPC_.NPDT'} = sub {
-    my($hr, $idx) = @_;
+    my($hr) = @_;
     if (exists $hr->{Magicka}) {
 	return(pack("SC8C27CSSSCCCxL",
 		    $hr->{Level}, $hr->{Str}, $hr->{Int}, $hr->{Wil}, $hr->{Agi},
@@ -1463,7 +1461,7 @@ $DECODE{'SLSD'} = sub {
     return(\%hr, {});
 };
 $ENCODE{'SLSD'} = sub {
-    my($hr, $idx) = @_;
+    my($hr) = @_;
     my @vals;
     foreach my $key (sort { $a <=> $b } keys %$hr) { unshift(@vals, $key); }
     return(pack("s*", @vals));
@@ -1477,7 +1475,7 @@ $DECODE{'SLLD'} = sub {
     return(\%hr, {});
 };
 $ENCODE{'SLLD'} = sub {
-    my($hr, $idx) = @_;
+    my($hr) = @_;
     my @vals;
     foreach my $key (sort { $a <=> $b } keys %$hr) { unshift(@vals, $key); }
     return(pack("l*", @vals));
@@ -1491,7 +1489,7 @@ $DECODE{'SLFD'} = sub {
     return(\%hr, {});
 };
 $ENCODE{'SLFD'} = sub {
-    my($hr, $idx) = @_;
+    my($hr) = @_;
     my @vals;
     foreach my $key (sort { $a <=> $b } keys %$hr) { unshift(@vals, $key); }
     return(pack("f*", @vals));
@@ -1723,11 +1721,11 @@ my %TOSTR =
      "NPC_.AIDT" => sub { my($hello, $unk1, $fight, $flee, $alarm, $unk2, $unk3, $unk4, $flags) = unpack($RD{'NPC_.AIDT'}, $_[0]);
 			  sprintf "Hello: %d  Fight: %d  Flee: %d  Alarm: %d  Flags: %s",
 			      $hello, $fight, $flee, $alarm, decode_flags($flags, \@AIDT_FLAGS); },
-     "NPC_.AI_W" => sub { my($hr, $idx) = $DECODE{'NPC_.AI_W'}->($_[0]);
+     "NPC_.AI_W" => sub { my($hr) = $DECODE{'NPC_.AI_W'}->($_[0]);
 			  my $idle = join(", ", map { $hr->{"Idle_$_"} } 1..8);
 			  sprintf "Distance: %d  Duration: %d  Time_of_day: %d, Idles: $idle",
 			      $hr->{Distance}, $hr->{Duration}, $hr->{Time_of_day} },
-     "NPC_.NPDT" => sub { my($hr, $idx) = $DECODE{'NPC_.NPDT'}->($_[0]);
+     "NPC_.NPDT" => sub { my($hr) = $DECODE{'NPC_.NPDT'}->($_[0]);
 			  if (exists $hr->{Str}) { # long form
 			      my $skills = "";
 			      my $n = 0;
@@ -1750,7 +1748,7 @@ my %TOSTR =
      "PCDT.FNAM" => $TOSTR_UNKNOWN, # .ess
      "PROB.PBDT" => sub { sprintf "Weight: %0.2f  Value: %d  Quality: %0.2f  Uses: %d", unpack($RD{'PROB.PBDT'}, $_[0]) },
      "QUES.DATA" => sub { sprintf "INFO_ID: %s", unpack($RD{'QUES.DATA'}, $_[0]) }, # only in .ess (relates back to Actor in INFO)
-     "RACE.RADT" => sub { my($hr, $idx) = $DECODE{'RACE.RADT'}->($_[0]);
+     "RACE.RADT" => sub { my($hr) = $DECODE{'RACE.RADT'}->($_[0]);
 			  my $result = sprintf "Flags: %s  Male_Height: %0.2f  Male_Weight: %0.2f  Female_Height: %0.2f  Female_Weight: %0.2f",
 			      decode_flags($hr->{Flags}, \@RADT_FLAGS), $hr->{Male_Height}, $hr->{Male_Weight},
 				  $hr->{Female_Height}, $hr->{Female_Weight};
@@ -2351,6 +2349,7 @@ sub read_object_ids {
 	if ($fun) {
 	    $fun->($rec_type, $id);
 	} else {
+	    warn "$plugin: $rec_type: $id\n" if (DBG);
 	    $plugin_id{$rec_type}->{$id} = 1 if (defined $id);
 	}
     }
@@ -2948,6 +2947,82 @@ sub search_and_replace {
     }
 }
 
+sub dumprec {
+    my($r, $opt) = @_; 		# opt is "index", "type", "field"
+    my @indices = defined($opt->{index}) ? ($opt->{index}) : (0 .. $#$r);
+    foreach my $i (@indices) {
+	my $type = $r->[$i]->[0];
+	next if (defined($opt->{type}) and ($type !~ /^$opt->{type}/i));
+	if (defined($opt->{field})) {
+	    my $key = $opt->{field};
+	    if (defined($r->[$i]->[1]->{$key})) {
+		print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
+	    } else {
+		next;
+	    }
+	} else {
+	    # dump all fields
+	    my @ordered_fields = ();
+	    my @unordered_fields = ();
+	    while (my($key, $val) = each %{$r->[$i]->[1]}) {
+		$val = qq{"$val"} if ($val =~ /\D/);
+		if (defined $r->[$i]->[2]->{$key}) {
+		    $ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
+		} else {
+		    push(@unordered_fields, "$key = $val");
+		}
+	    }
+	    print "$i: $type ", join(", ", @ordered_fields, @unordered_fields), "\n";
+	}
+    }
+    return(0);
+}
+
+sub setrec {
+    my($r, $opt, $newval) = @_;	# opt is "index", "type", "field"
+    if (not defined $newval) {
+	warn qq{Usage: setrec(\$r, \$opt_hash, \$newvalue)
+opt_hash can have the keys: "index", "type", or "field"\n};
+	return;
+    }
+    my $rc = 0;
+    my @indices = defined($opt->{index}) ? ($opt->{index}) : (0 .. $#$r);
+    foreach my $i (@indices) {
+	my $type = $r->[$i]->[0];
+	next if (defined($opt->{type}) and ($opt->{type} ne $type));
+	if (defined($opt->{field})) {
+	    my $key = $opt->{field};
+	    if (defined($r->[$i]->[1]->{$key})) {
+		if ($r->[$i]->[1]->{$key} ne $newval) {
+		    $r->[$i]->[1]->{$key} = $newval;
+		    $rc++;
+		}
+		print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
+	    } else {
+		next;
+	    }
+	} else {
+	    # dump all fields
+	    my @ordered_fields = ();
+	    my @unordered_fields = ();
+	    while (my($key, $val) = each %{$r->[$i]->[1]}) {
+		if ($newval ne $val) {
+		    $val = $r->[$i]->[1]->{$key} = $newval;
+		    $rc++;
+		}
+		$val = qq{"$val"} if ($val =~ /\D/);
+		if (defined $r->[$i]->[2]->{$key}) {
+		    $ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
+		} else {
+		    push(@unordered_fields, "$key = $val");
+		}
+	    }
+	    print "$i: $type ", join(", ", @ordered_fields, @unordered_fields), "\n";
+	}
+    }
+    return($rc);
+}
+
 sub run_code {
     my($rec_type, $r, $unk, $flags) = @_;
     my $mod = 0;
@@ -3118,7 +3193,6 @@ sub cmd_modify {
 			my $full_type = "${rec_type}.${subrec_type}";
 			#warn "full_type=$full_type\n";
 			my $encoder = encoder($full_type, $subrec_type);
-			#warn "DBG: (hr, idx)\n", Dumper([$hr, $idx]), "\n";
 			my $subrec = $encoder->($hr, $idx);
 			my $subrec_len = length($subrec);
 			if ($codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec)) {
