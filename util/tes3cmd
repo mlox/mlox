@@ -2968,7 +2968,12 @@ sub subrec {
 sub ext_cell_name {
     my($r, $name) = @_;
     $name = $name || chop_nulls($r->{RGNN}[0]) || "Wilderness";
-    return(sprintf("$name (%d, %d)", unpack("x[L]ll", $r->{DATA}[0])));
+    if (length($r->{DATA}[0]) < 12) { # size of "x[L]ll"
+	warn "Error, CELL: ($name) does not have a valid DATA subrecord\n";
+	return($name);
+    } else {
+	return(sprintf("$name (%d, %d)", unpack("x[L]ll", $r->{DATA}[0])));
+    }
 }
 
 sub rec_id {
@@ -3801,7 +3806,7 @@ sub cmd_fogpatch {
 			}
 			if (0.0 == $fog_den_data) {
 			    warn "  FOGBUG: $plugin\t\tCELL: $name\n";
-			    $cell{$name} = [$data, $ambi];
+			    $cell{$name} = [$data, $ambi, $plugin];
 			} else {
 			    if (defined($cell{$name})) {
 				warn qq{          $plugin CORRECTED fogbug in CELL: $name\n};
@@ -3822,8 +3827,8 @@ sub cmd_fogpatch {
     my $n = scalar keys %cell;
     warn qq{\nPatching $n cells in "$fogpatch"\n} if ($n > 0);
     foreach my $name (sort keys %cell) {
-	print "  CELL: $name\n";
-	my($data, $ambi) = @{$cell{$name}};
+	my($data, $ambi, $plugin) = @{$cell{$name}};
+	print "  CELL: $name\t\t[$plugin]\n";
 	# put in a non-zero fog density
 	substr($data, 8, 4) = substr($ambi, 12, 4) = pack("f", 0.01);
 	# write NAME, DATA, AMBI
@@ -3864,7 +3869,7 @@ sub cmd_cellnamepatch {
 		    my $prevname = $cell{$coord}->{NAME};
 		    if ($prevname ne $name) {
 			if ($name eq $cell{$coord}->{ORIGNAME}) {
-			    warn qq{CELL: ($coord) REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n};
+			    warn qq{CELL: ($coord) RENAME REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n};
 			    $cell{$coord}->{OUTPUTFLAG}++;
 			    $outputflag++;
 			} elsif ($name) {
@@ -4762,8 +4767,8 @@ sub cmd_recover {
     my $rectypes = join('|', @RECTYPES);
     my %valid_type; $valid_type{$_}++ foreach (@RECTYPES);
     print qq{$plugin: length = $inp_len\n};
-  READREC:
     my @removed;
+  READREC:
     while ($inp_offset < $inp_len) {
 	my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin);
 	$expected = undef;
@@ -4785,7 +4790,7 @@ sub cmd_recover {
 	    while (1) {
 		my $n_read = sysread($inp, $buff, $buff_size + $typlen);
 		last READREC if ($n_read == 0); # EOF
-		if (my($stuff, $rec_type) = ($buff =~ /^(.*)($rectypes)/)) {
+		if (my($stuff, $rec_type) = split(/($rectypes)/, $buff)) {
 		    my $new_offset = $inp_offset + length($stuff);
 		    print qq{Scan found $rec_type at: $new_offset\n};
 		    $inp_offset = sysseek($inp, $new_offset, 0);
