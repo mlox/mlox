@@ -18,6 +18,7 @@
 # combine (merge listed plugins into one plugin)
 # conflict (detailed report, toggle mergeable records from report)
 # lint (slurp in tes3lint functionality)
+# redo overdial, just list each topic once, with list of plugins that have it
 # multipatch includes:
 # * cellnamepatch
 # * fogpatch
@@ -726,21 +727,29 @@ sub list_files {
     return(\%files);
 }
 
-sub list_active {
+# sort list of files by their modification date
+sub sort_by_date {
+    my($dir, @files) = @_;
+    my $dirlist = list_files($dir);
+    my @sorted = sort { (-M "$dir/$dirlist->{lc $b}") <=> (-M "$dir/$dirlist->{lc $a}") } @files;
+    warn qq{DBG: sorted files:\n}, join("\n", @sorted), "\n" if (DBG);
+    return(@sorted);
+}
+
+sub load_order {
     die "DATADIR not defined\n" unless (defined($DATADIR));
     my $datafiles = list_files($DATADIR);
     my $mwfiles = list_files("$DATADIR/..");
     my $ini = "$DATADIR/../$mwfiles->{'morrowind.ini'}";
-    my %active;
+    my @active;
     my $fh = IO::Handle->new();
     if (open($fh, "<$ini")) {
 	warn qq{INI is: "$ini"\n} if (DBG);
 	while (<$fh>) {
-	    if (/GameFile\d+=([^\r\n]*)/) {
-		my $plugin = lc($1);
-		if ($datafiles->{$plugin}) {
-		    warn qq{Found Gamefile: "$1"\n} if (DBG);
-		    $active{$plugin} = $1;
+	    if (my($plugin) = (/GameFile\d+=([^\r\n]*)/)) {
+		if ($datafiles->{lc $plugin}) {
+		    warn qq{Found Gamefile: "$plugin"\n} if (DBG);
+		    push(@active, $plugin);
 		} else {
 		    warn qq{MISSING Gamefile: "$1"\n} if (DBG);
 		}
@@ -749,7 +758,8 @@ sub list_active {
     } else {
 	warn qq{Error opening "$ini" for input ($!)\n};
     }
-    return(\%active);
+    my @sorted = sort_by_date($DATADIR, @active);
+    return((grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)));
 }
 
 # assuming the program is run somewhere under the Morrowind game directory, find the
@@ -780,15 +790,6 @@ sub find_datadir {
     }
     warn qq{Can't find "Data Files" directory. Won't be able to find masters\n};
     return(undef);		# not running under morrowind directory
-}
-
-# sort list of files by their modification date
-sub sort_by_date {
-    my($dir, @files) = @_;
-    my $dirlist = list_files($dir);
-    my @sorted = sort { (-M "$dir/$dirlist->{$b}") <=> (-M "$dir/$dirlist->{$a}") } @files;
-    warn qq{DBG: sorted files:\n}, join("\n", @sorted), "\n" if (DBG);
-    return(@sorted);
 }
 
 sub allowed_cell_type {
@@ -3771,15 +3772,11 @@ sub cmd_wikiout {
 sub cmd_fogpatch {
     find_datadir();
     warn "Data Files = $DATADIR\n";
-    my $datafiles = list_active();
     my $fogpatch = "$DATADIR/fogpatch.esp";
-    my $out = open_output_plugin($fogpatch);
-    my $n = 0;
-    print $out $blank_header;
     my %cell;
-    foreach my $plugin (keys %{$datafiles}) {
+    foreach my $plugin (load_order()) {
 	next unless ($plugin =~ /\.es[mp]$/i);
-	$plugin = $datafiles->{$plugin};
+	next if ($plugin eq "fogpatch.esp");
 	warn "Scanning plugin: $plugin\n" if (DBG);
 	my $inp = open_input_plugin("$DATADIR/$plugin");
 	my $expected = "TES3";
@@ -3790,7 +3787,7 @@ sub cmd_fogpatch {
 	    my $srh = parse_subrec_hash($rec);
 	    my $data = $srh->{DATA}[0];
 	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
-	    if ($flags & 1) {	# interior cells
+	    if (is_interior($srh)) {
 		unless ($flags & 128) { # behave like exterior
 		    my $name = chop_nulls($srh->{NAME}[0]);
 		    my $ambi = $srh->{AMBI}[0];
@@ -3802,17 +3799,14 @@ sub cmd_fogpatch {
 			    $fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
 			    warn "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
 			}
-			if ($fog_den_data == 0.0 and not $cell{$name}) {
-			    warn "    FOGPATCH: $plugin\t\tCELL: $name\n";
-			    # write NAME, DATA, AMBI
-			    my $newrec = subrec("NAME", "$name\000");
-			    substr($data, 8, 4) = pack("f", 0.01);
-			    $newrec .= subrec("DATA", $data);
-			    substr($ambi, 12, 4) = pack("f", 0.01);
-			    $newrec .= subrec("AMBI", $ambi);
-			    write_rec($out, $rec_type, $newrec, $flags, $unk);
-			    $n++;
-			    $cell{$name} = 1;
+			if (0.0 == $fog_den_data) {
+			    warn "  FOGBUG: $plugin\t\tCELL: $name\n";
+			    $cell{$name} = [$data, $ambi];
+			} else {
+			    if (defined($cell{$name})) {
+				warn qq{          $plugin CORRECTED fogbug in CELL: $name\n};
+				delete $cell{$name};
+			    }
 			}
 		    } else {
 			warn "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
@@ -3823,7 +3817,19 @@ sub cmd_fogpatch {
 	}
 	close($inp);
     }
-    warn qq{Patched $n cells in "$fogpatch"\n};
+    my $out = open_output_plugin($fogpatch);
+    print $out $blank_header;
+    my $n = scalar keys %cell;
+    warn qq{\nPatching $n cells in "$fogpatch"\n} if ($n > 0);
+    foreach my $name (sort keys %cell) {
+	print "  CELL: $name\n";
+	my($data, $ambi) = @{$cell{$name}};
+	# put in a non-zero fog density
+	substr($data, 8, 4) = substr($ambi, 12, 4) = pack("f", 0.01);
+	# write NAME, DATA, AMBI
+	my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data) . subrec("AMBI", $ambi);
+	write_rec($out, 'CELL', $newrec, $flags, $unk);
+    }
     $::opt_a = "tes3cmd";
     $::opt_d = "Fogbug Patch";
     $::opt_q = 1;
@@ -3834,19 +3840,14 @@ sub cmd_fogpatch {
 sub cmd_cellnamepatch {
     find_datadir();
     warn qq{Data Files is: "$DATADIR"\n};
-    my $datafiles = list_active();
     my $patch_file = "cellnamepatch.esp";
     my $patch_path = "$DATADIR/$patch_file";
     my $n = 0;
     my %cell;
-    my @sorted = sort_by_date($DATADIR, keys %{$datafiles});
-    my @plugins = (grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted));
-    my %cell;
     my $outputflag = 0;
-    foreach my $plugin (@plugins) {
-	$plugin = $datafiles->{$plugin};
+    foreach my $plugin (load_order()) {
 	next if ($plugin eq $patch_file);
-	warn "Scanning plugin: $plugin\n";
+	warn "Scanning plugin: $plugin\n" if (DBG);
 	my $inp = open_input_plugin("$DATADIR/$plugin");
 	my $expected = "TES3";
 	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
