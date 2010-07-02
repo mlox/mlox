@@ -15,19 +15,20 @@
 # GUI
 # clean up the TOSTR stuff (for pretty print command) so it uses the codec defs
 # undump (text to record, can't undump from wrong version)
-# merge (merge listed plugins into one plugin)
+# combine (merge listed plugins into one plugin)
 # conflict (detailed report, toggle mergeable records from report)
 # lint (slurp in tes3lint functionality)
 # multipatch includes:
+# * cellnamepatch
 # * fogpatch
-# * summoned creatures persists patch
-# * Merged Objects (add mergeable flag to codec defs)
-# * Merged Leveled Lists
-# * Import faces/hairs
-# * GMST tweaks
-# * turn-off auto-calced spells.
 # * generate book rotate scripts.
 # * generate multimark scripts.
+# * gmst/global? tweaks
+# * import faces/hairs
+# * merged leveled lists
+# * merged objects (add mergeable flag to codec defs)
+# * summoned creatures persists patch
+# * turn-off auto-calced spells.
 
 use Cwd;
 use IO::Handle;
@@ -57,7 +58,7 @@ my $HDR_DESC_OFFSET = $HDR_AUTH_OFFSET + $HDR_AUTH_LENGTH;
 my $HDR_DESC_LENGTH = 256;
 my $REC_TYPE_LEN = 4;
 
-my $hedr = pack("a4L/a*", 'HEDR', pack("fLZ32Z256L", (my $ver = 1.3), (my $unk = 0), (my $auth = "tes3cmd"), (my $desc = "(generated)"), (my $nrec = 0)));
+my $hedr = pack("a4L/a*", 'HEDR', pack("fLZ32Z256L", (my $ver = 1.3), (my $is_master = 0), (my $auth = "tes3cmd"), (my $desc = "(generated)"), (my $nrec = 0)));
 my $blank_header = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
 
 ###USAGES
@@ -1991,7 +1992,7 @@ sub default_codec {
     $RD{$type} = compile_def(@def); # for transitional code
 }
 default_codec('TES3.HEDR', (["Version", "f"],
-			    ["Unknown", "L"],
+			    ["Is_Master", "L"],
 			    ["Author", "Z32"],
 			    ["Description", "Z256"],
 			    ["NRecords", "L"]));
@@ -2513,9 +2514,11 @@ my $TOSTR_DEBUG = sub { sprintf qq{DEBUG %s}, $TOSTR_UNK->($_[0]); };
 my $DIALTYPE = "None";
 my $NREC;
 my %TOSTR =
-    ("TES3.HEDR" => sub { my($ver, $unk, $auth, $desc, $nrec) = unpack($RD{'TES3.HEDR'}, $_[0]);
-			  $NREC = $nrec;
-			  qq{  Ver:$ver  Unk:$unk\n\t\tAuthor:"$auth"\n\t\tDescription:"$desc"\n\t\tNRec:$NREC}; },
+    ("TES3.HEDR" => sub { my($ver, $is_master, $auth, $desc, $nrec) = unpack($RD{'TES3.HEDR'}, $_[0]);
+			  $NREC = $nrec; # save it for later.
+			  ($ver = sprintf("%0.2f", $ver)) =~ s/0+$//;
+			  sprintf qq{\tVersion:$ver  Is_Master:%s\tAuthor:"$auth"\n\tDescription:"$desc"\n\tNRecords:$NREC},
+			      ($is_master) ? "True" : "False"; },
      "TES3.MAST" => sub { unpack($RD{'TES3.MAST'}, $_[0]) },
      "TES3.DATA" => sub { my($l1, $l2) = unpack($RD{'TES3.DATA'}, $_[0]);
 			  my $size = $l1 + ($l2 << 32);
@@ -3160,7 +3163,9 @@ sub make_temp {
 }
 
 sub fix_output {
-    my($plugin, $newname) = @_;
+    my($inp, $out, $plugin, $newname) = @_;
+    close($inp);
+    close($out);
     my $plugtmp = "$plugin.tmp";
     if (my($ext) = ($plugin =~ /\.(es[mps])$/i)) {
 	my($atime, $mtime) = (stat($plugin))[8,9];
@@ -3193,7 +3198,8 @@ sub fix_output {
 }
 
 sub cleanup_temp {
-    my($plugin) = @_;
+    my($inp, $plugin) = @_;
+    close($inp);
     my $plugtmp = "$plugin.tmp";
     unlink($plugtmp);
 }
@@ -3216,6 +3222,7 @@ sub read_object_ids {
 	    $plugin_id{$rec_type}->{$id} = 1 if (defined $id);
 	}
     }
+    close($inp);
     return(\%plugin_id) unless ($fun);
 }
 
@@ -3234,6 +3241,7 @@ sub read_dialogs {
 	my $type = unpack("C", $srh->{DATA}[0]);
 	$dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
     }
+    close($inp);
 }
 
 
@@ -3444,6 +3452,7 @@ sub process_plugin_for_input {
 	    $fun->($rec_type, $id, $rec, $srh, $flags, $unk)
 	}
     }
+    close($inp);
 }
 
 sub process_plugin_for_update {
@@ -3489,7 +3498,7 @@ sub process_plugin_for_update {
     if ($modified) {
 	my($file, $dir) = fileparse($plugin);
 	my $newname = "${dir}${prefix}${file}";
-	fix_output($plugin, $newname);
+	fix_output($inp, $out, $plugin, $newname);
     }
 }
 
@@ -3743,6 +3752,7 @@ sub load_master {
 	my $id = rec_id($srh, $rec_type);
 	$MASTER_ID->{$esm}->{$id}->{$rec_type} = [$srh, $rec];
     }
+    close($inp);
     # store data in cache file
     save_master_cache($esm);
 }
@@ -3811,6 +3821,7 @@ sub cmd_fogpatch {
 		}
 	    }
 	}
+	close($inp);
     }
     warn qq{Patched $n cells in "$fogpatch"\n};
     $::opt_a = "tes3cmd";
@@ -3826,13 +3837,12 @@ sub cmd_cellnamepatch {
     my $datafiles = list_active();
     my $patch_file = "cellnamepatch.esp";
     my $patch_path = "$DATADIR/$patch_file";
-    my $out = open_output_plugin($patch_path);
     my $n = 0;
-    print $out $blank_header;
     my %cell;
     my @sorted = sort_by_date($DATADIR, keys %{$datafiles});
     my @plugins = (grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted));
     my %cell;
+    my $outputflag = 0;
     foreach my $plugin (@plugins) {
 	$plugin = $datafiles->{$plugin};
 	next if ($plugin eq $patch_file);
@@ -3852,20 +3862,21 @@ sub cmd_cellnamepatch {
 		if (exists $cell{$coord}->{NAME}) {
 		    my $prevname = $cell{$coord}->{NAME};
 		    if ($prevname ne $name) {
-			warn qq{($coord) Redefined by: "$plugin" ["$prevname" -> "$name"]\n};
 			if ($name eq $cell{$coord}->{ORIGNAME}) {
-			    warn qq{Not reverting to original name: "$cell{$coord}->{ORIGNAME}"\n};
+			    warn qq{CELL: ($coord) REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n};
 			    $cell{$coord}->{OUTPUTFLAG}++;
+			    $outputflag++;
 			} elsif ($name) {
+			    warn qq{CELL: ($coord) Renamed by: [$plugin] from: "$prevname" to: "$name"\n};
 			    my $prevname = $cell{$coord}->{NAME};
 			    my $prevplug = $cell{$coord}->{PLUG};
-			    warn qq{($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
+			    warn qq{CELL: ($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
 			    my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data);
 			    $cell{$coord}->{NAME} = $name;
 			    $cell{$coord}->{PLUG} = $plugin;
 			    $cell{$coord}->{REC} = [$rec_type, $newrec, $flags, $unk];
 			} else {
-			    warn qq{($coord) Skipping null name: [$plugin]:"$name"\n};
+			    warn qq{CELL: ($coord) Skipping null name: [$plugin]:"$name"\n};
 			}
 		    }
 		} else {
@@ -3876,22 +3887,28 @@ sub cmd_cellnamepatch {
 		}
 	    }
 	}
+	close($inp);
     }
-    warn "Saving patch file: $patch_file\n";
-    foreach my $coord (%cell) {
-	if ($cell{$coord}->{OUTPUTFLAG}) {
-	    my $recref = $cell{$coord}->{REC};
-	    if ($recref) {
-		warn qq{CELL: ($coord) -> NAME: "$cell{$coord}->{NAME}"\n};
-		write_rec($out, @{$recref});
+    if ($outputflag) {
+	warn "\nPreserved the following CELL renamings:\n";
+	my $out = open_output_plugin($patch_path);
+	print $out $blank_header;
+	foreach my $coord (%cell) {
+	    if ($cell{$coord}->{OUTPUTFLAG}) {
+		my $recref = $cell{$coord}->{REC};
+		if ($recref) {
+		    warn qq{CELL: ($coord) -> NAME: "$cell{$coord}->{NAME}"\n};
+		    write_rec($out, @{$recref});
+		}
 	    }
 	}
+	close($out);
+	$::opt_a = "tes3cmd";
+	$::opt_d = "cellnamepatch";
+	$::opt_q = 1;
+	warn "Saving patch file: $patch_file\n";
+	cmd_header($patch_path);
     }
-    $::opt_a = "tes3cmd";
-    $::opt_d = "cellnamepatch";
-    $::opt_q = 1;
-    close($out);
-    cmd_header($patch_path);
 }
 
 sub cmd_overdial {
@@ -3927,7 +3944,7 @@ sub cmd_common {
     # compare to objects second plugin
     my $compare_fun = sub {
 	my($rec_type, $id) = @_;
-	if ($objects1->{$rec_type}->{$id}) {
+	if ($objects1->{$rec_type}->{$id} and ($rec_type ne 'TES3')) {
 	    warn "  $rec_type: $id\n";
 	}
     };
@@ -3951,6 +3968,7 @@ sub read_objects {
 	    $plugin_id{$rec_type}->{$id} = $rec if (defined $id);
 	}
     }
+    close($inp);
     return(\%plugin_id) unless ($fun);
 }
 
@@ -3974,7 +3992,7 @@ sub cmd_diff {
     }
     warn "IGNORE = $ignore\n" if (DBG);
     $::opt_o ||= 'e1,e2,eq,ne';
-    my %rpt = map { $_, 1 } split(m!/!, lc($::opt_o));
+    my %rpt = map { $_, 1 } split(m!,!, lc($::opt_o));
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
     my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
@@ -3984,6 +4002,7 @@ sub cmd_diff {
     my @diffs;		     # detailed diffs
     my(@diff1, @diff2);
     foreach my $rec_type (sort keys %{$obj1}) {
+	next if ($rec_type eq 'TES3');
 	foreach my $id (sort keys %{$obj1->{$rec_type}}) {
 	    if (defined(my $rec2 = $obj2->{$rec_type}->{$id})) {
 		my $rec1 = $obj1->{$rec_type}->{$id};
@@ -4105,7 +4124,7 @@ sub cmd_delete {
 	    }
 	}
     }
-    fix_output($plugin);
+    fix_output($inp, $out, $plugin);
 }
 
 sub cmd_objdelete {
@@ -4177,8 +4196,10 @@ sub cmd_objdelete {
 	    write_rec($out, $rec_type, $newrec, $flags, $unk);
 	}
     }
-    unless ($::opt_l) {
-	fix_output($plugin);
+    if ($::opt_l) {
+	close($inp);
+    } else {
+	fix_output($inp, $out, $plugin);
     }
 }
 
@@ -4280,9 +4301,9 @@ sub cmd_modify {
 	}
     }
     if ($plugin_modified and $codec_ok) {
-	fix_output($plugin);
+	fix_output($inp, $out, $plugin);
     } else {
-	cleanup_temp($plugin);
+	cleanup_temp($inp, $plugin);
     }
 }
 
@@ -4380,6 +4401,7 @@ sub cmd_print {
 	$n++;
     }
     $plugin_banner = "";
+    close($inp);
 } # cmd_print
 
 sub cmd_rename {
@@ -4475,9 +4497,9 @@ sub cmd_rename {
 	write_rec($out, $rec_type, $rec, $flags, $unk) unless($::opt_l);
     }
     if ($::opt_l) {
-	cleanup_temp($plugin);
+	cleanup_temp($inp, $plugin);
     } else {
-	fix_output($plugin);
+	fix_output($inp, $out, $plugin);
     }
 }
 
@@ -4643,23 +4665,24 @@ sub cmd_clean {
 			    # CLEAN WHGT
 			    # (some plugins, like Morrowind.esm, use an INTV sub-record instead of WHGT)
 			    if (not $cleaned_whgt) {
-				my $plugin_whgt = $srh->{WHGT}[0];
+				my $plugin_whgt = ($srh->{WHGT}[0]) ? unpack("f", $srh->{WHGT}[0]) : undef;
 				my $whgt_type = 'WHGT';
-				unless ($plugin_whgt) {
+				unless (defined $plugin_whgt) {
 				    my $srl = parse_subrec_list($rec);
 				    if ($srl->[2]->[0] eq 'INTV') {
-					$plugin_whgt = $srl->[2]->[1];
+					# this would be unusual. I think INTV water heights must be from very old Construction Sets.
+					$plugin_whgt = unpack("l", $srl->[2]->[1]);
 					$whgt_type = 'INTV';
 				    }
 				}
-				my $master_whgt = $mast_srh->{WHGT}[0];
-				unless ($master_whgt) {
+				my $master_whgt = ($mast_srh->{WHGT}[0]) ? unpack("f", $mast_srh->{WHGT}[0]) : undef;
+				unless (defined $master_whgt) {
 				    my $srl = parse_subrec_list($mast_rec);
 				    if ($srl->[2]->[0] eq 'INTV') {
-					$master_whgt = $srl->[2]->[1];
+					$master_whgt = unpack("l", $srl->[2]->[1]);
 				    }
 				}
-				if ($plugin_whgt and $master_whgt and ($plugin_whgt eq $master_whgt)) {
+				if (defined($plugin_whgt) and defined($master_whgt) and ($plugin_whgt == $master_whgt)) {
 				    warn " Cleaned redundant WHGT from CELL: $id\n";
 				    $r = remove_subrec($r, $whgt_type, 1);
 				    $cleaned_whgt++;
@@ -4787,10 +4810,10 @@ sub cmd_recover {
 	if (scalar(@removed) > 1) {
 	    print "Total bytes lost: $total\n";
 	}
-	fix_output($plugin);
+	fix_output($inp, $out, $plugin);
     } else {
 	print "Recovery found no bad data in $plugin\n";
-	cleanup_temp($plugin);
+	cleanup_temp($inp, $plugin);
     }
 }
 
