@@ -12,7 +12,6 @@
 # TBD:
 # tests
 # fixup usages and examples, and add more examples, esp. "modify"
-# rewrite wiki page: http://code.google.com/p/mlox/wiki/Tes3cmd
 # GUI
 # clean up the TOSTR stuff (for pretty print command) so it uses the codec defs
 # undump (text to record, can't undump from wrong version)
@@ -82,10 +81,10 @@ which in fact, is not corruption, but bad data.
 
 In any case, you will get detailed output on what tes3cmd finds damaged.
 
-Example:
+Example(s):
 
 # fix my damaged plugin:
-tes3cmd recover myplugin.esp
+tes3cmd recover "my plugin.esp"
 };
 
 sub opts_recover {
@@ -142,10 +141,10 @@ OPTIONS
 
 Converts input master (.esm) into a plugin (.esp).
 
-Example:
+Example(s):
 
-# output is: plugin.esp
-tes3cmd esp plugin.esm
+# output is: "my plugin.esp"
+tes3cmd esp "my plugin.esm"
 };
 
 sub opts_esp {
@@ -161,10 +160,10 @@ OPTIONS
 
 Converts input plugin (.esp) into a master (.esm).
 
-Example:
+Example(s):
 
-# output is: plugin.esm
-tes3cmd esm plugin.esp
+# output is: "my plugin.esm"
+tes3cmd esm "my plugin.esp"
 };
 
 sub opts_esm {
@@ -210,7 +209,7 @@ You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
 meaning in a regular expression and that they are unlike characters used for
 matching on a Windows command line.
 
-Examples:
+Example(s):
 
 # Problem: Aleanne's clothing mods do not have restocking inventory
 # Solution: create a small patch to change the counts for inventory containers
@@ -238,7 +237,7 @@ OPTIONS
 
 Creates a patch plugin to ensure all renamed cells end up in the player's game.
 
-Examples:
+Example(s):
 
 # Create the patch plugin "cellnamepatch.esp"
 tes3cmd cellnamepatch
@@ -258,7 +257,7 @@ OPTIONS
 
 Creates a patch plugin to fix all cells in your plugins that would trigger the fogbug.
 
-Examples:
+Example(s):
 
 # Create the patch plugin fogpatch.esp
 tes3cmd fogpatch
@@ -297,14 +296,14 @@ You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
 meaning in a regular expression and that they are unlike characters used for
 matching on a Windows command line.
 
-Examples:
+Example(s):
 
 # Delete all records with IDs matching "foo":
-tes3cmd delete -i foo plugin.esp
+tes3cmd delete -i foo "my plugin.esp"
 
 # Delete all sub-records of type NPC_.NPCO that match "Ring des Skeletts" from
 # savegame: quicksave.ess
-tes3cmd delete -s -t npc_.npco -m "Ring des Skeletts" quicksave.ess
+tes3cmd delete -s -t npc_.npco -m "Ring des Skeletts" "quicksave.ess"
 };
 
 sub opts_delete {
@@ -335,10 +334,10 @@ You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
 meaning in a regular expression and that they are unlike characters used for
 matching on a Windows command line.
 
-Examples:
+Example(s):
 
 # Delete some daedric bats from Creatures mod:
-tes3cmd objdelete -m plx_ex_daed_bat Creatures.esp
+tes3cmd objdelete -m plx_ex_daed_bat "Creatures.esp"
 };
 
 sub opts_objdelete {
@@ -367,10 +366,10 @@ topic "rescue me" when you find her in her cell.
 Note that overlap is only a potential problem if the plugins are loaded in the
 order they are listed in the output.
 
-Example:
+Example(s):
 
 # Show dialog overlaps between Lokken and SU:
-tes3cmd overdial BT_Whitewolf_2_0.esm Suran_Underworld_2.5.esp
+tes3cmd overdial "BT_Whitewolf_2_0.esm" "Suran_Underworld_2.5.esp"
 };
 
 sub opts_overdial {
@@ -378,22 +377,22 @@ sub opts_overdial {
     getopts('1D') or die $OVERDIAL_USAGE;
 }
 
-my $COM_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
+my $COMMON_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
 
 OPTIONS
  -D   turn on debug output
 
 Prints the IDs of records that the 2 given plugins have in common.
 
-Example:
+Example(s):
 
 # Show the records in common between my plugin and Morrowind.esm:
-tes3cmd common myplugin.esp Morrowind.esm
+tes3cmd common "my plugin.esp" "Morrowind.esm"
 };
 
 sub opts_common {
-    $_[0] && do { die $COM_USAGE; };
-    getopts('D') or die $COM_USAGE;
+    $_[0] && do { die $COMMON_USAGE; };
+    getopts('D') or die $COMMON_USAGE;
 }
 
 
@@ -425,10 +424,10 @@ CELL.FRMR records are automatically ignored when the ModIndex is zero. (Note
 that in this case, the ObjIndex appears to only be incremented by one).
 
 
-Example:
+Example(s):
 
-# Print report on differences between 2 savegames:
-tes3cmd diff save1000.ess save2000.ess > diff.out
+# Print report on differences between 2 savegames (output to diff.out):
+tes3cmd diff "save1000.ess" "save2000.ess" > diff.out
 
 # You can also use the -i switch to ignore further subfields in order to help
 # reduce the amount of differences as in the following example.
@@ -436,7 +435,7 @@ tes3cmd diff save1000.ess save2000.ess > diff.out
 tes3cmd diff -i crea.aidt,cell.nd3d testa0000.ess testb0000.ess > diff.out
 
 # Just print the records that differ
-tes3cmd diff -o ne plugin1.esp plugin2.esp
+tes3cmd diff -o ne "my plugin1.esp" plugin2.esp
 };
 
 sub opts_diff {
@@ -473,19 +472,19 @@ You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
 meaning in a regular expression and that they are unlike characters used for
 matching on a Windows command line.
 
-Examples:
+Example(s):
 
 # Print all records from a plugin (this could generate a lot of output):
-tes3cmd print plugin.esp
+tes3cmd print "my plugin.esp"
 
 # Print all records with IDs matching "foo":
-tes3cmd print -i foo plugin.esp
+tes3cmd print -i foo "plugin.esp"
 
 # Print all the CELL records from a plugin:
-tes3cmd print -t cell plugin.esp
+tes3cmd print -t cell "plugin.esp"
 
 # Print all cells from bradhia_v1_4.esp containing NPC named: "Maeve Jaste"
-tes3cmd print -t cell -m "NAME:.*maeve.jaste" bradhia_v1_4.esp
+tes3cmd print -t cell -m "NAME:.*maeve.jaste" "bradhia_v1_4.esp"
 };
 
 sub opts_print {
@@ -522,19 +521,19 @@ You should at least be aware that the characters "\\.?*+|^$()[]{}" have special
 meaning in a regular expression and that they are unlike characters used for
 matching on a Windows command line.
 
-Examples:
+Example(s):
 
 # Dump all records from a plugin (this could generate a lot of output):
-tes3cmd dump plugin.esp
+tes3cmd dump "my plugin.esp"
 
 # Dump all records with IDs matching "foo":
-tes3cmd dump -i foo plugin.esp
+tes3cmd dump -i foo "plugin.esp"
 
 # Dump all the CELL records from a plugin:
-tes3cmd dump -t cell plugin.esp
+tes3cmd dump -t cell "plugin.esp"
 
 # Dump all cells from bradhia_v1_4.esp containing NPC named: "Maeve Jaste"
-tes3cmd dump -t cell -m "NAME:.*maeve.jaste" bradhia_v1_4.esp
+tes3cmd dump -t cell -m "NAME:.*maeve.jaste" "bradhia_v1_4.esp"
 };
 
 sub opts_dump {
@@ -542,7 +541,7 @@ sub opts_dump {
     getopts('c:Df:F:i:lm:M:nNRrs:t:') or die $DUMP_USAGE;
 }
 
-my $HDR_USAGE = q{Usage: tes3cmd header OPTIONS plugin...
+my $HEADER_USAGE = q{Usage: tes3cmd header OPTIONS plugin...
 
 OPTIONS
  -D      turn on debug output
@@ -565,32 +564,32 @@ Note:
 If the value supplied won't fit into the plugin header field, you will be
 warned.
 
-Examples:
+Example(s):
 
 # Show the Author/Description fields for a plugin:
-tes3cmd header plugin.esp
+tes3cmd header "my plugin.esp"
 
 # Set the Author field to "john.moonsugar":
-tes3cmd header -a john.moonsugar plugin.esp
+tes3cmd header -a john.moonsugar "plugin.esp"
 
 # Append " and friends" to the Author field:
-tes3cmd header -a "+ and friends" plugin.esp
+tes3cmd header -a "+ and friends" "plugin.esp"
 
 # Add a Version number to a plugin Description field:
-tes3cmd header -d "+\nVersion: 1.0" plugin.esp
+tes3cmd header -d "+\nVersion: 1.0" "plugin.esp"
 };
 
 sub opts_header {
-    $_[0] && do { die $HDR_USAGE; };
+    $_[0] && do { die $HEADER_USAGE; };
     $::opt_v = 0;
     $::opt_a = "";
     $::opt_d = "";
     $::opt_m = undef;
     $::opt_v = 0.0;
-    getopts('Da:d:mv:') or die $HDR_USAGE;
+    getopts('Da:d:mv:') or die $HEADER_USAGE;
 }
 
-my $REN_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
+my $RENAME_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
 
 This first form of the command renames all records of type RECTYPE, replacing
 the Perl regular expression FROM with the value of TO (which may contain
@@ -622,19 +621,19 @@ Note that when renaming scripts, you can use either SCPT.SCTX or SCPT.SCHD as
 the RECTYPE.SUBTYPE parameter, and the script name is changed in both
 sub-records.
 
-Examples:
+Example(s):
 
 # rename all exterior cells to the null string:
-tes3cmd rename -e CELL.NAME ".*" "" plugin.esp
+tes3cmd rename -e CELL.NAME ".*" "" "my plugin.esp"
 
 # do a caseless comparison with the FROM pattern:
-tes3cmd rename cell.name "(?i)pelagaid" "Pelagiad" plugin.esp
+tes3cmd rename cell.name "(?i)pelagaid" "Pelagiad" "plugin.esp"
 (This would rename any name that has the string "pelagaid" in it with any form
 of capitalization, to "Pelagiad").
 
 # The following command will swap the first and last name of all NPCs using
 # substitution backreferences (a very powerful feature of regular expressions):
-tes3cmd rename npc_.fnam "^(\S+)\s(\S+)$" "$2 $1" plugin.esp
+tes3cmd rename npc_.fnam "^(\S+)\s(\S+)$" "$2 $1" "plugin.esp"
 (Note that on Linux you may need to use single-quotes instead of double-quotes).
 };
 
@@ -652,22 +651,26 @@ my %VALID_TYPE;
 $VALID_TYPE{$_}++ foreach (@ren_valid_types);
 
 sub opts_rename {
-    $_[0] && do { die $REN_USAGE; };
+    $_[0] && do { die $RENAME_USAGE; };
     $::opt_v = 0;
     $::opt_l = 0;
     $::opt_i = 0;
     $::opt_e = 0;
     $::opt_w = 38;
-    getopts('Deilvw:') or die $REN_USAGE;
+    getopts('Deilvw:') or die $RENAME_USAGE;
 
-    my $type = uc(shift(@ARGV)) or die "Missing required RECTYPE.SUBTYPE\n$REN_USAGE";
+    my $type = uc(shift(@ARGV)) or die "Missing required RECTYPE.SUBTYPE\n$RENAME_USAGE";
     die "Error: Invalid record type.subtype requested: $type\n\nI only know these:\n@ren_valid_types\n" unless ($VALID_TYPE{$type});
     ($REN_TYPE, $REN_SUBTYPE) = split(/\./, $type);
 
     unless ($::opt_l) {
-	defined($REN_FROM = shift(@ARGV)) or die "Missing required FROM\n$REN_USAGE";
-	defined($REN_TO = shift(@ARGV)) or die "Missing required TO\n$REN_USAGE";
+	defined($REN_FROM = shift(@ARGV)) or die "Missing required FROM\n$RENAME_USAGE";
+	defined($REN_TO = shift(@ARGV)) or die "Missing required TO\n$RENAME_USAGE";
     }
+}
+
+sub opts_wikiout {
+    getopts('D:') or die "Usage: tes3cmd -wikiout\n";
 }
 
 ###UTILITIES
@@ -687,6 +690,24 @@ sub chop_nulls {
     return(unpack("Z*", $str));
 }
 
+sub fatal_error {
+    my($msg) = @_;
+    my $err = $!;
+    my $diagnosis;
+    if ($^O =~ /^MSWin/) {
+	if ($err =~ /permission denied/i) {
+	    $diagnosis =<<END
+Permission errors may occur in recent versions of Windows (since Vista) due to
+the UAC feature and new protected nature of "Program Files". The ideal
+solution is to install Morrowind some place other than "Program Files", such
+as "C:\Games\Morrowind". You can also try disabling UAC, although may make your
+system less secure.
+END
+	}
+    }
+    die qq{FATAL ERROR: $msg ($err)$diagnosis\n"};
+}
+
 # return a dictionary of all the files found in the given directory.
 # keys are lowercased for caseless file finding.
 sub list_files {
@@ -699,7 +720,7 @@ sub list_files {
 	}
 	closedir(DH);
     } else {
-	warn qq{ERROR opening "$dir" ($!)\n};
+	fatal_error(qq{Opening "$dir"});
     }
     return(\%files);
 }
@@ -2837,12 +2858,13 @@ my %CMDS =
      "print"         => [ \&opts_print,         \&cmd_print,         's', "Print records as readable text"],
      "recover"       => [ \&opts_recover,       \&cmd_recover,       's', "Recover usable records from plugin with 'bad form' errors"],
      "rename"        => [ \&opts_rename,        \&cmd_rename,        's', "Rename objects"],
+     "-wikiout"      => [ \&opts_wikiout,       \&cmd_wikiout,       'm', "Output wiki formatted help"],
     );
 
 my $command_list;
 foreach (sort keys %CMDS) {
     $command_list .= "  $_\n    $CMDS{$_}->[3].\n"
-	unless ($_ eq 'help');
+	unless (($_ eq 'help') or ($_ =~ /^-/));
 }
 my $USAGE_ALL = qq{Usage: tes3cmd COMMAND OPTIONS plugins...
 
@@ -3145,10 +3167,10 @@ sub fix_output {
 	my $plugbak = $plugin;
 	if (defined($newname) and ($newname ne $plugin)) {
 	    unless ($newname =~ /\.(es[mps])$/i) {
-		die qq{Error, "$newname" name does not end in .esm/.esp/.ess\n};
+		fatal_error(qq{"$newname" name does not end in .esm/.esp/.ess});
 	    }
 	    unless (rename($plugtmp, $newname)) {
-		die qq{Error renaming "$plugtmp" to "$newname" ($!)\n};
+		fatal_error(qq{Renaming "$plugtmp" to "$newname"});;
 	    }
 	    utime($atime, $mtime, $newname);
 	    warn qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
@@ -3157,10 +3179,10 @@ sub fix_output {
 		$plugbak =~ s/(?:~(\d+))?\.$ext$/'~' . ($1 + 1) . ".$ext"/e;
 	    }
 	    unless (rename($plugin, $plugbak)) {
-		die qq{Error renaming "$plugin" to "$plugbak" ($!)\n};
+		fatal_error(qq{Renaming "$plugin" to "$plugbak" ($!)});
 	    }
 	    unless (rename($plugtmp, $plugin)) {
-		die qq{Error renaming "$plugtmp" to "$plugin" ($!)\n};
+		fatal_error(qq{Renaming "$plugtmp" to "$plugin"});
 	    }
 	    utime($atime, $mtime, $plugin);
 	    warn qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
@@ -3726,6 +3748,15 @@ sub load_master {
 }
 
 ###COMMANDS
+
+sub cmd_wikiout {
+    foreach my $cmd (sort keys %CMDS) {
+	next if (($cmd eq 'help') or ($cmd =~ /^-/));
+	my $usage = eval "\$@{[uc $cmd]}_USAGE";
+	$usage =~ s/'/''/g;
+	print "==$cmd==\n{{{\n$usage\n}}}\n\n";
+    }
+}
 
 sub cmd_fogpatch {
     find_datadir();
