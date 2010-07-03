@@ -10,6 +10,7 @@
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD:
+# fix RACE print output
 # tests
 # fixup usages and examples, and add more examples, esp. "modify"
 # GUI
@@ -1920,10 +1921,13 @@ sub indent_result {
 
 sub dbg_word {
     my($longstr) = @_;
-    #my $longstr = pack("L", $long);
-    #, unpack("l", $longstr)
-    sprintf qq{[%s (%d)  (%d %d) (%d %d %d %d)]},
-	unpack("H*", $longstr), unpack("f", $longstr), $longstr, unpack("S2", $longstr), unpack("C4", $longstr);
+    my $len = length($longstr);
+    if ($len != 4) {
+	warn "dbg_word: expected length of 4, got $len\n";
+	return;
+    }
+    sprintf qq{[UNKNOWN_WORD: 0x%s (f:%0.2f) (L:%d) (S:%d S:%d) (C:%d C:%d C:%d C:%d)]},
+	unpack("H*", $longstr), unpack("f", $longstr), unpack("L", $longstr), unpack("S2", $longstr), unpack("C4", $longstr);
 }
 
 sub decode_flags {
@@ -2061,28 +2065,31 @@ default_codec('CELL.CSTN', (["Target", "Z*"])); # guessing this is: "Cast/Curren
 # custom codec for CELL_DATA
 $DECODE{'CELL.DATA'} = sub {
     my($buff) = @_;
-    if (length($buff) == 24) {
+    my $dlen = length($buff);
+    if ($dlen == 24) {
 	my($x, $y, $z, $xrot, $yrot, $zrot) = unpack("f6", $buff);
 	return({ X => $x, Y => $y, Z => $z,
 		 X_angle => $xrot, Y_angle => $yrot, Z_angle => $zrot },
 	       {});		# indices not needed by custom encoder
-    } else {
-	my($flags, $fog) = unpack("Lx[L]f", $buff);
+    } elsif ($dlen == 12) {
+	my($flags, $unk, $fog) = unpack("LLf", $buff);
 	if ($flags & 0x01) { 	# Interior
-	    return({ Flags => $flags, Fog_Density => $fog },
+	    return({ Flags => $flags, Unknown => $unk, Fog_Density => $fog },
 		   {});		# indices not needed by custom encoder
 	} else {		# Exterior
 	    my($x, $y) = unpack("x[L]ll", $buff);
 	    return({ Flags => $flags, X => $x, Y => $y },
 		   {});		# indices not needed by custom encoder
 	}
+    } else {
+	die "DECODER ERROR on CELL.DATA, Invalid length: $dlen\n";
     }
 };
 $ENCODE{'CELL.DATA'} = sub {
     my($hr) = @_;
     if (exists $hr->{Flags}) {
 	if ($hr->{Flags} & 0x01) { # Interior
-	    return(pack("Lx[L]f", $hr->{Flags}, $hr->{Fog_Density}));
+	    return(pack("LLf", $hr->{Flags}, $hr->{Unknown}, $hr->{Fog_Density}));
 	} else {		     # Exterior
 	    return(pack("Lll", $hr->{Flags}, $hr->{X}, $hr->{Y}));
 	}
@@ -2092,8 +2099,8 @@ $ENCODE{'CELL.DATA'} = sub {
     }
 };
 
-default_codec('CELL.FRMR', (["ObjInd", "Sx[C]"],
-			    #["Unknown", "C"],
+default_codec('CELL.FRMR', (["ObjInd", "S"],
+			    ["Unknown", "C"],
 			    ["ModInd", "C"]));
 default_codec('CELL.NAM5', (["R", "C"],
 			    ["G", "C"],
@@ -2308,8 +2315,8 @@ default_codec('PROB.PBDT', (["Weight", "f"],
 			    ["Quality", "f"],
 			    ["Uses", "L"]));
 default_codec('QUES.DATA', (["Info_ID", "Z*"])); # only in .ess (relates back to Actor in INFO)
-default_codec('RACE.RADT', ([[("Skill_1", "Bonus_1") x 7]],
-			    [[("Attr_Male_1", "Attr_Female_1") x 8]],
+default_codec('RACE.RADT', ([[("Skill_1", "Bonus_1") x 7], "(L2)7"],
+			    [[("Attr_Male_1", "Attr_Female_1") x 8], "(L2)8"],
 			    ["Male_Height", "f"],
 			    ["Female_Height", "f"],
 			    ["Male_Weight", "f"],
@@ -2421,7 +2428,7 @@ default_codec('VFXM.VNAM', ([[("Long_1") x 6], "L6"],
 			    ["Unknown", "H22"],
 			    ["Name_2", "Z36"],
 			    ["Name_3", "Z68"]));
-#default_codec('DELE', (["DELETED"]));
+default_codec('DELE', (["Unknown", "a4"]));
 default_codec('DODT', (["X", "f"],
 		       ["Y", "f"],
 		       ["Z", "f"],
@@ -2488,8 +2495,6 @@ $ENCODE{'SLFD'} = sub {
 
 $DECODE{"SPEL.ENAM"} = $DECODE{"ENCH.ENAM"};
 $ENCODE{"SPEL.ENAM"} = $ENCODE{"ENCH.ENAM"};
-
-default_codec('DELE');
 
 # sub-records that decode as signed 32-bit longs:
 foreach (qw(INTV)) {
@@ -2560,23 +2565,25 @@ my %TOSTR =
 	 if (length($_[0]) == 24) {
 	     sprintf("Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack("f6", $_[0]));
 	 } else {
-	     my($flags, $fog_den_data) = unpack("Lx[L]f", $_[0]);
+	     my($flags, $unkbuf, $fog_den_data) = unpack("La4f", $_[0]);
 	     my @flags = ();
-	     my $coord = "";
-	     my $data_fog_str = "";
+	     my $coord = '';
+	     my $data_fog_str = '';
+	     my $unk_str = '';
 	     if ($flags & 0x01) {
 		 push(@flags, "Interior");
 		 $data_fog_str = sprintf "FogDensity: %0.2f ", $fog_den_data;
+		 $unk_str = sprintf "Unk:0x%s ", unpack("h*", $unkbuf);
 	     } else {
 		 push(@flags, "Exterior");
 		 my($x, $y) = unpack("x[L]ll", $_[0]);
 		 $coord = "Coordinates: ($x, $y) ";
 	     }
 	     my $flags_str = "Flags: " . decode_flags($flags, \@CELL_FLAGS);
-	     $coord . $data_fog_str . $flags_str;
+	     $coord . $data_fog_str . $unk_str . $flags_str;
 	 }
      },
-     "CELL.FRMR" => sub { sprintf "ObjInd: %d ModInd: %d", unpack($RD{'CELL.FRMR'}, $_[0]); },
+     "CELL.FRMR" => sub { sprintf "ObjInd: %d Unk: %d ModInd: %d", unpack($RD{'CELL.FRMR'}, $_[0]); },
      "CELL.NAM5" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'CELL.NAM5'}, $_[0]) },
      "CELL.NAM9" => sub { my $val = unpack($RD{'CELL.NAM9'}, $_[0]); (1 == $val) ? "Owner" : "Unk:$val"; },
      "CLAS.CLDT" => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
@@ -2815,7 +2822,7 @@ my %TOSTR =
      },
 
      # The following are common sub-record formats
-     DELE => sub { "DELETED" },
+     DELE => sub { sprintf "DELETED: Unk:0x%s", unpack($RD{'DELE'}, $_[0]) },
      DODT => sub { sprintf "Position x: %0.2f y: %0.2f z: %0.2f   Angle x: %0.2f y: %0.2f z: %0.2f", unpack($RD{'DODT'}, $_[0]) },
      FLAG => sub { sprintf "hexflags:0x%04x", unpack($RD{'FLAG'}, $_[0]) },
      NPCO => sub { sprintf 'Count=%d  Name="%s"', unpack("lZ*", $_[0]) }, # codec must use a32 for NAME
@@ -4040,8 +4047,8 @@ sub cmd_diff {
 	$ignore = '^(\s+(?:' . join('|', split(m!/!, $::opt_i)) . '):)\s.*$';
     }
     warn "IGNORE = $ignore\n" if (DBG);
-    $::opt_o ||= 'e1,e2,eq,ne';
-    my %rpt = map { $_, 1 } split(m!,!, lc($::opt_o));
+    $::opt_o ||= 'e1/e2/eq/ne';
+    my %rpt = map { $_, 1 } split(m!/!, lc($::opt_o));
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
     my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
@@ -4417,10 +4424,10 @@ sub cmd_print {
 		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 		if ($rec_type eq 'CELL') {
 		    my $objcnt;
-		    while ($print_rec =~ /CELL.FRMR:/g) {
+		    while ($print_rec =~ / FRMR:/g) {
 			$objcnt++;
 		    }
-		    printf "$rec_type: %-40s\t%5d objects\n", $id, $objcnt;
+		    printf "$rec_type: %-45s\t%5d objects\n", $id, $objcnt;
 		} else {
 		    print "$rec_type: $id\n";
 		}
