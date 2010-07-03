@@ -289,7 +289,7 @@ OPTIONS
 Deletes records/sub-records from the plugin. You can really damage things with
 this command, so be careful!
 
-Note: you must specify either -m or -M (or both) to ensure deletions are
+Note: you must specify at least one of: -i, -m or -M to ensure deletions are
 intentional.
 
 Note: tes3cmd uses Perl regular expressions for matching, the full documentation
@@ -301,6 +301,7 @@ matching on a Windows command line.
 Example(s):
 
 # Delete all records with IDs matching "foo":
+# Note that this doesn't also delete records that may depend on "foo".
 tes3cmd delete -i foo "my plugin.esp"
 
 # Delete all sub-records of type NPC_.NPCO that match "Ring des Skeletts" from
@@ -327,7 +328,7 @@ OPTIONS
 Deletes objects from cells in the given plugin. You can really damage things with
 this command, so be careful!
 
-Note: you must specify either -m or -M (or both) to ensure deletions are
+Note: you must specify at least one of: -i, -m or -M to ensure deletions are
 intentional.
 
 Note: tes3cmd uses Perl regular expressions for matching, the full documentation
@@ -819,6 +820,19 @@ my @RECTYPES =
        DIAL DOOR ENCH FACT FMAP GAME GLOB GMST INFO INGR JOUR KLST LAND LEVC
        LEVI LIGH LOCK LTEX MGEF MISC NPCC NPC_ PCDT PGRD PROB QUES RACE REFR
        REGN REPA SCPT SKIL SNDG SOUN SPEL SPLM SSCR STAT STLN TES3 VFXM WEAP);
+
+# All record sub-types found in .esm/.esp/.ess
+my @SUBRECTYPES =
+    qw(AADT ACDT ACSC ACSL ACTN AIDT AI_E AI_F AI_T AI_W ALDT AMBI ANAM ANIS
+       AODT APUD ASND AVFX BKDT BNAM BSND BVFX BYDT CHRD CLDT CNAM CNDT CRED
+       CSHN CSND CSTN CTDT CVFX DATA DELE DESC DNAM DODT ENAM ENDT FADT FGTN
+       FLAG FLTV FNAM FRMR GMDT HEDR HSND HVFX INAM INDX INTV IRDT ITEX KNAM
+       LHDT LKDT LNAM LSHN LSTN LVCR MAPD MAPH MAST MCDT MEDT MNAM MODL MVRF
+       NAM0 NAM1 NAM2 NAM3 NAM5 NAM8 NAM9 NAME ND3D NNAM NPCO NPCS NPDT ONAM
+       PBDT PGRC PGRP PNAM PTEX QSTF QSTN QSTR RADT RGNN RIDT RNAM SCDT SCHD
+       SCRD SCRI SCRS SCTX SCVR SKDT SLCS SLFD SLLD SLSD SNAM SPDT STPR STRV
+       TEXT TGTN TNAM UNAM VCLR VHGT VNAM VNML VTEX WEAT WHGT WIDX WNAM WPDT
+       XCHG XHLT XIDX XNAM XSCL XSOL YNAM ZNAM);
 
 # these types are for records to be cleaned from plugins when duped from a master:
 my @CLEAN_DUP_TYPES =
@@ -2936,21 +2950,18 @@ sub read_rec {
     }
     if ($n_read != $hdr_size) {
 	my $inp_offset = sysseek($fh, 0, 1) - $n_read - $hdr_size;
-	warn qq{Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read\n};
-	return(undef);
+	die qq{read_rec(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read\n};
     }
     my($rec_type, $rec_len, $unk, $flags) = unpack("a4LLL", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rec_type) {
 	my $inp_offset = sysseek($fh, 0, 1) - $n_read - $hdr_size;
-	warn qq{Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rec_type\n};
-	return(undef);
+	die qq{read_rec(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rec_type\n};
     }
     my $rec = "";
     $n_read = sysread($fh, $rec, $rec_len);
     if ($n_read != $rec_len) {
 	my $inp_offset = sysseek($fh, 0, 1) - $n_read - $hdr_size;
-	warn qq{Read Error ($plugin record at byte: $inp_offset, rec_type="$rec_type"): asked for $rec_len bytes, got $n_read\n};
-	return(undef);
+	die qq{read_rec(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rec_type"): asked for $rec_len bytes, got $n_read\n};
     }
     return($rec_type, $rec, $flags, $unk);
 }
@@ -3169,14 +3180,21 @@ sub make_temp {
 }
 
 sub fix_output {
-    my($inp, $out, $plugin, $newname) = @_;
+    my($inp, $out, $plugin, $modified, $newname) = @_;
     close($inp);
     close($out);
     my $plugtmp = "$plugin.tmp";
+    if (not $modified) {
+	warn "$plugin was not modified\n";
+	unlink($plugtmp);
+	return;
+    }
     if (my($ext) = ($plugin =~ /\.(es[mps])$/i)) {
 	my($atime, $mtime) = (stat($plugin))[8,9];
-	my $plugbak = $plugin;
-	if (defined($newname) and ($newname ne $plugin)) {
+	if (defined($newname)) {
+	    if ($newname eq $plugin) {
+		fatal_error(qq{New name: "$newname" is same as the old name.});
+	    }
 	    unless ($newname =~ /\.(es[mps])$/i) {
 		fatal_error(qq{"$newname" name does not end in .esm/.esp/.ess});
 	    }
@@ -3186,6 +3204,7 @@ sub fix_output {
 	    utime($atime, $mtime, $newname);
 	    warn qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
 	} else {
+	    my $plugbak = $plugin;
 	    while (-f $plugbak) {
 		$plugbak =~ s/(?:~(\d+))?\.$ext$/'~' . ($1 + 1) . ".$ext"/e;
 	    }
@@ -3214,20 +3233,23 @@ sub read_object_ids {
     my($plugin, $fun) = @_;
     my $inp = open_input_plugin($plugin);
     my %plugin_id = ();
-    while(my($rec_type, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
-	last if not defined $rec_type;
-	if ($flags & 0x1000) {
-	    warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
-	    next;
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
+	    last if not defined $rec_type;
+	    if ($flags & 0x1000) {
+		warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+		next;
+	    }
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    if ($fun) {
+		$fun->($rec_type, $id);
+	    } else {
+		warn "$plugin: $rec_type: $id\n" if (DBG);
+		$plugin_id{$rec_type}->{$id} = 1 if (defined $id);
+	    }
 	}
-	my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-	if ($fun) {
-	    $fun->($rec_type, $id);
-	} else {
-	    warn "$plugin: $rec_type: $id\n" if (DBG);
-	    $plugin_id{$rec_type}->{$id} = 1 if (defined $id);
-	}
-    }
+    };
+    warn $@ if ($@);
     close($inp);
     return(\%plugin_id) unless ($fun);
 }
@@ -3235,18 +3257,21 @@ sub read_object_ids {
 sub read_dialogs {
     my($plugin, $dialref) = @_;
     my $inp = open_input_plugin($plugin);
-    while(my($rec_type, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
-	last if not defined $rec_type;
-	if ($flags & 0x1000) {
-	    warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
-	    next;
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
+	    last if not defined $rec_type;
+	    if ($flags & 0x1000) {
+		warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+		next;
+	    }
+	    next if ($rec_type ne "DIAL");
+	    my $srh = parse_subrec_hash($rec);
+	    my $id = unpack("Z*", $srh->{NAME}[0]);
+	    my $type = unpack("C", $srh->{DATA}[0]);
+	    $dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
 	}
-	next if ($rec_type ne "DIAL");
-	my $srh = parse_subrec_hash($rec);
-	my $id = unpack("Z*", $srh->{NAME}[0]);
-	my $type = unpack("C", $srh->{DATA}[0]);
-	$dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
-    }
+    };
+    warn $@ if ($@);
     close($inp);
 }
 
@@ -3431,33 +3456,36 @@ sub process_plugin_for_input {
     my $expected = "TES3";
     my($wanted_ids, $wanted_types) = get_wanted();
     # process each record in the plugin
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	warn "REC=$rec_type flags=$flags\n" if (DBG);
-	if ($wanted_types) {
-	    unless ($wanted_types->{INFO} and ($rec_type eq 'DIAL')) {
-		next if (not $wanted_types->{$rec_type});
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    warn "REC=$rec_type flags=$flags\n" if (DBG);
+	    if ($wanted_types) {
+		unless ($wanted_types->{INFO} and ($rec_type eq 'DIAL')) {
+		    next if (not $wanted_types->{$rec_type});
+		}
 	    }
-	}
-	my $srh = parse_subrec_hash($rec);
-	if ($rec_type eq 'DIAL') {
-	    $CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . unpack("Z*", $srh->{NAME}[0]) . ')';
-	}
-	next if ($wanted_types and not $wanted_types->{$rec_type});
-	# process list of sub-records
-	my $id = rec_id($srh, $rec_type);
-	next if ($wanted_ids and $id !~ /$wanted_ids/i);
-	if ($::opt_m or $::opt_M) {
-	    my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
-	    if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
-		((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
+	    my $srh = parse_subrec_hash($rec);
+	    if ($rec_type eq 'DIAL') {
+		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . unpack("Z*", $srh->{NAME}[0]) . ')';
+	    }
+	    next if ($wanted_types and not $wanted_types->{$rec_type});
+	    # process list of sub-records
+	    my $id = rec_id($srh, $rec_type);
+	    next if ($wanted_ids and $id !~ /$wanted_ids/i);
+	    if ($::opt_m or $::opt_M) {
+		my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
+		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
+		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
+		    $fun->($rec_type, $id, $rec, $srh, $flags, $unk)
+		}
+	    } else {
 		$fun->($rec_type, $id, $rec, $srh, $flags, $unk)
 	    }
-	} else {
-	    $fun->($rec_type, $id, $rec, $srh, $flags, $unk)
 	}
-    }
+    };
+    warn $@ if ($@);
     close($inp);
 }
 
@@ -3469,43 +3497,47 @@ sub process_plugin_for_update {
     my($wanted_ids, $wanted_types) = get_wanted();
     my $modified = 0;
     # process each record in the plugin
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	warn "REC=$rec_type flags=$flags\n" if (DBG);
-	if ($wanted_types) {
-	    unless ($wanted_types->{INFO} and ($rec_type eq 'DIAL')) {
-		next if (not $wanted_types->{$rec_type});
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    warn "REC=$rec_type flags=$flags\n" if (DBG);
+	    if ($wanted_types) {
+		unless ($wanted_types->{INFO} and ($rec_type eq 'DIAL')) {
+		    next if (not $wanted_types->{$rec_type});
+		}
 	    }
-	}
-	my $srh = parse_subrec_hash($rec);
-	if ($rec_type eq 'DIAL') {
-	    $CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . unpack("Z*", $srh->{NAME}[0]) . ')';
-	}
-	next if ($wanted_types and not $wanted_types->{$rec_type});
-	# process list of sub-records
-	my $id = rec_id($srh, $rec_type);
-	next if ($wanted_ids and $id !~ /$wanted_ids/i);
-	my($newrec, $newflags);
-	if ($::opt_m or $::opt_M) {
-	    my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
-	    if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
-		((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
+	    my $srh = parse_subrec_hash($rec);
+	    if ($rec_type eq 'DIAL') {
+		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . unpack("Z*", $srh->{NAME}[0]) . ')';
+	    }
+	    next if ($wanted_types and not $wanted_types->{$rec_type});
+	    # process list of sub-records
+	    my $id = rec_id($srh, $rec_type);
+	    next if ($wanted_ids and $id !~ /$wanted_ids/i);
+	    my($newrec, $newflags);
+	    if ($::opt_m or $::opt_M) {
+		my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
+		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
+		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
+		    ($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk);
+		}
+	    } else {
 		($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk);
 	    }
-	} else {
-	    ($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk);
+	    if ($newrec) {
+		write_rec($out, $rec_type, $newrec, $newflags, $unk);
+		$modified++;
+	    }
 	}
-	if ($newrec) {
-	    write_rec($out, $rec_type, $newrec, $newflags, $unk);
-	    $modified++;
-	}
+    };
+    if ($@) {
+	$modified = 0;
+	warn $@;
     }
-    if ($modified) {
-	my($file, $dir) = fileparse($plugin);
-	my $newname = "${dir}${prefix}${file}";
-	fix_output($inp, $out, $plugin, $newname);
-    }
+    my($file, $dir) = fileparse($plugin);
+    my $newname = "${dir}${prefix}${file}";
+    fix_output($inp, $out, $plugin, $modified, $newname);
 }
 
 sub search_and_replace {
@@ -3746,18 +3778,21 @@ sub load_master {
     print "Loading Master: $esm\n";
     my $esm_file = list_files($DATADIR)->{$esm};
     my $inp = open_input_plugin("$DATADIR/$esm_file");
-    while(my($rec_type, $rec, $flags) = read_rec($inp, undef)) {
-	last if not defined $rec_type;
-	next if (defined $types and not $types->{$rec_type});
-	if ($flags & 0x1000) {
-	    print "Master($esm) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
-	    next;
+    eval {
+	while (my($rec_type, $rec, $flags) = read_rec($inp, undef)) {
+	    last if not defined $rec_type;
+	    next if (defined $types and not $types->{$rec_type});
+	    if ($flags & 0x1000) {
+		print "Master($esm) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+		next;
+	    }
+	    print "DBG: rec_type = $rec_type\n" if (DBG);
+	    my $srh = parse_subrec_hash($rec);
+	    my $id = rec_id($srh, $rec_type);
+	    $MASTER_ID->{$esm}->{$id}->{$rec_type} = [$srh, $rec];
 	}
-	print "DBG: rec_type = $rec_type\n" if (DBG);
-	my $srh = parse_subrec_hash($rec);
-	my $id = rec_id($srh, $rec_type);
-	$MASTER_ID->{$esm}->{$id}->{$rec_type} = [$srh, $rec];
-    }
+    };
+    warn $@ if ($@);
     close($inp);
     # store data in cache file
     save_master_cache($esm);
@@ -3776,7 +3811,7 @@ sub cmd_wikiout {
 
 sub cmd_fogpatch {
     find_datadir();
-    warn "Data Files = $DATADIR\n";
+    warn "Data Files is: $DATADIR\nScanning Active Plugins...\n";
     my $fogpatch = "$DATADIR/fogpatch.esp";
     my %cell;
     foreach my $plugin (load_order()) {
@@ -3785,47 +3820,50 @@ sub cmd_fogpatch {
 	warn "Scanning plugin: $plugin\n" if (DBG);
 	my $inp = open_input_plugin("$DATADIR/$plugin");
 	my $expected = "TES3";
-	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	    $expected = undef;
-	    last if not defined $rec_type;
-	    next unless ($rec_type eq 'CELL');
-	    my $srh = parse_subrec_hash($rec);
-	    my $data = $srh->{DATA}[0];
-	    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
-	    if (is_interior($srh)) {
-		unless ($flags & 128) { # behave like exterior
-		    my $name = chop_nulls($srh->{NAME}[0]);
-		    my $ambi = $srh->{AMBI}[0];
-		    my $fog_den_ambi;
-		    my $ambilen = length($ambi);
-		    if ($ambilen == 16) {
-			my $fog_den_ambi = unpack("x[L3]f", $ambi);
-			if ($fog_den_ambi != $fog_den_data) {
-			    $fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
-			    warn "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
-			}
-			if (0.0 == $fog_den_data) {
-			    warn "  FOGBUG: $plugin\t\tCELL: $name\n";
-			    $cell{$name} = [$data, $ambi, $plugin];
-			} else {
-			    if (defined($cell{$name})) {
-				warn qq{          $plugin CORRECTED fogbug in CELL: $name\n};
-				delete $cell{$name};
+	eval {
+	    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+		$expected = undef;
+		last if not defined $rec_type;
+		next unless ($rec_type eq 'CELL');
+		my $srh = parse_subrec_hash($rec);
+		my $data = $srh->{DATA}[0];
+		my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
+		if (is_interior($srh)) {
+		    unless ($flags & 128) { # behave like exterior
+			my $name = chop_nulls($srh->{NAME}[0]);
+			my $ambi = $srh->{AMBI}[0];
+			my $fog_den_ambi;
+			my $ambilen = length($ambi);
+			if ($ambilen == 16) {
+			    my $fog_den_ambi = unpack("x[L3]f", $ambi);
+			    if ($fog_den_ambi != $fog_den_data) {
+				$fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
+				warn "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
 			    }
+			    if (0.0 == $fog_den_data) {
+				warn "  FOGBUG: $plugin\t\tCELL: $name\n";
+				$cell{$name} = [$data, $ambi, $plugin];
+			    } else {
+				if (defined($cell{$name})) {
+				    warn qq{          $plugin CORRECTED fogbug in CELL: $name\n};
+				    delete $cell{$name};
+				}
+			    }
+			} else {
+			    warn "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
+				if ($ambilen != 0);
 			}
-		    } else {
-			warn "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
-			    if ($ambilen != 0);
 		    }
 		}
 	    }
-	}
+	};
+	warn $@ if ($@);
 	close($inp);
     }
     my $out = open_output_plugin($fogpatch);
     print $out $blank_header;
     my $n = scalar keys %cell;
-    warn qq{\nPatching $n cells in "$fogpatch"\n} if ($n > 0);
+    warn qq{\n"Generating $fogpatch" to patch $n cells.\n} if ($n > 0);
     foreach my $name (sort keys %cell) {
 	my($data, $ambi, $plugin) = @{$cell{$name}};
 	print "  CELL: $name\t\t[$plugin]\n";
@@ -3844,7 +3882,7 @@ sub cmd_fogpatch {
 
 sub cmd_cellnamepatch {
     find_datadir();
-    warn qq{Data Files is: "$DATADIR"\n};
+    warn "Data Files is: $DATADIR\nScanning Active Plugins...\n";
     my $patch_file = "cellnamepatch.esp";
     my $patch_path = "$DATADIR/$patch_file";
     my $n = 0;
@@ -3855,48 +3893,51 @@ sub cmd_cellnamepatch {
 	warn "Scanning plugin: $plugin\n" if (DBG);
 	my $inp = open_input_plugin("$DATADIR/$plugin");
 	my $expected = "TES3";
-	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	    $expected = undef;
-	    last if not defined $rec_type;
-	    next unless ($rec_type eq 'CELL');
-	    my $srh = parse_subrec_hash($rec);
-	    my $data = $srh->{DATA}[0];
-	    my($flags) = unpack("L", $data);
-	    unless ($flags & 1) {	# only do exterior cells
-		my $name = chop_nulls($srh->{NAME}[0]);
-		my $coord = join(", ", unpack("x[L]ll", $srh->{DATA}[0]));
-		if (exists $cell{$coord}->{NAME}) {
-		    my $prevname = $cell{$coord}->{NAME};
-		    if ($prevname ne $name) {
-			if ($name eq $cell{$coord}->{ORIGNAME}) {
-			    warn qq{CELL: ($coord) RENAME REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n};
-			    $cell{$coord}->{OUTPUTFLAG}++;
-			    $outputflag++;
-			} elsif ($name) {
-			    warn qq{CELL: ($coord) Renamed by: [$plugin] from: "$prevname" to: "$name"\n};
-			    my $prevname = $cell{$coord}->{NAME};
-			    my $prevplug = $cell{$coord}->{PLUG};
-			    warn qq{CELL: ($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
-			    my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data);
-			    $cell{$coord}->{NAME} = $name;
-			    $cell{$coord}->{PLUG} = $plugin;
-			    $cell{$coord}->{REC} = [$rec_type, $newrec, $flags, $unk];
-			} else {
-			    warn qq{CELL: ($coord) Skipping null name: [$plugin]:"$name"\n};
+	eval {
+	    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+		$expected = undef;
+		last if not defined $rec_type;
+		next unless ($rec_type eq 'CELL');
+		my $srh = parse_subrec_hash($rec);
+		my $data = $srh->{DATA}[0];
+		my($flags) = unpack("L", $data);
+		unless ($flags & 1) { # only do exterior cells
+		    my $name = chop_nulls($srh->{NAME}[0]);
+		    my $coord = join(", ", unpack("x[L]ll", $srh->{DATA}[0]));
+		    if (exists $cell{$coord}->{NAME}) {
+			my $prevname = $cell{$coord}->{NAME};
+			if ($prevname ne $name) {
+			    if ($name eq $cell{$coord}->{ORIGNAME}) {
+				warn qq{CELL: ($coord) RENAME REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n};
+				$cell{$coord}->{OUTPUTFLAG}++;
+				$outputflag++;
+			    } elsif ($name) {
+				warn qq{CELL: ($coord) Renamed by: [$plugin] from: "$prevname" to: "$name"\n};
+				my $prevname = $cell{$coord}->{NAME};
+				my $prevplug = $cell{$coord}->{PLUG};
+				warn qq{CELL: ($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
+				my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data);
+				$cell{$coord}->{NAME} = $name;
+				$cell{$coord}->{PLUG} = $plugin;
+				$cell{$coord}->{REC} = [$rec_type, $newrec, $flags, $unk];
+			    } else {
+				warn qq{CELL: ($coord) Skipping null name: [$plugin]:"$name"\n};
+			    }
 			}
+		    } else {
+			$cell{$coord}->{ORIGNAME} = $name;
+			$cell{$coord}->{ORIGPLUG} = $plugin;
+			$cell{$coord}->{NAME} = $name;
+			$cell{$coord}->{PLUG} = $plugin;
 		    }
-		} else {
-		    $cell{$coord}->{ORIGNAME} = $name;
-		    $cell{$coord}->{ORIGPLUG} = $plugin;
-		    $cell{$coord}->{NAME} = $name;
-		    $cell{$coord}->{PLUG} = $plugin;
 		}
 	    }
-	}
+	};
+	warn $@ if ($@);
 	close($inp);
     }
     if ($outputflag) {
-	warn "\nPreserved the following CELL renamings:\n";
+	warn "\nGenerating $patch_file to preserve the following CELL renamings:\n";
 	my $out = open_output_plugin($patch_path);
 	print $out $blank_header;
 	foreach my $coord (%cell) {
@@ -3910,9 +3951,8 @@ sub cmd_cellnamepatch {
 	}
 	close($out);
 	$::opt_a = "tes3cmd";
-	$::opt_d = "cellnamepatch";
+	$::opt_d = "Cell Name Patch";
 	$::opt_q = 1;
-	warn "Saving patch file: $patch_file\n";
 	cmd_header($patch_path);
     }
 }
@@ -3961,19 +4001,22 @@ sub read_objects {
     my($plugin, $fun) = @_;
     my $inp = open_input_plugin($plugin);
     my %plugin_id = ();
-    while(my($rec_type, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
-	last if not defined $rec_type;
-	if ($flags & 0x1000) {
-	    warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
-	    next;
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
+	    last if not defined $rec_type;
+	    if ($flags & 0x1000) {
+		warn "plugin($plugin) REC=$rec_type flags=$flags (ignored)\n" if (DBG);
+		next;
+	    }
+	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    if ($fun) {
+		$fun->($rec_type, $id);
+	    } else {
+		$plugin_id{$rec_type}->{$id} = $rec if (defined $id);
+	    }
 	}
-	my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-	if ($fun) {
-	    $fun->($rec_type, $id);
-	} else {
-	    $plugin_id{$rec_type}->{$id} = $rec if (defined $id);
-	}
-    }
+    };
+    warn $@ if ($@);
     close($inp);
     return(\%plugin_id) unless ($fun);
 }
@@ -4068,144 +4111,163 @@ sub cmd_diff {
 
 sub cmd_delete {
     my($plugin) = @_;
-    unless ($::opt_m and not $::opt_M) {
-	die qq{Error: you must specify either -m or -M (or both) to ensure deletions are intentional.\n};
+    unless ($::opt_i or $::opt_m and not $::opt_M) {
+	die qq{Error: you must specify at least one of: -i, -m or -M to ensure deletions are intentional.\n};
 	return;
     }
     read_match_files();
     my($inp, $out) = make_temp($plugin);
     my $expected = "TES3";
+    my $modified = 0;
     my($wanted_ids, $wanted_types) = get_wanted();
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	warn "REC=$rec_type flags=$flags\n" if (DBG);
-	my $nodelete = 0;
-	if ($wanted_ids) {
-	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-	    $nodelete = 1 if ($id !~ /$wanted_ids/i);
-	}
-	$nodelete = 1 if ($wanted_types and not $wanted_types->{$rec_type});
-	if ($nodelete) {
-	    write_rec($out, $rec_type, $rec, $flags, $unk);
-	    next;
-	}
-	my $p = 0;
-	my $rec_len = length($rec);
-	my $first = 1;
-	my $print_rec = "";
-	my $newrec = "";
-	while ($p < $rec_len) {
-	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	    $p += 8;
-	    my $subrec = substr($rec, $p, $subrec_len);
-	    $p += $subrec_len;
-	    if (defined $subrec) {
-		my $full_type = "${rec_type}.${subrec_type}";
-		my $match = 0;
-		unless ($wanted_types and not $wanted_types->{$full_type}) {
-		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNK;
-		    my $subrec_str = $tostr->($subrec);
-		    if ($::opt_s) {
-			$match = 1 if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
-				       ((not $::opt_M) or ($subrec_str !~ /$::opt_M/i)));
-		    }
-		    warn "DELETED SUBRECORD: $subrec_str\n" if ($match);
-		    $print_rec .= "   $full_type: $subrec_str\n";
-		}
-		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec) unless ($match);
-	    } else {
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    warn "REC=$rec_type flags=$flags\n" if (DBG);
+	    my $nodelete = 0;
+	    if ($wanted_ids) {
 		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-		warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
+		$nodelete = 1 if ($id !~ /$wanted_ids/i);
 	    }
-	}
-	if ($::opt_s) {
-	    write_rec($out, $rec_type, $newrec, $flags, $unk);
-	} else {
-	    if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
-		((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
-		warn "DELETED RECORD:\n$print_rec\n";
-	    } else {
+	    $nodelete = 1 if ($wanted_types and not $wanted_types->{$rec_type});
+	    if ($nodelete) {
 		write_rec($out, $rec_type, $rec, $flags, $unk);
+		next;
+	    }
+	    my $p = 0;
+	    my $rec_len = length($rec);
+	    my $first = 1;
+	    my $print_rec = "";
+	    my $newrec = "";
+	    while ($p < $rec_len) {
+		my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+		$p += 8;
+		my $subrec = substr($rec, $p, $subrec_len);
+		$p += $subrec_len;
+		if (defined $subrec) {
+		    my $full_type = "${rec_type}.${subrec_type}";
+		    my $match = 0;
+		    unless ($wanted_types and not $wanted_types->{$full_type}) {
+			my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNK;
+			my $subrec_str = $tostr->($subrec);
+			if ($::opt_s) {
+			    $match = 1 if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
+					   ((not $::opt_M) or ($subrec_str !~ /$::opt_M/i)));
+			}
+			if ($match) {
+			    warn "DELETED SUBRECORD: $subrec_str\n";
+			    $modified++;
+			}
+			$print_rec .= "   $full_type: $subrec_str\n";
+		    }
+		    $newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec) unless ($match);
+		} else {
+		    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+		    warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
+		}
+	    }
+	    if ($::opt_s) {
+		write_rec($out, $rec_type, $newrec, $flags, $unk);
+	    } else {
+		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
+		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
+		    warn "DELETED RECORD:\n$print_rec\n";
+		    $modified++;
+		} else {
+		    write_rec($out, $rec_type, $rec, $flags, $unk);
+		}
 	    }
 	}
+    };
+    if ($@) {
+	warn $@;
+	$modified = 0;
     }
-    fix_output($inp, $out, $plugin);
+    fix_output($inp, $out, $plugin, $modified);
 }
 
 sub cmd_objdelete {
     my($plugin) = @_;
-    unless ($::opt_m and not $::opt_M) {
-	die qq{Error: you must specify either -m or -M (or both) to ensure deletions are intentional.\n};
+    unless ($::opt_i or $::opt_m and not $::opt_M) {
+	die qq{Error: you must specify at least one of: -i, -m or -M to ensure deletions are intentional.\n};
     }
     my($inp, $out) = ($::opt_l) ? open_input_plugin($plugin) : make_temp($plugin);
+    my $modified = 0;
     my $expected = "TES3";
     my $delete_ids = ($::opt_i) ? '(' . join('|', split(m!/!, $::opt_i)) . ')' : undef;
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	my $nodelete = 0;
-	my $cell_id;
-	if ($rec_type eq 'CELL') {
-	    $cell_id = rec_id(parse_subrec_hash($rec), $rec_type);
-	    warn "REC=$rec_type flags=$flags CELL_ID=[$cell_id] DELETE_IDS=$delete_ids\n" if (DBG);
-	    $nodelete = 1 if ($delete_ids and $cell_id !~ /$delete_ids/i);
-	} else {
-	    $nodelete = 1;
-	}
-	if ($nodelete) {
-	    write_rec($out, $rec_type, $rec, $flags, $unk) unless ($::opt_l);
-	    next;
-	}
-	my $p = 0;
-	my $rec_len = length($rec);
-	my $print_obj = "";
-	my $newrec;
-	my $objrec;	# group of subrecs for current object
-	while ($p < $rec_len) {
-	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	    $p += 8;
-	    my $subrec = substr($rec, $p, $subrec_len);
-	    $p += $subrec_len;
-	    if (defined $subrec) {
-		my $full_type = "${rec_type}.${subrec_type}";
-		my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type} || $TOSTR_UNK;
-		my $subrec_str = $tostr->($subrec);
-		if ($subrec_type eq 'FRMR') { # TBD: or MVRF(.ess)!
-		    # start of a new group of subrecs for new object
-		    if (((not $::opt_m) or ($print_obj =~ /$::opt_m/i)) and
-			((not $::opt_M) or ($print_obj !~ /$::opt_M/i))) {
-			if ($::opt_l) {
-			    warn "MATCHED OBJECT IN CELL: $cell_id\n$print_obj\n";
-			} else {
-			    warn "DELETED OBJECT FROM CELL: $cell_id\n$print_obj\n";
-			    $objrec = '';
-			}
-		    } else {
-			$newrec .= $objrec; # save last object group
-		    }
-		    $objrec = pack("a4La*", $subrec_type, $subrec_len, $subrec); # initialize new object group
-		    $print_obj = "   $full_type: $subrec_str\n";
-		} elsif ($objrec) {
-		    $objrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec); # append to object group
-		    $print_obj .= "   $full_type: $subrec_str\n";
-		} else {
-		    # this block only for header subrecs (until first FRMR)
-		    $newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
-		}
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    my $nodelete = 0;
+	    my $cell_id;
+	    if ($rec_type eq 'CELL') {
+		$cell_id = rec_id(parse_subrec_hash($rec), $rec_type);
+		warn "REC=$rec_type flags=$flags CELL_ID=[$cell_id] DELETE_IDS=$delete_ids\n" if (DBG);
+		$nodelete = 1 if ($delete_ids and $cell_id !~ /$delete_ids/i);
 	    } else {
-		warn "$plugin: Error, malformed subrec for ($rec_type $cell_id) type=$subrec_type pos=$p len=$subrec_len\n";
+		$nodelete = 1;
+	    }
+	    if ($nodelete) {
+		write_rec($out, $rec_type, $rec, $flags, $unk) unless ($::opt_l);
+		next;
+	    }
+	    my $p = 0;
+	    my $rec_len = length($rec);
+	    my $print_obj = "";
+	    my $newrec;
+	    my $objrec;		# group of subrecs for current object
+	    while ($p < $rec_len) {
+		my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+		$p += 8;
+		my $subrec = substr($rec, $p, $subrec_len);
+		$p += $subrec_len;
+		if (defined $subrec) {
+		    my $full_type = "${rec_type}.${subrec_type}";
+		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type} || $TOSTR_UNK;
+		    my $subrec_str = $tostr->($subrec);
+		    if ($subrec_type eq 'FRMR') { # TBD: or MVRF(.ess)!
+			# start of a new group of subrecs for new object
+			if (((not $::opt_m) or ($print_obj =~ /$::opt_m/i)) and
+			    ((not $::opt_M) or ($print_obj !~ /$::opt_M/i))) {
+			    if ($::opt_l) {
+				warn "MATCHED OBJECT IN CELL: $cell_id\n$print_obj\n";
+			    } else {
+				warn "DELETED OBJECT FROM CELL: $cell_id\n$print_obj\n";
+				$modified++;
+				$objrec = '';
+			    }
+			} else {
+			    $newrec .= $objrec; # save last object group
+			}
+			$objrec = pack("a4La*", $subrec_type, $subrec_len, $subrec); # initialize new object group
+			$print_obj = "   $full_type: $subrec_str\n";
+		    } elsif ($objrec) {
+			$objrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec); # append to object group
+			$print_obj .= "   $full_type: $subrec_str\n";
+		    } else {
+			# this block only for header subrecs (until first FRMR)
+			$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+		    }
+		} else {
+		    warn "$plugin: Error, malformed subrec for ($rec_type $cell_id) type=$subrec_type pos=$p len=$subrec_len\n";
+		}
+	    }
+	    unless ($::opt_l) {
+		$newrec .= $objrec if ($objrec);
+		write_rec($out, $rec_type, $newrec, $flags, $unk);
 	    }
 	}
-	unless ($::opt_l) {
-	    $newrec .= $objrec if ($objrec);
-	    write_rec($out, $rec_type, $newrec, $flags, $unk);
-	}
+    };
+    if ($@) {
+	warn $@;
+	$modified = 0;
     }
     if ($::opt_l) {
 	close($inp);
     } else {
-	fix_output($inp, $out, $plugin);
+	fix_output($inp, $out, $plugin, $modified);
     }
 }
 
@@ -4223,94 +4285,96 @@ sub cmd_modify {
     my($inp, $out) = make_temp($plugin);
     my $expected = "TES3";
     my($wanted_ids, $wanted_types) = get_wanted();
-    my $plugin_modified = 0;
+    my $modified = 0;
     my $codec_ok = 1;
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	warn "REC=$rec_type flags=$flags\n" if (DBG);
-	my $nomodify = 0;
-	my $recid;
-	my $srh;
-	if ($wanted_ids) {
-	    $srh = parse_subrec_hash($rec);
-	    $recid = rec_id($srh, $rec_type);
-	    $nomodify = 1 if ($recid !~ /$wanted_ids/i);
-	}
-	$nomodify = 1 if ($wanted_types and not $wanted_types->{$rec_type});
-	if ($nomodify) {
-	    write_rec($out, $rec_type, $rec, $flags, $unk);
-	    next;
-	}
-	my $p = 0;
-	my $rec_len = length($rec);
-	my $first = 1;
-	my $print_rec = "";
-	my $newrec = "";
-	my @subrecs = ();
-	while ($p < $rec_len) {
-	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	    $p += 8;
-	    my $subrec = substr($rec, $p, $subrec_len);
-	    $p += $subrec_len;
-	    if (defined $subrec) {
-		my $full_type = "${rec_type}.${subrec_type}";
-		unless ($wanted_types and not $wanted_types->{$rec_type}) {
-		    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNK;
-		    my($hr, $idx) = decoder($rec_type, $subrec_type)->($subrec);
-		    my $subrec_str = $tostr->($subrec);
-		    if ($::opt_s) {
-			if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
-			    ((not $::opt_M) or ($subrec_str !~ /$::opt_M/i))) {
-			    # sub-record matches, so run our code on it ...
-			    warn "full_type=$full_type\n";
-			    if (my $newhr = run_code($full_type, $hr, $idx)) {
-				my $encoder = encoder($rec_type, $subrec_type);
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    warn "REC=$rec_type flags=$flags\n" if (DBG);
+	    my $nomodify = 0;
+	    my $recid;
+	    my $srh;
+	    if ($wanted_ids) {
+		$srh = parse_subrec_hash($rec);
+		$recid = rec_id($srh, $rec_type);
+		$nomodify = 1 if ($recid !~ /$wanted_ids/i);
+	    }
+	    $nomodify = 1 if ($wanted_types and not $wanted_types->{$rec_type});
+	    if ($nomodify) {
+		write_rec($out, $rec_type, $rec, $flags, $unk);
+		next;
+	    }
+	    my $p = 0;
+	    my $rec_len = length($rec);
+	    my $first = 1;
+	    my $print_rec = "";
+	    my $newrec = "";
+	    my @subrecs = ();
+	    while ($p < $rec_len) {
+		my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+		$p += 8;
+		my $subrec = substr($rec, $p, $subrec_len);
+		$p += $subrec_len;
+		if (defined $subrec) {
+		    my $full_type = "${rec_type}.${subrec_type}";
+		    unless ($wanted_types and not $wanted_types->{$rec_type}) {
+			my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNK;
+			my($hr, $idx) = decoder($rec_type, $subrec_type)->($subrec);
+			my $subrec_str = $tostr->($subrec);
+			if ($::opt_s) {
+			    if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
+				((not $::opt_M) or ($subrec_str !~ /$::opt_M/i))) {
+				# sub-record matches, so run our code on it ...
+				warn "full_type=$full_type\n";
+				if (my $newhr = run_code($full_type, $hr, $idx)) {
+				    my $encoder = encoder($rec_type, $subrec_type);
 				#warn "DBG: (newhr, idx)\n", Dumper([$newhr, $idx]), "\n";
-				$subrec = $encoder->($newhr, $idx);
-				$plugin_modified = 1;
-				$subrec_str = $tostr->($subrec);
-				warn "MODIFIED SUBRECORD: $subrec_str\n";
-			    } else {
-				$subrec = undef;
+				    $subrec = $encoder->($newhr, $idx);
+				    $modified++;
+				    $subrec_str = $tostr->($subrec);
+				    warn "MODIFIED SUBRECORD: $subrec_str\n";
+				} else {
+				    $subrec = undef;
+				}
 			    }
 			}
+			push(@subrecs, [$subrec_type, $hr, $idx]);
+			$print_rec .= "   $full_type: $subrec_str\n";
+			$codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec) if (DBG);
 		    }
-		    push(@subrecs, [$subrec_type, $hr, $idx]);
-		    $print_rec .= "   $full_type: $subrec_str\n";
-		    $codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec) if (DBG);
-		}
-		$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
-	    } else {
-		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-		warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
-	    }
-	}
-	if ($::opt_s) {
-	    write_rec($out, $rec_type, $newrec, $flags, $unk);
-	} elsif ($codec_ok) {
-	    if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
-		((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
-		if (my $modrec = run_code($rec_type, \@subrecs, $flags, $unk)) {
-		    #warn "Record was modified, encoding modified record\n";
-		    $plugin_modified = 1;
-		    my $newrec = '';
-		    ($newrec, $codec_ok) = encode_rec($rec_type, $modrec, $codec_ok, $print_rec);
-		    if ($codec_ok and ($newrec ne $rec)) {
-			$rec = $newrec;
-			my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-			warn "MODIFIED RECORD:\n" . rec_to_string($rec, $rec_type, $id, $plugin) . "\n";
-		    }
+		    $newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+		} else {
+		    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+		    warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
 		}
 	    }
-	    write_rec($out, $rec_type, $rec, $flags, $unk);
+	    if ($::opt_s) {
+		write_rec($out, $rec_type, $newrec, $flags, $unk);
+	    } elsif ($codec_ok) {
+		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
+		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
+		    if (my $modrec = run_code($rec_type, \@subrecs, $flags, $unk)) {
+			#warn "Record was modified, encoding modified record\n";
+			my $newrec = '';
+			($newrec, $codec_ok) = encode_rec($rec_type, $modrec, $codec_ok, $print_rec);
+			if ($codec_ok and ($newrec ne $rec)) {
+			    $rec = $newrec;
+			    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+			    warn "MODIFIED RECORD:\n" . rec_to_string($rec, $rec_type, $id, $plugin) . "\n";
+			    $modified++;
+			}
+		    }
+		}
+		write_rec($out, $rec_type, $rec, $flags, $unk);
+	    }
 	}
+    };
+    if ($@) {
+	warn $@;
+	$modified = 0;
     }
-    if ($plugin_modified and $codec_ok) {
-	fix_output($inp, $out, $plugin);
-    } else {
-	cleanup_temp($inp, $plugin);
-    }
+    fix_output($inp, $out, $plugin, $modified);
 }
 
 my $plugin_banner;
@@ -4330,82 +4394,87 @@ sub cmd_print {
 	$plugin_banner = undef if ($::opt_n);
     }
     my $n = 1;
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	my $srh = parse_subrec_hash($rec);
-	my $id = rec_id($srh, $rec_type);
-	next if ($wanted_ids and $id !~ /$wanted_ids/i);
-	if ($rec_type eq 'DIAL') {
-	    $CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}->[0])} . ':' . unpack("Z*", $srh->{NAME}->[0]) . ')';
-	}
-	next if ($wanted_types and not $wanted_types->{$rec_type});
-	$n = 0 if ($rec_type eq "TES3");
-	my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
-	next if ($::opt_m and $print_rec !~ /$::opt_m/i);
-	next if ($::opt_M and $print_rec =~ /$::opt_M/i);
-	if ($print_rec and $plugin_banner) {
-	    print $plugin_banner;
-	    $plugin_banner = undef;
-	}
-	if ($::opt_l) {
-	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
-	    if ($rec_type eq 'CELL') {
-		my $objcnt;
-		while ($print_rec =~ /CELL.FRMR:/g) { $objcnt++; }
-		printf "$rec_type: %-40s\t%5d objects\n", $id, $objcnt;
-	    } else {
-		print "$rec_type: $id\n";
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    my $srh = parse_subrec_hash($rec);
+	    my $id = rec_id($srh, $rec_type);
+	    next if ($wanted_ids and $id !~ /$wanted_ids/i);
+	    if ($rec_type eq 'DIAL') {
+		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}->[0])} . ':' . unpack("Z*", $srh->{NAME}->[0]) . ')';
 	    }
-	} elsif ($::opt_r or $::opt_R) {
-	    if ($::opt_c and ($rec_type eq 'CELL')) {
-		my @frmr_data;
-		my $frmr_match = 0;
-		my $srl = parse_subrec_list($rec);
-		my @newrec = ();
-		my $first_frmr_seen = 0;
-		my $subrec_str = '';
-		my $tostr;
-		while (@$srl) {
-		    my $subrecref = shift(@$srl);
-		    my($subtype, $subrec) = @$subrecref;
-		    $tostr = $TOSTR{"CELL.$subtype"} || $TOSTR{$subtype};
-		    $subrec_str .= $tostr->($subrec);
-		    if ($first_frmr_seen) {
-			if ($subtype eq 'FRMR') {
-			    if ($subrec_str =~ /$::opt_c/i) {
-				$frmr_match++;
-				push(@newrec, @frmr_data);
+	    next if ($wanted_types and not $wanted_types->{$rec_type});
+	    $n = 0 if ($rec_type eq "TES3");
+	    my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
+	    next if ($::opt_m and $print_rec !~ /$::opt_m/i);
+	    next if ($::opt_M and $print_rec =~ /$::opt_M/i);
+	    if ($print_rec and $plugin_banner) {
+		print $plugin_banner;
+		$plugin_banner = undef;
+	    }
+	    if ($::opt_l) {
+		my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+		if ($rec_type eq 'CELL') {
+		    my $objcnt;
+		    while ($print_rec =~ /CELL.FRMR:/g) {
+			$objcnt++;
+		    }
+		    printf "$rec_type: %-40s\t%5d objects\n", $id, $objcnt;
+		} else {
+		    print "$rec_type: $id\n";
+		}
+	    } elsif ($::opt_r or $::opt_R) {
+		if ($::opt_c and ($rec_type eq 'CELL')) {
+		    my @frmr_data;
+		    my $frmr_match = 0;
+		    my $srl = parse_subrec_list($rec);
+		    my @newrec = ();
+		    my $first_frmr_seen = 0;
+		    my $subrec_str = '';
+		    my $tostr;
+		    while (@$srl) {
+			my $subrecref = shift(@$srl);
+			my($subtype, $subrec) = @$subrecref;
+			$tostr = $TOSTR{"CELL.$subtype"} || $TOSTR{$subtype};
+			$subrec_str .= $tostr->($subrec);
+			if ($first_frmr_seen) {
+			    if ($subtype eq 'FRMR') {
+				if ($subrec_str =~ /$::opt_c/i) {
+				    $frmr_match++;
+				    push(@newrec, @frmr_data);
+				}
+				$subrec_str = '';
+				@frmr_data = (); # start a new group
 			    }
-			    $subrec_str = '';
-			    @frmr_data = (); # start a new group
-			}
-			push(@frmr_data, pack("a4L", $subtype, length($subrec)) . $subrec);
-		    } else {
-			if ($subtype eq 'FRMR') {
-			    $first_frmr_seen = 1;
 			    push(@frmr_data, pack("a4L", $subtype, length($subrec)) . $subrec);
 			} else {
-			    push(@newrec, pack("a4L", $subtype, length($subrec)) . $subrec);
+			    if ($subtype eq 'FRMR') {
+				$first_frmr_seen = 1;
+				push(@frmr_data, pack("a4L", $subtype, length($subrec)) . $subrec);
+			    } else {
+				push(@newrec, pack("a4L", $subtype, length($subrec)) . $subrec);
+			    }
 			}
 		    }
-		}
-		if ($subrec_str =~ /$::opt_c/i) {
-		    $frmr_match++;
-		    push(@newrec, @frmr_data);
-		}
-		if ($frmr_match) {
-		    my $newrec = join("", @newrec);
-		    print pack("a4LLLa*", $rec_type, length($newrec), $unk, $flags, $newrec);
+		    if ($subrec_str =~ /$::opt_c/i) {
+			$frmr_match++;
+			push(@newrec, @frmr_data);
+		    }
+		    if ($frmr_match) {
+			my $newrec = join("", @newrec);
+			print pack("a4LLLa*", $rec_type, length($newrec), $unk, $flags, $newrec);
+		    }
+		} else {
+		    print pack("a4LLLa*", $rec_type, length($rec), $unk, $flags, $rec);
 		}
 	    } else {
-		print pack("a4LLLa*", $rec_type, length($rec), $unk, $flags, $rec);
+		print "$print_rec\n" if ($print_rec);
 	    }
-	} else {
-	    print "$print_rec\n" if ($print_rec);
+	    $n++;
 	}
-	$n++;
-    }
+    };
+    warn $@ if ($@);
     $plugin_banner = "";
     close($inp);
 } # cmd_print
@@ -4413,99 +4482,108 @@ sub cmd_print {
 sub cmd_rename {
     my($plugin) = @_;
     my($inp, $out) = ($::opt_l) ? open_input_plugin($plugin) : make_temp($plugin);
+    my $modified = 0;
     unless ($::opt_l) {
 	warn "\n$plugin: RENAMING Records:\n";
     }
     my $expected = "TES3";
-    while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
-	$expected = undef;
-	last if not defined $rec_type;
-	warn "REC=$rec_type flags=$flags\n" if (DBG);
-	if ($rec_type eq 'SCPT') {
-	    my $renamed_schd = 0;
-	    my $renamed_sctx = 0;
-	    my($srl) = parse_subrec_list($rec);
-	    foreach my $subrec (@{$srl}) {
-		my $subtype = $subrec->[0];
-		if ($subtype eq "SCHD") {
-		    my($name, @schd_longs) = unpack("Z32L5", $subrec->[1]);
-		    if ($::opt_l) {	# only list records
-			printf qq{  $rec_type.$subtype  %-30s\n}, $name;
-		    } else {
-			my $newname;
-			eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
-			if (length($newname) < 32) {
+    eval {
+	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if not defined $rec_type;
+	    warn "REC=$rec_type flags=$flags\n" if (DBG);
+	    if ($rec_type eq 'SCPT') {
+		my $renamed_schd = 0;
+		my $renamed_sctx = 0;
+		my($srl) = parse_subrec_list($rec);
+		foreach my $subrec (@{$srl}) {
+		    my $subtype = $subrec->[0];
+		    if ($subtype eq "SCHD") {
+			my($name, @schd_longs) = unpack("Z32L5", $subrec->[1]);
+			if ($::opt_l) {	# only list records
+			    printf qq{  $rec_type.$subtype  %-30s\n}, $name;
+			} else {
+			    my $newname;
+			    eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
+			    if (length($newname) < 32) {
+				if ($name ne $newname) {
+				    $subrec->[1] = pack("Z32L5", $newname, @schd_longs);
+				    $renamed_schd = 1;
+				    printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
+				}
+			    } else {
+				warn qq{New name for script: "$newname" is too long, must be less than 32 bytes\n};
+			    }
+			}
+		    } elsif ($subtype eq "SCTX") {
+			my $script = $subrec->[1];
+			my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
+			if ($::opt_l) {	# only list records
+			    printf qq{  $rec_type.$subtype  %-30s\n}, $name;
+			} else {
+			    my $newname;
+			    eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
 			    if ($name ne $newname) {
-				$subrec->[1] = pack("Z32L5", $newname, @schd_longs);
-				$renamed_schd = 1;
+				$script =~ s/^[^;]*?\bbegin\s+(\S+)/Begin $newname/im;
+				$subrec->[1] = $script;
+				$renamed_sctx = 1;
 				printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
 			    }
-			} else {
-			    warn qq{New name for script: "$newname" is too long, must be less than 32 bytes\n};
 			}
 		    }
-		} elsif ($subtype eq "SCTX") {
-		    my $script = $subrec->[1];
-		    my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
-		    if ($::opt_l) {	# only list records
-			printf qq{  $rec_type.$subtype  %-30s\n}, $name;
+		}
+		unless ($::opt_l) {
+		    if ($renamed_schd and $renamed_sctx) {
+			$modified++;
+			$rec = new_rec($srl);
 		    } else {
-			my $newname;
-			eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
-			if ($name ne $newname) {
-			    $script =~ s/^[^;]*?\bbegin\s+(\S+)/Begin $newname/im;
-			    $subrec->[1] = $script;
-			    $renamed_sctx = 1;
-			    printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
-			}
+			my $what = "";
+			$what .= " SCHD" unless $renamed_schd;
+			$what .= " SCTX" unless $renamed_sctx;
+			warn "Error renaming$what, record NOT updated.\n";
 		    }
 		}
-	    }
-	    unless ($::opt_l) {
-		if ($renamed_schd and $renamed_sctx) {
-		    $rec = new_rec($srl);
+	    } elsif ($rec_type eq $REN_TYPE) {
+		my $renamed = 0;
+		# TBD - switch to codec / process_plugin???
+		# !!! name_idx is not yet implemented for parse_subrec_list
+		my($srl, $name_idx) = parse_subrec_list($rec);
+		if (defined($name_idx) and
+		    my $name = $srl->[$name_idx]->[1]) {
+		    $name = chop_nulls($name);
+		    if ($::opt_l) { # only list records
+			my $recstr = pprec($rec, $REN_SUBTYPE);
+			printf qq{  $rec_type  %-30s [%s]\n}, $name, $recstr;
+		    } else {	# rename records
+			my $do_rename = 1;
+			$do_rename = 0 if ($rec_type eq "CELL" and not allowed_cell_type($srl));
+			if ($do_rename) {
+			    my $newname;
+			    eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
+			    if ($name ne $newname) {
+				$srl->[$name_idx]->[1] = "$newname\000";
+				$renamed = 1;
+				$modified++;
+				printf qq{    Renaming: $REN_TYPE %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
+			    }
+			}
+		    }
 		} else {
-		    my $what = "";
-		    $what .= " SCHD" unless $renamed_schd;
-		    $what .= " SCTX" unless $renamed_sctx;
-		    warn "Error renaming$what, record NOT updated.\n";
+		    warn "Error, Record has no $REN_SUBTYPE sub-record: $rec\n";
 		}
+		$rec = new_rec($srl) if $renamed;
 	    }
-	} elsif ($rec_type eq $REN_TYPE) {
-	    my $renamed = 0;
-	    # TBD - switch to codec / process_plugin???
-	    # !!! name_idx is not yet implemented for parse_subrec_list
-	    my($srl, $name_idx) = parse_subrec_list($rec);
-	    if (defined($name_idx) and
-		my $name = $srl->[$name_idx]->[1]) {
-		$name = chop_nulls($name);
-		if ($::opt_l) {	# only list records
-		    my $recstr = pprec($rec, $REN_SUBTYPE);
-		    printf qq{  $rec_type  %-30s [%s]\n}, $name, $recstr;
-		} else {	# rename records
-		    my $do_rename = 1;
-		    $do_rename = 0 if ($rec_type eq "CELL" and not allowed_cell_type($srl));
-		    if ($do_rename) {
-			my $newname;
-			eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
-			if ($name ne $newname) {
-			    $srl->[$name_idx]->[1] = "$newname\000";
-			    $renamed = 1;
-			    printf qq{    Renaming: $REN_TYPE %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
-			}
-		    }
-		}
-	    } else {
-		warn "Error, Record has no $REN_SUBTYPE sub-record: $rec\n";
-	    }
-	    $rec = new_rec($srl) if $renamed;
+	    write_rec($out, $rec_type, $rec, $flags, $unk) unless($::opt_l);
 	}
-	write_rec($out, $rec_type, $rec, $flags, $unk) unless($::opt_l);
+    };
+    if ($@) {
+	warn $@;
+	$modified = 0;
     }
     if ($::opt_l) {
 	cleanup_temp($inp, $plugin);
     } else {
-	fix_output($inp, $out, $plugin);
+	fix_output($inp, $out, $plugin, $modified);
     }
 }
 
@@ -4766,22 +4844,25 @@ sub cmd_recover {
     my $inp_offset = sysseek($inp, 0, 0); # seek to start
     my $rectypes = join('|', @RECTYPES);
     my %valid_type; $valid_type{$_}++ foreach (@RECTYPES);
+    my %valid_subtype; $valid_subtype{$_}++ foreach (@SUBRECTYPES);
     print qq{$plugin: length = $inp_len\n};
     my @removed;
   READREC:
     while ($inp_offset < $inp_len) {
-	my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin);
-	$expected = undef;
+	my($rec_type, $rec, $flags, $unk);
 	eval {
+	    ($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin);
+	    $expected = undef;
 	    die "Error, Invalid record type: $rec_type\n" if (not $valid_type{$rec_type});
-	    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
+	    my $srh = parse_subrec_hash($rec);
+	    foreach my $subtype (keys %$srh) {
+		die qq{Error, Invalid record subtype: "$subtype"\n} if (not $valid_subtype{$subtype});
+	    }
+	    my $id = rec_id($srh, $rec_type);
 	    printf "Offset: %8d  Found: $rec_type $id\n", $inp_offset if (DBG);
 	};
-	if ((not $@) and (defined $rec_type)) {
-	    # everything was AOK
-	    write_rec($out, $rec_type, $rec, $flags, $unk);
-	    $inp_offset = sysseek($inp, 0, 1); # set inp_offset to current seek position
-	} else {
+	if ($@) {
+	    warn $@;
 	    # start a scan from last input offset for something that looks like a record header
 	    my $start_offset = $inp_offset;
 	    print qq{READ ERROR on record starting at: $start_offset\n};
@@ -4801,6 +4882,10 @@ sub cmd_recover {
 		    $inp_offset = sysseek($inp,  0 - $typlen, 1) if ($n_read == ($buff_size + $typlen));
 		}
 	    }
+	} else {
+	    # everything was AOK
+	    write_rec($out, $rec_type, $rec, $flags, $unk);
+	    $inp_offset = sysseek($inp, 0, 1); # set inp_offset to current seek position
 	}
     }
     if (@removed) {
@@ -4816,7 +4901,7 @@ sub cmd_recover {
 	if (scalar(@removed) > 1) {
 	    print "Total bytes lost: $total\n";
 	}
-	fix_output($inp, $out, $plugin);
+	fix_output($inp, $out, $plugin, 1);
     } else {
 	print "Recovery found no bad data in $plugin\n";
 	cleanup_temp($inp, $plugin);
