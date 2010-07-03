@@ -10,7 +10,7 @@
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD:
-# fix RACE print output
+# fix clean (WHGT/AMBI)
 # tests
 # fixup usages and examples, and add more examples, esp. "modify"
 # GUI
@@ -117,10 +117,9 @@ GMSTs, see:
 
   http://www.wikihost.org/w/mlox/evil_gmsts/
 
-Junk cells are bogus external CELL records that crop up in many plugins, due
+Junk cells are bogus external CELL records that crop up in many plugins due
 to a Construction Set bug. They contain only NAME, DATA and sometimes RGNN
-sub-records, and the flags in the DATA sub-record are unchanged from the flags
-in the master.
+sub-records with data identical to the master.
 };
 
 sub opts_clean {
@@ -841,6 +840,7 @@ my @CLEAN_DUP_TYPES =
        FACT GLOB GMST INFO INGR LAND LEVC LEVI LIGH LOCK LTEX MGEF MISC NPC_
        PGRD PROB RACE REGN REPA SCPT SKIL SNDG SOUN SPEL SSCR STAT WEAP);
 
+# TBD - repack these guys
 # Evil GMSTs for Tribunal (values are hexencoded)
 my %EVIL_TB =
     (scompanionshare => '354525650234f6d60716e696f6e6023586162756',
@@ -856,6 +856,7 @@ my %EVIL_TB =
      steleportdisabled => '35452565024556c65607f62747164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2',
      );
 
+# TBD - repack these guys
 # Evil GMSTs for Bloodmoon (values are hexencoded)
 my %EVIL_BM =
     (fcombatdistancewerewolfmod => '64c4456502a99999e3',
@@ -2323,39 +2324,69 @@ default_codec('RACE.RADT', ([[("Skill_1", "Bonus_1") x 7], "(L2)7"],
 			    ["Female_Weight", "f"],
 			    ["Flags", "L"]));
 # REFR.ACDT (player Actor Data)
-## Not present: Burden, Detect Animal, Detect Ench., Light, Night Eye, Slowfall
-## OFFSET - EFFECT
-## 144 - "fortify attack"
-## 148 - "sanctuary"
-## 156 - "fire shield/resist fire???"
-## 164 - "resist shock"
-## 188 - "chameleon"
-## 196 - "water breathing"
-## 200 - "water walking"
-## 204 - "swift swim"
-## 212 - "levitate"
-## 216 - "shield"
-## 228 - "blind"
-## 236 - "invisibility"
-default_codec('REFR.ACDT', (["Unknown", "a144"],
-			    ["Fortify_Attack", "L"],
-			    ["Sanctuary", "L"],
-			    ["Unknown", "a4"],
-			    ["Fire_Shield", "L"],
-			    ["Unknown", "a28"],
-			    ["Chameleon", "L"],
-			    ["Unknown", "a4"],
-			    ["Water_Breathing", "L"],
-			    ["Water_Walking", "L"],
-			    ["Swift_Swim", "L"],
-			    ["Unknown", "a4"],
-			    ["Levitate", "L"],
-			    ["Shield", "L"],
-			    ["Unknown", "a8"],
-			    ["Blind", "L"],
-			    ["Unknown", "a4"],
-			    ["Invisibility", "L"],
-			    ["Unknown", "a*"]));
+##(Not present???: Burden, Detect Animal, Detect Ench., Light, Night Eye, Slowfall, Telekinesis)
+############################################################## Offset
+default_codec('REFR.ACDT', ([[("Unknown_1") x 10], "L10"],   #   0
+			    ["Health", "f"],		     #  40
+			    ["Max_Health", "f"],	     #  44
+			    ["Fatigue", "f"],		     #  48
+			    ["Max_Fatigue", "f"],	     #  52
+			    ["Unknown_1", "f"],		     #  56
+			    ["Unknown_1", "f"],		     #  60
+			    ["Unknown_1", "f"],		     #  64
+			    ["Unknown_1", "f"],		     #  68
+			    ["Unknown_1", "f"],		     #  72
+			    ["Encumbrance", "f"],	     #  76
+			    ["STR", "f"],		     #  80
+			    ["STR_Base", "f"],		     #  84
+			    ["INT", "f"],		     #  88
+			    ["INT_Base", "f"],		     #  92
+			    ["WIL", "f"],		     #  96
+			    ["WIL_Base", "f"],		     # 100
+			    ["AGI", "f"],		     # 104
+			    ["AGI_Base", "f"],		     # 108
+			    ["SPD", "f"],		     # 112
+			    ["SPD_Base", "f"],		     # 116
+			    ["END", "f"],		     # 120
+			    ["END_Base", "f"],		     # 124
+			    ["PER", "f"],		     # 128
+			    ["PER_Base", "f"],		     # 132
+			    ["LUC", "f"],		     # 136
+			    ["LUC_Base", "f"],		     # 140
+			    ["Fortify_Attack", "L"],	     # 144
+			    ["Sanctuary", "L"],		     # 148
+			    ["Resist_Magicka", "C"],	     # 152
+			    [[("Unknown_1") x 3], "C3"],
+			    ["Resist_Fire", "C"],            # 156 (+ Fire Shield)
+			    [[("Unknown_1") x 3], "C3"],
+			    ["Resist_Frost", "C"],           # 160 (+ Frost Shield)
+			    [[("Unknown_1") x 3], "C3"],
+			    ["Resist_Shock", "C"],	     # 164 (+ Lightning Shield)
+			    [[("Unknown_1") x 3], "C3"],
+			    ["Resist_Common_Disease", "L"],  # 168
+			    ["Unknown_1", "L"],		     # 172
+			    ["Unknown_1", "L"],		     # 176
+			    ["Resist_Poison", "L"],	     # 180
+			    ["Resist_Paralysis", "L"],	     # 184
+			    ["Chameleon", "L"],		     # 188
+			    ["Resist_Normal_Weapons", "L"],  # 192
+			    ["Water_Breathing", "L"],	     # 196
+			    ["Water_Walking", "L"],	     # 200
+			    ["Swift_Swim", "L"],	     # 204
+			    ["Unknown_1", "L"],		     # 208
+			    ["Levitate", "L"],		     # 212
+			    ["Shield", "L"],		     # 216
+			    ["Unknown_1", "L"],		     # 220
+			    ["Unknown_1", "L"],		     # 224
+			    ["Blind", "L"],		     # 228
+			    ["Unknown_1", "L"],		     # 232
+			    ["Invisibility", "L"],	     # 236
+			    ["unknown", "L"],		     # 240
+			    ["Unknown_1", "L"],		     # 244
+			    ["Unknown_1", "L"],		     # 248
+			    ["Unknown_1", "L"],		     # 252
+			    ["Unknown_1", "L"],		     # 256
+			    ["Unknown_1", "L"]));	     # 260
 default_codec("REFR.WNAM", (["Readied_Spell", "Z*"]));
 default_codec('REGN.WEAT', (["Clear", "C"],
 			    ["Cloudy", "C"],
@@ -2573,7 +2604,7 @@ my %TOSTR =
 	     if ($flags & 0x01) {
 		 push(@flags, "Interior");
 		 $data_fog_str = sprintf "FogDensity: %0.2f ", $fog_den_data;
-		 $unk_str = sprintf "Unk:0x%s ", unpack("h*", $unkbuf);
+		 $unk_str = sprintf "Unk:0x%s ", unpack("H*", $unkbuf);
 	     } else {
 		 push(@flags, "Exterior");
 		 my($x, $y) = unpack("x[L]ll", $_[0]);
@@ -2768,9 +2799,7 @@ my %TOSTR =
 			  }
 			  $result;
 		      },
-#     "REFR.ACDT" => sub { my($unk1, $cham, $unk2, $watw, $unk3, $lev, $unk4) = unpack($RD{'REFR.ACDT'}, $_[0]);
-#		      sprintf "Unk1: %s  Chameleon: %d  Unk2: %s  Water_Walking: %d  Unk3: %s  Levitate: %d  Unk4: %s",
-#			  $TOSTR_UNK->($unk1), $cham, $TOSTR_UNK->($unk2), $watw, $TOSTR_UNK->($unk3), $lev, $TOSTR_UNK->($unk4) },
+     "REFR.ACDT" => sub { sprintf "%s", unpack("H*", $_[0]) },
      "REFR.WNAM" => sub { my $spell = unpack($RD{'REFR.WNAM'}, $_[0]);
 		      sprintf "Readied_Spell: %s", $spell },
      "REGN.WEAT" => sub { sprintf "Clear: %d  Cloudy: %d  Foggy: %d  Overcast: %d  Rain: %d  Thunder: %d  Ash: %d  Blight: %d",
