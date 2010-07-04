@@ -802,19 +802,12 @@ sub load_order {
 # location of the "Data Files" directory by walking up the hierarchy.
 sub find_datadir {
     return($DATADIR) if (defined($DATADIR));
-    my $dirlist = list_files(".");
-    if ($dirlist->{"morrowind.esm"}) {
-	$DATADIR = ".";
-	$TES3CMD_DIR = "$DATADIR/tes3cmd";
-	return($DATADIR);
-    }
     my $dir = Cwd::getcwd();
     warn "DBG: checking for data dir in: $dir\n" if (DBG);
     while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
 	my $datadir = list_files($dir)->{"data files"};
 	if ($datadir) {
 	    $DATADIR = "$dir/$datadir";
-	    #warn "DBG: found datadir: $DATADIR\n" if (DBG);
 	    print "DATADIR = $DATADIR\n";
 	    $TES3CMD_DIR = "$DATADIR/tes3cmd";
 	    return($DATADIR);
@@ -3803,20 +3796,32 @@ sub master_cache_name {
 }
 
 sub load_master_cache {
-    my($esm) = @_;
+     my($esm) = @_;
     my $esm_file = list_files($DATADIR)->{$esm};
     my $mcache = master_cache_name($esm);
+    warn "DBG: master cache name = $mcache\n" if (DBG);
     eval {
-	if (my $hashref = retrieve($mcache)) {
-	    if (-s $esm_file == $hashref->{size}) {
-		$MASTER_ID->{$esm} = $hashref->{data};
+	if (my $listref = retrieve($mcache)) {
+	    my($prev_size, $master_data) = @{$listref};
+	    my $curr_size = (-s "$DATADIR/$esm_file");
+	    if ($curr_size == $prev_size) {
+		$MASTER_ID->{$esm} = $master_data;
 		my $name = $mcache;
 		$name =~ s/$DATADIR/<DATADIR>/;
 		print "Loaded cached Master: $name\n";
+	    } else {
+		die "Cache Invalidated for: $esm_file (curr_size == $curr_size, prev_size == $prev_size)\n";
 	    }
+	} else {
+	    die "Error retrieving master cache for: $esm_file\n";
 	}
     };
-    return($@ ? 0 : 1);
+    if ($@) {
+	warn $@;
+	return(0);
+    } else {
+	return(1);
+    }
 }
 
 sub save_master_cache {
@@ -3824,22 +3829,22 @@ sub save_master_cache {
     my $esm_file = list_files($DATADIR)->{$esm};
     my $mcache = master_cache_name($esm);
     mkdir($TES3CMD_DIR, 0755) if (not -d $TES3CMD_DIR);
-    store({ size => (-s $esm_file), data => $MASTER_ID->{$esm}}, $mcache);
+    my $size = (-s "$DATADIR/$esm_file");
+    warn "DBG: save_master_cache($esm) saving size: $size\n" if (DBG);
+    store([ $size, $MASTER_ID->{$esm}], $mcache);
 }
 
 # load all the records from a master .esm into a dictionary.
 sub load_master {
     my($esm, $types) = @_;
-    find_datadir();
     $esm = lc($esm);
+    warn "DBG: load_master($esm, $types)\n" if (DBG);
+    find_datadir();
     if (defined $MASTER_ID->{$esm}) {
-	print "DBG: re-using master data: $esm\n" if (DBG);
+	warn "DBG: re-using master data: $esm\n" if (DBG);
 	return;
     }
-    if (load_master_cache($esm)) {
-	# load pre-parsed data
-	return;
-    }
+    return if (load_master_cache($esm)); # load pre-parsed data
     print "Loading Master: $esm\n";
     my $esm_file = list_files($DATADIR)->{$esm};
     my $inp = open_input_plugin("$DATADIR/$esm_file");
@@ -3859,7 +3864,6 @@ sub load_master {
     };
     warn $@ if ($@);
     close($inp);
-    # store data in cache file
     save_master_cache($esm);
 }
 
