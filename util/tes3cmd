@@ -10,28 +10,36 @@
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD:
-# fix clean (WHGT/AMBI)
-# tests
-# fixup usages and examples, and add more examples, esp. "modify"
+# canonize switches (-i is always "ID")
+# fix "clean" command (WHGT/AMBI)
+# implement -o option for "clean"
+# add ability for "header" command to update NREC field
+# combine "delete" and "objdelete", fixup subrecord deletion
+# and add more examples, esp. "modify"
+# write some tests
 # GUI
 # clean up the TOSTR stuff (for pretty print command) so it uses the codec defs
-# undump (text to record, can't undump from wrong version)
-# combine (merge listed plugins into one plugin)
-# conflict (detailed report, toggle mergeable records from report)
-# lint (slurp in tes3lint functionality)
-# redo overdial, just list each topic once, with list of plugins that have it
-# multipatch includes:
-# * cellnamepatch
-# * fogpatch
-# * generate book rotate scripts.
-# * generate multimark scripts.
-# * gmst/global? tweaks
-# * import faces/hairs
-# * merged leveled lists
-# * merged objects (add mergeable flag to codec defs)
-# * summoned creatures persists patch
-# * turn-off auto-calced spells.
+# reformat overdial output, just list each topic once, with list of plugins that have it
+# implement script compiler
+# cellnamepatch should also patch for reverted AMBI/WHGT changes
+# add new commands:
+# * "undump" (text to record, can't undump from wrong version)
+# * "combine" (merge listed plugins into one plugin)
+# * "conflict" (detailed report, toggle mergeable records from report)
+# * "lint" (splice in tes3lint functionality)
+# * "multipatch", to include:
+# ** cellnamepatch
+# ** fogpatch
+# ** generate book rotate scripts.
+# ** generate multimark scripts.
+# ** gmst/global tweaks: (timescale, fCombatAngleXY)
+# ** import faces/hairs (avoid conflicts by dropping rest of object definition)
+# ** merged leveled lists
+# ** merged objects (add mergeable flag to record defs)
+# ** summoned creatures persists patch
+# ** turn-off auto-calced spells.
 
+use Carp;
 use Cwd;
 use IO::Handle;
 use File::Basename;
@@ -50,15 +58,18 @@ BEGIN {
 
 ###GLOBALS (Miscellaneous)
 
-my $TES3CMD_DIR;
-my $DATADIR;
-my $MASTER_ID;
-my $GLOBCHARS = '*?';
+my $DUMP_VERSION = "0.1";	# so undump won't use wrong format version
+my $DATADIR;			# where "Data Files" lives.
+my $TES3CMD_DIR;		# tes3cmd directory under "Data Files" (for cache, ...)
+my $MASTER_ID;			# data loaded from masters
+my $GLOBCHARS = '*?';		# for filename matching
+my $REC_TYPE_LEN = 4;
+
+# for fast HEDR updating header command
 my $HDR_AUTH_OFFSET = 32;
 my $HDR_AUTH_LENGTH = 32;
 my $HDR_DESC_OFFSET = $HDR_AUTH_OFFSET + $HDR_AUTH_LENGTH;
 my $HDR_DESC_LENGTH = 256;
-my $REC_TYPE_LEN = 4;
 
 my $hedr = pack("a4L/a*", 'HEDR', pack("fLZ32Z256L", (my $ver = 1.3), (my $is_master = 0), (my $auth = "tes3cmd"), (my $desc = "(generated)"), (my $nrec = 0)));
 my $blank_header = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
@@ -197,12 +208,12 @@ Helper Functions: dumprec() and setrec()
 
 tes3cmd includes 2 builtin helper functions to help you make your
 modifications: dumprec() and setrec(). Use dumprec() to print out a view of
-the records. If you just use: "-e 'dumprec($r)'", you will get an idea of the
-record structure. Both functions take the same 2 arguments. The first is '$r'
-(the name of the current record), the second is a reference to a Perl hash
-containing any or all of these keys: "index", "type", "field". "index" will
-constrain matching of sub-records to one index. "type" specifies a sub-record
-type match, and "field" specifies a field name to match. The final argument to
+the records. If you just use: "-e 'dumprec()'", you will get an idea of the
+record structure. Both functions take the same 2 arguments. The first is a
+reference to a Perl hash containing any or all of these keys: "i" (sub-record
+Index), "t" (sub-record Type), "f" (sub-record Field). "i" will constrain
+matching of sub-records to subrecords by index. "t" specifies a sub-record
+type match, and "f" specifies a field name to match. The final argument to
 setrec() is the value to assign to matching fields.
 
 Note: tes3cmd uses Perl regular expressions for matching, the full documentation
@@ -213,6 +224,9 @@ matching on a Windows command line.
 
 Example(s):
 
+# print the first 4 subrecords of the cell "Ashmelech" from Morrowind.esm
+tes3cmd modify -t cell -i ashmelech -e 'dumprec({i=>[0..3]})' Morrowind.esm
+
 # Problem: Aleanne's clothing mods do not have restocking inventory
 # Solution: create a small patch to change the counts for inventory containers
 #   to negative numbers so they will be restocking.
@@ -221,9 +235,9 @@ tes3cmd print -t cont ale_clothing_v?.esp
 # Step 1: Create the patch file containing just the container records:
 tes3cmd print -R -t cont ale_clothing_v?.esp > ale_patch.esp
 # Step 2: Change all the count fields for the containers in Aleanne's Clothing to -3 (for restocking wares)
-tes3cmd modify -t cont -e "setrec($r, {field=>'Count'}, -3)" ale_patch.esp
+tes3cmd modify -t cont -e "setrec({f=>'Count'}, -3)" ale_patch.esp
 # Note: on Linux, the quoting would be a little different:
-tes3cmd modify -t cont -e 'setrec($r, {field=>"Count"}, -3)' ale_patch.esp
+tes3cmd modify -t cont -e 'setrec({f=>"Count"}, -3)' ale_patch.esp
 
 };
 
@@ -237,7 +251,20 @@ my $CELLNAMEPATCH_USAGE = q{Usage: tes3cmd cellnamepatch
 OPTIONS
  -D        turn on debug output
 
-Creates a patch plugin to ensure all renamed cells end up in the player's game.
+Creates a patch plugin to ensure renamed cells are not accidentally reverted
+to their original name.
+
+This command solves the following plugin conflict that causes bugs:
+* Master A names external CELL (1, 1) as: "".
+* Plugin B renames CELL (1, 1) to: "My City".
+* Plugin C modifies CELL (1, 1), using the original name "", reverting
+  plugin B's renaming.
+* References in plugin B (such as in scripts) that refer to "My City" break.
+
+This command scans your currently active plugin load order for cell name
+reversions, and ensures whenever possible that cell renaming is properly
+maintained. You should regenerate your cellnamepatch whenever you change your
+load order.
 
 Example(s):
 
@@ -257,7 +284,14 @@ my $FOGPATCH_USAGE = q{Usage: tes3cmd fogpatch
 OPTIONS
  -D        turn on debug output
 
-Creates a patch plugin to fix all cells in your plugins that would trigger the fogbug.
+Some video cards are affected by how Morrowind handles a fog density setting
+of zero in interior cells with the result that the interior is pitch black,
+except for some light sources, and no amount of light, night-eye, or gamma
+setting will make the interior visible. This is known as the "fog bug". 
+
+This command creates a patch plugin that fixes all fogbugged cells in your
+active plugins by setting the fog density of those cells to a non-zero value.
+You should regenerate your fogpatch whenever you change your load order.
 
 Example(s):
 
@@ -673,7 +707,11 @@ sub opts_rename {
 }
 
 sub opts_wikiout {
-    getopts('D:') or die "Usage: tes3cmd -wikiout\n";
+    getopts('D') or die "Usage: tes3cmd -wikiout\n";
+}
+
+sub opts_codectest {
+    getopts('Dx:') or die "Usage: tes3cmd -codectest [-x excluded_types]\n";
 }
 
 ###UTILITIES
@@ -688,10 +726,7 @@ sub celldata {
 # is_interior($srh);
 sub is_interior { unpack("L", $_[0]->{DATA}[0]) & 1 }
 
-sub chop_nulls {
-    my($str) = @_;
-    return(unpack("Z*", $str));
-}
+sub chop_nulls { unpack("Z*", $_[0]); }
 
 sub fatal_error {
     my($msg) = @_;
@@ -856,7 +891,7 @@ my %EVIL_TB =
      steleportdisabled => '35452565024556c65607f62747164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2',
      );
 
-# TBD - repack these guys
+# TBD - repack these guys as 'H*'
 # Evil GMSTs for Bloodmoon (values are hexencoded)
 my %EVIL_BM =
     (fcombatdistancewerewolfmod => '64c4456502a99999e3',
@@ -1927,8 +1962,8 @@ sub dbg_word {
 	warn "dbg_word: expected length of 4, got $len\n";
 	return;
     }
-    sprintf qq{[UNKNOWN_WORD: 0x%s (f:%0.2f) (L:%d) (S:%d S:%d) (C:%d C:%d C:%d C:%d)]},
-	unpack("H*", $longstr), unpack("f", $longstr), unpack("L", $longstr), unpack("S2", $longstr), unpack("C4", $longstr);
+    sprintf(qq{[UNKNOWN_WORD: 0x%s (f:%0.2f) (L:%d) (S:%d S:%d) (C:%d C:%d C:%d C:%d)]},
+	unpack("H*", $longstr), unpack("f", $longstr), unpack("L", $longstr), unpack("S2", $longstr), unpack("C4", $longstr));
 }
 
 sub decode_flags {
@@ -1955,66 +1990,79 @@ my %DECODE = ();
 my %ENCODE = ();
 my %RD = ();			# TBD switch to using the info from DECODE and get rid of RD
 
+sub flatten {
+    my @newlist;
+    push(@newlist, (ref eq 'ARRAY') ? flatten(@$_) : $_) foreach (@_);
+    return(@newlist);
+}
+
 sub compile_def {
-    my(@def) = @_;
+    my($purpose, @def) = @_;
     my $format = "";
+    my @keys;
+    my %key_n;
+    my %idx;
+    my $index = 0;
     foreach my $ref (@def) {
-	$format .= $ref->[1];
+	my($key, $fmt) = @$ref;
+	if (ref($fmt) eq 'ARRAY') {
+	    $format .= ($purpose eq 'decode') ? $fmt->[0] : $fmt->[1];
+	} else {
+	    $format .= $fmt;
+	}
+	foreach my $key (map { lc } flatten($key)) {
+	    while (exists $idx{$key}) {
+		$key =~ s/_\d+$//;
+		$key .= '_' . $key_n{$key}++;
+	    }
+	    push(@keys, $key);
+	    $idx{$key} = $index++;
+	}
     }
-    return($format);
+    return($format, scalar(@keys), \@keys, \%idx);
 }
 sub default_decoder {
-    my(@def) = @_;
-    my $cdef = compile_def(@def);
+    my($type, @def) = @_;
+    my($cdef, $nkeys, $keys) = compile_def('decode', @def);
+    $RD{$type} = $cdef; # for transitional code
     my $decoder = sub {
 	my($buff) = @_;
 	my %hr;
-	my %idx;
-	my $index = 0;
-	my @keys = map { $_->[0]; } @def;
-        my @vals = unpack($cdef, $buff);
-	foreach my $val (@vals) {
-	    my $key = shift(@keys);
-	    while (ref($key) eq 'ARRAY') {
-	    	unshift(@keys, @$key);
-		$key = shift(@keys);
-	    }
-	    my $n = 2;
-	    while (exists $hr{$key}) {
-	    	$key =~ s/_\d+$/_/;
-		$key .= $n++;
-	    }
+	my @vals = unpack($cdef, $buff);
+	my $nvals = scalar(@vals);
+	die "Error in codec: nvals($nvals) != nkeys($nkeys)\n"
+	    if ($nvals > $nkeys);
+	foreach my $key (@$keys) {
+	    my $val = shift(@vals);
 	    $hr{$key} = $val;
-	    $idx{$key} = $index++;
+	    last if (not @vals);
 	}
-	return(\%hr, \%idx);
+	return(\%hr);
     };
     return($decoder);
 };
 sub default_encoder {
     my(@def) = @_;
-    my $cdef = compile_def(@def);
+    my($cdef, $nkeys, $keys, $idx) = compile_def('encode', @def);
     my $encoder = sub {
-	my($hr, $idx) = @_;
+	my($hr) = @_;
 	my @rec = ();
 	while (my($key, $val) = each %$hr) {
-	    $rec[$idx->{$key}] = $val;
+	    $rec[$idx->{lc($key)}] = $val;
 	}
-	#warn qq{cdef=="$cdef"    rec==\n}, Dumper([@rec]), "\n";
 	return(pack($cdef, @rec));
     };
     return($encoder);
 };
 sub default_codec {
     my($type, @def) = @_;
-    $DECODE{$type} = default_decoder(@def);
+    $DECODE{$type} = default_decoder($type, @def);
     $ENCODE{$type} = default_encoder(@def);
-    $RD{$type} = compile_def(@def); # for transitional code
 }
 default_codec('TES3.HEDR', (["Version", "f"],
 			    ["Is_Master", "L"],
-			    ["Author", "Z32"],
-			    ["Description", "Z256"],
+			    ["Author", ["Z32", "a32"]],
+			    ["Description", ["Z256", "a256"]],
 			    ["NRecords", "L"]));
 default_codec('TES3.MAST', (["Master", "Z*"]));
 
@@ -2101,11 +2149,12 @@ $ENCODE{'CELL.DATA'} = sub {
 };
 
 default_codec('CELL.FRMR', (["ObjInd", "S"],
-			    ["Unknown", "C"],
+			    ["Unknown_1", "C"],
 			    ["ModInd", "C"]));
-default_codec('CELL.NAM5', (["R", "C"],
+default_codec('CELL.NAM5', (["R", "C"], # Map Color
 			    ["G", "C"],
-			    ["B", "C"])); # Map Color
+			    ["B", "C"],
+			    ["Unused", "C"]));
 default_codec('CELL.NAM9', (["Owner", "L"]));
 default_codec('CLAS.CLDT', (["Primary_Attribute", "L"],
 			    ["Secondary_Attribute", "L"],
@@ -2126,11 +2175,11 @@ default_codec('CREA.AI_W', (["Distance", "S"],
 			    [[("Idle_1") x 10], "C10"]));
 #default_codec('CREA.AIDT', ([[("AI_1") x 12], "C12"]));
 default_codec('CREA.AIDT', (["Hello", "C"],
-			    ["Unknown", "C"],
+			    ["Unknown_1", "C"],
 			    ["Fight", "C"],
 			    ["Flee", "C"],
 			    ["Alarm", "C"],
-			    [[("Unknown_1") x 3], "C3"],
+			    ["Unknown_1", "a3"],
 			    ["Flags", "L"]));
 default_codec('CREA.FLAG', (["Flags", "L"]));
 default_codec('CREA.NPDT', (["Type", "L"],
@@ -2157,7 +2206,9 @@ default_codec('CREA.NPDT', (["Type", "L"],
 			    ["Attack_3_Min", "L"],
 			    ["Attack_3_Max", "L"],
 			    ["Gold", "L"]));
-default_codec('DIAL.DATA', (["Type", "C"]));
+default_codec('DIAL.DATA', (["Type", "C"],
+			   # ["Unused", "a3"]
+			   ));
 default_codec('ENCH.ENDT', (["Type", "L"],
 			    ["Cost", "L"],
 			    ["Charge", "L"],
@@ -2174,30 +2225,24 @@ default_codec('FACT.FADT', (["Primary_Attribute", "L"],
 			    ["Secondary_Attribute", "L"],
 			    [[("At1_1", "At2_1", "Sk1_1", "Sk2_1", "Fact_1") x 10], "(L5)10"],
 			    [[("Sk_1") x 6], "L6"],
-			    ["Unknown", "L"],
+			    ["Unknown_1", "L"],
 			    ["Flags", "L"]));
-#			  foreach my $rd (unpack("(a20)10", $rankdata)) {
-#			      my($at1, $at2, $sk1, $sk2, $fact) = unpack("L5", $rd);
-#			      push(@results, sprintf "\t\tAttr_1: %3d  Attr_2: %3d  Skill_1: %3d  Skill_2: %3d  Fact: %3d",
-#				  $at1, $at2, $sk1, $sk2, $fact);
-#			  }
-#			  join("\n", @results);
-
 default_codec('GLOB.FNAM', (["VarType", "a"]));
 default_codec('GMST.NAME', (["Name", "a*"]));
 default_codec('INFO.ACDT', (["Actor_Data", "Z*"])); # (only in .ess)
 default_codec('INFO.INAM', (["Name", "Z*"]));
-default_codec('INFO.DATA', (#["Unknown", "L"],
-			    ["Disposition", "x[L]L"],
+default_codec('INFO.DATA', (["Unknown_1", "L"],
+			    ["Disposition", "L"],
 			    ["Rank", "C"],
 			    ["Sex", "C"],
-			    ["PCRank", "C"]));
+			    ["PCRank", "C"],
+			    ["Unknown_1", "C"]));
 default_codec('INFO.ANAM', (["Cell", "Z*"]));
-default_codec('INFO.BNAM', (["Result", "Z*"]));
+default_codec('INFO.BNAM', (["Result", "a*"]));
 default_codec('INFO.CNAM', (["Class", "Z*"]));
 default_codec('INFO.DNAM', (["PC_Faction", "Z*"]));
 default_codec('INFO.FNAM', (["Faction", "Z*"]));
-default_codec('INFO.NAME', (["Response", "Z*"]));
+default_codec('INFO.NAME', (["Response", "a*"]));
 default_codec('INFO.NNAM', (["Next_ID", "Z*"]));
 default_codec('INFO.ONAM', (["Actor", "Z*"]));
 default_codec('INFO.PNAM', (["Prev_ID", "Z*"]));
@@ -2209,7 +2254,7 @@ default_codec('INFO.SCVR', (["Index", "a"],
 			    ["Type", "a"],
 			    ["Function", "a2"],
 			    ["Comparison", "a"],
-			    ["Name", "Z*"]));
+			    ["Name", "a*"]));
 default_codec('INGR.IRDT', (["Weight", "f"],
 			    ["Value", "L"],
 			    [[("Effect_1") x 4], "l4"],
@@ -2231,7 +2276,7 @@ default_codec('LIGH.LHDT', (["Weight", "f"],
 			    ["Red", "C"],
 			    ["Green", "C"],
 			    ["Blue", "C"],
-			    ["Unknown", "C"],
+			    ["Unknown_1", "C"],
 			    ["Flags", "L"]));
 default_codec('LOCK.LKDT', (["Weight", "f"],
 			    ["Value", "L"],
@@ -2249,21 +2294,21 @@ default_codec('MGEF.MEDT', (["School", "L"],
 			    ["SizeCap", "f"]));
 default_codec('MISC.MCDT', (["Weight", "f"],
 			    ["Value", "L"],
-			    ["Unknown", "L"]));
+			    ["Unknown_1", "L"]));
 default_codec('NPC_.CNDT', (["Data", "Z*"]));
 default_codec('NPC_.FLAG', (["Flags", "L"]));
 default_codec('NPC_.AIDT', (["Hello", "C"],
-			    ["Unknown", "C"],
+			    ["Unknown_1", "C"],
 			    ["Fight", "C"],
 			    ["Flee", "C"],
 			    ["Alarm", "C"],
-			    [[("Unknown_1") x 3], "C3"],
+			    ["Unknown_1", "a3"],
 			    ["Flags", "L"]));
 default_codec('NPC_.AI_W', (["Distance", "S"],
 			    ["Duration", "S"],
 			    ["Time_of_day", "C"],
 			    [[("Idle_1") x 8], "C8"],
-			    ["Unknown", "C"]));
+			    ["Unknown_1", "C"]));
 
 $DECODE{'NPC_.NPDT'} = sub {
     my($buff) = @_;
@@ -2356,13 +2401,13 @@ default_codec('REFR.ACDT', ([[("Unknown_1") x 10], "L10"],   #   0
 			    ["Fortify_Attack", "L"],	     # 144
 			    ["Sanctuary", "L"],		     # 148
 			    ["Resist_Magicka", "C"],	     # 152
-			    [[("Unknown_1") x 3], "C3"],
+			    ["Unknown_1", "a3"],
 			    ["Resist_Fire", "C"],            # 156 (+ Fire Shield)
-			    [[("Unknown_1") x 3], "C3"],
+			    ["Unknown_1", "a3"],
 			    ["Resist_Frost", "C"],           # 160 (+ Frost Shield)
-			    [[("Unknown_1") x 3], "C3"],
+			    ["Unknown_1", "a3"],
 			    ["Resist_Shock", "C"],	     # 164 (+ Lightning Shield)
-			    [[("Unknown_1") x 3], "C3"],
+			    ["Unknown_1", "a3"],
 			    ["Resist_Common_Disease", "L"],  # 168
 			    ["Unknown_1", "L"],		     # 172
 			    ["Unknown_1", "L"],		     # 176
@@ -2395,27 +2440,30 @@ default_codec('REGN.WEAT', (["Clear", "C"],
 			    ["Rain", "C"],
 			    ["Thunder", "C"],
 			    ["Ash", "C"],
-			    ["Blight", "C"]));
+			    ["Blight", "C"],
+			    ["Snow", "C"], # Bloodmoon
+			    ["blizzard", "C"])); # Bloodmoon
 default_codec('REGN.CNAM', (["Red", "C"],
 			    ["Green", "C"],
-			    ["Blue", "C"]));
-default_codec('REGN.SNAM', (["Sound_Name", "Z32"],
+			    ["Blue", "C"],
+			    ["Unused", "C"]));
+default_codec('REGN.SNAM', (["Sound_Name", ["Z32", "a32"]],
 			    ["Chance", "C"]));
 default_codec('REGN.WNAM', (["Name", "L"]));
 default_codec('REPA.RIDT', (["Weight", "f"],
 			    ["Value", "L"],
 			    ["Uses", "L"],
 			    ["Quality", "f"]));
-default_codec('SCPT.RNAM', (["Unknown", "L"]));
+default_codec('SCPT.RNAM', (["Unknown_1", "L"]));
 default_codec('SCPT.SCDT', (["Bytecode", "H*"]));
-default_codec('SCPT.SCHD', (["Name", "Z32"],
+default_codec('SCPT.SCHD', (["Name", ["Z32", "a32"]],
 			    ["Num_Shorts", "L"],
 			    ["Num_Longs", "L"],
 			    ["Num_Floats", "L"],
 			    ["Data_Size", "L"],
-			    ["Long_Var_Size", "L"]));
+			    ["Local_Var_Size", "L"]));
 default_codec('SCPT.SCVR', (["Variables", "a*"]));
-default_codec('SCPT.SCTX', (["Script", "Z*"]));
+default_codec('SCPT.SCTX', (["Script", "a*"]));
 default_codec('SKIL.SKDT', (["Attribute", "L"],
 			    ["Specialization", "L"],
 			    [[("Use_Values_1") x 4], "f4"]));
@@ -2425,11 +2473,11 @@ default_codec('SPEL.SPDT', (["Type", "L"],
 			    ["Flags", "L"]));
 default_codec('SPLM.NAME', (["Name", "L"]));
 default_codec('SPLM.SPDT', (["Type", "L"],
-			    ["Name", "Z40"],
-			    [[("Long_1") x 2, "L2"]],
-			    ["Caster", "Z32"],
+			    ["Name", ["Z40", "a40"]],
+			    [[("Long_1") x 2], "L2"],
+			    ["Caster", ["Z32", "a32"]],
 			    ["Item", "Z*"]));
-default_codec('SPLM.NPDT', (["Name", "Z40"],
+default_codec('SPLM.NPDT', (["Name", ["Z40", "a40"]],
 			    ["Magnitude", "l"],
 			    ["Seconds_Active", "f"],
 			    [[("Long_1") x 2], "l2"]));
@@ -2438,7 +2486,7 @@ default_codec('SPLM.TNAM', (["Target", "Z*"]));
 default_codec('SOUN.DATA', (["Volume", "C"],
 			    ["MinRange", "C"],
 			    ["MaxRange", "C"]));
-default_codec('SSCR.DATA', (["Name", "Z*"]));
+default_codec('SSCR.DATA', (["Name", "a*"]));
 default_codec('STLN.ONAM', (["Name", "Z*"]));
 default_codec('WEAP.WPDT', (["Weight", "f"],
 			    ["Value", "L"],
@@ -2454,12 +2502,12 @@ default_codec('WEAP.WPDT', (["Weight", "f"],
 			    ["Thrust_Min", "C"],
 			    ["Thrust_Max", "C"],
 			    ["Flags", "L"]));
-default_codec('VFXM.VNAM', ([[("Long_1") x 6], "L6"],
+default_codec('VFXM.VNAM', ([[("Long_1") x 6], "(a4)6"],
 			    ["Short", "S"],
-			    ["Unknown", "H22"],
-			    ["Name_2", "Z36"],
-			    ["Name_3", "Z68"]));
-default_codec('DELE', (["Unknown", "a4"]));
+			    ["Unknown_1", "a22"],
+			    ["Name_2", ["Z36", "a36"]],
+			    ["Name_3", ["Z68", "a68"]]));
+default_codec('DELE', (["Unknown_1", "L"]));
 default_codec('DODT', (["X", "f"],
 		       ["Y", "f"],
 		       ["Z", "f"],
@@ -2468,8 +2516,8 @@ default_codec('DODT', (["X", "f"],
 		       ["Angle_Z", "f"]));
 default_codec('FLAG', (["Flags", "L"]));
 default_codec('NPCO', (["Count", "l"],
-		       ["Name", "Z32"]));
-default_codec('NPCS', (["String", "Z32"]));
+		       ["Name", "a32"]));
+default_codec('NPCS', (["String", "a32"]));
 default_codec('XCHG', (["Enchant_Charge", "L"]));
 default_codec('XHLT', (["Health", "L"]));
 default_codec('XSCL', (["Scale", "f"]));
@@ -2546,12 +2594,12 @@ foreach (qw(FLTV WHGT)) {
     $ENCODE{$_} = sub{ pack("f", $_[0]->{FloatVal} ); };
 }
 
-# sub-records that decode as variable length Z-strings:
+# sub-records that decode as variable length strings:
 foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FGTN FNAM
 HSND HVFX ITEX KNAM LSHN LSTN MNAM MODL NAME PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
 TEXT TGTN TNAM WNAM)) {
-    $DECODE{$_} = sub{ return({ String => unpack("Z*", $_[0]) }, {}); };
-    $ENCODE{$_} = sub{ pack("Z*", $_[0]->{String} ); };
+    $DECODE{$_} = sub{ return({ String => unpack("a*", $_[0]) }, {}); };
+    $ENCODE{$_} = sub{ pack("a*", $_[0]->{String} ); };
 }
 
 ###PRETTY PRINTER
@@ -2615,7 +2663,7 @@ my %TOSTR =
 	 }
      },
      "CELL.FRMR" => sub { sprintf "ObjInd: %d Unk: %d ModInd: %d", unpack($RD{'CELL.FRMR'}, $_[0]); },
-     "CELL.NAM5" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'CELL.NAM5'}, $_[0]) },
+     "CELL.NAM5" => sub { sprintf "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'CELL.NAM5'}, $_[0]) },
      "CELL.NAM9" => sub { my $val = unpack($RD{'CELL.NAM9'}, $_[0]); (1 == $val) ? "Owner" : "Unk:$val"; },
      "CLAS.CLDT" => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
 			      unpack($RD{'CLAS.CLDT'}, $_[0]);
@@ -2642,7 +2690,7 @@ my %TOSTR =
      "CLOT.INDX" => sub { unpack($RD{'CLOT.INDX'}, $_[0]) },
      "CONT.CNDT" => sub { sprintf "Weight: %0.2f", unpack($RD{'CONT.CNDT'}, $_[0]) },
      "CONT.FLAG" => sub { decode_flags(unpack($RD{'CONT.FLAG'}, $_[0]), \@CONTAINER_FLAGS) },
-     "CREA.AI_W" => sub { my($hr, $idx) = $DECODE{'CREA.AI_W'}->($_[0]);
+     "CREA.AI_W" => sub { my($hr) = $DECODE{'CREA.AI_W'}->($_[0]);
 			  my $idle = join(", ", map { $hr->{"Idle_$_"} } 1..10);
 			  sprintf "Distance: %d  Duration: %d  Time_of_day: %d, Idles: $idle",
 			      $hr->{Distance}, $hr->{Duration}, $hr->{Time_of_day} },
@@ -2712,7 +2760,7 @@ my %TOSTR =
 			  my $name = ($typ == 1) ? "" : "  Name:$nam";
 			  sprintf "Index:$idx  Type:%s  Fun:%s  Cmp:%s$name",
 			      print_lookup($typ, \%INFO_SCVR_type), print_lookup($fun, \%INFO_FUN), print_lookup($cmp, \%INFO_SCVR_cmp); },
-     "INGR.IRDT" => sub { my($hr, $idx) = $DECODE{'INGR.IRDT'}->($_[0]);
+     "INGR.IRDT" => sub { my($hr) = $DECODE{'INGR.IRDT'}->($_[0]);
 			  my $result = sprintf "Weight: %0.2f  Value: %d  Effects: ",
 			      $hr->{Weight}, $hr->{Value};
 			  my @results;
@@ -2802,7 +2850,7 @@ my %TOSTR =
      "REFR.ACDT" => sub { sprintf "%s", unpack("H*", $_[0]) },
      "REFR.WNAM" => sub { my $spell = unpack($RD{'REFR.WNAM'}, $_[0]);
 		      sprintf "Readied_Spell: %s", $spell },
-     "REGN.WEAT" => sub { sprintf "Clear: %d  Cloudy: %d  Foggy: %d  Overcast: %d  Rain: %d  Thunder: %d  Ash: %d  Blight: %d",
+     "REGN.WEAT" => sub { sprintf "Clear: %d  Cloudy: %d  Foggy: %d  Overcast: %d  Rain: %d  Thunder: %d  Ash: %d  Blight: %d  Snow: %d  Blizzard: %d",
 			      unpack($RD{'REGN.WEAT'}, $_[0]) },
      "REGN.CNAM" => sub { "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'REGN.CNAM'}, $_[0]) },
      "REGN.SNAM" => sub { "Chance: %3d  SoundName: %s", unpack($RD{'REGN.SNAM'}, $_[0]) },
@@ -2825,9 +2873,9 @@ my %TOSTR =
      "SPLM.NAME" => sub { unpack($RD{'SPLM.NAME'}, $_[0]); },
      "SPLM.SPDT" => sub {
 	 # SPDT is 160 bytes long
-	 my($type, $spell, $long2, $long3, $caster, $item) = unpack($RD{'SPLM.SPDT'}, $_[0]);
-	 sprintf qq{Type: %s  Name: "%s"  long2:%s  long3: %d  caster: "%s"  Item: "%s"},
-	     $SPLM_TYPE{$type}, $spell, dbg_word($long2), $long3, $caster, $item;
+	 my($type, $name, $long1, $long2, $caster, $item) = unpack($RD{'SPLM.SPDT'}, $_[0]);
+	 sprintf qq{Type: %s  Name: "%s"  long1:%s  long2: %d  caster: "%s"  Item: "%s"},
+	     $SPLM_TYPE{$type}, $name, dbg_word(pack("L", $long1)), $long2, $caster, $item;
      },
      "SPLM.NPDT" => sub {
 	 # NPDT is 56 bytes long
@@ -2912,6 +2960,7 @@ my %CMDS =
      "print"         => [ \&opts_print,         \&cmd_print,         's', "Print records as readable text"],
      "recover"       => [ \&opts_recover,       \&cmd_recover,       's', "Recover usable records from plugin with 'bad form' errors"],
      "rename"        => [ \&opts_rename,        \&cmd_rename,        's', "Rename objects"],
+     "-codectest"    => [ \&opts_codectest,     \&cmd_codectest,     's', "Test TES3 codec"],
      "-wikiout"      => [ \&opts_wikiout,       \&cmd_wikiout,       'm', "Output wiki formatted help"],
     );
 
@@ -2922,10 +2971,14 @@ foreach (sort keys %CMDS) {
 }
 my $USAGE_ALL = qq{Usage: tes3cmd COMMAND OPTIONS plugins...
 
-For help on individual commands: tes3cmd help command
+tes3cmd is a low-level command line tool that can examine, edit, and delete
+records from a TES3 plugin for Morrowind.
 
 COMMANDS
 $command_list
+
+For help on individual commands: tes3cmd help command
+
 };
 
 sub opts_help {
@@ -2999,7 +3052,7 @@ sub read_rec {
 	my $inp_offset = sysseek($fh, 0, 1) - $n_read - $hdr_size;
 	die qq{read_rec(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rec_type"): asked for $rec_len bytes, got $n_read\n};
     }
-    return($rec_type, $rec, $flags, $unk);
+    return($rec_type, $rec, $flags, $unk, $rec_hdr);
 }
 
 sub write_rec {
@@ -3013,13 +3066,13 @@ sub subrec {
 }
 
 sub ext_cell_name {
-    my($r, $name) = @_;
-    $name = $name || chop_nulls($r->{RGNN}[0]) || "Wilderness";
-    if (length($r->{DATA}[0]) < 12) { # size of "x[L]ll"
+    my($srh, $name) = @_;
+    $name = $name || chop_nulls($srh->{RGNN}[0]) || "Wilderness";
+    if (length($srh->{DATA}[0]) < 12) { # size of "x[L]ll"
 	warn "Error, CELL: ($name) does not have a valid DATA subrecord\n";
 	return($name);
     } else {
-	return(sprintf("$name (%d, %d)", unpack("x[L]ll", $r->{DATA}[0])));
+	return(sprintf("$name (%d, %d)", unpack("x[L]ll", $srh->{DATA}[0])));
     }
 }
 
@@ -3302,7 +3355,7 @@ sub read_dialogs {
 	    }
 	    next if ($rec_type ne "DIAL");
 	    my $srh = parse_subrec_hash($rec);
-	    my $id = unpack("Z*", $srh->{NAME}[0]);
+	    my $id = chop_nulls($srh->{NAME}[0]);
 	    my $type = unpack("C", $srh->{DATA}[0]);
 	    $dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
 	}
@@ -3356,7 +3409,7 @@ sub rec_to_string {
     my $dial_str = ($rec_type eq 'INFO') ? " $CURRENT_DIAL" : '';
     my $flagstr = decode_flags($flags, \@REC_FLAGS);
     warn "REC=$rec_type $id flags=$flagstr\n" if (DBG);
-    my $hdr = defined($flags) ? "${prefix}Record: $rec_type $id${dial_str} Flags: $flagstr${unkstr}$separator" : "";
+    my $hdr = defined($flags) ? qq{${prefix}Record: $rec_type "$id"${dial_str} Flags: $flagstr${unkstr}$separator} : "";
     my @frmr_data;
     my $first_frmr_seen = 0;
     my $frmr_match = 0;
@@ -3443,8 +3496,8 @@ sub read_match_files {
 }
 
 sub decode_rec {
-    my($plugin, $rec_type, $rec, $codec_ok) = @_;
-    #warn "decode_rec($plugin, $rec_type, $rec, $codec_ok)\n";
+    my($plugin, $rec_type, $rec) = @_;
+    #warn "decode_rec($plugin, $rec_type, $rec)\n";
     my $p = 0;
     my $rec_len = length($rec);
     # decode the sub-records for this record
@@ -3455,37 +3508,29 @@ sub decode_rec {
 	my $subrec = substr($rec, $p, $subrec_len);
 	$p += $subrec_len;
 	if (defined $subrec) {
-	    my($hr, $idx) = decoder($rec_type, $subrec_type)->($subrec);
-	    push(@subrecs, [$subrec_type, $hr, $idx]);
-	    $codec_ok = check_codec($codec_ok, "${rec_type}.${subrec_type}", $subrec_type, $subrec, $hr, $idx, undef) if (DBG);
+	    my($hr) = decoder($rec_type, $subrec_type)->($subrec);
+	    push(@subrecs, [$subrec_type, $hr]);
 	} else {
 	    warn "$plugin: Error, malformed subrec for ($rec_type) type=$subrec_type pos=$p len=$subrec_len\n";
 	}
     }
-    return(\@subrecs, $codec_ok);
+    return(\@subrecs);
 }
 
+# encode and return a buffer for the subrecords that comprise the body of a full record.
 sub encode_rec {
-    my($rec_type, $r, $codec_ok, $print_rec) = @_;
+    my($rec_type, $r) = @_;
     my $newrec = '';
     foreach my $subr (@$r) {
-	my($subrec_type, $hr, $idx) = @$subr;
+	my($subrec_type, $hr) = @$subr;
 	my $full_type = "${rec_type}.${subrec_type}";
-	my $subrec = encoder($rec_type, $subrec_type)->($hr, $idx);
-#	my $subrec_len = length($subrec);
-	if (DBG) {
-	    unless ($codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec)) {
-		warn "DBG: Codec Failure on $full_type!\n";
-		last;
-	    }
-	}
-#	$newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
+	my $subrec = encoder($rec_type, $subrec_type)->($hr);
 	$newrec .= pack("a4L/a*", $subrec_type, $subrec);
     }
-    return($newrec, $codec_ok);
+    return($newrec);
 }
 
-sub process_plugin_for_input {
+sub process_plugin_for_read {
     my($plugin, $fun) = @_;
     read_match_files();
     my $inp = open_input_plugin($plugin);
@@ -3493,7 +3538,7 @@ sub process_plugin_for_input {
     my($wanted_ids, $wanted_types) = get_wanted();
     # process each record in the plugin
     eval {
-	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	while (my($rec_type, $rec, $flags, $unk, $rec_hdr) = read_rec($inp, $expected, $plugin)) {
 	    $expected = undef;
 	    last if not defined $rec_type;
 	    warn "REC=$rec_type flags=$flags\n" if (DBG);
@@ -3504,7 +3549,7 @@ sub process_plugin_for_input {
 	    }
 	    my $srh = parse_subrec_hash($rec);
 	    if ($rec_type eq 'DIAL') {
-		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . unpack("Z*", $srh->{NAME}[0]) . ')';
+		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . chop_nulls($srh->{NAME}[0]) . ')';
 	    }
 	    next if ($wanted_types and not $wanted_types->{$rec_type});
 	    # process list of sub-records
@@ -3514,10 +3559,10 @@ sub process_plugin_for_input {
 		my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
 		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
 		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
-		    $fun->($rec_type, $id, $rec, $srh, $flags, $unk)
+		    $fun->($rec_type, $id, $rec, $srh, $flags, $unk, $rec_hdr)
 		}
 	    } else {
-		$fun->($rec_type, $id, $rec, $srh, $flags, $unk)
+		$fun->($rec_type, $id, $rec, $srh, $flags, $unk, $rec_hdr)
 	    }
 	}
     };
@@ -3534,7 +3579,7 @@ sub process_plugin_for_update {
     my $modified = 0;
     # process each record in the plugin
     eval {
-	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
+	while (my($rec_type, $rec, $flags, $unk, $rec_hdr) = read_rec($inp, $expected, $plugin)) {
 	    $expected = undef;
 	    last if not defined $rec_type;
 	    warn "REC=$rec_type flags=$flags\n" if (DBG);
@@ -3545,7 +3590,7 @@ sub process_plugin_for_update {
 	    }
 	    my $srh = parse_subrec_hash($rec);
 	    if ($rec_type eq 'DIAL') {
-		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . unpack("Z*", $srh->{NAME}[0]) . ')';
+		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}[0])} . ':' . chop_nulls($srh->{NAME}[0]) . ')';
 	    }
 	    next if ($wanted_types and not $wanted_types->{$rec_type});
 	    # process list of sub-records
@@ -3556,10 +3601,10 @@ sub process_plugin_for_update {
 		my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $flags, $unk);
 		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
 		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
-		    ($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk);
+		    ($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk, $rec_hdr);
 		}
 	    } else {
-		($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk);
+		($newrec, $newflags) = $fun->($rec_type, $id, $rec, $srh, $flags, $unk, $rec_hdr);
 	    }
 	    if ($newrec) {
 		write_rec($out, $rec_type, $newrec, $newflags, $unk);
@@ -3602,13 +3647,13 @@ sub search_and_replace {
 }
 
 sub getrec {
-    my($r, $opt) = @_; 		# opt is "index", "type", "field"
-    my @indices = defined($opt->{index}) ? ($opt->{index}) : (0 .. $#$r);
+    my($r, $opt) = @_; 		# opt is hashref with keys: "i", "t", "f"
+    my @indices = defined($opt->{i}) ? ($opt->{i}) : (0 .. $#$r);
     foreach my $i (@indices) {
 	my $type = $r->[$i]->[0];
-	next if (defined($opt->{type}) and ($type !~ /^$opt->{type}/i));
-	if (defined($opt->{field})) {
-	    my $key = $opt->{field};
+	next if (defined($opt->{t}) and ($type !~ /^$opt->{t}/i));
+	if (defined($opt->{f})) {
+	    my $key = lc($opt->{f});
 	    if (defined($r->[$i]->[1]->{$key})) {
 		return($r->[$i]->[1]->{$key});
 	    } else {
@@ -3634,13 +3679,13 @@ sub getrec {
 }
 
 sub dumprec {
-    my($r, $opt) = @_; 		# opt is "index", "type", "field"
-    my @indices = defined($opt->{index}) ? ($opt->{index}) : (0 .. $#$r);
+    my($r, $opt) = @_; 		# opt is hashref with keys: "i", "t", "f"
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#$r);
     foreach my $i (@indices) {
 	my $type = $r->[$i]->[0];
-	next if (defined($opt->{type}) and ($type !~ /^$opt->{type}/i));
-	if (defined($opt->{field})) {
-	    my $key = $opt->{field};
+	next if (defined($opt->{t}) and ($type !~ /^$opt->{t}/i));
+	if (defined($opt->{f})) {
+	    my $key = lc($opt->{f});
 	    if (defined($r->[$i]->[1]->{$key})) {
 		print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
 	    } else {
@@ -3652,6 +3697,7 @@ sub dumprec {
 	    my @unordered_fields = ();
 	    while (my($key, $val) = each %{$r->[$i]->[1]}) {
 		$val = qq{"$val"} if ($val =~ /[^\d.]/);
+		my $print_key = lcfirst($key);
 		if (defined $r->[$i]->[2]->{$key}) {
 		    $ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
 		} else {
@@ -3665,19 +3711,19 @@ sub dumprec {
 }
 
 sub setrec {
-    my($r, $opt, $newval) = @_;	# opt is "index", "type", "field"
+    my($r, $opt, $newval) = @_;	# opt is hashref with keys: "i", "t", "f"
     if (not defined $newval) {
-	warn qq{Usage: setrec(\$r, \$opt_hash, \$newvalue)
-opt_hash can have the keys: "index", "type", or "field"\n};
+	warn qq{Usage: setrec(\$option_hash, \$newvalue)
+option_hash can have the keys: "i", "t", or "f"\n};
 	return;
     }
     my $rc = 0;
-    my @indices = defined($opt->{index}) ? ($opt->{index}) : (0 .. $#$r);
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#$r);
     foreach my $i (@indices) {
 	my $type = $r->[$i]->[0];
-	next if (defined($opt->{type}) and ($opt->{type} ne $type));
-	if (defined($opt->{field})) {
-	    my $key = $opt->{field};
+	next if (defined($opt->{t}) and ($opt->{t} ne $type));
+	if (defined($opt->{f})) {
+	    my $key = lc($opt->{f});
 	    if (defined($r->[$i]->[1]->{$key})) {
 		if ($r->[$i]->[1]->{$key} ne $newval) {
 		    $r->[$i]->[1]->{$key} = $newval;
@@ -3727,6 +3773,8 @@ sub run_code {
     my $mod = 0;
     search_and_replace($r, \$mod) if ($::opt_r);
     if ($::opt_e) {
+	# under the covers, add the first argument '$r' (pointer to current record).
+	$::opt_e =~ s/\b(dump|set)rec\s*\(/${1}rec(\$r,/g;
 	$mod ||= eval($::opt_e);
 	if ($@) {
 	    warn qq{Error running "$::opt_e" on: $rec_type ($@)\n};
@@ -3744,25 +3792,6 @@ sub encoder {
 sub decoder {
     my($rec_type, $subrec_type) = @_;
     return($DECODE{"${rec_type}.${subrec_type}"} || $DECODE{$subrec_type} || $DECODER_UNKNOWN);
-}
-
-sub check_codec {
-    my($codec_ok, $rec_type, $subrec_type, $subrec, $hr, $idx, $print_rec) = @_;
-    # DEBUG: sanity check of codec orthogonality
-    my $newrec;
-    if ($codec_ok and (($newrec = encoder($rec_type, $subrec_type)->($hr, $idx)) ne $subrec)) {
-	# we only print the first codec failure, it's more than enough :(
-	$codec_ok = 0;
-	warn "ERROR, codec failure on $rec_type:\n";
-	if (length($newrec) != length($subrec)) {
-	    warn "Encoded length mismatch: newrec: @{[length($newrec)]}  subrec: @{[length($subrec)]}\n";
-	}
-	warn "subrec: ", unpack("H*", $subrec), "\n";
-	warn "newrec: ", unpack("H*", $newrec), "\n";
-	warn Dumper({ hr => $hr, idx => $idx});
-	warn "Full Record:\n$print_rec\n";
-    }
-    return($codec_ok);
 }
 
 sub master_cache_name {
@@ -3834,7 +3863,79 @@ sub load_master {
     save_master_cache($esm);
 }
 
+sub dumpit {
+    my($label, $it) = @_;
+    $it =~ s/([[:cntrl:]])/"^".chr(ord($1)+64)/ge;
+    warn("$label: [$it]\n" . (($::opt_D) ? unpack("H*", $it) . "\n" : ''));
+}
+
 ###COMMANDS
+
+sub cmd_codectest {
+    my($plugin) = @_;
+    return if ($plugin =~ /^test_/);
+    my %exclude;
+    if ($::opt_x) {
+	# optional types to exclude
+	foreach (split(m!/!, uc($::opt_x))) { $exclude{$_}++; }
+    }
+    print "\n", ("=" x 65), "\n";
+    print "TESTING codec on: $plugin ...\n";
+    my $fun = sub {
+	my($rec_type, $id, $rec, $srh, $flags, $unk, $rec_hdr) = @_;
+	my $r = decode_rec($plugin, $rec_type, $rec);
+	my $newflags = $flags;
+	my $newrec = '';
+	my $p = 0;
+	my $rec_len = length($rec);
+	while ($p < $rec_len) {
+	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
+	    my $full_type = "${rec_type}.${subrec_type}";
+	    $p += 8;
+	    my $subrec = substr($rec, $p, $subrec_len);
+	    $p += $subrec_len;
+	    if (defined $subrec) {
+		my($hr) = decoder($rec_type, $subrec_type)->($subrec);
+		my $newsubrec = encoder($rec_type, $subrec_type)->($hr);
+		unless ($exclude{$full_type}) {
+		    if ($newsubrec ne $subrec) {
+			warn "CODEC FAILURE on sub-record ${full_type}:\n";
+			if (length($newsubrec) != length($subrec)) {
+			    warn "Encoded length mismatch: newrec: @{[length($newsubrec)]}  subrec: @{[length($subrec)]}\n";
+			}
+			dumpit('original', $subrec);
+			dumpit('re-coded', $newsubrec);
+			warn Dumper($hr);
+			my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $newflags, $unk);
+			warn "Full Record:\n$print_rec\n";
+			die "Test Halted\n" unless ($::opt_s);
+		    }
+		}
+		$newrec .= pack("a4L/a*", $subrec_type, $newsubrec);
+	    } else {
+		warn "$plugin: Error, malformed subrec for ($rec_type) type=$subrec_type pos=$p len=$subrec_len\n";
+	    }
+	}
+	unless ($exclude{$rec_type}) {
+	    if ($rec ne $newrec) {
+		warn "CODEC FAILURE on record ${rec_type}:\n";
+		dumpit('original', $rec);
+		dumpit('re-coded', $newrec);
+		my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $newflags, $unk);
+		warn "Full Record:\n$print_rec\n";
+	    }
+	    if ((my $new_hdr = pack("a4LLL", $rec_type, length($rec), $unk, $newflags)) ne $rec_hdr) {
+		warn "CODEC FAILURE on ${rec_type} Record Header:\n";
+		dumpit('original', $rec_hdr);
+		dumpit('re-coded', $new_hdr);
+		my $print_rec = rec_to_string($rec, $rec_type, $id, $plugin, $newflags, $unk);
+		warn "Full Record:\n$print_rec\n";
+	    }
+	}
+	return($newrec, $newflags);
+    };
+    process_plugin_for_update($plugin, $fun, "test_");
+}
 
 sub cmd_wikiout {
     foreach my $cmd (sort keys %CMDS) {
@@ -4322,7 +4423,6 @@ sub cmd_modify {
     my $expected = "TES3";
     my($wanted_ids, $wanted_types) = get_wanted();
     my $modified = 0;
-    my $codec_ok = 1;
     eval {
 	while (my($rec_type, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
 	    $expected = undef;
@@ -4356,17 +4456,16 @@ sub cmd_modify {
 		    my $full_type = "${rec_type}.${subrec_type}";
 		    unless ($wanted_types and not $wanted_types->{$rec_type}) {
 			my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNK;
-			my($hr, $idx) = decoder($rec_type, $subrec_type)->($subrec);
+			my($hr) = decoder($rec_type, $subrec_type)->($subrec);
 			my $subrec_str = $tostr->($subrec);
 			if ($::opt_s) {
 			    if (((not $::opt_m) or ($subrec_str =~ /$::opt_m/i)) and
 				((not $::opt_M) or ($subrec_str !~ /$::opt_M/i))) {
 				# sub-record matches, so run our code on it ...
 				warn "full_type=$full_type\n";
-				if (my $newhr = run_code($full_type, $hr, $idx)) {
+				if (my $newhr = run_code($full_type, $hr)) {
 				    my $encoder = encoder($rec_type, $subrec_type);
-				#warn "DBG: (newhr, idx)\n", Dumper([$newhr, $idx]), "\n";
-				    $subrec = $encoder->($newhr, $idx);
+				    $subrec = $encoder->($newhr);
 				    $modified++;
 				    $subrec_str = $tostr->($subrec);
 				    warn "MODIFIED SUBRECORD: $subrec_str\n";
@@ -4375,9 +4474,8 @@ sub cmd_modify {
 				}
 			    }
 			}
-			push(@subrecs, [$subrec_type, $hr, $idx]);
+			push(@subrecs, [$subrec_type, $hr]);
 			$print_rec .= "   $full_type: $subrec_str\n";
-			$codec_ok = check_codec($codec_ok, $full_type, $subrec_type, $subrec, $hr, $idx, $print_rec) if (DBG);
 		    }
 		    $newrec .= pack("a4La*", $subrec_type, $subrec_len, $subrec);
 		} else {
@@ -4387,14 +4485,14 @@ sub cmd_modify {
 	    }
 	    if ($::opt_s) {
 		write_rec($out, $rec_type, $newrec, $flags, $unk);
-	    } elsif ($codec_ok) {
+	    } else {
 		if (((not $::opt_m) or ($print_rec =~ /$::opt_m/i)) and
 		    ((not $::opt_M) or ($print_rec !~ /$::opt_M/i))) {
 		    if (my $modrec = run_code($rec_type, \@subrecs, $flags, $unk)) {
 			#warn "Record was modified, encoding modified record\n";
 			my $newrec = '';
-			($newrec, $codec_ok) = encode_rec($rec_type, $modrec, $codec_ok, $print_rec);
-			if ($codec_ok and ($newrec ne $rec)) {
+			$newrec = encode_rec($rec_type, $modrec);
+			if ($newrec ne $rec) {
 			    $rec = $newrec;
 			    my $id = rec_id(parse_subrec_hash($rec), $rec_type);
 			    warn "MODIFIED RECORD:\n" . rec_to_string($rec, $rec_type, $id, $plugin) . "\n";
@@ -4438,7 +4536,7 @@ sub cmd_print {
 	    my $id = rec_id($srh, $rec_type);
 	    next if ($wanted_ids and $id !~ /$wanted_ids/i);
 	    if ($rec_type eq 'DIAL') {
-		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}->[0])} . ':' . unpack("Z*", $srh->{NAME}->[0]) . ')';
+		$CURRENT_DIAL = '(' . $DIAL_TYPE{unpack("C", $srh->{DATA}->[0])} . ':' . chop_nulls($srh->{NAME}->[0]) . ')';
 	    }
 	    next if ($wanted_types and not $wanted_types->{$rec_type});
 	    $n = 0 if ($rec_type eq "TES3");
@@ -4543,7 +4641,7 @@ sub cmd_rename {
 			    eval qq{(\$newname = \$name) =~ s!$REN_FROM!$REN_TO!g};
 			    if (length($newname) < 32) {
 				if ($name ne $newname) {
-				    $subrec->[1] = pack("Z32L5", $newname, @schd_longs);
+				    $subrec->[1] = pack("a32L5", $newname, @schd_longs);
 				    $renamed_schd = 1;
 				    printf qq{    Renaming: $rec_type.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
 				}
@@ -4776,7 +4874,7 @@ sub cmd_clean {
 		    if (is_interior($srh)) {
 			if ($::opt_c) { # check for redundant AMBI/WHGT
 			    # CLEAN AMBI
-			    ($r) = decode_rec($plugin, $rec_type, $rec) if (not defined $r);
+			    $r = decode_rec($plugin, $rec_type, $rec) if (not defined $r);
 			    if (not $cleaned_ambi and $srh->{AMBI}[0] eq $mast_srh->{AMBI}[0]) {
 				warn " Cleaned redundant AMBI from CELL: $id\n";
 				$r = remove_subrec($r, 'AMBI');
@@ -4832,7 +4930,7 @@ sub cmd_clean {
 	    }
 	} elsif ($rec_type eq 'TES3') {
 	    foreach my $mast (@{$srh->{MAST}}) {
-		load_master(unpack("Z*", $mast));
+		load_master(chop_nulls($mast));
 	    }
 	}
 	if ($::opt_d) {
@@ -4847,26 +4945,25 @@ sub cmd_clean {
 		}
 	    }
 	}
-	($newrec) = encode_rec($rec_type, $r) if ($r); # update record buffer if we have modified it
+	$newrec = encode_rec($rec_type, $r) if ($r); # update record buffer if we have modified it
 	return($newrec, $newflags);
     };
     process_plugin_for_update($plugin, $fun, "Clean_");
 }
 
-my $DUMP_FORMAT_VERSION = "0.1";
 sub cmd_dump {
     my($plugin) = @_;
-    print "#(Dump_Version: $DUMP_FORMAT_VERSION)\n";
+    print "#(Dump_Version: $DUMP_VERSION)\n";
     print "\nPlugin: $plugin\n";
     my $fun = sub {
 	my($rec_type, $id, $rec, $srh, $flags, $unk) = @_;
 	my $unkstr = (DBG) ? sprintf("  Unk:%04x", $unk) : '';
 	my $flagstr = decode_flags($flags, \@REC_FLAGS);
 	my $dial_str = ($rec_type eq 'INFO') ? " $CURRENT_DIAL" : '';
-	print qq{\nRecord: $rec_type $id${dial_str} Flags: $flagstr${unkstr}\n};
+	print qq{\nRecord: $rec_type "$id"${dial_str} Flags: $flagstr${unkstr}\n};
 	dumprec(decode_rec($plugin, $rec_type, $rec));
     };
-    process_plugin_for_input($plugin, $fun);
+    process_plugin_for_read($plugin, $fun);
 }
 
 sub cmd_recover {
