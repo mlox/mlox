@@ -119,8 +119,9 @@ OPTIONS
  -R      Replace original with cleaned version (original is backed up)
 
 Cleans plugins of various junk. If no cleaning options are selected, the
-default is to assume the options: -c, -g, -j, -o. It should always be safe to
-use the "clean" command with no options to get the default cleaning behavior.
+default is to assume the options: -c, -d, -g, -j, -o. It should always be safe
+to use the "clean" command with no options to get the default cleaning
+behavior.
 
 An Evil GMST is defined as a GMST from the list of 11 Tribunal GMSTs or 61
 Bloodmoon GMSTs that are inadvertently introduced to a plugin by the
@@ -140,7 +141,7 @@ sub opts_clean {
     getopts('DacdgjoO:R') or die $CLEAN_USAGE;
     unless ($::opt_c or $::opt_d or $::opt_g or $::opt_j or $::opt_o) {
 	# turn on all safe cleaning options if none are selected.
-	$::opt_c = $::opt_g = $::opt_j = $::opt_o = 1;
+	$::opt_c = $::opt_d = $::opt_g = $::opt_j = $::opt_o = 1;
     }
     if ($::opt_a) {
 	# turn on all cleaning options
