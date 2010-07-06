@@ -11,7 +11,6 @@
 
 # TBD:
 # canonize common switches (-i is always "ID")
-# implement -o option for "clean"
 # add ability for "header" command to update NREC field
 # combine "delete" and "objdelete", fixup subrecord deletion
 # and add more examples, esp. "modify"
@@ -137,7 +136,7 @@ sub-records with data identical to the master.
 sub opts_clean {
     $_[0] && do { die $CLEAN_USAGE; };
     getopts('DacdgjoO:') or die $CLEAN_USAGE;
-    unless ($::opt_c and not $::opt_d and not $::opt_g and not $::opt_j and not $::opt_o) {
+    unless ($::opt_c or $::opt_d or $::opt_g or $::opt_j or $::opt_o) {
 	# turn on all safe cleaning options if none are selected.
 	$::opt_c = $::opt_g = $::opt_j = $::opt_o = 1;
     }
@@ -2072,7 +2071,7 @@ my %RECDEF =
 	      DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]],
 	      FGTN => [],
 	      FLTV => [],
-	      FRMR => [["ObjInd", "S"], ["Unknown", "C"], ["ModInd", "C"]],
+	      FRMR => [["ObjIdx", "S"], ["Unknown", "C"], ["ModIdx", "C"]],
 	      INDX => [],
 	      INTV => [],
 	      KNAM => [],
@@ -2875,9 +2874,9 @@ $ENCODE{'CELL.DATA'} = sub {
     }
 };
 
-default_codec('CELL.FRMR', (["ObjInd", "S"],
+default_codec('CELL.FRMR', (["ObjIdx", "S"],
 			    ["Unknown_1", "C"],
-			    ["ModInd", "C"]));
+			    ["ModIdx", "C"]));
 default_codec('CELL.NAM5', (["R", "C"], # Map Color
 			    ["G", "C"],
 			    ["B", "C"],
@@ -3351,7 +3350,7 @@ my %TOSTR =
 	     $coord . $data_fog_str . $unk_str . $flags_str;
 	 }
      },
-     "CELL.FRMR" => sub { sprintf "ObjInd: %d Unk: %d ModInd: %d", unpack($RD{'CELL.FRMR'}, $_[0]); },
+     "CELL.FRMR" => sub { sprintf "ObjIdx: %d Unk: %d ModIdx: %d", unpack($RD{'CELL.FRMR'}, $_[0]); },
      "CELL.NAM5" => sub { sprintf "Map_Color_RGB: (%x, %x, %x)", unpack($RD{'CELL.NAM5'}, $_[0]) },
      "CELL.NAM9" => sub { my $val = unpack($RD{'CELL.NAM9'}, $_[0]); (1 == $val) ? "Owner" : "Unk:$val"; },
      "CLAS.CLDT" => sub { my($attr1, $attr2, $spec, $min1, $maj1, $min2, $maj2, $min3, $maj3, $min4, $maj4, $min5, $maj5, $flags, $autoflags) =
@@ -3912,21 +3911,25 @@ sub parse_cell_objects {
 	    $nam0idx = scalar(@objs) + (($obj) ? 1 : 0);
 	} elsif ($subtype eq 'FRMR') {
 	    if ($obj) {
-		push(@objs, $obj);
-		$objidx{$obj}++;
+		my @newobj = @$obj;
+		push(@objs, \@newobj);
+		$objidx{$newobj[1]} = $newobj[0];
 	    }
-	    $obj = pack("a4L/a*", $subtype, $subrec); # start new object
+	    # start new object
+	    $obj->[0] = [unpack($RD{'CELL.FRMR'}, $subrec)];
+	    $obj->[1] = '';
 	} else {
 	    if ($obj) {		# collecting object
-		$obj .= pack("a4L/a*", $subtype, $subrec);
+		$obj->[1] .= pack("a4L/a*", $subtype, $subrec);
 	    } else {		# still collecting header
 		$hdr .= pack("a4L/a*", $subtype, $subrec);
 	    }
 	}
     }
     if ($obj) {
-	push(@objs, $obj);
-	$objidx{$obj}++;
+	my @newobj = @$obj;
+	push(@objs, \@newobj);
+	$objidx{$newobj[1]} = $newobj[0];
     }
     return($hdr, $nam0idx, \@objs, \%objidx);
 }
@@ -3940,7 +3943,8 @@ sub assemble_cell_objects {
 	    my $nam0 = scalar(@$objs) - $nam0idx;
 	    $rec .= pack("a4LL", 'NAM0', 4, $nam0) if ($nam0 > 0);
 	}
-	$rec .= $obj;
+	my $frmr = pack($RD{'CELL.FRMR'}, @{$obj->[0]});
+	$rec .=  pack("a4L/a*", 'FRMR', $frmr) . $obj->[1];
     }
     return($rec);
 }
@@ -4940,10 +4944,10 @@ sub cmd_diff {
 		my $rec1 = $obj1->{$rec_type}->{$id};
 		my $print_rec1 = rec_to_string($rec1, $rec_type, $id, $plugin1);
 		$print_rec1 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
-		$print_rec1 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/gm;
+		$print_rec1 =~ s/CELL.FRMR: ObjIdx: \d+ ModIdx: 0/CELL.FRMR: ObjIdx: (IGNORED) ModIdx: 0/gm;
 		my $print_rec2 = rec_to_string($rec2, $rec_type, $id, $plugin2);
 		$print_rec2 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
-		$print_rec2 =~ s/CELL.FRMR: ObjInd: \d+ ModInd: 0/CELL.FRMR: ObjInd: (IGNORED) ModInd: 0/gm;
+		$print_rec2 =~ s/CELL.FRMR: ObjIdx: \d+ ModIdx: 0/CELL.FRMR: ObjIdx: (IGNORED) ModIdx: 0/gm;
 		if ($print_rec1 eq $print_rec2) {
 		    push(@p1_equal_p2, "$rec_type: $id") if ($rpt{eq});
 		} elsif ($rpt{ne}) {
@@ -5616,36 +5620,43 @@ sub cmd_clean {
 	    my $cleaned_ambi;
 	    my $cleaned_whgt;
 	    my $plug_srl;
-	    my $cell_objects;
 	    my $mast_srl;
+	    if ($::opt_o) {
+		# CLEAN CELL OBJECTS
+		my($p_hdr, $p_nam0idx, $p_objs, $p_objidx) = parse_cell_objects($rec);
+		my @new_objs;
+		foreach my $obj (@$p_objs) {
+		    my $object_body = $obj->[1];
+		    my $cleaned_obj = 0;
+		    foreach my $master (keys %{my_master}) {
+			if (my $lref = $MASTER_ID->{$master}->{$id}->{CELL}) {
+			    my($mast_srh, $mast_rec) = @{$lref};
+			    my($m_hdr, $m_nam0idx, $m_objs, $m_objidx) = parse_cell_objects($mast_rec);
+			    if ($m_objidx->{$object_body}->[0] == $obj->[0]->[0]) { # compare master and plugin FRMR object indices
+				$cleaned_obj++;
+				last;
+			    }
+			}
+		    }
+		    if ($cleaned_obj) {
+			my $name = chop_nulls(parse_subrec_hash($obj->[1])->{NAME}[0]);
+			print " Cleaned redundant object ($name FRMR:$obj->[0]->[0]) from CELL: $id\n";
+		    } else {
+			push(@new_objs, $obj);
+		    }
+		}
+		if (scalar(@new_objs) != scalar(@$p_objs)) {
+		    $rec = assemble_cell_objects($p_hdr, $p_nam0idx, \@new_objs);
+		    # update decodings if already decoded.
+		    $r = decode_rec($plugin, $rec_type, $rec) if ($r);
+		    $plug_srl = parse_subrec_list($rec) if ($plug_srl);
+		}
+	    }
 	    # we check plugin against all masters, as we can't know with which masters the author created it
 	    # and ideally, we don't want the result of cleaning to be dependent on load order.
 	    foreach my $master (keys %{my_master}) {
 		if (my $lref = $MASTER_ID->{$master}->{$id}->{CELL}) {
 		    my($mast_srh, $mast_rec) = @{$lref};
-		    if ($::opt_o) {
-			# CLEAN CELL OBJECTS
-			my($p_hdr, $p_nam0idx, $p_objs, $p_objidx) = parse_cell_objects($rec);
-			my($m_hdr, $m_nam0idx, $m_objs, $m_objidx) = parse_cell_objects($mast_rec);
-			my @new_plug_cells;
-			my $modified = 0;
-			foreach my $obj (@$p_objs) {
-			    if ($m_objidx->{$obj}) {
-				$modified++;
-				my $obj_srh = parse_subrec_hash($obj);
-				my $name = chop_nulls($obj_srh->{NAME}[0]);
-				print " Cleaned redundant object ($name) from CELL: $id\n";
-			    } else {
-				push(@new_plug_cells, $obj);
-			    }
-			}
-			if ($modified) {
-			    $rec = assemble_cell_objects($p_hdr, $p_nam0idx, \@new_plug_cells);
-			    # update decodings if already decoded.
-			    $r = decode_rec($plugin, $rec_type, $rec) if ($r);
-			    $plug_srl = parse_subrec_list($rec) if ($plug_srl);
-			}
-		    }
 		    if (is_interior($srh)) {
 			if ($::opt_c) { # check for redundant AMBI/WHGT
 			    # CLEAN AMBI
