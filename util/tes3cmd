@@ -13,6 +13,7 @@
 # canonize common switches (-i is always "ID")
 # add ability for "header" command to update NREC field
 # combine "delete" and "objdelete", fixup subrecord deletion
+# rewrite commands to use the "process" subroutines
 # and add more examples, esp. "modify"
 # write some tests
 # GUI
@@ -134,6 +135,19 @@ GMSTs, see:
 Junk cells are bogus external CELL records that crop up in many plugins due
 to a Construction Set bug. They contain only NAME, DATA and sometimes RGNN
 sub-records with data identical to the master.
+
+Example(s):
+
+# clean my plugin of only Evil GMSTs:
+tes3cmd clean -g "my plugin.esp"
+
+# clean 2 plugins and put the cleaned versions in a subdirectory "Clean":
+tes3cmd clean -O Clean plugin1.esp plugin2.esp
+
+# clean all plugins in the current directory, replacing the originals with
+# the cleaned versions and save the diagnostic output to a file (clean.txt):
+tes3cmd clean -R *.esm *.esp > clean.txt
+
 };
 
 sub opts_clean {
@@ -161,6 +175,7 @@ Example(s):
 
 # output is: "my plugin.esp"
 tes3cmd esp "my plugin.esm"
+
 };
 
 sub opts_esp {
@@ -851,86 +866,84 @@ my @CLEAN_DUP_TYPES =
        FACT GLOB GMST INFO INGR LAND LEVC LEVI LIGH LOCK MGEF MISC NPC_
        PGRD PROB RACE REGN REPA SCPT SKIL SNDG SOUN SPEL SSCR STAT WEAP);
 
-# TBD - repack these guys as 'H*'
 # Evil GMSTs for Tribunal (values are hexencoded)
 my %EVIL_TB =
-    (scompanionshare => '354525650234f6d60716e696f6e6023586162756',
-     scompanionwarningbuttonone => '3545256502c456470247865602d656273656e61627970217579647e2',
-     scompanionwarningbuttontwo => '35452565022556475727e60247f60234f6d60716e696f6e60235861627560246963707c61697e2',
-     scompanionwarningmessage => '354525650295f6572702d656273656e61627970296370207f6f627562702e6f67702478616e602778656e60286560236f6e64727163647564602779647860297f657e2020295f6572702d656273656e6162797027796c6c602175796470296660297f6570246f602e6f6470276966756028696d60276f6c64602f6270276f6f646370247f602262796e67602869637020527f6669647026516c657560247f602160207f6379647966756026716c65756e2',
-     sdeletenote => '35452565024456c656475602e4f64756f3',
-     seffectsummonfabricant => '3545256502375466665636473557d6d6f6e664162627963616e647',
-     slevitatedisabled => '3545256502c456679647164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2',
-     smagicfabricantid => '354525650264162627963616e647',
-     smaxsale => '3545256502d41687023516c656',
-     sprofitvalue => '35452565020527f6669647026516c65756',
-     steleportdisabled => '35452565024556c65607f62747164796f6e602d6167696360246f6563702e6f6470277f627b60286562756e2',
+    (scompanionshare => '5354525620436f6d70616e696f6e205368617265',
+     scompanionwarningbuttonone => '53545256204c657420746865206d657263656e61727920717569742e',
+     scompanionwarningbuttontwo => '535452562052657475726e20746f20436f6d70616e696f6e20536861726520646973706c61792e',
+     scompanionwarningmessage => '5354525620596f7572206d657263656e61727920697320706f6f726572206e6f77207468616e207768656e20686520636f6e74726163746564207769746820796f752e2020596f7572206d657263656e6172792077696c6c207175697420696620796f7520646f206e6f7420676976652068696d20676f6c64206f7220676f6f647320746f206272696e67206869732050726f6669742056616c756520746f206120706f7369746976652076616c75652e',
+     sdeletenote => '535452562044656c657465204e6f74653f',
+     seffectsummonfabricant => '53545256207345666665637453756d6d6f6e466162726963616e74',
+     slevitatedisabled => '53545256204c657669746174696f6e206d6167696320646f6573206e6f7420776f726b20686572652e',
+     smagicfabricantid => '5354525620466162726963616e74',
+     smaxsale => '53545256204d61782053616c65',
+     sprofitvalue => '535452562050726f6669742056616c7565',
+     steleportdisabled => '535452562054656c65706f72746174696f6e206d6167696320646f6573206e6f7420776f726b20686572652e',
      );
 
-# TBD - repack these guys as 'H*'
 # Evil GMSTs for Bloodmoon (values are hexencoded)
 my %EVIL_BM =
-    (fcombatdistancewerewolfmod => '64c4456502a99999e3',
-     ffleedistance => '64c44565020008b354',
-     fwerewolfacrobatics => '64c445650200006134',
-     fwerewolfagility => '64c445650200006134',
-     fwerewolfalchemy => '64c4456502000008f3',
-     fwerewolfalteration => '64c4456502000008f3',
-     fwerewolfarmorer => '64c4456502000008f3',
-     fwerewolfathletics => '64c445650200006134',
-     fwerewolfaxe => '64c4456502000008f3',
-     fwerewolfblock => '64c4456502000008f3',
-     fwerewolfbluntweapon => '64c4456502000008f3',
-     fwerewolfconjuration => '64c4456502000008f3',
-     fwerewolfdestruction => '64c4456502000008f3',
-     fwerewolfenchant => '64c4456502000008f3',
-     fwerewolfendurance => '64c445650200006134',
-     fwerewolffatigue => '64c445650200008c34',
-     fwerewolfhandtohand => '64c445650200008c24',
-     fwerewolfhealth => '64c445650200000004',
-     fwerewolfheavyarmor => '64c4456502000008f3',
-     fwerewolfillusion => '64c4456502000008f3',
-     fwerewolfintellegence => '64c4456502000008f3',
-     fwerewolflightarmor => '64c4456502000008f3',
-     fwerewolflongblade => '64c4456502000008f3',
-     fwerewolfluck => '64c4456502000008f3',
-     fwerewolfmagicka => '64c445650200008c24',
-     fwerewolfmarksman => '64c4456502000008f3',
-     fwerewolfmediumarmor => '64c4456502000008f3',
-     fwerewolfmerchantile => '64c4456502000008f3',
-     fwerewolfmysticism => '64c4456502000008f3',
-     fwerewolfpersonality => '64c4456502000008f3',
-     fwerewolfrestoration => '64c4456502000008f3',
-     fwerewolfrunmult => '64c445650200000cf3',
-     fwerewolfsecurity => '64c4456502000008f3',
-     fwerewolfshortblade => '64c4456502000008f3',
-     fwerewolfsilverweapondamagemult => '64c445650200000cf3',
-     fwerewolfsneak => '64c4456502000008f3',
-     fwerewolfspear => '64c4456502000008f3',
-     fwerewolfspeechcraft => '64c4456502000008f3',
-     fwerewolfspeed => '64c445650200006134',
-     fwerewolfstrength => '64c445650200006134',
-     fwerewolfunarmored => '64c445650200008c24',
-     fwerewolfwillpower => '64c4456502000008f3',
-     iwerewolfbounty => '94e445650201720000',
-     iwerewolffightmod => '94e445650246000000',
-     iwerewolffleemod => '94e445650246000000',
-     iwerewolfleveltoattack => '94e445650241000000',
-     seditnote => '35452565025446964702e4f64756',
-     seffectsummoncreature01 => '3545256502375466665636473557d6d6f6e634275616475727560313',
-     seffectsummoncreature02 => '3545256502375466665636473557d6d6f6e634275616475727560323',
-     seffectsummoncreature03 => '3545256502375466665636473557d6d6f6e634275616475727560333',
-     seffectsummoncreature04 => '3545256502375466665636473557d6d6f6e634275616475727560343',
-     seffectsummoncreature05 => '3545256502375466665636473557d6d6f6e634275616475727560353',
-     smagiccreature01id => '354525650237d416769636342756164757275603139444',
-     smagiccreature02id => '354525650237d416769636342756164757275603239444',
-     smagiccreature03id => '354525650237d416769636342756164757275603339444',
-     smagiccreature04id => '354525650237d416769636342756164757275603439444',
-     smagiccreature05id => '354525650237d416769636342756164757275603539444',
-     swerewolfalarmmessage => '354525650295f657028616675602265656e602465647563647564602368616e67696e676026627f6d60216027756275677f6c666023747164756e2',
-     swerewolfpopup => '35452565027556275677f6c666',
-     swerewolfrefusal => '354525650295f657023616e6e6f6470246f602478696370216370216027756275677f6c666e2',
-     swerewolfrestmessage => '354525650295f657023616e6e6f64702275637470296e6027756275677f6c6660266f627d6e2',
+    (fcombatdistancewerewolfmod => '464c5456209a99993e',
+     ffleedistance => '464c54562000803b45',
+     fwerewolfacrobatics => '464c54562000001643',
+     fwerewolfagility => '464c54562000001643',
+     fwerewolfalchemy => '464c5456200000803f',
+     fwerewolfalteration => '464c5456200000803f',
+     fwerewolfarmorer => '464c5456200000803f',
+     fwerewolfathletics => '464c54562000001643',
+     fwerewolfaxe => '464c5456200000803f',
+     fwerewolfblock => '464c5456200000803f',
+     fwerewolfbluntweapon => '464c5456200000803f',
+     fwerewolfconjuration => '464c5456200000803f',
+     fwerewolfdestruction => '464c5456200000803f',
+     fwerewolfenchant => '464c5456200000803f',
+     fwerewolfendurance => '464c54562000001643',
+     fwerewolffatigue => '464c5456200000c843',
+     fwerewolfhandtohand => '464c5456200000c842',
+     fwerewolfhealth => '464c54562000000040',
+     fwerewolfheavyarmor => '464c5456200000803f',
+     fwerewolfillusion => '464c5456200000803f',
+     fwerewolfintellegence => '464c5456200000803f',
+     fwerewolflightarmor => '464c5456200000803f',
+     fwerewolflongblade => '464c5456200000803f',
+     fwerewolfluck => '464c5456200000803f',
+     fwerewolfmagicka => '464c5456200000c842',
+     fwerewolfmarksman => '464c5456200000803f',
+     fwerewolfmediumarmor => '464c5456200000803f',
+     fwerewolfmerchantile => '464c5456200000803f',
+     fwerewolfmysticism => '464c5456200000803f',
+     fwerewolfpersonality => '464c5456200000803f',
+     fwerewolfrestoration => '464c5456200000803f',
+     fwerewolfrunmult => '464c5456200000c03f',
+     fwerewolfsecurity => '464c5456200000803f',
+     fwerewolfshortblade => '464c5456200000803f',
+     fwerewolfsilverweapondamagemult => '464c5456200000c03f',
+     fwerewolfsneak => '464c5456200000803f',
+     fwerewolfspear => '464c5456200000803f',
+     fwerewolfspeechcraft => '464c5456200000803f',
+     fwerewolfspeed => '464c54562000001643',
+     fwerewolfstrength => '464c54562000001643',
+     fwerewolfunarmored => '464c5456200000c842',
+     fwerewolfwillpower => '464c5456200000803f',
+     iwerewolfbounty => '494e54562010270000',
+     iwerewolffightmod => '494e54562064000000',
+     iwerewolffleemod => '494e54562064000000',
+     iwerewolfleveltoattack => '494e54562014000000',
+     seditnote => '535452562045646974204e6f7465',
+     seffectsummoncreature01 => '53545256207345666665637453756d6d6f6e43726561747572653031',
+     seffectsummoncreature02 => '53545256207345666665637453756d6d6f6e43726561747572653032',
+     seffectsummoncreature03 => '53545256207345666665637453756d6d6f6e43726561747572653033',
+     seffectsummoncreature04 => '53545256207345666665637453756d6d6f6e43726561747572653034',
+     seffectsummoncreature05 => '53545256207345666665637453756d6d6f6e43726561747572653035',
+     smagiccreature01id => '5354525620734d61676963437265617475726530314944',
+     smagiccreature02id => '5354525620734d61676963437265617475726530324944',
+     smagiccreature03id => '5354525620734d61676963437265617475726530334944',
+     smagiccreature04id => '5354525620734d61676963437265617475726530344944',
+     smagiccreature05id => '5354525620734d61676963437265617475726530354944',
+     swerewolfalarmmessage => '5354525620596f752068617665206265656e206465746563746564206368616e67696e672066726f6d20612077657265776f6c662073746174652e',
+     swerewolfpopup => '535452562057657265776f6c66',
+     swerewolfrefusal => '5354525620596f752063616e6e6f7420646f207468697320617320612077657265776f6c662e',
+     swerewolfrestmessage => '5354525620596f752063616e6e6f74207265737420696e2077657265776f6c6620666f726d2e',
     );
 
 my @beth_levc =
@@ -5093,6 +5106,7 @@ sub cmd_delete {
 }
 
 sub cmd_objdelete {
+    # TBD - switch to use parse_cell_objects/assemble_cell_objects
     my($plugin) = @_;
     unless ($::opt_i or $::opt_m and not $::opt_M) {
 	die qq{Error: you must specify at least one of: -i, -m or -M to ensure deletions are intentional.\n};
@@ -5633,7 +5647,7 @@ sub cmd_clean {
 	    if ($::opt_g) {
 		my $type = $gmst_type{substr($id, 0, 1)};
 		my $val = $srh->{$type}[0];
-		my $hexval = unpack("h*", "$type $val");
+		my $hexval = unpack("H*", "$type $val");
 		if ($EVIL_BM{$id} eq $hexval) {
 		    print " Cleaned Evil GMST Bloodmoon: $id\n";
 		    return;
