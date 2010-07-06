@@ -3740,7 +3740,7 @@ sub update_header {
 		}
 		if ($newnrec) {
 		    my $nrecbuff = pack("L", $newnrec);
-		    warn "$plugin: Updating record count field from $nrec to $newnrec\n";
+		    warn "$plugin: Updated record count field from $nrec to $newnrec\n";
 		    unless (defined write_header_field($plugin, undef, $nrecbuff, "NREC", $HDR_NREC_OFFSET, 4)) {
 			close(PLUG);
 			return;
@@ -4146,7 +4146,7 @@ sub fix_output {
 	    unless (rename($plugtmp, $plugin)) {
 		fatal_error(qq{Renaming "$plugtmp" to "$plugin"});
 	    }
-	    update_header($newname, undef, undef, get_record_count($newname));
+	    update_header($plugin, undef, undef, get_record_count($plugin));
 	    utime($atime, $mtime, $plugin);
 	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
 	}
