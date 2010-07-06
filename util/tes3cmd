@@ -3740,10 +3740,12 @@ sub update_header {
 		}
 		if ($newnrec) {
 		    my $nrecbuff = pack("L", $newnrec);
-		    warn "$plugin: Updated record count field from $nrec to $newnrec\n";
-		    unless (defined write_header_field($plugin, undef, $nrecbuff, "NREC", $HDR_NREC_OFFSET, 4)) {
-			close(PLUG);
-			return;
+		    if ($nrec != $newnrec) {
+			warn "$plugin: Updated record count field from $nrec to $newnrec\n";
+			unless (defined write_header_field($plugin, undef, $nrecbuff, "NREC", $HDR_NREC_OFFSET, 4)) {
+			    close(PLUG);
+			    return;
+			}
 		    }
 		}
 	    } else {
