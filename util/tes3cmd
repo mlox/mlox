@@ -42,6 +42,7 @@ use Carp;
 use Cwd;
 use IO::Handle;
 use File::Basename;
+use File::Spec;
 use File::Copy;
 use Getopt::Std;
 use Data::Dumper;
@@ -115,6 +116,7 @@ OPTIONS
  -j      clean junk cells (no new info from definition in masters)
  -o      clean objects from cells unchanged from masters
  -O dir  output directory (default is same as plugin being cleaned)
+ -R      Replace original with cleaned version (original is backed up)
 
 Cleans plugins of various junk. If no cleaning options are selected, the
 default is to assume the options: -c, -g, -j, -o. It should always be safe to
@@ -135,7 +137,7 @@ sub-records with data identical to the master.
 
 sub opts_clean {
     $_[0] && do { die $CLEAN_USAGE; };
-    getopts('DacdgjoO:') or die $CLEAN_USAGE;
+    getopts('DacdgjoO:R') or die $CLEAN_USAGE;
     unless ($::opt_c or $::opt_d or $::opt_g or $::opt_j or $::opt_o) {
 	# turn on all safe cleaning options if none are selected.
 	$::opt_c = $::opt_g = $::opt_j = $::opt_o = 1;
@@ -845,7 +847,7 @@ sub allowed_cell_type {
 # these types are for records to be cleaned from plugins when duped from a master:
 my @CLEAN_DUP_TYPES =
     qw(ACTI ALCH APPA ARMO BODY BOOK BSGN CELL CLAS CLOT CONT CREA DOOR ENCH
-       FACT GLOB GMST INFO INGR LAND LEVC LEVI LIGH LOCK LTEX MGEF MISC NPC_
+       FACT GLOB GMST INFO INGR LAND LEVC LEVI LIGH LOCK MGEF MISC NPC_
        PGRD PROB RACE REGN REPA SCPT SKIL SNDG SOUN SPEL SSCR STAT WEAP);
 
 # TBD - repack these guys as 'H*'
@@ -3903,12 +3905,17 @@ sub parse_subrec_hash {
 
 sub parse_cell_objects {
     my($rec) = @_;
-    my($hdr, $nam0idx, $obj, @objs, %objidx);
+    my($hdr, $obj, @objs, %objidx);
     my $srl = parse_subrec_list($rec);
     foreach my $subr (@$srl) {
 	my($subtype, $subrec) = @$subr;
 	if ($subtype eq 'NAM0') {
-	    $nam0idx = scalar(@objs) + (($obj) ? 1 : 0);
+	    if ($obj) {
+		my @newobj = @$obj;
+		push(@objs, \@newobj);
+		$objidx{$newobj[1]} = $newobj[0];
+	    }
+	    push(@objs, 'NAM0');
 	} elsif ($subtype eq 'FRMR') {
 	    if ($obj) {
 		my @newobj = @$obj;
@@ -3931,20 +3938,22 @@ sub parse_cell_objects {
 	push(@objs, \@newobj);
 	$objidx{$newobj[1]} = $newobj[0];
     }
-    return($hdr, $nam0idx, \@objs, \%objidx);
+    return($hdr, \@objs, \%objidx);
 }
 
 sub assemble_cell_objects {
-    my($hdr, $nam0idx, $objs) = @_;
+    my($hdr, $objs) = @_;
     my $rec = $hdr;
-    my $idx = 0;
+    my $idx = 1;
     foreach my $obj (@$objs) {
-	if ($nam0idx == $idx++) {
-	    my $nam0 = scalar(@$objs) - $nam0idx;
+	if ($obj eq 'NAM0') {
+	    my $nam0 = scalar(@$objs) - $idx;
 	    $rec .= pack("a4LL", 'NAM0', 4, $nam0) if ($nam0 > 0);
+	} else {
+	    my $frmr = pack($RD{'CELL.FRMR'}, @{$obj->[0]});
+	    $rec .=  pack("a4L/a*", 'FRMR', $frmr) . $obj->[1];
 	}
-	my $frmr = pack($RD{'CELL.FRMR'}, @{$obj->[0]});
-	$rec .=  pack("a4L/a*", 'FRMR', $frmr) . $obj->[1];
+	$idx++;
     }
     return($rec);
 }
@@ -4009,17 +4018,22 @@ sub fix_output {
     close($out);
     my $plugtmp = "$plugin.tmp";
     unless ($modified) {
-	warn "$plugin was not modified\n";
+	print "$plugin was not modified\n";
 	unlink($plugtmp);
 	return;
     }
+    if ($::opt_O) {
+	$newname = $plugin unless ($newname);
+	# prepend given output directory
+	$newname = "$::opt_O/" . (fileparse($newname))[0];
+    }
     if (my($ext) = ($plugin =~ /\.(es[mps])$/i)) {
 	my($atime, $mtime) = (stat($plugin))[8,9];
+	if (File::Spec->rel2abs($newname) eq File::Spec->rel2abs($plugin)) {
+	    warn "fix_output(): newname ($newname) same as plugin ($plugin)\n";
+	    undef $newname;
+	}
 	if (defined($newname)) {
-	    $newname = "$::opt_O/" . (fileparse($newname))[0] if ($::opt_O);
-	    if ($newname eq $plugin) {
-		fatal_error(qq{New name: "$newname" is same as the old name.});
-	    }
 	    unless ($newname =~ /\.(es[mps])$/i) {
 		fatal_error(qq{"$newname" name does not end in .esm/.esp/.ess});
 	    }
@@ -4027,10 +4041,9 @@ sub fix_output {
 		fatal_error(qq{Renaming "$plugtmp" to "$newname"});;
 	    }
 	    utime($atime, $mtime, $newname);
-	    warn qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
+	    print qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
 	} else {
 	    my $plugbak = $plugin;
-	    # TBD: add -O handling here?
 	    while (-f $plugbak) {
 		$plugbak =~ s/(?:~(\d+))?\.$ext$/'~' . ($1 + 1) . ".$ext"/e;
 	    }
@@ -4041,7 +4054,7 @@ sub fix_output {
 		fatal_error(qq{Renaming "$plugtmp" to "$plugin"});
 	    }
 	    utime($atime, $mtime, $plugin);
-	    warn qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
+	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
 	}
     } else {
 	die qq{Error, "$plugin" name does not end in .esm/.esp/.ess\n};
@@ -4355,9 +4368,13 @@ sub process_plugin_for_update {
 	$modified = 0;
 	warn $@;
     }
-    my($file, $dir) = fileparse($plugin);
-    my $newname = "${dir}${prefix}${file}";
-    fix_output($inp, $out, $plugin, $modified, $newname);
+    if ($prefix) {
+	my($file, $dir) = fileparse($plugin);
+	my $newname = "${dir}${prefix}${file}";
+	fix_output($inp, $out, $plugin, $modified, $newname);
+    } else {
+	fix_output($inp, $out, $plugin, $modified);
+    }
 }
 
 sub search_and_replace {
@@ -4562,7 +4579,7 @@ sub load_master_cache {
 	}
     };
     if ($@) {
-	warn $@;
+	warn $@ unless ($@ =~ /can't open .*\.dat: No such file or directory/);
 	return(0);
     } else {
 	return(1);
@@ -4604,7 +4621,7 @@ sub load_master {
 	    print "DBG: rec_type = $rec_type\n" if (DBG);
 	    my $srh = parse_subrec_hash($rec);
 	    my $id = rec_id($srh, $rec_type);
-	    $MASTER_ID->{$esm}->{$id}->{$rec_type} = [$srh, $rec];
+	    $MASTER_ID->{$esm}->{$id}->{$rec_type} = [$srh, $rec, $flags];
 	}
     };
     warn $@ if ($@);
@@ -5163,7 +5180,7 @@ sub cmd_modify {
     read_match_files();
     # load Perl program if specified with -p
     if ($::opt_p) {
-	unless (do $::opt_p) {
+	unless (do $::opt_p) {	# execute opt_p file
 	    die "Error processing $::opt_p ($@)\n" if ($@);
 	}
 	$::opt_e = 'main($rec_type, $r, $flags, $unk);' unless ($::opt_e);
@@ -5594,6 +5611,14 @@ sub cmd_clean {
 	warn "Don't know how to clean savegames: $plugin ... yet\n";
 	return;
     }
+    if ($plugin =~ /^(Morrowind|Tribunal|Bloodmoon)\.esm$/i) {
+	warn "Skipping Bethesda Master: $plugin\n";
+	return;
+    }
+    if ($plugin =~ /~\d+\.es[mps]$/i) {
+	warn "Skipping Backup: $plugin\n";
+	return;
+    }
     print "\nCLEANING: $plugin ...\n";
     my %duptype;
     $duptype{$_}++ foreach (@CLEAN_DUP_TYPES);
@@ -5620,18 +5645,18 @@ sub cmd_clean {
 	    my $cleaned_ambi;
 	    my $cleaned_whgt;
 	    my $plug_srl;
-	    my $mast_srl;
 	    if ($::opt_o) {
 		# CLEAN CELL OBJECTS
-		my($p_hdr, $p_nam0idx, $p_objs, $p_objidx) = parse_cell_objects($rec);
+		my($p_hdr, $p_objs, $p_objidx) = parse_cell_objects($rec);
 		my @new_objs;
 		foreach my $obj (@$p_objs) {
+		    do { push(@new_objs, $obj); next; } if ($obj eq 'NAM0');
 		    my $object_body = $obj->[1];
 		    my $cleaned_obj = 0;
 		    foreach my $master (keys %{my_master}) {
 			if (my $lref = $MASTER_ID->{$master}->{$id}->{CELL}) {
 			    my($mast_srh, $mast_rec) = @{$lref};
-			    my($m_hdr, $m_nam0idx, $m_objs, $m_objidx) = parse_cell_objects($mast_rec);
+			    my($m_hdr, $m_objs, $m_objidx) = parse_cell_objects($mast_rec);
 			    if ($m_objidx->{$object_body}->[0] == $obj->[0]->[0]) { # compare master and plugin FRMR object indices
 				$cleaned_obj++;
 				last;
@@ -5639,17 +5664,16 @@ sub cmd_clean {
 			}
 		    }
 		    if ($cleaned_obj) {
-			my $name = chop_nulls(parse_subrec_hash($obj->[1])->{NAME}[0]);
-			print " Cleaned redundant object ($name FRMR:$obj->[0]->[0]) from CELL: $id\n";
+			my $obj_info = chop_nulls(parse_subrec_hash($obj->[1])->{NAME}[0]) . " FRMR:" . $obj->[0]->[0];
+			print " Cleaned redundant object ($obj_info) from CELL: $id\n";
 		    } else {
 			push(@new_objs, $obj);
 		    }
 		}
 		if (scalar(@new_objs) != scalar(@$p_objs)) {
-		    $rec = assemble_cell_objects($p_hdr, $p_nam0idx, \@new_objs);
-		    # update decodings if already decoded.
-		    $r = decode_rec($plugin, $rec_type, $rec) if ($r);
-		    $plug_srl = parse_subrec_list($rec) if ($plug_srl);
+		    $rec = assemble_cell_objects($p_hdr, \@new_objs);
+		    $r = decode_rec($plugin, $rec_type, $rec);
+		    $plug_srl = parse_subrec_list($rec);
 		}
 	    }
 	    # we check plugin against all masters, as we can't know with which masters the author created it
@@ -5661,7 +5685,7 @@ sub cmd_clean {
 			if ($::opt_c) { # check for redundant AMBI/WHGT
 			    # CLEAN AMBI
 			    $r ||= decode_rec($plugin, $rec_type, $rec);
-			    unless ($cleaned_ambi and $srh->{AMBI}[0] eq $mast_srh->{AMBI}[0]) {
+			    if ($srh->{AMBI}[0] eq $mast_srh->{AMBI}[0] and not $cleaned_ambi) {
 				$r = remove_subrec($r, 'AMBI');
 				$cleaned_ambi++;
 			    }
@@ -5680,7 +5704,7 @@ sub cmd_clean {
 				}
 				my $master_whgt = ($mast_srh->{WHGT}[0]) ? unpack("f", $mast_srh->{WHGT}[0]) : undef;
 				unless (defined $master_whgt) {
-				    $mast_srl ||= parse_subrec_list($mast_rec);
+				    my $mast_srl = parse_subrec_list($mast_rec);
 				    if ($mast_srl->[2]->[0] eq 'INTV') {
 					$master_whgt = unpack("l", $mast_srl->[2]->[1]);
 				    }
@@ -5729,8 +5753,8 @@ sub cmd_clean {
 	    # check for duped records
 	    foreach my $master (keys %{my_master}) {
 		if (my $lref = $MASTER_ID->{$master}->{$id}->{$rec_type}) {
-		    my($mast_srh, $mast_rec) = @{$lref};
-		    if ($duptype{$rec_type} and ($rec eq $mast_rec)) {
+		    my($mast_srh, $mast_rec, $mast_flags) = @{$lref};
+		    if ($duptype{$rec_type} and ($rec eq $mast_rec) and ($flags eq $mast_flags)) {
 			print " Cleaned Duplicate $rec_type:  $id\n";
 			return;
 		    }
@@ -5740,7 +5764,11 @@ sub cmd_clean {
 	$newrec = encode_rec($rec_type, $r) if ($r); # update record buffer if we have modified it
 	return($newrec, $newflags);
     };
-    process_plugin_for_update($plugin, $fun, "Clean_");
+    if ($::opt_R) {
+	process_plugin_for_update($plugin, $fun);
+    } else {
+	process_plugin_for_update($plugin, $fun, "Clean_");
+    }
 }
 
 sub cmd_dump {
