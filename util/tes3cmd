@@ -11,7 +11,6 @@
 
 # TBD:
 # canonize common switches (-i is always "ID")
-# add ability for "header" command to update NREC field
 # combine "delete" and "objdelete", fixup subrecord deletion
 # rewrite commands to use the "process" subroutines
 # and add more examples, esp. "modify"
@@ -71,6 +70,7 @@ my $HDR_AUTH_OFFSET = 32;
 my $HDR_AUTH_LENGTH = 32;
 my $HDR_DESC_OFFSET = $HDR_AUTH_OFFSET + $HDR_AUTH_LENGTH;
 my $HDR_DESC_LENGTH = 256;
+my $HDR_NREC_OFFSET = $HDR_DESC_OFFSET + $HDR_DESC_LENGTH;
 
 my $hedr = pack("a4L/a*", 'HEDR', pack("fLZ32Z256L", (my $ver = 1.3), (my $is_master = 0), (my $auth = "tes3cmd"), (my $desc = "(generated)"), (my $nrec = 0)));
 my $blank_header = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
@@ -503,7 +503,7 @@ my $PRINT_USAGE = q{Usage: tes3cmd print OPTIONS plugin...
 
 OPTIONS
  -D        turn on debug output.
- -c regex  when printing cells, only print the matching objects in the cell.
+ -C regex  when printing cells, only print the matching objects in the cell.
  -i ids    only print out the records with ids matching the given /-delimited
            list of regular expression patterns.
  -l        only list the ids of the records to be printed, instead of the entire record.
@@ -551,7 +551,7 @@ my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 
 OPTIONS
  -D        turn on debug output.
- -c regex  when dumping cells, only dump the matching objects in the cell.
+ -C regex  when dumping cells, only dump the matching objects in the cell.
  -i ids    only dump out the records with ids matching the given /-delimited
            list of regular expression patterns.
  -l        only list the ids of the records to be dumped, instead of the entire record.
@@ -602,7 +602,8 @@ OPTIONS
  -D      turn on debug output
  -a XXX  set the Author field to the value XXX
  -d YYY  set the Description field to value YYY
- -m      multi-line output for listing field contents.
+ -m      multi-line output for listing field contents
+ -n      update record count in header
 
 When -a and -d are not given, the current Author/Description field contents
 are printed.
@@ -641,7 +642,7 @@ sub opts_header {
     $::opt_d = "";
     $::opt_m = undef;
     $::opt_v = 0.0;
-    getopts('Da:d:mv:') or die $HEADER_USAGE;
+    getopts('Da:d:mnv:') or die $HEADER_USAGE;
 }
 
 my $RENAME_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
@@ -2694,6 +2695,8 @@ my @SUBRECTYPES =
        TEXT TGTN TNAM UNAM VCLR VHGT VNAM VNML VTEX WEAT WHGT WIDX WNAM WPDT
        XCHG XHLT XIDX XNAM XSCL XSOL YNAM ZNAM);
 
+my %JUNKCELL_SUBTYPE = (NAME => 1, DATA => 1, RGNN => 1);
+
 sub indent_result {
     my($str) = @_;
     $str =~ tr/\r//d;
@@ -3698,33 +3701,101 @@ sub opts_help {
 
 ###IO
 
+sub update_header {
+    my($plugin, $newauth, $newdesc, $newnrec) = @_;
+    unless(open(PLUG, "+<$plugin")) {
+	warn qq{Error opening "$plugin" for read/write ($!)\n};
+	return;
+    }
+    unless(binmode(PLUG)) {
+	warn "Error setting binmode on $plugin ($!)\n";
+	close(PLUG);
+	return;
+    }
+    my $block;
+    my $nread = read(PLUG, $block, 4096);
+    if ($nread == 0) {
+	warn "$plugin: Error on intial read ($!)\n";
+	close(PLUG);
+	return;
+    }
+    my $magic = substr($block, 0, 4);
+    if ($magic eq "TES3") {
+	if ($nread >= 324) { 	# minimum TES3 plugin size
+	    my $auth = chop_nulls(substr($block, $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH));
+	    my $desc = chop_nulls(substr($block, $HDR_DESC_OFFSET, $HDR_DESC_LENGTH));
+	    my $nrec = unpack("L", substr($block, $HDR_NREC_OFFSET, 4));
+	    if ($newauth or $newdesc or $newnrec) {
+		if ($newauth) {
+		    unless (defined write_header_field($plugin, $auth, $newauth, "AUTHOR", $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH)) {
+			close(PLUG);
+			return;
+		    }
+		}
+		if ($newdesc) {
+		    unless (defined write_header_field($plugin, $desc, $newdesc, "DESCRIPTION", $HDR_DESC_OFFSET, $HDR_DESC_LENGTH)) {
+			close(PLUG);
+			return;
+		    }
+		}
+		if ($newnrec) {
+		    my $nrecbuff = pack("L", $newnrec);
+		    warn "$plugin: Updating record count field from $nrec to $newnrec\n";
+		    unless (defined write_header_field($plugin, undef, $nrecbuff, "NREC", $HDR_NREC_OFFSET, 4)) {
+			close(PLUG);
+			return;
+		    }
+		}
+	    } else {
+		if ($::opt_m) {
+		    warn "$plugin:\n  AUTH=$auth\n  DESC=$desc\n  NREC=$nrec";
+		} else {
+		    warn "$plugin: AUTH=$auth DESC=$desc NREC=$nrec\n";
+		}
+	    }
+	}
+    } elsif ($magic eq "TES4") {
+	warn "This function is not yet implemented for TES4 files\n";
+    } else {
+	warn "$plugin: Error, this does not appear to be an elder scrolls plugin\n";
+    }
+    close(PLUG);
+}
+
 sub write_header_field {
     my($plugin, $origval, $val, $label, $offset, $fieldlen) = @_;
-    if ($val =~ /^\+(.*)$/) {
-	$val = $origval . $1;
+    my $valbuff;
+    if (defined $origval) {
+	# TBD - I think this section needs rewriting.
+	# handle special processing for string fields here
+	if ($val =~ /^\+(.*)$/) {
+	    $val = $origval . $1;
+	}
+	$val =~ s/(\\r|\r)?(\\n|\n)/\r\n/g;
+	# create an empty null padded field
+	$valbuff = "\000" x $fieldlen;
+	# truncate $val to fit in the field, if necessary
+	my $origlen = length($val);
+	$val = substr($val, 0, $fieldlen - 1);
+	if (length($val) < $origlen) {
+	    warn "Warning, input $label truncated because it exceeded field length of: $fieldlen\n";
+	}
+	# TBD - probably not necessary, just use pack("a")
+	# and plop the given string value into it, with at least one ending null
+	substr($valbuff, 0, length($val)) = $val;
+    } else {
+	# non string fields get no special processing
+	$valbuff = $val;
     }
-    $val =~ s/(\\r|\r)?(\\n|\n)/\r\n/g;
-    # create an empty null padded field
-    my $valz = "\000" x $fieldlen;
-    # truncate $val to fit in the field, if necessary
-    my $origlen = length($val);
-    $val = substr($val, 0, $fieldlen - 1);
-    if (length($val) < $origlen) {
-	warn "Warning, input $label truncated because it exceeded field length of: $fieldlen\n";
-    }
-    # and plop the given string value into it, with at least one ending null
-    substr($valz, 0, length($val)) = $val;
     unless(seek(PLUG, $offset, 0)) {
 	warn "$plugin: Error seeking to start of $label field at offset: $offset ($!)\n";
 	return(undef);
     }
-    my $len = length($valz);
-    my $nwritten = syswrite(PLUG, $valz);
-    if ($nwritten != $len) {
-	warn "$plugin: Error incomplete write to $label field ( ($!)\n";
+    if ((my $nwritten = syswrite(PLUG, $valbuff)) != length($valbuff)) {
+	warn "$plugin: Error incomplete write to $label field ($!)\n";
 	return(undef);
     }
-    warn qq{$plugin: $label set to: "$val"\n} unless ($::opt_q);
+    warn qq{$plugin: $label set to: "$val"\n} unless ($::opt_q or not defined($origval));
     return(1);
 }
 
@@ -4016,6 +4087,13 @@ sub open_output_plugin {
     return($fh);
 }
 
+sub get_record_count {
+    my($plugin) = @_;
+    my $count = -1;		# we don't count the TES3 record
+    process_plugin_for_read($plugin, sub { $count++; });
+    return($count);
+}
+
 sub make_temp {
     my($plugin) = @_;
     die qq{Error, "$plugin" name does not end in .esm/.esp/.ess\n}
@@ -4054,6 +4132,7 @@ sub fix_output {
 	    unless (rename($plugtmp, $newname)) {
 		fatal_error(qq{Renaming "$plugtmp" to "$newname"});;
 	    }
+	    update_header($newname, undef, undef, get_record_count($newname));
 	    utime($atime, $mtime, $newname);
 	    print qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
 	} else {
@@ -4067,6 +4146,7 @@ sub fix_output {
 	    unless (rename($plugtmp, $plugin)) {
 		fatal_error(qq{Renaming "$plugtmp" to "$plugin"});
 	    }
+	    update_header($newname, undef, undef, get_record_count($newname));
 	    utime($atime, $mtime, $plugin);
 	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
 	}
@@ -4177,7 +4257,7 @@ sub rec_to_string {
     my @frmr_data;
     my $first_frmr_seen = 0;
     my $frmr_match = 0;
-    # TBD, for opt_c, we seem to bung the fog density.
+    # TBD, for opt_C, we seem to bung the fog density.
     while ($p < $rec_len) {
 	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
 	$p += 8;
@@ -4187,10 +4267,10 @@ sub rec_to_string {
 	    my $full_type = "${rec_type}.${subrec_type}";
 	    my $tostr = $TOSTR{$full_type} || $TOSTR{$subrec_type}  || $TOSTR_UNK;
 	    my $subrec_str = $tostr->($subrec);
-	    if ($::opt_c and ($rec_type eq 'CELL')) {
+	    if ($::opt_C and ($rec_type eq 'CELL')) {
 		if ($first_frmr_seen) {
 		    if ($subrec_type eq 'FRMR') {
-			if (join(" ", @frmr_data) =~ /$::opt_c/i) {
+			if (join(" ", @frmr_data) =~ /$::opt_C/i) {
 			    $frmr_match++;
 			    push(@print_rec, @frmr_data);
 			}
@@ -4214,9 +4294,9 @@ sub rec_to_string {
 	    warn "$plugin: Error, malformed subrec for ($rec_type $id) type=$subrec_type pos=$p len=$subrec_len\n";
 	}
     }
-    # if -c, check the last FRMR group
-    if ($::opt_c) {
-	if (join(" ", @frmr_data) =~ /$::opt_c/i) {
+    # if -C, check the last FRMR group
+    if ($::opt_C) {
+	if (join(" ", @frmr_data) =~ /$::opt_C/i) {
 	    $frmr_match++;
 	    push(@print_rec, @frmr_data);
 	}
@@ -4384,7 +4464,7 @@ sub process_plugin_for_update {
     }
     if ($prefix) {
 	my($file, $dir) = fileparse($plugin);
-	my $newname = "${dir}${prefix}${file}";
+	my $newname = ($dir eq './') ? "${prefix}${file}" : "${dir}${prefix}${file}";
 	fix_output($inp, $out, $plugin, $modified, $newname);
     } else {
 	fix_output($inp, $out, $plugin, $modified);
@@ -4790,10 +4870,10 @@ sub cmd_fogpatch {
 	my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data) . subrec("AMBI", $ambi);
 	write_rec($out, 'CELL', $newrec, $flags, $unk);
     }
+    close($out);
     $::opt_a = "tes3cmd";
     $::opt_d = "Fogbug Patch";
     $::opt_q = 1;
-    close($out);
     cmd_header($fogpatch);
 }
 
@@ -5339,7 +5419,7 @@ sub cmd_print {
 		    print "$rec_type: $id\n";
 		}
 	    } elsif ($::opt_r or $::opt_R) {
-		if ($::opt_c and ($rec_type eq 'CELL')) {
+		if ($::opt_C and ($rec_type eq 'CELL')) {
 		    my @frmr_data;
 		    my $frmr_match = 0;
 		    my $srl = parse_subrec_list($rec);
@@ -5354,7 +5434,7 @@ sub cmd_print {
 			$subrec_str .= $tostr->($subrec);
 			if ($first_frmr_seen) {
 			    if ($subtype eq 'FRMR') {
-				if ($subrec_str =~ /$::opt_c/i) {
+				if ($subrec_str =~ /$::opt_C/i) {
 				    $frmr_match++;
 				    push(@newrec, @frmr_data);
 				}
@@ -5371,7 +5451,7 @@ sub cmd_print {
 			    }
 			}
 		    }
-		    if ($subrec_str =~ /$::opt_c/i) {
+		    if ($subrec_str =~ /$::opt_C/i) {
 			$frmr_match++;
 			push(@newrec, @frmr_data);
 		    }
@@ -5501,54 +5581,7 @@ sub cmd_rename {
 
 sub cmd_header {
     my($plugin) = @_;
-    unless(open(PLUG, "+<$plugin")) {
-	warn qq{Error opening "$plugin" for read/write ($!)\n};
-	return;
-    }
-    unless(binmode(PLUG)) {
-	warn "Error setting binmode on $plugin ($!)\n";
-	close(PLUG);
-	return;
-    }
-    my $block;
-    my $nread = read(PLUG, $block, 4096);
-    if ($nread == 0) {
-	warn "$plugin: Error on intial read ($!)\n";
-	close(PLUG);
-	return;
-    }
-    my $magic = substr($block, 0, 4);
-    if ($magic eq "TES3") {
-	if ($nread >= 324) { 	# minimum TES3 plugin size
-	    my $auth = chop_nulls(substr($block, $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH));
-	    my $desc = chop_nulls(substr($block, $HDR_DESC_OFFSET, $HDR_DESC_LENGTH));
-	    if ($::opt_a or $::opt_d) {
-		if ($::opt_a) {
-		    unless (defined write_header_field($plugin, $auth, $::opt_a, "AUTHOR", $HDR_AUTH_OFFSET, $HDR_AUTH_LENGTH)) {
-			close(PLUG);
-			return;
-		    }
-		}
-		if ($::opt_d) {
-		    unless (defined write_header_field($plugin, $desc, $::opt_d, "DESCRIPTION", $HDR_DESC_OFFSET, $HDR_DESC_LENGTH)) {
-			close(PLUG);
-			return;
-		    }
-		}
-	    } else {
-		if ($::opt_m) {
-		    warn "$plugin:\n  AUTH=$auth\n  DESC=$desc\n";
-		} else {
-		    warn "$plugin: AUTH=$auth DESC=$desc\n";
-		}
-	    }
-	}
-    } elsif ($magic eq "TES4") {
-	warn "This function is not yet implemented for TES4 files\n";
-    } else {
-	warn "$plugin: Error, this does not appear to be an elder scrolls plugin\n";
-    }
-    close(PLUG);
+    update_header($plugin, $::opt_a, $::opt_d, (($::opt_n) ? get_record_count($plugin) : 0));
 }
 
 sub convert_plugin {
@@ -5635,6 +5668,13 @@ sub cmd_clean {
 	return;
     }
     print "\nCLEANING: $plugin ...\n";
+#    print "\nCLEANING: $plugin with options: ";
+#    print "-c " if ($::opt_c);
+#    print "-d " if ($::opt_d);
+#    print "-g " if ($::opt_g);
+#    print "-j " if ($::opt_j);
+#    print "-o " if ($::opt_o);
+#    print "\n";
     my %duptype;
     $duptype{$_}++ foreach (@CLEAN_DUP_TYPES);
     my %my_master;
@@ -5700,14 +5740,16 @@ sub cmd_clean {
 			if ($::opt_c) { # check for redundant AMBI/WHGT
 			    # CLEAN AMBI
 			    $r ||= decode_rec($plugin, $rec_type, $rec);
-			    if ($srh->{AMBI}[0] eq $mast_srh->{AMBI}[0] and not $cleaned_ambi) {
-				$r = remove_subrec($r, 'AMBI');
-				$cleaned_ambi++;
+			    unless ($cleaned_ambi) {
+				if (defined($srh->{AMBI}) and ($srh->{AMBI}[0] eq $mast_srh->{AMBI}[0])) {
+				    $r = remove_subrec($r, 'AMBI');
+				    $cleaned_ambi++;
+				}
 			    }
 			    # CLEAN WHGT
 			    # (some plugins, like Morrowind.esm, use an INTV sub-record instead of WHGT)
 			    unless ($cleaned_whgt) {
-				my $plugin_whgt = ($srh->{WHGT}[0]) ? unpack("f", $srh->{WHGT}[0]) : undef;
+				my $plugin_whgt = (defined($srh->{WHGT}) and $srh->{WHGT}[0]) ? unpack("f", $srh->{WHGT}[0]) : undef;
 				my $whgt_type = 'WHGT';
 				unless (defined $plugin_whgt) {
 				    $plug_srl ||= parse_subrec_list($rec);
@@ -5730,22 +5772,22 @@ sub cmd_clean {
 				}
 			    }
 			}
-		    } else {	    # is exterior
-			if ($::opt_j) {	# check for junkcell
-			    if ((scalar keys %$srh) < 4) {
-				# junk cells always contain less than 4 sub-records
-				my $modified = 0;
-				for my $type (qw(NAME DATA RGNN)) {
-				    if ($srh->{$type}[0] ne $mast_srh->{$type}[0]) {
-					# record contains some modified data, so it isn't junk
-					$modified++;
-					last;
-				    }
+		    }
+		    if ($::opt_j) {	# check for junkcell
+			if ((scalar keys %{$srh}) < 4) {
+			    # junk cells always contain less than 4 sub-records
+			    my $modified = 0;
+			    for my $type (keys %{$srh}) {
+				if (not $JUNKCELL_SUBTYPE{$type} or
+				    $srh->{$type}[0] ne $mast_srh->{$type}[0]) {
+				    # record contains subrecords or some modified data, so it isn't junk
+				    $modified++;
+				    last;
 				}
-				unless ($modified) {
-				    print " Cleaned Junk CELL:  $id\n";
-				    return;
-				}
+			    }
+			    unless ($modified) {
+				print " Cleaned Junk CELL:  $id\n";
+				return;
 			    }
 			}
 		    }
