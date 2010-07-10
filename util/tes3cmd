@@ -10,6 +10,7 @@ $::VERSION = "0.37f";
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD:
+# implement proper verbosity
 # cleanup .tmp if die
 # rewrite "modify", "rename" commands to use the "process" subroutines?
 # and add more examples, esp. "modify"
@@ -31,10 +32,12 @@ $::VERSION = "0.37f";
 # ** generate multimark scripts.
 # ** gmst/global tweaks: (timescale, fCombatAngleXY)
 # ** import faces/hairs (avoid conflicts by dropping rest of object definition)
-# ** merged leveled lists
-# ** merged objects (add mergeable flag to record defs)
-# ** summoned creatures persists patch
+# ** merge objects (add mergeable flag to record defs)
 # ** turn-off auto-calced spells.
+# ** merging leveled-lists:
+# *** "chance-none" - last wins, average chance
+# *** calc flags - last wins.
+
 
 use Cwd;
 use IO::Handle;
@@ -52,6 +55,7 @@ BEGIN {
     # reached, we define the following constants so that we only compile
     # debug/help code into the program when it it actually needed.
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
 }
 
 ### CONSTANTS
@@ -90,6 +94,7 @@ our $opt_report_only;
 our $opt_separator;
 our $opt_sub_match;
 our $opt_sub_no_match;
+our $opt_verbose;
 our @opt_flag;
 our @opt_id = ();
 our @opt_type = ();
@@ -248,7 +253,8 @@ sub opts_clean {
 	       'junk-cells'    => \$opt_clean_junk_cells,
 	       'no-cache',
 	       'output-dir',
-	       'replace'       => \$opt_clean_replace)
+	       'replace'       => \$opt_clean_replace,
+	       'verbose')
 	or die $CLEAN_USAGE;
     unless ($opt_clean_cell_objects or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
 	# turn on all safe cleaning options if none are selected.
@@ -282,7 +288,7 @@ tes3cmd esp "my plugin.esm"
 
 sub opts_esp {
     $_[0] && do { die $ESP_USAGE; };
-    GetOptions('debug|d', 'overwrite') or die $ESP_USAGE;
+    GetOptions('debug|d', 'overwrite', 'verbose') or die $ESP_USAGE;
 }
 
 my $ESM_USAGE = q{Usage: tes3cmd esm OPTIONS plugin...
@@ -307,7 +313,7 @@ tes3cmd esm "my plugin.esp"
 
 sub opts_esm {
     $_[0] && do { die $ESM_USAGE; };
-    GetOptions('debug|d', 'overwrite') or die $ESM_USAGE;
+    GetOptions('debug|d', 'overwrite', 'verbose') or die $ESM_USAGE;
 }
 
 my $MODIFY_USAGE = q{Usage: tes3cmd modify OPTIONS plugin...
@@ -411,7 +417,8 @@ sub opts_modify {
 	       'run=s' => \$opt_modify_run,
 	       'sub-match=s',
 	       'sub-no-match|M=s',
-	       'type=s@')
+	       'type=s@',
+	       'verbose')
 	or die $MODIFY_USAGE;
 }
 
@@ -426,6 +433,12 @@ OPTIONS:
 
  --fogbug
 	fix interior cells with the fog bug
+
+ --merge-lists
+	merges leveled lists used in your active plugins
+
+ --summons-persist
+	fixes summoned creatures crash by making them persistent
 
 DESCRIPTION:
 
@@ -469,6 +482,15 @@ Fog Bug Patch (--fogbug)
   active plugins by setting the fog density of those cells to a non-zero
   value.
 
+Summoned creatures persists (--summons-persist)
+
+  There's a bug in Morrowind that can cause the game to crash if you leave a
+  cell where an NPC has summoned a creature. The simple workaround is to flag
+  summoned creatures as persistent. The Morrowind Patch Project implements
+  this fix, however other mods coming later in the load order often revert it.
+  This multipatch option ensures that known summoned creatures are flagged as
+  persistent.
+
 EXAMPLES:
 
 # Create the patch plugin "multipatch.esp"
@@ -477,12 +499,23 @@ tes3cmd multipatch
 
 our $opt_multipatch_cellnames;
 our $opt_multipatch_fogbug;
+our $opt_multipatch_merge_lists;
+our $opt_multipatch_summons_persist;
 sub opts_multipatch {
     $_[0] && do { die $MULTIPATCH_USAGE; };
     GetOptions('debug|d',
-	       'cellnames'  => \$opt_multipatch_cellnames,
-	       'fogbug'     => \$opt_multipatch_fogbug)
+	       'cellnames'    => \$opt_multipatch_cellnames,
+	       'fogbug'       => \$opt_multipatch_fogbug,
+	       'merge-lists'  => \$opt_multipatch_merge_lists,
+	       'summons-persist' => \$opt_multipatch_summons_persist,
+	       'verbose')
 	or die $MULTIPATCH_USAGE;
+
+    unless ($opt_multipatch_cellnames or $opt_multipatch_fogbug or
+	    $opt_multipatch_merge_lists or $opt_multipatch_summons_persist) {
+	# by default turn on all options if none are selected
+	$opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
+    }
 }
 
 
@@ -559,7 +592,8 @@ sub opts_delete {
 	       'no-match|M=s',
 	       'sub-match=s',
 	       'sub-no-match|M=s',
-	       'type=s@')
+	       'type=s@',
+	       'verbose')
 	or die $DELETE_USAGE;
 }
 
@@ -598,7 +632,8 @@ our $opt_overdial_single;
 sub opts_overdial {
     $_[0] && do { die $OVERDIAL_USAGE; };
     GetOptions('debug|d',
-	       'single' => \$opt_overdial_single)
+	       'single' => \$opt_overdial_single,
+	       'verbose')
 	or die $OVERDIAL_USAGE;
 }
 
@@ -620,7 +655,7 @@ tes3cmd common "my plugin.esp" "Morrowind.esm"
 
 sub opts_common {
     $_[0] && do { die $COMMON_USAGE; };
-    GetOptions('debug|d') or die $COMMON_USAGE;
+    GetOptions('debug|d', 'verbose') or die $COMMON_USAGE;
 }
 
 
@@ -689,8 +724,13 @@ sub opts_diff {
 	       '1-not-2|e1'       => \$opt_diff_1_not_2,
 	       '2-not-1|e2'       => \$opt_diff_2_not_1,
 	       'equal|eq'         => \$opt_diff_equal,
-	       'not-equal|ne'     => \$opt_diff_not_equal)
+	       'not-equal|ne'     => \$opt_diff_not_equal,
+	       'verbose')
 	or die $DIFF_USAGE;
+
+    unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal) {
+	$opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = 1;
+    }
 }
 
 my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
@@ -796,7 +836,8 @@ sub opts_dump {
 	       'raw-with-header=s' => \$opt_dump_raw_with_header,
 	       'raw=s' => \$opt_dump_raw,
 	       'separator=s',
-	       'type=s@')
+	       'type=s@',
+	       'verbose')
 	or die $DUMP_USAGE;
 
     $opt_dump_raw = $opt_dump_raw_with_header
@@ -885,7 +926,8 @@ sub opts_header {
 	       'multiline' => \$opt_header_multiline,
 	       'synchronize' => \$opt_header_synchronize,
 	       'update-masters' => \$opt_header_update_masters,
-	       'update-record-count' => \$opt_header_update_record_count)
+	       'update-record-count' => \$opt_header_update_record_count,
+	       'verbose')
 	or die $HEADER_USAGE;
 
     $opt_header_update_masters = $opt_header_update_record_count = 1
@@ -971,7 +1013,8 @@ sub opts_rename {
 	       'interior' => \$opt_rename_interior,
 	       'exterior' => \$opt_rename_exterior,
 	       'report-only',
-	       'window-size=i' => \$opt_rename_window_size)
+	       'window-size=i' => \$opt_rename_window_size,
+	       'verbose')
 	or die $RENAME_USAGE;
 
     my $type = uc(shift(@ARGV)) or die "Missing required RECTYPE.SUBTYPE\n$RENAME_USAGE";
@@ -985,7 +1028,7 @@ sub opts_rename {
 }
 
 sub opts_wikiout {
-    GetOptions('debug|d') or
+    GetOptions('debug|d', 'verbose') or
 	die "Usage: tes3cmd -wikiout\n";
 }
 
@@ -994,7 +1037,8 @@ our @opt_codectest_excluded_type = ();
 sub opts_codectest {
     GetOptions('debug|d',
 	       'continue|c' => \$opt_codectest_continue,
-	       'excluded-type|x=s@' => \@opt_codectest_excluded_type)
+	       'excluded-type|x=s@' => \@opt_codectest_excluded_type,
+	       'verbose')
 	or die "Usage: tes3cmd -codectest [--excluded-type|-x excluded_type]\n";
 }
 
@@ -1070,7 +1114,9 @@ sub sort_by_date {
     return(@sorted);
 }
 
+my @LOAD_ORDER;
 sub load_order {
+    return(@LOAD_ORDER) if (defined(@LOAD_ORDER));
     die "DATADIR not defined\n" unless (defined($DATADIR));
     my $datafiles = list_files($DATADIR);
     my $mwfiles = list_files("$DATADIR/..");
@@ -1093,7 +1139,7 @@ sub load_order {
 	warn qq{Error opening "$ini" for input ($!)\n};
     }
     my @sorted = sort_by_date($DATADIR, @active);
-    return((grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)));
+    return(@LOAD_ORDER = (grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)));
 }
 
 # assuming the program is run somewhere under the Morrowind game directory, find the
@@ -1147,6 +1193,33 @@ my @CLEAN_DUP_TYPES =
     qw(ACTI ALCH APPA ARMO BODY BOOK BSGN CELL CLAS CLOT CONT CREA DOOR ENCH
        FACT GLOB GMST INFO INGR LAND LEVC LEVI LIGH LOCK MGEF MISC NPC_
        PGRD PROB RACE REGN REPA SCPT SKIL SNDG SOUN SPEL SSCR STAT WEAP);
+
+
+my @summoned_creatures =
+    ('centurion_fire_dead',
+     'wraith_sul_senipul',
+     'ancestor_ghost_summon',
+     'atronach_flame_summon',
+     'atronach_frost_summon',
+     'atronach_storm_summon',
+     'bonelord_summon',
+     'bonewalker_summon',
+     'bonewalker_greater_summ',
+     'centurion_sphere_summon',
+     'clannfear_summon',
+     'daedroth_summon',
+     'dremora_summon',
+     'golden saint_summon',
+     'hunger_summon',
+     'scamp_summon',
+     'skeleton_summon',
+     'ancestor_ghost_variner',
+     'fabricant_summon',
+     'bm_bear_black_summon',
+     'bm_wolf_grey_summon',
+     'bm_wolf_bone_summon');
+my %SUMMONED_CREATURES;
+$SUMMONED_CREATURES{$_}++ foreach (@summoned_creatures);
 
 # Evil GMSTs for Tribunal (values are hexencoded)
 my %EVIL_TB =
@@ -1228,478 +1301,7 @@ my %EVIL_BM =
      swerewolfrestmessage => '5354525620596f752063616e6e6f74207265737420696e2077657265776f6c6620666f726d2e',
     );
 
-my @beth_levc =
-    ('bm_ex_berserkers',
-     'bm_ex_felcoast',
-     'bm_ex_felcoast_40',
-     'bm_ex_felcoast_60',
-     'bm_ex_felcoast_sleep',
-     'bm_ex_hirforest',
-     'bm_ex_hirforest_40',
-     'bm_ex_hirforest_60',
-     'bm_ex_hirforest_sleep',
-     'bm_ex_horker_h20',
-     'bm_ex_horker_lake',
-     'bm_ex_isinplains',
-     'bm_ex_isinplains_40',
-     'bm_ex_isinplains_60',
-     'bm_ex_isinplains_sleep',
-     'bm_ex_moemountains',
-     'bm_ex_moemountains_40',
-     'bm_ex_moemountains_60',
-     'bm_ex_moemountains_sleep',
-     'bm_ex_reaver_archers',
-     'bm_ex_reavers',
-     'bm_ex_rieklingpatrols',
-     'bm_ex_rieklingpatrols_20',
-     'bm_ex_rieklingpatrols_40',
-     'bm_ex_rieklingpatrols_60',
-     'bm_ex_smugglers',
-     'bm_ex_wolfpack',
-     'bm_ex_wolfpack_20',
-     'bm_ex_wolfpack_40',
-     'bm_ex_wolfpack_60',
-     'bm_frysehag_all',
-     'bm_in_berserker_20',
-     'bm_in_berserker_40',
-     'bm_in_berserker_60',
-     'bm_in_frysehag_20',
-     'bm_in_frysehag_40',
-     'bm_in_frysehag_8',
-     'bm_in_icecaves',
-     'bm_in_icecaves_40',
-     'bm_in_icecaves_60',
-     'bm_in_nordburial',
-     'bm_in_nordburial_40',
-     'bm_in_nordburial_60',
-     'bm_werewolf_connor',
-     'bm_werewolf_wilderness01',
-     'bm_werewolf_wilderness02',
-     'bm_werewolf_wilderness03',
-     'bm_werewolf_wilderness04',
-     'bm_werewolf_wilderness05',
-     'bm_werewolf_wilderness06',
-     'bm_werewolf_wilderness07',
-     'bm_werewolf_wilderness08',
-     'bm_werewolf_wilderness09',
-     'db_assassins',
-     'ex_ascadianisles_lev+0',
-     'ex_ascadianisles_lev+2',
-     'ex_ascadianisles_lev-1',
-     'ex_ascadianisles_sleep',
-     'ex_azurascoast_lev+0',
-     'ex_azurascoast_lev+2',
-     'ex_azurascoast_lev-1',
-     'ex_azurascoast_sleep',
-     'ex_bittercoast_lev+0',
-     'ex_bittercoast_lev+2',
-     'ex_bittercoast_lev-1',
-     'ex_bittercoast_sleep',
-     'ex_grazelands_lev+0',
-     'ex_grazelands_lev+2',
-     'ex_grazelands_lev-1',
-     'ex_grazelands_sleep',
-     'ex_molagmar_lev+0',
-     'ex_molagmar_lev+2',
-     'ex_molagmar_lev-1',
-     'ex_molagmar_sleep',
-     'ex_redmtn_all_lev+0',
-     'ex_redmtn_all_lev+2',
-     'ex_redmtn_all_lev-2',
-     'ex_redmtn_all_sleep',
-     'ex_sheogorad_lev+0',
-     'ex_sheogorad_lev+2',
-     'ex_sheogorad_lev-1',
-     'ex_sheogorad_sleep',
-     'ex_shore_all_lev+0',
-     'ex_shore_all_lev+2',
-     'ex_shore_all_lev-2',
-     'ex_shore_cliffracer_lev+0',
-     'ex_shore_cliffracer_lev+2',
-     'ex_shore_cliffracer_lev-2',
-     'ex_shore_mudcrab',
-     'ex_westgash_lev+0',
-     'ex_westgash_lev+2',
-     'ex_westgash_lev-1',
-     'ex_westgash_sleep',
-     'ex_wild_all_lev+0',
-     'ex_wild_all_lev+2',
-     'ex_wild_all_lev-1',
-     'ex_wild_all_sleep',
-     'ex_wild_netch_lev+0',
-     'ex_wild_netch_lev+2',
-     'ex_wild_netch_lev-1',
-     'ex_wild_rat_lev+0',
-     'ex_wild_rat_lev+2',
-     'ex_wild_rat_lev-2',
-     'h2o_all_lev+0',
-     'h2o_all_lev+2',
-     'h2o_all_lev-2',
-     'h2o_slaughterfish',
-     'in_6th_all_lev+0',
-     'in_6th_all_lev+2',
-     'in_6th_all_lev-2',
-     'in_6th_ash_lev+0',
-     'in_6th_ash_lev+2',
-     'in_6th_ash_lev-2',
-     'in_cave_alit_lev+0',
-     'in_cave_alit_lev+2',
-     'in_cave_alit_lev-1',
-     'in_cave_all_lev+0',
-     'in_cave_all_lev+2',
-     'in_cave_all_lev-1',
-     'in_cave_kagouti_lev+0',
-     'in_cave_kagouti_lev+2',
-     'in_cave_kagouti_lev-1',
-     'in_cave_nix_lev+0',
-     'in_cave_nix_lev+2',
-     'in_cave_nix_lev-1',
-     'in_dae_all_lev+0',
-     'in_dae_all_lev+2',
-     'in_dae_all_lev-2',
-     'in_dae_atronach_lev+0',
-     'in_dae_atronach_lev+2',
-     'in_dae_atronach_lev-2',
-     'in_dae_clanfear_lev+0',
-     'in_dae_clanfear_lev+2',
-     'in_dae_clanfear_lev-2',
-     'in_dae_dremora_lev+0',
-     'in_dae_dremora_lev+2',
-     'in_dae_dremora_lev-2',
-     'in_durzogs',
-     'in_dwe_all_lev+0',
-     'in_dwe_all_lev+2',
-     'in_dwe_all_lev-2',
-     'in_dwe_all_tribunal',
-     'in_dwe_cent_lev+0',
-     'in_dwe_cent_lev+2',
-     'in_dwe_cent_lev-2',
-     'in_egg_all_lev+0',
-     'in_egg_all_lev+2',
-     'in_egg_all_lev-1',
-     'in_egg_kwama_blight_lev+0',
-     'in_egg_kwama_blight_lev+2',
-     'in_egg_kwama_blight_lev-1',
-     'in_egg_kwama_lev+0',
-     'in_egg_kwama_lev+2',
-     'in_egg_kwama_lev-1',
-     'in_egg_kwama_mined',
-     'in_egg_scrib_lev+0',
-     'in_egg_scrib_lev+2',
-     'in_egg_scrib_lev-1',
-     'in_goblins',
-     'in_tomb_all_lev+0',
-     'in_tomb_all_lev+2',
-     'in_tomb_all_lev-2',
-     'in_tomb_all_lev_trib',
-     'in_tomb_bone_lev+0',
-     'in_tomb_bone_lev+2',
-     'in_tomb_bone_lev-2',
-     'in_tomb_skele_lev+0',
-     'in_tomb_skele_lev+2',
-     'in_tomb_skele_lev-2',
-     'in_vamp_cattle',
-     'in_vamp_cattle_aun',
-     'in_vamp_cattle_ber',
-     'in_vamp_cattle_qua',
-     'l_vamp_cattle',
-    );
-my %BETH_LEVC;
-foreach my $l (@beth_levc) { $BETH_LEVC{$l}++; }
-
-my @beth_levi =
-    ('bm_chest_loot_01',
-     'bm_corpse_loot_01',
-     'bm_imperial guard random weapon',
-     'bm_karstaag_barrels',
-     'bm_karstaag_crates',
-     'bm_random_enchanted',
-     'bm_random_healthpotions',
-     'bm_random_lockpick',
-     'bm_random_mead',
-     'bm_random_nordhuntweap',
-     'bm_random_nordictomb',
-     'bm_random_nordsilver',
-     'bm_random_reaver_helm',
-     'bm_random_riekling_loot',
-     'bm_random_skaal',
-     'bm_randomboots_smugglers',
-     'bm_randomcuirass_smugglers',
-     'bm_randomgreaves_smugglers',
-     'bm_randomhealth_smugglers',
-     'bm_randomhelmet_smugglers',
-     'bm_randomleft_smugglers',
-     'bm_randomloot_smugglers',
-     'bm_randomright_smugglers',
-     'bm_randomshield_smugglers',
-     'bm_randomweapon_berserker',
-     'bm_randomwpn_smugglers',
-     'bm_skaalhunthelm',
-     'bm_skaalhuntlgaunt',
-     'bm_skaalhuntlpauldron',
-     'bm_skaalhuntrgaunt',
-     'bm_skaalhuntrpauldron',
-     'bm_skaalhuntshield',
-     'goblin_health',
-     'goblin_weapons_random',
-     'imperial guard random helmet',
-     'imperial guard random lpauldron',
-     'imperial guard random rpauldron',
-     'imperial guard random shield',
-     'imperial guard random skirt',
-     'imperial guard random weapon',
-     'l_b_amulets',
-     'l_b_bandit_goods',
-     'l_b_loot_tomb',
-     'l_b_loot_tomb01',
-     'l_b_loot_tomb02',
-     'l_b_loot_tomb03',
-     'l_b_rings',
-     'l_m_amulets',
-     'l_m_armor',
-     'l_m_armor_boots',
-     'l_m_armor_bracers',
-     'l_m_armor_cuirass',
-     'l_m_armor_gauntlet',
-     'l_m_armor_helmet',
-     'l_m_armor_shields',
-     'l_m_belts',
-     'l_m_enchantitem_hlaalu_rank0',
-     'l_m_enchantitem_hlaalu_rank4',
-     'l_m_enchantitem_hlaalu_rank6',
-     'l_m_enchantitem_imperial_rank0',
-     'l_m_enchantitem_redoran_rank2',
-     'l_m_enchantitem_redoran_rank4',
-     'l_m_enchantitem_redoran_rank6',
-     'l_m_enchantitem_redoran_rank8',
-     'l_m_enchantitem_telvanni_rank01',
-     'l_m_enchantitem_telvanni_rank6',
-     'l_m_enchantitem_telvanni_rank8',
-     'l_m_enchantitem_temple_rank0_1',
-     'l_m_enchantitem_temple_rank0_2',
-     'l_m_enchantitem_temple_rank4',
-     'l_m_enchantitem_temple_rank6',
-     'l_m_enchantitem_temple_rank8_1',
-     'l_m_enchantitem_temple_rank8_2',
-     'l_m_potion',
-     'l_m_potion_h',
-     'l_m_rings',
-     'l_m_wpn_melee',
-     'l_m_wpn_melee_axe',
-     'l_m_wpn_melee_blunt',
-     'l_m_wpn_melee_long blade',
-     'l_m_wpn_melee_short blade',
-     'l_m_wpn_melee_spear',
-     'l_m_wpn_missle',
-     'l_m_wpn_missle_arrow',
-     'l_m_wpn_missle_bolt',
-     'l_n_amulet',
-     'l_n_apparatus',
-     'l_n_armor',
-     'l_n_armor_boots',
-     'l_n_armor_bracers',
-     'l_n_armor_cuirass',
-     'l_n_armor_gauntlet',
-     'l_n_armor_greaves',
-     'l_n_armor_helmet',
-     'l_n_armor_pauldron',
-     'l_n_armor_shields',
-     'l_n_lockpicks',
-     'l_n_probe',
-     'l_n_repair item',
-     'l_n_rings',
-     'l_n_smuggled_goods',
-     'l_n_soul gem',
-     'l_n_wpn_melee',
-     'l_n_wpn_melee_axe',
-     'l_n_wpn_melee_blunt',
-     'l_n_wpn_melee_blunt_berzerker',
-     'l_n_wpn_melee_long blade',
-     'l_n_wpn_melee_short blade',
-     'l_n_wpn_melee_spear',
-     'l_n_wpn_melee_tomb',
-     'l_n_wpn_missle',
-     'l_n_wpn_missle_arrow',
-     'l_n_wpn_missle_bolt',
-     'l_n_wpn_missle_bow',
-     'l_n_wpn_missle_thrown',
-     'l_n_wpn_missle_xbow',
-     'random ashlander weapon',
-     'random ebony weapon',
-     'random excellent melee weapon',
-     'random gold',
-     'random gold_lev_05',
-     'random gold_lev_10',
-     'random gold_lev_15',
-     'random gold_lev_20',
-     'random orcish armor',
-     'random_adamantium',
-     'random_alchemy_diff',
-     'random_alit_hide',
-     'random_ampoule_pod',
-     'random_armor_bonemold',
-     'random_armor_chitin',
-     'random_armor_fur',
-     'random_armor_glass',
-     'random_armor_iron',
-     'random_armor_netch_leather',
-     'random_armor_steel',
-     'random_ash_salts',
-     'random_ash_yam',
-     'random_bandit_1-5',
-     'random_bandit_11+',
-     'random_bandit_6-10',
-     'random_bear_pelt',
-     'random_belladonna_plant',
-     'random_belladonna_spriggan',
-     'random_bittergreen_petals',
-     'random_black_anther',
-     'random_black_lichen',
-     'random_boar_leather',
-     'random_bonemeal',
-     'random_book_dunmer',
-     'random_book_imperial_dunmer',
-     'random_book_imperial_hlaalu',
-     'random_book_skill',
-     'random_book_wizard_all',
-     'random_book_wizard_evil',
-     'random_bulbs',
-     'random_bunglers_bane',
-     'random_cabbage',
-     'random_chokeweed',
-     'random_coda_flower',
-     'random_com_kitchenware',
-     'random_comberry',
-     'random_common_de_fclothes_01',
-     'random_common_de_mclothes_01',
-     'random_coprinus',
-     'random_corkbulb_root',
-     'random_cornberry',
-     'random_corprus_weepings',
-     'random_crab_meat',
-     'random_daedra_heart',
-     'random_daedra_skin',
-     'random_daedric_weapon',
-     'random_de_blueware_01',
-     'random_de_cheapfood_01_nc',
-     'random_de_cheapfood_01_ne',
-     'random_de_pants',
-     'random_de_pos_01',
-     'random_de_pos_01_nc',
-     'random_de_robe',
-     'random_de_shirt',
-     'random_de_shoes_common',
-     'random_de_weapon',
-     'random_diamond',
-     'random_dreugh_wax',
-     'random_drinks_01',
-     'random_drinks_nord',
-     'random_drinksndrugs_imp',
-     'random_dwarven_all',
-     'random_dwarven_ingredients',
-     'random_dwarven_misc',
-     'random_dwemer_armor',
-     'random_dwemer_coins',
-     'random_dwemer_weapon',
-     'random_ebony',
-     'random_ectoplasm',
-     'random_expensive_de_fclothes_02',
-     'random_expensive_de_mclothes_02',
-     'random_exquisite_de_fclothes1',
-     'random_exquisite_de_mclothes1',
-     'random_extravagant_de_fclothes1',
-     'random_extravagant_de_mclothes1',
-     'random_fire_petal',
-     'random_fire_salts',
-     'random_food',
-     'random_frost_salts',
-     'random_gem',
-     'random_ghoul_heart',
-     'random_glass_weapon',
-     'random_gold_kanet',
-     'random_golden_saint_shield',
-     'random_golden_saint_weapon',
-     'random_golden_sedge',
-     'random_gravetar',
-     'random_green_lichen',
-     'random_guar_hide',
-     'random_hackle-lo_leaf',
-     'random_heartwood',
-     'random_heather',
-     'random_holly',
-     'random_horker_tusk',
-     'random_hound_meat',
-     'random_hypha_facia',
-     'random_imp_armor',
-     'random_imp_silverware',
-     'random_imp_weapon',
-     'random_ingredient',
-     'random_ingredient_diff',
-     'random_iron_fur_armor',
-     'random_iron_weapon',
-     'random_kagouti_hide',
-     'random_kresh_fiber',
-     'random_kwama egg',
-     'random_kwama_cuttle',
-     'random_loot_bonewalker',
-     'random_loot_bonewalker_greater',
-     'random_loot_special',
-     'random_loot_special_marksman',
-     'random_marshmerrow',
-     'random_moon_sugar',
-     'random_muck',
-     'random_netch_leather',
-     'random_noble_sedge',
-     'random_nordic_weapons',
-     'random_nordictomb_rare',
-     'random_orcish_weapons',
-     'random_pearl',
-     'random_pos',
-     'random_potion_attribute_restore',
-     'random_potion_bad',
-     'random_racer_plumes',
-     'random_rat_meat',
-     'random_rawglass',
-     'random_red_guard_cloth_01',
-     'random_red_lichen',
-     'random_riekling_loot',
-     'random_ripened_belladonna',
-     'random_roobrush',
-     'random_russula',
-     'random_rye',
-     'random_saltrice',
-     'random_scales',
-     'random_scamp_skin',
-     'random_scathecraw',
-     'random_scrap_metal',
-     'random_scrib_jelly',
-     'random_scroll_all',
-     'random_shalk_resin',
-     'random_silver_weapon',
-     'random_skooma',
-     'random_smuggler_1-5',
-     'random_smuggler_11+',
-     'random_smuggler_6-10',
-     'random_snowbear_pelt',
-     'random_snowwolf_pelt',
-     'random_spines',
-     'random_stalks',
-     'random_steel_weapon',
-     'random_stoneflower_petals',
-     'random_sweetpulp',
-     'random_timsa',
-     'random_trama_root',
-     'random_unripened_belladonna',
-     'random_vampire_dust',
-     'random_void_salts',
-     'random_weapon_melee_basic',
-     'random_wickwheat',
-     'random_willow_anther',
-     'random_wolf_pelt',
-    );
-my %BETH_LEVI;
-foreach my $l (@beth_levi) { $BETH_LEVI{$l}++; }
-
+# TBD use this to replace any hardcoded flag constants.
 my %REC_FLAGS = ("deleted"     => 0x0020,
 		 "persistent"  => 0x0400,
 		 "ignored"     => 0x1000,
@@ -2020,8 +1622,8 @@ my %NPC_FLAGS = ("female" => 0x0001,
 		 "blood_skel" => 0x0400,
 		 "blood_metal" => 0x0800);
 
-my %LEVI_DATA = (1 => "Calc from all levels <= PC level",
-		 2 => "Calc for each item");
+my %LEVI_FLAGS = ("Calc_from_all_levels_<=_PC_level" => 0x1,
+		  "Calc_for_each_item" => 0x2);
 
 my %AIDT_FLAGS = ("weapon" => 0x00001,
 		  "armor" => 0x00002,
@@ -2666,23 +2268,23 @@ my %RECDEF =
 	     ],
      LEVC => [
 	      NAME => [["ID", "a*"]],
-	      DATA => [["List_Data", "L"]],
+	      DATA => [["List_Flags", "L"]], # calc from all levels <= PC level
 	      INDX => [["Item_Count", "L"]],
+	      NNAM => [["Chance_None", "C"]],
 	      [
-	       CNAM => [["Actor_ID", "a*"]],
+	       CNAM => [["Creature_ID", "Z*"]],
 	       INTV => [["Level", "S"]],
 	      ],
-	      NNAM => [["Chance_None", "C"]]
 	     ],
      LEVI => [
 	      NAME => [["ID", "a*"]],
-	      DATA => [["List_Data", "L"]],
+	      DATA => [["List_Flags", "L"]], # calc from all levels <= PC level + calc from all items
 	      INDX => [["Item_Count", "L"]],
+	      NNAM => [["Chance_None", "C"]],
 	      [
 	       INAM => [["Item_ID", "Z*"]],
 	       INTV => [["Level", "S"]],
 	      ],
-	      NNAM => [["Chance_None", "C"]]
 	     ],
      LIGH => [
 	      FNAM => [["Name", "a*"]],
@@ -2935,7 +2537,7 @@ my %RECDEF =
      SPLM => [
 	      CNAM => [["Unknown_1", "L"], ["Unknown_1", "Z*"]],
 	      NAM0 => [["Unknown_1", "L"]],
-	      NAME => [["Name", "L"]],
+	      NAME => [["ID", "L"]],
 	      NPDT => [["Name", ["Z40", "a40"]], ["Magnitude", "l"], ["Seconds_Active", "f"], [[("Long_1") x 2], "l2"]],
 	      SPDT => [["Type", "L"], ["Name", ["Z40", "a40"]], [[("Long_1") x 2], "L2"],
 		       ["Caster", ["Z32", "a32"]], ["Item", "Z*"]],
@@ -3278,9 +2880,9 @@ default_codec('FACT.FADT', (["Primary_Attribute", "L"],
 			    ["Unknown_1", "L"],
 			    ["Flags", "L"]));
 default_codec('GLOB.FNAM', (["VarType", "a"]));
-default_codec('GMST.NAME', (["Name", "a*"]));
+default_codec('GMST.NAME', (["ID", "a*"]));
 default_codec('INFO.ACDT', (["Actor_Data", "Z*"])); # (only in .ess)
-default_codec('INFO.INAM', (["Name", "Z*"]));
+default_codec('INFO.INAM', (["ID", "Z*"]));
 default_codec('INFO.DATA', (["Unknown_1", "L"],
 			    ["Disposition", "L"],
 			    ["Rank", "C"],
@@ -3312,12 +2914,15 @@ default_codec('INGR.IRDT', (["Weight", "f"],
 			    [[("Attribute_1") x 4], "l4"]));
 default_codec('LAND.INTV', (["X", "l"],
 			    ["Y", "l"]));
-default_codec('LEVC.DATA', (["List_Data", "L"]));
+default_codec('LEVC.DATA', (["List_Flags", "L"]));
+default_codec('LEVC.INDX', (["Item_Count", "L"]));
 default_codec('LEVC.INTV', (["Level", "S"]));
+default_codec('LEVC.CNAM', (["Creature_ID", "Z*"]));
 default_codec('LEVC.NNAM', (["Chance_None", "C"]));
-default_codec('LEVI.DATA', (["List_Data", "L"]));
+default_codec('LEVI.DATA', (["List_Flags", "L"]));
+default_codec('LEVI.INDX', (["Item_Count", "L"]));
 default_codec('LEVI.INTV', (["Level", "S"]));
-default_codec('LEVI.INAM', (["Name", "Z*"]));
+default_codec('LEVI.INAM', (["Item_ID", "Z*"]));
 default_codec('LEVI.NNAM', (["Chance_None", "C"]));
 default_codec('LIGH.LHDT', (["Weight", "f"],
 			    ["Value", "L"],
@@ -3505,7 +3110,7 @@ default_codec('REPA.RIDT', (["Weight", "f"],
 			    ["Quality", "f"]));
 default_codec('SCPT.RNAM', (["Unknown_1", "L"]));
 default_codec('SCPT.SCDT', (["Bytecode", "H*"]));
-default_codec('SCPT.SCHD', (["Name", ["Z32", "a32"]],
+default_codec('SCPT.SCHD', (["ID", ["Z32", "a32"]],
 			    ["Num_Shorts", "L"],
 			    ["Num_Longs", "L"],
 			    ["Num_Floats", "L"],
@@ -3520,7 +3125,7 @@ default_codec('SNDG.DATA', (["Data", "L"]));
 default_codec('SPEL.SPDT', (["Type", "L"],
 			    ["Cost", "L"],
 			    ["Flags", "L"]));
-default_codec('SPLM.NAME', (["Name", "L"]));
+default_codec('SPLM.NAME', (["ID", "L"]));
 default_codec('SPLM.SPDT', (["Type", "L"],
 			    ["Name", ["Z40", "a40"]],
 			    [[("Long_1") x 2], "L2"],
@@ -3606,9 +3211,13 @@ foreach (qw(FLTV WHGT)) {
     $ENCODE{$_} = sub{ pack("f", $_[0]->{float} ); };
 }
 
+# for the standard "NAME == ID" objects:
+$DECODE{NAME} = sub{ { id => unpack("Z*", $_[0]) }; };
+$ENCODE{NAME} = sub{ pack("a*", $_[0]->{id} ); };
+
 # subrecords that decode as variable length strings:
 foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FGTN FNAM
-HSND HVFX ITEX KNAM LSHN LSTN MNAM MODL NAME PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
+HSND HVFX ITEX KNAM LSHN LSTN MNAM MODL PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
 TEXT TGTN TNAM WNAM)) {
     $DECODE{$_} = sub{ { string => unpack("Z*", $_[0]) }; };
     $ENCODE{$_} = sub{ pack("a*", $_[0]->{string} ); };
@@ -3792,10 +3401,10 @@ my %TOSTR =
 			  $result . join(", ", @results);
 		      },
      "LAND.INTV" => sub { sprintf qq{Coordinates: (%d, %d)}, unpack($RD{'LAND.INTV'}, $_[0]) },
-     "LEVC.DATA" => sub { "List Data: %d (1 = Calc from all levels <= PC level)", unpack($RD{'LEVC.DATA'}, $_[0]) },
+     "LEVC.DATA" => sub { "List_Flags: %d (1 = Calc from all levels <= PC level)", unpack($RD{'LEVC.DATA'}, $_[0]) },
      "LEVC.INTV" => sub { sprintf "Level: %d", unpack($RD{'LEVC.INTV'}, $_[0]) },
      "LEVC.NNAM" => sub { sprintf "ChanceNone: %d", unpack($RD{'LEVC.NNAM'}, $_[0]) },
-     "LEVI.DATA" => sub { "List Data: %s ", $LEVI_DATA{unpack($RD{'LEVI.DATA'}, $_[0])} },
+     "LEVI.DATA" => sub { "List_Flags: " . decode_flags(unpack($RD{'LEVI.DATA'}, $_[0]), \%LEVI_FLAGS) },
      "LEVI.INTV" => sub { sprintf "Level: %d", unpack($RD{'LEVI.INTV'}, $_[0]) },
      "LEVI.INAM" => sub { unpack($RD{'LEVI.INAM'}, $_[0]) },
      "LEVI.NNAM" => sub { sprintf "ChanceNone: %d", unpack($RD{'LEVI.NNAM'}, $_[0]) },
@@ -4000,8 +3609,11 @@ GENERAL HELP:
 OPTIONS given to commands may be abbreviated, as long as the abbreviations are
 unique.
 
-tes3cmd uses Perl regular expressions for matching, the full documentation can
-be found here:
+Normal users will likely only be interested in the "clean" and "multipatch"
+commands. The other commands will mostly appeal to modders.
+
+tes3cmd uses Perl regular expressions for string matching, the full
+documentation can be found here:
    http://www.perl.com/doc/manual/html/pod/perlre.html
 You should at least be aware that the characters "\\.?*+|^\$()[]{}" have
 special meaning in a regular expression and that they are unlike characters
@@ -4179,23 +3791,24 @@ sub rec_id {
 # given a reference to object returned by a decoder, return printable name
 # operates on current record: $R
 sub get_id {
-    my($rectype) = @_;
+    my($rectype, $r) = @_;
+    $r ||= $R;
     if ($rectype eq "INFO") {
-	foreach my $subr (@$R) {
+	foreach my $subr (@$r) {
 	    if ($subr->[0] eq 'INAM') {
-		return($subr->[1]->{Name});
+		return($subr->[1]->{id});
 	    }
 	}
     } elsif ($rectype eq "CELL") {
 	my($name, $rgnn, $coord);
-	foreach my $subr (@$R) {
+	foreach my $subr (@$r) {
 	    if ($subr->[0] eq 'NAME') {
-		$name = $subr->[1]->{String} unless (defined $name);
+		$name = $subr->[1]->{string} unless (defined $name);
 	    } elsif ($subr->[0] eq 'RGNN') {
-		$rgnn = $subr->[1]->{String} unless (defined $rgnn);
+		$rgnn = $subr->[1]->{string} unless (defined $rgnn);
 	    } elsif ($subr->[0] eq 'DATA') {
-		if (defined $subr->[1]->{X}) {
-		    $coord = "$subr->[1]->{X}, $subr->[1]->{Y}"; # External Cell
+		if (defined $subr->[1]->{x}) {
+		    $coord = "$subr->[1]->{x}, $subr->[1]->{y}"; # External Cell
 		}
 	    }
 	    last if ($subr->[0] eq 'FRMR');
@@ -4207,30 +3820,30 @@ sub get_id {
 	    return($name);
 	}
     } elsif ($rectype eq "SCPT") {
-	foreach my $subr (@$R) {
-	    return(lc(chop_nulls($subr->[1]->{Name})))
+	foreach my $subr (@$r) {
+	    return(lc(chop_nulls($subr->[1]->{id})))
 		if ($subr->[0] eq 'SCHD');
 	}
     } elsif ($rectype eq "LAND") {
-	foreach my $subr (@$R) {
+	foreach my $subr (@$r) {
 	    if ($subr->[0] eq 'INTV') {
-		my $x = $subr->[1]->{X};
-		my $y = $subr->[1]->{Y};
+		my $x = $subr->[1]->{x};
+		my $y = $subr->[1]->{y};
 		return("($x, $y)");
 	    }
 	}
     } elsif (($rectype eq "MGEF") or ($rectype eq "SKIL")) {
-	foreach my $subr (@$R) {
+	foreach my $subr (@$r) {
 	    if ($subr->[0] eq 'INDX') {
-		return($subr->[1]->{Long});
+		return($subr->[1]->{long});
 	    }
 	}
     } elsif ($rectype eq "TES3") {
 	return('');
     } else {
-	foreach my $subr (@$R) {
+	foreach my $subr (@$r) {
 	    if ($subr->[0] eq 'NAME') {
-		return($subr->[1]->{String});
+		return($subr->[1]->{id});
 	    }
 	}
     }
@@ -4647,13 +4260,14 @@ sub decode_rec {
 
 # encode and return a buffer for the subrecords that comprise the body of a full record.
 sub encode_rec {
-    my($rectype) = @_;
+    my($rectype, $r) = @_;
+    $r ||= $R;
     my $newrec = '';
-    foreach my $subr (@$R) {
-	my($subrec_type, $hr) = @$subr;
-	my $full_type = "${rectype}.${subrec_type}";
-	my $subrec = encoder($rectype, $subrec_type)->($hr);
-	$newrec .= pack("a4L/a*", $subrec_type, $subrec);
+    foreach my $subr (@$r) {
+	my($subtype, $hr) = @$subr;
+	my $full_type = "${rectype}.${subtype}";
+	my $subrec = encoder($rectype, $subtype)->($hr);
+	$newrec .= pack("a4L/a*", $subtype, $subrec);
     }
     return($newrec);
 }
@@ -4682,12 +4296,9 @@ sub rec_match {
 	}
     }
     if ($opt_match or $opt_no_match) {
-	#warn qq{DBG: opt_match == "$opt_match"   opt_no_match == "$opt_no_match"\n};
 	my $print_rec = rec_to_string($rec, $rectype, $id, $plugin, $flags);
-	#warn "DBG: print_rec == {{{{$print_rec}}}}\n";
 	if (((not $opt_match) or ($print_rec =~ /$opt_match/is)) and
 	    ((not $opt_no_match) or ($print_rec !~ /$opt_no_match/is))) {
-	    #warn "DBG: match for $opt_match\n";
 	    return(1, $srh, $id, $print_rec);
 	} else {
 	    return(0, $srh, $id, $print_rec);
@@ -4785,17 +4396,19 @@ sub search_and_replace {
     }
 }
 
-# currently unused
+# by default operates on current record: $R
 sub getrec {
-    my($opt) = @_; 		# opt is hashref with keys: "i", "t", "f"
-    my @indices = defined($opt->{i}) ? ($opt->{i}) : (0 .. $#$R);
+    my($opt, $r) = @_; 		# opt is hashref with keys: "i", "t", "f"
+    $r ||= $R;
+    my @indices = defined($opt->{i}) ? ($opt->{i}) : (0 .. $#$r);
     foreach my $i (@indices) {
-	my $type = $R->[$i]->[0];
-	next if (defined($opt->{t}) and ($type !~ /^$opt->{t}/i));
+	my $subtype = $r->[$i]->[0];
+	next if (defined($opt->{t}) and ($subtype !~ /^$opt->{t}/i));
 	if (defined($opt->{f})) {
 	    my $key = lc($opt->{f});
-	    if (defined($R->[$i]->[1]->{$key})) {
-		return($R->[$i]->[1]->{$key});
+	    #warn "DBG: key=$key stuff=".Dumper($r->[$i]->[1])."\n";
+	    if (defined($r->[$i]->[1]->{$key})) {
+		return($r->[$i]->[1]->{$key});
 	    } else {
 		next;
 	    }
@@ -4803,9 +4416,9 @@ sub getrec {
 	    # give first (default) field
 	    my @ordered_fields = ();
 	    my @unordered_fields = ();
-	    while (my($key, $val) = each %{$R->[$i]->[1]}) {
-		if (defined $R->[$i]->[2]->{$key}) {
-		    $ordered_fields[$R->[$i]->[2]->{$key}] = $val;
+	    while (my($key, $val) = each %{$r->[$i]->[1]}) {
+		if (defined $r->[$i]->[2]->{$key}) {
+		    $ordered_fields[$r->[$i]->[2]->{$key}] = $val;
 		} else {
 		    push(@unordered_fields, $val);
 		}
@@ -4815,20 +4428,22 @@ sub getrec {
 	    return(shift, @fields);
 	}
     }
-    die "getrec: no match\n";
+    my @opts; push(@opts, "$_ = $opt->{$_}") foreach (keys %$opt);
+    die "getrec: no match for (@opts)\n";
 }
 
-# operates on current record: $R
+# by default operates on current record: $R
 sub dumprec {
-    my($opt) = @_; 		# opt is hashref with keys: "i", "t", "f"
-    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#$R);
+    my($opt, $r) = @_; 		# opt is hashref with keys: "i", "t", "f"
+    $r ||= $R;
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#$r);
     foreach my $i (@indices) {
-	my $type = $R->[$i]->[0];
+	my $type = $r->[$i]->[0];
 	next if (defined($opt->{t}) and ($type !~ /^$opt->{t}/i));
 	if (defined($opt->{f})) {
 	    my $key = lc($opt->{f});
-	    if (defined($R->[$i]->[1]->{$key})) {
-		print qq{$i: $type  $key = $R->[$i]->[1]->{$key}\n};
+	    if (defined($r->[$i]->[1]->{$key})) {
+		print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
 	    } else {
 		next;
 	    }
@@ -4836,11 +4451,11 @@ sub dumprec {
 	    # dump all fields
 	    my @ordered_fields = ();
 	    my @unordered_fields = ();
-	    while (my($key, $val) = each %{$R->[$i]->[1]}) {
+	    while (my($key, $val) = each %{$r->[$i]->[1]}) {
 		$val = qq{"$val"} if ($val =~ /[^\d.]/);
 		my $print_key = lcfirst($key);
-		if (defined $R->[$i]->[2]->{$key}) {
-		    $ordered_fields[$R->[$i]->[2]->{$key}] = "$key = $val";
+		if (defined $r->[$i]->[2]->{$key}) {
+		    $ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
 		} else {
 		    push(@unordered_fields, "$key = $val");
 		}
@@ -4851,27 +4466,28 @@ sub dumprec {
     return(0);
 }
 
-# operates on current record: $R
+# by default operates on current record: $R
 sub setrec {
-    my($opt, $newval) = @_;	# opt is hashref with keys: "i", "t", "f"
+    my($opt, $newval, $r) = @_;	# opt is hashref with keys: "i", "t", "f"
     unless (defined $newval) {
 	warn qq{Usage: setrec(\$option_hash, \$newvalue)
 option_hash can have the keys: "i", "t", or "f"\n};
 	return;
     }
+    $r ||= $R;
     my $rc = 0;
-    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#$R);
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#$r);
     foreach my $i (@indices) {
-	my $type = $R->[$i]->[0];
+	my $type = $r->[$i]->[0];
 	next if (defined($opt->{t}) and ($opt->{t} ne $type));
 	if (defined($opt->{f})) {
 	    my $key = lc($opt->{f});
-	    if (defined($R->[$i]->[1]->{$key})) {
-		if ($R->[$i]->[1]->{$key} ne $newval) {
-		    $R->[$i]->[1]->{$key} = $newval;
+	    if (defined($r->[$i]->[1]->{$key})) {
+		if ($r->[$i]->[1]->{$key} ne $newval) {
+		    $r->[$i]->[1]->{$key} = $newval;
 		    $rc++;
 		}
-		#print qq{$i: $type  $key = $R->[$i]->[1]->{$key}\n};
+		#print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
 	    } else {
 		next;
 	    }
@@ -4879,13 +4495,13 @@ option_hash can have the keys: "i", "t", or "f"\n};
 	    # set all fields
 	    my @ordered_fields = ();
 	    my @unordered_fields = ();
-	    while (my($key, $val) = each %{$R->[$i]->[1]}) {
+	    while (my($key, $val) = each %{$r->[$i]->[1]}) {
 		if ($newval ne $val) {
-		    $val = $R->[$i]->[1]->{$key} = $newval;
+		    $val = $r->[$i]->[1]->{$key} = $newval;
 		    $rc++;
 		}
-		if (defined $R->[$i]->[2]->{$key}) {
-		    $ordered_fields[$R->[$i]->[2]->{$key}] = "$key = $val";
+		if (defined $r->[$i]->[2]->{$key}) {
+		    $ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
 		} else {
 		    push(@unordered_fields, "$key = $val");
 		}
@@ -5024,6 +4640,78 @@ sub dumpit {
     warn("$label: [$it]\n" . ((DBG) ? unpack("H*", $it) . "\n" : ''));
 }
 
+sub load_leveled_lists {
+    find_datadir();
+    my $datafiles = list_files($DATADIR);
+    my $levdat = {};
+    my $leveled_list_cache_file = "$TES3CMD_DIR/leveled_lists_cache.dat";
+    # load cache
+    unless ($opt_no_cache) {
+	eval { $levdat = retrieve($leveled_list_cache_file); };
+	if ($@) {
+	    warn "Invalid Leveled Lists Cache, will rebuild\n";
+	    $levdat = {};
+	}
+    }
+    my @load_order = load_order();
+    my %active;
+    $active{lc($_)}++ foreach (@load_order);
+    foreach my $plugin (@load_order) {
+	my $lc_plugin = lc($plugin);
+	# skip known merged leveled lists plugins
+	next if ($lc_plugin eq "multipatch.esp");
+	next if ($lc_plugin eq "mashed lists.esp");
+	next if ($lc_plugin eq "merged_leveled_lists.esp");
+	my $curr_size = -s ("$DATADIR/" . $datafiles->{$lc_plugin});
+	my $invalid = 0;
+	if (defined($levdat->{$lc_plugin})) {
+	    # update plugins who have changed size
+	    unless ($curr_size == $levdat->{$lc_plugin}->{size}) {
+		warn "Leveled List Cache UPDATING: $plugin\n";
+		delete $levdat->{$lc_plugin};
+		$invalid = 1;
+	    }
+	} else {
+	    # add plugins added to load order
+	    warn "Leveled List Cache ADDING: $plugin\n";
+	    $invalid = 1;
+	}
+	if ($invalid) {
+	    my $inp = open_for_read("$DATADIR/$plugin");
+	    eval {
+		while (my($rectype, $rec, $flags) = read_rec($inp, undef)) {
+		    last if (not defined $rectype);
+		    next unless ($rectype =~ /^LEV[CI]$/);
+		    if ($flags & 0x1000) {
+			print "DBG: Plugin $plugin REC=$rectype flags=$flags (ignored)\n" if (VERBOSE);
+			next;
+		    }
+		    print "DBG: rec_type = $rectype\n" if (DBG);
+		    my $r = decode_rec($plugin, $rectype, $rec);
+		    my $id = get_id($rectype, $r);
+		    $levdat->{$lc_plugin}->{$rectype}->{$id} = [$r, $flags];
+		}
+	    };
+	    close($inp);
+	    if ($@) {
+		warn $@;
+		delete $levdat->{$lc_plugin};
+	    } else {
+		$levdat->{$lc_plugin}->{size} = $curr_size;
+	    }
+	}
+    }
+    # delete plugins no longer in load order
+    foreach my $plugin (keys %$levdat) {
+	delete $levdat->{$plugin} unless ($active{$plugin});
+    }
+    # save cache
+    unless ($opt_no_cache) {
+	store($levdat, $leveled_list_cache_file);
+    }
+    return($levdat);
+} # load_leveled_lists
+
 ###COMMANDS
 
 sub cmd_codectest {
@@ -5096,18 +4784,174 @@ sub cmd_wikiout {
     foreach my $cmd (sort keys %CMDS) {
 	next if (($cmd eq 'help') or ($cmd =~ /^-/));
 	my $usage = eval "\$@{[uc $cmd]}_USAGE";
+	my $desc = $CMDS{$cmd}->[3];
 	$usage =~ s/'/''/g;
-	print "==$cmd==\n{{{\n$usage\n}}}\n\n";
+	print "==$cmd - _${desc}_==\n{{{\n$usage\n}}}\n\n";
     }
+}
+
+sub multipatch_check_fogbug {
+    my($plugin, $srh, $data, $fog_den_data, $fogcell) = @_;
+    my $name = chop_nulls($srh->{NAME}[0]);
+    my $ambi = $srh->{AMBI}[0];
+    my $fog_den_ambi;
+    my $ambilen = length($ambi);
+    if ($ambilen == 16) {
+	my $fog_den_ambi = unpack("x[L3]f", $ambi);
+	if ($fog_den_ambi != $fog_den_data) {
+	    $fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
+	    print "$plugin: [CELL $name] Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n"
+		if ($fog_den_data == 0.0);
+	}
+	if (0.0 == $fog_den_data) {
+	    print "  [FOGBUG] $plugin\t\tCELL: $name\n" if (VERBOSE);
+	    $fogcell->{$name} = [$data, $ambi, $plugin];
+	} else {
+	    if (defined($fogcell->{$name})) {
+		print qq{  [FOGBUG] CORRECTED $plugin CELL: $name\n} if (VERBOSE);
+		delete $fogcell->{$name};
+	    }
+	}
+    } else {
+	print "$plugin: ERROR: [CELL $name] len(AMBI) subrec $ambilen != 16, skipping\n"
+	    if ($ambilen != 0);
+    }
+}
+
+sub multipatch_check_cell_rename_reversions {
+    my($plugin, $srh, $data, $flags, $unk, $rencell) = @_;
+    my $name = chop_nulls($srh->{NAME}[0]);
+    my $coord = join(", ", unpack("x[L]ll", $srh->{DATA}[0]));
+    if (exists $rencell->{$coord}->{NAME}) {
+	my $prevname = $rencell->{$coord}->{NAME};
+	if ($prevname ne $name) {
+	    if ($name eq $rencell->{$coord}->{ORIGNAME}) {
+		print qq{  [REVNAME] CELL: ($coord) RENAME REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n} if (VERBOSE);
+		$rencell->{$coord}->{OUTPUTFLAG}++;
+	    } elsif ($name) {
+		print qq{  [REVNAME] CELL: ($coord) Renamed by: [$plugin] from: "$prevname" to: "$name"\n} if (VERBOSE);
+		my $prevname = $rencell->{$coord}->{NAME};
+		my $prevplug = $rencell->{$coord}->{PLUG};
+		print qq{  [REVNAME] CELL: ($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n} if (VERBOSE);
+		my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data);
+		$rencell->{$coord}->{NAME} = $name;
+		$rencell->{$coord}->{PLUG} = $plugin;
+		$rencell->{$coord}->{REC} = ['CELL', $newrec, $flags, $unk];
+	    } else {
+		print qq{  [REVNAME] CELL: ($coord) Skipping null name: [$plugin]:"$name"\n} if (VERBOSE);
+	    }
+	}
+    } else {
+	$rencell->{$coord}->{ORIGNAME} = $name;
+	$rencell->{$coord}->{ORIGPLUG} = $plugin;
+	$rencell->{$coord}->{NAME} = $name;
+	$rencell->{$coord}->{PLUG} = $plugin;
+    }
+}
+
+sub merge_leveled_lists {
+    my @merged_lists;
+    my $levdat = load_leveled_lists();
+    my $ll = {};
+    foreach my $plugin (load_order()) {
+	my $lc_plugin = lc($plugin);
+	if (defined($levdat->{$lc_plugin})) {
+	    foreach my $rectype (qw(LEVC LEVI)) {
+		foreach my $id (keys %{$levdat->{$lc_plugin}->{$rectype}}) {
+		    my($r, $flags) = @{$levdat->{$lc_plugin}->{$rectype}->{$id}};
+		    push(@{$ll->{$rectype}->{$id}}, [$plugin, $r, $flags]);
+		}
+	    }
+	}
+    }
+    foreach my $rectype (qw(LEVC LEVI)) {
+	foreach my $id (sort keys %{$ll->{$rectype}}) {
+	    warn qq{DBG: examining $rectype: "$id"\n} if (DBG);
+	    if (scalar(@{$ll->{$rectype}->{$id}}) == 1) {
+		print " [LEVLIST] skipping $rectype $id - defined only once: [$ll->{$rectype}->{$id}->[0]->[0]]\n" if (VERBOSE);
+		next;
+	    }
+	    my $last_r = $ll->{$rectype}->{$id}->[-1]->[1];
+	    # strategy: last guy wins for List Flags
+	    # TBD offer first guy or additive strategy?
+	    my $last_list_flags = getrec({f=>"list_flags"}, $last_r);
+	    # strategy: last guy wins for "Chance_None"
+	    # TBD offer first guy or average?
+	    my $last_chance = getrec({f=>"chance_none"}, $last_r);
+	    my %levlist;
+	    foreach my $lref (@{$ll->{$rectype}->{$id}}) {
+		my($plugin, $r, $flags) = @$lref;
+		my $element_id;
+		my %levtmp;
+		foreach my $subr (@$r) {
+		    my($subtype, $hr) = @$subr;
+		    if ($subtype eq 'CNAM') {
+			$element_id = $hr->{creature_id};
+			#warn "DBG: CNAM element id: $element_id\n";
+		    } elsif ($subtype eq 'INAM') {
+			$element_id = $hr->{item_id};
+			#warn "DBG: INAM element id: $element_id\n";
+		    } elsif ($subtype eq 'INTV') {
+			my $level = $hr->{level};
+			#warn "DBG: element_id=$element_id  level=$level\n";
+			$levtmp{$element_id}->{$level}++;
+		    }
+		}
+		# replace old with the new
+		#warn "DBG: ($id) levtmp = " . Dumper(\%levtmp) . "\n";
+		$levlist{$_} = $levtmp{$_} foreach (keys %levtmp);
+	    }
+	    print " [LEVLIST] Defining $rectype $id ->\n" if (VERBOSE);
+	    my @unsorted_list;
+	    #warn "DBG: ($id) levlist = " . Dumper(\%levlist) . "\n";
+	    foreach my $element_id (keys %levlist) {
+		foreach my $level (keys %{$levlist{$element_id}}) {
+		    my $count = $levlist{$element_id}->{$level};
+		    for (my $i=0; $i < $count; $i++) {
+			push(@unsorted_list, [$level, $element_id]);
+		    }
+		}
+	    }
+	    #warn "DBG: unsorted_list: " . Dumper(\@unsorted_list) . "\n";
+	    # sort the leveled list by level, then by crea/item id
+	    my @sorted_list;
+	    foreach my $lref (sort {$a->[0] <=> $b->[0] or $a->[1] cmp $b->[1]} @unsorted_list) {
+		my($level, $element_id) = @$lref;
+		print "\t[lev=$level cre=$element_id]\n" if (VERBOSE);
+		push(@sorted_list, [$element_id, $level]);
+	    }
+	    my $indx = scalar(@sorted_list);
+	    # create new record
+	    my @subrecs;
+	    push(@subrecs, [ 'NAME', { id => $id } ]);
+	    push(@subrecs, [ 'DATA', { list_flags => $last_list_flags } ]);
+	    push(@subrecs, [ 'NNAM', { chance_none => $last_chance } ]);
+	    push(@subrecs, [ 'INDX', { item_count => $indx } ]);
+	    foreach my $lref (@sorted_list) {
+		my($element_id, $level) = @$lref;
+		if ($rectype eq 'LEVC') {
+		    push(@subrecs, [ 'CNAM', { creature_id => $element_id } ]);
+		} else {
+		    push(@subrecs, [ 'INAM', { item_id => $element_id } ]);
+		}
+		push(@subrecs, [ 'INTV', { level => $level } ]);
+	    }
+	    push(@merged_lists, [$rectype, \@subrecs]);
+	}
+    }
+    return(\@merged_lists);
 }
 
 sub cmd_multipatch {
     find_datadir();
+    print "Miss Multipatch says:\n" if (DBG or VERBOSE);
     print "Data Files is: $DATADIR\nScanning Active Plugins...\n";
     my $patch_file = "multipatch.esp";
     my $patch_path = "$DATADIR/$patch_file";
     my %fogcell;		# fogbugged cells
     my %rencell;		# cells with reverted renamings
+    my %sumcrea;		# critters needing persistent flag
+    my $merged_lists = merge_leveled_lists() if ($opt_multipatch_merge_lists);
     foreach my $plugin (load_order()) {
 	next if ($plugin eq $patch_file);
 	next if (($plugin eq "fogpatch.esp") or ($plugin eq "cellnamepatch.esp"));
@@ -5118,65 +4962,39 @@ sub cmd_multipatch {
 	    while (my($rectype, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
 		$expected = undef;
 		last if (not defined $rectype);
-		if ($rectype eq 'CELL') {
-		    my $srh = parse_subrec_hash($rec);
-		    my $data = $srh->{DATA}[0];
-		    my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
-		    if (is_interior($srh)) {
-			# only check interior cells for fogbug
-			unless ($flags & 128) { # behave like exterior
-			    my $name = chop_nulls($srh->{NAME}[0]);
-			    my $ambi = $srh->{AMBI}[0];
-			    my $fog_den_ambi;
-			    my $ambilen = length($ambi);
-			    if ($ambilen == 16) {
-				my $fog_den_ambi = unpack("x[L3]f", $ambi);
-				if ($fog_den_ambi != $fog_den_data) {
-				    $fog_den_data = 0.0 if ($fog_den_ambi == 0.0);
-				    print "Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n" if ($fog_den_data == 0.0);
-				}
-				if (0.0 == $fog_den_data) {
-				    print "FOGBUG: $plugin\t\tCELL: $name\n";
-				    $fogcell{$name} = [$data, $ambi, $plugin];
-				} else {
-				    if (defined($fogcell{$name})) {
-					print qq{\t$plugin CORRECTED fogbug in CELL: $name\n};
-					delete $fogcell{$name};
-				    }
-				}
-			    } else {
-				print "Error: $plugin, CELL: $name, len(AMBI) subrec $ambilen != 16, skipping\n"
-				    if ($ambilen != 0);
-			    }
-			}
-		    } else {
-			# only check exterior cells for rename reversion problem
-			my $name = chop_nulls($srh->{NAME}[0]);
-			my $coord = join(", ", unpack("x[L]ll", $srh->{DATA}[0]));
-			if (exists $rencell{$coord}->{NAME}) {
-			    my $prevname = $rencell{$coord}->{NAME};
-			    if ($prevname ne $name) {
-				if ($name eq $rencell{$coord}->{ORIGNAME}) {
-				    print qq{CELL: ($coord) RENAME REVERTED by: [$plugin] from: "$prevname" to: "$name". Reversion will be undone.\n};
-				    $rencell{$coord}->{OUTPUTFLAG}++;
-				} elsif ($name) {
-				    print qq{CELL: ($coord) Renamed by: [$plugin] from: "$prevname" to: "$name"\n};
-				    my $prevname = $rencell{$coord}->{NAME};
-				    my $prevplug = $rencell{$coord}->{PLUG};
-				    print qq{CELL: ($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n};
-				    my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data);
-				    $rencell{$coord}->{NAME} = $name;
-				    $rencell{$coord}->{PLUG} = $plugin;
-				    $rencell{$coord}->{REC} = [$rectype, $newrec, $flags, $unk];
-				} else {
-				    print qq{CELL: ($coord) Skipping null name: [$plugin]:"$name"\n};
+		if ($opt_multipatch_fogbug or $opt_multipatch_cellnames) {
+		    if ($rectype eq 'CELL') {
+			my $srh = parse_subrec_hash($rec);
+			my $data = $srh->{DATA}[0];
+			my($flags, $fog_den_data) = unpack("Lx[L]f", $data);
+			if (is_interior($srh)) {
+			    # only check interior cells for fogbug
+			    if ($opt_multipatch_fogbug) {
+				unless ($flags & 128) { # behave like exterior
+				    multipatch_check_fogbug($plugin, $srh, $data, $fog_den_data, \%fogcell);
 				}
 			    }
 			} else {
-			    $rencell{$coord}->{ORIGNAME} = $name;
-			    $rencell{$coord}->{ORIGPLUG} = $plugin;
-			    $rencell{$coord}->{NAME} = $name;
-			    $rencell{$coord}->{PLUG} = $plugin;
+			    # only check exterior cells for rename reversion problem
+			    if ($opt_multipatch_cellnames) {
+				multipatch_check_cell_rename_reversions($plugin, $srh, $data, $flags, $unk, \%rencell);
+			    }
+			}
+		    }
+		}
+		if ($opt_multipatch_summons_persist) {
+		    if ($rectype eq 'CREA') {
+			my $id = rec_id(parse_subrec_hash($rec), $rectype);
+			if ($SUMMONED_CREATURES{$id}) {
+			    if ($flags & $REC_FLAGS{persistent}) {
+				# plugin has preserved persistent flag
+				print "  [SUMMCREA] $plugin PRESERVES persistence for: $id\n" if (VERBOSE);
+				delete $sumcrea{$id};
+			    } else {
+				# plugin has voided persistent flag, so reset it
+				print "  [SUMMCREA] $plugin REVERTS persistence for: $id\n" if (VERBOSE);
+				$sumcrea{$id} = [$rec, ($flags & $REC_FLAGS{persistent}), $unk];
+			    }
 			}
 		    }
 		}
@@ -5185,13 +5003,16 @@ sub cmd_multipatch {
 	print $@ if ($@);
 	close($inp);
     }
-    my $fogbugs = scalar keys %fogcell;
-    my $renrevs = scalar keys %rencell;
-    if ($fogbugs or $renrevs) {
+    my $nfogbugs = scalar keys %fogcell;
+    my $nrenrevs = scalar keys %rencell;
+    my $nsumcrea = scalar keys %sumcrea;
+    if ($nfogbugs or $nrenrevs or $nsumcrea or $merged_lists) {
+	print "\n".("="x75)."\n";
+	print "A multipatch has been conjured for you to address the following issues:\n";
 	my $out = open_for_write($patch_path);
-	if ($renrevs) {
-	    print "\nPreserving the following CELL renamings:\n";
-	    print $out make_header({description => "MultiPatch\n\nVersion: $::VERSION"});
+	print $out make_header({description => "MultiPatch\n\nVersion: $::VERSION"});
+	if ($nrenrevs) {
+	    print "\nPreserving the following $nrenrevs CELL renamings:\n";
 	    foreach my $coord (%rencell) {
 		if ($rencell{$coord}->{OUTPUTFLAG}) {
 		    my $recref = $rencell{$coord}->{REC};
@@ -5202,8 +5023,8 @@ sub cmd_multipatch {
 		}
 	    }
 	}
-	if ($fogbugs) {
-	    print qq{\nPatching $fogbugs fogbugged cells:\n};
+	if ($nfogbugs) {
+	    print qq{\nPatching $nfogbugs fogbugged cells:\n};
 	    foreach my $name (sort keys %fogcell) {
 		my($data, $ambi, $plugin) = @{$fogcell{$name}};
 		print "  CELL: $name\t\t[$plugin]\n";
@@ -5213,6 +5034,23 @@ sub cmd_multipatch {
 		my $newrec = subrec("NAME", "$name\000") . subrec("DATA", $data) . subrec("AMBI", $ambi);
 		write_rec($out, 'CELL', $newrec);
 	    }
+	}
+	if ($nsumcrea) {
+	    print "\nResetting the following $nsumcrea Summoned Creatures persistence:\n";
+	    foreach my $id (sort keys %sumcrea) {
+		print "  CREA: $id\n";
+		my($newrec, $newflags, $unk) = @{$sumcrea{$id}};
+		write_rec($out, 'CREA', $newrec, $newflags, $unk);
+	    }
+	}
+	if ($merged_lists) {
+	    my %count;
+	    foreach my $lref (@$merged_lists) {
+		my($rectype, $r) = @$lref;
+		$count{$rectype}++;
+		write_rec($out, $rectype, encode_rec($rectype, $r));
+	    }
+	    print "\nMerged Leveled Lists ($count{LEVC} LEVC lists/$count{LEVI} LEVI lists)\n";
 	}
 	close($out);
 	$opt_header_update_record_count = 1;
@@ -5284,6 +5122,10 @@ sub cmd_diff {
     warn "IGNORE = $ignore\n" if (DBG);
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
+    if (VERBOSE) {
+	print "Plugin1: $plugin1\n";
+	print "Plugin2: $plugin2\n";
+    }
     my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
     my @p2_not_p1;	     # objects in plugin2 that do not exist in plugin1
     my @p1_equal_p2;	     # objects in plugin1 that are equal in plugin2
@@ -6060,6 +5902,8 @@ sub main {
 	# these commands process multiple plugins at once
 	$cmd->(@plugins);
     } else {		    # type eq 's'
+	# put plugins in load order
+	@plugins = sort { -M $b <=> -M $a } @plugins;
 	# these commands process a single plugin at a time
 	die $USAGE_ALL if (scalar(@plugins) == 0);
 	for my $plugin (@plugins) {
