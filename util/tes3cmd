@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37f";
+$::VERSION = "0.37g";
 # tes3cmd: command line tool to do various hackage on a TES3 plugin
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -27,17 +27,12 @@ $::VERSION = "0.37f";
 # * "lint" (splice in tes3lint functionality)
 # * "multipatch", to include:
 # ** --activate switch to add it to [Game Files]
-# ** undo spurious AMBI/WHGT reversion
 # ** generate book rotate scripts.
 # ** generate multimark scripts.
 # ** gmst/global tweaks: (timescale, fCombatAngleXY)
 # ** import faces/hairs (avoid conflicts by dropping rest of object definition)
 # ** merge objects (add mergeable flag to record defs)
 # ** turn-off auto-calced spells.
-# ** merging leveled-lists:
-# *** "chance-none" - last wins, average chance
-# *** calc flags - last wins.
-
 
 use Cwd;
 use IO::Handle;
@@ -1301,7 +1296,6 @@ my %EVIL_BM =
      swerewolfrestmessage => '5354525620596f752063616e6e6f74207265737420696e2077657265776f6c6620666f726d2e',
     );
 
-# TBD use this to replace any hardcoded flag constants.
 my %REC_FLAGS = ("deleted"     => 0x0020,
 		 "persistent"  => 0x0400,
 		 "ignored"     => 0x1000,
@@ -4094,10 +4088,7 @@ sub read_objects {
     eval {
 	while (my($rectype, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $rectype);
-	    if ($flags & 0x1000) {
-		warn "plugin($plugin) REC=$rectype flags=$flags (ignored)\n" if (DBG);
-		next;
-	    }
+	    next if ($flags & $REC_FLAGS{ignored});
 	    my $id = rec_id(parse_subrec_hash($rec), $rectype);
 	    if ($fun) {
 		$fun->($rectype, $id);
@@ -4117,10 +4108,7 @@ sub read_dialogs {
     eval {
 	while (my($rectype, $rec, $flags, $unk) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $rectype);
-	    if ($flags & 0x1000) {
-		warn "plugin($plugin) REC=$rectype flags=$flags (ignored)\n" if (DBG);
-		next;
-	    }
+	    next if ($flags & $REC_FLAGS{ignored});
 	    next if ($rectype ne "DIAL");
 	    my $srh = parse_subrec_hash($rec);
 	    my $id = chop_nulls($srh->{NAME}[0]);
@@ -4618,11 +4606,8 @@ sub load_master {
     eval {
 	while (my($rectype, $rec, $flags) = read_rec($inp, undef)) {
 	    last if (not defined $rectype);
+	    next if ($flags & $REC_FLAGS{ignored});
 	    next if (defined $types and not $types->{$rectype});
-	    if ($flags & 0x1000) {
-		print "Master($esm) REC=$rectype flags=$flags (ignored)\n" if (DBG);
-		next;
-	    }
 	    print "DBG: rec_type = $rectype\n" if (DBG);
 	    my $srh = parse_subrec_hash($rec);
 	    my $id = rec_id($srh, $rectype);
@@ -4682,10 +4667,7 @@ sub load_leveled_lists {
 		while (my($rectype, $rec, $flags) = read_rec($inp, undef)) {
 		    last if (not defined $rectype);
 		    next unless ($rectype =~ /^LEV[CI]$/);
-		    if ($flags & 0x1000) {
-			print "DBG: Plugin $plugin REC=$rectype flags=$flags (ignored)\n" if (VERBOSE);
-			next;
-		    }
+		    next if ($flags & $REC_FLAGS{ignored});
 		    print "DBG: rec_type = $rectype\n" if (DBG);
 		    my $r = decode_rec($plugin, $rectype, $rec);
 		    my $id = get_id($rectype, $r);
@@ -4873,10 +4855,8 @@ sub merge_leveled_lists {
 	    }
 	    my $last_r = $ll->{$rectype}->{$id}->[-1]->[1];
 	    # strategy: last guy wins for List Flags
-	    # TBD offer first guy or additive strategy?
 	    my $last_list_flags = getrec({f=>"list_flags"}, $last_r);
 	    # strategy: last guy wins for "Chance_None"
-	    # TBD offer first guy or average?
 	    my $last_chance = getrec({f=>"chance_none"}, $last_r);
 	    my %levlist;
 	    foreach my $lref (@{$ll->{$rectype}->{$id}}) {
@@ -4962,6 +4942,7 @@ sub cmd_multipatch {
 	    while (my($rectype, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
 		$expected = undef;
 		last if (not defined $rectype);
+		next if ($flags & $REC_FLAGS{ignored});
 		if ($opt_multipatch_fogbug or $opt_multipatch_cellnames) {
 		    if ($rectype eq 'CELL') {
 			my $srh = parse_subrec_hash($rec);
@@ -5050,11 +5031,12 @@ sub cmd_multipatch {
 		$count{$rectype}++;
 		write_rec($out, $rectype, encode_rec($rectype, $r));
 	    }
-	    print "\nMerged Leveled Lists ($count{LEVC} LEVC lists/$count{LEVI} LEVI lists)\n";
+	    print "\nMerged Leveled Lists ($count{LEVC} LEVC, $count{LEVI} LEVI)\n";
 	}
 	close($out);
 	$opt_header_update_record_count = 1;
 	update_header($patch_path, QUIET);
+	print qq{\nOutput is: "$patch_file", don't forget to activate it!\n};
     } else {
 	print qq{\nNo patching necessary. "multipatch.esp" not generated.\n};
     }
@@ -5376,6 +5358,7 @@ sub cmd_rename {
 	while (my($rectype, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
 	    $expected = undef;
 	    last if (not defined $rectype);
+	    next if ($flags & $REC_FLAGS{ignored});
 	    warn "REC=$rectype flags=$flags\n" if (DBG);
 	    if ($rectype eq 'SCPT') {
 		my $renamed_schd = 0;
