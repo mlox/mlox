@@ -4831,9 +4831,8 @@ sub cmd_codectest {
 
 sub cmd_fixit {
     find_datadir();
-    # clean everything
-    $opt_clean_replace;
-    $opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+    # clean everything and replace originals
+    $opt_clean_replace = $opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     cmd_clean($_) foreach (load_order());
     # generate all patches
     $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
@@ -5006,7 +5005,7 @@ sub merge_leveled_lists {
 sub cmd_multipatch {
     find_datadir();
     print "Miss Multipatch says:\n" if (DBG or VERBOSE);
-    print "Data Files is: $DATADIR\nScanning Active Plugins...\n";
+    print "Scanning Active Plugins...\n";
     my $patch_file = "multipatch.esp";
     my $patch_path = "$DATADIR/$patch_file";
     my %fogcell;		# fogbugged cells
