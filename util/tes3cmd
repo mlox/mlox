@@ -94,7 +94,37 @@ our @opt_flag;
 our @opt_id = ();
 our @opt_type = ();
 
+my %CLEAN_PLUGIN =
+    (
+     "bloodmoon.esm" => "Bethesda Master",
+     "fogpatch.esp" => "does not need cleaning",
+     "gmst fix.esp" => "intentionally contain Evil GMSTs",
+     "gmst vaccine.esp" => "intentionally contain Evil GMSTs",
+     "mashed lists.esp" => "does not need cleaning",
+     "merged_dialogs.esp" => "does not need cleaning, but you should delete it anyway",
+     "merged_leveled_lists.esp"  => "does not need cleaning",
+     "merged_objects.esp" => "does not need cleaning",
+     "morrowind.esm" => "Bethesda Master",
+     "multipatch.esp" => "does not need cleaning",
+     "tribunal.esm" => "Bethesda Master",
+    );
+
 ###USAGES
+
+my $FIXIT_USAGE = q{Usage: tes3cmd fixit
+
+DESCRIPTION:
+
+The fixit command does the following operations:
+- Cleans all your plugins ("tes3cmd clean")
+- Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
+- Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
+};
+
+sub opts_fixit {
+    $_[0] && do { die $FIXIT_USAGE; };
+    GetOptions('debug|d') or die $FIXIT_USAGE;
+}
 
 my $RECOVER_USAGE = q{Usage: tes3cmd recover OPTIONS plugin...
 
@@ -1149,8 +1179,13 @@ sub find_datadir {
 	    $DATADIR = "$dir/$datadir";
 	    print "DATADIR = $DATADIR\n";
 	    $TES3CMD_DIR = "$DATADIR/tes3cmd";
-	    fatal_error(qq{"$TES3CMD_DIR" exists, but is not a directory, please remove or rename it.})
-		if (-e $TES3CMD_DIR and not -d $TES3CMD_DIR);
+	    unless (-d $TES3CMD_DIR) {
+		if (-e $TES3CMD_DIR) {
+		    fatal_error(qq{"$TES3CMD_DIR" exists, but is not a directory, please remove or rename it.});
+		}
+		mkdir($TES3CMD_DIR, 0755) or
+		    fatal_error(qq{Unable to make directory: "$TES3CMD_DIR" ($!)});
+	    }
 	    return($DATADIR);
 	}
 	my @parts = split(m![\\/]!, $dir);
@@ -1958,7 +1993,7 @@ my %RECDEF =
      ARMO => [
 	      NAME => [["ID", "a*"]],
 	      AODT => [["Type", "L"], ["Weight", "f"], ["Value", "L"], ["Health", "L"], ["Enchant_Points", "L"], ["Armor_Rating", "L"]],
-	      BNAM => [["Male_Body_ID", "a*"]],
+	      BNAM => [["Male_Body_ID", ["Z*", "a*"]]],
 	      CNAM => [["Female_Body_ID", "a*"]],
 	      ENAM => [["Enchantment", "a*"]],
 	      FNAM => [["Name", "a*"]],
@@ -2094,7 +2129,7 @@ my %RECDEF =
      CLOT => [
 	      NAME => [["ID", "a*"]],
 	      BNAM => [["Male_Body_ID", "a*"]],
-	      CNAM => [["Female_Body_ID", "a*"]],
+	      CNAM => [["Female_Body_ID", ["Z*", "a*"]]],
 	      CTDT => [["Type", "L"], ["Weight", "f"], ["Value", "S"], ["Enchant_Points", "S"]],
 	      ENAM => [["Enchantment_ID", "a*"]],
 	      FNAM => [["Name", "a*"]],
@@ -2143,7 +2178,12 @@ my %RECDEF =
 	      MODL => [["Model", "a*"]],
 	      NPCO => [["Count", "l"], ["Name", "a32"]],
 	      NPCS => $RD_Unknown,
-	      NPDT => [["Type", "L"], ["Lev", "L"], ["Str", "L"], ["Int", "L"], ["Wil", "L"], ["Agi", "L"], ["Spd", "L"], ["End", "L"], ["Per", "L"], ["Lck", "L"], ["Health", "L"], ["Spell_Points", "L"], ["Fatigue", "L"], ["Soul", "L"], ["Combat", "L"], ["Magic", "L"], ["Stealth", "L"], ["Attack_1_Min", "L"], ["Attack_1_Max", "L"], ["Attack_2_Min", "L"], ["Attack_2_Max", "L"], ["Attack_3_Min", "L"], ["Attack_3_Max", "L"], ["Gold", "L"]],
+	      NPDT => [["Type", "L"], ["Lev", "L"], ["Str", "L"], ["Int", "L"], ["Wil", "L"],
+		       ["Agi", "L"], ["Spd", "L"], ["End", "L"], ["Per", "L"], ["Lck", "L"],
+		       ["Health", "L"], ["Spell_Points", "L"], ["Fatigue", "L"], ["Soul", "L"],
+		       ["Combat", "L"], ["Magic", "L"], ["Stealth", "L"], ["Attack_1_Min", "L"],
+		       ["Attack_1_Max", "L"], ["Attack_2_Min", "L"], ["Attack_2_Max", "L"],
+		       ["Attack_3_Min", "L"], ["Attack_3_Max", "L"], ["Gold", "L"]],
 	      SCRI => [["Script", "a*"]],
 	      XSCL => [["Scale", "f"]],
 	     ],
@@ -2364,7 +2404,7 @@ my %RECDEF =
 	      FNAM => [["Name", "a*"]],
 	      KNAM => $RD_Unknown,
 	      MODL => [["Model", "a*"]],
-	      NAME => [["ID", "a*"]],
+	      NAME => [["ID", ["Z*", "a*"]]],
 	      NPCO => [["Count", "l"], ["Name", "a32"]],
 	      NPCS => $RD_Unknown,
 	      NPDT => [sub {
@@ -2373,17 +2413,17 @@ my %RECDEF =
 			   my $len = length($buff);
 			   if ($len == 12) {
 			       my($lev, $disp, $fact, $rank, $unk1, $unk2, $unk3, $gold) = unpack("SC6L", $_[0]);
-			       return({ Level => $lev, Disposition => $disp, Faction => $fact, Rank => $rank,
-					Unk1 => $unk1, Unk2 => $unk2, Unk3 => $unk3, Gold => $gold });
+			       return({ level => $lev, disposition => $disp, faction => $fact, rank => $rank,
+					unk1 => $unk1, unk2 => $unk2, unk3 => $unk3, gold => $gold });
 			   } elsif ($len == 52) {
 			       my $i = 0;
 			       my %hr;
 			       foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
 				   $hr{$SKILL{$i++}} = $skill_level;
 			       }
-			       ($hr{Level}, $hr{Str}, $hr{Int}, $hr{Wil}, $hr{Agi}, $hr{Spd}, $hr{End},
-				$hr{Per}, $hr{Lck}, $hr{Rep}, $hr{Health}, $hr{Magicka}, $hr{Fatigue},
-				$hr{Disposition}, $hr{Faction}, $hr{Rank}, $hr{Gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
+			       ($hr{level}, $hr{str}, $hr{int}, $hr{wil}, $hr{agi}, $hr{spd}, $hr{end},
+				$hr{per}, $hr{lck}, $hr{rep}, $hr{health}, $hr{magicka}, $hr{fatigue},
+				$hr{disposition}, $hr{faction}, $hr{rank}, $hr{gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
 			       return(\%hr);
 			   } else {
 			       warn "BAD NPC_.NPDT length ($len) is not 12 or 52!\n";
@@ -2734,6 +2774,15 @@ $ENCODE{'TES3.DATA'} = sub {
 default_codec('ALCH.ALDT', (["Weight", "f"],
 			    ["Value", "L"],
 			    ["Autocalc", "L"]));
+default_codec('ALCH.ENAM', (["Spell_Effect", "S"],
+			    ["Skill", "C"],
+			    ["Attribute", "C"],
+			    ["Range", "L"],
+			    ["Area", "L"],
+			    ["Duration", "L"],
+			    ["MagMin", "L"],
+			    ["MagMax", "L"]));
+default_codec('ALCH.TEXT', (["Text", ["Z*", "Z*"]]));
 default_codec('APPA.AADT', (["Type", "L"],
 			    ["Quality", "f"],
 			    ["Weight", "f"],
@@ -2744,6 +2793,8 @@ default_codec('ARMO.AODT', (["Type", "L"],
 			    ["Health", "L"],
 			    ["Enchant_Points", "L"],
 			    ["Armor_Rating", "L"]));
+default_codec('ARMO.BNAM', (["Index", ["Z*", "a*"]]));
+default_codec('ARMO.CNAM', (["Index", ["Z*", "a*"]]));
 default_codec('ARMO.INDX', (["Index", "C"]));
 default_codec('BODY.BYDT', (["Body_Part", "C"],
 			    ["Vampire", "C"],
@@ -2783,7 +2834,7 @@ $DECODE{'CELL.DATA'} = sub {
 $ENCODE{'CELL.DATA'} = sub {
     my($hr) = @_;
     if (exists $hr->{flags}) {
-	if ($hr->{Flags} & 0x01) { # Interior
+	if ($hr->{flags} & 0x01) { # Interior
 	    return(pack("LLf", $hr->{flags}, $hr->{unknown}, $hr->{fog_density}));
 	} else {		     # Exterior
 	    return(pack("Lll", $hr->{flags}, $hr->{x}, $hr->{y}));
@@ -2808,6 +2859,8 @@ default_codec('CLAS.CLDT', (["Primary_Attribute", "L"],
 			    [[("Minor_Skill_1", "Major_Skill_1") x 5], "(L2)5"],
 			    ["Flags", "L"],
 			    ["AutoCalc", "L"]));
+default_codec('CLOT.BNAM', (["Index", ["Z*", "a*"]]));
+default_codec('CLOT.CNAM', (["Index", ["Z*", "a*"]]));
 default_codec('CLOT.CTDT', (["Type", "L"],
 			    ["Weight", "f"],
 			    ["Value", "S"],
@@ -2867,6 +2920,8 @@ default_codec('ENCH.ENAM', (["Spell_Effect", "S"],
 			    ["Duration", "L"],
 			    ["MagMin", "L"],
 			    ["MagMax", "L"]));
+default_codec('FACT.ANAM', (["Contra_Faction", ["Z*", "a*"]]));
+default_codec('FACT.RNAM', (["Rank", "a*"]));
 default_codec('FACT.FADT', (["Primary_Attribute", "L"],
 			    ["Secondary_Attribute", "L"],
 			    [[("At1_1", "At2_1", "Sk1_1", "Sk2_1", "Fact_1") x 10], "(L5)10"],
@@ -2875,6 +2930,7 @@ default_codec('FACT.FADT', (["Primary_Attribute", "L"],
 			    ["Flags", "L"]));
 default_codec('GLOB.FNAM', (["VarType", "a"]));
 default_codec('GMST.NAME', (["ID", "a*"]));
+default_codec('GMST.STRV', (["string", ["Z*", "a*"]]));
 default_codec('INFO.ACDT', (["Actor_Data", "Z*"])); # (only in .ess)
 default_codec('INFO.INAM', (["ID", "Z*"]));
 default_codec('INFO.DATA', (["Unknown_1", "L"],
@@ -2970,7 +3026,7 @@ $DECODE{'NPC_.NPDT'} = sub {
 	my $i = 0;
 	my %hr;
 	foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
-	    $hr{$SKILL{$i++}} = $skill_level;
+	    $hr{lc($SKILL{$i++})} = $skill_level;
 	}
 	($hr{level}, $hr{str}, $hr{int}, $hr{wil}, $hr{agi}, $hr{spd}, $hr{end},
 	 $hr{per}, $hr{lck}, $hr{rep}, $hr{health}, $hr{magicka}, $hr{fatigue},
@@ -3135,6 +3191,7 @@ default_codec('SOUN.DATA', (["Volume", "C"],
 			    ["MinRange", "C"],
 			    ["MaxRange", "C"]));
 default_codec('SSCR.DATA', (["Name", "a*"]));
+default_codec('SSCR.NAME', (["Name", ["Z*", "a*"]]));
 default_codec('STLN.ONAM', (["Name", "Z*"]));
 default_codec('WEAP.WPDT', (["Weight", "f"],
 			    ["Value", "L"],
@@ -3207,15 +3264,28 @@ foreach (qw(FLTV WHGT)) {
 
 # for the standard "NAME == ID" objects:
 $DECODE{NAME} = sub{ { id => unpack("Z*", $_[0]) }; };
-$ENCODE{NAME} = sub{ pack("a*", $_[0]->{id} ); };
+$ENCODE{NAME} = sub{ pack("Z*", $_[0]->{id} ); };
 
-# subrecords that decode as variable length strings:
-foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DESC DNAM ENAM FGTN FNAM
-HSND HVFX ITEX KNAM LSHN LSTN MNAM MODL PTEX RGNN RNAM SCIP SCPT SCRI SNAM STRV
-TEXT TGTN TNAM WNAM)) {
+# subrecords that decode as variable length Z strings:
+foreach (qw(ANAM ASND AVFX BNAM BSND BVFX CNAM CSND CVFX DNAM ENAM FNAM HSND HVFX ITEX KNAM MODL PTEX RGNN RNAM SNAM SCRI TNAM)) {
+    $DECODE{$_} = sub{ { string => unpack("Z*", $_[0]) }; };
+    $ENCODE{$_} = sub{ pack("Z*", $_[0]->{string} ); };
+}
+
+# subrecords that decode as variable length Z strings, encode as a:
+foreach (qw(FGTN LSHN LSTN MNAM SCIP SCPT STRV
+TEXT TGTN)) {
     $DECODE{$_} = sub{ { string => unpack("Z*", $_[0]) }; };
     $ENCODE{$_} = sub{ pack("a*", $_[0]->{string} ); };
 }
+
+# subrecords that decode as variable length a strings, encode as a:
+foreach (qw(DESC WNAM)) {
+    $DECODE{$_} = sub{ { string => unpack("a*", $_[0]) }; };
+    $ENCODE{$_} = sub{ pack("a*", $_[0]->{string} ); };
+}
+
+
 
 ###PRETTY PRINTER
 
@@ -3567,6 +3637,7 @@ my %CMDS =
      "dump"        => [ \&opts_dump,        \&cmd_dump,        's', "Dump records as text"],
      "esm"         => [ \&opts_esm,         \&cmd_esm,         's', "Convert plugin (esp) to master (esm)"],
      "esp"         => [ \&opts_esp,         \&cmd_esp,         's', "Convert master (esm) to plugin (esp)"],
+     "fixit"       => [ \&opts_fixit,       \&cmd_fixit,       'm', "Fixes everything it knows how to fix"],
      "header"      => [ \&opts_header,      \&cmd_header,      's', "Read/Write plugin header fields (author, description)"],
      "help"        => [ \&opts_help ],
      "modify"      => [ \&opts_modify,      \&cmd_modify,      's', "Powerful batch record modification via user code extensions"],
@@ -3797,7 +3868,7 @@ sub get_id {
 	my($name, $rgnn, $coord);
 	foreach my $subr (@$r) {
 	    if ($subr->[0] eq 'NAME') {
-		$name = $subr->[1]->{string} unless (defined $name);
+		$name = $subr->[1]->{id} unless (defined $name);
 	    } elsif ($subr->[0] eq 'RGNN') {
 		$rgnn = $subr->[1]->{string} unless (defined $rgnn);
 	    } elsif ($subr->[0] eq 'DATA') {
@@ -4580,10 +4651,6 @@ sub save_master_cache {
     return(0) if ($opt_no_cache);
     my $esm_file = list_files($DATADIR)->{$esm};
     my $mcache = master_cache_name($esm);
-    unless (-d $TES3CMD_DIR) {
-	mkdir($TES3CMD_DIR, 0755) or
-	    fatal_error(qq{Unable to make directory: "$TES3CMD_DIR" ($!)});
-    }
     my $size = (-s "$DATADIR/$esm_file");
     warn "DBG: save_master_cache($esm) saving size: $size\n" if (DBG);
     store([ $size, $MASTER_ID->{$esm}], $mcache);
@@ -4658,7 +4725,7 @@ sub load_leveled_lists {
 	    }
 	} else {
 	    # add plugins added to load order
-	    warn "Leveled List Cache ADDING: $plugin\n";
+	    warn "Leveled List Cache ADDING: $plugin\n" if (VERBOSE);
 	    $invalid = 1;
 	}
 	if ($invalid) {
@@ -4761,6 +4828,20 @@ sub cmd_codectest {
     };
     process_plugin_for_update($plugin, $fun, "test_");
 } # cmd_codectest
+
+sub cmd_fixit {
+    find_datadir();
+    # clean everything
+    $opt_clean_replace;
+    $opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+    cmd_clean($_) foreach (load_order());
+    # generate all patches
+    $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
+    cmd_multipatch();
+    # synchronize plugin headers to masters
+    $opt_header_update_masters = $opt_header_update_record_count = 1;
+    cmd_header($_) foreach (load_order());
+}
 
 sub cmd_wikiout {
     foreach my $cmd (sort keys %CMDS) {
@@ -5226,7 +5307,7 @@ sub cmd_delete {
 	    }
 	} else {
 	    # we are deleting whole records
-	    $print_rec ||= rec_to_string($rec, $rectype, $id, $plugin);
+	    $print_rec ||= rec_to_string($rec, $rectype, $id, $plugin, $flags, $unk);
 	    print "\nDELETED RECORD:$print_rec\n";
 	    return(undef);
 	}
@@ -5330,7 +5411,7 @@ sub cmd_modify {
 			if ($newrec ne $rec) {
 			    $rec = $newrec;
 			    my $id = rec_id(parse_subrec_hash($rec), $rectype);
-			    warn "MODIFIED RECORD:\n" . rec_to_string($rec, $rectype, $id, $plugin) . "\n";
+			    warn "MODIFIED RECORD:\n" . rec_to_string($rec, $rectype, $id, $plugin, $flags, $unk) . "\n";
 			    $modified++;
 			}
 		    }
@@ -5535,19 +5616,15 @@ my %gmst_type = ('i' => 'INTV', 'f' => 'FLTV', 's' => 'STRV');
 sub cmd_clean {
     my($plugin) = @_;
     if ($plugin =~ /\.ess$/) {
-	warn "Don't know how to clean savegames: $plugin ... yet\n";
-	return;
-    }
-    if ($plugin =~ /^(Morrowind|Tribunal|Bloodmoon)\.esm$/i) {
-	warn "Skipping Bethesda Master: $plugin\n";
-	return;
-    }
-    if ($plugin =~ /^GMST (Fix|Vaccine)\.esp$/i) {
-	warn "Skipping plugin that intentionally contain Evil GMSTs: $plugin\n";
+	warn "Skipping $plugin: don't know how to clean savegames ... yet.\n";
 	return;
     }
     if ($plugin =~ /~\d+\.es[mps]$/i) {
-	warn "Skipping Backup: $plugin\n";
+	warn "Skipping $plugin: because it's a backup.\n";
+	return;
+    }
+    if (my $reason = $CLEAN_PLUGIN{lc($plugin)}) {
+	warn "Skipping $plugin: ${reason}.\n";
 	return;
     }
     print qq{\nCLEANING: "$plugin" ...\n};
