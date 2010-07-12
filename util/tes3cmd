@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-$::VERSION = "0.37g";
-# tes3cmd: command line tool to do various hackage on a TES3 plugin
+$::VERSION = "0.37h";
+# tes3cmd: command line tool to do various hacks on a TES3 plugin
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
@@ -11,13 +11,15 @@ $::VERSION = "0.37g";
 
 # TBD:
 # implement proper verbosity
+# redo header command output
+# diff: report type diffs
 # cleanup .tmp if die
 # rewrite "modify", "rename" commands to use the "process" subroutines?
 # and add more examples, esp. "modify"
 # write some tests
-# switch pretty printer to use new recdefs
+# finish RECDEFs/codec/TOSTR/prettyprinter rewrite
+# clean would be sped up if command added a "clean <size>" mark to plugin (SSCR + VERSION + length + date at EOF? mark ignored?)
 # GUI
-# clean up the TOSTR stuff (for pretty print command) so it uses the codec defs
 # reformat overdial output? just list each topic once, with list of plugins that have it
 # implement script compiler
 # add new commands:
@@ -34,7 +36,7 @@ $::VERSION = "0.37g";
 # ** merge objects (add mergeable flag to record defs)
 # ** turn-off auto-calced spells.
 
-use Cwd;
+use Carp;
 use IO::Handle;
 use Fcntl qw(SEEK_SET SEEK_CUR SEEK_END);
 use File::Basename;
@@ -43,7 +45,12 @@ use File::Copy;
 use Getopt::Long qw(:config auto_abbrev);
 use Data::Dumper;
 use Storable;
+use Cwd;
 use strict;
+#use warnings;
+
+
+package Util;
 
 BEGIN {
     # since perl will optimize out conditional branches that are never
@@ -51,7 +58,1307 @@ BEGIN {
     # debug/help code into the program when it it actually needed.
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
+
+    use Exporter ();
+    our @ISA = qw(Exporter);
+    our $VERSION = "0.1";
+    our @EXPORT_OK = qw(err dbg msg abort);
+    our %EXPORT_TAGS = ( FIELDS => [ @EXPORT_OK ] );
 }
+
+### UTILITY FUNCTIONS
+
+sub err { warn "[@{[__PACKAGE__]}: $_[0]]\n"; }
+sub dbg { err("DEBUG: $_[0]"); }
+sub msg { print("@{[__PACKAGE__]}: $_[0]\n"); }
+sub abort {
+    my($msg) = @_;
+    my $diagnosis;
+    if ($^O =~ /^MSWin/) {
+	if ($msg =~ /permission denied/i) {
+	    $diagnosis =<<END
+Permission errors may occur in recent versions of Windows (since Vista) due to
+the UAC feature and new protected nature of "Program Files". The ideal
+solution is to install Morrowind some place other than "Program Files", such
+as "C:\\Games\\Morrowind". You can also try disabling UAC, although may make your
+system less secure.
+END
+	}
+    }
+    die qq{FATAL ERROR: $msg$diagnosis\n"};
+}
+
+
+package TES3::Util;
+
+BEGIN {
+    # since perl will optimize out conditional branches that are never
+    # reached, we define the following constants so that we only compile
+    # debug/help code into the program when it it actually needed.
+    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
+    Util->import(qw(err dbg msg abort));
+}
+
+
+### PACKAGE GLOBALS
+
+our $DATADIR;	       # where "Data Files" lives.
+our $TES3CMD_DIR;      # tes3cmd directory under "Data Files" (for cache, ...)
+
+use constant RELOAD => 1;	# tell methods not to use cached data
+
+### UTILITY FUNCTIONS
+
+# return a dictionary of all the files found in the given directory.
+# keys are lowercased for caseless file finding.
+sub list_files {
+    my($dir) = @_;
+    my %files = ();
+    if (opendir(DH, $dir)) {
+	while (my $file = readdir(DH)) {
+	    next if (($file eq '.') or ($file eq '..'));
+	    $files{lc($file)} = $file;
+	}
+	closedir(DH);
+    } else {
+	abort(qq{Opening "$dir" ($!)});
+    }
+    return(\%files);
+}
+
+# sort list of files by their modification date
+sub sort_by_date {
+    my($dir, @files) = @_;
+    my $dirlist = list_files($dir);
+    my @sorted = sort { (-M "$dir/$dirlist->{lc $b}") <=> (-M "$dir/$dirlist->{lc $a}") } @files;
+    dbg(qq{sorted files:} . join("\n", @sorted) . "\n") if (DBG);
+    return(@sorted);
+}
+
+# assuming the program is run somewhere under the Morrowind game directory, find the
+# location of the "Data Files" directory by walking up the hierarchy.
+sub find_datadir {
+    return($DATADIR) if (defined($DATADIR));
+    my $dir = Cwd::getcwd();
+    dbg("checking for data dir in: $dir") if (DBG);
+    while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
+	my $datadir = list_files($dir)->{"data files"};
+	if ($datadir) {
+	    $DATADIR = "$dir/$datadir";
+	    err(qq{DATADIR = $DATADIR}) if (VERBOSE);
+	    $TES3CMD_DIR = "$DATADIR/tes3cmd";
+	    unless (-d $TES3CMD_DIR) {
+		if (-e $TES3CMD_DIR) {
+		    abort(qq{"$TES3CMD_DIR" exists, but is not a directory, please remove or rename it.});
+		}
+		mkdir($TES3CMD_DIR, 0755) or
+		    abort(qq{Unable to make directory: "$TES3CMD_DIR" ($!)});
+	    }
+	    return($DATADIR);
+	}
+	my @parts = split(m![\\/]!, $dir);
+	pop(@parts);
+	$dir = join("/", @parts);
+	dbg(qq{Checking for "Data Files" in: $dir}) if (DBG);
+    }
+    err(qq{Can't find "Data Files" directory, functionality reduced. Run me under "Morrowind" somewhere.});
+    return(undef);		# not running under morrowind directory
+}
+
+BEGIN {
+    find_datadir();
+}
+
+### TES3::Util methods
+
+sub new {
+    my($class) = @_;
+    return(bless({}, $class));
+}
+
+# map of "Data Files" directory for caseless filename lookup
+sub datafiles_map {
+    my($self, $reload) = @_;
+    return($self->{datafiles_map})
+	if (defined($self->{datafiles_map} and not $reload));
+    return($self->{datafiles_map} = list_files($DATADIR));
+}
+
+sub datapath { "$DATADIR/" . $_[0]->datafiles_map()->{lc($_[1])}; }
+sub datafile { $_[0]->datafiles_map()->{lc($_[1])}; }
+
+sub ini_file {
+    my($self, $reload) = @_;
+    return(@{$self->{ini_file}})
+	if (defined($self->{ini_file} and not $reload));
+    my $mwfiles = list_files("$DATADIR/..");
+    return($self->{ini_file} = "$DATADIR/../$mwfiles->{'morrowind.ini'}");
+}
+
+sub load_order {
+    my($self, $reload) = @_;
+    return(@{$self->{load_order}})
+	if (defined($self->{load_order} and not $reload));
+    die "DATADIR not defined\n" unless (defined($DATADIR));
+    my $ini = $self->ini_file();
+    my @active;
+    my $fh = IO::Handle->new();
+    if (open($fh, "<$ini")) {
+	dbg qq{INI is: "$ini"} if (DBG);
+	while (<$fh>) {
+	    if (my($plugin) = (/GameFile\d+=([^\r\n]*)/)) {
+		if ($self->datafile($plugin)) {
+		    dbg qq{Found Gamefile: "$plugin"} if (DBG);
+		    push(@active, $plugin);
+		} else {
+		    dbg qq{MISSING Gamefile: "$1"} if (DBG);
+		}
+	    }
+	}
+    } else {
+	err qq{Error opening "$ini" for input ($!)};
+    }
+    my @sorted = sort_by_date($DATADIR, @active);
+    return($self->{load_order} = [grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)]);
+}
+
+### end of TES3::Util package
+
+package TES3::Record;
+BEGIN {
+    Util->import(qw(err dbg msg abort));
+}
+use Data::Dumper;
+use strict;
+
+our $HDR_AUTH_LENGTH = 32;
+our $HDR_DESC_LENGTH = 256;
+
+sub unpack_short_array {
+    my($self, $buff) = @_;
+    my $i = 1;
+    $self->{$i++} = $_ foreach (unpack("s*", $buff));
+    $self;
+}
+sub pack_short_array { pack("s*", map { $_[0]->{$_} } sort { $a <=> $b } grep { !/^_/ } keys %{$_[0]}); }
+sub unpack_long_array {
+    my($self, $buff) = @_;
+    my $i = 1;
+    $self->{$i++} = $_ foreach (unpack("l*", $buff));
+    $self;
+}
+sub pack_long_array { pack("l*", map { $_[0]->{$_} } sort { $a <=> $b } grep { !/^_/ } keys %{$_[0]}); }
+sub unpack_float_array {
+    my($self, $buff) = @_;
+    my $i = 1;
+    $self->{$i++} = $_ foreach (unpack("f*", $buff));
+    $self;
+}
+sub pack_float_array { pack("f*", map { $_[0]->{$_} } sort { $a <=> $b } grep { !/^_/ } keys %{$_[0]}); }
+
+my $RD_Actor_Data =
+#     Field                              Offset
+    [([[("Unknown_1") x 10], "L10"],   #   0
+      ["Health", "f"],		       #  40
+      ["Max_Health", "f"],	       #  44
+      ["Fatigue", "f"],		       #  48
+      ["Max_Fatigue", "f"],	       #  52
+      ["Unknown_1", "f"],	       #  56
+      ["Unknown_1", "f"],	       #  60
+      ["Unknown_1", "f"],	       #  64
+      ["Unknown_1", "f"],	       #  68
+      ["Unknown_1", "f"],	       #  72
+      ["Encumbrance", "f"],	       #  76
+      ["STR", "f"],		       #  80
+      ["STR_Base", "f"],	       #  84
+      ["INT", "f"],		       #  88
+      ["INT_Base", "f"],	       #  92
+      ["WIL", "f"],		       #  96
+      ["WIL_Base", "f"],	       # 100
+      ["AGI", "f"],		       # 104
+      ["AGI_Base", "f"],	       # 108
+      ["SPD", "f"],		       # 112
+      ["SPD_Base", "f"],	       # 116
+      ["END", "f"],		       # 120
+      ["END_Base", "f"],	       # 124
+      ["PER", "f"],		       # 128
+      ["PER_Base", "f"],	       # 132
+      ["LUC", "f"],		       # 136
+      ["LUC_Base", "f"],	       # 140
+      ["Fortify_Attack", "L"],	       # 144
+      ["Sanctuary", "L"],	       # 148
+      ["Resist_Magicka", "C"],	       # 152
+      ["Unknown_1", "a3"],
+      ["Resist_Fire", "C"],	# 156 (+ Fire Shield)
+      ["Unknown_1", "a3"],
+      ["Resist_Frost", "C"],	# 160 (+ Frost Shield)
+      ["Unknown_1", "a3"],
+      ["Resist_Shock", "C"],	# 164 (+ Lightning Shield)
+      ["Unknown_1", "a3"],
+      ["Resist_Common_Disease", "L"],		   # 168
+      ["Unknown_1", "L"],			   # 172
+      ["Unknown_1", "L"],			   # 176
+      ["Resist_Poison", "L"],			   # 180
+      ["Resist_Paralysis", "L"],		   # 184
+      ["Chameleon", "L"],			   # 188
+      ["Resist_Normal_Weapons", "L"],		   # 192
+      ["Water_Breathing", "L"],			   # 196
+      ["Water_Walking", "L"],			   # 200
+      ["Swift_Swim", "L"],			   # 204
+      ["Unknown_1", "L"],			   # 208
+      ["Levitate", "L"],			   # 212
+      ["Shield", "L"],				   # 216
+      ["Unknown_1", "L"],			   # 220
+      ["Unknown_1", "L"],			   # 224
+      ["Blind", "L"],				   # 228
+      ["Unknown_1", "L"],			   # 232
+      ["Invisibility", "L"],			   # 236
+      ["Unknown_1", "L"],			   # 240
+      ["Unknown_1", "L"],			   # 244
+      ["Unknown_1", "L"],			   # 248
+      ["Unknown_1", "L"],			   # 252
+      ["Unknown_1", "L"],			   # 256
+      ["Unknown_1", "L"])];
+
+my $RD_Enchantment =
+    [["Spell_Effect", "S"], ["Skill", "C"], ["Attribute", "C"], ["Range", "L"],
+     ["Area", "L"], ["Duration", "L"], ["MagMin", "L"], ["MagMax", "L"]];
+
+my $RD_Unknown = [["Unknown_1", "H*"]];
+
+my %SKILL = ( 0 => "Block",
+	      1 => "Armorer",
+	      2 => "MediumArmor",
+	      3 => "HeavyArmor",
+	      4 => "BluntWeapon",
+	      5 => "LongBlade",
+	      6 => "Axe",
+	      7 => "Spear",
+	      8 => "Athletics",
+	      9 => "Enchant",
+	     10 => "Destruction",
+	     11 => "Alteration",
+	     12 => "Illusion",
+	     13 => "Conjuration",
+	     14 => "Mysticism",
+	     15 => "Restoration",
+	     16 => "Alchemy",
+	     17 => "Unarmored",
+	     18 => "Security",
+	     19 => "Sneak",
+	     20 => "Acrobatics",
+	     21 => "LightArmor",
+	     22 => "ShortBlade",
+	     23 => "Marksman",
+	     24 => "Mercantile",
+	     25 => "SpeechCraft",
+	     26 => "HandToHand",
+	    255 => "None");
+
+my @RECDEFS =
+    (
+     [ACTI => [
+	       [NAME => [["ID", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [ALCH => [
+	       [NAME => [["ID", "a*"]]],
+	       [ALDT => [["Weight", "f"], ["Value", "L"], ["Autocalc", "L"]]],
+	       [ENAM => $RD_Enchantment],
+	       [FNAM => [["Name", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [TEXT => [["Icon", "a*"]]],
+	      ]],
+     [APPA => [
+	       [NAME => [["ID", "a*"]]],
+	       [AADT => [["Type", "L"], ["Quality", "f"], ["Weight", "f"], ["Value", "L"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [ARMO => [
+	       [NAME => [["ID", "a*"]]],
+	       [AODT => [["Type", "L"], ["Weight", "f"], ["Value", "L"], ["Health", "L"], ["Enchant_Points", "L"], ["Armor_Rating", "L"]]],
+	       [BNAM => [["Male_Body_ID", ["Z*", "a*"]]]],
+	       [CNAM => [["Female_Body_ID", "a*"]]],
+	       [ENAM => [["Enchantment", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [INDX => [["Part_Index", "C"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [BODY => [
+	       [NAME => [["ID", "a*"]]],
+	       [BYDT => [["Body_Part", "C"], ["Vampire", "C"], ["Flags", "C"], ["Part_Type", "C"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	      ]],
+     [BOOK => [
+	       [NAME => [["ID", "a*"]]],
+	       [BKDT => [["Weight", "f"], ["Value", "L"], ["Scroll", "L"], ["Skill", "L"], ["Enchant_Points", "L"]]],
+	       [ENAM => [["Enchantment", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [TEXT => [["Text", "a*"]]],
+	      ]],
+     [BSGN => [
+	       [NAME => [["ID", "a*"]]],
+	       [DESC => [["Description", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [NPCS => [["Spell", "a*"]]],
+	       [TNAM => [["Image", "a*"]]]
+	      ]],
+     [CELL => [
+	       [
+		[AMBI => [["Ambient_Color", "L"], ["Sunlight_Color", "L"], ["Fog_Color", "L"], ["Fog_Density", "f"]]],
+	       ],
+	       [
+		[FRMR => [["ObjIdx", "S"], ["Unknown", "C"], ["ModIdx", "C"]]],
+	       ],
+	       [ACDT => $RD_Actor_Data],
+	       [ACSC => $RD_Unknown],
+	       [ACSL => $RD_Unknown],
+	       [ACTN => $RD_Unknown],
+	       [ANAM => $RD_Unknown],
+	       [ANIS => $RD_Unknown],
+	       [APUD => $RD_Unknown],
+	       [BNAM => $RD_Unknown],
+	       [CHRD => $RD_Unknown],
+	       [CNAM => $RD_Unknown],
+	       [CNDT => $RD_Unknown],
+	       [CRED => $RD_Unknown],
+	       [CSHN => $RD_Unknown],
+	       [CSTN => [["Target", "Z*"]]], # guessing this is: "Cast/Current Spell Target Name"
+	       [DATA => [sub {
+			     my($self, $buff) = @_;
+			     if (length($buff) == 24) {
+				 ($self->{x}, $self->{y}, $self->{z},
+				  $self->{x_angle}, $self->{y_angle}, $self->{z_angle}) = unpack("f6", $buff);
+			     } elsif (length($buff) == 12) {
+				 my($flags, $unk, $fog) = unpack("LLf", $buff);
+				 if ($flags & 0x01) { # Interior
+				     $self->{flags} = $flags;
+				     $self->{unknown} = $unk;
+				     $self->{fog_density} = $fog;
+				 } else { # Exterior
+				     $self->{flags} = $flags;
+				     ($self->{x}, $self->{y}) = unpack("x[L]ll", $buff);
+				 }
+			     } else {
+				 $self->bad_length(length($buff));
+			     }
+			     return($self);
+			 },
+			 sub {
+			     my($self) = @_;
+			     if (exists $self->{flags}) {
+				 if ($self->{flags} & 0x01) { # Interior
+				     return(pack("LLf", $self->{flags}, $self->{unknown}, $self->{fog_density}));
+				 } else { # Exterior
+				     return(pack("Lll", $self->{flags}, $self->{x}, $self->{y}));
+				 }
+			     } else {
+				 return(pack("f6", $self->{x}, $self->{y}, $self->{z},
+					     $self->{x_angle}, $self->{y_angle}, $self->{z_angle}));
+			     }
+			 }]],
+	       [DNAM => [["Door_ID", "a*"]]],
+	       [DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]]],
+	       [FGTN => $RD_Unknown],
+	       [FLTV => [["Unknown_1", "f"]]],
+	       [INDX => $RD_Unknown],
+	       [INTV => $RD_Unknown],
+	       [KNAM => $RD_Unknown],
+	       [LSHN => $RD_Unknown],
+	       [LSTN => $RD_Unknown],
+	       [LVCR => $RD_Unknown],
+	       [MNAM => $RD_Unknown],
+	       [MVRF => [["Moved_Ref", "L"]]], # .ess
+	       [NAM0 => [["Object_Count", "L"]]],
+	       [NAM5 => [["Red", "C"], ["Green", "C"], ["Blue", "C"], ["Unused", "C"]]], # Map Color
+	       [NAM8 => $RD_Unknown],
+	       [NAM9 => [["Owner", "L"]]],
+	       [NAME => [["ID", "a*"]]],
+	       [ND3D => $RD_Unknown],
+	       [PRDT => $RD_Unknown],
+	       [PWPC => $RD_Unknown],
+	       [PWPS => $RD_Unknown],
+	       [RGNN => $RD_Unknown],
+	       [SCRI => [["Script", "a*"]]],
+	       [SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]]],
+	       [SLFD => [\&unpack_float_array, \&pack_float_array]],
+	       [SLLD => [\&unpack_long_array,  \&pack_long_array]],
+	       [SLSD => [\&unpack_short_array, \&pack_short_array]],
+	       [STPR => $RD_Unknown],
+	       [TGTN => $RD_Unknown],
+	       [TNAM => $RD_Unknown],
+	       [UNAM => $RD_Unknown],
+	       [WHGT => $RD_Unknown],
+	       [WNAM => $RD_Unknown],
+	       [XCHG => [["Enchant_Charge", "L"]]],
+	       [XNAM => $RD_Unknown],
+	       [XSCL => [["Scale", "f"]]],
+	       [XSOL => [["Soul", "Z*"]]],
+	       [YNAM => $RD_Unknown],
+	       [ZNAM => $RD_Unknown],
+	      ]],
+     [CLAS => [
+	       [NAME => [["ID", "a*"]]],
+	       [CLDT => [["Primary_Attribute", "L"], ["Secondary_Attribute", "L"], ["Specialization", "L"],
+			 [[("Minor_Skill_1", "Major_Skill_1") x 5], "(L2)5"], ["Flags", "L"], ["AutoCalc", "L"]]],
+	       [DESC => [["Description", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	      ]],
+     [CLOT => [
+	       [NAME => [["ID", "a*"]]],
+	       [BNAM => [["Male_Body_ID", "a*"]]],
+	       [CNAM => [["Female_Body_ID", ["Z*", "a*"]]]],
+	       [CTDT => [["Type", "L"], ["Weight", "f"], ["Value", "S"], ["Enchant_Points", "S"]]],
+	       [ENAM => [["Enchantment_ID", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [INDX => [["Index", "C"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [CNTC => [
+	       [NAME => [["ID", "a*"]]],
+	       [INDX => [["Index", "L"]]],
+	       [NPCO => [["Count", "l"], ["Name", "a32"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]]],
+	       [SLFD => [\&unpack_float_array, \&pack_float_array]],
+	       [SLLD => [\&unpack_long_array,  \&pack_long_array]],
+	       [SLSD => [\&unpack_short_array, \&pack_short_array]],
+	       [XCHG => [["Enchant_Charge", "L"]]],
+	       [XHLT => [["Health", "L"]]],
+	       [XIDX => [["Scripted_Item_Index", "L"]]],
+	       [XSOL => [["Soul", "Z*"]]],
+	      ]],
+     [CONT => [
+	       [FNAM => [["Name", "a*"]]],
+	       [CNDT => [["Weight", "f"]]],
+	       [FLAG => [["Container_Flags", "L"]]],
+	       [INDX => [["Unknown_1", "L"]]], # .ess
+	       [MODL => [["Model", "a*"]]],
+	       [NAME => [["ID", "a*"]]],
+	       [NPCO => [["Count", "l"], ["Name", "a32"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [CREA => [
+	       [NAME => [["ID", "a*"]]],
+	       [AIDT => [["Hello", "C"], ["Unknown_1", "C"], ["Fight", "C"], ["Flee", "C"], ["Alarm", "C"], ["Unknown_1", "a3"], ["Flags", "L"]]],
+	       [AI_E => $RD_Unknown],
+	       [AI_F => $RD_Unknown],
+	       [AI_T => $RD_Unknown],
+	       [AI_W => [["Distance", "S"], ["Duration", "C"], ["Time_of_day", "C"], [[("Idle_1") x 10], "C10"]]],
+	       [CNAM => $RD_Unknown],
+	       [DNAM => $RD_Unknown],
+	       [DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]]],
+	       [FLAG => [["Flags", "L"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [INDX => $RD_Unknown],
+	       [MODL => [["Model", "a*"]]],
+	       [NPCO => [["Count", "l"], ["Name", "a32"]]],
+	       [NPCS => $RD_Unknown],
+	       [NPDT => [["Type", "L"], ["Lev", "L"], ["Str", "L"], ["Int", "L"], ["Wil", "L"],
+			 ["Agi", "L"], ["Spd", "L"], ["End", "L"], ["Per", "L"], ["Lck", "L"],
+			 ["Health", "L"], ["Spell_Points", "L"], ["Fatigue", "L"], ["Soul", "L"],
+			 ["Combat", "L"], ["Magic", "L"], ["Stealth", "L"], ["Attack_1_Min", "L"],
+			 ["Attack_1_Max", "L"], ["Attack_2_Min", "L"], ["Attack_2_Max", "L"],
+			 ["Attack_3_Min", "L"], ["Attack_3_Max", "L"], ["Gold", "L"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [XSCL => [["Scale", "f"]]],
+	      ]],
+     [CREC => [
+	       [NAME => [["ID", "a*"]]],
+	       [AI_F => $RD_Unknown],
+	       [AI_T => $RD_Unknown],
+	       [AI_W => $RD_Unknown],
+	       [INDX => $RD_Unknown],
+	       [NPCO => [["Count", "l"], ["Name", "a32"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]]],
+	       [SLFD => [\&unpack_float_array, \&pack_float_array]],
+	       [SLSD => [\&unpack_short_array, \&pack_short_array]],
+	       [WIDX => [["Equipped_Index", "l"], ["Ammo_Flag", "l"]]],
+	       [XCHG => [["Enchant_Charge", "L"]]],
+	       [XHLT => [["Health", "L"]]],
+	       [XIDX => $RD_Unknown],
+	       [XSCL => [["Scale", "f"]]],
+	      ]],
+     [DIAL => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["Type", "C"]]],
+	       [XIDX => $RD_Unknown],
+	      ]],
+     [DOOR => [
+	       [NAME => [["ID", "a*"]]],
+	       [ANAM => [["Door_Close_Sound", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [SNAM => [["Door_Open_Sound", "a*"]]],
+	      ]],
+     [ENCH => [
+	       [NAME => [["ID", "a*"]]],
+	       [ENAM => $RD_Enchantment],
+	       [ENDT => [["Type", "L"], ["Cost", "L"], ["Charge", "L"], ["Autocalc", "L"]]],
+	      ]],
+     [FACT => [
+	       [NAME => [["ID", "a*"]]],
+	       [ANAM => [["Contra_Faction", "a*"]]],
+	       [FADT => [["Primary_Attribute", "L"], ["Secondary_Attribute", "L"],
+			 [[("At1_1", "At2_1", "Sk1_1", "Sk2_1", "Fact_1") x 10], "(L5)10"],
+			 [[("Sk_1") x 6], "L6"], ["Unknown_1", "L"], ["Flags", "L"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [INTV => [["Contra_Faction_Factor", "a*"]]],
+	       [RNAM => [["Rank", "a*"]]],
+	      ]],
+     [FMAP => [
+	       [MAPD => $RD_Unknown],
+	       [MAPH => $RD_Unknown],
+	      ]],
+     [GAME => [
+	       [GMDT => [["Current_Cell", "Z*"], ["Unknown", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
+	      ]],
+     [GLOB => [
+	       [NAME => [["ID", "a*"]]],
+	       [FLTV => [["Float", "f"]]],
+	       [FNAM => [["Type", "a"]]],
+	      ]],
+     [GMST => [
+	       [NAME => [["ID", "a*"]]],
+	       [FLTV => [["Float", "f"]]],
+	       [INTV => [["Integer", "l"]]],
+	       [STRV => [["String", "a*"]]],
+	      ]],
+     [INFO => [
+	       [INAM => [["ID", "a*"]]],
+	       [ACDT => [["Actor_Data", "Z*"]]], # .ess
+	       [ANAM => [["Cell", "Z*"]]],
+	       [BNAM => [["Result", "a*"]]],
+	       [CNAM => [["Class", "Z*"]]],
+	       [DATA => [["Unknown_1", "L"], ["Disposition", "L"], ["Rank", "C"],
+			 ["Sex", "C"], ["PCRank", "C"], ["Unknown_1", "C"]]],
+	       [DNAM => [["PC_Faction", "Z*"]]],
+	       [FLTV => [["Result_Value", "f"]]],
+	       [FNAM => [["Faction", "Z*"]]],
+	       [INTV => [["Compare_Value", "L"]]],
+	       [NAME => [["Response", "a*"]]],
+	       [NNAM => [["Next_ID", "Z*"]]],
+	       [ONAM => [["Actor", "Z*"]]],
+	       [PNAM => [["Prev_ID", "Z*"]]],
+	       [QSTF => [["Quest_Finished", "C"]]],
+	       [QSTN => [["Quest_Name", "C"]]],
+	       [QSTR => [["Quest_Restart", "C"]]],
+	       [RNAM => [["Race", "a*"]]],
+	       [SCVR => [["Index", "a"], ["Type", "a"], ["Function", "a2"], ["Comparison", "a"], ["Name", "a*"]]],
+	       [SNAM => [["Sound_File", "a*"]]],
+	      ]],
+     [INGR => [
+	       [NAME => [["ID", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [IRDT => [["Weight", "f"], ["Value", "L"], [[("Effect_1") x 4], "l4"], [[("Skill_1") x 4], "l4"], [[("Attribute_1") x 4], "l4"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [JOUR => [
+	       [NAME => [["ID", "a*"]]],
+	      ]],
+     [KLST => [
+	       [
+		[KNAM => [["ID", "a*"]]],
+		[CNAM => [["Dead_Count", "L"]]],
+		[INTV => [["End_of_List", "L"]]],
+	       ]
+	      ]],
+     [LAND => [
+	       [DATA => $RD_Unknown],
+	       [INTV => [["X", "l"], ["Y", "l"]]],
+	       [VCLR => $RD_Unknown],
+	       [VHGT => $RD_Unknown],
+	       [VNML => $RD_Unknown],
+	       [VTEX => $RD_Unknown],
+	       [WNAM => $RD_Unknown],
+	      ]],
+     [LEVC => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["List_Flags", "L"]]], # calc from all levels <= PC level
+	       [INDX => [["Item_Count", "L"]]],
+	       [NNAM => [["Chance_None", "C"]]],
+	       [
+		[CNAM => [["Creature_ID", "Z*"]]],
+		[INTV => [["Level", "S"]]],
+	       ],
+	      ]],
+     [LEVI => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["List_Flags", "L"]]], # calc from all levels <= PC level + calc from all items
+	       [INDX => [["Item_Count", "L"]]],
+	       [NNAM => [["Chance_None", "C"]]],
+	       [
+		[INAM => [["Item_ID", "Z*"]]],
+		[INTV => [["Level", "S"]]],
+	       ],
+	      ]],
+     [LIGH => [
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [LHDT => [["Weight", "f"], ["Value", "L"], ["Time", "L"], ["Radius", "L"],
+			 ["Red", "C"], ["Green", "C"], ["Blue", "C"],
+			 ["Unknown_1", "C"], ["Flags", "L"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [NAME => [["ID", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [SNAM => [["Sound_ID", "a*"]]],
+	      ]],
+     [LOCK => [
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [LKDT => [["Weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [NAME => [["ID", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [LTEX => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["Texture_Path", "Z*"]]],
+	       [INTV => [["Unknown_1", "L"]]],
+	      ]],
+     [MGEF => [
+	       [INDX => [["ID", "L"]]],
+	       [ASND => [["Area_Sound", "a*"]]],
+	       [AVFX => [["Area_VFX", "a*"]]],
+	       [BSND => [["Bolt_Sound", "a*"]]],
+	       [BVFX => [["Bolt_VFX", "a*"]]],
+	       [CSND => [["Cast_Sound", "a*"]]],
+	       [CVFX => [["Cast_VFX", "a*"]]],
+	       [DESC => [["Description", "a*"]]],
+	       [HSND => [["Hit_Sound", "a*"]]],
+	       [HVFX => [["Hit_VFX", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MEDT => [["School", "L"], ["Base_Cost", "f"],["Flags", "L"],
+			 ["Red", "L"], ["Green", "L"], ["Blue", "L"],
+			 ["Speed", "f"], ["Size", "f"], ["SizeCap", "f"]]],
+	       [PTEX => [["Particle_Texture", "a*"]]],
+	      ]],
+     [MISC => [
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MCDT => [["Weight", "f"], ["Value", "L"], ["Unknown_1", "L"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [NAME => [["ID", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [NPCC => [
+	       [AI_E => $RD_Unknown],
+	       [AI_F => $RD_Unknown],
+	       [AI_T => $RD_Unknown],
+	       [AI_W => $RD_Unknown],
+	       [NAME => [["ID", "a*"]]],
+	       [NPCO => [["Count", "l"], ["Name", "a32"]]],
+	       [NPDT => $RD_Unknown],
+	       [SCRI => [["Script", "a*"]]],
+	       [SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]]],
+	       [SLFD => [\&unpack_float_array, \&pack_float_array]],
+	       [SLLD => [\&unpack_long_array,  \&pack_long_array]],
+	       [SLSD => [\&unpack_short_array, \&pack_short_array]],
+	       [WIDX => [["Equipped_Index", "l"], ["Ammo_Flag", "l"]]],
+	       [XCHG => [["Enchant_Charge", "L"]]],
+	       [XHLT => [["Health", "L"]]],
+	       [XIDX => $RD_Unknown],
+	       [XSOL => [["Soul", "Z*"]]],
+	      ]],
+     [NPC_ => [
+	       [NAME => [["ID", "Z*"]]],
+	       [FNAM => [["Name", "Z*"]]],
+	       [AIDT => [["Hello", "C"], ["Unknown_1", "C"], ["Fight", "C"], ["Flee", "C"], ["Alarm", "C"], ["Unknown_1", "a3"], ["Flags", "L"]]],
+	       [AI_E => [["X", "l"], ["Y", "l"], ["Z", "l"], ["Duration", "S"], ["ID", "a32"], ["Unknown_1", "S"]]],
+	       [AI_F => $RD_Unknown],
+	       [AI_T => $RD_Unknown],
+	       [AI_W => [["Distance", "S"], ["Duration", "S"], ["Time_of_day", "C"], [[("Idle_1") x 8], "C8"], ["Unknown_1", "C"]]],
+	       [ANAM => $RD_Unknown],
+	       [BNAM => $RD_Unknown],
+	       [CNAM => $RD_Unknown],
+	       [CNDT => [["Data", "Z*"]]],
+	       [DNAM => $RD_Unknown],
+	       [DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]]],
+	       [FLAG => [["Flags", "L"]]],
+	       [KNAM => $RD_Unknown],
+	       [MODL => [["Model", "a*"]]],
+	       [NPCO => [["Count", "l"], ["Name", "a32"]]],
+	       [NPCS => $RD_Unknown],
+	       [NPDT => [sub {
+			     my($self, $buff) = @_;
+			     if (length($buff) == 12) {
+				 ($self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
+				  $self->{unk1}, $self->{unk2}, $self->{unk3}, $self->{gold}) =
+				      unpack("SC6L", $buff);
+			     } elsif (length($buff) == 52) {
+				 my $i = 0;
+				 foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
+				     $self->{lc($SKILL{$i++})} = $skill_level;
+				 }
+				 ($self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi}, $self->{spd},
+				  $self->{end}, $self->{per}, $self->{lck}, $self->{rep}, $self->{health},
+				  $self->{magicka}, $self->{fatigue}, $self->{disposition}, $self->{faction},
+				  $self->{rank}, $self->{gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
+			     } else {
+				 $self->bad_length(length($buff));
+			     }
+			     return($self);
+			 },
+			 sub {
+			     my($self) = @_;
+			     if (exists $self->{magicka}) {
+				 return(pack("SC8C27CSSSCCCxL",
+					     $self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi},
+					     $self->{spd}, $self->{end}, $self->{per}, $self->{lck},
+					     $self->{"block"}, $self->{"armorer"}, $self->{"mediumarmor"}, $self->{"heavyarmor"},
+					     $self->{"bluntweapon"}, $self->{"longblade"}, $self->{"axe"}, $self->{"spear"},
+					     $self->{"athletics"}, $self->{"enchant"}, $self->{"destruction"}, $self->{"alteration"},
+					     $self->{"illusion"}, $self->{"conjuration"}, $self->{"mysticism"}, $self->{"restoration"},
+					     $self->{"alchemy"}, $self->{"unarmored"}, $self->{"security"}, $self->{"sneak"},
+					     $self->{"acrobatics"}, $self->{"lightarmor"}, $self->{"shortblade"}, $self->{"marksman"},
+					     $self->{"mercantile"}, $self->{"speechcraft"}, $self->{"handtohand"},
+					     $self->{rep}, $self->{health}, $self->{magicka}, $self->{fatigue},
+					     $self->{disposition}, $self->{faction}, $self->{rank}, $self->{gold}));
+			     } else {
+				 return(pack("SC6L", $self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
+					     $self->{unk1}, $self->{unk2}, $self->{unk3},  $self->{gold}));
+			     }
+			 }]],
+	       [RNAM => $RD_Unknown],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [PCDT => [
+	       [AADT => $RD_Unknown],
+	       [ANIS => $RD_Unknown],
+	       [BNAM => $RD_Unknown],
+	       [CNAM => $RD_Unknown],
+	       [DNAM => $RD_Unknown],
+	       [ENAM => $RD_Unknown],
+	       [FNAM => [["Name", "a*"]]],
+	       [KNAM => $RD_Unknown],
+	       [LNAM => $RD_Unknown],
+	       [MNAM => $RD_Unknown],
+	       [NAM0 => $RD_Unknown],
+	       [NAM1 => $RD_Unknown],
+	       [NAM2 => $RD_Unknown],
+	       [NAM3 => $RD_Unknown],
+	       [NAM9 => $RD_Unknown],
+	       [PNAM => $RD_Unknown],
+	       [SNAM => $RD_Unknown],
+	      ]],
+     [PGRD => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => $RD_Unknown],
+	       [PGRC => $RD_Unknown],
+	       [PGRP => $RD_Unknown],
+	      ]],
+     [PROB => [
+	       [NAME => [["ID", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [PBDT => [["Weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]]],
+	      ]],
+     [QUES => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["Info_ID", "Z*"]]], # {ess => 1}
+	      ]],
+     [RACE => [
+	       [NAME => [["ID", "a*"]]],
+	       [DESC => [["Description", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [NPCS => [["Spell", ["Z32", "a32"]]]],
+	       [RADT => [[[("Skill_1", "Bonus_1") x 7], "(L2)7"], [[("Attr_Male_1", "Attr_Female_1") x 8], "(L2)8"],
+			 ["Male_Height", "f"], ["Female_Height", "f"], ["Male_Weight", "f"], ["Female_Weight", "f"], ["Flags", "L"]]],
+	      ]],
+     [REFR => [
+	       [NAME => [["ID", "a*"]]],
+	       [AADT => $RD_Unknown],
+	       [ACDT => $RD_Actor_Data],
+	       [ACSC => $RD_Unknown],
+	       [ACSL => $RD_Unknown],
+	       [ACTN => [["Unknown_1", "L"]]], # Actor Number???
+	       [CHRD => $RD_Unknown],
+	       [CSHN => $RD_Unknown],
+	       [CSTN => $RD_Unknown],
+	       [DATA => $RD_Unknown],
+	       [FGTN => [["Uknown_1", "a*"]]], # Following Target Name???
+	       [FRMR => [["Form_Ref", "L"]]],
+	       [ND3D => [["Unknown_1", "C"]]],
+	       [STPR => $RD_Unknown],
+	       [TGTN => [["Target", "a*"]]],
+	       [WNAM => [["Readied_Spell", "Z*"]]],
+	       [XSCL => [["Scale", "f"]]],
+	      ]],
+     [REGN => [
+	       [NAME => [["ID", "a*"]]],
+	       [BNAM => [["Sleep_Creature_ID", "a*"]]],
+	       [CNAM => [["Red", "C"], ["Green", "C"], ["Blue", "C"], ["Unused", "C"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [SNAM => [["Sound_Name", ["Z32", "a32"]], ["Chance", "C"]]],
+	       [WEAT => [sub {
+			     my($self, $buff) = @_;
+			     if (length($buff) == 10) {
+				 ($self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
+				  $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
+				  $self->{snow}, $self->{blizzard}) = unpack("C10", $buff);
+			     } elsif (length($buff) == 8) {
+				 ($self->{clear}, $self->{cloudy}, $self->{foggy},
+				  $self->{overcast}, $self->{rain}, $self->{thunder},
+				  $self->{ash}, $self->{blight}) = unpack("C8", $buff);
+			     } else {
+				 $self->bad_length(length($buff));
+			     }
+			     return($self);
+			 },
+			 sub {
+			     my($self) = @_;
+			     if (exists $self->{blizzard}) {
+				 pack("C10",
+				      $self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
+				      $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
+				      $self->{snow}, $self->{blizzard});
+			     } else {
+				 pack("C8",
+				      $self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
+				      $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight});
+			     }
+			   }]],
+	       [WNAM => [["Name", "L"]]],
+	      ]],
+     [REPA => [
+	       [NAME => [["ID", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [RIDT => [["Weight", "f"], ["Value", "L"], ["Uses", "L"], ["Quality", "f"]]],
+	       [SCRI => [["Script", "a*"]]],
+	      ]],
+     [SCPT => [
+	       [RNAM => [["Unknown_1", "L"]]],
+	       [SCDT => [["Bytecode", "H*"]]],
+	       [SCHD => [["ID", ["Z32", "a32"]], ["Num_Shorts", "L"], ["Num_Longs", "L"], ["Num_Floats", "L"],
+			 ["Data_Size", "L"], ["Local_Var_Size", "L"]]],
+	       [SCTX => [["Script_Text", "a*"]]],
+	       [SCVR => [["Variables", "a*"]]],
+	       [SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]]],
+	       [SLFD => [\&unpack_float_array, \&pack_float_array]],
+	       [SLLD => [\&unpack_long_array,  \&pack_long_array]],
+	       [SLSD => [\&unpack_short_array, \&pack_short_array]],
+	      ]],
+     [SKIL => [
+	       [INDX => [["ID", "L"]]],
+	       [DESC => [["Description", "a*"]]],
+	       [SKDT => [["Attribute", "L"], ["Specialization", "L"], [[("Use_Values_1") x 4], "f4"]]],
+	      ]],
+     [SNDG => [
+	       [NAME => [["ID", "a*"]]],
+	       [CNAM => [["Creature_ID", "a*"]]],
+	       [DATA => [["Data", "L"]]],
+	       [SNAM => [["Sound_ID", "a*"]]],
+	      ]],
+     [SOUN => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["Volume", "C"], ["MinRange", "C"], ["MaxRange", "C"]]],
+	       [FNAM => [["Name", "a*"]]],
+	      ]],
+     [SPEL => [
+	       [NAME => [["ID", "a*"]]],
+	       [ENAM => $RD_Enchantment],
+	       [FNAM => [["Name", "a*"]]],
+	       [SPDT => [["Type", "L"], ["Cost", "L"], ["Flags", "L"]]],
+	      ]],
+     [SPLM => [
+	       [CNAM => [["Unknown_1", "L"], ["Unknown_1", "Z*"]]],
+	       [NAM0 => [["Unknown_1", "C"]]],
+	       [NAME => [["ID", "L"]]],
+	       [NPDT => [["Name", ["Z32", "a32"]], ["Unknown_1", "H16"], ["Magnitude", "l"],
+			 ["Seconds_Active", "f"], [[("Long_1") x 2], "l2"]]],
+	       [SPDT => [["Type", "L"], ["Name", ["Z40", "a40"]], [[("Long_1") x 2], "L2"],
+			 ["Caster", ["Z32", "a32"]], ["Item", ["Z32", "a32"]], ["Long_1", "L"], ["unknown_1", "H80"]]],
+	       [TNAM => [["Target", "Z*"]]],
+	       [VNAM => [["Unknown_1", "L"]]],
+	       [XNAM => [["Unknown_1", "C"]]],
+	      ]],
+     [SSCR => [
+	       [NAME => [["ID", "a*"]]],
+	       [DATA => [["Name", "a*"]]],
+	      ]],
+     [STAT => [
+	       [NAME => [["ID", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	      ]],
+     [STLN => [
+	       [NAME => [["ID", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [ONAM => [["Name", "Z*"]]],
+	      ]],
+     [TES3 => [
+	       [HEDR => [["Version", "f"], ["Is_Master", "L"], ["Author", ["Z32", "a32"]],
+			 ["Description", ["Z256", "a256"]], ["NRecords", "L"]]],
+	       [
+		[MAST => [["Master", "Z*"]]],
+		[DATA => [sub {
+			      my($self, $buff) = @_;
+			      my($l1, $l2) = unpack("L2", $buff);
+			      $self->{length} = $l1 + ($l2 << 32);
+			      $self;
+			  },
+			  sub {
+			      my $len = $_[0]->{length};
+			      my $l1 = $len & 0xffffffff;
+			      my $l2 = $len >> 32;
+			      pack("L2", $l1, $l2);
+			  }]],
+	       ],
+	       [GMDT => [["Unknown_1", "H48"], ["Current_Cell", ["Z64", "a64"]], ["Unknown_1", "L"], ["PCName", ["Z32", "a32"]]]],
+	       [SCRD => [[[("Long_1") x 5], "L5"]]],
+	       [SCRS => [["Screenshot", "H*"]]],
+	      ]],
+     [VFXM => [
+	       [VNAM => [[[("Long_1") x 6], "(a4)6"], ["Short", "S"], ["Unknown_1", "a22"],
+			 ["Name_1", ["Z36", "a36"]], ["Name_1", ["Z68", "a68"]]]],
+	      ]],
+     [WEAP => [
+	       [NAME => [["ID", "a*"]]],
+	       [ENAM => [["Enchantment", "a*"]]],
+	       [FNAM => [["Name", "a*"]]],
+	       [ITEX => [["Icon", "a*"]]],
+	       [MODL => [["Model", "a*"]]],
+	       [SCRI => [["Script", "a*"]]],
+	       [WPDT => [["Weight", "f"], ["Value", "L"], ["Type", "S"], ["Health", "S"], ["Speed", "f"],
+			 ["Reach", "f"], ["Enchant_Points", "S"], ["Chop_Min", "C"], ["Chop_Max", "C"],
+			 ["Slash_Min", "C"], ["Slash_Max", "C"], ["Thrust_Min", "C"], ["Thrust_Max", "C"],
+			 ["Flags", "L"]]],
+	      ]],
+    );
+
+our %CODEC;
+
+sub new {
+    my($class, $plugin, $rectype, $recbuf) = @_;
+    my $self = {};
+    bless($self, $class);
+    $self->decode($plugin, $rectype, $recbuf);
+    return($self);
+}
+
+sub bad_length {
+    my($self, $len) = @_;
+    err "DECODER ERROR on @{[ref($self)]}, Invalid length: $len";
+}
+
+sub subrecs { @{$_[0]->{R}} }
+
+sub decode {
+    # TBD add efficient decoder
+    my($self, $plugin, $rectype, $recbuf) = @_;
+    my $p = 0;
+    my $rec_len = length($recbuf);
+    # decode the subrecords for this record
+    my @subrecs = ();
+    while ($p < $rec_len) {
+	my($subtype, $sublen) = unpack("a4L", substr($recbuf, $p));
+	$p += 8;
+	my $subrecbuf = substr($recbuf, $p, $sublen);
+	$p += $sublen;
+	if (defined $subrecbuf) {
+	    eval {
+		my $r = $CODEC{$rectype}->{$subtype}->{init}->($subrecbuf);
+		push(@subrecs, $r);
+	    };
+	    if ($@) {
+		abort "$plugin: rectype=$rectype subtype=$subtype BAD INIT";
+	    }
+	} else {
+	    err "$plugin: Error, malformed subrec for ($rectype) type=$subtype pos=$p len=$sublen\n";
+	}
+    }
+    return($self->{R} = \@subrecs);
+}
+
+sub encode {
+    my($self) = @_;
+    return( join("", map { pack("a4L/a*", $_->subtype(), $_->encode()) } $self->subrecs()) );
+}
+
+sub flatten {
+    my @newlist;
+    push(@newlist, (ref eq 'ARRAY') ? flatten(@$_) : $_) foreach (@_);
+    return(@newlist);
+}
+
+sub gen_subrec_methods {
+    my($rectype, $subtype, $subdefref) = @_;
+    my $decode_pack_format;
+    my $encode_pack_format;
+    my $method;
+    if (ref($subdefref->[0]) eq 'CODE') {
+	# custom codec subs
+	my($decoder, $encoder) = @$subdefref;
+	no strict "refs";
+	$method = "${rectype}::${subtype}::decode";
+	*$method = $decoder;
+	$method = "${rectype}::${subtype}::encode";
+	*$method = $encoder;
+    } else {
+	# generic codec subs
+	my $decode_pack_format;
+	my $encode_pack_format;
+	my @fieldnames;
+	my %seen;
+	foreach (@{$subdefref}) {
+	    if (ref eq 'ARRAY') {
+		my($fieldname, $fmt) = @{$_};
+
+		foreach my $fname (map { lc } flatten($fieldname)) {
+		    while (exists $seen{$fname}) {
+			$fname =~ s/_\d+$//;
+			$fname .= '_' . $seen{$fname}++;
+		    }
+		    $seen{$fname} = 1;
+		    push(@fieldnames, $fname);
+		}
+
+		#push(@fieldnames, lc($fieldname));
+		if (ref($fmt) eq 'ARRAY') {
+		    # different decoder/encoder defs
+		    my($decode_fmt, $encode_fmt) = @$fmt;
+		    $decode_pack_format .= $decode_fmt;
+		    $encode_pack_format .= $encode_fmt;
+		} else {
+		    # standard definition pair
+		    $decode_pack_format .= $fmt;
+		    $encode_pack_format .= $fmt;
+		}
+	    } else {
+		die "${rectype}::${subtype}: Invalid subrecord definition structure.\n";
+	    }
+	}
+	no strict "refs";
+	$method = "${rectype}::${subtype}::decode";
+	*$method = sub {
+	    use strict "refs";
+	    my($self, $subrecbuf) = @_;
+	    my(@vals) = unpack($decode_pack_format, $subrecbuf);
+	    $self->{$_} = shift(@vals) foreach (@fieldnames);
+	    return($self);
+	};
+	$method = "${rectype}::${subtype}::encode";
+	*$method = sub {
+	    use strict "refs";
+	    my @vals;
+	    push(@vals, $_[0]->{$_}) foreach (@fieldnames); # $_[0] is self
+	    return(pack($encode_pack_format, @vals));
+	};
+    }
+    $CODEC{$rectype}->{$subtype}->{init} = sub {
+	use strict "refs";
+	my($init) = @_;
+	my $self = {};
+	my $class = "${rectype}::${subtype}";
+	bless($self, $class);
+	if (defined($init)) {
+	    if (not ref($init)) {
+		$self->{_buf_} = $init;
+		$self->decode($init);
+	    } else {
+		die "$class: bad init value";
+	    }
+	}
+	return($self);
+    };
+    no strict "refs";
+    $method = "${rectype}::${subtype}::getbuf";
+    *$method = sub {
+	use strict "refs";
+	return($_[0]->{_buf_});	# $_[0] is self
+    };
+    $method = "${rectype}::${subtype}::fulltype";
+    *$method = sub { use strict "refs"; "${rectype}.${subtype}"; };
+    $method = "${rectype}::${subtype}::rectype";
+    *$method = sub { use strict "refs"; ${rectype}; };
+    $method = "${rectype}::${subtype}::subtype";
+    *$method = sub { use strict "refs"; ${subtype}; };
+    return();
+}
+
+sub gen_class {
+    my($rectype, @recdefs) = @_;
+    my $method;
+    foreach my $defref (@recdefs) {
+	if (ref($defref->[0]) eq 'ARRAY') {
+	    # define group
+	    my @group;
+	    foreach (@{$defref}) {
+		my($subtype, $subdefref) = @{$_};
+		push(@group, $subtype);
+		gen_subrec_methods($rectype, $subtype, $subdefref);
+	    }
+	    # TBD - do something with group information
+	} else {
+	    gen_subrec_methods($rectype, @{$defref});
+	}
+    }
+    gen_subrec_methods($rectype, DELE => [["DELETED", "L"]]);
+
+    no strict "refs";
+
+    $method = "${rectype}::set";
+    *$method = sub {
+	use strict "refs";
+	my($self, $selector, $newval) = @_; # opt is hashref with keys: "i", "t", "f"
+	unless (defined $newval) {
+	    warn qq{Usage: set(\$selector_hash, \$newvalue)
+selector_hash can have the keys: "i", "t", or "f"\n};
+	    return;
+	}
+	my $r = $self->{R};
+	my $modified = 0;
+	my @indices = defined($selector->{i}) ? @{$selector->{i}} : (0 .. $#$r);
+	foreach my $i (@indices) {
+	    my $type = $r->[$i]->[0];
+	    next if (defined($selector->{t}) and ($selector->{t} ne $type));
+	    if (defined($selector->{f})) {
+		my $key = lc($selector->{f});
+		if (defined($r->[$i]->[1]->{$key})) {
+		    if ($r->[$i]->[1]->{$key} ne $newval) {
+			$r->[$i]->[1]->{$key} = $newval;
+			$modified++;
+		    }
+		    #print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
+		} else {
+		    next;
+		}
+	    } else {
+		# set all fields
+		my @ordered_fields = ();
+		my @unordered_fields = ();
+		while (my($key, $val) = each %{$r->[$i]->[1]}) {
+		    if ($val ne $newval) {
+			$r->[$i]->[1]->{$key} = $newval;
+			$modified++;
+		    }
+		    if (defined $r->[$i]->[2]->{$key}) {
+			$ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
+		    } else {
+			push(@unordered_fields, "$key = $val");
+		    }
+		}
+		#print "$i: $type ", join(", ", @ordered_fields, @unordered_fields), "\n";
+	    }
+	}
+	return($modified);
+    };
+
+    $method = "${rectype}::get";
+    *$method = sub {
+	use strict "refs";
+	my($self, $selector) = @_;	# opt is hashref with keys: "i", "t", "f"
+	my $r = $self->{R};
+	my @indices = defined($selector->{i}) ? ($selector->{i}) : (0 .. $#$r);
+	foreach my $i (@indices) {
+	    my $subtype = $r->[$i]->[0];
+	    next if (defined($selector->{t}) and ($subtype !~ /^$selector->{t}/i));
+	    if (defined($selector->{f})) {
+		my $key = lc($selector->{f});
+		#warn "DBG: key=$key stuff=".Dumper($r->[$i]->[1])."\n";
+		if (defined($r->[$i]->[1]->{$key})) {
+		    return($r->[$i]->[1]->{$key});
+		} else {
+		    next;
+		}
+	    } else {
+		# give first (default) field
+		my @ordered_fields = ();
+		my @unordered_fields = ();
+		while (my($key, $val) = each %{$r->[$i]->[1]}) {
+		    if (defined $r->[$i]->[2]->{$key}) {
+			$ordered_fields[$r->[$i]->[2]->{$key}] = $val;
+		    } else {
+			push(@unordered_fields, $val);
+		    }
+		}
+		my @fields;
+		push(@fields, @ordered_fields, @unordered_fields);
+		return(shift, @fields);
+	    }
+	}
+	my @opts; push(@opts, "$_ = $selector->{$_}") foreach (keys %$selector);
+	die "getrec: no match for (@opts)\n";
+    };
+
+    $method = "${rectype}::dump";
+    *$method = sub {
+	use strict "refs";
+	my($self, $selector) = @_;	# opt is hashref with keys: "i", "t", "f"
+	my $r = $self->{R};
+	my @indices = defined($selector->{i}) ? @{$selector->{i}} : (0 .. $#$r);
+	foreach my $i (@indices) {
+	    my $type = $r->[$i]->[0];
+	    next if (defined($selector->{t}) and ($type !~ /^$selector->{t}/i));
+	    if (defined($selector->{f})) {
+		my $key = lc($selector->{f});
+		if (defined($r->[$i]->[1]->{$key})) {
+		    print qq{$i: $type  $key = $r->[$i]->[1]->{$key}\n};
+		} else {
+		    next;
+		}
+	    } else {
+		# dump all fields
+		my @ordered_fields = ();
+		my @unordered_fields = ();
+		while (my($key, $val) = each %{$r->[$i]->[1]}) {
+		    $val = qq{"$val"} if ($val =~ /[^\d.]/);
+		    my $print_key = lcfirst($key);
+		    if (defined $r->[$i]->[2]->{$key}) {
+			$ordered_fields[$r->[$i]->[2]->{$key}] = "$key = $val";
+		    } else {
+			push(@unordered_fields, "$key = $val");
+		    }
+		}
+		print " $i: $type ", join(", ", @ordered_fields, @unordered_fields), "\n";
+	    }
+	}
+	return(0);
+    };
+}
+
+sub generate_classes {
+    foreach my $defref (@RECDEFS) {
+	my($rectype, $subrecdefs) = @$defref;
+	gen_class($rectype, @$subrecdefs);
+    }
+}
+
+### end of TES3::Record package
+
+package main;
+
+BEGIN {
+    # since perl will optimize out conditional branches that are never
+    # reached, we define the following constants so that we only compile
+    # debug/help code into the program when it it actually needed.
+    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
+    Util->import(qw(err dbg msg abort));
+}
+
+TES3::Record::generate_classes();
 
 ### CONSTANTS
 
@@ -62,15 +1369,12 @@ use constant {
 
 ###GLOBALS (Miscellaneous)
 
+my $T3 = new TES3::Util;
 my $R = {};			# current decoded record (for modify)
 my $DUMP_VERSION = "0.1";	# so undump won't use wrong format version
-my $DATADIR;			# where "Data Files" lives.
-my $TES3CMD_DIR;		# tes3cmd directory under "Data Files" (for cache, ...)
 my $MASTER_ID;			# data loaded from masters
 my $GLOBCHARS = '*?';		# for filename matching
 my $RECTYPE_LEN = 4;
-my $HDR_AUTH_LENGTH = 32;
-my $HDR_DESC_LENGTH = 256;
 
 # common Options
 our $opt_debug = 0;		# (use the magic constant DBG instead)
@@ -96,17 +1400,17 @@ our @opt_type = ();
 
 my %CLEAN_PLUGIN =
     (
-     "bloodmoon.esm" => "Bethesda Master",
-     "fogpatch.esp" => "does not need cleaning",
-     "gmst fix.esp" => "intentionally contain Evil GMSTs",
-     "gmst vaccine.esp" => "intentionally contain Evil GMSTs",
-     "mashed lists.esp" => "does not need cleaning",
-     "merged_dialogs.esp" => "does not need cleaning, but you should delete it anyway",
-     "merged_leveled_lists.esp"  => "does not need cleaning",
-     "merged_objects.esp" => "does not need cleaning",
-     "morrowind.esm" => "Bethesda Master",
-     "multipatch.esp" => "does not need cleaning",
-     "tribunal.esm" => "Bethesda Master",
+     "bloodmoon.esm"             => "Bethesda Master",
+     "fogpatch.esp"              => "does not need cleaning",
+     "gmst fix.esp"              => "intentionally contain Evil GMSTs",
+     "gmst vaccine.esp"          => "intentionally contain Evil GMSTs",
+     "mashed lists.esp"          => "does not need cleaning",
+     "merged_dialogs.esp"        => "does not need cleaning, but you should delete it anyway",
+     "merged_leveled_lists.esp"  => "does not need cleaning, but you should use multipatch instead",
+     "merged_objects.esp"        => "does not need cleaning",
+     "morrowind.esm"             => "Bethesda Master",
+     "multipatch.esp"            => "does not need cleaning",
+     "tribunal.esm"              => "Bethesda Master",
     );
 
 ###USAGES
@@ -908,8 +2212,8 @@ new given value.
 If a given value contains the string "\\n", it will be replaced by a CRLF.
 
 Note:
- - the Author value should fit in $HDR_AUTH_LENGTH bytes.
- - the Description value should fit in $HDR_DESC_LENGTH bytes.
+ - the Author value should fit in $TES3::Record::HDR_AUTH_LENGTH bytes.
+ - the Description value should fit in $TES3::Record::HDR_DESC_LENGTH bytes.
 
 If the value supplied won't fit into the plugin header field, you will be
 warned.
@@ -1052,6 +2356,11 @@ sub opts_rename {
     }
 }
 
+sub opts_shell {
+    GetOptions('debug|d', 'verbose') or
+	die "Usage: tes3cmd -shell\n";
+}
+
 sub opts_wikiout {
     GetOptions('debug|d', 'verbose') or
 	die "Usage: tes3cmd -wikiout\n";
@@ -1072,7 +2381,7 @@ sub opts_codectest {
 sub make_header {
     my($opt) = @_;
     my $hedr = pack("a4L/a*", 'HEDR',
-		    pack("fLZ${HDR_AUTH_LENGTH}Z${HDR_DESC_LENGTH}L",
+		    pack("fLZ${TES3::Record::HDR_AUTH_LENGTH}Z${TES3::Record::HDR_DESC_LENGTH}L",
 			 ($opt->{version} || 1.3),
 			 ($opt->{ismaster} || 0),
 			 ($opt->{author} || "tes3cmd"),
@@ -1094,107 +2403,9 @@ sub celldata {
 # is_interior($srh);
 sub is_interior { unpack("L", $_[0]->{DATA}[0]) & 1 }
 
-sub chop_nulls { unpack("Z*", $_[0]); }
-
-sub fatal_error {
-    my($msg) = @_;
-    my $diagnosis;
-    if ($^O =~ /^MSWin/) {
-	if ($msg =~ /permission denied/i) {
-	    $diagnosis =<<END
-Permission errors may occur in recent versions of Windows (since Vista) due to
-the UAC feature and new protected nature of "Program Files". The ideal
-solution is to install Morrowind some place other than "Program Files", such
-as "C:\Games\Morrowind". You can also try disabling UAC, although may make your
-system less secure.
-END
-	}
-    }
-    die qq{FATAL ERROR: $msg$diagnosis\n"};
-}
-
-# return a dictionary of all the files found in the given directory.
-# keys are lowercased for caseless file finding.
-sub list_files {
-    my($dir) = @_;
-    my %files = ();
-    if (opendir(DH, $dir)) {
-	while (my $file = readdir(DH)) {
-	    next if (($file eq '.') or ($file eq '..'));
-	    $files{lc($file)} = $file;
-	}
-	closedir(DH);
-    } else {
-	fatal_error(qq{Opening "$dir" ($!)});
-    }
-    return(\%files);
-}
-
-# sort list of files by their modification date
-sub sort_by_date {
-    my($dir, @files) = @_;
-    my $dirlist = list_files($dir);
-    my @sorted = sort { (-M "$dir/$dirlist->{lc $b}") <=> (-M "$dir/$dirlist->{lc $a}") } @files;
-    warn qq{DBG: sorted files:\n}, join("\n", @sorted), "\n" if (DBG);
-    return(@sorted);
-}
-
-my @LOAD_ORDER;
-sub load_order {
-    return(@LOAD_ORDER) if (defined(@LOAD_ORDER));
-    die "DATADIR not defined\n" unless (defined($DATADIR));
-    my $datafiles = list_files($DATADIR);
-    my $mwfiles = list_files("$DATADIR/..");
-    my $ini = "$DATADIR/../$mwfiles->{'morrowind.ini'}";
-    my @active;
-    my $fh = IO::Handle->new();
-    if (open($fh, "<$ini")) {
-	warn qq{INI is: "$ini"\n} if (DBG);
-	while (<$fh>) {
-	    if (my($plugin) = (/GameFile\d+=([^\r\n]*)/)) {
-		if ($datafiles->{lc $plugin}) {
-		    warn qq{Found Gamefile: "$plugin"\n} if (DBG);
-		    push(@active, $plugin);
-		} else {
-		    warn qq{MISSING Gamefile: "$1"\n} if (DBG);
-		}
-	    }
-	}
-    } else {
-	warn qq{Error opening "$ini" for input ($!)\n};
-    }
-    my @sorted = sort_by_date($DATADIR, @active);
-    return(@LOAD_ORDER = (grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)));
-}
-
-# assuming the program is run somewhere under the Morrowind game directory, find the
-# location of the "Data Files" directory by walking up the hierarchy.
-sub find_datadir {
-    return($DATADIR) if (defined($DATADIR));
-    my $dir = Cwd::getcwd();
-    warn "DBG: checking for data dir in: $dir\n" if (DBG);
-    while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
-	my $datadir = list_files($dir)->{"data files"};
-	if ($datadir) {
-	    $DATADIR = "$dir/$datadir";
-	    print "DATADIR = $DATADIR\n";
-	    $TES3CMD_DIR = "$DATADIR/tes3cmd";
-	    unless (-d $TES3CMD_DIR) {
-		if (-e $TES3CMD_DIR) {
-		    fatal_error(qq{"$TES3CMD_DIR" exists, but is not a directory, please remove or rename it.});
-		}
-		mkdir($TES3CMD_DIR, 0755) or
-		    fatal_error(qq{Unable to make directory: "$TES3CMD_DIR" ($!)});
-	    }
-	    return($DATADIR);
-	}
-	my @parts = split(m![\\/]!, $dir);
-	pop(@parts);
-	$dir = join("/", @parts);
-	warn "DBG: checking for data dir in: $dir\n" if (DBG);
-    }
-    warn qq{Can't find "Data Files" directory. Won't be able to find masters\n};
-    return(undef);		# not running under morrowind directory
+sub chop_nulls {
+    #Carp::confess("chop_nulls") if not defined $_[0];
+    unpack("Z*", $_[0]);
 }
 
 sub allowed_cell_type {
@@ -1461,35 +2672,6 @@ my %INFO_SCVR_cmp =
 
 my %SEX = (0 => "Male", 1 => "Female", 0xFF => "None");
 my %SPECIALIZATION = (0 => "Combat", 1 => "Magic", 2 => "Stealth");
-
-my %SKILL = ( 0 => "Block",
-	      1 => "Armorer",
-	      2 => "MediumArmor",
-	      3 => "HeavyArmor",
-	      4 => "BluntWeapon",
-	      5 => "LongBlade",
-	      6 => "Axe",
-	      7 => "Spear",
-	      8 => "Athletics",
-	      9 => "Enchant",
-	     10 => "Destruction",
-	     11 => "Alteration",
-	     12 => "Illusion",
-	     13 => "Conjuration",
-	     14 => "Mysticism",
-	     15 => "Restoration",
-	     16 => "Alchemy",
-	     17 => "Unarmored",
-	     18 => "Security",
-	     19 => "Sneak",
-	     20 => "Acrobatics",
-	     21 => "LightArmor",
-	     22 => "ShortBlade",
-	     23 => "Marksman",
-	     24 => "Mercantile",
-	     25 => "SpeechCraft",
-	     26 => "HandToHand",
-	    255 => "None");
 
 my %ATTRIBUTE = (0 => "Strength",
 		 1 => "Intelligence",
@@ -1857,768 +3039,6 @@ my @CREA_TYPE = qw(Creature Daedra Undead Humanoid);
 
 my @SNDG_DATA = ("Left_Foot", "Right_Foot", "Swim_Left", "Swim_Right", "Moan", "Roar", "Scream", "Land");
 
-
-sub unpack_short_array {
-    my $i = 1;
-    my %hr;
-    $hr{$i++} = $_ foreach (unpack("s*", $_[0]));
-    \%hr;
-};
-sub pack_short_array {
-    my($hr) = @_;
-    my @vals;
-    unshift(@vals, $hr->{$_}) foreach (sort { $a <=> $b } keys %{$hr});
-    pack("s*", @vals);
-}
-sub unpack_long_array {
-    my $i = 1;
-    my %hr;
-    $hr{$i++} = $_ foreach (unpack("l*", $_[0]));
-    \%hr;
-};
-sub pack_long_array {
-    my($hr) = @_;
-    my @vals;
-    unshift(@vals, $hr->{$_}) foreach (sort { $a <=> $b } keys %{$hr});
-    pack("l*", @vals);
-}
-sub unpack_float_array {
-    my $i = 1;
-    my %hr;
-    $hr{$i++} = $_ foreach (unpack("f*", $_[0]));
-    \%hr;
-};
-sub pack_float_array {
-    my($hr) = @_;
-    my @vals;
-    unshift(@vals, $hr->{$_}) foreach (sort { $a <=> $b } keys %{$hr});
-    pack("f*", @vals);
-}
-
-my $RD_Actor_Data =
-#     Field                              Offset
-    [([[("Unknown_1") x 10], "L10"],   #   0
-      ["Health", "f"],		       #  40
-      ["Max_Health", "f"],	       #  44
-      ["Fatigue", "f"],		       #  48
-      ["Max_Fatigue", "f"],	       #  52
-      ["Unknown_1", "f"],	       #  56
-      ["Unknown_1", "f"],	       #  60
-      ["Unknown_1", "f"],	       #  64
-      ["Unknown_1", "f"],	       #  68
-      ["Unknown_1", "f"],	       #  72
-      ["Encumbrance", "f"],	       #  76
-      ["STR", "f"],		       #  80
-      ["STR_Base", "f"],	       #  84
-      ["INT", "f"],		       #  88
-      ["INT_Base", "f"],	       #  92
-      ["WIL", "f"],		       #  96
-      ["WIL_Base", "f"],	       # 100
-      ["AGI", "f"],		       # 104
-      ["AGI_Base", "f"],	       # 108
-      ["SPD", "f"],		       # 112
-      ["SPD_Base", "f"],	       # 116
-      ["END", "f"],		       # 120
-      ["END_Base", "f"],	       # 124
-      ["PER", "f"],		       # 128
-      ["PER_Base", "f"],	       # 132
-      ["LUC", "f"],		       # 136
-      ["LUC_Base", "f"],	       # 140
-      ["Fortify_Attack", "L"],	       # 144
-      ["Sanctuary", "L"],	       # 148
-      ["Resist_Magicka", "C"],	       # 152
-      ["Unknown_1", "a3"],
-      ["Resist_Fire", "C"],	# 156 (+ Fire Shield)
-      ["Unknown_1", "a3"],
-      ["Resist_Frost", "C"],	# 160 (+ Frost Shield)
-      ["Unknown_1", "a3"],
-      ["Resist_Shock", "C"],	# 164 (+ Lightning Shield)
-      ["Unknown_1", "a3"],
-      ["Resist_Common_Disease", "L"],		   # 168
-      ["Unknown_1", "L"],			   # 172
-      ["Unknown_1", "L"],			   # 176
-      ["Resist_Poison", "L"],			   # 180
-      ["Resist_Paralysis", "L"],		   # 184
-      ["Chameleon", "L"],			   # 188
-      ["Resist_Normal_Weapons", "L"],		   # 192
-      ["Water_Breathing", "L"],			   # 196
-      ["Water_Walking", "L"],			   # 200
-      ["Swift_Swim", "L"],			   # 204
-      ["Unknown_1", "L"],			   # 208
-      ["Levitate", "L"],			   # 212
-      ["Shield", "L"],				   # 216
-      ["Unknown_1", "L"],			   # 220
-      ["Unknown_1", "L"],			   # 224
-      ["Blind", "L"],				   # 228
-      ["Unknown_1", "L"],			   # 232
-      ["Invisibility", "L"],			   # 236
-      ["Unknown_1", "L"],			   # 240
-      ["Unknown_1", "L"],			   # 244
-      ["Unknown_1", "L"],			   # 248
-      ["Unknown_1", "L"],			   # 252
-      ["Unknown_1", "L"],			   # 256
-      ["Unknown_1", "L"])];
-
-my $RD_Enchantment =
-    [["Spell_Effect", "S"], ["Skill", "C"], ["Attribute", "C"], ["Range", "L"],
-     ["Area", "L"], ["Duration", "L"], ["MagMin", "L"], ["MagMax", "L"]];
-
-my $RD_Unknown = [["Unknown_1", "H*"]];
-
-my %RECDEF =
-    {
-     ACTI => [
-	      NAME => [["ID", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     ALCH => [
-	      NAME => [["ID", "a*"]],
-	      ALDT => [["Weight", "f"], ["Value", "L"], ["Autocalc", "L"]],
-	      ENAM => $RD_Enchantment,
-	      FNAM => [["Name", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	      TEXT => [["Icon", "a*"]],
-	     ],
-     APPA => [
-	      NAME => [["ID", "a*"]],
-	      AADT => [["Type", "L"], ["Quality", "f"], ["Weight", "f"], ["Value", "L"]],
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     ARMO => [
-	      NAME => [["ID", "a*"]],
-	      AODT => [["Type", "L"], ["Weight", "f"], ["Value", "L"], ["Health", "L"], ["Enchant_Points", "L"], ["Armor_Rating", "L"]],
-	      BNAM => [["Male_Body_ID", ["Z*", "a*"]]],
-	      CNAM => [["Female_Body_ID", "a*"]],
-	      ENAM => [["Enchantment", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      INDX => [["Part_Index", "C"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     BODY => [
-	      NAME => [["ID", "a*"]],
-	      BYDT => [["Body_Part", "C"], ["Vampire", "C"], ["Flags", "C"], ["Part_Type", "C"]],
-	      FNAM => [["Name", "a*"]],
-	      MODL => [["Model", "a*"]],
-	     ],
-     BOOK => [
-	      NAME => [["ID", "a*"]],
-	      BKDT => [["Weight", "f"], ["Value", "L"], ["Scroll", "L"], ["Skill", "L"], ["Enchant_Points", "L"]],
-	      ENAM => [["Enchantment", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	      TEXT => [["Text", "a*"]],
-	     ],
-     BSGN => [
-	      NAME => [["ID", "a*"]],
-	      DESC => [["Description", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      NPCS => [["Spell", "a*"]],
-	      TNAM => [["Image", "a*"]]
-	     ],
-     CELL => [
-	      [
-	       AMBI => [["Ambient_Color", "L"], ["Sunlight_Color", "L"], ["Fog_Color", "L"], ["Fog_Density", "f"]],
-	      ],
-	      [
-	       FRMR => [["ObjIdx", "S"], ["Unknown", "C"], ["ModIdx", "C"]],
-	      ],
-	      ACDT => $RD_Actor_Data,
-	      ACSC => $RD_Unknown,
-	      ACSL => $RD_Unknown,
-	      ACTN => $RD_Unknown,
-	      ANAM => $RD_Unknown,
-	      ANIS => $RD_Unknown,
-	      APUD => $RD_Unknown,
-	      BNAM => $RD_Unknown,
-	      CHRD => $RD_Unknown,
-	      CNAM => $RD_Unknown,
-	      CNDT => $RD_Unknown,
-	      CRED => $RD_Unknown,
-	      CSHN => $RD_Unknown,
-	      CSTN => [["Target", "Z*"]], # guessing this is: "Cast/Current Spell Target Name"
-	      DATA => [sub {
-			   my($buff) = @_;
-			   my $dlen = length($buff);
-			   if ($dlen == 24) {
-			       my($x, $y, $z, $xrot, $yrot, $zrot) = unpack("f6", $buff);
-			       return({ X => $x, Y => $y, Z => $z,
-					X_angle => $xrot, Y_angle => $yrot, Z_angle => $zrot });
-			   } elsif ($dlen == 12) {
-			       my($flags, $unk, $fog) = unpack("LLf", $buff);
-			       if ($flags & 0x01) { # Interior
-				   return({ Flags => $flags, Unknown => $unk, Fog_Density => $fog });
-			       } else {	# Exterior
-				   my($x, $y) = unpack("x[L]ll", $buff);
-				   return({ Flags => $flags, X => $x, Y => $y });
-			       }
-			   } else {
-			       die "DECODER ERROR on CELL.DATA, Invalid length: $dlen\n";
-			   }
-		       },
-		       sub {
-			   my($hr) = @_;
-			   if (exists $hr->{flags}) {
-			       if ($hr->{flags} & 0x01) { # Interior
-				   return(pack("LLf", $hr->{flags}, $hr->{unknown}, $hr->{fog_density}));
-			       } else {	# Exterior
-				   return(pack("Lll", $hr->{flags}, $hr->{x}, $hr->{y}));
-			       }
-			   } else {
-			       return(pack("f6", $hr->{x}, $hr->{y}, $hr->{z},
-					   $hr->{x_angle}, $hr->{y_angle}, $hr->{z_angle}));
-			   }
-		       }],
-	      DELE => [["Unknown", "H4"]],
-	      DNAM => [["Door_ID", "a*"]],
-	      DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]],
-	      FGTN => $RD_Unknown,
-	      FLTV => [["Unknown_1", "f"]],
-	      INDX => $RD_Unknown,
-	      INTV => $RD_Unknown,
-	      KNAM => $RD_Unknown,
-	      LSHN => $RD_Unknown,
-	      LSTN => $RD_Unknown,
-	      LVCR => $RD_Unknown,
-	      MNAM => $RD_Unknown,
-	      MVRF => [["Moved_Ref", "L"]], # .ess
-	      NAM0 => [["Object_Count", "L"]],
-	      NAM5 => [["Red", "C"], ["Green", "C"], ["Blue", "C"], ["Unused", "C"]], # Map Color
-	      NAM8 => $RD_Unknown,
-	      NAM9 => [["Owner", "L"]],
-	      NAME => [["ID", "a*"]],
-	      ND3D => $RD_Unknown,
-	      PRDT => $RD_Unknown,
-	      PWPC => $RD_Unknown,
-	      PWPS => $RD_Unknown,
-	      RGNN => $RD_Unknown,
-	      SCRI => [["Script", "a*"]],
-	      SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]],
-	      SLFD => [\&unpack_float_array, \&pack_float_array],
-	      SLLD => [\&unpack_long_array,  \&pack_long_array],
-	      SLSD => [\&unpack_short_array, \&pack_short_array],
-	      STPR => $RD_Unknown,
-	      TGTN => $RD_Unknown,
-	      TNAM => $RD_Unknown,
-	      UNAM => $RD_Unknown,
-	      WHGT => $RD_Unknown,
-	      WNAM => $RD_Unknown,
-	      XCHG => [["Enchant_Charge", "L"]],
-	      XNAM => $RD_Unknown,
-	      XSCL => [["Scale", "f"]],
-	      XSOL => [["Soul", "Z*"]],
-	      YNAM => $RD_Unknown,
-	      ZNAM => $RD_Unknown,
-	     ],
-     CLAS => [
-	      NAME => [["ID", "a*"]],
-	      CLDT => [["Primary_Attribute", "L"], ["Secondary_Attribute", "L"], ["Specialization", "L"],
-		       [[("Minor_Skill_1", "Major_Skill_1") x 5], "(L2)5"], ["Flags", "L"], ["AutoCalc", "L"]],
-	      DESC => [["Description", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	     ],
-     CLOT => [
-	      NAME => [["ID", "a*"]],
-	      BNAM => [["Male_Body_ID", "a*"]],
-	      CNAM => [["Female_Body_ID", ["Z*", "a*"]]],
-	      CTDT => [["Type", "L"], ["Weight", "f"], ["Value", "S"], ["Enchant_Points", "S"]],
-	      ENAM => [["Enchantment_ID", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      INDX => [["Index", "C"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     CNTC => [
-	      NAME => [["ID", "a*"]],
-	      INDX => [["Index", "L"]],
-	      NPCO => [["Count", "l"], ["Name", "a32"]],
-	      SCRI => [["Script", "a*"]],
-	      SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]],
-	      SLFD => [\&unpack_float_array, \&pack_float_array],
-	      SLLD => [\&unpack_long_array,  \&pack_long_array],
-	      SLSD => [\&unpack_short_array, \&pack_short_array],
-	      XCHG => [["Enchant_Charge", "L"]],
-	      XHLT => [["Health", "L"]],
-	      XIDX => [["Scripted_Item_Index", "L"]],
-	      XSOL => [["Soul", "Z*"]],
-	     ],
-     CONT => [
-	      FNAM => [["Name", "a*"]],
-	      CNDT => [["Weight", "f"]],
-	      FLAG => [["Container_Flags", "L"]],
-	      INDX => [["Unknown_1", "L"]],	# .ess
-	      MODL => [["Model", "a*"]],
-	      NAME => [["ID", "a*"]],
-	      NPCO => [["Count", "l"], ["Name", "a32"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     CREA => [
-	      NAME => [["ID", "a*"]],
-	      AIDT => [["Hello", "C"], ["Unknown_1", "C"], ["Fight", "C"], ["Flee", "C"], ["Alarm", "C"], ["Unknown_1", "a3"], ["Flags", "L"]],
-	      AI_E => $RD_Unknown,
-	      AI_F => $RD_Unknown,
-	      AI_T => $RD_Unknown,
-	      AI_W => [["Distance", "S"], ["Duration", "C"], ["Time_of_day", "C"], [[("Idle_1") x 10], "C10"]],
-	      CNAM => $RD_Unknown,
-	      DNAM => $RD_Unknown,
-	      DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]],
-	      FLAG => [["Flags", "L"]],
-	      FNAM => [["Name", "a*"]],
-	      INDX => $RD_Unknown,
-	      MODL => [["Model", "a*"]],
-	      NPCO => [["Count", "l"], ["Name", "a32"]],
-	      NPCS => $RD_Unknown,
-	      NPDT => [["Type", "L"], ["Lev", "L"], ["Str", "L"], ["Int", "L"], ["Wil", "L"],
-		       ["Agi", "L"], ["Spd", "L"], ["End", "L"], ["Per", "L"], ["Lck", "L"],
-		       ["Health", "L"], ["Spell_Points", "L"], ["Fatigue", "L"], ["Soul", "L"],
-		       ["Combat", "L"], ["Magic", "L"], ["Stealth", "L"], ["Attack_1_Min", "L"],
-		       ["Attack_1_Max", "L"], ["Attack_2_Min", "L"], ["Attack_2_Max", "L"],
-		       ["Attack_3_Min", "L"], ["Attack_3_Max", "L"], ["Gold", "L"]],
-	      SCRI => [["Script", "a*"]],
-	      XSCL => [["Scale", "f"]],
-	     ],
-     CREC => [
-	      NAME => [["ID", "a*"]],
-	      AI_F => $RD_Unknown,
-	      AI_T => $RD_Unknown,
-	      AI_W => $RD_Unknown,
-	      INDX => $RD_Unknown,
-	      NPCO => [["Count", "l"], ["Name", "a32"]],
-	      SCRI => [["Script", "a*"]],
-	      SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]],
-	      SLFD => [\&unpack_float_array, \&pack_float_array],
-	      SLSD => [\&unpack_short_array, \&pack_short_array],
-	      WIDX => [["Equipped_Index", "l"], ["Ammo_Flag", "l"]],
-	      XCHG => [["Enchant_Charge", "L"]],
-	      XHLT => [["Health", "L"]],
-	      XIDX => $RD_Unknown,
-	      XSCL => [["Scale", "f"]],
-	     ],
-     DIAL => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["Type", "C"]],
-	      XIDX => $RD_Unknown,
-	     ],
-     DOOR => [
-	      NAME => [["ID", "a*"]],
-	      ANAM => [["Door_Close_Sound", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	      SNAM => [["Door_Open_Sound", "a*"]],
-	     ],
-     ENCH => [
-	      NAME => [["ID", "a*"]],
-	      ENAM => $RD_Enchantment,
-	      ENDT => [["Type", "L"], ["Cost", "L"], ["Charge", "L"], ["Autocalc", "L"]],
-	     ],
-     FACT => [
-	      NAME => [["ID", "a*"]],
-	      ANAM => [["Contra_Faction", "a*"]],
-	      FADT => [["Primary_Attribute", "L"], ["Secondary_Attribute", "L"],
-		       [[("At1_1", "At2_1", "Sk1_1", "Sk2_1", "Fact_1") x 10], "(L5)10"],
-		       [[("Sk_1") x 6], "L6"], ["Unknown_1", "L"], ["Flags", "L"]],
-	      FNAM => [["Name", "a*"]],
-	      INTV => [["Contra_Faction_Factor", "a*"]],
-	      RNAM => [["Rank", "a*"]],
-	     ],
-     FMAP => [
-	      MAPD => $RD_Unknown,
-	      MAPH => $RD_Unknown,
-	     ],
-     GAME => [
-	      GMDT => [["Current_Cell", "Z*"]], # there is junk following the cell name ... not clear if there's a max cell name size?
-	     ],
-     GLOB => [
-	      NAME => [["ID", "a*"]],
-	      FLTV => [["Float", "f"]],
-	      FNAM => [["Type", "a"]],
-	     ],
-     GMST => [
-	      NAME => [["ID", "a*"]],
-	      FLTV => [["Float", "f"]],
-	      INTV => [["Integer", "l"]],
-	      STRV => [["String", "a*"]],
-	     ],
-     INFO => [
-	      INAM => [["ID", "a*"]],
-	      ACDT => [["Actor_Data", "Z*"]], # .ess
-	      ANAM => [["Cell", "Z*"]],
-	      BNAM => [["Result", "a*"]],
-	      CNAM => [["Class", "Z*"]],
-	      DATA => [["Unknown_1", "L"], ["Disposition", "L"], ["Rank", "C"],
-		       ["Sex", "C"], ["PCRank", "C"], ["Unknown_1", "C"]],
-	      DNAM => [["PC_Faction", "Z*"]],
-	      FLTV => [["Result_Value", "f"]],
-	      FNAM => [["Faction", "Z*"]],
-	      INTV => [["Compare_Value", "L"]],
-	      NAME => [["Response", "a*"]],
-	      NNAM => [["Next_ID", "Z*"]],
-	      ONAM => [["Actor", "Z*"]],
-	      PNAM => [["Prev_ID", "Z*"]],
-	      QSTF => [["Quest_Finished", "C"]],
-	      QSTN => [["Quest_Name", "C"]],
-	      QSTR => [["Quest_Restart", "C"]],
-	      RNAM => [["Race", "a*"]],
-	      SCVR => [["Index", "a"], ["Type", "a"], ["Function", "a2"], ["Comparison", "a"], ["Name", "a*"]],
-	      SNAM => [["Sound_File", "a"]],
-	     ],
-     INGR => [
-	      NAME => [["ID", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      IRDT => [["Weight", "f"], ["Value", "L"], [[("Effect_1") x 4], "l4"], [[("Skill_1") x 4], "l4"], [[("Attribute_1") x 4], "l4"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     JOUR => [
-	      NAME => [["ID", "a*"]],
-	     ],
-     KLST => [
-	      [
-	       KNAM => [["ID", "a*"]],
-	       CNAM => [["Dead_Count", "L"]],
-	       INTV => [["End_of_List", "L"]],
-	      ]
-	     ],
-     LAND => [
-	      DATA => $RD_Unknown,
-	      INTV => [["X", "l"], ["Y", "l"]],
-	      VCLR => $RD_Unknown,
-	      VHGT => $RD_Unknown,
-	      VNML => $RD_Unknown,
-	      VTEX => $RD_Unknown,
-	      WNAM => $RD_Unknown,
-	     ],
-     LEVC => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["List_Flags", "L"]], # calc from all levels <= PC level
-	      INDX => [["Item_Count", "L"]],
-	      NNAM => [["Chance_None", "C"]],
-	      [
-	       CNAM => [["Creature_ID", "Z*"]],
-	       INTV => [["Level", "S"]],
-	      ],
-	     ],
-     LEVI => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["List_Flags", "L"]], # calc from all levels <= PC level + calc from all items
-	      INDX => [["Item_Count", "L"]],
-	      NNAM => [["Chance_None", "C"]],
-	      [
-	       INAM => [["Item_ID", "Z*"]],
-	       INTV => [["Level", "S"]],
-	      ],
-	     ],
-     LIGH => [
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      LHDT => [["Weight", "f"], ["Value", "L"], ["Time", "L"], ["Radius", "L"],
-		       ["Red", "C"], ["Green", "C"], ["Blue", "C"],
-		       ["Unknown_1", "C"], ["Flags", "L"]],
-	      MODL => [["Model", "a*"]],
-	      NAME => [["ID", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	      SNAM => [["Sound_ID", "a*"]],
-	     ],
-     LOCK => [
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      LKDT => [["Weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]],
-	      MODL => [["Model", "a*"]],
-	      NAME => [["ID", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     LTEX => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["Texture_Path", "Z*"]],
-	      INTV => [["Unknown_1", "L"]],
-	     ],
-     MGEF => [
-	      INDX => [["ID", "L"]],
-	      ASND => [["Area_Sound", "a*"]],
-	      AVFX => [["Area_VFX", "a*"]],
-	      BSND => [["Bolt_Sound", "a*"]],
-	      BVFX => [["Bolt_VFX", "a*"]],
-	      CSND => [["Cast_Sound", "a*"]],
-	      CVFX => [["Cast_VFX", "a*"]],
-	      DESC => [["Description", "a*"]],
-	      HSND => [["Hit_Sound", "a*"]],
-	      HVFX => [["Hit_VFX", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MEDT => [["School", "L"], ["Base_Cost", "f"],["Flags", "L"],
-		       ["Red", "L"], ["Green", "L"], ["Blue", "L"],
-		       ["Speed", "f"], ["Size", "f"], ["SizeCap", "f"]],
-	      PTEX => [["Particle_Texture", "a*"]],
-	     ],
-     MISC => [
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MCDT => [["Weight", "f"], ["Value", "L"], ["Unknown_1", "L"]],
-	      MODL => [["Model", "a*"]],
-	      NAME => [["ID", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     NPCC => [
-	      AI_E => $RD_Unknown,
-	      AI_F => $RD_Unknown,
-	      AI_T => $RD_Unknown,
-	      AI_W => $RD_Unknown,
-	      NAME => [["ID", "a*"]],
-	      NPCO => [["Count", "l"], ["Name", "a32"]],
-	      NPDT => $RD_Unknown,
-	      SCRI => [["Script", "a*"]],
-	      SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]],
-	      SLFD => [\&unpack_float_array, \&pack_float_array],
-	      SLLD => [\&unpack_long_array,  \&pack_long_array],
-	      SLSD => [\&unpack_short_array, \&pack_short_array],
-	      WIDX => [["Equipped_Index", "l"], ["Ammo_Flag", "l"]],
-	      XCHG => [["Enchant_Charge", "L"]],
-	      XHLT => [["Health", "L"]],
-	      XIDX => $RD_Unknown,
-	      XSOL => [["Soul", "Z*"]],
-	     ],
-     NPC_ => [
-	      AIDT => [["Hello", "C"], ["Unknown_1", "C"], ["Fight", "C"], ["Flee", "C"], ["Alarm", "C"], ["Unknown_1", "a3"], ["Flags", "L"]],
-	      AI_E => [["X", "l"], ["Y", "l"], ["Z", "l"], ["Duration", "S"], ["ID", "a32"], ["Unknown_1", "S"]],
-	      AI_F => $RD_Unknown,
-	      AI_T => $RD_Unknown,
-	      AI_W => [["Distance", "S"], ["Duration", "S"], ["Time_of_day", "C"], [[("Idle_1") x 8], "C8"], ["Unknown_1", "C"]],
-	      ANAM => $RD_Unknown,
-	      BNAM => $RD_Unknown,
-	      CNAM => $RD_Unknown,
-	      CNDT => [["Data", "Z*"]],
-	      DNAM => $RD_Unknown,
-	      DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]],
-	      FLAG => [["Flags", "L"]],
-	      FNAM => [["Name", "a*"]],
-	      KNAM => $RD_Unknown,
-	      MODL => [["Model", "a*"]],
-	      NAME => [["ID", ["Z*", "a*"]]],
-	      NPCO => [["Count", "l"], ["Name", "a32"]],
-	      NPCS => $RD_Unknown,
-	      NPDT => [sub {
-			   my($buff) = @_;
-			   my %hr;
-			   my $len = length($buff);
-			   if ($len == 12) {
-			       my($lev, $disp, $fact, $rank, $unk1, $unk2, $unk3, $gold) = unpack("SC6L", $_[0]);
-			       return({ level => $lev, disposition => $disp, faction => $fact, rank => $rank,
-					unk1 => $unk1, unk2 => $unk2, unk3 => $unk3, gold => $gold });
-			   } elsif ($len == 52) {
-			       my $i = 0;
-			       my %hr;
-			       foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
-				   $hr{$SKILL{$i++}} = $skill_level;
-			       }
-			       ($hr{level}, $hr{str}, $hr{int}, $hr{wil}, $hr{agi}, $hr{spd}, $hr{end},
-				$hr{per}, $hr{lck}, $hr{rep}, $hr{health}, $hr{magicka}, $hr{fatigue},
-				$hr{disposition}, $hr{faction}, $hr{rank}, $hr{gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
-			       return(\%hr);
-			   } else {
-			       warn "BAD NPC_.NPDT length ($len) is not 12 or 52!\n";
-			   }
-		       },
-		       sub {
-			   my($hr) = @_;
-			   if (exists $hr->{magicka}) {
-			       return(pack("SC8C27CSSSCCCxL",
-					   $hr->{level}, $hr->{str}, $hr->{int}, $hr->{wil}, $hr->{agi},
-					   $hr->{spd}, $hr->{end}, $hr->{per}, $hr->{lck},
-					   $hr->{"block"}, $hr->{"armorer"}, $hr->{"mediumarmor"}, $hr->{"heavyarmor"},
-					   $hr->{"bluntweapon"}, $hr->{"longblade"}, $hr->{"axe"}, $hr->{"spear"},
-					   $hr->{"athletics"}, $hr->{"enchant"}, $hr->{"destruction"}, $hr->{"alteration"},
-					   $hr->{"illusion"}, $hr->{"conjuration"}, $hr->{"mysticism"}, $hr->{"restoration"},
-					   $hr->{"alchemy"}, $hr->{"unarmored"}, $hr->{"security"}, $hr->{"sneak"},
-					   $hr->{"acrobatics"}, $hr->{"lightarmor"}, $hr->{"shortblade"}, $hr->{"marksman"},
-					   $hr->{"mercantile"}, $hr->{"speechcraft"}, $hr->{"handtohand"},
-					   $hr->{rep}, $hr->{health}, $hr->{magicka}, $hr->{fatigue},
-					   $hr->{disposition}, $hr->{faction}, $hr->{rank}, $hr->{gold}));
-			   } else {
-			       return(pack("SC6L", $hr->{level}, $hr->{disposition}, $hr->{faction}, $hr->{rank},
-					   $hr->{unk1}, $hr->{unk2}, $hr->{unk3},  $hr->{gold}));
-			   }
-		       }],
-	      RNAM => $RD_Unknown,
-	      SCRI => [["Script", "a*"]],
-	     ],
-     PCDT => [
-	      AADT => $RD_Unknown,
-	      ANIS => $RD_Unknown,
-	      BNAM => $RD_Unknown,
-	      CNAM => $RD_Unknown,
-	      DNAM => $RD_Unknown,
-	      ENAM => $RD_Unknown,
-	      FNAM => [["Name", "a*"]],
-	      KNAM => $RD_Unknown,
-	      LNAM => $RD_Unknown,
-	      MNAM => $RD_Unknown,
-	      NAM0 => $RD_Unknown,
-	      NAM1 => $RD_Unknown,
-	      NAM2 => $RD_Unknown,
-	      NAM3 => $RD_Unknown,
-	      NAM9 => $RD_Unknown,
-	      PNAM => $RD_Unknown,
-	      SNAM => $RD_Unknown,
-	     ],
-     PGRD => [
-	      NAME => [["ID", "a*"]],
-	      DATA => $RD_Unknown,
-	      PGRC => $RD_Unknown,
-	      PGRP => $RD_Unknown,
-	     ],
-     PROB => [
-	      NAME => [["ID", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      PBDT => [["Weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]],
-	     ],
-     QUES => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["Info_ID", "Z*"]], # {ess => 1}
-	     ],
-     RACE => [
-	      NAME => [["ID", "a*"]],
-	      DESC => [["Description", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      NPCS => [["Spell", ["Z32", "a32"]]],
-	      RADT => [[[("Skill_1", "Bonus_1") x 7], "(L2)7"], [[("Attr_Male_1", "Attr_Female_1") x 8], "(L2)8"],
-		       ["Male_Height", "f"], ["Female_Height", "f"], ["Male_Weight", "f"], ["Female_Weight", "f"], ["Flags", "L"]],
-	     ],
-     REFR => [
-	      NAME => [["ID", "a*"]],
-	      AADT => $RD_Unknown,
-	      ACDT => $RD_Actor_Data,
-	      ACSC => $RD_Unknown,
-	      ACSL => $RD_Unknown,
-	      ACTN => [["Unknown_1", "L"]], # Actor Number???
-	      CHRD => $RD_Unknown,
-	      CSHN => $RD_Unknown,
-	      CSTN => $RD_Unknown,
-	      DATA => $RD_Unknown,
-	      FGTN => [["Uknown_1", "a*"]], # Following Target Name???
-	      FRMR => [["Form_Ref", "L"]],
-	      ND3D => [["Unknown_1", "C"]],
-	      STPR => $RD_Unknown,
-	      TGTN => [["Target", "a*"]],
-	      WNAM => [["Readied_Spell", "Z*"]],
-	      XSCL => [["Scale", "f"]],
-	     ],
-     REGN => [
-	      NAME => [["ID", "a*"]],
-	      BNAM => [["Sleep_Creature_ID", "a*"]],
-	      CNAM => [["Red", "C"], ["Green", "C"], ["Blue", "C"], ["Unused", "C"]],
-	      FNAM => [["Name", "a*"]],
-	      SNAM => [["Sound_Name", ["Z32", "a32"]], ["Chance", "C"]],
-	      WEAT => [["Clear", "C"], ["Cloudy", "C"], ["Foggy", "C"], ["Overcast", "C"],
-		       ["Rain", "C"], ["Thunder", "C"], ["Ash", "C"], ["Blight", "C"],
-		       ["Snow", "C"], ["Blizzard", "C"]],	 # Bloodmoon
-	      WNAM => [["Name", "L"]],
-	     ],
-     REPA => [
-	      NAME => [["ID", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      RIDT => [["Weight", "f"], ["Value", "L"], ["Uses", "L"], ["Quality", "f"]],
-	      SCRI => [["Script", "a*"]],
-	     ],
-     SCPT => [
-	      RNAM => [["Unknown_1", "L"]],
-	      SCDT => [["Bytecode", "H*"]],
-	      SCHD => [["ID", ["Z32", "a32"]], ["Num_Shorts", "L"], ["Num_Longs", "L"], ["Num_Floats", "L"],
-		       ["Data_Size", "L"], ["Local_Var_Size", "L"]],
-	      SCTX => [["Script_Text", "a*"]],
-	      SCVR => [["Variables", "a*"]],
-	      SLCS => [["Shorts", "L"], ["Longs", "L"], ["Floats", "L"]],
-	      SLFD => [\&unpack_float_array, \&pack_float_array],
-	      SLLD => [\&unpack_long_array,  \&pack_long_array],
-	      SLSD => [\&unpack_short_array, \&pack_short_array],
-	     ],
-     SKIL => [
-	      INDX => [["ID", "L"]],
-	      DESC => [["Description", "a*"]],
-	      SKDT => [["Attribute", "L"], ["Specialization", "L"], [[("Use_Values_1") x 4], "f4"]],
-	     ],
-     SNDG => [
-	      NAME => [["ID", "a*"]],
-	      CNAM => [["Creature_ID", "a*"]],
-	      DATA => [["Data", "L"]],
-	      SNAM => [["Sound_ID", "a*"]],
-	     ],
-     SOUN => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["Volume", "C"], ["MinRange", "C"], ["MaxRange", "C"]],
-	      FNAM => [["Name", "a*"]],
-	     ],
-     SPEL => [
-	      NAME => [["ID", "a*"]],
-	      ENAM => $RD_Enchantment,
-	      FNAM => [["Name", "a*"]],
-	      SPDT => [["Type", "L"], ["Cost", "L"], ["Flags", "L"]],
-	     ],
-     SPLM => [
-	      CNAM => [["Unknown_1", "L"], ["Unknown_1", "Z*"]],
-	      NAM0 => [["Unknown_1", "L"]],
-	      NAME => [["ID", "L"]],
-	      NPDT => [["Name", ["Z40", "a40"]], ["Magnitude", "l"], ["Seconds_Active", "f"], [[("Long_1") x 2], "l2"]],
-	      SPDT => [["Type", "L"], ["Name", ["Z40", "a40"]], [[("Long_1") x 2], "L2"],
-		       ["Caster", ["Z32", "a32"]], ["Item", "Z*"]],
-	      TNAM => [["Target", "Z*"]],
-	      VNAM => [["Unknown_1", "L"]],
-	      XNAM => [["Unknown_1", "L"]],
-	     ],
-     SSCR => [
-	      NAME => [["ID", "a*"]],
-	      DATA => [["Name", "a*"]],
-	     ],
-     STAT => [
-	      NAME => [["ID", "a*"]],
-	      MODL => [["Model", "a*"]],
-	     ],
-     STLN => [
-	      NAME => [["ID", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      ONAM => [["Name", "Z*"]],
-	     ],
-     TES3 => [
-	      DATA => [sub { my($l1, $l2) = unpack("L2", $_[0]); { Length => $l1 + ($l2 << 32) }; },
-		       sub { my $len = $_[0]->{Length}; my $l1 = $len & 0xffffffff; my $l2 = $len >> 32; pack("L2", $l1, $l2); }],
-	      GMDT => [["Unknown_1", "H23"], ["Current_Cell", ["Z67", "a67"]], ["Unknown_1", "L"], ["Unknown_1", "H30"]],
-	      HEDR => [["Version", "f"], ["Is_Master", "L"], ["Author", ["Z32", "a32"]],
-		       ["Description", ["Z256", "a256"]], ["NRecords", "L"]],
-	      MAST => [["Master", "Z*"]],
-	      SCRD => [[[("Long_1") x 5], "L5"]],
-	      SCRS => [["Screenshot", "H*"]],
-	     ],
-     VFXM => [
-	      VNAM => [[[("Long_1") x 6], "(a4)6"], ["Short", "S"], ["Unknown_1", "a22"],
-		       ["Name_1", ["Z36", "a36"]], ["Name_1", ["Z68", "a68"]]],
-	     ],
-     WEAP => [
-	      NAME => [["ID", "a*"]],
-	      ENAM => [["Enchantment", "a*"]],
-	      FNAM => [["Name", "a*"]],
-	      ITEX => [["Icon", "a*"]],
-	      MODL => [["Model", "a*"]],
-	      SCRI => [["Script", "a*"]],
-	      WPDT => [["Weight", "f"], ["Value", "L"], ["Type", "S"], ["Health", "S"], ["Speed", "f"],
-		       ["Reach", "f"], ["Enchant_Points", "S"], ["Chop_Min", "C"], ["Chop_Max", "C"],
-		       ["Slash_Min", "C"], ["Slash_Max", "C"], ["Thrust_Min", "C"], ["Thrust_Max", "C"],
-		       ["Flags", "L"]],
-	     ],
-     };
 
 # All record sub-types found in .esm/.esp/.ess
 my @SUBRECTYPES =
@@ -3646,6 +4066,7 @@ my %CMDS =
      "recover"     => [ \&opts_recover,     \&cmd_recover,     's', "Recover usable records from plugin with 'bad form' errors"],
      "rename"      => [ \&opts_rename,      \&cmd_rename,      's', "Rename objects"],
      "-codectest"  => [ \&opts_codectest,   \&cmd_codectest,   's', "Test TES3 codec"],
+     "-shell"      => [ \&opts_shell,       \&cmd_shell,       'm', "run a TES3 REPL"],
      "-wikiout"    => [ \&opts_wikiout,     \&cmd_wikiout,     'm', "Output wiki formatted help"],
     );
 
@@ -3699,48 +4120,58 @@ sub opts_help {
 ###IO
 
 sub update_header {
+    # TBD, only backup and open for update if plugin actually needs updating.
     my($plugin, $quiet) = @_;
-    my $datafiles;
+    if (($opt_header_update_record_count or $opt_header_update_masters) and
+	($plugin =~ /~\D+\.es[mp]$/i)) {
+	warn "Skipping Backup: $plugin\n";
+	return;
+    }
     my $master;
     my($atime, $mtime) = (stat($plugin))[8,9];
-    if ($opt_header_update_masters) {
-	find_datadir();
-	$datafiles = list_files($DATADIR);
-    }
     my $fh = open_for_update($plugin);
     my($rectype, $rec, $flags, $unk) = read_rec($fh, 'TES3', $plugin);
     my $tes3len = length($rec);
-    decode_rec($plugin, 'TES3', $rec); # sets $R
-    my $updated_masters = '';
-    foreach my $subr (@$R) {
-	my($subtype, $hr) = @$subr;
+    my $tr = TES3::Record->new($plugin, $rectype, $rec);
+    my $update_msg = '';
+    my $modified = 0;
+    foreach my $tsr ($tr->subrecs()) {
+	my $subtype = $tsr->subtype();
 	if ($subtype eq 'HEDR') {
 	    if ($opt_header_author) {
+		$modified++;
 		if ($opt_header_author =~ /^\+(.*)/) {
-		    $hr->{author} .= $1;
+		    $tsr->{author} .= $1;
 		} else {
-		    $hr->{author} = $opt_header_author;
+		    $tsr->{author} = $opt_header_author;
 		}
 	    }
 	    if ($opt_header_description) {
+		$modified++;
 		if ($opt_header_description =~ /^\+(.*)/) {
-		    $hr->{description} .= $1;
+		    $tsr->{description} .= $1;
 		} else {
-		    $hr->{description} = $opt_header_description;
+		    $tsr->{description} = $opt_header_description;
 		}
 	    }
 	    if ($opt_header_update_record_count) {
-		$hr->{nrecords} = get_record_count($plugin);
+		my $count = get_record_count($plugin);
+		if ($tsr->{nrecords} != $count) {
+		    $modified++;
+		    $update_msg .= qq{  Updated Record Count: $tsr->{nrecords} --> $count\n};
+		    $tsr->{nrecords} = $count;
+		}
 	    }
 	}
 	if ($opt_header_update_masters) {
 	    if ($subtype eq 'MAST') {
-		$master = $hr->{master};
+		$master = $tsr->{master};
 	    } elsif ($subtype eq 'DATA') {
-		my $length = $hr->{length};
-		if ((my $newlen = -s ("$DATADIR/" . $datafiles->{lc($master)})) != $length) {
-		    $updated_masters .= qq{  Synchronized master "$master" length: $length --> $newlen\n};
-		    $hr->{length} = $newlen;
+		my $length = $tsr->{length};
+		if ((my $newlen = -s ($T3->datapath($master))) != $length) {
+		    $modified++;
+		    $update_msg .= qq{  Synchronized master "$master" length: $length --> $newlen\n};
+		    $tsr->{length} = $newlen;
 		}
 	    }
 	}
@@ -3749,14 +4180,14 @@ sub update_header {
 	my $banner = "$plugin:\n";
 	if (not($opt_header_author or $opt_header_description or $opt_header_update_record_count or
 		$opt_header_update_masters or $opt_header_update_record_count) or
-	    $opt_header_author or $opt_header_description or $opt_header_update_record_count) {
-	    foreach my $subr (@$R) {
-		my($subtype, $hr) = @$subr;
+	    $opt_header_author or $opt_header_description) {
+	    foreach my $tsr ($tr->subrecs()) {
+		my $subtype = $tsr->subtype();
 		if ($subtype eq 'HEDR') {
 		    if ($opt_header_multiline) {
-			print qq{$plugin:\n  AUTH=$hr->{author}\n  DESC=$hr->{description}\n};
+			print qq{$plugin:\n  AUTH=$tsr->{author}\n  DESC=$tsr->{description}\n};
 		    } else {
-			my $msg = qq{$plugin:  AUTH=$hr->{author}  DESC=$hr->{description}};
+			my $msg = qq{$plugin:  AUTH=$tsr->{author}  DESC=$tsr->{description}};
 			$msg =~ s/(\r)?\n/\\r\\n/gm;
 			print "$msg\n";
 		    }
@@ -3765,9 +4196,18 @@ sub update_header {
 		}
 	    }
 	}
-	print $banner . $updated_masters if ($updated_masters);
+	if ($update_msg) {
+	    print $banner . $update_msg;
+	} else {
+	    print "$plugin not modified\n" if (VERBOSE);
+	}
     }
-    $rec = encode_rec('TES3');	# uses $R
+    if ($modified) {
+	# if updating make backup of plugin before making changes
+	my $backup = unique_backup_name($plugin);
+	copy($plugin, $backup) or die "Error, copy failed $plugin -> $backup ($!)\n";
+    }
+    $rec = $tr->encode();
     if (length($rec) == $tes3len) {
 	seek($fh, 0, SEEK_SET);
 	write_rec($fh, 'TES3', $rec, $flags, $unk);
@@ -4118,10 +4558,10 @@ sub fix_output {
 	}
 	if (defined($newname)) {
 	    unless ($newname =~ /\.(es[mps])$/i) {
-		fatal_error(qq{"$newname" name does not end in .esm/.esp/.ess});
+		abort(qq{"$newname" name does not end in .esm/.esp/.ess});
 	    }
 	    unless (rename($plugtmp, $newname)) {
-		fatal_error(qq{Renaming "$plugtmp" to "$newname" ($!)});;
+		abort(qq{Renaming "$plugtmp" to "$newname" ($!)});;
 	    }
 	    $opt_header_update_record_count = 1;
 	    update_header($newname, QUIET);
@@ -4130,10 +4570,10 @@ sub fix_output {
 	} else {
 	    my $plugbak = unique_backup_name($plugin);
 	    unless (rename($plugin, $plugbak)) {
-		fatal_error(qq{Renaming "$plugin" to "$plugbak" ($!)});
+		abort(qq{Renaming "$plugin" to "$plugbak" ($!)});
 	    }
 	    unless (rename($plugtmp, $plugin)) {
-		fatal_error(qq{Renaming "$plugtmp" to "$plugin" ($!)});
+		abort(qq{Renaming "$plugtmp" to "$plugin" ($!)});
 	    }
 	    $opt_header_update_record_count = 1;
 	    update_header($plugin, QUIET);
@@ -4608,34 +5048,31 @@ sub decoder {
     return($DECODE{"${rectype}.${subrec_type}"} || $DECODE{$subrec_type} || $DECODER_UNKNOWN);
 }
 
-sub master_cache_name {
+sub master_cache_path {
     my($esm) = @_;
-    my $cname = "$TES3CMD_DIR/$esm";
+    my $cname = "$TES3::TES3CMD_DIR/$esm";
     $cname =~ s/\.esm$/.dat/;
-    #warn "DBG: master_cache_name($esm) -> $cname\n";
+    #warn "DBG: master_cache_path($esm) -> $cname\n";
     return($cname);
 }
 
 sub load_master_cache {
     my($esm) = @_;
     return(0) if ($opt_no_cache);
-    my $esm_file = list_files($DATADIR)->{$esm};
-    my $mcache = master_cache_name($esm);
+    my $mcache = master_cache_path($esm);
     warn "DBG: master cache name = $mcache\n" if (DBG);
     eval {
 	if (my $listref = retrieve($mcache)) {
 	    my($prev_size, $master_data) = @{$listref};
-	    my $curr_size = (-s "$DATADIR/$esm_file");
+	    my $curr_size = (-s $T3->datapath($esm));
 	    if ($curr_size == $prev_size) {
 		$MASTER_ID->{$esm} = $master_data;
-		my $name = $mcache;
-		$name =~ s/$DATADIR/<DATADIR>/;
-		print "Loaded cached Master: $name\n";
+		print "Loaded cached Master: <DATADIR>/$esm\n";
 	    } else {
-		die "Cache Invalidated for: $esm_file (curr_size == $curr_size, prev_size == $prev_size)\n";
+		die "Cache Invalidated for: $esm (curr_size == $curr_size, prev_size == $prev_size)\n";
 	    }
 	} else {
-	    die "Error retrieving master cache for: $esm_file\n";
+	    die "Error retrieving master cache for: $esm\n";
 	}
     };
     if ($@) {
@@ -4649,11 +5086,9 @@ sub load_master_cache {
 sub save_master_cache {
     my($esm) = @_;
     return(0) if ($opt_no_cache);
-    my $esm_file = list_files($DATADIR)->{$esm};
-    my $mcache = master_cache_name($esm);
-    my $size = (-s "$DATADIR/$esm_file");
+    my $size = (-s $T3->datapath($esm));
     warn "DBG: save_master_cache($esm) saving size: $size\n" if (DBG);
-    store([ $size, $MASTER_ID->{$esm}], $mcache);
+    store([ $size, $MASTER_ID->{$esm}], master_cache_path($esm));
 }
 
 # load all the records from a master .esm into a dictionary.
@@ -4661,15 +5096,13 @@ sub load_master {
     my($esm, $types) = @_;
     $esm = lc($esm);
     warn "DBG: load_master($esm, $types)\n" if (DBG);
-    find_datadir();
     if (defined $MASTER_ID->{$esm}) {
 	warn "DBG: re-using master data: $esm\n" if (DBG);
 	return;
     }
     return if (load_master_cache($esm)); # load pre-parsed data
     print "Loading Master: $esm\n";
-    my $esm_file = list_files($DATADIR)->{$esm};
-    my $inp = open_for_read("$DATADIR/$esm_file");
+    my $inp = open_for_read($T3->datapath($esm));
     eval {
 	while (my($rectype, $rec, $flags) = read_rec($inp, undef)) {
 	    last if (not defined $rectype);
@@ -4693,10 +5126,9 @@ sub dumpit {
 }
 
 sub load_leveled_lists {
-    find_datadir();
-    my $datafiles = list_files($DATADIR);
+    my $datafiles = $T3->datafiles();
     my $levdat = {};
-    my $leveled_list_cache_file = "$TES3CMD_DIR/leveled_lists_cache.dat";
+    my $leveled_list_cache_file = "$TES3::TES3CMD_DIR/leveled_lists_cache.dat";
     # load cache
     unless ($opt_no_cache) {
 	eval { $levdat = retrieve($leveled_list_cache_file); };
@@ -4714,10 +5146,10 @@ sub load_leveled_lists {
 	next if ($lc_plugin eq "multipatch.esp");
 	next if ($lc_plugin eq "mashed lists.esp");
 	next if ($lc_plugin eq "merged_leveled_lists.esp");
-	my $curr_size = -s ("$DATADIR/" . $datafiles->{$lc_plugin});
+	my $curr_size = -s $T3->datapath($plugin);
 	my $invalid = 0;
 	if (defined($levdat->{$lc_plugin})) {
-	    # update plugins who have changed size
+	    # update plugins that have changed size
 	    unless ($curr_size == $levdat->{$lc_plugin}->{size}) {
 		warn "Leveled List Cache UPDATING: $plugin\n";
 		delete $levdat->{$lc_plugin};
@@ -4729,7 +5161,7 @@ sub load_leveled_lists {
 	    $invalid = 1;
 	}
 	if ($invalid) {
-	    my $inp = open_for_read("$DATADIR/$plugin");
+	    my $inp = open_for_read($T3->datapath($plugin));
 	    eval {
 		while (my($rectype, $rec, $flags) = read_rec($inp, undef)) {
 		    last if (not defined $rectype);
@@ -4775,38 +5207,28 @@ sub cmd_codectest {
     print "TESTING codec on: $plugin ...\n";
     my $fun = sub {
 	my($rec_match, $rectype, $id, $rec, $srh, $flags, $unk, $rec_hdr, $print_rec) = @_;
-	my $r = decode_rec($plugin, $rectype, $rec);
-	my $newflags = $flags;
+	my $tr = TES3::Record->new($plugin, $rectype, $rec);
 	my $newrec = '';
-	my $p = 0;
-	my $rec_len = length($rec);
-	while ($p < $rec_len) {
-	    my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	    my $full_type = "${rectype}.${subrec_type}";
-	    $p += 8;
-	    my $subrec = substr($rec, $p, $subrec_len);
-	    $p += $subrec_len;
-	    if (defined $subrec) {
-		my($hr) = decoder($rectype, $subrec_type)->($subrec);
-		my $newsubrec = encoder($rectype, $subrec_type)->($hr);
-		unless ($exclude{$full_type}) {
-		    if ($newsubrec ne $subrec) {
-			warn "CODEC FAILURE on subrecord ${full_type}:\n";
-			if (length($newsubrec) != length($subrec)) {
-			    warn "Encoded length mismatch: newrec: @{[length($newsubrec)]}  subrec: @{[length($subrec)]}\n";
-			}
-			dumpit('original', $subrec);
-			dumpit('re-coded', $newsubrec);
-			warn Dumper($hr);
-			$print_rec ||= rec_to_string($rec, $rectype, $id, $plugin, $flags, $unk);
-			warn "Full Record:\n$print_rec\n";
-			die "Test Halted\n" unless ($opt_codectest_continue);
+	my $newflags = $flags;
+	foreach my $tsr ($tr->subrecs()) {
+	    my $oldsubrec = $tsr->getbuf();
+	    my $newsubrec = $tsr->encode();
+	    my $fulltype = $tsr->fulltype();
+	    unless ($exclude{$fulltype}) {
+		if ($newsubrec ne $oldsubrec) {
+		    warn "CODEC FAILURE on subrecord ${fulltype}:\n";
+		    if (length($newsubrec) != length($oldsubrec)) {
+			warn "Encoded length mismatch: newrec: @{[length($newsubrec)]}  subrec: @{[length($oldsubrec)]}\n";
 		    }
+		    dumpit('original', $oldsubrec);
+		    dumpit('re-coded', $newsubrec);
+		    warn Dumper($tsr);
+		    #$print_rec ||= rec_to_string($rec, $rectype, $id, $plugin, $flags, $unk);
+		    #warn "Full Record:\n$print_rec\n";
+		    die "Test Halted\n" unless ($opt_codectest_continue);
 		}
-		$newrec .= pack("a4L/a*", $subrec_type, $newsubrec);
-	    } else {
-		warn "$plugin: Error, malformed subrec for ($rectype) type=$subrec_type pos=$p len=$subrec_len\n";
 	    }
+	    $newrec .= pack("a4L/a*", $tsr->subtype(), $newsubrec);
 	}
 	unless ($exclude{$rectype}) {
 	    if ($rec ne $newrec) {
@@ -4817,7 +5239,7 @@ sub cmd_codectest {
 		warn "Full Record:\n$print_rec\n";
 	    }
 	    if ((my $new_hdr = pack("a4LLL", $rectype, length($rec), $unk, $newflags)) ne $rec_hdr) {
-		warn "CODEC FAILURE on ${rectype} Record Header:\n";
+		warn "CODEC FAILURE on ${rectype} RECORD HEADER:\n";
 		dumpit('original', $rec_hdr);
 		dumpit('re-coded', $new_hdr);
 		$print_rec ||= rec_to_string($rec, $rectype, $id, $plugin, $newflags, $unk);
@@ -4830,7 +5252,6 @@ sub cmd_codectest {
 } # cmd_codectest
 
 sub cmd_fixit {
-    find_datadir();
     # clean everything and replace originals
     $opt_clean_replace = $opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     cmd_clean($_) foreach (load_order());
@@ -4982,32 +5403,30 @@ sub merge_leveled_lists {
 	    }
 	    my $indx = scalar(@sorted_list);
 	    # create new record
-	    my @subrecs;
-	    push(@subrecs, [ 'NAME', { id => $id } ]);
-	    push(@subrecs, [ 'DATA', { list_flags => $last_list_flags } ]);
-	    push(@subrecs, [ 'NNAM', { chance_none => $last_chance } ]);
-	    push(@subrecs, [ 'INDX', { item_count => $indx } ]);
+	    my @newrec = ([ 'NAME', { id => $id } ],
+			  [ 'DATA', { list_flags => $last_list_flags } ],
+			  [ 'NNAM', { chance_none => $last_chance } ],
+			  [ 'INDX', { item_count => $indx } ]);
 	    foreach my $lref (@sorted_list) {
 		my($element_id, $level) = @$lref;
 		if ($rectype eq 'LEVC') {
-		    push(@subrecs, [ 'CNAM', { creature_id => $element_id } ]);
+		    push(@newrec, [ 'CNAM', { creature_id => $element_id } ]);
 		} else {
-		    push(@subrecs, [ 'INAM', { item_id => $element_id } ]);
+		    push(@newrec, [ 'INAM', { item_id => $element_id } ]);
 		}
-		push(@subrecs, [ 'INTV', { level => $level } ]);
+		push(@newrec, [ 'INTV', { level => $level } ]);
 	    }
-	    push(@merged_lists, [$rectype, \@subrecs]);
+	    push(@merged_lists, [$rectype, \@newrec]);
 	}
     }
     return(\@merged_lists);
-}
+} # merge_leveled_lists
 
 sub cmd_multipatch {
-    find_datadir();
     print "Miss Multipatch says:\n" if (DBG or VERBOSE);
     print "Scanning Active Plugins...\n";
     my $patch_file = "multipatch.esp";
-    my $patch_path = "$DATADIR/$patch_file";
+    my $patch_path = "$TES3::Util::DATADIR/$patch_file";
     my %fogcell;		# fogbugged cells
     my %rencell;		# cells with reverted renamings
     my %sumcrea;		# critters needing persistent flag
@@ -5016,7 +5435,7 @@ sub cmd_multipatch {
 	next if ($plugin eq $patch_file);
 	next if (($plugin eq "fogpatch.esp") or ($plugin eq "cellnamepatch.esp"));
 	print "Scanning plugin: $plugin\n" if (DBG);
-	my $inp = open_for_read("$DATADIR/$plugin");
+	my $inp = open_for_read($T3->datapath($plugin));
 	my $expected = "TES3";
 	eval {
 	    while (my($rectype, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin)) {
@@ -5255,8 +5674,8 @@ sub cmd_diff {
 
 sub cmd_delete {
     my($plugin) = @_;
-    my $delete_subrecords = $opt_sub_match or $opt_sub_no_match;
-    my $delete_cell_objects = $opt_cell_object_match or $opt_cell_object_no_match;
+    my $delete_subrecords = ($opt_sub_match or $opt_sub_no_match);
+    my $delete_cell_objects = ($opt_cell_object_match or $opt_cell_object_no_match);
     my $fun = sub {
 	my($rec_match, $rectype, $id, $rec, $srh, $flags, $unk, $rec_hdr, $print_rec) = @_;
 	# we pass through all records that did not match the standard record selection switches of rec_match()
@@ -5535,11 +5954,6 @@ sub cmd_rename {
 
 sub cmd_header {
     my($plugin) = @_;
-    if ($opt_header_author or $opt_header_description or $opt_header_update_record_count or $opt_header_update_masters) {
-	# if updating make backup of plugin before making changes
-	my $backup = unique_backup_name($plugin);
-	copy($plugin, $backup) or die "Error, copy failed $plugin -> $backup ($!)\n";
-    }
     update_header($plugin);
 }
 
@@ -5640,10 +6054,10 @@ sub cmd_clean {
 		my $type = $gmst_type{substr($id, 0, 1)};
 		my $val = $srh->{$type}[0];
 		my $hexval = unpack("H*", "$type $val");
-		if ($EVIL_BM{$id} eq $hexval) {
+		if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Bloodmoon: $id\n";
 		    return;
-		} elsif ($EVIL_TB{$id} eq $hexval) {
+		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Tribunal:  $id\n";
 		    return;
 		}
@@ -5871,9 +6285,7 @@ sub cmd_recover {
     my $expected = "TES3";
     my $inp_len = sysseek($inp, 0, SEEK_END); # seek to end
     my $inp_offset = sysseek($inp, 0, SEEK_SET); # seek to start
-    my $rectypes = join('|', keys %RECDEF);
-    my %valid_type; $valid_type{$_}++ foreach (keys %RECDEF);
-    my %valid_subtype; $valid_subtype{$_}++ foreach (@SUBRECTYPES);
+    my $rectypes = join('|', keys %TES3::Record::RECTYPES);
     print qq{$plugin: length = $inp_len\n};
     my @removed;
   READREC:
@@ -5882,10 +6294,10 @@ sub cmd_recover {
 	eval {
 	    ($rectype, $rec, $flags, $unk) = read_rec($inp, $expected, $plugin);
 	    $expected = undef;
-	    die "Error, Invalid record type: $rectype\n" unless ($valid_type{$rectype});
+	    die "Error, Invalid record type: $rectype\n" unless ($TES3::Record::RECTYPES{$rectype});
 	    my $srh = parse_subrec_hash($rec);
 	    foreach my $subtype (keys %$srh) {
-		die qq{Error, Invalid record subtype: "$subtype"\n} unless ($valid_subtype{$subtype});
+		die qq{Error, Invalid record subtype: "$subtype"\n} unless ($TES3::Record::RECTYPES{$rectype}->{$subtype});
 	    }
 	    my $id = rec_id($srh, $rectype);
 	    printf "Offset: %8d  Found: $rectype $id\n", $inp_offset if (DBG);
@@ -5936,6 +6348,29 @@ sub cmd_recover {
 	cleanup_temp($inp, $plugin);
     }
 } # cmd_recover
+
+sub cmd_shell {
+    $| = 1;
+    print "> ";
+    my $perlstuff = '';
+    my $done = 0;
+    while (<>) {
+	$perlstuff = join('', $perlstuff, $_);
+	if (/^$/ or ($perlstuff =~ /^[^\n]*;$/)) {
+	    my $result = eval($perlstuff);
+	    if ($@) {
+		print "psh ERROR: $@\n> ";
+	    } else {
+		print "\n==> $result\n" if ($result);
+		print "> ";
+	    }
+	    # clear out buffer
+	    $perlstuff = '';
+	} else {
+	    print "- ";
+	}
+    }
+}
 
 sub main {
     die $USAGE_ALL if ((scalar(@ARGV) == 0) or
