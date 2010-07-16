@@ -9,19 +9,27 @@ $::VERSION = "0.37h";
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
+#  cmd_codectest
+#  cmd_header
+#  cmd_multipatch
+# TEST: cmd_common
+# TEST: cmd_diff
 # TEST: cmd_dump
-# TEST: cmd_header
-# TEST: cmd_esp
 # TEST: cmd_esm
+# TEST: cmd_esp
+# TEST: cmd_overdial
 # TEST: cmd_recover
+# TEST: cmd_shell
+# TEST: cmd_wikiout
+# UPDATE/TEST: cmd_clean
 # UPDATE/TEST: cmd_delete
+# UPDATE/TEST: cmd_fixit
 # UPDATE/TEST: cmd_modify (use process_plugin_for_update)
 # UPDATE/TEST: cmd_rename (use process_plugin_for_update) (just reuse modify command?)
-# UPDATE/TEST: cmd_clean
-# UPDATE/TEST: cmd_fixit
+
 
 # TBD:
-# put header stuff inside rec/subrec object? (read_rec could return a new TES3::Record with undecoded recbuf. change stash to SAVEBUF)
+# do something about change to dumprec/setrec and modify doc !!!
 # put commands and opts in a big dispatch table?
 # allow commands to be abbreviated
 # TES::File (open_for_read, backup, etc)
@@ -69,6 +77,8 @@ use Cwd;
 use strict;
 use warnings;
 
+$SIG{__DIE__} = sub { Carp::confess(@_); };
+
 package Util;
 
 BEGIN {
@@ -76,17 +86,20 @@ BEGIN {
     # reached, we define the following constants so that we only compile
     # debug/help code into the program when it it actually needed.
     use constant DBG => scalar(grep(/^(?:-d|-?-debug)$/, @ARGV));
-    use constant ASSERT => scalar(grep(/^-?-assert$/, @ARGV));
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
 
     use Exporter ();
     our @ISA = qw(Exporter);
-    our @EXPORT_OK = qw(err dbg prn abort dbg_word);
+    our @EXPORT_OK = qw(abort assert err dbg prn);
     our %EXPORT_TAGS = ( FIELDS => [ @EXPORT_OK ] );
 }
 
 ### UTILITY FUNCTIONS
 
+sub assert {
+    my($cond, $msg) = @_;
+    Carp::confess($msg) if ($cond);
+}
 sub err { warn "[@_]\n"; }
 sub dbg { warn "[DEBUG: @_]\n"; }
 sub prn { print "@_\n"; }
@@ -107,25 +120,12 @@ END
     die qq{FATAL ERROR: $msg$diagnosis\n"};
 }
 
-sub dbg_word {
-    my($longstr) = @_;
-    my $len = length($longstr);
-    if ($len != 4) {
-	warn "dbg_word: expected length of 4, got $len\n";
-	return;
-    }
-    sprintf(qq{[UNKNOWN_WORD: 0x%s (f:%0.2f) (L:%d) (S:%d S:%d) (C:%d C:%d C:%d C:%d)]},
-	unpack("H*", $longstr), unpack("f", $longstr), unpack("L", $longstr), unpack("S2", $longstr), unpack("C4", $longstr));
-}
-
-
 package TES3::Util;
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
-    use constant ASSERT => scalar(grep(/^-?-assert$/, @ARGV));
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(err dbg prn abort));
+    Util->import(qw(abort assert dbg err prn));
 }
 
 
@@ -256,21 +256,19 @@ sub load_order {
 package TES3::Record;
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
-    use constant ASSERT => scalar(grep(/^-?-assert$/, @ARGV));
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(err dbg prn abort dbg_word));
+    Util->import(qw(abort assert dbg err prn));
 }
 use Data::Dumper;
 use strict;
 
-use constant { STASHBUF => 1 };
+use constant { COPY_HEADER => 1 };
 
 our $CODEC_VERSION = "0.2";
 our $HDR_AUTH_LENGTH = 32;
 our $HDR_DESC_LENGTH = 256;
 our $MARGIN = "  ";
 our $CURRENT_DIAL;
-our $CURRENT_PLUGIN;
 
 ### SYMBOLIC NAMES FOR FIELD VALUES
 
@@ -800,9 +798,21 @@ my %YESNO = ( 0 => "No", 1 => "Yes");
 
 ### RECORD DEFINITIONS
 
+sub dbg_word {
+    my($longstr) = @_;
+    my $len = length($longstr);
+    if ($len != 4) {
+	warn "dbg_word: expected length of 4, got $len\n";
+	return;
+    }
+    sprintf(qq{[UNKNOWN_WORD: 0x%s (f:%0.2f) (l:%d) (s:%d s:%d) (c:%d c:%d c:%d c:%d)]},
+	unpack("H8", $longstr), unpack("f", $longstr), unpack("l", $longstr), unpack("s2", $longstr), unpack("c4", $longstr));
+}
+
 sub unpack_float_array {
     my($self, $buff) = @_;
     my $i = 1;
+    $self->{_buf_} = $buff;
     $self->{$i++} = $_ foreach (unpack("f*", $buff));
     $self->{_last_idx} = $i - 1;
     $self;
@@ -817,6 +827,7 @@ my @RD_float_array = ([], { decode => \&unpack_float_array,
 
 sub unpack_long_array {
     my($self, $buff) = @_;
+    $self->{_buf_} = $buff;
     my $i = 1;
     $self->{$i++} = $_ foreach (unpack("l*", $buff));
     $self->{_last_idx} = $i - 1;
@@ -832,6 +843,7 @@ my @RD_long_array  = ([], { decode => \&unpack_long_array,
 
 sub unpack_short_array {
     my($self, $buff) = @_;
+    $self->{_buf_} = $buff;
     my $i = 1;
     $self->{$i++} = $_ foreach (unpack("s*", $buff));
     $self->{_last_idx} = $i - 1;
@@ -845,8 +857,8 @@ my @RD_short_array = ([], { decode => \&unpack_short_array,
 				"Short_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
 			    }});
 
-my @RD_widx = ([["Equipped_Index", "l"], # JMS index into NPCO inventory items of those that are equipped
-		["Ammo_Flag", "l"]],
+my @RD_widx = ([["equipped_index", "l"], # JMS index into NPCO inventory items of those that are equipped
+		["ammo_flag", "l"]],
 	       { tostr => sub {
 		     my($self) = @_;
 		     sprintf("Equipped_Index:%d%s", $self->{equipped_index},
@@ -856,80 +868,80 @@ my @RD_widx = ([["Equipped_Index", "l"], # JMS index into NPCO inventory items o
 
 my $RD_Actor_Data =
 #     Field                              Offset
-    [(["Unknown_1", "L"],	       #   0
-      ["Unknown_1", "L"],	       #   4
-      ["Unknown_1", "L"],	       #   8
-      ["Unknown_1", "L"],	       #  12
-      ["Unknown_1", "L"],	       #  16
-      ["Unknown_1", "L"],	       #  20
-      ["Unknown_1", "L"],	       #  24
-      ["Unknown_1", "L"],	       #  28
-      ["Unknown_1", "L"],	       #  32
-      ["Unknown_1", "L"],	       #  36
-      ["Health", "f"],		       #  40
-      ["Max_Health", "f"],	       #  44
-      ["Fatigue", "f"],		       #  48
-      ["Max_Fatigue", "f"],	       #  52
-      ["Unknown_1", "f"],	       #  56
-      ["Unknown_1", "f"],	       #  60
-      ["Unknown_1", "f"],	       #  64
-      ["Unknown_1", "f"],	       #  68
-      ["Unknown_1", "f"],	       #  72
-      ["Encumbrance", "f"],	       #  76
-      ["STR", "f"],		       #  80
-      ["STR_Base", "f"],	       #  84
-      ["INT", "f"],		       #  88
-      ["INT_Base", "f"],	       #  92
-      ["WIL", "f"],		       #  96
-      ["WIL_Base", "f"],	       # 100
-      ["AGI", "f"],		       # 104
-      ["AGI_Base", "f"],	       # 108
-      ["SPD", "f"],		       # 112
-      ["SPD_Base", "f"],	       # 116
-      ["END", "f"],		       # 120
-      ["END_Base", "f"],	       # 124
-      ["PER", "f"],		       # 128
-      ["PER_Base", "f"],	       # 132
-      ["LUC", "f"],		       # 136
-      ["LUC_Base", "f"],	       # 140
-      ["Fortify_Attack", "L"],	       # 144
-      ["Sanctuary", "L"],	       # 148
-      ["Resist_Magicka", "C"],	       # 152
-      ["Unknown_1", "H6"],
-      ["Resist_Fire", "C"],	# 156 (+ Fire Shield)
-      ["Unknown_1", "H6"],
-      ["Resist_Frost", "C"],	# 160 (+ Frost Shield)
-      ["Unknown_1", "H6"],
-      ["Resist_Shock", "C"],	# 164 (+ Lightning Shield)
-      ["Unknown_1", "H6"],
-      ["Resist_Common_Disease", "L"],		   # 168
-      ["Unknown_1", "L"],			   # 172
-      ["Unknown_1", "L"],			   # 176
-      ["Resist_Poison", "L"],			   # 180
-      ["Resist_Paralysis", "L"],		   # 184
-      ["Chameleon", "L"],			   # 188
-      ["Resist_Normal_Weapons", "L"],		   # 192
-      ["Water_Breathing", "L"],			   # 196
-      ["Water_Walking", "L"],			   # 200
-      ["Swift_Swim", "L"],			   # 204
-      ["Unknown_1", "L"],			   # 208
-      ["Levitate", "L"],			   # 212
-      ["Shield", "L"],				   # 216
-      ["Unknown_1", "L"],			   # 220
-      ["Unknown_1", "L"],			   # 224
-      ["Blind", "L"],				   # 228
-      ["Unknown_1", "L"],			   # 232
-      ["Invisibility", "L"],			   # 236
-      ["Unknown_1", "L"],			   # 240
-      ["Unknown_1", "L"],			   # 244
-      ["Unknown_1", "L"],			   # 248
-      ["Unknown_1", "L"],			   # 252
-      ["Unknown_1", "L"],			   # 256
-      ["Unknown_1", "L"])];
+    [(["unknown_1", "L"],	       #   0
+      ["unknown_1", "L"],	       #   4
+      ["unknown_1", "L"],	       #   8
+      ["unknown_1", "L"],	       #  12
+      ["unknown_1", "L"],	       #  16
+      ["unknown_1", "L"],	       #  20
+      ["unknown_1", "L"],	       #  24
+      ["unknown_1", "L"],	       #  28
+      ["unknown_1", "L"],	       #  32
+      ["unknown_1", "L"],	       #  36
+      ["health", "f"],		       #  40
+      ["max_health", "f"],	       #  44
+      ["fatigue", "f"],		       #  48
+      ["max_fatigue", "f"],	       #  52
+      ["unknown_1", "f"],	       #  56
+      ["unknown_1", "f"],	       #  60
+      ["unknown_1", "f"],	       #  64
+      ["unknown_1", "f"],	       #  68
+      ["unknown_1", "f"],	       #  72
+      ["encumbrance", "f"],	       #  76
+      ["str", "f"],		       #  80
+      ["str_base", "f"],	       #  84
+      ["int", "f"],		       #  88
+      ["int_Base", "f"],	       #  92
+      ["wil", "f"],		       #  96
+      ["wil_base", "f"],	       # 100
+      ["agi", "f"],		       # 104
+      ["agi_base", "f"],	       # 108
+      ["spd", "f"],		       # 112
+      ["spd_base", "f"],	       # 116
+      ["end", "f"],		       # 120
+      ["end_base", "f"],	       # 124
+      ["per", "f"],		       # 128
+      ["per_base", "f"],	       # 132
+      ["luc", "f"],		       # 136
+      ["luc_base", "f"],	       # 140
+      ["fortify_attack", "L"],	       # 144
+      ["sanctuary", "L"],	       # 148
+      ["resist_magicka", "C"],	       # 152
+      ["unknown_1", "H6"],
+      ["resist_fire", "C"],	# 156 (+ Fire Shield)
+      ["unknown_1", "H6"],
+      ["resist_frost", "C"],	# 160 (+ Frost Shield)
+      ["unknown_1", "H6"],
+      ["resist_shock", "C"],	# 164 (+ Lightning Shield)
+      ["unknown_1", "H6"],
+      ["resist_common_disease", "L"],		   # 168
+      ["unknown_1", "L"],			   # 172
+      ["unknown_1", "L"],			   # 176
+      ["resist_poison", "L"],			   # 180
+      ["resist_paralysis", "L"],		   # 184
+      ["chameleon", "L"],			   # 188
+      ["resist_normal_weapons", "L"],		   # 192
+      ["water_breathing", "L"],			   # 196
+      ["water_walking", "L"],			   # 200
+      ["swift_swim", "L"],			   # 204
+      ["unknown_1", "L"],			   # 208
+      ["levitate", "L"],			   # 212
+      ["shield", "L"],				   # 216
+      ["unknown_1", "L"],			   # 220
+      ["unknown_1", "L"],			   # 224
+      ["blind", "L"],				   # 228
+      ["unknown_1", "L"],			   # 232
+      ["invisibility", "L"],			   # 236
+      ["unknown_1", "L"],			   # 240
+      ["unknown_1", "L"],			   # 244
+      ["unknown_1", "L"],			   # 248
+      ["unknown_1", "L"],			   # 252
+      ["unknown_1", "L"],			   # 256
+      ["unknown_1", "L"])];
 
 my @RD_Enchantment =
-    ([["Spell_Effect", "S"], ["Skill", "c"], ["Attribute", "C"], ["Range", "L"],
-      ["Area", "L"], ["Duration", "L"], ["Mag_Min", "L"], ["Mag_Max", "L"]],
+    ([["spell_effect", "S"], ["skill", "c"], ["attribute", "C"], ["range", "L"],
+      ["area", "L"], ["duration", "L"], ["mag_min", "L"], ["mag_max", "L"]],
      { tostr => sub {
 	   my($self) = @_;
 	   my $spell = $SPELL_EFFECT{$self->{spell_effect}};
@@ -942,66 +954,66 @@ my @RD_Enchantment =
 	       $spell, $RANGE_TYPE{$self->{range}}, $self->{area}, $self->{duration}, $self->{mag_min}, $self->{mag_max} },
      });
 
-my $RD_Unknown = [["Unknown_1", "H*"]];
+my $RD_Unknown = [["unknown_1", "H*"]];
 
 my @RECDEFS =
     (
      [ACTI => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [ALCH => [
-	       [NAME => [["ID", "Z*"]]],
-	       [ALDT => [["Weight", "f"], ["Value", "L"], ["Autocalc", "L"]],
+	       [NAME => [["id", "Z*"]]],
+	       [ALDT => [["weight", "f"], ["value", "L"], ["autocalc", "L"]],
 		{ rdflags => [qw(mergeable)] }],
 	       [ENAM => @RD_Enchantment],
-	       [FNAM => [["Name", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [TEXT => [["Icon", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [TEXT => [["icon", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [APPA => [
-	       [NAME => [["ID", "Z*"]]],
-	       [AADT => [["Type", "L", { lookup => \%APPARATUS_TYPE }],
-			 ["Quality", "f"], ["Weight", "f"], ["Value", "L"]],
+	       [NAME => [["id", "Z*"]]],
+	       [AADT => [["type", "L", { lookup => \%APPARATUS_TYPE }],
+			 ["quality", "f"], ["weight", "f"], ["value", "L"]],
 		{ rdflags => [qw(mergeable)] }],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [ARMO => [
-	       [NAME => [["ID", "Z*"]]],
-	       [AODT => [["Type", "L", { lookup => \%ARMOR_TYPE }], ["Weight", "f"], ["Value", "L"], ["Health", "L"],
-			 ["Enchant_Points", "L"], ["Armor_Rating", "L"]], { rdflags => [qw(mergeable)] }],
-	       [BNAM => [["Male_Body_ID", ["Z*", "a*"]]]],
-	       [CNAM => [["Female_Body_ID", "a*"]]],
-	       [ENAM => [["Enchantment", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [INDX => [["Part_Index", "C", { lookup => \%ARMOR_INDEX }]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [AODT => [["type", "L", { lookup => \%ARMOR_TYPE }], ["weight", "f"], ["value", "L"], ["health", "L"],
+			 ["enchant_points", "L"], ["armor_rating", "L"]], { rdflags => [qw(mergeable)] }],
+	       [BNAM => [["male_body_id", ["Z*", "a*"]]]],
+	       [CNAM => [["female_body_id", "a*"]]],
+	       [ENAM => [["enchantment", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [INDX => [["part_index", "C", { lookup => \%ARMOR_INDEX }]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [BODY => [
-	       [NAME => [["ID", "Z*"]]],
-	       [BYDT => [["Body_Part", "C", { lookup => \%BYDT_PART }], ["Vampire", "C"],
-			 ["Flags", "C", { symflag => \%BYDT_FLAGS }], ["Part_Type", "C", { lookup => \%BYDT_PTYP }]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [BYDT => [["body_part", "C", { lookup => \%BYDT_PART }], ["vampire", "C"],
+			 ["flags", "C", { symflag => \%BYDT_FLAGS }], ["part_type", "C", { lookup => \%BYDT_PTYP }]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [BOOK => [
-	       [NAME => [["ID", "Z*"]]],
-	       [BKDT => [["Weight", "f"], ["Value", "L"], ["Scroll", "L", { lookup => \%YESNO }],
-			 ["Skill", "l"], ["Enchant_Points", "L"]], { rdflags => [qw(mergeable)] }],
-	       [ENAM => [["Enchantment", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [TEXT => [["Text", "a*"]],
+	       [NAME => [["id", "Z*"]]],
+	       [BKDT => [["weight", "f"], ["value", "L"], ["scroll", "L", { lookup => \%YESNO }],
+			 ["skill", "l"], ["enchant_points", "L"]], { rdflags => [qw(mergeable)] }],
+	       [ENAM => [["enchantment", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [TEXT => [["text", "a*"]],
 		{ tostr => sub {
 		      my $str = $_[0]->{text};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
@@ -1010,16 +1022,16 @@ my @RECDEFS =
 		}],
 	      ], { rdflags => [qw(mergeable)] }],
      [BSGN => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DESC => [["Description", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [NPCS => [["Spell", ["Z32", "a32"]]]],
-	       [TNAM => [["Image", "Z*"]]]
+	       [NAME => [["id", "Z*"]]],
+	       [DESC => [["description", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [TNAM => [["image", "Z*"]]]
 	      ], { rdflags => [qw(mergeable)] }],
      [CELL => [
-	       [AMBI => [["Ambient_Color", "L:0x%08x"], ["Sunlight_Color", "L:0x%08x"],
-			 ["Fog_Color", "L:0x%08x"], ["Fog_Density", "f"]]],
-	       [FRMR => [["ObjIdx", "S"], ["Unknown", "C"], ["ModIdx", "C"]],
+	       [AMBI => [["ambient_color", "L:0x%08x"], ["sunlight_color", "L:0x%08x"],
+			 ["fog_color", "L:0x%08x"], ["fog_density", "f"]]],
+	       [FRMR => [["objidx", "S"], ["unknown", "C"], ["modidx", "C"]],
 		{ rdflags => [qw(startgroup)] }],
 	       [ACDT => $RD_Actor_Data],
 	       [ACSC => $RD_Unknown],
@@ -1034,11 +1046,12 @@ my @RECDEFS =
 	       [CNDT => $RD_Unknown],
 	       [CRED => $RD_Unknown],
 	       [CSHN => $RD_Unknown],
-	       [CSTN => [["Target", "Z*"]]], # guessing this is: "Cast/Current Spell Target Name"
+	       [CSTN => [["target", "Z*"]]], # guessing this is: "Cast/Current Spell Target Name"
 	       [DATA => [],
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
+		     $self->{_buf_} = $buff;
 		     if (length($buff) == 24) {
 			 ($self->{x}, $self->{y}, $self->{z},
 			  $self->{x_angle}, $self->{y_angle}, $self->{z_angle}) = unpack("f6", $buff);
@@ -1089,30 +1102,30 @@ my @RECDEFS =
 		     }
 		 },
 		}],
-	       [DNAM => [["Door_ID", "Z*"]]],
-	       [DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]]],
-	       [FGTN => [["Folling_Target_Name", "Z*"]]],
-	       [FLTV => [["Unknown_1", "f"]]],
+	       [DNAM => [["door_id", "Z*"]]],
+	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
+	       [FGTN => [["following_target_name", "Z*"]]],
+	       [FLTV => [["unknown_1", "f"]]],
 	       [INDX => $RD_Unknown],
-	       [INTV => $RD_Unknown],
+	       [INTV => [['water_height', 'l']]],
 	       [KNAM => $RD_Unknown],
 	       [LSHN => $RD_Unknown],
 	       [LSTN => $RD_Unknown],
 	       [LVCR => $RD_Unknown],
 	       [MNAM => $RD_Unknown],
-	       [MVRF => [["Moved_Ref", "L"]]], # .ess
-	       [NAM0 => [["Object_Count", "L"]]],
-	       [NAM5 => [["Red", "C"], ["Green", "C"], ["Blue", "C"], ["Unused", "C"]]], # Map Color
+	       [MVRF => [["moved_ref", "L"]]], # .ess
+	       [NAM0 => [["object_count", "L"]]],
+	       [NAM5 => [["red", "C"], ["green", "C"], ["blue", "C"], ["unused", "C"]]], # Map Color
 	       [NAM8 => $RD_Unknown],
-	       [NAM9 => [["Owner", "L"]]],
-	       [NAME => [["Name", "Z*"]]],
+	       [NAM9 => [["owner", "L"]]],
+	       [NAME => [["name", "Z*"]]],
 	       [ND3D => $RD_Unknown],
 	       [PRDT => $RD_Unknown],
 	       [PWPC => $RD_Unknown],
 	       [PWPS => $RD_Unknown],
-	       [RGNN => [["Region", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [SLCS => [["N_Shorts", "L"], ["N_Longs", "L"], ["N_Floats", "L"]]],
+	       [RGNN => [["region", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array],
 	       [SLLD => @RD_long_array],
 	       [SLSD => @RD_short_array],
@@ -1120,20 +1133,20 @@ my @RECDEFS =
 	       [TGTN => $RD_Unknown],
 	       [TNAM => $RD_Unknown],
 	       [UNAM => $RD_Unknown],
-	       [WHGT => $RD_Unknown],
+	       [WHGT => [["water_height", "f"]]],
 	       [WNAM => $RD_Unknown],
-	       [XCHG => [["Enchant_Charge", "L"]]],
+	       [XCHG => [["enchant_charge", "L"]]],
 	       [XNAM => $RD_Unknown],
-	       [XSCL => [["Scale", "f"]]],
-	       [XSOL => [["Soul", "Z*"]]],
+	       [XSCL => [["scale", "f"]]],
+	       [XSOL => [["soul", "Z*"]]],
 	       [YNAM => $RD_Unknown],
 	       [ZNAM => $RD_Unknown],
 	      ], { id => sub {
 		       my($self) = @_;
-		       return($self->{_id_}) if ($self->{_id_});
-		       my $name = $self->get('NAME','name');
+		       return($self->{_id_}) if (defined $self->{_id_});
+		       my $name = $self->get('NAME', 'name');
 		       return($name) if ($self->is_interior());
-		       $name = $self->get('RGNN','region') unless ($name);
+		       $name = $self->get('RGNN', 'region') unless ($name);
 		       $name ||= 'Wilderness';
 		       my $x = $self->get('DATA', 'x');
 		       my $y = $self->get('DATA', 'y');
@@ -1146,112 +1159,112 @@ my @RECDEFS =
 		   }
 		 }],
      [CLAS => [
-	       [NAME => [["ID", "Z*"]]],
-	       [CLDT => [["Primary_Attribute", "L", { lookup => \%ATTRIBUTE }],
-			 ["Secondary_Attribute", "L", { lookup => \%ATTRIBUTE }],
-			 ["Specialization", "L", { lookup => \%SPECIALIZATION }],
-			 ["Minor_Skill_1", "l", { lookup => \%SKILL }], ["Major_Skill_1", "l", { lookup => \%SKILL }],
-			 ["Minor_Skill_1", "l", { lookup => \%SKILL }], ["Major_Skill_1", "l", { lookup => \%SKILL }],
-			 ["Minor_Skill_1", "l", { lookup => \%SKILL }], ["Major_Skill_1", "l", { lookup => \%SKILL }],
-			 ["Minor_Skill_1", "l", { lookup => \%SKILL }], ["Major_Skill_1", "l", { lookup => \%SKILL }],
-			 ["Minor_Skill_1", "l", { lookup => \%SKILL }], ["Major_Skill_1", "l", { lookup => \%SKILL }],
-			 ["Flags", "L", { lookup => \%PLAYABLE }], ["AutoCalc", "L", { symrdflags => \%AUTOCALC_FLAGS }]]],
-	       [DESC => [["Description", "a*"]],
+	       [NAME => [["id", "Z*"]]],
+	       [CLDT => [["primary_attribute", "L", { lookup => \%ATTRIBUTE }],
+			 ["secondary_attribute", "L", { lookup => \%ATTRIBUTE }],
+			 ["specialization", "L", { lookup => \%SPECIALIZATION }],
+			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
+			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
+			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
+			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
+			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
+			 ["flags", "L", { lookup => \%PLAYABLE }], ["autocalc", "L", { symflags => \%AUTOCALC_FLAGS }]]],
+	       [DESC => [["description", "a*"]],
 		{ tostr => sub {
 		      my $str = $_[0]->{description};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
 		      "Description:$str";
 		  },
 		}],
-	       [FNAM => [["Name", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [CLOT => [
-	       [NAME => [["ID", "Z*"]]],
-	       [BNAM => [["Male_Body_ID", "a*"]]],
-	       [CNAM => [["Female_Body_ID", ["Z*", "a*"]]]],
-	       [CTDT => [["Type", "L", { lookup => \%CTDT_TYPE }], ["Weight", "f"],
-			 ["Value", "S"], ["Enchant_Points", "S"]], { rdflags => [qw(mergeable)] }],
-	       [ENAM => [["Enchantment_ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [INDX => [["Index", "C"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [BNAM => [["male_body_id", "a*"]]],
+	       [CNAM => [["female_body_id", ["Z*", "a*"]]]],
+	       [CTDT => [["type", "L", { lookup => \%CTDT_TYPE }], ["weight", "f"],
+			 ["value", "S"], ["enchant_points", "S"]], { rdflags => [qw(mergeable)] }],
+	       [ENAM => [["enchantment_ID", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [INDX => [["index", "C"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [CNTC => [
-	       [NAME => [["ID", "Z*"]]],
-	       [INDX => [["Index", "L"]]],
-	       [NPCO => [["Count", "l"], ["Name", ["Z32", "a32"]]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [SLCS => [["N_Shorts", "L"], ["N_Longs", "L"], ["N_Floats", "L"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [INDX => [["index", "L"]]],
+	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array],
 	       [SLLD => @RD_long_array],
 	       [SLSD => @RD_short_array],
-	       [XCHG => [["Enchant_Charge", "L"]]],
-	       [XHLT => [["Health", "L"]]],
-	       [XIDX => [["Scripted_Item_Index", "L"]]],
-	       [XSOL => [["Soul", "Z*"]]],
+	       [XCHG => [["enchant_charge", "L"]]],
+	       [XHLT => [["health", "L"]]],
+	       [XIDX => [["scripted_item_index", "L"]]],
+	       [XSOL => [["soul", "Z*"]]],
 	      ]],
      [CONT => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [CNDT => [["Weight", "f"]]],
-	       [FLAG => [["Container_Flags", "L", { symrdflags => \%CONTAINER_FLAGS }]]],
-	       [INDX => [["Unknown_1", "L"]]], # .ess
-	       [MODL => [["Model", "Z*"]]],
-	       [NPCO => [["Count", "l"], ["Name", ["Z32", "a32"]]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [CNDT => [["weight", "f"]]],
+	       [FLAG => [["container_flags", "L", { symflags => \%CONTAINER_FLAGS }]]],
+	       [INDX => [["unknown_1", "L"]]], # .ess
+	       [MODL => [["model", "Z*"]]],
+	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [CREA => [
-	       [NAME => [["ID", "Z*"]]],
-	       [AIDT => [["Hello", "C"], ["Unknown_1", "C"], ["Fight", "C"], ["Flee", "C"],
-			 ["Alarm", "C"], ["Unknown_1", "H6"], ["Flags", "L", { symrdflags => \%AIDT_FLAGS }]],
+	       [NAME => [["id", "Z*"]]],
+	       [AIDT => [["hello", "C"], ["unknown_1", "C"], ["fight", "C"], ["flee", "C"],
+			 ["alarm", "C"], ["unknown_1", "H6"], ["flags", "L", { symflags => \%AIDT_FLAGS }]],
 		{ rdflags => [qw(mergeable)] }],
 	       [AI_E => $RD_Unknown],
 	       [AI_F => $RD_Unknown],
 	       [AI_T => $RD_Unknown],
-	       [AI_W => [["Distance", "S"], ["Duration", "C"], ["Time_of_day", "C"],
-			 ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"],
-			 ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"]]],
+	       [AI_W => [["distance", "S"], ["duration", "C"], ["time_of_day", "C"],
+			 ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"],
+			 ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"]]],
 	       [CNAM => $RD_Unknown],
 	       [DNAM => $RD_Unknown],
-	       [DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]]],
-	       [FLAG => [["Flags", "L", { symrdflags => \%CREATURE_FLAGS }]]],
-	       [FNAM => [["Name", "Z*"]]],
+	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
+	       [FLAG => [["flags", "L", { symflags => \%CREATURE_FLAGS }]]],
+	       [FNAM => [["name", "Z*"]]],
 	       [INDX => $RD_Unknown],
-	       [MODL => [["Model", "Z*"]]],
-	       [NPCO => [["Count", "l"], ["Name", ["Z*", "a32"]]]],
-	       [NPCS => $RD_Unknown],
-	       [NPDT => [["Type", "L", { lookup => \%CREA_TYPE }], ["Lev", "L"], ["Str", "L"], ["Int", "L"], ["Wil", "L"],
-			 ["Agi", "L"], ["Spd", "L"], ["End", "L"], ["Per", "L"], ["Lck", "L"],
-			 ["Health", "L"], ["Spell_Points", "L"], ["Fatigue", "L"], ["Soul", "L"],
-			 ["Combat", "L"], ["Magic", "L"], ["Stealth", "L"], ["Attack_1_Min", "L"],
-			 ["Attack_1_Max", "L"], ["Attack_2_Min", "L"], ["Attack_2_Max", "L"],
-			 ["Attack_3_Min", "L"], ["Attack_3_Max", "L"], ["Gold", "L"]], { rdflags => [qw(mergeable)] }],
-	       [SCRI => [["Script", "Z*"]]],
-	       [XSCL => [["Scale", "f"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]],
+	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [NPDT => [["type", "L", { lookup => \%CREA_TYPE }], ["lev", "L"], ["str", "L"], ["int", "L"], ["wil", "L"],
+			 ["agi", "L"], ["spd", "L"], ["end", "L"], ["per", "L"], ["lck", "L"],
+			 ["health", "L"], ["spell_points", "L"], ["fatigue", "L"], ["soul", "L"],
+			 ["combat", "L"], ["magic", "L"], ["stealth", "L"], ["attack_1_min", "L"],
+			 ["attack_1_max", "L"], ["attack_2_min", "L"], ["attack_2_max", "L"],
+			 ["attack_3_min", "L"], ["attack_3_max", "L"], ["gold", "L"]], { rdflags => [qw(mergeable)] }],
+	       [SCRI => [["script", "Z*"]]],
+	       [XSCL => [["scale", "f"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [CREC => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	       [AI_F => $RD_Unknown],
 	       [AI_T => $RD_Unknown],
 	       [AI_W => $RD_Unknown],
 	       [INDX => $RD_Unknown],
-	       [NPCO => [["Count", "l"], ["Name", ["Z*", "a32"]]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [SLCS => [["N_Shorts", "L"], ["N_Longs", "L"], ["N_Floats", "L"]]],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array],
 	       [SLLD => @RD_long_array],
 	       [SLSD => @RD_short_array],
 	       [WIDX => @RD_widx],
-	       [XCHG => [["Enchant_Charge", "L"]]],
-	       [XHLT => [["Health", "L"]]],
+	       [XCHG => [["enchant_charge", "L"]]],
+	       [XHLT => [["health", "L"]]],
 	       [XIDX => $RD_Unknown],
-	       [XSCL => [["Scale", "f"]]],
+	       [XSCL => [["scale", "f"]]],
 	      ]],
      [DIAL => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["Type", "C"]],
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["type", "C"]],
 		{
 		 tostr => sub {
 		      my($self) = @_;
@@ -1259,58 +1272,58 @@ my @RECDEFS =
 		      $CURRENT_DIAL = "$type:".$self->{_parent_}->id();
 		      return($type);
 		}}],
-	       [XIDX => [["Index", "l"]]],
+	       [XIDX => [["index", "l"]]],
 	      ]],
      [DOOR => [
-	       [NAME => [["ID", "Z*"]]],
-	       [ANAM => [["Door_Close_Sound", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [SNAM => [["Door_Open_Sound", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [ANAM => [["door_close_sound", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [SNAM => [["door_open_sound", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [ENCH => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	       [ENAM => @RD_Enchantment],
-	       [ENDT => [["Type", "L", { lookup => \%ENCHANT_TYPE }], ["Cost", "L"], ["Charge", "L"], ["Autocalc", "L"]]],
+	       [ENDT => [["type", "L", { lookup => \%ENCHANT_TYPE }], ["cost", "L"], ["charge", "L"], ["autocalc", "L"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [FACT => [
-	       [NAME => [["ID", "Z*"]]],
-	       [ANAM => [["Contra_Faction", "a*"]]],
-	       [FADT => [["Primary_Attribute", "L", { lookup => \%ATTRIBUTE}], ["Secondary_Attribute", "L", { lookup => \%ATTRIBUTE}],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["At1_1", "L"], ["At2_1", "L"], ["Sk1_1", "L"], ["Sk2_1", "L"], ["Fact_1", "L"],
-			 ["Sk_1", "L"], ["Sk_1", "L"], ["Sk_1", "L"], ["Sk_1", "L"], ["Sk_1", "L"], ["Sk_1", "L"],
-			 ["Unknown_1", "l"], ["Flags", "L"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [INTV => [["Contra_Faction_Factor", "l"]]],
-	       [RNAM => [["Rank", ["Z32", "a32"]]]],
+	       [NAME => [["id", "Z*"]]],
+	       [ANAM => [["contra_faction", "a*"]]],
+	       [FADT => [["primary_attribute", "L", { lookup => \%ATTRIBUTE}], ["secondary_attribute", "L", { lookup => \%ATTRIBUTE}],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["at1_1", "L"], ["at2_1", "L"], ["sk1_1", "L"], ["sk2_1", "L"], ["fact_1", "L"],
+			 ["sk_1", "L"], ["sk_1", "L"], ["sk_1", "L"], ["sk_1", "L"], ["sk_1", "L"], ["sk_1", "L"],
+			 ["unknown_1", "L"], ["flags", "L"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [INTV => [["contra_faction_factor", "l"]]],
+	       [RNAM => [["rank", ["Z32", "a32"]]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [FMAP => [			# ess, single record, no id
 	       [MAPD => $RD_Unknown],
 	       [MAPH => $RD_Unknown],
 	      ], { id => sub {'()'} }],
      [GAME => [			# ess, single record, no id
-	       [GMDT => [["Current_Cell", "Z*"], ["Unknown", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
+	       [GMDT => [["current_cell", "Z*"], ["unknown", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
 	      ], { id => sub {'()'} }],
      [GLOB => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FLTV => [["Float", "f"]]],
-	       [FNAM => [["Type", "a"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FLTV => [["float", "f"]]],
+	       [FNAM => [["type", "a"]]],
 	      ]],
      [GMST => [
-	       [NAME => [["ID", ["Z*", "a*"]]]],
-	       [FLTV => [["Float", "f"]]],
-	       [INTV => [["Integer", "l"]]],
-	       [STRV => [["String", "a*"]],
+	       [NAME => [["id", ["Z*", "a*"]]]],
+	       [FLTV => [["float", "f"]]],
+	       [INTV => [["integer", "l"]]],
+	       [STRV => [["string", "a*"]],
 		{ tostr => sub {
 		      my $str = $_[0]->{string};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
@@ -1319,10 +1332,10 @@ my @RECDEFS =
 		}],
 	      ]],
      [INFO => [
-	       [INAM => [["ID", "Z*"]]],
-	       [ACDT => [["Actor_Data", "Z*"]]], # .ess
-	       [ANAM => [["Cell", "Z*"]]],
-	       [BNAM => [["Result", "a*"]],
+	       [INAM => [["id", "Z*"]]],
+	       [ACDT => [["actor_data", "Z*"]]], # .ess
+	       [ANAM => [["cell", "Z*"]]],
+	       [BNAM => [["result", "a*"]],
 		{ tostr => sub {
 		      my($self) = @_;
 		      my $str = $self->{result};
@@ -1331,9 +1344,9 @@ my @RECDEFS =
 		      "Result:\t$str";
 		  },
 		}],
-	       [CNAM => [["Class", "Z*"]]],
-	       [DATA => [["Unknown_1", "L"], ["Disposition", "L"], ["Rank", "C"],
-			 ["Sex", "C"], ["PC_Rank", "C"], ["Unknown_1", "C"]],
+	       [CNAM => [["class", "Z*"]]],
+	       [DATA => [["unknown_1", "L"], ["disposition", "L"], ["rank", "C"],
+			 ["sex", "C"], ["pc_rank", "C"], ["unknown_1", "C"]],
 		{ tostr => sub {
 		      my($self) = @_;
 		      if ($CURRENT_DIAL =~ /^Journal/i) {
@@ -1347,11 +1360,11 @@ my @RECDEFS =
 		      }
 		  }
 		}],
-	       [DNAM => [["PC_Faction", "Z*"]]],
-	       [FLTV => [["Result_Value", "f"]]],
-	       [FNAM => [["Faction", "Z*"]]],
-	       [INTV => [["Compare_Value", "L"]]],
-	       [NAME => [["Response", "a*"]],
+	       [DNAM => [["pc_faction", "Z*"]]],
+	       [FLTV => [["result_value", "f"]]],
+	       [FNAM => [["faction", "Z*"]]],
+	       [INTV => [["compare_value", "L"]]],
+	       [NAME => [["response", "a*"]],
 		{ tostr => sub {
 		      my($self) = @_;
 		      my $str = $self->{response};
@@ -1360,27 +1373,27 @@ my @RECDEFS =
 		      "Response:\t$str";
 		  },
 		}],
-	       [NNAM => [["Next_ID", "Z*"]]],
-	       [ONAM => [["Actor", "Z*"]]],
-	       [PNAM => [["Prev_ID", "Z*"]]],
-	       [QSTF => [["Quest_Finished", "C:"]]],
-	       [QSTN => [["Quest_Name", "C:"]]],
-	       [QSTR => [["Quest_Restart", "C:"]]],
-	       [RNAM => [["Race", "Z*"]]],
-	       [SCVR => [["Index", "a"],
-			 ["Type", "a", { lookup => \%INFO_SCVR_TYPE}],
-			 ["Function", "a2", { lookup => \%INFO_FUN }],
-			 ["Comparison", "a", { lookup => \%INFO_SCVR_CMP }],
-			 ["Name", "a*"]]],
-	       [SNAM => [["Sound_File", "Z*"]]],
+	       [NNAM => [["next_id", "Z*"]]],
+	       [ONAM => [["actor", "Z*"]]],
+	       [PNAM => [["prev_id", "Z*"]]],
+	       [QSTF => [["quest_finished", "C:"]]],
+	       [QSTN => [["quest_name", "C:"]]],
+	       [QSTR => [["quest_restart", "C:"]]],
+	       [RNAM => [["race", "Z*"]]],
+	       [SCVR => [["index", "a"],
+			 ["type", "a", { lookup => \%INFO_SCVR_TYPE}],
+			 ["function", "a2", { lookup => \%INFO_FUN }],
+			 ["comparison", "a", { lookup => \%INFO_SCVR_CMP }],
+			 ["name", "a*"]]],
+	       [SNAM => [["sound_file", "Z*"]]],
 	      ]],
      [INGR => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [IRDT => [["Weight", "f"], ["Value", "L"],
-			 ["Effect_1", "l"], ["Effect_1", "l"], ["Effect_1", "l"], ["Effect_1", "l"],
-			 ["Skill_1", "l"], ["Skill_1", "l"], ["Skill_1", "l"], ["Skill_1", "l"],
-			 ["Attribute_1", "l"], ["Attribute_1", "l"], ["Attribute_1", "l"], ["Attribute_1", "l"],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [IRDT => [["weight", "f"], ["value", "L"],
+			 ["effect_1", "l"], ["effect_1", "l"], ["effect_1", "l"], ["effect_1", "l"],
+			 ["skill_1", "l"], ["skill_1", "l"], ["skill_1", "l"], ["skill_1", "l"],
+			 ["attribute_1", "l"], ["attribute_1", "l"], ["attribute_1", "l"], ["attribute_1", "l"],
 			],
 	       { tostr => sub {
 		     my($self) = @_;
@@ -1401,20 +1414,20 @@ my @RECDEFS =
 		     sprintf("Weight:%0.2f  Value:%d  Effects:%s",
 			 $self->{weight}, $self->{value}, join(",", @effects));
 		 }}],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [JOUR => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	      ]],
      [KLST => [
-	       [KNAM => [["ID", "Z*"]], { rdflags => [qw(startgroup)] }],
-	       [CNAM => [["Dead_Count", "L"]]],
-	       [INTV => [["End_of_List", "L"]]],
+	       [KNAM => [["id", "Z*"]], { rdflags => [qw(startgroup)] }],
+	       [CNAM => [["dead_count", "L"]]],
+	       [INTV => [["end_of_list", "L"]]],
 	      ]],
      [LAND => [
-	       [INTV => [["X", "l"], ["Y", "l"]]],
+	       [INTV => [["x", "l"], ["y", "l"]]],
 	       [DATA => $RD_Unknown],
 	       [VCLR => $RD_Unknown],
 	       [VHGT => $RD_Unknown],
@@ -1423,133 +1436,132 @@ my @RECDEFS =
 	       [WNAM => $RD_Unknown],
 	      ], { id => sub {
 		       my($self) = @_;
-		       return($self->{_id_}) if ($self->{_id_});
+		       return($self->{_id_}) if (defined $self->{_id_});
 		       my $x = $self->get('INTV', 'x');
 		       my $y = $self->get('INTV', 'y');
 		       return($self->{_id_} = "($x, $y") if (defined($x) and defined($y));
 		       err "Bad LAND id: missing INTV";
-		       if (ASSERT) {
-			   err Dumper($self);
-		       }
+		       err Dumper($self) if (DBG);
 		   }
 		 }],
      [LEVC => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["List_Flags", "L", { symrdflags => \%LEVC_FLAGS }]]],
-	       [INDX => [["Item_Count", "L"]]],
-	       [NNAM => [["Chance_None", "C"]]],
-	       [CNAM => [["Creature_ID", "Z*"]], { rdflags => [qw(startgroup)] }],
-	       [INTV => [["Level", "S"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["list_flags", "L", { symflags => \%LEVC_FLAGS }]]],
+	       [INDX => [["item_count", "L"]]],
+	       [NNAM => [["chance_none", "C"]]],
+	       [CNAM => [["creature_id", "Z*"]], { rdflags => [qw(startgroup)] }],
+	       [INTV => [["level", "S"]]],
 	      ]],
      [LEVI => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["List_Flags", "L", { symrdflags => \%LEVI_FLAGS }]]],
-	       [INDX => [["Item_Count", "L"]]],
-	       [NNAM => [["Chance_None", "C"]]],
-	       [INAM => [["Item_ID", "Z*"]], { rdflags => [qw(startgroup)] }],
-	       [INTV => [["Level", "S"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["list_flags", "L", { symflags => \%LEVI_FLAGS }]]],
+	       [INDX => [["item_count", "L"]]],
+	       [NNAM => [["chance_none", "C"]]],
+	       [INAM => [["item_id", "Z*"]], { rdflags => [qw(startgroup)] }],
+	       [INTV => [["level", "S"]]],
 	      ]],
      [LIGH => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [LHDT => [["Weight", "f"], ["Value", "L"], ["Time", "L"], ["Radius", "L"],
-			 ["Red", "C"], ["Green", "C"], ["Blue", "C"],
-			 ["Unknown_1", "C"], ["Flags", "L", { symrdflags => \%LHDT_FLAGS }]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [SNAM => [["Sound_ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [LHDT => [["weight", "f"], ["value", "L"], ["time", "L"], ["radius", "L"],
+			 ["red", "C"], ["green", "C"], ["blue", "C"],
+			 ["unknown_1", "C"], ["flags", "L", { symflags => \%LHDT_FLAGS }]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [SNAM => [["sound_id", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [LOCK => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [LKDT => [["Weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [LKDT => [["weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [LTEX => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["Texture_Path", "Z*"]]],
-	       [INTV => [["Unknown_1", "L"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["texture_path", "Z*"]]],
+	       [INTV => [["unknown_1", "L"]]],
 	      ]],
      [MGEF => [
-	       [INDX => [["ID", "L"]]],
-	       [ASND => [["Area_Sound", "Z*"]]],
-	       [AVFX => [["Area_VFX", "Z*"]]],
-	       [BSND => [["Bolt_Sound", "Z*"]]],
-	       [BVFX => [["Bolt_VFX", "Z*"]]],
-	       [CSND => [["Cast_Sound", "Z*"]]],
-	       [CVFX => [["Cast_VFX", "Z*"]]],
-	       [DESC => [["Description", "a*"]],
+	       [INDX => [["id", "L"]]],
+	       [ASND => [["area_sound", "Z*"]]],
+	       [AVFX => [["area_vfx", "Z*"]]],
+	       [BSND => [["bolt_sound", "Z*"]]],
+	       [BVFX => [["bolt_vfx", "Z*"]]],
+	       [CSND => [["cast_sound", "Z*"]]],
+	       [CVFX => [["cast_vfx", "Z*"]]],
+	       [DESC => [["description", "a*"]],
 		{ tostr => sub {
 		      my $str = $_[0]->{description};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
 		      "Description:$str";
 		  },
 		}],
-	       [HSND => [["Hit_Sound", "Z*"]]],
-	       [HVFX => [["Hit_VFX", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MEDT => [["School", "L"], ["Base_Cost", "f"],["Flags", "L", { symrdflags => \%MGEF_FLAGS }],
-			 ["Red", "L"], ["Green", "L"], ["Blue", "L"],
-			 ["Speed", "f"], ["Size", "f"], ["SizeCap", "f"]]],
+	       [HSND => [["hit_sound", "Z*"]]],
+	       [HVFX => [["hit_vfx", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MEDT => [["school", "L"], ["base_cost", "f"],["flags", "L", { symflags => \%MGEF_FLAGS }],
+			 ["red", "L"], ["green", "L"], ["blue", "L"],
+			 ["speed", "f"], ["size", "f"], ["sizecap", "f"]]],
 	       [PTEX => [["Particle_Texture", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [MISC => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MCDT => [["Weight", "f"], ["Value", "L"], ["Unknown_1", "L"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MCDT => [["weight", "f"], ["Value", "L"], ["unknown_1", "L"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [NPCC => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	       [AI_E => $RD_Unknown],
 	       [AI_F => $RD_Unknown],
 	       [AI_T => $RD_Unknown],
 	       [AI_W => $RD_Unknown],
-	       [NPCO => [["Count", "l"], ["Name", ["Z*", "a32"]]]],
+	       [NPCO => [["count", "l"], ["Name", ["Z*", "a32"]]]],
 	       [NPDT => $RD_Unknown],
-	       [SCRI => [["Script", "Z*"]]],
-	       [SLCS => [["N_Shorts", "L"], ["N_Longs", "L"], ["N_Floats", "L"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array],
 	       [SLLD => @RD_long_array],
 	       [SLSD => @RD_short_array],
 	       [WIDX => @RD_widx],
-	       [XCHG => [["Enchant_Charge", "L"]]],
-	       [XHLT => [["Health", "L"]]],
+	       [XCHG => [["enchant_charge", "L"]]],
+	       [XHLT => [["health", "L"]]],
 	       [XIDX => $RD_Unknown],
-	       [XSOL => [["Soul", "Z*"]]],
+	       [XSOL => [["soul", "Z*"]]],
 	      ]],
      [NPC_ => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [AIDT => [["Hello", "C"], ["Unknown_1", "C"], ["Fight", "C"], ["Flee", "C"], ["Alarm", "C"],
-			 ["Unknown_1", "H6"], ["Flags", "L", { symrdflags => \%AIDT_FLAGS }]]],
-	       [AI_E => [["X", "l"], ["Y", "l"], ["Z", "l"], ["Duration", "S"], ["ID", "a32"], ["Unknown_1", "S"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [AIDT => [["hello", "C"], ["unknown_1", "C"], ["fight", "C"], ["flee", "C"], ["alarm", "C"],
+			 ["unknown_1", "H6"], ["flags", "L", { symflags => \%AIDT_FLAGS }]]],
+	       [AI_E => [["x", "l"], ["y", "l"], ["z", "l"], ["duration", "S"], ["id", "a32"], ["unknown_1", "S"]]],
 	       [AI_F => $RD_Unknown],
 	       [AI_T => $RD_Unknown],
-	       [AI_W => [["Distance", "S"], ["Duration", "S"], ["Time_of_day", "C"],
-			 ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"],
-			 ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"], ["Idle_1", "C"],
-			 ["Unknown_1", "C"]]],
-	       [ANAM => [["Faction", "Z*"]]],
-	       [BNAM => [["Head_Model", "Z*"]]],
-	       [CNAM => [["Class", "Z*"]]],
-	       [CNDT => [["Data", "Z*"]]],
+	       [AI_W => [["distance", "S"], ["duration", "S"], ["time_of_day", "C"],
+			 ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"],
+			 ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"], ["idle_1", "C"],
+			 ["unknown_1", "C"]]],
+	       [ANAM => [["faction", "Z*"]]],
+	       [BNAM => [["head_model", "Z*"]]],
+	       [CNAM => [["class", "Z*"]]],
+	       [CNDT => [["data", "Z*"]]],
 	       [DNAM => $RD_Unknown],
-	       [DODT => [["X", "f"], ["Y", "f"], ["Z", "f"], ["Angle_X", "f"], ["Angle_Y", "f"], ["Angle_Z", "f"]]],
-	       [FLAG => [["Flags", "L", { symrdflags => \%NPC_FLAGS }]]],
-	       [KNAM => [["Hair_Model", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [NPCO => [["Count", "l"], ["Name", ["Z*", "a32"]]]],
-	       [NPCS => [["Spell", ["Z32", "a32"]]]],
+	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
+	       [FLAG => [["flags", "L", { symflags => \%NPC_FLAGS }]]],
+	       [KNAM => [["hair_model", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]],
+	       [NPCS => [["spell", ["Z32", "a32"]]]],
 	       [NPDT => [],
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
+		     $self->{_buf_} = $buff;
 		     if (length($buff) == 12) {
 			 ($self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
 			  $self->{unk1}, $self->{unk2}, $self->{unk3}, $self->{gold}) =
@@ -1608,17 +1620,17 @@ my @RECDEFS =
 		     }
 		 }
 		}],
-	       [RNAM => [["Race", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
+	       [RNAM => [["race", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [PCDT => [			# ess, single record, no id
 	       [AADT => $RD_Unknown],
 	       [ANIS => $RD_Unknown],
 	       [BNAM => [["bnam", "Z*"]]],
 	       [CNAM => $RD_Unknown],
-	       [DNAM => [["Dialog_Topic", "Z*"]]],
+	       [DNAM => [["dialog_topic", "Z*"]]],
 	       [ENAM => $RD_Unknown],
-	       [FNAM => [["Long_1", "l"], ["Long_1", "l"], ["Long_1", "l"], ["Faction", "Z16"], ["Float_1", "f"], ["Float_1", "f"], ["Long_1", "l"], ["Long_1", "l"]]],
+	       [FNAM => [["long_1", "l"], ["long_1", "l"], ["long_1", "l"], ["faction", "Z16"], ["float_1", "f"], ["float_1", "f"], ["long_1", "l"], ["long_1", "l"]]],
 	       [KNAM => $RD_Unknown],
 	       [LNAM => $RD_Unknown],
 	       [MNAM => [["mnam", "Z*"]]],
@@ -1631,45 +1643,45 @@ my @RECDEFS =
 	       [SNAM => $RD_Unknown],
 	      ], { id => sub {'()'} }],
      [PGRD => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	       [DATA => $RD_Unknown],
 	       [PGRC => $RD_Unknown],
 	       [PGRP => $RD_Unknown],
 	      ]],
      [PROB => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [PBDT => [["Weight", "f"], ["Value", "L"], ["Quality", "f"], ["Uses", "L"]], { rdflags => [qw(mergeable)] }],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [PBDT => [["weight", "f"], ["value", "L"], ["quality", "f"], ["uses", "L"]], { rdflags => [qw(mergeable)] }],
 	      ], { rdflags => [qw(mergeable)] }],
      [QUES => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["Info_ID", "Z*"]]], # {ess => 1}
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["info_id", "Z*"]]], # {ess => 1}
 	      ]],
      [RACE => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DESC => [["Description", "a*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [NPCS => [["Spell", ["Z32", "a32"]]]],
-	       [RADT => [["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Skill_1", "l", { lookup => \%SKILL }], ["Bonus_1", "L"],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Attr_Male_1", "L", { lookup => \%ATTRIBUTE }], ["Attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["Male_Height", "f"], ["Female_Height", "f"],
-			 ["Male_Weight", "f"], ["Female_Weight", "f"],
-			 ["Flags", "L", { symrdflags => \%RADT_FLAGS }]],
+	       [NAME => [["id", "Z*"]]],
+	       [DESC => [["description", "a*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [RADT => [["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["male_height", "f"], ["female_height", "f"],
+			 ["male_weight", "f"], ["female_weight", "f"],
+			 ["flags", "L", { symflags => \%RADT_FLAGS }]],
 	       {
 		tostr => sub {
 		    my($self) = @_;
@@ -1678,7 +1690,7 @@ my @RECDEFS =
 			    $self->{female_height}, $self->{female_weight};
 		    foreach my $i (1..7) {
 			my($skill_id, $bonus) = ($self->{"skill_$i"}, $self->{"bonus_$i"});
-			if (ASSERT) {
+			if (DBG) {
 			    abort "Null Bonus: ".Dumper($self)."\n" unless defined $bonus;
 			    abort "Null skill_id:$skill_id: ".Dumper($self)."\n" unless defined $skill_id;
 			    abort "Null SKILL for skill_id:$skill_id: ".Dumper($self)."\n" unless defined $SKILL{$skill_id};
@@ -1697,34 +1709,35 @@ my @RECDEFS =
 	       }],
 	      ]],
      [REFR => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	       [AADT => $RD_Unknown],
 	       [ACDT => $RD_Actor_Data],
 	       [ACSC => $RD_Unknown],
 	       [ACSL => $RD_Unknown],
-	       [ACTN => [["Unknown_1", "L"]]], # Actor Number???
+	       [ACTN => [["unknown_1", "L"]]], # Actor Number???
 	       [CHRD => $RD_Unknown],
 	       [CSHN => $RD_Unknown],
 	       [CSTN => $RD_Unknown],
 	       [DATA => $RD_Unknown],
-	       [FGTN => [["Folling_Target_Name", "Z*"]]],
-	       [FRMR => [["Form_Ref", "L"]]],
-	       [ND3D => [["Unknown_1", "C"]]],
+	       [FGTN => [["following_target_name", "Z*"]]],
+	       [FRMR => [["form_ref", "L"]]],
+	       [ND3D => [["unknown_1", "C"]]],
 	       [STPR => $RD_Unknown],
-	       [TGTN => [["Target", "a*"]]],
-	       [WNAM => [["Readied_Spell", "Z*"]]],
-	       [XSCL => [["Scale", "f"]]],
+	       [TGTN => [["target", "a*"]]],
+	       [WNAM => [["readied_spell", "Z*"]]],
+	       [XSCL => [["scale", "f"]]],
 	      ]],
      [REGN => [
-	       [NAME => [["ID", "Z*"]]],
-	       [BNAM => [["Sleep_Creature_ID", "Z*"]]],
-	       [CNAM => [["Red", "C:%x"], ["Green", "C:%x"], ["Blue", "C:%x"], ["Unused", "C"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [SNAM => [["Sound_Name", ["Z32", "a32"]], ["Chance", "C"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [BNAM => [["sleep_creature_id", "Z*"]]],
+	       [CNAM => [["red", "C:%x"], ["green", "C:%x"], ["blue", "C:%x"], ["unused", "C"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [SNAM => [["sound_name", ["Z32", "a32"]], ["chance", "C"]]],
 	       [WEAT => [],
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
+		     $self->{_buf_} = $buff;
 		     if (length($buff) == 10) {
 			 ($self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
 			  $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
@@ -1764,102 +1777,103 @@ my @RECDEFS =
 		     }
 		 },
 		}],
-	       [WNAM => [["Name", "L"]]],
+	       [WNAM => [["name", "L"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [REPA => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [RIDT => [["Weight", "f"], ["Value", "L"], ["Uses", "L"], ["Quality", "f"]], { rdflags => [qw(mergeable)] }],
-	       [SCRI => [["Script", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [RIDT => [["weight", "f"], ["value", "L"], ["uses", "L"], ["quality", "f"]], { rdflags => [qw(mergeable)] }],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [SCPT => [
-	       [SCHD => [["ID", ["Z32", "a32"]], ["Num_Shorts", "L"], ["Num_Longs", "L"], ["Num_Floats", "L"],
-			 ["Data_Size", "L"], ["Local_Var_Size", "L"]]],
-	       [RNAM => [["Unknown_1", "L"]]],
-	       [SCDT => [["Bytecode", "H*:(compiled script code)"]]],
-	       [SCTX => [["Script_Text", "a*"]],
+	       [SCHD => [["id", ["Z32", "a32"]], ["num_shorts", "L"], ["num_longs", "L"], ["num_floats", "L"],
+			 ["data_size", "L"], ["local_var_size", "L"]]],
+	       [RNAM => [["unknown_1", "L"]]],
+	       [SCDT => [["bytecode", "H*:(compiled script code)"]]],
+	       [SCTX => [["script_text", "a*"]],
 		{ tostr => sub {
 		      my $str = $_[0]->{script_text};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
 		      "Script_Text:\n$str";
 		  },
 		}],
-	       [SCVR => [["Variables", "a*"]],
+	       [SCVR => [["variables", "a*"]],
 		{ tostr => sub { "Script_Variables: " . join(',', split(/\000/, $_[0]->{variables})) },
 		}],
-	       [SLCS => [["N_Shorts", "L"], ["N_Longs", "L"], ["N_Floats", "L"]]],
+	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array],
 	       [SLLD => @RD_long_array],
 	       [SLSD => @RD_short_array],
 	      ]],
      [SKIL => [
-	       [INDX => [["ID", "L", { lookup => \%SKILL }]]],
-	       [DESC => [["Description", "a*"]]],
-	       [SKDT => [["Attribute", "L", { lookup => \%ATTRIBUTE }],
-			 ["Specialization", "L", { lookup => \%SPECIALIZATION }],
-			 ["Use_Values_1", "f"], ["Use_Values_1", "f"], ["Use_Values_1", "f"], ["Use_Values_1", "f"]]],
+	       [INDX => [["id", "L", { lookup => \%SKILL }]]],
+	       [DESC => [["description", "a*"]]],
+	       [SKDT => [["attribute", "L", { lookup => \%ATTRIBUTE }],
+			 ["specialization", "L", { lookup => \%SPECIALIZATION }],
+			 ["use_values_1", "f"], ["use_values_1", "f"], ["use_values_1", "f"], ["use_values_1", "f"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [SNDG => [
-	       [NAME => [["ID", "Z*"]]],
-	       [CNAM => [["Creature_ID", "Z*"]]],
-	       [DATA => [["Data", "L"]]],
-	       [SNAM => [["Sound_ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [CNAM => [["creature_id", "Z*"]]],
+	       [DATA => [["data", "L"]]],
+	       [SNAM => [["sound_id", "Z*"]]],
 	      ]],
      [SOUN => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["Volume", "C"], ["MinRange", "C"], ["MaxRange", "C"]]],
-	       [FNAM => [["Name", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["volume", "C"], ["min_range", "C"], ["max_range", "C"]]],
+	       [FNAM => [["name", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [SPEL => [
-	       [NAME => [["ID", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
 	       [ENAM => @RD_Enchantment],
-	       [FNAM => [["Name", "Z*"]]],
-	       [SPDT => [["Type", "L", { lookup => \%SPEL_TYPE }], ["Cost", "L"],
-			 ["Flags", "L", { symrdflags => \%SPEL_FLAGS }]],
+	       [FNAM => [["name", "Z*"]]],
+	       [SPDT => [["type", "L", { lookup => \%SPEL_TYPE }], ["Cost", "L"],
+			 ["flags", "L", { symflags => \%SPEL_FLAGS }]],
 		{ rdflags => [qw(mergeable)] }],
 	      ], { rdflags => [qw(mergeable)] }],
      [SPLM => [			# ess, single record, no id
-	       [NAME => [["Name", "L"]]],
-	       [CNAM => [["Unknown_1", "L"], ["Unknown_1", "Z*"]]],
-	       [NAM0 => [["Unknown_1", "C"]]],
-	       [NPDT => [["Name", ["Z32", "a32"]], ["Unknown_1", "H16"], ["Magnitude", "l"],
-			 ["Seconds_Active", "f"], ["Long_1", "l"], ["Long_1", "l"]]],
-	       [SPDT => [["Type", "L", { lookup => \%SPLM_TYPE }], ["Name", ["Z40", "a40"]], ["Long_1", "L"], ["Long_1", "L"],
-			 ["Caster", ["Z32", "a32"]], ["Item", ["Z32", "a32"]], ["Long_1", "L"], ["unknown_1", "H80"]]],
-	       [TNAM => [["Target", "Z*"]]],
-	       [VNAM => [["Unknown_1", "L"]]],
-	       [XNAM => [["Unknown_1", "C"]]],
+	       [NAME => [["name", "L"]]],
+	       [CNAM => [["unknown_1", "L"], ["unknown_1", "Z*"]]],
+	       [NAM0 => [["unknown_1", "C"]]],
+	       [NPDT => [["name", ["Z32", "a32"]], ["unknown_1", "H16"], ["magnitude", "l"],
+			 ["seconds_active", "f"], ["long_1", "l"], ["long_1", "l"]]],
+	       [SPDT => [["type", "L", { lookup => \%SPLM_TYPE }], ["name", ["Z40", "a40"]], ["long_1", "L"], ["long_1", "L"],
+			 ["caster", ["Z32", "a32"]], ["item", ["Z32", "a32"]], ["long_1", "L"], ["unknown_1", "H80"]]],
+	       [TNAM => [["target", "Z*"]]],
+	       [VNAM => [["unknown_1", "L"]]],
+	       [XNAM => [["unknown_1", "C"]]],
 	      ], { id => sub {'()'} }],
      [SSCR => [
-	       [NAME => [["ID", "Z*"]]],
-	       [DATA => [["Name", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [DATA => [["name", "Z*"]]],
 	      ]],
      [STAT => [
-	       [NAME => [["ID", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [STLN => [
-	       [NAME => [["ID", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ONAM => [["Name", "Z*"]]],
+	       [NAME => [["id", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ONAM => [["name", "Z*"]]],
 	      ]],
      [TES3 => [
-	       [HEDR => [["Version", "f"], ["Is_Master", "L"], ["Author", ["Z32", "a32"]],
-			 ["Description", ["Z256", "a256"]], ["NRecords", "L"]],
+	       [HEDR => [["version", "f"], ["is_master", "L"], ["author", ["Z32", "a32"]],
+			 ["description", ["Z256", "a256"]], ["n_records", "L"]],
 		{
 		 tostr => sub { my($self) = @_;
 				my $ver = sprintf("%0.2f", $self->{version});
 				$ver =~ s/0+$//;
-				return(sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"$self->{author}"\n${MARGIN}Description:"$self->{description}"\n${MARGIN}NRecords:$self->{nrecords}}, ($self->{is_master}) ? "True" : "False")); },
+				return(sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"$self->{author}"\n${MARGIN}Description:"$self->{description}"\n${MARGIN}NRecords:$self->{n_records}}, ($self->{is_master}) ? "True" : "False")); },
 		}],
 	       [
-		[MAST => [["Master", "Z*"]], { rdflags => [qw(startgroup)] }],
+		[MAST => [["master", "Z*"]], { rdflags => [qw(startgroup)] }],
 		[DATA => [],
 		 {
 		  decode => sub {
 		      my($self, $buff) = @_;
+		      $self->{_buf_} = $buff;
 		      my($l1, $l2) = unpack("L2", $buff);
 		      $self->{length} = $l1 + ($l2 << 32);
 		      $self;
@@ -1876,47 +1890,60 @@ my @RECDEFS =
 		  },
 		 }],
 	       ],
-	       [GMDT => [["Unknown_1", "H48"], ["Current_Cell", ["Z64", "a64"]], ["Unknown_1", "L"], ["PCName", ["Z32", "a32"]]]],
-	       [SCRD => [["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"]]],
-	       [SCRS => [["Screenshot", "H*"]]],
+	       [GMDT => [["unknown_1", "H48"], ["current_cell", ["Z64", "a64"]], ["unknown_1", "L"], ["pc_name", ["Z32", "a32"]]]],
+	       [SCRD => [["long_1", "L"], ["long_1", "L"], ["long_1", "L"], ["long_1", "L"], ["long_1", "L"]]],
+	       [SCRS => [["screenshot", "H*"]]],
 	      ], {
 		  id => sub { 'TES3' },
 		 }],
      [VFXM => [			# ess, single record, no id
-	       [VNAM => [["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"], ["Long_1", "L"],
-			 ["Short", "S"], ["Unknown_1", "H44"],
-			 ["Name_1", ["Z36", "a36"]], ["Name_1", ["Z68", "a68"]]]],
+	       [VNAM => [["long_1", "L"], ["long_1", "L"], ["long_1", "L"], ["long_1", "L"], ["long_1", "L"], ["long_1", "L"],
+			 ["short", "S"], ["unknown_1", "H44"],
+			 ["name_1", ["Z36", "a36"]], ["name_1", ["Z68", "a68"]]]],
 	      ], { id => sub {'()'} }],
      [WEAP => [
-	       [NAME => [["ID", "Z*"]]],
-	       [ENAM => [["Enchantment", "Z*"]]],
-	       [FNAM => [["Name", "Z*"]]],
-	       [ITEX => [["Icon", "Z*"]]],
-	       [MODL => [["Model", "Z*"]]],
-	       [SCRI => [["Script", "Z*"]]],
-	       [WPDT => [["Weight", "f"], ["Value", "L"], ["Type", "S", { lookup => \%WEAPON_TYPE }],
-			 ["Health", "S"], ["Speed", "f"],
-			 ["Reach", "f"], ["Enchant_Points", "S"], ["Chop_Min", "C"], ["Chop_Max", "C"],
-			 ["Slash_Min", "C"], ["Slash_Max", "C"], ["Thrust_Min", "C"], ["Thrust_Max", "C"],
-			 ["Flags", "L", { symrdflags => \%WEAPON_FLAGS }]],
+	       [NAME => [["id", "Z*"]]],
+	       [ENAM => [["enchantment", "Z*"]]],
+	       [FNAM => [["name", "Z*"]]],
+	       [ITEX => [["icon", "Z*"]]],
+	       [MODL => [["model", "Z*"]]],
+	       [SCRI => [["script", "Z*"]]],
+	       [WPDT => [["weight", "f"], ["value", "L"], ["type", "S", { lookup => \%WEAPON_TYPE }],
+			 ["health", "S"], ["speed", "f"],
+			 ["reach", "f"], ["enchant_points", "S"], ["chop_min", "C"], ["chop_max", "C"],
+			 ["slash_min", "C"], ["slash_max", "C"], ["thrust_min", "C"], ["thrust_max", "C"],
+			 ["flags", "L", { symflags => \%WEAPON_FLAGS }]],
 		{ rdflags => [qw(mergeable)] }],
 	      ], { rdflags => [qw(mergeable)] }],
     );
 
-our %CODEC;
-
 # TES3::Record->new_from_recbuf "factory' for creating the various record types
 sub new_from_recbuf {
-    my($class, $rectype, $recbuf, $hdrflags, $hdrunk) = @_;
-    my $self = {};
-    $self->{_hdrflags_} = $hdrflags;
-    $self->{_hdrunk_} = $hdrunk;
-    $self->{_rectype_} = $rectype;
-    $self->{_recbuf_} = $recbuf;
-    bless($self, $rectype);	# we re-bless into the class "$rectype"
-    if (ASSERT) {
-	Carp::confess "TES3::Record::new($class, $rectype) is not a TES3::Record" unless $self->isa('TES3::Record');
-    }
+    my(undef, $rectype, $recbuf, $hdrflags, $hdrunk) = @_;
+    bless({ _rectype_ => $rectype,
+	    _hdrflags_ => $hdrflags,
+	    _hdrunk_ => $hdrunk,
+	    _recbuf_ => $recbuf }, $rectype);
+}
+
+# tr->new_from_tr - create a new blank tr record object with same type as parameter
+sub new_from_tr {
+    my($self, $copyhdr) = @_;
+    bless({ _rectype_ => $self->rectype,
+	    _hdrflags_ => ($copyhdr) ? $self->hdrflags : 0,
+	    _hdrunk_ => ($copyhdr) ? $self->hdrunk : 0,
+	    _recbuf_ => ''}, $self->rectype);
+}
+
+# TES3::Record->new_copy
+sub new_copy {
+    my($class, $tr) = @_;
+    my $self = { _rectype_ => $tr->rectype,
+		 _hdrflags_ => $tr->hdrflags,
+		 _hdrunk_ => $tr->hdrunk,
+		 _recbuf_ => $tr->recbuf };
+    bless($self, $self->{_rectype_});	# we re-bless into the class "$rectype"
+    $self->decode;
     return($self);
 }
 
@@ -1932,18 +1959,10 @@ sub decode {
     # decode the subrecords for this record
     my $rectype = $self->{_rectype_};
     my $recbuf = $self->{_recbuf_};
-    eval {
-	my @parts = unpack("(a4L/a*)*", $self->{_recbuf_});
-	while (my($subtype, $subrecbuf) = splice(@parts, 0, 2)) {
-	    my $tsr = $CODEC{$rectype}->{$subtype}->{init}->($self, $subrecbuf);
-	    $self->{_id_} = $tsr->{id} if (defined $tsr->{id});
-	    # inline $tr->append() for speed
-	    push(@{$self->{SL}}, $tsr);
-	    push(@{$self->{SH}->{$subtype}}, $tsr);
-	}
-    };
+    my @parts = eval { unpack("(a4L/a*)*", $recbuf); };
     if ($@) {
 	# eval'ed unpack choked, so try a safer (slightly slower) decoder
+	@parts = ();
 	my $p = 0;
 	my $rec_len = length($recbuf);
 	while ($p < $rec_len) {
@@ -1952,15 +1971,19 @@ sub decode {
 	    my $subrecbuf = substr($recbuf, $p, $sublen);
 	    $p += $sublen;
 	    if (defined $subrecbuf) {
-		my $tsr = $CODEC{$rectype}->{$subtype}->{init}->($self, $subrecbuf);
-		$self->{_id_} = $tsr->{id} if (defined $tsr->{id});
-		# inline $tr->append() for speed
-		push(@{$self->{SL}}, $tsr);
-		push(@{$self->{SH}->{$subtype}}, $tsr);
+		push(@parts, $subtype, $subrecbuf);
 	    } else {
-		err "$CURRENT_PLUGIN: Error, malformed subrec for ($rectype) type=$subtype pos=$p len=$sublen\n";
+		err "tr->decode(): Error, malformed subrec for ($rectype) type=$subtype pos=$p len=$sublen\n";
 	    }
 	}
+    }
+    while (my($subtype, $subrecbuf) = splice(@parts, 0, 2)) {
+	my $tsr = { _parent_ => $self };
+	bless($tsr, "${rectype}::${subtype}")->decode($subrecbuf);
+	$self->{_id_} = $tsr->{id} if (defined $tsr->{id});
+	# inline $tr->append()
+	push(@{$self->{SL}}, $tsr);
+	push(@{$self->{SH}->{$subtype}}, $tsr);
     }
     return($self);
 } # decode
@@ -1975,7 +1998,6 @@ sub encode {
 my %flag_cache;
 sub decode_flags {
     my($flags, $flagdefs) = @_;
-    Carp::confess("undefined flags") unless defined $flags;
     return($flag_cache{"$flags.$flagdefs"}) if (defined $flag_cache{"$flags.$flagdefs"});
     my @list = ();
     while (my($name, $val) = each %$flagdefs) {
@@ -2083,14 +2105,15 @@ sub gen_subrec_methods {
 	    }
 	}
 	no strict "refs";
-	# tsr->decode - unpack fields of a subrec into our self hash
+	# tsr->decode - unpack fields of a subrec (_buf_) into our self hash
 	unless ($package->can('decode')) {
 	    $method = "${package}::decode";
 	    *$method = sub {
 		use strict "refs";
 		my($self, $subrecbuf) = @_;
-		my(@vals) = unpack($decode_pack_format, $subrecbuf);
-		# assert scalar(@vals) == scalar(@fieldnames)
+		my(@vals) = unpack($decode_pack_format, $self->{_buf_} = $subrecbuf);
+		assert(scalar(@vals) == scalar(@fieldnames),
+		       "decode(): number of field values does not match number of field names") if (DBG);
 		$self->{$_} = shift(@vals) foreach (@fieldnames);
 		return($self);
 	    };
@@ -2145,31 +2168,16 @@ sub gen_subrec_methods {
 		};
 	    }
 	} # tsr->tostr
-
-#	# \@tsr::fieldnames
-#	my $name = "${package}::fieldnames";
-#	*$name = \@fieldnames;
     } 				# finished processing list of subrec fields
 
-    $CODEC{$rectype}->{$subtype}->{init} = sub {
-	use strict "refs";
-	my($parent, $init) = @_;
-	my $self = { _parent_ => $parent };
-	bless($self, $package);
-	$self->{_buf_} = $init;
-	$self->decode($init);
-	return($self);
-    };
     no strict "refs";
 
     # tsr->new()
     $method = "${package}::new";
     *$method = sub {
 	use strict "refs";
-	my($class, $parent, $hashref) = @_;
-	my $self = $hashref;
-	$self->{_parent_} = $parent;
-	bless($self, $class);
+	my($class, $hashref) = @_;
+	bless($hashref, $class);
     };
 
     # tsr->getbuf()
@@ -2222,12 +2230,12 @@ sub gen_class {
     no strict "refs";
     # definitions of methods for record classes
 
-    # $tr->new()
+    # (RECTYPE)->new()
     $method = "${rectype}::new";
     *$method = sub {
 	use strict "refs";
 	my($rectype, $init) = @_;
-	my $self = { R => [] };
+	my $self = { _hdrflags_ => 0, _hdrunk_ => 0 }; # _recbuf_ is undef for write_rec to check
 	bless($self, $rectype);
 	if (defined $init and ref($init) eq 'ARRAY') {
 	    if (ref($init->[0]) eq 'ARRAY') {
@@ -2235,26 +2243,26 @@ sub gen_class {
 		foreach my $subrecref (@$init) {
 		    my($subtype, $subhash) = @{$subrecref};
 		    no strict 'refs';
-		    $self->append("${rectype}::${subtype}"->new($self, $subhash));
+		    $self->append("${rectype}::${subtype}"->new($subhash));
 		}
 	    } else {
 		# or alternatively pass in array of subrec objects
-		foreach my $tsr (@$init) {
-		    $self->append($tsr);
-		}
+		$self->append($_) foreach (@$init);
 	    }
 	}
 	$self;
     };
 
-
     # $tr->append()
     $method = "${rectype}::append";
     *$method = sub {
 	use strict "refs";
-	my $self = shift(@_);
-	push(@{$self->{SL}}, @_);
-	push(@{$self->{SH}->{$_->subtype()}}, $_) foreach (@_);
+	my($self, @subrecs) = @_;
+	push(@{$self->{SL}}, @subrecs);
+	foreach my $tsr (@subrecs) {
+	    $tsr->{_parent_} = $self;
+	    push(@{$self->{SH}->{$tsr->subtype()}}, $tsr);
+	}
 	$self;
     };
 
@@ -2286,7 +2294,7 @@ sub gen_class {
     # tr->id()
     unless ($rectype->can('id')) {
 	$method = "${rectype}::id";
-	*$method = sub { $_[0]->{_id_}; };
+	*$method = sub { $_[0]->{_id_} };
     }
 
     # tr->recbuf()
@@ -2319,13 +2327,6 @@ sub gen_class {
 	*$method = sub {
 	    use strict "refs";
 	    my($self) = @_;
-	    if (ASSERT) {
-		abort("Undefined ID: ".$rectype) unless (defined $self->id());
-		abort("Undefined FlagStr: ".$rectype." ".$self->id) unless (defined $self->hdrflagstr());
-		foreach (@{$self->{SL}}) {
-		    abort("Undefined tostr: ".$_->fulltype) unless (defined $_->tostr());
-		}
-	    }
 	    qq{Record: $rectype "@{[$self->id()]}" Flags: @{[$self->hdrflagstr()]}\n} . $MARGIN .
 		join("\n${MARGIN}", map { $_->subtype().": ".$_->tostr() } @{$self->{SL}});
 	};
@@ -2373,9 +2374,8 @@ package main;
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
-    use constant ASSERT => scalar(grep(/^-?-assert$/, @ARGV));
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(err dbg prn abort));
+    Util->import(qw(abort assert dbg err prn));
 }
 
 TES3::Record::generate_classes();
@@ -2390,13 +2390,13 @@ use constant {
 ###GLOBALS (Miscellaneous)
 
 my $T3 = new TES3::Util;
-my $R = {};			# current decoded record (for modify) # TBD - nuke
+my $R = {};			# current decoded record (for modify)
 my $MASTER_ID;			# data loaded from masters
 my $GLOBCHARS = '*?';		# for filename matching
 my $RECTYPE_LEN = 4;
 
 # common Options
-our @STDOPT = (qw(debug assert verbose));
+our @STDOPT = (qw(debug verbose));
 our $opt_cell_object_match;
 our $opt_cell_object_no_match;
 our $opt_exterior;
@@ -2434,6 +2434,8 @@ my %CLEAN_PLUGIN =
 
 ###USAGES
 
+sub usage { print "@_\n"; exit(1); }
+
 my $FIXIT_USAGE = q{Usage: tes3cmd fixit
 
 DESCRIPTION:
@@ -2445,8 +2447,8 @@ The fixit command does the following operations:
 };
 
 sub opts_fixit {
-    $_[0] && do { abort $FIXIT_USAGE; };
-    GetOptions(@STDOPT) or abort $FIXIT_USAGE;
+    $_[0] && do { usage($FIXIT_USAGE); };
+    GetOptions(@STDOPT) or usage($FIXIT_USAGE);
 }
 
 my $RECOVER_USAGE = q{Usage: tes3cmd recover OPTIONS plugin...
@@ -2478,8 +2480,8 @@ tes3cmd recover "my plugin.esp"
 };
 
 sub opts_recover {
-    $_[0] && do { abort $RECOVER_USAGE; };
-    GetOptions(@STDOPT) or abort $RECOVER_USAGE;
+    $_[0] && do { usage($RECOVER_USAGE); };
+    GetOptions(@STDOPT) or usage($RECOVER_USAGE);
 }
 
 my $CLEAN_USAGE = q{Usage: tes3cmd clean OPTIONS plugin...
@@ -2591,7 +2593,7 @@ our $opt_clean_gmsts = 0;
 our $opt_clean_junk_cells = 0;
 our $opt_clean_replace = 0;
 sub opts_clean {
-    $_[0] && do { abort $CLEAN_USAGE; };
+    $_[0] && do { usage($CLEAN_USAGE); };
     GetOptions(@STDOPT,
 	       'all'           => \$opt_clean_all,
 	       'cell-objects'  => \$opt_clean_cell_objects,
@@ -2602,7 +2604,7 @@ sub opts_clean {
 	       'no-cache',
 	       'output-dir',
 	       'replace'       => \$opt_clean_replace)
-	or abort $CLEAN_USAGE;
+	or usage($CLEAN_USAGE);
     unless ($opt_clean_cell_objects or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
 	# turn on all safe cleaning options if none are selected.
 	$opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
@@ -2634,8 +2636,8 @@ tes3cmd esp "my plugin.esm"
 };
 
 sub opts_esp {
-    $_[0] && do { abort $ESP_USAGE; };
-    GetOptions(@STDOPT, 'overwrite') or abort $ESP_USAGE;
+    $_[0] && do { usage($ESP_USAGE); };
+    GetOptions(@STDOPT, 'overwrite') or usage($ESP_USAGE);
 }
 
 my $ESM_USAGE = q{Usage: tes3cmd esm OPTIONS plugin...
@@ -2659,8 +2661,8 @@ tes3cmd esm "my plugin.esp"
 };
 
 sub opts_esm {
-    $_[0] && do { abort $ESM_USAGE; };
-    GetOptions(@STDOPT, 'overwrite') or abort $ESM_USAGE;
+    $_[0] && do { usage($ESM_USAGE); };
+    GetOptions(@STDOPT, 'overwrite') or usage($ESM_USAGE);
 }
 
 my $MODIFY_USAGE = q{Usage: tes3cmd modify OPTIONS plugin...
@@ -2751,7 +2753,7 @@ our $opt_modify_program_file = '';
 our $opt_modify_replace = '';
 our $opt_modify_run = '';
 sub opts_modify {
-    $_[0] && do { abort $MODIFY_USAGE; };
+    $_[0] && do { usage($MODIFY_USAGE); };
     GetOptions(@STDOPT,
 	       'exterior',
 	       'flag=s@',
@@ -2765,7 +2767,7 @@ sub opts_modify {
 	       'sub-match=s',
 	       'sub-no-match|M=s',
 	       'type=s@')
-	or abort $MODIFY_USAGE;
+	or usage($MODIFY_USAGE);
 }
 
 my $MULTIPATCH_USAGE = q{Usage: tes3cmd multipatch
@@ -2851,14 +2853,14 @@ our $opt_multipatch_fogbug;
 our $opt_multipatch_merge_lists;
 our $opt_multipatch_summons_persist;
 sub opts_multipatch {
-    $_[0] && do { abort $MULTIPATCH_USAGE; };
+    $_[0] && do { usage($MULTIPATCH_USAGE); };
     GetOptions(@STDOPT,
 	       'cellnames'    => \$opt_multipatch_cellnames,
 	       'fogbug'       => \$opt_multipatch_fogbug,
 	       'merge-lists'  => \$opt_multipatch_merge_lists,
 	       'no-cache',
 	       'summons-persist' => \$opt_multipatch_summons_persist)
-	or abort $MULTIPATCH_USAGE;
+	or usage($MULTIPATCH_USAGE);
 
     unless ($opt_multipatch_cellnames or $opt_multipatch_fogbug or
 	    $opt_multipatch_merge_lists or $opt_multipatch_summons_persist) {
@@ -2929,7 +2931,7 @@ tes3cmd delete --id foo "my plugin.esp"
 };
 
 sub opts_delete {
-    $_[0] && do { abort $DELETE_USAGE; };
+    $_[0] && do { usage($DELETE_USAGE); };
     GetOptions(@STDOPT,
 	       'cell-object-match=s',
 	       'cell-object-no-match=s',
@@ -2942,7 +2944,7 @@ sub opts_delete {
 	       'sub-match=s',
 	       'sub-no-match|M=s',
 	       'type=s@')
-	or abort $DELETE_USAGE;
+	or usage($DELETE_USAGE);
 }
 
 my $OVERDIAL_USAGE = q{Usage: tes3cmd overdial OPTIONS plugin...
@@ -2978,10 +2980,10 @@ tes3cmd overdial "BT_Whitewolf_2_0.esm" "Suran_Underworld_2.5.esp"
 
 our $opt_overdial_single;
 sub opts_overdial {
-    $_[0] && do { abort $OVERDIAL_USAGE; };
+    $_[0] && do { usage($OVERDIAL_USAGE); };
     GetOptions(@STDOPT,
 	       'single' => \$opt_overdial_single)
-	or abort $OVERDIAL_USAGE;
+	or usage($OVERDIAL_USAGE);
 }
 
 my $COMMON_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
@@ -3001,8 +3003,8 @@ tes3cmd common "my plugin.esp" "Morrowind.esm"
 };
 
 sub opts_common {
-    $_[0] && do { abort $COMMON_USAGE; };
-    GetOptions(@STDOPT) or abort $COMMON_USAGE;
+    $_[0] && do { usage($COMMON_USAGE); };
+    GetOptions(@STDOPT) or usage($COMMON_USAGE);
 }
 
 
@@ -3066,7 +3068,7 @@ our $opt_diff_equal;
 our $opt_diff_not_equal;
 our $opt_diff_types;
 sub opts_diff {
-    $_[0] && do { abort $DIFF_USAGE; };
+    $_[0] && do { usage($DIFF_USAGE); };
     GetOptions(@STDOPT,
 	       'ignore-type=s@' => \@opt_diff_ignore_type,
 	       '1-not-2|e1'       => \$opt_diff_1_not_2,
@@ -3074,15 +3076,13 @@ sub opts_diff {
 	       'equal|eq'         => \$opt_diff_equal,
 	       'types'            => \$opt_diff_types,
 	       'not-equal|ne'     => \$opt_diff_not_equal)
-	or abort $DIFF_USAGE;
+	or usage($DIFF_USAGE);
 
     unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal or $opt_diff_types) {
 	$opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
     }
 }
 
-# --canon
-#	dump in canonical format
 my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
 
 OPTIONS:
@@ -3166,12 +3166,10 @@ tes3cmd dump --flag persistent --flag 0x2000 "my plugin.esp"
 
 our $opt_dump_raw;
 our $opt_dump_raw_with_header;
-our $opt_dump_canon = 0;
 my $RAWOUT;
 sub opts_dump {
-    $_[0] && do { abort $DUMP_USAGE; };
+    $_[0] && do { usage($DUMP_USAGE); };
     GetOptions(@STDOPT,
-	       'canon' => \$opt_dump_canon,
 	       'cell-object-match=s',
 	       'cell-object-no-match=s',
 	       'exterior',
@@ -3186,10 +3184,12 @@ sub opts_dump {
 	       'raw=s' => \$opt_dump_raw,
 	       'separator=s',
 	       'type=s@')
-	or abort $DUMP_USAGE;
+	or usage($DUMP_USAGE);
 
     $opt_dump_raw = $opt_dump_raw_with_header
 	if ($opt_dump_raw_with_header);
+    abort("did you forget to give a filename for raw output?")
+	if (defined($opt_dump_raw) and $opt_dump_raw =~ /^-/);
     $RAWOUT = open_for_write($opt_dump_raw)
 	if ($opt_dump_raw);
     print $RAWOUT make_header()
@@ -3267,7 +3267,7 @@ our $opt_header_synchronize;
 our $opt_header_update_masters;
 our $opt_header_update_record_count = 0;
 sub opts_header {
-    $_[0] && do { abort $HEADER_USAGE; };
+    $_[0] && do { usage($HEADER_USAGE); };
     GetOptions(@STDOPT,
 	       'author=s' => \$opt_header_author,
 	       'description=s' => \$opt_header_description,
@@ -3275,7 +3275,7 @@ sub opts_header {
 	       'synchronize' => \$opt_header_synchronize,
 	       'update-masters' => \$opt_header_update_masters,
 	       'update-record-count' => \$opt_header_update_record_count)
-	or abort $HEADER_USAGE;
+	or usage($HEADER_USAGE);
 
     $opt_header_update_masters = $opt_header_update_record_count = 1
 	if ($opt_header_synchronize);
@@ -3354,13 +3354,13 @@ our $opt_rename_interior = 0;
 our $opt_rename_exterior = 0;
 our $opt_rename_window_size = 38;
 sub opts_rename {
-    $_[0] && do { abort $RENAME_USAGE; };
+    $_[0] && do { usage($RENAME_USAGE); };
     GetOptions(@STDOPT,
 	       'interior' => \$opt_rename_interior,
 	       'exterior' => \$opt_rename_exterior,
 	       'report-only',
 	       'window-size=i' => \$opt_rename_window_size)
-	or abort $RENAME_USAGE;
+	or usage($RENAME_USAGE);
 
     my $type = uc(shift(@ARGV)) or abort "Missing required RECTYPE.SUBTYPE\n$RENAME_USAGE";
     abort "Error: Invalid record type.subtype requested: $type\n\nI only know these:\n@ren_valid_types\n" unless ($VALID_TYPE{$type});
@@ -3374,12 +3374,12 @@ sub opts_rename {
 
 sub opts_shell {
     GetOptions(@STDOPT) or
-	abort "Usage: tes3cmd -shell\n";
+	usage("Usage: tes3cmd -shell");
 }
 
 sub opts_wikiout {
     GetOptions(@STDOPT) or
-	abort "Usage: tes3cmd -wikiout\n";
+	usage("Usage: tes3cmd -wikiout");
 }
 
 our $opt_codectest_continue;
@@ -3388,7 +3388,7 @@ sub opts_codectest {
     GetOptions(@STDOPT,
 	       'continue|c' => \$opt_codectest_continue,
 	       'excluded-type|ignored-type|x=s@' => \@opt_codectest_excluded_type)
-	or abort "Usage: tes3cmd -codectest [--excluded-type|-x excluded_type]\n";
+	or usage("Usage: tes3cmd -codectest [--excluded-type|-x excluded_type]");
 }
 
 ###UTILITIES
@@ -3401,17 +3401,12 @@ sub make_header {
 			 ($opt->{ismaster} || 0),
 			 ($opt->{author} || "tes3cmd"),
 			 ($opt->{description} || "(generated)"),
-			 ($opt->{nrecords} || 0)));
+			 ($opt->{n_records} || 0)));
     my $tes3 = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
     die("Invalid TES3 header definition has incorrect size.")
 	unless (length($tes3) == MIN_TES3_PLUGIN_SIZE);
     return($tes3);
 }
-
-# is_interior($srh);
-sub is_interior { unpack("L", $_[0]->{DATA}[0]) & 1 }
-
-sub chop_nulls { unpack("Z*", $_[0]); }
 
 ###DATA DEFINITIONS
 
@@ -3652,10 +3647,10 @@ sub opts_help {
 	if (my $cmd_ref = $CMDS{$cmd_name}) {
 	    $cmd_ref->[0]->(1);	# exits
 	} else {
-	    abort $USAGE_ALL;
+	    usage($USAGE_ALL);
 	}
     }
-    abort $USAGE_ALL;
+    usage($USAGE_ALL);
 }
 
 ###IO
@@ -3671,13 +3666,15 @@ sub update_header {
     my($atime, $mtime) = (stat($plugin))[8,9];
     my $fh = open_for_update($plugin);
     my($rectype, $tr) = read_rec($fh, 'TES3', $plugin);
-    # TBD - check for undef tr
+    $tr->decode();
     my $tes3len = length($tr->recbuf);
     my $update_msg = '';
     my $modified = 0;
+    my $hedr_tsr;
     foreach my $tsr ($tr->subrecs()) {
 	my $subtype = $tsr->subtype();
 	if ($subtype eq 'HEDR') {
+	    $hedr_tsr = $tsr;
 	    if ($opt_header_author) {
 		$modified++;
 		if ($opt_header_author =~ /^\+(.*)/) {
@@ -3696,10 +3693,10 @@ sub update_header {
 	    }
 	    if ($opt_header_update_record_count) {
 		my $count = get_record_count($plugin);
-		if ($tsr->{nrecords} != $count) {
+		if ($tsr->{n_records} != $count) {
 		    $modified++;
-		    $update_msg .= qq{  Updated Record Count: $tsr->{nrecords} --> $count\n};
-		    $tsr->{nrecords} = $count;
+		    $update_msg .= qq{  Updated Record Count: $tsr->{n_records} --> $count\n};
+		    $tsr->{n_records} = $count;
 		}
 	    }
 	}
@@ -3717,26 +3714,18 @@ sub update_header {
 	}
     }
     unless ($quiet) {
-	my $banner = "$plugin:\n";
 	if (VERBOSE) {
-	    print $banner . $tr->tostr() . "\n";
+	    print "$plugin:\n" . $tr->tostr() . "\n";
 	} else {
 	    if (not($opt_header_author or $opt_header_description or $opt_header_update_record_count or
 		    $opt_header_update_masters or $opt_header_update_record_count) or
 		$opt_header_author or $opt_header_description) {
-		foreach my $tsr ($tr->subrecs()) {
-		    my $subtype = $tsr->subtype();
-		    if ($subtype eq 'HEDR') {
-			if ($opt_header_multiline) {
-			    print qq{$plugin:\n  AUTH=$tsr->{author}\n  DESC=$tsr->{description}\n};
-			} else {
-			    my $msg = qq{$plugin:  AUTH=$tsr->{author}  DESC=$tsr->{description}};
-			    $msg =~ s/(\r)?\n/\\r\\n/gm;
-			    print "$msg\n";
-			}
-			$banner = '';
-			last;
-		    }
+		if ($opt_header_multiline) {
+		    print qq{$plugin:\n  AUTH=$hedr_tsr->{author}\n  DESC=$hedr_tsr->{description}\n};
+		} else {
+		    my $msg = qq{$plugin:  AUTH=$hedr_tsr->{author}  DESC=$hedr_tsr->{description}};
+		    $msg =~ s/(\r)?\n/\\r\\n/gm;
+		    print "$msg\n";
 		}
 	    }
 	}
@@ -3751,12 +3740,11 @@ sub update_header {
 	my $backup = unique_backup_name($plugin);
 	copy($plugin, $backup) or abort "Error, copy failed $plugin -> $backup ($!)\n";
     }
-    $tr->encode();
     if ($tr->reclen() == $tes3len) {
 	seek($fh, 0, SEEK_SET);
 	write_rec($fh, $tr);
     } else {
-	abort "update_header(): output header size incorrect\n";
+	abort "update_header(): output header size incorrect (expected:$tes3len, got: @{[$tr->reclen()]})\n";
     }
     close($fh);
     utime($atime, $mtime, $plugin);
@@ -3790,86 +3778,14 @@ sub read_rec {
 
 sub write_rec {
     my($fh, $tr) = @_;
+    if (DBG) {
+	abort "null rectype" if not defined $tr->rectype;
+	abort "null reclen" if not defined $tr->reclen;
+	abort "null hdrunk" if not defined $tr->hdrunk;
+	abort "null hdrflags" if not defined $tr->hdrflags;
+    }
+    $tr->encode() unless (defined $tr->{_recbuf_});
     print $fh pack("a4LLLa*", $tr->rectype, $tr->reclen, $tr->hdrunk, $tr->hdrflags, $tr->recbuf);
-}
-
-sub subrec { # TBD remove
-    my($type, $val) = @_;
-    return(pack("a4La*", $type, length($val), $val));
-}
-
-sub ext_cell_name {
-    my($srh, $name) = @_;
-    $name = $name || (defined $srh->{RGNN}[0]) ? chop_nulls($srh->{RGNN}[0]) : "Wilderness";
-    if (length($srh->{DATA}[0]) < 12) { # size of "x[L]ll"
-	warn "Error, CELL: ($name) does not have a valid DATA subrecord\n";
-	return($name);
-    } else {
-	return(sprintf("$name (%d, %d)", unpack("x[L]ll", $srh->{DATA}[0])));
-    }
-}
-
-# given a reference to object returned by a decoder, return printable name
-# operates on current record: $R
-sub get_id {
-    my($rectype, $r) = @_;
-    $r ||= $R;
-    if ($rectype eq "INFO") {
-	foreach my $subr (@$r) {
-	    if ($subr->[0] eq 'INAM') {
-		return($subr->[1]->{id});
-	    }
-	}
-    } elsif ($rectype eq "CELL") {
-	my($name, $rgnn, $coord);
-	foreach my $subr (@$r) {
-	    if ($subr->[0] eq 'NAME') {
-		$name = $subr->[1]->{id} unless (defined $name);
-	    } elsif ($subr->[0] eq 'RGNN') {
-		$rgnn = $subr->[1]->{string} unless (defined $rgnn);
-	    } elsif ($subr->[0] eq 'DATA') {
-		if (defined $subr->[1]->{x}) {
-		    $coord = "$subr->[1]->{x}, $subr->[1]->{y}"; # External Cell
-		}
-	    }
-	    last if ($subr->[0] eq 'FRMR');
-	}
-	if (defined $coord) {	# this is an external cell
-	    my $where = $name || $rgnn || 'Wilderness';
-	    return("$where ($coord)");
-	} else {		# this is an internal cell
-	    return($name);
-	}
-    } elsif ($rectype eq "SCPT") {
-	foreach my $subr (@$r) {
-	    return(lc(chop_nulls($subr->[1]->{id})))
-		if ($subr->[0] eq 'SCHD');
-	}
-    } elsif ($rectype eq "LAND") {
-	foreach my $subr (@$r) {
-	    if ($subr->[0] eq 'INTV') {
-		my $x = $subr->[1]->{x};
-		my $y = $subr->[1]->{y};
-		return("($x, $y)");
-	    }
-	}
-    } elsif (($rectype eq "MGEF") or ($rectype eq "SKIL")) {
-	foreach my $subr (@$r) {
-	    if ($subr->[0] eq 'INDX') {
-		return($subr->[1]->{long});
-	    }
-	}
-    } elsif ($rectype eq "TES3") {
-	return('');
-    } else {
-	foreach my $subr (@$r) {
-	    if ($subr->[0] eq 'NAME') {
-		return($subr->[1]->{id});
-	    }
-	}
-    }
-    warn "get_id(): don't know how to make ID for: $rectype\n";
-    return(undef);
 }
 
 # TBD - use a generic "group" parser?
@@ -4048,6 +3964,7 @@ sub read_records {
 	while (my($rectype, $tr) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $tr);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
+	    #$tr->decode();
 	    my $id = $tr->id;
 	    if ($fun) {
 		$fun->($rectype, $id, $tr);
@@ -4069,7 +3986,7 @@ sub read_objects {
 	while (my($rectype, $tr) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $tr);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-	    $tr->decode;
+	    #$tr->decode();
 	    my $id = $tr->id;
 	    $plugin_id{$id}->{$rectype} = $tr if (defined $id);
 	}
@@ -4089,7 +4006,7 @@ sub read_dialogs {
 	    next if ($rectype ne "DIAL");
 	    $tr->decode();
 	    my $id = $tr->id();
-	    my $type = $tr->get('DATA','type');
+	    my $type = $tr->get('DATA', 'type');
 	    $dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
 	}
     };
@@ -4130,57 +4047,14 @@ sub get_wanted {
     return($wanted_ids, $wanted_types, $wanted_flags);
 }
 
-# decode record buffer into a list of [subtype, hr], where hr is a hash of the fields of the subrecord
-sub decode_rec { # TBD - nuke
-    my($plugin, $rectype, $rec) = @_;
-    #warn "decode_rec($plugin, $rectype, $rec)\n";
-    my $p = 0;
-    my $rec_len = length($rec);
-    # decode the subrecords for this record
-    my @subrecs = ();
-    while ($p < $rec_len) {
-	my($subrec_type, $subrec_len) = unpack("a4L", substr($rec, $p));
-	$p += 8;
-	my $subrec = substr($rec, $p, $subrec_len);
-	$p += $subrec_len;
-	if (defined $subrec) {
-	    my($hr) = decoder($rectype, $subrec_type)->($subrec);
-	    push(@subrecs, [$subrec_type, $hr]);
-	} else {
-	    warn "$plugin: Error, malformed subrec for ($rectype) type=$subrec_type pos=$p len=$subrec_len\n";
-	}
-    }
-    return($R = \@subrecs); # TBD - nuke
-}
-
-# encode and return a buffer for the subrecords that comprise the body of a full record.
-sub encode_rec { # TBD - nuke
-    my($rectype, $r) = @_;
-    $r ||= $R;
-    my $newrec = '';
-    foreach my $subr (@$r) {
-	my($subtype, $hr) = @$subr;
-	my $full_type = "${rectype}.${subtype}";
-	my $subrec = encoder($rectype, $subtype)->($hr);
-	$newrec .= pack("a4L/a*", $subtype, $subrec);
-    }
-    return($newrec);
-}
-
 # return 1 if record matches selection criteria of command line switches
 sub rec_match {
     my($plugin, $tr, $wanted_ids, $wanted_types, $wanted_flags) = @_;
-    return(0) if ($wanted_flags and not ($tr->hdrflags & $wanted_flags));
+    return(0, $tr) if ($wanted_flags and not ($tr->hdrflags & $wanted_flags));
     my $rectype = $tr->rectype;
-    if ($wanted_types) {
-	unless ($wanted_types->{INFO} and ($rectype eq 'DIAL')) {
-	    return(0) unless ($wanted_types->{$rectype});
-	}
-    }
-    $tr->decode();
-    my $id = $tr->id();
     return(0, $tr) if ($wanted_types and not $wanted_types->{$rectype});
-    return(0, $tr) if ($wanted_ids and $id !~ /$wanted_ids/i);
+    $tr->decode();
+    return(0, $tr) if ($wanted_ids and not ($tr->id =~ /$wanted_ids/i));
     if ($rectype eq 'CELL') {
 	if ($tr->is_interior()) {
 	    return(0, $tr) if ($opt_exterior);
@@ -4230,10 +4104,10 @@ sub process_plugin_for_update {
 	    $expected = undef;
 	    last if (not defined $rectype);
 	    # function can delete, modify, or pass rec thru
-	    my $newtr = $fun->($tr, $wanted_ids, $wanted_types, $wanted_flags);
-	    if (defined $newtr) { # rec was kept
-		if ($newtr) {	   # rec was changed
-		    write_rec($out, $newtr);
+	    my $trnew = $fun->($tr, $wanted_ids, $wanted_types, $wanted_flags);
+	    if (defined $trnew) { # rec was kept
+		if ($trnew) {	   # rec was changed
+		    write_rec($out, $trnew);
 		    $modified++;
 		} else {	# pass rec through unchanged
 		    write_rec($out, $tr);
@@ -4446,7 +4320,7 @@ sub load_leveled_lists {
 		    last if (not defined $rectype);
 		    next unless ($rectype =~ /^LEV[CI]$/);
 		    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-		    $tr->decode;
+		    $tr->decode();
 		    $levdat->{$lc_plugin}->{$rectype}->{$tr->id} = $tr;
 		}
 	    };
@@ -4483,33 +4357,33 @@ sub cmd_codectest {
     print "\n", ("=" x 65), "\n";
     print "TESTING codec on: $plugin ...\n";
     my $fun = sub {
-	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_);
-	my $newrec = '';
+	my($tr) = @_;
+	$tr->decode();
+	my $id = $tr->id();
 	my $rectype = $tr->rectype;
-	my $newflags = $tr->hdrflags;
+	my $trnew = $tr->new_from_tr(TES3::Record::COPY_HEADER);
 	foreach my $tsr ($tr->subrecs()) {
 	    my $oldsubrec = $tsr->getbuf();
+	    die "no buf: " . Dumper($tsr). "\n" if (not defined $oldsubrec);
 	    my $newsubrec = $tsr->encode();
 	    my $fulltype = $tsr->fulltype();
 	    unless ($exclude{$fulltype}) {
 		if ($newsubrec ne $oldsubrec) {
-		    my $id = $tr->id();
-		    my $subtype = $tsr->subtype();
-		    warn "CODEC FAILURE on ($rectype:$id) subrecord ${subtype}:\n";
+		    warn "CODEC FAILURE on ($id): ${fulltype}:\n";
 		    if (length($newsubrec) != length($oldsubrec)) {
 			warn "Encoded length mismatch: subrec: @{[length($oldsubrec)]}  newrec: @{[length($newsubrec)]}\n";
 		    }
 		    dumpit('original', $oldsubrec);
 		    dumpit('re-coded', $newsubrec);
-		    warn Dumper($tsr);
+		    #warn Dumper($tsr);
 		    abort "Test Halted\n" unless ($opt_codectest_continue);
 		}
 	    }
-	    $newrec .= pack("a4L/a*", $tsr->subtype(), $newsubrec);
+	    $trnew->append($tsr);
 	}
+	my $newrec = $trnew->encode;
 	unless ($exclude{$rectype}) {
-	    my $rec = $tr->recbuf;
-	    if ($rec ne $newrec) {
+	    if ((my $rec = $tr->recbuf) ne $newrec) {
 		warn "CODEC FAILURE on record ${rectype}:\n";
 		dumpit('original', $rec);
 		dumpit('re-coded', $newrec);
@@ -4517,9 +4391,9 @@ sub cmd_codectest {
 		warn "Full Record:\n$print_rec\n";
 	    }
 	}
-	return($newrec, $newflags);
+	return($trnew);
     };
-    process_plugin_for_update($plugin, $fun, TES3::Record::STASHBUF, "test_");
+    process_plugin_for_update($plugin, $fun, "test_");
 } # cmd_codectest
 
 sub cmd_fixit {
@@ -4547,8 +4421,10 @@ sub cmd_wikiout {
 sub multipatch_check_fogbug {
     my($plugin, $tr, $fogcell) = @_;
     my $name = $tr->id();
-    my $fog_den_data = $tr->get('DATA','fog_density');
-    my $fog_den_ambi = $tr->get('AMBI','fog_density');
+    my $tsr_data = $tr->get('DATA');
+    my $tsr_ambi = $tr->get('AMBI');
+    my $fog_den_data = $tsr_data->{fog_density};
+    my $fog_den_ambi = $tsr_ambi->{fog_density};
     return unless (defined($fog_den_ambi) and defined($fog_den_data));
     if ($fog_den_ambi != $fog_den_data) {
 	print "$plugin: [CELL $name] Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n";
@@ -4556,6 +4432,7 @@ sub multipatch_check_fogbug {
     }
     if (0.0 == $fog_den_data) {
 	print "  [FOGBUG] $plugin\t\tCELL: $name\n" if (VERBOSE);
+	my $trnew = CELL->new([$tsr_data, $tsr_ambi]);
 	$fogcell->{$name} = [$tr, $plugin];
     } else {
 	if (defined($fogcell->{$name})) {
@@ -4567,8 +4444,8 @@ sub multipatch_check_fogbug {
 
 sub multipatch_check_cell_rename_reversions {
     my($plugin, $tr, $rencell) = @_;
-    my $name = $tr->get('NAME','name');
-    my $coord = $tr->get('DATA','x') . ", " . $tr->get('DATA','y');
+    my $name = $tr->get('NAME', 'name');
+    my $coord = $tr->get('DATA', 'x') . ", " . $tr->get('DATA', 'y');
     if (exists $rencell->{$coord}->{NAME}) {
 	my $prevname = $rencell->{$coord}->{NAME};
 	if ($prevname ne $name) {
@@ -4580,10 +4457,10 @@ sub multipatch_check_cell_rename_reversions {
 		my $prevname = $rencell->{$coord}->{NAME};
 		my $prevplug = $rencell->{$coord}->{PLUG};
 		print qq{  [REVNAME] CELL: ($coord) Replacing: [$prevplug]:"$prevname" with: [$plugin]:"$name"\n} if (VERBOSE);
-		my $newtr = CELL->new([$tr->get('NAME'), $tr->get('DATA')])->encode();
+		my $trnew = CELL->new([$tr->get('NAME'), $tr->get('DATA')]);
 		$rencell->{$coord}->{NAME} = $name;
 		$rencell->{$coord}->{PLUG} = $plugin;
-		$rencell->{$coord}->{REC} = $newtr;
+		$rencell->{$coord}->{REC} = $trnew;
 	    } else {
 		print qq{  [REVNAME] CELL: ($coord) Skipping null name: [$plugin]:"$name"\n} if (VERBOSE);
 	    }
@@ -4620,9 +4497,9 @@ sub merge_leveled_lists {
 	    }
 	    my $last_tr = $ll->{$rectype}->{$id}->[-1]->[1];
 	    # strategy: last guy wins for List Flags
-	    my $last_list_flags = $last_tr->get('DATA','list_flags');
+	    my $last_list_flags = $last_tr->get('DATA', 'list_flags');
 	    # strategy: last guy wins for "Chance_None"
-	    my $last_chance = $last_tr->get('NNAM','chance_none');
+	    my $last_chance = $last_tr->get('NNAM', 'chance_none');
 	    my %levlist;
 	    foreach my $lref (@{$ll->{$rectype}->{$id}}) {
 		my($plugin, $tr) = @$lref;
@@ -4676,15 +4553,15 @@ sub merge_leveled_lists {
 		$tr = LEVC->new($newrec);
 		foreach my $lref (@sorted_list) {
 		    my($element_id, $level) = @$lref;
-		    $tr->append(LEVC::CNAM->new($tr, { creature_id => $element_id }),
-				LEVC::INTV->new($tr, { level => $level }));
+		    $tr->append(LEVC::CNAM->new({ creature_id => $element_id }),
+				LEVC::INTV->new({ level => $level }));
 		}
 	    } else {
 		$tr = LEVI->new($newrec);
 		foreach my $lref (@sorted_list) {
 		    my($element_id, $level) = @$lref;
-		    $tr->append(LEVI::INAM->new($tr, { item_id => $element_id }),
-				LEVI::INTV->new($tr, { level => $level }));
+		    $tr->append(LEVI::INAM->new({ item_id => $element_id }),
+				LEVI::INTV->new({ level => $level }));
 		}
 	    }
 	    push(@merged_lists, $tr);
@@ -4783,8 +4660,7 @@ sub cmd_multipatch {
 		my $data_tsr = $tr->get('DATA');
 		my $ambi_tsr = $tr->get('AMBI');
 		$data_tsr->{fog_density} = $ambi_tsr->{fog_density} = 0.01;
-		# write NAME, DATA, AMBI
-		write_rec($out, $tr); # 'CELL', CELL->new([$name_tsr, $data_tsr, $ambi_tsr])->encode(), 0, 0);
+		write_rec($out, CELL->new([$name_tsr, $data_tsr, $ambi_tsr]));
 	    }
 	}
 	if ($nsumcrea) {
@@ -4799,7 +4675,7 @@ sub cmd_multipatch {
 	    my %count;
 	    foreach my $tr (@$merged_lists) {
 		$count{$tr->rectype()}++;
-		write_rec($out, $tr); # $tr->rectype(), $tr->encode(), 0, 0);
+		write_rec($out, $tr);
 	    }
 	    print "\nMerged Leveled Lists ($count{LEVC} LEVC, $count{LEVI} LEVI)\n";
 	}
@@ -4971,7 +4847,7 @@ sub cmd_delete {
     my $delete_subrecords = ($opt_sub_match or $opt_sub_no_match);
     my $delete_cell_objects = ($opt_cell_object_match or $opt_cell_object_no_match);
     my $fun = sub {
-	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode
+	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
 	# we pass through all records that did not match the standard record selection switches of rec_match()
 	return($tr->recbuf, $tr->hdrflags) unless ($rec_match);
 	my($rectype, $id) = ($tr->rectype, $tr->id);
@@ -5223,7 +5099,7 @@ sub cmd_esm {
     convert_plugin($plugin);
 }
 
-my %gmst_type = ('i' => 'INTV', 'f' => 'FLTV', 's' => 'STRV');
+my %gmst_type = ('i' => [INTV => 'integer'], 'f' => [FLTV => 'float'], 's' => [STRV => 'string']);
 sub cmd_clean {
     my($plugin) = @_;
     if ($plugin =~ /\.ess$/) {
@@ -5242,39 +5118,35 @@ sub cmd_clean {
     my %duptype = map { $_, 1 } @CLEAN_DUP_TYPES;
     my %my_master;
     my $fun = sub {
-	my($rec_match, $rectype, $id, $rec, $srh, $flags, $unk) = @_;
-	my $newrec = $rec;
-	my $newflags = $flags;
-	my $r;
+	my($rec_match, $plug_tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
+	my($id, $rectype) = ($plug_tr->id, $plug_tr->rectype);
 	if ($rectype eq 'GMST') {
 	    if ($opt_clean_gmsts) {
-		my $type = $gmst_type{substr($id, 0, 1)};
-		my $val = $srh->{$type}[0];
+		my($type, $field) = @{$gmst_type{substr($id, 0, 1)}};
+		my $val = $plug_tr->get($type, $field);
 		my $hexval = unpack("H*", "$type $val");
 		if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Bloodmoon: $id\n";
-		    return;
+		    return;	# return undef to delete
 		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Tribunal:  $id\n";
-		    return;
+		    return;	# return undef to delete
 		}
 	    }
 	} elsif ($rectype eq 'CELL') {
 	    my $cleaned_ambi;
 	    my $cleaned_whgt;
-	    my $plug_srl;
 	    if ($opt_clean_cell_objects) {
 		# CLEAN CELL OBJECTS
-		my($p_hdr, $p_objs, $p_objidx) = parse_cell_objects($plugin, $rec);
+		my($p_hdr, $p_objs, $p_objidx) = parse_cell_objects($plugin, $plug_tr);
 		my @new_objs;
 		foreach my $obj (@$p_objs) {
 		    if ($obj eq 'NAM0') { push(@new_objs, $obj); next; }
 		    my $object_body = $obj->[1];
 		    my $cleaned_obj = 0;
 		    foreach my $master (keys %{my_master}) {
-			if (my $lref = $MASTER_ID->{$master}->{$id}->{CELL}) {
-			    my($mast_srh, $mast_rec) = @{$lref};
-			    my($m_hdr, $m_objs, $m_objidx) = parse_cell_objects($plugin, $mast_rec);
+			if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{CELL}) {
+			    my($m_hdr, $m_objs, $m_objidx) = parse_cell_objects($plugin, $mast_tr);
 			    if ($m_objidx->{$object_body}->[0] == $obj->[0]->[0]) { # compare master and plugin FRMR object indices
 				$cleaned_obj++;
 				last;
@@ -5289,60 +5161,55 @@ sub cmd_clean {
 		    }
 		}
 		if (scalar(@new_objs) != scalar(@$p_objs)) {
-		    $rec = assemble_cell_objects($p_hdr, \@new_objs);
-		    $r = decode_rec($plugin, $rectype, $rec);
-		    $plug_srl = parse_subrec_list($rec);
+		    $plug_tr = assemble_cell_objects($p_hdr, \@new_objs);
+		    # TBD - this was to reparse a modified rec
+		    #$r = decode_rec($plugin, $rectype, $rec);
+		    #$plug_srl = parse_subrec_list($rec);
 		}
 	    }
 	    # we check plugin against all masters, as we can't know with which masters the author created it
 	    # and ideally, we don't want the result of cleaning to be dependent on load order.
 	    foreach my $master (keys %{my_master}) {
-		if (my $lref = $MASTER_ID->{$master}->{$id}->{CELL}) {
-		    my($mast_srh, $mast_rec) = @{$lref};
-		    if (is_interior($srh)) {
+		if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{CELL}) {
+		    if ($plug_tr->is_interior) {
 			if ($opt_clean_cell_params) { # check for redundant AMBI/WHGT
 			    # CLEAN AMBI
-			    $r ||= decode_rec($plugin, $rectype, $rec);
 			    unless ($cleaned_ambi) {
-				if (defined($srh->{AMBI}) and ($srh->{AMBI}[0] eq $mast_srh->{AMBI}[0])) {
-				    $r = remove_subrec($r, 'AMBI');
+				if (defined($plug_tr->get('AMBI')) and ($plug_tr->get('AMBI')->getbuf eq $mast_tr->get('AMBI')->getbuf)) {
+				    $plug_tr->delete_subrec('AMBI');
 				    $cleaned_ambi++;
 				}
 			    }
 			    # CLEAN WHGT
 			    # (some plugins, like Morrowind.esm, use an INTV subrecord instead of WHGT)
 			    unless ($cleaned_whgt) {
-				my $plugin_whgt = (defined($srh->{WHGT}) and $srh->{WHGT}[0]) ? unpack("f", $srh->{WHGT}[0]) : undef;
+				my $plugin_whgt = $plug_tr->get('WHGT', 'water_height');
 				my $whgt_type = 'WHGT';
 				unless (defined $plugin_whgt) {
-				    $plug_srl ||= parse_subrec_list($rec);
-				    if ($plug_srl->[2]->[0] eq 'INTV') {
+				    if ($plug_tr->subtype eq 'INTV') {
 					# this would be unusual. I think INTV water heights must be from very old Construction Sets.
-					$plugin_whgt = unpack("l", $plug_srl->[2]->[1]);
+					$plugin_whgt = $plug_tr->get('INTV', 'water_height');
 					$whgt_type = 'INTV';
 				    }
 				}
-				my $master_whgt = ($mast_srh->{WHGT}[0]) ? unpack("f", $mast_srh->{WHGT}[0]) : undef;
+				my $master_whgt = $mast_tr->get('WHGT', 'water_height');
 				unless (defined $master_whgt) {
-				    my $mast_srl = parse_subrec_list($mast_rec);
-				    if ($mast_srl->[2]->[0] eq 'INTV') {
-					$master_whgt = unpack("l", $mast_srl->[2]->[1]);
-				    }
+				    $master_whgt = $mast_tr->get('INTV', 'water_height'); # want first INTV before any FRMR
 				}
 				if (defined($plugin_whgt) and defined($master_whgt) and ($plugin_whgt == $master_whgt)) {
-				    $r = remove_subrec($r, $whgt_type, 1);
+				    $plug_tr->delete_subrec($whgt_type, 1);
 				    $cleaned_whgt++;
 				}
 			    }
 			}
 		    }
 		    if ($opt_clean_junk_cells) {
-			if ((scalar keys %{$srh}) < 4) {
+			if (scalar($plug_tr->subrecs()) < 4) {
 			    # junk cells always contain less than 4 subrecords
 			    my $modified = 0;
-			    for my $type (keys %{$srh}) {
+			    foreach my $type (map { $_->subtype() } $plug_tr->subrecs()) {
 				if (not $JUNKCELL_SUBTYPE{$type} or
-				    $srh->{$type}[0] ne $mast_srh->{$type}[0]) {
+				    $plug_tr->get($type)->getbuf() ne $mast_tr->get($type)->getbuf()) {
 				    # record contains subrecords or some modified data, so it isn't junk
 				    $modified++;
 				    last;
@@ -5350,7 +5217,7 @@ sub cmd_clean {
 			    }
 			    unless ($modified) {
 				print " Cleaned Junk CELL:  $id\n";
-				return;
+				return; # return undef to delete this record
 			    }
 			}
 		    }
@@ -5363,42 +5230,39 @@ sub cmd_clean {
 		print " Cleaned redundant " . join(',', @what) . " from CELL: $id\n";
 	    }
 	} elsif ($rectype eq 'TES3') {
-	    foreach my $mast (@{$srh->{MAST}}) {
-		my $master = chop_nulls($mast);
+	    foreach my $master ($plug_tr->getall('MAST', 'master')) {
 		$my_master{lc($master)}++;
 		load_master($master);
 	    }
 	}
 	if ($opt_clean_dups) {
 	    foreach my $master (keys %{my_master}) {
-		if (my $lref = $MASTER_ID->{$master}->{$id}->{$rectype}) {
-		    my($mast_srh, $mast_rec, $mast_flags) = @{$lref};
-		    if ($duptype{$rectype} and ($rec eq $mast_rec) and ($flags eq $mast_flags)) {
+		if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{$rectype}) {
+		    if ($duptype{$rectype} and
+			($plug_tr->recbuf() eq $mast_tr->recbuf()) and
+			($plug_tr->hdrflags eq $mast_tr->hdrflags)) {
 			print " Cleaned Duplicate $rectype:  $id\n";
 			return;
 		    }
 		}
 	    }
 	}
-	$newrec = encode_rec($rectype, $r) if ($r); # update record buffer if we have modified it
-	return($newrec, $newflags);
+	my $newrec = $plug_tr->encode(); # update record buffer if we have modified it
+	return($newrec, $plug_tr->hdrflags);
     };
     if ($opt_clean_replace) {
 	process_plugin_for_update($plugin, $fun);
     } else {
-	process_plugin_for_update($plugin, $fun, undef, "Clean_");
+	process_plugin_for_update($plugin, $fun, "Clean_");
     }
 } # cmd_clean
 
 sub cmd_dump {
     my($plugin) = @_;
     my $dump_banner;
-    unless ($opt_no_banner) {
-	$dump_banner = "\nPlugin: $plugin\n";
-	$dump_banner = "#(Codec_Version: $TES3::Record::CODEC_VERSION)\n$dump_banner" if ($opt_dump_canon);
-    }
+    $dump_banner = "\nPlugin: $plugin\n" unless ($opt_no_banner);
     my $fun = sub {
-	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode
+	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
 	return unless ($rec_match);
 	my $unkstr = (DBG) ? sprintf("  Unk:%04x", $tr->unk) : '';
 	my $id = $tr->id();
@@ -5406,67 +5270,62 @@ sub cmd_dump {
 	    print $dump_banner;
 	    $dump_banner = "";
 	}
-	if ($opt_dump_canon) {
-	    # TBD???
-	    err "Dumping in a canonical format is not implemented";
-	} else {
-	    # pretty print
-	    $print_rec ||= $tr->tostr();
-	    my $rectype = $tr->rectype;
-	    if ($opt_list) {
-		if ($rectype eq 'CELL') {
-		    my $objcnt = (defined $tr->{SH}->{FRMR}) ? scalar(@{$tr->{SH}->{FRMR}}) : 0;
-		    printf "$rectype: %-45s\t%5d objects\n", $id, $objcnt;
-		} else {
-		    print "$rectype: $id\n";
-		}
-	    } elsif ($opt_dump_raw) {
-		if ($opt_cell_object_match and ($rectype eq 'CELL')) {
-		    my @frmr_data;
-		    my $frmr_match = 0;
-		    my @newrec = ();
-		    my $first_frmr_seen = 0;
-		    my $subrec_str = '';
-		    my $tostr;
-		    foreach my $tsr ($tr->subrecs()) {
-			my $subtype = $tsr->subtype();
-			$subrec_str .= $tsr->tostr();
-			if ($first_frmr_seen) {
-			    if ($subtype eq 'FRMR') {
-				if ($subrec_str =~ /$opt_cell_object_match/i) {
-				    $frmr_match++;
-				    push(@newrec, @frmr_data);
-				}
-				$subrec_str = '';
-				@frmr_data = (); # start a new group
+	# pretty print
+	$print_rec ||= $tr->tostr();
+	my $rectype = $tr->rectype;
+	if ($opt_list) {
+	    if ($rectype eq 'CELL') {
+		my $objcnt = (defined $tr->{SH}->{FRMR}) ? scalar(@{$tr->{SH}->{FRMR}}) : 0;
+		printf "$rectype: %-45s\t%5d objects\n", $id, $objcnt;
+	    } else {
+		print "$rectype: $id\n";
+	    }
+	} elsif ($opt_dump_raw) {
+	    if ($opt_cell_object_match and ($rectype eq 'CELL')) {
+		my @frmr_data;
+		my $frmr_match = 0;
+		my @newrec = ();
+		my $first_frmr_seen = 0;
+		my $subrec_str = '';
+		my $tostr;
+		foreach my $tsr ($tr->subrecs()) {
+		    my $subtype = $tsr->subtype();
+		    $subrec_str .= $tsr->tostr();
+		    if ($first_frmr_seen) {
+			if ($subtype eq 'FRMR') {
+			    if ($subrec_str =~ /$opt_cell_object_match/i) {
+				$frmr_match++;
+				push(@newrec, @frmr_data);
 			    }
+			    $subrec_str = '';
+			    @frmr_data = (); # start a new group
+			}
+			push(@frmr_data, pack("a4L/a", $subtype, $tsr->getbuf()));
+		    } else {
+			if ($subtype eq 'FRMR') {
+			    $first_frmr_seen = 1;
 			    push(@frmr_data, pack("a4L/a", $subtype, $tsr->getbuf()));
 			} else {
-			    if ($subtype eq 'FRMR') {
-				$first_frmr_seen = 1;
-				push(@frmr_data, pack("a4L/a", $subtype, $tsr->getbuf()));
-			    } else {
-				push(@newrec, pack("a4L/a", $subtype, $tsr->getbuf()));
-			    }
+			    push(@newrec, pack("a4L/a", $subtype, $tsr->getbuf()));
 			}
 		    }
-		    if ($subrec_str =~ /$opt_cell_object_match/i) {
-			$frmr_match++;
-			push(@newrec, @frmr_data);
-		    }
-		    if ($frmr_match) {
-			my $newrec = join("", @newrec);
-			print $RAWOUT pack("a4LLLa*", $rectype, length($newrec), $tr->hdrunk, $tr->hdrflags, $newrec);
-		    }
-		} else {
-		    print $RAWOUT pack("a4LLLa*", $rectype, $tr->reclen, $tr->hdrunk, $tr->hdrflags, $tr->recbuf);
+		}
+		if ($subrec_str =~ /$opt_cell_object_match/i) {
+		    $frmr_match++;
+		    push(@newrec, @frmr_data);
+		}
+		if ($frmr_match) {
+		    my $newrec = join("", @newrec);
+		    print $RAWOUT pack("a4LLLa*", $rectype, length($newrec), $tr->hdrunk, $tr->hdrflags, $newrec);
 		}
 	    } else {
-		print "\n$print_rec\n" if ($print_rec);
+		print $RAWOUT pack("a4LLLa*", $rectype, $tr->reclen, $tr->hdrunk, $tr->hdrflags, $tr->recbuf);
 	    }
+	} else {
+	    print "\n$print_rec\n" if ($print_rec);
 	}
     };
-    process_plugin_for_read($plugin, $fun, ($opt_dump_raw) ? TES3::Record::STASHBUF : undef);
+    process_plugin_for_read($plugin, $fun);
 } # cmd_dump
 
 sub cmd_recover {
@@ -5488,11 +5347,11 @@ sub cmd_recover {
 	    ($rectype, $tr) = read_rec($inp, $expected, $plugin);
 	    $expected = undef;
 	    abort "Error, Invalid record type: $rectype\n" unless ($TES3::Record::RECTYPES{$rectype});
-	    $tr->decode;
+	    $tr->decode();
+	    my $id = $tr->id;
 	    foreach my $subtype (map {$_->subtype} $tr->subrecs()) {
 		abort qq{Error, Invalid record subtype: "$subtype"\n} unless ($TES3::Record::RECTYPES{$rectype}->{$subtype});
 	    }
-	    my $id = $tr->id;
 	    printf "Offset: %8d  Found: $rectype $id\n", $inp_offset if (DBG);
 	};
 	if ($@) {
@@ -5567,11 +5426,11 @@ sub cmd_shell {
 }
 
 sub main {
-    abort $USAGE_ALL if ((scalar(@ARGV) == 0) or
-		       (scalar(@ARGV) == 1 and $ARGV[0] =~ /help/i));
+    usage($USAGE_ALL)
+	if ((scalar(@ARGV) == 0) or (scalar(@ARGV) == 1 and $ARGV[0] =~ /help/i));
     my $cmd_ref;
     my $cmd_name = shift(@ARGV);
-    abort $USAGE_ALL unless ($cmd_ref = $CMDS{$cmd_name});
+    usage($USAGE_ALL) unless ($cmd_ref = $CMDS{$cmd_name});
     my($cmd_getopts, $cmd, $type) = @{$cmd_ref};
     $cmd_getopts->();
     my @plugins;
@@ -5593,7 +5452,7 @@ sub main {
 	# put plugins in load order
 	@plugins = sort { -M $b <=> -M $a } @plugins;
 	# these commands process a single plugin at a time
-	abort $USAGE_ALL if (scalar(@plugins) == 0);
+	usage($USAGE_ALL) if (scalar(@plugins) == 0);
 	for my $plugin (@plugins) {
 	    $cmd->($plugin);
 	}
