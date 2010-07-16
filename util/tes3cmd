@@ -12,8 +12,8 @@ $::VERSION = "0.37h";
 #  cmd_codectest
 #  cmd_header
 #  cmd_multipatch
-# TEST: cmd_common
-# TEST: cmd_diff
+#  cmd_common
+#  cmd_diff
 # TEST: cmd_dump
 # TEST: cmd_esm
 # TEST: cmd_esp
@@ -3695,7 +3695,7 @@ sub update_header {
 		my $count = get_record_count($plugin);
 		if ($tsr->{n_records} != $count) {
 		    $modified++;
-		    $update_msg .= qq{  Updated Record Count: $tsr->{n_records} --> $count\n};
+		    $update_msg .= qq{  $plugin: Updated Record Count: $tsr->{n_records} --> $count\n};
 		    $tsr->{n_records} = $count;
 		}
 	    }
@@ -3707,7 +3707,7 @@ sub update_header {
 		my $length = $tsr->{length};
 		if ((my $newlen = -s ($T3->datapath($master))) != $length) {
 		    $modified++;
-		    $update_msg .= qq{  Synchronized master "$master" length: $length --> $newlen\n};
+		    $update_msg .= qq{  $plugin: Synchronized master "$master" length: $length --> $newlen\n};
 		    $tsr->{length} = $newlen;
 		}
 	    }
@@ -3739,12 +3739,13 @@ sub update_header {
 	# make backup of plugin before making changes only if updating
 	my $backup = unique_backup_name($plugin);
 	copy($plugin, $backup) or abort "Error, copy failed $plugin -> $backup ($!)\n";
-    }
-    if ($tr->reclen() == $tes3len) {
-	seek($fh, 0, SEEK_SET);
-	write_rec($fh, $tr);
-    } else {
-	abort "update_header(): output header size incorrect (expected:$tes3len, got: @{[$tr->reclen()]})\n";
+	$tr->encode();
+	if ($tr->reclen() == $tes3len) {
+	    seek($fh, 0, SEEK_SET);
+	    write_rec($fh, $tr);
+	} else {
+	    abort "update_header(): output header size incorrect (expected:$tes3len, got: @{[$tr->reclen()]})\n";
+	}
     }
     close($fh);
     utime($atime, $mtime, $plugin);
@@ -3946,7 +3947,7 @@ sub fix_output {
     } else {
 	abort qq{Error, "$plugin" name does not end in .esm/.esp/.ess\n};
     }
-}
+} # fix_output
 
 sub cleanup_temp {
     my($inp, $plugin) = @_;
@@ -3964,7 +3965,7 @@ sub read_records {
 	while (my($rectype, $tr) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $tr);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-	    #$tr->decode();
+	    $tr->decode();
 	    my $id = $tr->id;
 	    if ($fun) {
 		$fun->($rectype, $id, $tr);
@@ -3986,7 +3987,7 @@ sub read_objects {
 	while (my($rectype, $tr) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $tr);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-	    #$tr->decode();
+	    $tr->decode();
 	    my $id = $tr->id;
 	    $plugin_id{$id}->{$rectype} = $tr if (defined $id);
 	}
