@@ -14,22 +14,20 @@ $::VERSION = "0.37h";
 #  cmd_multipatch
 #  cmd_common
 #  cmd_diff
+#  cmd_shell
+#  cmd_wikiout
+#  cmd_esm
+#  cmd_esp
+#  cmd_overdial
+#  cmd_recover (try to recover at subrecord granularity? save lost data and dump like od)
 # TEST: cmd_dump
-# TEST: cmd_esm
-# TEST: cmd_esp
-# TEST: cmd_overdial
-# TEST: cmd_recover
-# TEST: cmd_shell
-# TEST: cmd_wikiout
-# UPDATE/TEST: cmd_clean
-# UPDATE/TEST: cmd_delete
+# TEST: cmd_delete
+# TEST: cmd_clean
+# TEST: cmd_modify (fix doco for helpers)
 # UPDATE/TEST: cmd_fixit
-# UPDATE/TEST: cmd_modify (use process_plugin_for_update)
-# UPDATE/TEST: cmd_rename (use process_plugin_for_update) (just reuse modify command?)
-
 
 # TBD:
-# do something about change to dumprec/setrec and modify doc !!!
+# implement logfile for detail output (delete, modify, clean, multipatch)
 # put commands and opts in a big dispatch table?
 # allow commands to be abbreviated
 # TES::File (open_for_read, backup, etc)
@@ -51,6 +49,7 @@ $::VERSION = "0.37h";
 # * "lint" (splice in tes3lint functionality)
 # * "multipatch", to include:
 # ** --activate switch to add it to [Game Files]
+# ** automatically patch overdial problems???
 # ** generate book rotate scripts (need compiler)
 # ** generate multimark scripts (need compiler)
 # ** gmst/global tweaks: (timescale, fCombatAngleXY)
@@ -79,6 +78,8 @@ use warnings;
 
 $SIG{__DIE__} = sub { Carp::confess(@_); };
 
+### CLASS: Util
+
 package Util;
 
 BEGIN {
@@ -93,8 +94,6 @@ BEGIN {
     our @EXPORT_OK = qw(abort assert err dbg prn);
     our %EXPORT_TAGS = ( FIELDS => [ @EXPORT_OK ] );
 }
-
-### UTILITY FUNCTIONS
 
 sub assert {
     my($cond, $msg) = @_;
@@ -129,7 +128,7 @@ BEGIN {
 }
 
 
-### PACKAGE GLOBALS
+### CLASS: TES3::Util
 
 our $DATADIR;	       # where "Data Files" lives.
 our $TES3CMD_DIR;      # tes3cmd directory under "Data Files" (for cache, ...)
@@ -168,7 +167,7 @@ sub sort_by_date {
 # location of the "Data Files" directory by walking up the hierarchy.
 sub find_datadir {
     return($DATADIR) if (defined($DATADIR));
-    my $dir = Cwd::getcwd();
+    my $dir = Cwd::getcwd;
     dbg("checking for data dir in: $dir") if (DBG);
     while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
 	my $datadir = list_files($dir)->{"data files"};
@@ -229,9 +228,9 @@ sub load_order {
     return(@{$self->{load_order}})
 	if (defined($self->{load_order} and not $reload));
     abort "DATADIR not defined\n" unless (defined($DATADIR));
-    my $ini = $self->ini_file();
+    my $ini = $self->ini_file;
     my @active;
-    my $fh = IO::Handle->new();
+    my $fh = IO::Handle->new;
     if (open($fh, "<$ini")) {
 	dbg qq{INI is: "$ini"} if (DBG);
 	while (<$fh>) {
@@ -251,9 +250,12 @@ sub load_order {
     return(@{$self->{load_order} = [grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)]});
 }
 
-### end of TES3::Util package
+### END OF TES3::Util
+
+### CLASS: TES3::Record
 
 package TES3::Record;
+
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
@@ -269,6 +271,7 @@ our $HDR_AUTH_LENGTH = 32;
 our $HDR_DESC_LENGTH = 256;
 our $MARGIN = "  ";
 our $CURRENT_DIAL;
+our %RECTYPES;
 
 ### SYMBOLIC NAMES FOR FIELD VALUES
 
@@ -812,7 +815,7 @@ sub dbg_word {
 sub unpack_float_array {
     my($self, $buff) = @_;
     my $i = 1;
-    $self->{_buf_} = $buff;
+    $self->{_subbuf_} = $buff;
     $self->{$i++} = $_ foreach (unpack("f*", $buff));
     $self->{_last_idx} = $i - 1;
     $self;
@@ -820,6 +823,7 @@ sub unpack_float_array {
 sub pack_float_array { pack("f*", map { $_[0]->{$_} } (1..$_[0]->{_last_idx})); }
 my @RD_float_array = ([], { decode => \&unpack_float_array,
 			    encode => \&pack_float_array,
+			    fieldnames => sub { (1..$_[0]->{_last_idx}); },
 			    tostr => sub {
 				my($self) = @_;
 				"Float_Vals: " . join(", ", map { sprintf("%0.2f", $self->{$_}) } 1..$self->{_last_idx});
@@ -827,7 +831,7 @@ my @RD_float_array = ([], { decode => \&unpack_float_array,
 
 sub unpack_long_array {
     my($self, $buff) = @_;
-    $self->{_buf_} = $buff;
+    $self->{_subbuf_} = $buff;
     my $i = 1;
     $self->{$i++} = $_ foreach (unpack("l*", $buff));
     $self->{_last_idx} = $i - 1;
@@ -836,6 +840,7 @@ sub unpack_long_array {
 sub pack_long_array { pack("l*", map { $_[0]->{$_} } (1..$_[0]->{_last_idx})); }
 my @RD_long_array  = ([], { decode => \&unpack_long_array,
 			    encode => \&pack_long_array,
+			    fieldnames => sub { (1..$_[0]->{_last_idx}); },
 			    tostr => sub {
 				my($self) = @_;
 				"Long_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
@@ -843,7 +848,7 @@ my @RD_long_array  = ([], { decode => \&unpack_long_array,
 
 sub unpack_short_array {
     my($self, $buff) = @_;
-    $self->{_buf_} = $buff;
+    $self->{_subbuf_} = $buff;
     my $i = 1;
     $self->{$i++} = $_ foreach (unpack("s*", $buff));
     $self->{_last_idx} = $i - 1;
@@ -852,6 +857,7 @@ sub unpack_short_array {
 sub pack_short_array { pack("s*", map { $_[0]->{$_} } (1..$_[0]->{_last_idx})); }
 my @RD_short_array = ([], { decode => \&unpack_short_array,
 			    encode => \&pack_short_array,
+			    fieldnames => sub { (1..$_[0]->{_last_idx}); },
 			    tostr => sub {
 				my($self) = @_;
 				"Short_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
@@ -956,6 +962,8 @@ my @RD_Enchantment =
 
 my $RD_Unknown = [["unknown_1", "H*"]];
 
+my %RDFLAGS;
+
 my @RECDEFS =
     (
      [ACTI => [
@@ -1051,7 +1059,7 @@ my @RECDEFS =
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
-		     $self->{_buf_} = $buff;
+		     $self->{_subbuf_} = $buff;
 		     if (length($buff) == 24) {
 			 ($self->{x}, $self->{y}, $self->{z},
 			  $self->{x_angle}, $self->{y_angle}, $self->{z_angle}) = unpack("f6", $buff);
@@ -1085,6 +1093,7 @@ my @RECDEFS =
 				     $self->{x_angle}, $self->{y_angle}, $self->{z_angle}));
 		     }
 		 },
+		 fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{flags}) {
@@ -1114,7 +1123,7 @@ my @RECDEFS =
 	       [LVCR => $RD_Unknown],
 	       [MNAM => $RD_Unknown],
 	       [MVRF => [["moved_ref", "L"]]], # .ess
-	       [NAM0 => [["object_count", "L"]]],
+	       [NAM0 => [["object_count", "L"]], { rdflags => [qw(startgroup)] }],
 	       [NAM5 => [["red", "C"], ["green", "C"], ["blue", "C"], ["unused", "C"]]], # Map Color
 	       [NAM8 => $RD_Unknown],
 	       [NAM9 => [["owner", "L"]]],
@@ -1269,7 +1278,7 @@ my @RECDEFS =
 		 tostr => sub {
 		      my($self) = @_;
 		      my $type = $DIAL_TYPE{$self->{type}};
-		      $CURRENT_DIAL = "$type:".$self->{_parent_}->id();
+		      $CURRENT_DIAL = "$type:".$self->{_parent_}->id;
 		      return($type);
 		}}],
 	       [XIDX => [["index", "l"]]],
@@ -1561,7 +1570,7 @@ my @RECDEFS =
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
-		     $self->{_buf_} = $buff;
+		     $self->{_subbuf_} = $buff;
 		     if (length($buff) == 12) {
 			 ($self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
 			  $self->{unk1}, $self->{unk2}, $self->{unk3}, $self->{gold}) =
@@ -1600,6 +1609,7 @@ my @RECDEFS =
 				     $self->{unk1}, $self->{unk2}, $self->{unk3},  $self->{gold}));
 		     }
 		 },
+		 fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{str}) { # long form
@@ -1737,7 +1747,7 @@ my @RECDEFS =
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
-		     $self->{_buf_} = $buff;
+		     $self->{_subbuf_} = $buff;
 		     if (length($buff) == 10) {
 			 ($self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
 			  $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
@@ -1764,6 +1774,7 @@ my @RECDEFS =
 			      $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight});
 		     }
 		 },
+		 fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{blizzard}) {
@@ -1873,7 +1884,7 @@ my @RECDEFS =
 		 {
 		  decode => sub {
 		      my($self, $buff) = @_;
-		      $self->{_buf_} = $buff;
+		      $self->{_subbuf_} = $buff;
 		      my($l1, $l2) = unpack("L2", $buff);
 		      $self->{length} = $l1 + ($l2 << 32);
 		      $self;
@@ -1884,6 +1895,7 @@ my @RECDEFS =
 		      my $l2 = $len >> 32;
 		      pack("L2", $l1, $l2);
 		  },
+		  fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		  tostr => sub {
 		      my($self) = @_;
 		      return("Length:$self->{length}");
@@ -1915,7 +1927,7 @@ my @RECDEFS =
 			 ["flags", "L", { symflags => \%WEAPON_FLAGS }]],
 		{ rdflags => [qw(mergeable)] }],
 	      ], { rdflags => [qw(mergeable)] }],
-    );
+    ); # End of @RECDEFS
 
 # TES3::Record->new_from_recbuf "factory' for creating the various record types
 sub new_from_recbuf {
@@ -1943,9 +1955,11 @@ sub new_copy {
 		 _hdrunk_ => $tr->hdrunk,
 		 _recbuf_ => $tr->recbuf };
     bless($self, $self->{_rectype_});	# we re-bless into the class "$rectype"
-    $self->decode;
-    return($self);
+    return($self->decode);
 }
+
+# tr->recbuf
+sub recbuf { $_[0]->{_recbuf_} }
 
 # tr->bad_length
 sub bad_length {
@@ -1968,18 +1982,18 @@ sub decode {
 	while ($p < $rec_len) {
 	    my($subtype, $sublen) = unpack("a4L", substr($recbuf, $p));
 	    $p += 8;
-	    my $subrecbuf = substr($recbuf, $p, $sublen);
+	    my $subbuf = substr($recbuf, $p, $sublen);
 	    $p += $sublen;
-	    if (defined $subrecbuf) {
-		push(@parts, $subtype, $subrecbuf);
+	    if (defined $subbuf) {
+		push(@parts, $subtype, $subbuf);
 	    } else {
 		err "tr->decode(): Error, malformed subrec for ($rectype) type=$subtype pos=$p len=$sublen\n";
 	    }
 	}
     }
-    while (my($subtype, $subrecbuf) = splice(@parts, 0, 2)) {
+    while (my($subtype, $subbuf) = splice(@parts, 0, 2)) {
 	my $tsr = { _parent_ => $self };
-	bless($tsr, "${rectype}::${subtype}")->decode($subrecbuf);
+	bless($tsr, "${rectype}::${subtype}")->decode($subbuf);
 	$self->{_id_} = $tsr->{id} if (defined $tsr->{id});
 	# inline $tr->append()
 	push(@{$self->{SL}}, $tsr);
@@ -1991,7 +2005,8 @@ sub decode {
 # tr->encode()
 sub encode {
     my($self) = @_;
-    return( $self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype(), $_->encode()) } $self->subrecs()) );
+    $self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype(), $_->encode()) } $self->subrecs());
+    return($self);
 }
 
 # decode flags of a record field
@@ -2023,9 +2038,7 @@ sub gen_custom {
 	    *$method = do { no strict 'refs'; $val };
 	} elsif ($opt eq 'rdflags') {
 	    # define rdflags for recs and subrecs
-	    no strict 'refs';
-	    my $name = "${package}::rdflags";
-	    *$name = {map {$_,1} @{$val}};
+	    $RDFLAGS{$package} = {map {$_,1} @{$val}};
 	} else {
 	    # oops
 	    abort "Unknown record option: $opt = $val";
@@ -2035,6 +2048,7 @@ sub gen_custom {
 
 sub gen_subrec_methods {
     my($rectype, $subtype, $subdefref, $suboptref) = @_;
+    $RECTYPES{$rectype}->{$subtype}++;
     my $decode_pack_format;
     my $encode_pack_format;
     my $method;
@@ -2105,13 +2119,13 @@ sub gen_subrec_methods {
 	    }
 	}
 	no strict "refs";
-	# tsr->decode - unpack fields of a subrec (_buf_) into our self hash
+	# tsr->decode - unpack fields of a subrec (_subbuf_) into our self hash
 	unless ($package->can('decode')) {
 	    $method = "${package}::decode";
 	    *$method = sub {
 		use strict "refs";
-		my($self, $subrecbuf) = @_;
-		my(@vals) = unpack($decode_pack_format, $self->{_buf_} = $subrecbuf);
+		my($self, $subbuf) = @_;
+		my(@vals) = unpack($decode_pack_format, $self->{_subbuf_} = $subbuf);
 		assert(scalar(@vals) == scalar(@fieldnames),
 		       "decode(): number of field values does not match number of field names") if (DBG);
 		$self->{$_} = shift(@vals) foreach (@fieldnames);
@@ -2167,7 +2181,13 @@ sub gen_subrec_methods {
 		    sprintf($print_format, map { $self->{$_} } @fieldnames);
 		};
 	    }
-	} # tsr->tostr
+	}			# tsr->tostr
+
+	# tsr->fieldnames()
+	unless ($package->can('fieldnames')) {
+	    $method = "${package}::fieldnames";
+	    *$method = sub { @fieldnames; };
+	}
     } 				# finished processing list of subrec fields
 
     no strict "refs";
@@ -2180,11 +2200,11 @@ sub gen_subrec_methods {
 	bless($hashref, $class);
     };
 
-    # tsr->getbuf()
-    $method = "${package}::getbuf";
+    # tsr->subbuf()
+    $method = "${package}::subbuf";
     *$method = sub {
 	use strict "refs";
-	return($_[0]->{_buf_});	# $_[0] is self
+	return($_[0]->{_subbuf_});	# $_[0] is self
     };
 
     # tsr->fulltype()
@@ -2198,7 +2218,7 @@ sub gen_subrec_methods {
     # tsr->subtype()
     $method = "${package}::subtype";
     *$method = sub { $subtype; };
-} # gen_subrec_methods
+}				# gen_subrec_methods
 
 sub gen_class {
     my($recdefref) = @_;
@@ -2368,7 +2388,9 @@ sub generate_classes {
     gen_class($_) foreach (@RECDEFS);
 }
 
-### end of TES3::Record package
+### END OF TES3::Record
+
+### MAIN
 
 package main;
 
@@ -2382,15 +2404,12 @@ TES3::Record::generate_classes();
 
 ### CONSTANTS
 
-use constant {
-    QUIET => 1,
-    MIN_TES3_PLUGIN_SIZE => 324,
-};
+use constant { MIN_TES3_PLUGIN_SIZE => 324 };
 
-###GLOBALS (Miscellaneous)
+### GLOBALS (Miscellaneous)
 
 my $T3 = new TES3::Util;
-my $R = {};			# current decoded record (for modify)
+my $R = {};			# current decoded TES3::Record (for modify)
 my $MASTER_ID;			# data loaded from masters
 my $GLOBCHARS = '*?';		# for filename matching
 my $RECTYPE_LEN = 4;
@@ -2432,7 +2451,7 @@ my %CLEAN_PLUGIN =
     );
 
 
-###USAGES
+### USAGES AND OPTION PROCESSING
 
 sub usage { print "@_\n"; exit(1); }
 
@@ -2697,16 +2716,11 @@ OPTIONS:
 	load Perl code to run on each matched record from file named: <file>
 
  --replace /a/b/
-	replace regex a with b. you can use any character instead of the slash
+	replace regex pattern a with value b. you can use any character
+	instead of the slash as long as it does not occur in "a" or "b".
 
  --run "<code>"
 	specify a string of Perl <code> to run on each matched record
-
- --sub-match <regex>
-	only modify the subrecords that match <regex>
-
- --sub-no-match <regex>
-	only modify the subrecords that do not match <regex>
 
  --type* <record-type>
 	only modify records with the given <record-type>
@@ -2764,8 +2778,6 @@ sub opts_modify {
 	       'program-file=s' => \$opt_modify_program_file,
 	       'replace=s' => \$opt_modify_replace,
 	       'run=s' => \$opt_modify_run,
-	       'sub-match=s',
-	       'sub-no-match|M=s',
 	       'type=s@')
 	or usage($MODIFY_USAGE);
 }
@@ -3061,7 +3073,7 @@ tes3cmd diff --ignore-type crea.aidt --ignore-type cell.nd3d testa0000.ess testb
 tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 };
 
-our @opt_diff_ignore_type = ();
+our @opt_diff_ignore_types = ();
 our $opt_diff_1_not_2;
 our $opt_diff_2_not_1;
 our $opt_diff_equal;
@@ -3070,7 +3082,7 @@ our $opt_diff_types;
 sub opts_diff {
     $_[0] && do { usage($DIFF_USAGE); };
     GetOptions(@STDOPT,
-	       'ignore-type=s@' => \@opt_diff_ignore_type,
+	       'ignore-type=s@' => \@opt_diff_ignore_types,
 	       '1-not-2|e1'       => \$opt_diff_1_not_2,
 	       '2-not-1|e2'       => \$opt_diff_2_not_1,
 	       'equal|eq'         => \$opt_diff_equal,
@@ -3281,97 +3293,6 @@ sub opts_header {
 	if ($opt_header_synchronize);
 }
 
-my $RENAME_USAGE = q{Usage: tes3cmd rename OPTIONS RECTYPE.SUBTYPE FROM TO plugin...
-
-OPTIONS:
- --debug
-	turn on debug messages
-
- --exterior
-	only rename if the record is an exterior CELL
-
- --interior
-	only rename if the record is an interior CELL
-
- --report-only
-	just list the records, do not rename them
-
- --window-size <size>
-	set size of printable window for record contents printed with
-	--report-only switch to <size>
-
-DESCRIPTION:
-
-This first form of the command renames all records of type RECTYPE, replacing
-the Perl regular expression FROM with the value of TO (which may contain
-backreferences). The rename only happens if the CELL.NAME subrecord matches
-the given FROM regular expression.
-
-tes3cmd rename --report-only RECTYPE.SUBTYPE plugin...
-
-When the --report-only switch is given, records of the given type are only
-listed. (You do not give a FROM or TO when using the --report-only option).
-
-The original input file is renamed to a backup, and changes are output to the
-original filename.
-
-Note that when renaming scripts, you can use either SCPT.SCTX or SCPT.SCHD as
-the RECTYPE.SUBTYPE parameter, and the script name is changed in both
-subrecords.
-
-Note: documentation for regular expressions:
-  http://www.perl.com/doc/manual/html/pod/perlre.html
-
-EXAMPLES:
-
-# rename all exterior cells to the null string:
-tes3cmd rename --exterior CELL.NAME ".*" "" "my plugin.esp"
-
-# do a caseless comparison with the FROM pattern:
-tes3cmd rename cell.name "(?i)pelagaid" "Pelagiad" "plugin.esp"
-(This would rename any name that has the string "pelagaid" in it with any form
-of capitalization, to "Pelagiad").
-
-# The following command will swap the first and last name of all NPCs using
-# substitution backreferences (a very powerful feature of regular expressions):
-tes3cmd rename npc_.fnam "^(\S+)\s(\S+)$" "$2 $1" "plugin.esp"
-(Note that on Linux you may need to use single-quotes instead of double-quotes).
-};
-
-my($RENAME_FROM, $RENAME_TO, $RENAME_TYPE, $RENAME_SUBTYPE);
-my @ren_valid_types =
-    qw(GMST.NAME CLAS.NAME CLAS.FNAM FACT.NAME FACT.FNAM RACE.NAME RACE.FNAM
-       SOUN.NAME SOUN.FNAM REGN.NAME REGN.FNAM BSGN.NAME BSGN.FNAM STAT.NAME
-       DOOR.NAME DOOR.FNAM MISC.NAME MISC.FNAM WEAP.NAME WEAP.FNAM CONT.NAME
-       CONT.FNAM SPEL.NAME SPEL.FNAM CREA.NAME CREA.FNAM LIGH.NAME LIGH.FNAM
-       ENCH.NAME NPC_.NAME NPC_.FNAM ARMO.NAME ARMO.FNAM CLOT.NAME CLOT.FNAM
-       REPA.NAME REPA.FNAM ACTI.NAME ACTI.FNAM APPA.NAME APPA.FNAM LOCK.NAME
-       LOCK.FNAM PROB.NAME PROB.FNAM INGR.NAME INGR.FNAM BOOK.NAME BOOK.FNAM
-       ALCH.NAME ALCH.FNAM LEVI.NAME CELL.NAME DIAL.NAME SCPT.SCHD SCPT.SCTX);
-my %VALID_TYPE = map { ($_,1) } @ren_valid_types;
-
-our $opt_rename_interior = 0;
-our $opt_rename_exterior = 0;
-our $opt_rename_window_size = 38;
-sub opts_rename {
-    $_[0] && do { usage($RENAME_USAGE); };
-    GetOptions(@STDOPT,
-	       'interior' => \$opt_rename_interior,
-	       'exterior' => \$opt_rename_exterior,
-	       'report-only',
-	       'window-size=i' => \$opt_rename_window_size)
-	or usage($RENAME_USAGE);
-
-    my $type = uc(shift(@ARGV)) or abort "Missing required RECTYPE.SUBTYPE\n$RENAME_USAGE";
-    abort "Error: Invalid record type.subtype requested: $type\n\nI only know these:\n@ren_valid_types\n" unless ($VALID_TYPE{$type});
-    ($RENAME_TYPE, $RENAME_SUBTYPE) = split(/\./, $type);
-
-    unless ($opt_report_only) {
-	defined($RENAME_FROM = shift(@ARGV)) or abort "Missing required FROM\n$RENAME_USAGE";
-	defined($RENAME_TO = shift(@ARGV)) or abort "Missing required TO\n$RENAME_USAGE";
-    }
-}
-
 sub opts_shell {
     GetOptions(@STDOPT) or
 	usage("Usage: tes3cmd -shell");
@@ -3391,24 +3312,7 @@ sub opts_codectest {
 	or usage("Usage: tes3cmd -codectest [--excluded-type|-x excluded_type]");
 }
 
-###UTILITIES
-
-sub make_header {
-    my($opt) = @_;
-    my $hedr = pack("a4L/a*", 'HEDR',
-		    pack("fLZ${TES3::Record::HDR_AUTH_LENGTH}Z${TES3::Record::HDR_DESC_LENGTH}L",
-			 ($opt->{version} || 1.3),
-			 ($opt->{ismaster} || 0),
-			 ($opt->{author} || "tes3cmd"),
-			 ($opt->{description} || "(generated)"),
-			 ($opt->{n_records} || 0)));
-    my $tes3 = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
-    die("Invalid TES3 header definition has incorrect size.")
-	unless (length($tes3) == MIN_TES3_PLUGIN_SIZE);
-    return($tes3);
-}
-
-###DATA DEFINITIONS
+### DATA DEFINITIONS
 
 # these types are for records to be cleaned from plugins when duped from a master:
 my @CLEAN_DUP_TYPES =
@@ -3520,29 +3424,7 @@ my %EVIL_BM =
      swerewolfrestmessage => '5354525620596f752063616e6e6f74207265737420696e2077657265776f6c6620666f726d2e',
     );
 
-my %INFO_SCVR_type =
-    ('0' => "Nothing",
-     '1' => "Function",
-     '2' => "Global",
-     '3' => "Local",
-     '4' => "Journal",
-     '5' => "Item",
-     '6' => "Dead",
-     '7' => "Not_ID",
-     '8' => "Not_Faction",
-     '9' => "Not_Class",
-     'A' => "Not_Race",
-     'B' => "Not_Cell",
-     'C' => "Not_Local");
-
-my %INFO_SCVR_cmp =
-    ('0' => '=',
-     '1' => '!=',
-     '2' => '>',
-     '3' => '>=',
-     '4' => '<',
-     '5' => '<=');
-
+# TBD
 my %MAGIC_SCHOOL = (0 => "Alteration",
 		    1 => "Conjuration",
 		    2 => "Destruction",
@@ -3550,36 +3432,15 @@ my %MAGIC_SCHOOL = (0 => "Alteration",
 		    4 => "Mysticism",
 		    5 => "Restoration");
 
+# TBD
 my %FACT_FLAGS = ("hidden_from_player" => 0x0001);
 
-my @CREA_TYPE = qw(Creature Daedra Undead Humanoid);
-
+# TBD
 my @SNDG_DATA = ("Left_Foot", "Right_Foot", "Swim_Left", "Swim_Right", "Moan", "Roar", "Scream", "Land");
-
-
-# All record sub-types found in .esm/.esp/.ess
-my @SUBRECTYPES =
-    qw(AADT ACDT ACSC ACSL ACTN AIDT AI_E AI_F AI_T AI_W ALDT AMBI ANAM ANIS
-       AODT APUD ASND AVFX BKDT BNAM BSND BVFX BYDT CHRD CLDT CNAM CNDT CRED
-       CSHN CSND CSTN CTDT CVFX DATA DELE DESC DNAM DODT ENAM ENDT FADT FGTN
-       FLAG FLTV FNAM FRMR GMDT HEDR HSND HVFX INAM INDX INTV IRDT ITEX KNAM
-       LHDT LKDT LNAM LSHN LSTN LVCR MAPD MAPH MAST MCDT MEDT MNAM MODL MVRF
-       NAM0 NAM1 NAM2 NAM3 NAM5 NAM8 NAM9 NAME ND3D NNAM NPCO NPCS NPDT ONAM
-       PBDT PGRC PGRP PNAM PTEX QSTF QSTN QSTR RADT RGNN RIDT RNAM SCDT SCHD
-       SCRD SCRI SCRS SCTX SCVR SKDT SLCS SLFD SLLD SLSD SNAM SPDT STPR STRV
-       TEXT TGTN TNAM UNAM VCLR VHGT VNAM VNML VTEX WEAT WHGT WIDX WNAM WPDT
-       XCHG XHLT XIDX XNAM XSCL XSOL YNAM ZNAM);
 
 my %JUNKCELL_SUBTYPE = (NAME => 1, DATA => 1, RGNN => 1);
 
-sub indent_result {
-    my($str) = @_;
-    $str =~ tr/\r//d;
-    $str =~ s/\n/\n\t\t/g;
-    return("\t\t$str");
-}
-
-###DISPATCHER
+### DISPATCHER
 
 my %CMDS =
     (
@@ -3600,7 +3461,6 @@ my %CMDS =
      "multipatch"  => [ \&opts_multipatch,  \&cmd_multipatch,  'm', "Patches problems in your active plugins"],
      "overdial"    => [ \&opts_overdial,    \&cmd_overdial,    'm', "Identify overlapping dialog (a source of missing topic bugs)"],
      "recover"     => [ \&opts_recover,     \&cmd_recover,     's', "Recover usable records from plugin with 'bad form' errors"],
-     "rename"      => [ \&opts_rename,      \&cmd_rename,      's', "Rename objects"],
      "-codectest"  => [ \&opts_codectest,   \&cmd_codectest,   's', "Test TES3 codec"],
      "-shell"      => [ \&opts_shell,       \&cmd_shell,       'm', "run a TES3 REPL"],
      "-wikiout"    => [ \&opts_wikiout,     \&cmd_wikiout,     'm', "Output wiki formatted help"],
@@ -3653,125 +3513,29 @@ sub opts_help {
     usage($USAGE_ALL);
 }
 
-###IO
-
-sub update_header {
-    my($plugin, $quiet) = @_;
-    if (($opt_header_update_record_count or $opt_header_update_masters) and
-	($plugin =~ /~\D+\.es[mp]$/i)) {
-	warn "Skipping Backup: $plugin\n";
-	return;
-    }
-    my $master;
-    my($atime, $mtime) = (stat($plugin))[8,9];
-    my $fh = open_for_update($plugin);
-    my($rectype, $tr) = read_rec($fh, 'TES3', $plugin);
-    $tr->decode();
-    my $tes3len = length($tr->recbuf);
-    my $update_msg = '';
-    my $modified = 0;
-    my $hedr_tsr;
-    foreach my $tsr ($tr->subrecs()) {
-	my $subtype = $tsr->subtype();
-	if ($subtype eq 'HEDR') {
-	    $hedr_tsr = $tsr;
-	    if ($opt_header_author) {
-		$modified++;
-		if ($opt_header_author =~ /^\+(.*)/) {
-		    $tsr->{author} .= $1;
-		} else {
-		    $tsr->{author} = $opt_header_author;
-		}
-	    }
-	    if ($opt_header_description) {
-		$modified++;
-		if ($opt_header_description =~ /^\+(.*)/) {
-		    $tsr->{description} .= $1;
-		} else {
-		    $tsr->{description} = $opt_header_description;
-		}
-	    }
-	    if ($opt_header_update_record_count) {
-		my $count = get_record_count($plugin);
-		if ($tsr->{n_records} != $count) {
-		    $modified++;
-		    $update_msg .= qq{  $plugin: Updated Record Count: $tsr->{n_records} --> $count\n};
-		    $tsr->{n_records} = $count;
-		}
-	    }
-	}
-	if ($opt_header_update_masters) {
-	    if ($subtype eq 'MAST') {
-		$master = $tsr->{master};
-	    } elsif ($subtype eq 'DATA') {
-		my $length = $tsr->{length};
-		if ((my $newlen = -s ($T3->datapath($master))) != $length) {
-		    $modified++;
-		    $update_msg .= qq{  $plugin: Synchronized master "$master" length: $length --> $newlen\n};
-		    $tsr->{length} = $newlen;
-		}
-	    }
-	}
-    }
-    unless ($quiet) {
-	if (VERBOSE) {
-	    print "$plugin:\n" . $tr->tostr() . "\n";
-	} else {
-	    if (not($opt_header_author or $opt_header_description or $opt_header_update_record_count or
-		    $opt_header_update_masters or $opt_header_update_record_count) or
-		$opt_header_author or $opt_header_description) {
-		if ($opt_header_multiline) {
-		    print qq{$plugin:\n  AUTH=$hedr_tsr->{author}\n  DESC=$hedr_tsr->{description}\n};
-		} else {
-		    my $msg = qq{$plugin:  AUTH=$hedr_tsr->{author}  DESC=$hedr_tsr->{description}};
-		    $msg =~ s/(\r)?\n/\\r\\n/gm;
-		    print "$msg\n";
-		}
-	    }
-	}
-	if ($update_msg) {
-	    print $update_msg;
-	} else {
-	    print "$plugin not modified\n" if (VERBOSE);
-	}
-    }
-    if ($modified) {
-	# make backup of plugin before making changes only if updating
-	my $backup = unique_backup_name($plugin);
-	copy($plugin, $backup) or abort "Error, copy failed $plugin -> $backup ($!)\n";
-	$tr->encode();
-	if ($tr->reclen() == $tes3len) {
-	    seek($fh, 0, SEEK_SET);
-	    write_rec($fh, $tr);
-	} else {
-	    abort "update_header(): output header size incorrect (expected:$tes3len, got: @{[$tr->reclen()]})\n";
-	}
-    }
-    close($fh);
-    utime($atime, $mtime, $plugin);
-}				# update_header
+### IO AND CACHING
 
 my $hdr_size = 16;
 sub read_rec {
     my($fh, $expected_type, $plugin) = @_;
     my $rec_hdr = "";
-    my $n_read = sysread($fh, $rec_hdr, $hdr_size);
+    my $n_read = read($fh, $rec_hdr, $hdr_size);
     if ($n_read == 0) {		# EOF
 	return(undef);
     }
     if ($n_read != $hdr_size) {
-	my $inp_offset = sysseek($fh, 0, SEEK_CUR) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
 	abort qq{read_rec(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read\n};
     }
     my($rectype, $rec_len, $hdrunk, $hdrflags) = unpack("a4LLL", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rectype) {
-	my $inp_offset = sysseek($fh, 0, SEEK_CUR) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
 	abort qq{read_rec(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype\n};
     }
     my $recbuf = "";
-    $n_read = sysread($fh, $recbuf, $rec_len);
+    $n_read = read($fh, $recbuf, $rec_len);
     if ($n_read != $rec_len) {
-	my $inp_offset = sysseek($fh, 0, SEEK_CUR) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
 	abort qq{read_rec(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $rec_len bytes, got $n_read\n};
     }
     return($rectype, TES3::Record->new_from_recbuf($rectype, $recbuf, $hdrflags, $hdrunk));
@@ -3789,76 +3553,9 @@ sub write_rec {
     print $fh pack("a4LLLa*", $tr->rectype, $tr->reclen, $tr->hdrunk, $tr->hdrflags, $tr->recbuf);
 }
 
-# TBD - use a generic "group" parser?
-sub parse_cell_objects {
-    my($tr) = @_;
-    my($hdr, $obj, @objs, %objidx);
-    # objidx is hash indexed by recbuf (for cleaning duped cell objects)
-    foreach my $tsr ($tr->subrecs()) {
-	my $subtype = $tsr->subtype();
-	if ($subtype eq 'NAM0') {
-	    if ($obj) {
-		my @newobj = @$obj;
-		push(@objs, \@newobj);
-		$objidx{$newobj[1]} = $newobj[0];
-		undef $obj;
-	    }
-	    push(@objs, 'NAM0');
-	} elsif ($subtype eq 'FRMR') {
-	    if ($obj) {
-		my @newobj = @$obj;
-		push(@objs, \@newobj);
-		$objidx{$newobj[1]} = $newobj[0];
-	    }
-	    # start new object
-	    $obj->[0] = $tsr;	# stash the FRMR rec so we can use objidx later
-	    $obj->[1] = '';	# start a new cell object subrecs buffer.
-	} else {
-	    my $subrec = $tsr->getbuf();
-	    if ($obj) {		# collecting object
-		$obj->[1] .= pack("a4L/a*", $subtype, $subrec);
-	    } else {		# still collecting header
-		$hdr .= pack("a4L/a*", $subtype, $subrec);
-	    }
-	}
-    }
-    if ($obj) {
-	my @newobj = @$obj;
-	push(@objs, \@newobj);
-	$objidx{$newobj[1]} = $newobj[0];
-    }
-    return($hdr, \@objs, \%objidx);
-}
-
-sub assemble_cell_objects {
-    my($hdr, $objs) = @_;
-    my $rec = $hdr;		# start the assembled cell with hdr
-    my $idx = 1;
-    foreach my $obj (@$objs) {
-	if ($obj eq 'NAM0') {
-	    my $nam0 = scalar(@$objs) - $idx;
-	    $rec .= pack("a4LL", 'NAM0', 4, $nam0) if ($nam0 > 0);
-	} else {
-	    my $frmr = $obj->[0]->encode();
-	    $rec .=  pack("a4L/a*", 'FRMR', $frmr) . $obj->[1];
-	}
-	$idx++;
-    }
-    return($rec);
-}
-
-sub pprec {
-    my($rec, $subtype) = @_;
-    warn "DBG: pprec($rec)\n" if (DBG);
-    my $recstr = join(":", grep(!/[^[:print:]]/, map { s/[\000]+$//gm; tr/\r\n/ /; $_; } split(/\000?([A-Z][A-Z_][A-Z_][A-Z_\d])...\000/, $rec)));
-    $recstr =~ s/^:$subtype:.*?:// if ($subtype);
-    $recstr =~ s/:([A-Z][A-Z_][A-Z_][A-Z_\d])/|$1/g;
-    return(substr($recstr, 0, $opt_rename_window_size));
-}
-
 sub open_for_read {
     my($plugin) = @_;
-    my $fh = IO::Handle->new();
+    my $fh = IO::Handle->new;
     open($fh, "<", $plugin) or abort qq{Error opening "$plugin" for input ($!)\n};
     binmode($fh, ':raw') or abort "Error setting binmode on $plugin ($!)\n";
     return($fh);
@@ -3866,7 +3563,7 @@ sub open_for_read {
 
 sub open_for_write {
     my($plugin) = @_;
-    my $fh = IO::Handle->new();
+    my $fh = IO::Handle->new;
     open($fh, ">", $plugin) or abort qq{Error opening "$plugin" for output ($!)\n};
     binmode($fh, ':raw') or abort qq{Error setting binmode on "$plugin" ($!)\n};
     return($fh);
@@ -3874,7 +3571,7 @@ sub open_for_write {
 
 sub open_for_update {
     my($plugin) = @_;
-    my $fh = IO::Handle->new();
+    my $fh = IO::Handle->new;
     open($fh, "+<", $plugin) or abort qq{Error opening "$plugin" for read/write ($!)\n};
     binmode($fh, ':raw') or abort qq{Error setting binmode on "$plugin" ($!)\n};
     return($fh);
@@ -3928,7 +3625,7 @@ sub fix_output {
 		abort(qq{Renaming "$plugtmp" to "$newname" ($!)});;
 	    }
 	    $opt_header_update_record_count = 1;
-	    update_header($newname, QUIET);
+	    update_header($newname, [qw(QUIET)]);
 	    utime($atime, $mtime, $newname);
 	    print qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
 	} else {
@@ -3940,7 +3637,7 @@ sub fix_output {
 		abort(qq{Renaming "$plugtmp" to "$plugin" ($!)});
 	    }
 	    $opt_header_update_record_count = 1;
-	    update_header($plugin, QUIET);
+	    update_header($plugin, [qw(QUIET)]);
 	    utime($atime, $mtime, $plugin);
 	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
 	}
@@ -3965,8 +3662,7 @@ sub read_records {
 	while (my($rectype, $tr) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $tr);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-	    $tr->decode();
-	    my $id = $tr->id;
+	    my $id = $tr->decode()->id;
 	    if ($fun) {
 		$fun->($rectype, $id, $tr);
 	    } else {
@@ -3987,8 +3683,7 @@ sub read_objects {
 	while (my($rectype, $tr) = read_rec($inp, undef, $plugin)) {
 	    last if (not defined $tr);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-	    $tr->decode();
-	    my $id = $tr->id;
+	    my $id = $tr->decode()->id;
 	    $plugin_id{$id}->{$rectype} = $tr if (defined $id);
 	}
     };
@@ -4005,189 +3700,13 @@ sub read_dialogs {
 	    last if (not defined $rectype);
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 	    next if ($rectype ne "DIAL");
-	    $tr->decode();
-	    my $id = $tr->id();
+	    my $id = $tr->decode()->id;
 	    my $type = $tr->get('DATA', 'type');
 	    $dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
 	}
     };
     warn $@ if ($@);
     close($inp);
-}
-
-
-sub get_wanted {
-    my $wanted_ids = (@opt_id) ? '(' . join('|', @opt_id) . ')' : '';
-    my $wanted_flags;
-    foreach my $flag (@opt_flag) {
-	if ((my $n = eval $flag) > 0) {
-	    $wanted_flags |= $n; # it's a numeric flag
-	} else {
-	    $wanted_flags |= $HDR_FLAGS{lc($flag)};
-	}
-    }
-    my $wanted_types;
-    if (@opt_type) {
-	foreach my $option (@opt_type) {
-	    my($type, $subtype) = split(/\./, uc($option));
-	    if (length($type) != 4) {
-		warn qq{get_wanted_types: Invalid record type: "$type" (must be 4 characters long)\n};
-		next;
-	    }
-	    $wanted_types->{$type}++;
-	    if ($subtype) {
-		if (length($subtype) == 4) {
-		    $wanted_types->{"$type.$subtype"}++;
-		} else {
-		    warn qq{get_wanted_types: Invalid record subtype: "$subtype" (must be 4 characters long)\n};
-		    next;
-		}
-	    }
-	}
-    }
-    return($wanted_ids, $wanted_types, $wanted_flags);
-}
-
-# return 1 if record matches selection criteria of command line switches
-sub rec_match {
-    my($plugin, $tr, $wanted_ids, $wanted_types, $wanted_flags) = @_;
-    return(0, $tr) if ($wanted_flags and not ($tr->hdrflags & $wanted_flags));
-    my $rectype = $tr->rectype;
-    return(0, $tr) if ($wanted_types and not $wanted_types->{$rectype});
-    $tr->decode();
-    return(0, $tr) if ($wanted_ids and not ($tr->id =~ /$wanted_ids/i));
-    if ($rectype eq 'CELL') {
-	if ($tr->is_interior()) {
-	    return(0, $tr) if ($opt_exterior);
-	} else {
-	    return(0, $tr) if ($opt_interior);
-	}
-    }
-    if ($opt_match or $opt_no_match) {
-	my $print_rec = $tr->tostr();
-	if (((not $opt_match) or ($print_rec =~ /$opt_match/is)) and
-	    ((not $opt_no_match) or ($print_rec !~ /$opt_no_match/is))) {
-	    return(1, $tr, $print_rec);
-	} else {
-	    return(0, $tr, $print_rec);
-	}
-    } else {
-	return(1, $tr);
-    }
-}
-
-sub process_plugin_for_read {
-    my($plugin, $fun) = @_;
-    my $inp = open_for_read($plugin);
-    my $expected = "TES3";
-    my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
-    # process each record in the plugin
-    eval {
-	while (my($rectype, $tr) = read_rec($inp, $expected, $plugin)) {
-	    $expected = undef;
-	    last if (not defined $rectype);
-	    $fun->($tr, $wanted_ids, $wanted_types, $wanted_flags);
-	}
-    };
-    warn $@ if ($@);
-    close($inp);
-}
-
-sub process_plugin_for_update {
-    my($plugin, $fun, $prefix) = @_;
-    my($inp, $out) = make_temp($plugin);
-    my $expected = "TES3";
-    my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
-    my $modified;
-    # process each record in the plugin
-    eval {
-	while (my($rectype, $tr) = read_rec($inp, $expected, $plugin)) {
-	    $expected = undef;
-	    last if (not defined $rectype);
-	    # function can delete, modify, or pass rec thru
-	    my $trnew = $fun->($tr, $wanted_ids, $wanted_types, $wanted_flags);
-	    if (defined $trnew) { # rec was kept
-		if ($trnew) {	   # rec was changed
-		    write_rec($out, $trnew);
-		    $modified++;
-		} else {	# pass rec through unchanged
-		    write_rec($out, $tr);
-		}
-	    } else {		# rec was deleted
-		$modified++;
-	    }
-	}
-    };
-    if ($@) {
-	$modified = 0;
-	warn $@;
-    }
-    if ($prefix) {
-	my($file, $dir) = fileparse($plugin);
-	my $newname = ($dir eq './') ? "${prefix}${file}" : "${dir}${prefix}${file}";
-	fix_output($inp, $out, $plugin, $modified, $newname);
-    } else {
-	fix_output($inp, $out, $plugin, $modified);
-    }
-}
-
-sub get_record_count {
-    my($plugin) = @_;
-    my $count = -1;		# we don't count the TES3 record
-    process_plugin_for_read($plugin, sub { $count++; });
-    return($count);
-}
-
-sub search_and_replace {
-    my($x, $mref) = @_; # TBD - nuke $x ($R)
-    my $type = ref($x);
-    if ($type eq 'ARRAY') {
-	foreach (@$x) {
-	    if (ref($_) eq '') {
-		${$mref} = 1 if eval qq{\$_ =~ s$opt_modify_replace;};
-	    } else {
-		search_and_replace($_, $mref);
-	    }
-	}
-    } elsif ($type eq 'HASH') {
-	while (my($k, $v) = each %$x) {
-	    if (ref($x->{$k}) eq '') {
-		${$mref} = 1 if eval qq{\$x->{\$k} =~ s$opt_modify_replace;};
-	    } else {
-		search_and_replace($x->{$k}, $mref);
-	    }
-	}
-    } elsif ($type eq '') {
-	my $x_before = $x;
-	${$mref} = 1 if eval qq{\$_ =~ s$opt_modify_replace;};
-    }
-}
-
-sub remove_subrec {
-    my($r, $subtype, $n) = @_;
-    my @new_r = ();
-    my $c = 0;
-    foreach my $subr (@$r) {
-	if ($subr->[0] eq $subtype) {
-	    next unless ((defined $n) and ($c++ >= $n));
-	}
-	push(@new_r, $subr);
-    }
-    return(\@new_r);
-}
-
-sub run_code {
-    my($rectype, $flags, $unk) = @_;
-    my $mod = 0;
-    search_and_replace($R, \$mod) if ($opt_modify_replace);
-    if ($opt_modify_run) {
-	$mod ||= eval($opt_modify_run);
-	if ($@) {
-	    warn qq{Error running "$opt_modify_run" on: $rectype ($@)\n};
-	    $mod = 0;
-	}
-    }
-    return(($mod) ? $R : undef)	# TBD -nuke
 }
 
 sub master_cache_path {
@@ -4254,19 +3773,13 @@ sub load_master {
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 	    next if (defined $types and not $types->{$rectype});
 	    print "DBG: rec_type = $rectype\n" if (DBG);
-	    my $id = $tr->id;
-	    $MASTER_ID->{$esm}->{$id}->{$tr->rectype} = $tr;
+	    $tr->decode;
+	    $MASTER_ID->{$esm}->{$tr->id}->{$tr->rectype} = $tr;
 	}
     };
     warn $@ if ($@);
     close($inp);
     save_master_cache($esm);
-}
-
-sub dumpit {
-    my($label, $it) = @_;
-    $it =~ s/([[:cntrl:]])/"^".chr(ord($1)+64)/ge;
-    warn("$label: [$it]\n" . ((DBG) ? unpack("H*", $it) . "\n" : ''));
 }
 
 sub load_leveled_lists {
@@ -4292,7 +3805,7 @@ sub load_leveled_lists {
 	err "Invalidating Leveled List Cache due to CODEC update.";
 	$levdat = {_codec_version_ => $TES3::Record::CODEC_VERSION };
     }
-    my @load_order = $T3->load_order();
+    my @load_order = $T3->load_order;
     my %active = map { lc($_), 1 } @load_order;
     foreach my $plugin (@load_order) {
 	my $lc_plugin = lc($plugin);
@@ -4321,7 +3834,7 @@ sub load_leveled_lists {
 		    last if (not defined $rectype);
 		    next unless ($rectype =~ /^LEV[CI]$/);
 		    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-		    $tr->decode();
+		    $tr->decode;
 		    $levdat->{$lc_plugin}->{$rectype}->{$tr->id} = $tr;
 		}
 	    };
@@ -4345,7 +3858,295 @@ sub load_leveled_lists {
     return($levdat);
 } # load_leveled_lists
 
-###COMMANDS
+### UTILITIES
+
+sub make_header {
+    my($opt) = @_;
+    my $hedr = pack("a4L/a*", 'HEDR',
+		    pack("fLZ${TES3::Record::HDR_AUTH_LENGTH}Z${TES3::Record::HDR_DESC_LENGTH}L",
+			 ($opt->{version} || 1.3),
+			 ($opt->{is_master} || 0),
+			 ($opt->{author} || "tes3cmd"),
+			 ($opt->{description} || "(generated)"),
+			 ($opt->{n_records} || 0)));
+    my $tes3 = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
+    die("Invalid TES3 header definition has incorrect size.")
+	unless (length($tes3) == MIN_TES3_PLUGIN_SIZE);
+    return($tes3);
+}
+
+sub update_header {
+    my($plugin, $options) = @_;
+    if (($opt_header_update_record_count or $opt_header_update_masters) and
+	($plugin =~ /~\D+\.es[mp]$/i)) {
+	warn "Skipping Backup: $plugin\n";
+	return;
+    }
+    my $quiet = grep(/\bQUIET\b/, @$options);
+    my $nobackup = grep(/\bNOBACKUP\b/, @$options);
+    my $master;
+    my($atime, $mtime) = (stat($plugin))[8,9];
+    my $fh = open_for_update($plugin);
+    my($rectype, $tr) = read_rec($fh, 'TES3', $plugin);
+    my $tes3len = length($tr->decode()->recbuf);
+    my $update_msg = '';
+    my $modified = 0;
+    my $hedr_tsr;
+    foreach my $tsr ($tr->subrecs()) {
+	my $subtype = $tsr->subtype;
+	if ($subtype eq 'HEDR') {
+	    $hedr_tsr = $tsr;
+	    if ($opt_header_author) {
+		$modified++;
+		if ($opt_header_author =~ /^\+(.*)/) {
+		    $tsr->{author} .= $1;
+		} else {
+		    $tsr->{author} = $opt_header_author;
+		}
+	    }
+	    if ($opt_header_description) {
+		$modified++;
+		if ($opt_header_description =~ /^\+(.*)/) {
+		    $tsr->{description} .= $1;
+		} else {
+		    $tsr->{description} = $opt_header_description;
+		}
+	    }
+	    if ($opt_header_update_record_count) {
+		my $count = get_record_count($plugin);
+		if ($tsr->{n_records} != $count) {
+		    $modified++;
+		    $update_msg .= qq{  $plugin: Updated Record Count: $tsr->{n_records} --> $count\n};
+		    $tsr->{n_records} = $count;
+		}
+	    }
+	}
+	if ($opt_header_update_masters) {
+	    if ($subtype eq 'MAST') {
+		$master = $tsr->{master};
+	    } elsif ($subtype eq 'DATA') {
+		my $length = $tsr->{length};
+		if ((my $newlen = -s ($T3->datapath($master))) != $length) {
+		    $modified++;
+		    $update_msg .= qq{  $plugin: Synchronized master "$master" length: $length --> $newlen\n};
+		    $tsr->{length} = $newlen;
+		}
+	    }
+	}
+    }
+    unless ($quiet) {
+	if (VERBOSE) {
+	    print "$plugin:\n" . $tr->tostr() . "\n";
+	} else {
+	    if (not($opt_header_author or $opt_header_description or $opt_header_update_record_count or
+		    $opt_header_update_masters or $opt_header_update_record_count) or
+		$opt_header_author or $opt_header_description) {
+		if ($opt_header_multiline) {
+		    print qq{$plugin:\n  AUTH=$hedr_tsr->{author}\n  DESC=$hedr_tsr->{description}\n};
+		} else {
+		    my $msg = qq{$plugin:  AUTH=$hedr_tsr->{author}  DESC=$hedr_tsr->{description}};
+		    $msg =~ s/(\r)?\n/\\r\\n/gm;
+		    print "$msg\n";
+		}
+	    }
+	}
+	if ($update_msg) {
+	    print $update_msg;
+	} else {
+	    print "$plugin not modified\n" if (VERBOSE);
+	}
+    }
+    if ($modified) {
+	unless ($nobackup) {
+	    # make backup of plugin before making changes only if updating
+	    my $backup = unique_backup_name($plugin);
+	    copy($plugin, $backup) or abort "Error, copy failed $plugin -> $backup ($!)\n";
+	}
+	$tr->encode;
+	if ($tr->reclen() == $tes3len) {
+	    seek($fh, 0, SEEK_SET);
+	    write_rec($fh, $tr);
+	} else {
+	    abort "update_header(): output header size incorrect (expected:$tes3len, got: @{[$tr->reclen()]})\n";
+	}
+    }
+    close($fh);
+    utime($atime, $mtime, $plugin);
+}				# update_header
+
+sub split_groups {
+    my($tr) = @_;
+    my @groups;
+    my @this_group;
+    foreach my $tsr ($tr->subrecs()) {
+	my $package = ref($tsr);
+	warn "DBG: split_groups: package is $package\n";
+	if ($RDFLAGS{$package}->{groupstart}) {
+	    push(@groups, [@this_group]);
+	    @this_group = ();
+	}
+	push(@this_group, $tsr);
+    }
+    push(@groups, [@this_group]); # collect last group
+    return(\@groups);
+}
+
+sub get_wanted {
+    my $wanted_ids = (@opt_id) ? '(' . join('|', @opt_id) . ')' : '';
+    my $wanted_flags;
+    foreach my $flag (@opt_flag) {
+	if ((my $n = eval $flag) > 0) {
+	    $wanted_flags |= $n; # it's a numeric flag
+	} else {
+	    $wanted_flags |= $HDR_FLAGS{lc($flag)};
+	}
+    }
+    my $wanted_types;
+    if (@opt_type) {
+	foreach my $option (@opt_type) {
+	    my($wrectype, $wsubtype) = split(/\./, uc($option));
+	    if (length($wrectype) != 4) {
+		abort qq{get_wanted_types: Invalid record type: "$wrectype" (must be 4 characters long)\n};
+	    }
+	    $wanted_types->{$wrectype}++;
+	    if ($wsubtype) {
+		if (length($wsubtype) == 4) {
+		    $wanted_types->{"$wrectype.$wsubtype"}++;
+		} else {
+		    abort qq{get_wanted_types: Invalid record subtype: "$wsubtype" (must be 4 characters long)\n};
+		}
+	    }
+	}
+    }
+    return($wanted_ids, $wanted_types, $wanted_flags);
+}
+
+# return 1 if record matches selection criteria of command line switches
+sub rec_match {
+    my($plugin, $rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags) = @_;
+    return(0, $tr) if ($wanted_flags and not ($tr->hdrflags & $wanted_flags));
+    return(0, $tr) if ($wanted_types and not $wanted_types->{$rectype});
+    $tr->decode;
+    return(0, $tr) if ($wanted_ids and not ($tr->id =~ /$wanted_ids/i));
+    if ($rectype eq 'CELL') {
+	if ($tr->is_interior()) {
+	    return(0, $tr) if ($opt_exterior);
+	} else {
+	    return(0, $tr) if ($opt_interior);
+	}
+    }
+    if ($opt_match or $opt_no_match) {
+	my $print_rec = $tr->tostr;
+	if (((not $opt_match) or ($print_rec =~ /$opt_match/is)) and
+	    ((not $opt_no_match) or ($print_rec !~ /$opt_no_match/is))) {
+	    return(1, $tr, $print_rec);
+	} else {
+	    return(0, $tr, $print_rec);
+	}
+    } else {
+	return(1, $tr);
+    }
+}
+
+sub get_record_count {
+    my($plugin) = @_;
+    my $count = -1;		# we don't count the TES3 record
+    process_plugin_for_read($plugin, sub { $count++; }); # TBD:faster just to read_rec??
+    return($count);
+}
+
+sub remove_subrec {
+    my($r, $subtype, $n) = @_;
+    my @new_r = ();
+    my $c = 0;
+    foreach my $subr (@$r) {
+	if ($subr->[0] eq $subtype) {
+	    next unless ((defined $n) and ($c++ >= $n));
+	}
+	push(@new_r, $subr);
+    }
+    return(\@new_r);
+}
+
+sub dumpit {
+    my($label, $it) = @_;
+    $it =~ s/([[:cntrl:]])/"^".chr(ord($1)+64)/ge;
+    warn("$label: [$it]\n" . ((DBG) ? unpack("H*", $it) . "\n" : ''));
+}
+
+# turn a group of CELL subrecs into [objidx and recbuf]
+sub buffalize {
+    my(@this_group) = @_;
+    my($objidx, $recbuf, $objname);
+    # TBD - it's slightly more efficient to assume first subrec is FRMR, as it should be
+    foreach my $tsr (@this_group) {
+	if ($tsr->subtype eq 'FRMR') {
+	    $objidx = $tsr->{objidx} unless (defined $objidx);
+	} else {
+	    $objname = $tsr->{name}
+		if (undefined $objidx and $tsr->subtype eq 'NAME');
+	    $recbuf .= $tsr->subbuf;
+	}
+    }
+    return($objidx, $recbuf, $objname);
+}
+
+sub process_plugin_for_read {
+    my($plugin, $fun) = @_;
+    my $inp = open_for_read($plugin);
+    my $expected = "TES3";
+    my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
+    # process each record in the plugin
+    eval {
+	while (my($rectype, $tr) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if (not defined $rectype);
+	    $fun->($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
+	}
+    };
+    warn $@ if ($@);
+    close($inp);
+}
+
+sub process_plugin_for_update {
+    my($plugin, $fun, $prefix) = @_;
+    my($inp, $out) = make_temp($plugin);
+    my $expected = "TES3";
+    my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
+    my $modified;
+    # process each record in the plugin
+    eval {
+	while (my($rectype, $tr) = read_rec($inp, $expected, $plugin)) {
+	    $expected = undef;
+	    last if (not defined $rectype);
+	    # function can delete, modify, or pass rec thru
+	    my $trnew = $fun->($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
+	    if (defined $trnew) { # rec was kept
+		if ($trnew) {	   # rec was changed
+		    write_rec($out, $trnew);
+		    $modified++;
+		} else {	# null return record, so pass original rec through unchanged
+		    write_rec($out, $tr);
+		}
+	    } else {		# undefined return indicates rec to be deleted
+		$modified++;
+	    }
+	}
+    };
+    if ($@) {
+	$modified = 0;		# do not modify original plugin if errors occurred
+	warn $@;
+    }
+    if ($prefix) {
+	my($file, $dir) = fileparse($plugin);
+	my $newname = ($dir eq './') ? "${prefix}${file}" : "${dir}${prefix}${file}";
+	fix_output($inp, $out, $plugin, $modified, $newname);
+    } else {
+	fix_output($inp, $out, $plugin, $modified);
+    }
+}
+
+### COMMANDS
 
 sub cmd_codectest {
     my($plugin) = @_;
@@ -4358,16 +4159,14 @@ sub cmd_codectest {
     print "\n", ("=" x 65), "\n";
     print "TESTING codec on: $plugin ...\n";
     my $fun = sub {
-	my($tr) = @_;
-	$tr->decode();
-	my $id = $tr->id();
-	my $rectype = $tr->rectype;
+	my($rectype, $tr) = @_;
+	my $id = $tr->decode()->id;
 	my $trnew = $tr->new_from_tr(TES3::Record::COPY_HEADER);
 	foreach my $tsr ($tr->subrecs()) {
-	    my $oldsubrec = $tsr->getbuf();
+	    my $oldsubrec = $tsr->subbuf;
 	    die "no buf: " . Dumper($tsr). "\n" if (not defined $oldsubrec);
-	    my $newsubrec = $tsr->encode();
-	    my $fulltype = $tsr->fulltype();
+	    my $newsubrec = $tsr->encode()->recbuf;
+	    my $fulltype = $tsr->fulltype;
 	    unless ($exclude{$fulltype}) {
 		if ($newsubrec ne $oldsubrec) {
 		    warn "CODEC FAILURE on ($id): ${fulltype}:\n";
@@ -4382,13 +4181,13 @@ sub cmd_codectest {
 	    }
 	    $trnew->append($tsr);
 	}
-	my $newrec = $trnew->encode;
+	my $newrec = $trnew->encode()->recbuf;
 	unless ($exclude{$rectype}) {
 	    if ((my $rec = $tr->recbuf) ne $newrec) {
 		warn "CODEC FAILURE on record ${rectype}:\n";
 		dumpit('original', $rec);
 		dumpit('re-coded', $newrec);
-		my $print_rec = $tr->tostr();
+		my $print_rec = $tr->tostr;
 		warn "Full Record:\n$print_rec\n";
 	    }
 	}
@@ -4399,10 +4198,12 @@ sub cmd_codectest {
 
 sub cmd_fixit {
     # clean everything and replace originals
-    $opt_clean_replace = $opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+    $opt_clean_replace = $opt_clean_cell_objects = $opt_clean_cell_params =
+	$opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     cmd_clean($_) foreach ($T3->load_order());
     # generate all patches
-    $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
+    $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists =
+	$opt_multipatch_summons_persist = 1;
     cmd_multipatch();
     # synchronize plugin headers to masters
     $opt_header_update_masters = $opt_header_update_record_count = 1;
@@ -4421,7 +4222,7 @@ sub cmd_wikiout {
 
 sub multipatch_check_fogbug {
     my($plugin, $tr, $fogcell) = @_;
-    my $name = $tr->id();
+    my $name = $tr->id;
     my $tsr_data = $tr->get('DATA');
     my $tsr_ambi = $tr->get('AMBI');
     my $fog_den_data = $tsr_data->{fog_density};
@@ -4474,7 +4275,7 @@ sub multipatch_check_cell_rename_reversions {
     }
 } # multipatch_check_cell_rename_reversions
 
-sub merge_leveled_lists {
+sub multipatch_merge_leveled_lists {
     my @merged_lists;
     my $levdat = load_leveled_lists();
     my $ll = {};
@@ -4508,7 +4309,7 @@ sub merge_leveled_lists {
 		my %levtmp;
 		#warn "DBG: tr=".Dumper($tr)."\n";
 		foreach my $tsr ($tr->subrecs()) {
-		    my $subtype = $tsr->subtype();
+		    my $subtype = $tsr->subtype;
 		    if ($subtype eq 'CNAM') {
 			$element_id = $tsr->{creature_id};
 			#warn "DBG: CNAM element id: $element_id\n";
@@ -4569,7 +4370,7 @@ sub merge_leveled_lists {
 	}
     }
     return(\@merged_lists);
-} # merge_leveled_lists
+} # multipatch_merge_leveled_lists
 
 sub cmd_multipatch {
     print "Miss Multipatch says:\n" if (DBG or VERBOSE);
@@ -4579,7 +4380,7 @@ sub cmd_multipatch {
     my %fogcell;		# fogbugged cells
     my %rencell;		# cells with reverted renamings
     my %sumcrea;		# critters needing persistent flag
-    my $merged_lists = merge_leveled_lists() if ($opt_multipatch_merge_lists);
+    my $merged_lists = multipatch_merge_leveled_lists() if ($opt_multipatch_merge_lists);
     foreach my $plugin ($T3->load_order()) {
 	next if ($plugin eq $patch_file);
 	next if (($plugin eq "fogpatch.esp") or ($plugin eq "cellnamepatch.esp"));
@@ -4593,8 +4394,7 @@ sub cmd_multipatch {
 		next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 		if ($opt_multipatch_fogbug or $opt_multipatch_cellnames) {
 		    if ($rectype eq 'CELL') {
-			$tr->decode;
-			if ($tr->is_interior()) {
+			if ($tr->decode()->is_interior()) {
 			    # only check interior cells for fogbug
 			    if ($opt_multipatch_fogbug) {
 				unless ($tr->get('DATA', 'flags') & 128) { # behave like exterior
@@ -4611,8 +4411,7 @@ sub cmd_multipatch {
 		}
 		if ($opt_multipatch_summons_persist) {
 		    if ($rectype eq 'CREA') {
-			$tr->decode;
-			my $id = $tr->id();
+			my $id = $tr->decode()->id;
 			if ($SUMMONED_CREATURES{$id}) {
 			    if ($tr->hdrflags & $HDR_FLAGS{persistent}) {
 				# plugin has preserved persistent flag
@@ -4682,7 +4481,7 @@ sub cmd_multipatch {
 	}
 	close($out);
 	$opt_header_update_record_count = 1;
-	update_header($patch_path, QUIET);
+	update_header($patch_path, [qw(QUIET NOBACKUP)]);
 	print qq{\nOutput is: "$patch_file", don't forget to activate it!\n};
     } else {
 	print qq{\nNo patching necessary. "multipatch.esp" not generated.\n};
@@ -4729,10 +4528,10 @@ sub cmd_common {
     read_records($plugin2, $compare_fun);
 }
 
-sub output_diff {
+sub diff_output {
     my($diff_file, $diff) = @_;
     if (@{$diff}) {
-	my $fh = IO::Handle->new();
+	my $fh = IO::Handle->new;
 	if (open($fh, ">$diff_file")) {
 	    print $fh join("\n", @{$diff});
 	    close($fh);
@@ -4745,11 +4544,7 @@ sub output_diff {
 
 sub cmd_diff {
     my($plugin1, $plugin2) = @_;
-    my $ignore;
-    if (@opt_diff_ignore_type) {
-	$ignore = '^(\s+(?:' . join('|', @opt_diff_ignore_type) . '):)\s.*$';
-    }
-    warn "IGNORE = $ignore\n" if (DBG);
+    my %ignore_type = map {uc($_),1} ('CELL.FRMR', @opt_diff_ignore_types);
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
     if (VERBOSE) {
@@ -4788,13 +4583,11 @@ sub cmd_diff {
 	    next if ($rectype eq 'TES3');
 	    if (defined(my $rec2 = $obj2->{$id}->{$rectype})) {
 		my $tr1 = $obj1->{$id}->{$rectype};
-		my $print_rec1 = $tr1->tostr();
-		$print_rec1 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
-		$print_rec1 =~ s/CELL.FRMR: ObjIdx: \d+ ModIdx: 0/CELL.FRMR: ObjIdx: (IGNORED) ModIdx: 0/gm if ($rectype eq 'CELL'); # TBD
+		# TBD remove ignored types if ($rectype eq 'CELL');
+		my $print_rec1 = $tr1->tostr;
 		my $tr2 = $obj2->{$id}->{$rectype};
-		my $print_rec2 = $tr2->tostr();
-		$print_rec2 =~ s/$ignore/$1 (IGNORED)/gmi if ($ignore);
-		$print_rec2 =~ s/CELL.FRMR: ObjIdx: \d+ ModIdx: 0/CELL.FRMR: ObjIdx: (IGNORED) ModIdx: 0/gm if ($rectype eq 'CELL'); # TBD
+		# TBD remove ignored types if ($rectype eq 'CELL');
+		my $print_rec2 = $tr2->tostr;
 		if ($print_rec1 eq $print_rec2) {
 		    push(@p1_equal_p2, "$rectype: $id") if ($opt_diff_equal);
 		} elsif ($opt_diff_not_equal) {
@@ -4838,8 +4631,8 @@ sub cmd_diff {
 	}
 	@diff1 = sort @diff1;
 	@diff2 = sort @diff2;
-	output_diff($diff1_file, \@diff1);
-	output_diff($diff2_file, \@diff2);
+	diff_output($diff1_file, \@diff1);
+	diff_output($diff2_file, \@diff2);
     }
 } # cmd_diff
 
@@ -4848,57 +4641,73 @@ sub cmd_delete {
     my $delete_subrecords = ($opt_sub_match or $opt_sub_no_match);
     my $delete_cell_objects = ($opt_cell_object_match or $opt_cell_object_no_match);
     my $fun = sub {
-	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
-	# we pass through all records that did not match the standard record selection switches of rec_match()
-	return($tr->recbuf, $tr->hdrflags) unless ($rec_match);
-	my($rectype, $id) = ($tr->rectype, $tr->id);
+	my($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags) = @_;
+	my($rec_match, undef, undef, $print_rec) =
+	    rec_match($plugin, $rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags); # calls tr->decode()
+	# we pass through all records that did not match the standard record selection switches of rec_match
+	return($tr) unless ($rec_match);
+	my $id = $tr->id;
 	if ($delete_subrecords) {
 	    # we are processing sub-records
 	    my $newrec = '';
+	    my @newtr;
 	    foreach my $tsr ($tr->subrecs()) {
-		my $subrec_str = $tsr->tostr();
+		my $subrec_str = $tsr->tostr;
 		if ($opt_sub_match or $opt_sub_no_match) {
-		    if (((not $opt_sub_match) or ($subrec_str =~ /$opt_sub_match/i)) and
+		    if (((not $wanted_types) or ($wanted_types->{$tsr->subtype})) and
+			((not $opt_sub_match) or ($subrec_str =~ /$opt_sub_match/i)) and
 			((not $opt_sub_no_match) or ($subrec_str !~ /$opt_sub_no_match/i))) {
-			my $id = $tr->id();
+			my $id = $tr->id;
 			print "[$rectype $id] DELETED SUBRECORD: $subrec_str\n";
 		    } else {
-			$newrec .= pack("a4L/a*", $tsr->subtype(), $tsr->encode());
+			push(@newtr, $tsr);
 		    }
 		}
 	    }
-	    return($newrec, $tr->hdrflags);
+	    return(${rectype}->new([@newtr]));
 	} elsif ($delete_cell_objects) {
-	    my $newrec = '';
 	    if ($rectype eq 'CELL') {
-		my($cellhdr, $objs, $objidx) = parse_cell_objects($plugin, $tr);
-		my @new_objs;
-		warn "objs: " . Dumper($objs) . "\n";
-		foreach my $obj (@$objs) {
-		    if ($obj eq 'NAM0') { push(@new_objs, $obj); next; }
-		    my $objstr;
-#		    foreach my $tsr (@{parse_subrec_list($obj->[1])}) {
-#			my($subtype, $subrec) = @{$subr};
-#			my $tostr = ($TOSTR{"$rectype.$subtype"} || $TOSTR{$subtype} || $TOSTR_UNK)->($subrec);
-#			$objstr .= "$subtype: $tostr\n";
-#		    }
-		    warn "objstr = $objstr\n";
-		    if (((not $opt_cell_object_match) or ($objstr =~ /$opt_cell_object_match/i)) and
-			((not $opt_cell_object_no_match) or ($objstr !~ /$opt_cell_object_no_match/i))) {
-			my $obj_info = chop_nulls(parse_subrec_hash($obj->[1])->{NAME}[0]) . " FRMR:" . $obj->[0]->[0];
-			print "[CELL: $id] DELETED CELL OBJECT: $obj_info\n";
+		my @groups = @{split_groups($tr)};
+		my @newcell = shift(@groups); # take header
+		my $deletions = 0;
+		my $nam0_tsr;
+		my $n = 0;
+		foreach my $gref (@groups) {
+		    my @this_group = @$gref; # all the subrecs in a FRMR (object instance) group
+		    if ($this_group[0]->subtype eq 'NAM0') {
+			push(@newcell, $nam0_tsr = $this_group[0]);
 		    } else {
-			push(@new_objs, $obj);
+			my($gstring, $name, $objidx);
+			foreach my $tsr (@this_group) {
+			    $gstring .= $tsr->tostr;
+			    $name = $tsr->get('NAME', 'name')
+				if (undefined $name and $tsr->subtype eq 'NAME');
+			    $objidx = $tsr->get('FRMR', 'objidx')
+				if (undefined $objidx and $tsr->subtype eq 'FRMR');
+			}
+			if (((not $opt_cell_object_match) or ($gstring =~ /$opt_cell_object_match/i)) and
+			    ((not $opt_cell_object_no_match) or ($gstring !~ /$opt_cell_object_no_match/i))) {
+			    print "[CELL: $id] DELETED CELL OBJECT: $name ObjIdx:$objidx\n";
+			    $deletions++;
+			} else {
+			    push(@newcell, @this_group);
+			    $n++ if (defined $nam0_tsr); # count objects after NAM0 marker
+			}
 		    }
 		}
-		$newrec = assemble_cell_objects($cellhdr, \@new_objs);
+		if ($deletions) {
+		    $nam0_tsr->{object_count} = $n;	# update NAM0
+		    return(CELL->new([@newcell]));
+		} else {
+		    return(''); # passthrough
+		}
 	    } else {
-		return($newrec, $tr->flags);
+		return(''); # passthrough
 	    }
 	} else {
 	    # we are deleting whole records
 	    if (VERBOSE) {
-		$print_rec ||= $tr->tostr();
+		$print_rec ||= $tr->tostr;
 		print "\nDELETED RECORD:\n$print_rec\n";
 	    } else {
 		print "DELETED: $rectype $id\n";
@@ -4918,121 +4727,53 @@ sub cmd_modify {
 	}
 	$opt_modify_run = 'main($rectype, $r, $flags, $unk);' unless ($opt_modify_run);
     }
+    if ($opt_modify_replace) {
+	# check that the replacer expression is valid
+	eval qq{(my \$foo = "HALCALI") =~ s$opt_modify_replace;};
+	if ($@) {
+	    abort("Invalid replacer expression: $opt_modify_replace");
+	}
+    }
+    my $fun = sub {
+	my($rec_match, $rectype, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
+	# we pass through all records that did not match the standard record selection switches of rec_match
+	return($tr) unless ($rec_match);
+	my $id = $tr->id;
+	my $oldrec = $tr->recbuf;
+	my $modified = 0;
+	if ($opt_modify_replace) {
+	    foreach my $tsr ($tr->subrecs()) {
+		foreach my $key (keys %$tsr) {
+		    next if ($key =~ /^_/); # skip keys that are not fieldnames
+		    eval qq{\$tsr->{$key} =~ s$opt_modify_replace;};
+		}
+	    }
+	}
+	if ($opt_modify_run) {
+	    $modified ||= eval($opt_modify_run);
+	    if ($@) {
+		warn qq{Error running "$opt_modify_run" on: $rectype ($@)\n};
+		$modified = 0;
+	    }
+	}
+	if ($modified) {
+	    my $newrec = $tr->encode()->recbuf;
+	    if ($newrec ne $oldrec) {
+		warn "MODIFIED RECORD:\n" . $newrec->tostr . "\n";
+		return($tr);
+	    }
+	}
+	return('');		# passthrough unchanged
+    };
+    process_plugin_for_update($plugin, $fun);
 } # cmd_modify
-
-# sub cmd_rename {
-#     my($plugin) = @_;
-#     my($inp, $out) = ($opt_report_only) ? open_for_read($plugin) : make_temp($plugin);
-#     my $modified = 0;
-#     unless ($opt_report_only) {
-# 	warn "\n$plugin: RENAMING Records:\n";
-#     }
-#     my $expected = "TES3";
-#     eval {
-# 	while (my($rectype, $tr) = read_rec($inp, $expected, $plugin)) {
-# 	    $expected = undef;
-# 	    last if (not defined $tr->rectype);
-# 	    my $hdrflags = $tr->hdrflags;
-# 	    next if ($hdrflags & $HDR_FLAGS{ignored});
-# 	    warn "REC=$rectype flags=$hdrflags\n" if (DBG);
-# 	    if ($rectype eq 'SCPT') {
-# 		my $renamed_schd = 0;
-# 		my $renamed_sctx = 0;
-# 		foreach my $tsr ($tr->subrecs) {
-# 		    my $subtype = $tsr->subtype;
-# 		    if ($subtype eq "SCHD") {
-# 			if ($opt_report_only) { # only list records
-# 			    printf qq{  $rectype.$subtype  %-30s\n}, $name;
-# 			} else {
-# 			    my $newname;
-# 			    eval qq{(\$newname = \$name) =~ s!$RENAME_FROM!$RENAME_TO!g};
-# 			    if (length($newname) < 32) {
-# 				if ($name ne $newname) {
-# 				    $subrec->[1] = pack("a32L5", $newname, @schd_longs);
-# 				    $renamed_schd = 1;
-# 				    printf qq{    Renaming: $rectype.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
-# 				}
-# 			    } else {
-# 				warn qq{New name for script: "$newname" is too long, must be less than 32 bytes\n};
-# 			    }
-# 			}
-# 		    } elsif ($subtype eq "SCTX") {
-# 			my $script = $subrec->[1];
-# 			my $name = ($script =~ m!^[^;]*?\bbegin\s+(\S+)!im) ? $1 : "unknown";
-# 			if ($opt_report_only) { # only list records
-# 			    printf qq{  $rectype.$subtype  %-30s\n}, $name;
-# 			} else {
-# 			    my $newname;
-# 			    eval qq{(\$newname = \$name) =~ s!$RENAME_FROM!$RENAME_TO!g};
-# 			    if ($name ne $newname) {
-# 				$script =~ s/^[^;]*?\bbegin\s+(\S+)/Begin $newname/im;
-# 				$subrec->[1] = $script;
-# 				$renamed_sctx = 1;
-# 				printf qq{    Renaming: $rectype.$subtype %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
-# 			    }
-# 			}
-# 		    }
-# 		}
-# 		unless ($opt_report_only) {
-# 		    if ($renamed_schd and $renamed_sctx) {
-# 			$modified++;
-# 			#$rec = new_rec($srl); TBD
-# 		    } else {
-# 			my $what = "";
-# 			$what .= " SCHD" unless $renamed_schd;
-# 			$what .= " SCTX" unless $renamed_sctx;
-# 			warn "Error renaming$what, record NOT updated.\n";
-# 		    }
-# 		}
-# 	    } elsif ($rectype eq $RENAME_TYPE) {
-# 		my $renamed = 0;
-# 		my $srl = parse_subrec_list($rec);
-# 		my $name_idx = ($srl->[0]->[0] eq 'NAME') ? 0 : undef;
-# 		if (defined($name_idx) and
-# 		    my $name = chop_nulls($srl->[$name_idx]->[1])) {
-# 		    if ($opt_report_only) { # only list records
-# 			my $recstr = pprec($rec, $RENAME_SUBTYPE);
-# 			printf qq{  $rectype  %-30s [%s]\n}, $name, $recstr;
-# 		    } else {	# rename records
-# 			my $do_rename = 1;
-# 			# TBD check if user selected opt_interior/opt_exterior
-# 			#$do_rename = 0 if ($rectype eq "CELL" and not allowed_cell_type($srl));
-# 			if ($do_rename) {
-# 			    my $newname;
-# 			    eval qq{(\$newname = \$name) =~ s!$RENAME_FROM!$RENAME_TO!g};
-# 			    if ($name ne $newname) {
-# 				$srl->[$name_idx]->[1] = "$newname\000";
-# 				$renamed = 1;
-# 				$modified++;
-# 				printf qq{    Renaming: $RENAME_TYPE %-30s -> %-30s\n}, qq{"$name"}, qq{"$newname"};
-# 			    }
-# 			}
-# 		    }
-# 		} else {
-# 		    warn "Error, Record has no $RENAME_SUBTYPE subrecord: $rec\n";
-# 		}
-# 		#$rec = new_rec($srl) if $renamed; TBD
-# 	    }
-# 	    write_rec($out, $tr) unless ($opt_report_only);
-# 	}
-#     };
-#     if ($@) {
-# 	warn $@;
-# 	$modified = 0;
-#     }
-#     if ($opt_report_only) {
-# 	cleanup_temp($inp, $plugin);
-#     } else {
-# 	fix_output($inp, $out, $plugin, $modified);
-#     }
-#} # cmd_rename
 
 sub cmd_header {
     my($plugin) = @_;
     update_header($plugin);
 }
 
-sub convert_plugin {
+sub esp_esm_convert {
     my($input) = @_;
     my $output;
     my $byte_expected;
@@ -5055,17 +4796,17 @@ sub convert_plugin {
 	open(OUT, "+<$output") or abort qq{Error opening "$output" for read/write ($!)};
 	binmode(OUT) or abort "Error setting binmode on $output ($!)";
 	my $magic;
-	(sysread(OUT, $magic, 4) == 4) or abort "$output: Error reading magic ($!)";
+	(read(OUT, $magic, 4) == 4) or abort "$output: Error reading magic ($!)";
 	if ($magic eq "TES3") {
-	    sysseek(OUT, 28, SEEK_SET) or abort "sysseek";
+	    seek(OUT, 28, SEEK_SET) or abort "seek";
 	    my $byte;
-	    (sysread(OUT, $byte, 1) == 1) or abort "$output: Error reading master byte ($!)\n";
+	    (read(OUT, $byte, 1) == 1) or abort "$output: Error reading master byte ($!)\n";
 	    my $val = unpack("C", $byte);
 	    #warn "masterbyte = $val\n";
 	    ($byte eq $byte_expected) or
 		abort qq{Error, expected master byte value of @{[unpack("C",$byte_expected)]}, got $val instead};
-	    sysseek(OUT, 28, SEEK_SET) or abort "sysseek";
-	    (syswrite(OUT, $byte_new, 1) == 1) or abort "$output: Error writing master byte ($!)\n";
+	    seek(OUT, 28, SEEK_SET) or abort "seek";
+	    print OUT $byte_new or abort "$output: Error writing byte ($!)\n";
 	} elsif ($magic eq "TES4") {
 	    abort "This function is not yet implemented for TES4 files";
 	} else {
@@ -5082,14 +4823,14 @@ sub convert_plugin {
     my($atime, $mtime) = (stat($input))[8,9];
     utime($atime, $mtime, $output);
     warn "$input copied to $output\n"
-} # convert_plugin
+} # esp_esm_convert
 
 # convert a master to a plugin
 sub cmd_esp {
     my($master) = @_;
     abort "Error, input must be a master (.esm)\n"
 	unless ($master =~ /\.esm$/i);
-    convert_plugin($master);
+    esp_esm_convert($master);
 }
 
 # convert a plugin to a master
@@ -5097,7 +4838,7 @@ sub cmd_esm {
     my($plugin) = @_;
     abort "Error, input must be a plugin (.esp)\n"
 	unless ($plugin =~ /\.esp$/i);
-    convert_plugin($plugin);
+    esp_esm_convert($plugin);
 }
 
 my %gmst_type = ('i' => [INTV => 'integer'], 'f' => [FLTV => 'float'], 's' => [STRV => 'string']);
@@ -5119,10 +4860,12 @@ sub cmd_clean {
     my %duptype = map { $_, 1 } @CLEAN_DUP_TYPES;
     my %my_master;
     my $fun = sub {
-	my($rec_match, $plug_tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
-	my($id, $rectype) = ($plug_tr->id, $plug_tr->rectype);
+	my($rectype, $plug_tr) = @_;
+	my $record_modified = 0;
 	if ($rectype eq 'GMST') {
 	    if ($opt_clean_gmsts) {
+		# CLEAN EVIL GMSTS
+		my $id = $plug_tr->decode()->id;
 		my($type, $field) = @{$gmst_type{substr($id, 0, 1)}};
 		my $val = $plug_tr->get($type, $field);
 		my $hexval = unpack("H*", "$type $val");
@@ -5139,104 +4882,128 @@ sub cmd_clean {
 	    my $cleaned_whgt;
 	    if ($opt_clean_cell_objects) {
 		# CLEAN CELL OBJECTS
-		my($p_hdr, $p_objs, $p_objidx) = parse_cell_objects($plugin, $plug_tr);
-		my @new_objs;
-		foreach my $obj (@$p_objs) {
-		    if ($obj eq 'NAM0') { push(@new_objs, $obj); next; }
-		    my $object_body = $obj->[1];
-		    my $cleaned_obj = 0;
-		    foreach my $master (keys %{my_master}) {
-			if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{CELL}) {
-			    my($m_hdr, $m_objs, $m_objidx) = parse_cell_objects($plugin, $mast_tr);
-			    if ($m_objidx->{$object_body}->[0] == $obj->[0]->[0]) { # compare master and plugin FRMR object indices
-				$cleaned_obj++;
-				last;
-			    }
-			}
-		    }
-		    if ($cleaned_obj) {
-			my $obj_info = chop_nulls(parse_subrec_hash($obj->[1])->{NAME}[0]) . " FRMR:" . $obj->[0]->[0];
-			print " Cleaned redundant object ($obj_info) from CELL: $id\n";
+		# clean a FRMR group in plugin cell if its following subrecs exactly match
+		# a FRMR group with the same ObjIdx from one of the masters
+		my $id = $plug_tr->decode()->id;
+		my @plug_groups = @{split_groups($plug_tr)};
+		my @newcell = shift(@plug_groups); # take header
+		# find cells plugin has in common with masters.
+		my $nam0_tsr;
+		my $n = 0;
+		my $cell_modified = 0;
+		foreach my $pgref (@plug_groups) {
+		    my $cleaned = 0;
+		    my @this_group = @$pgref; # all the subrecs in a FRMR (object instance) group
+		    if ($this_group[0]->subtype eq 'NAM0') {
+			push(@newcell, $nam0_tsr = $this_group[0]);
 		    } else {
-			push(@new_objs, $obj);
-		    }
-		}
-		if (scalar(@new_objs) != scalar(@$p_objs)) {
-		    $plug_tr = assemble_cell_objects($p_hdr, \@new_objs);
-		    # TBD - this was to reparse a modified rec
-		    #$r = decode_rec($plugin, $rectype, $rec);
-		    #$plug_srl = parse_subrec_list($rec);
-		}
-	    }
-	    # we check plugin against all masters, as we can't know with which masters the author created it
-	    # and ideally, we don't want the result of cleaning to be dependent on load order.
-	    foreach my $master (keys %{my_master}) {
-		if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{CELL}) {
-		    if ($plug_tr->is_interior) {
-			if ($opt_clean_cell_params) { # check for redundant AMBI/WHGT
-			    # CLEAN AMBI
-			    unless ($cleaned_ambi) {
-				if (defined($plug_tr->get('AMBI')) and ($plug_tr->get('AMBI')->getbuf eq $mast_tr->get('AMBI')->getbuf)) {
-				    $plug_tr->delete_subrec('AMBI');
-				    $cleaned_ambi++;
-				}
-			    }
-			    # CLEAN WHGT
-			    # (some plugins, like Morrowind.esm, use an INTV subrecord instead of WHGT)
-			    unless ($cleaned_whgt) {
-				my $plugin_whgt = $plug_tr->get('WHGT', 'water_height');
-				my $whgt_type = 'WHGT';
-				unless (defined $plugin_whgt) {
-				    if ($plug_tr->subtype eq 'INTV') {
-					# this would be unusual. I think INTV water heights must be from very old Construction Sets.
-					$plugin_whgt = $plug_tr->get('INTV', 'water_height');
-					$whgt_type = 'INTV';
+			my($plug_objidx, $plug_buf, $plug_objname) = buffalize(@this_group);
+		      CHECK_MASTER_CELL_OBJECTS:
+			foreach my $master (keys %{my_master}) {
+			    if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{CELL}) {
+				foreach my $mgref (splice(@{split_groups($mast_tr)}, 0, 1)) { # skip header group
+				    my($mast_objidx, $mast_buf) = buffalize(@$mgref);
+				    if ($plug_objidx == $mast_objidx) {
+					if ($plug_buf eq $mast_buf) {
+					    $cleaned++;
+					    $cell_modified++;
+					    last CHECK_MASTER_CELL_OBJECTS; # done with all masters
+					}
+					last; # done with this master
 				    }
 				}
-				my $master_whgt = $mast_tr->get('WHGT', 'water_height');
-				unless (defined $master_whgt) {
-				    $master_whgt = $mast_tr->get('INTV', 'water_height'); # want first INTV before any FRMR
-				}
-				if (defined($plugin_whgt) and defined($master_whgt) and ($plugin_whgt == $master_whgt)) {
-				    $plug_tr->delete_subrec($whgt_type, 1);
-				    $cleaned_whgt++;
-				}
 			    }
 			}
-		    }
-		    if ($opt_clean_junk_cells) {
-			if (scalar($plug_tr->subrecs()) < 4) {
-			    # junk cells always contain less than 4 subrecords
-			    my $modified = 0;
-			    foreach my $type (map { $_->subtype() } $plug_tr->subrecs()) {
-				if (not $JUNKCELL_SUBTYPE{$type} or
-				    $plug_tr->get($type)->getbuf() ne $mast_tr->get($type)->getbuf()) {
-				    # record contains subrecords or some modified data, so it isn't junk
-				    $modified++;
-				    last;
-				}
-			    }
-			    unless ($modified) {
-				print " Cleaned Junk CELL:  $id\n";
-				return; # return undef to delete this record
-			    }
+			if ($cleaned) {
+			    print " Cleaned redundant object ($plug_objname FRMR: $plug_objidx) from CELL: $id\n";
+			} else {
+			    push(@newcell, @this_group); # no clean
+			    $n++ if (defined $nam0_tsr); # count objects after NAM0 marker
 			}
 		    }
 		}
+		if ($cell_modified) {
+		    $nam0_tsr->{object_count} = $n;	# update NAM0
+		    $plug_tr = CELL->new([@newcell]);
+		    $record_modified++;
+		}
 	    }
-	    my @what;
-	    push(@what, 'AMBI') if ($cleaned_ambi);
-	    push(@what, 'WHGT') if ($cleaned_whgt);
-	    if (@what) {
-		print " Cleaned redundant " . join(',', @what) . " from CELL: $id\n";
+	    if ($opt_clean_cell_params or $opt_clean_junk_cells) {
+		# CLEAN superfluous AMBI/WHGT
+		# we check plugin against all masters, as we can't know with which masters the author created it
+		# and ideally, we don't want the result of cleaning to be dependent on load order.
+		my $id = $plug_tr->decode()->id;
+		foreach my $master (keys %{my_master}) {
+		    if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{CELL}) {
+			if ($plug_tr->is_interior) {
+			    if ($opt_clean_cell_params) { # check for redundant AMBI/WHGT
+				# CLEAN AMBI
+				unless ($cleaned_ambi) {
+				    if (defined($plug_tr->get('AMBI')) and ($plug_tr->get('AMBI')->subbuf eq $mast_tr->get('AMBI')->subbuf)) {
+					$plug_tr->delete_subrec('AMBI');
+					$cleaned_ambi++;
+				    }
+				}
+				# CLEAN WHGT
+				# (some plugins, like Morrowind.esm, use an INTV subrecord instead of WHGT)
+				unless ($cleaned_whgt) {
+				    my $plugin_whgt = $plug_tr->get('WHGT', 'water_height');
+				    my $whgt_type = 'WHGT';
+				    unless (defined $plugin_whgt) {
+					if ($plug_tr->subtype eq 'INTV') {
+					    # this would be unusual. I think INTV water heights must be from very old Construction Sets.
+					    $plugin_whgt = $plug_tr->get('INTV', 'water_height');
+					    $whgt_type = 'INTV';
+					}
+				    }
+				    my $master_whgt = $mast_tr->get('WHGT', 'water_height');
+				    unless (defined $master_whgt) {
+					$master_whgt = $mast_tr->get('INTV', 'water_height'); # want first INTV before any FRMR
+				    }
+				    if (defined($plugin_whgt) and defined($master_whgt) and ($plugin_whgt == $master_whgt)) {
+					$plug_tr->delete_subrec($whgt_type, 1);
+					$cleaned_whgt++;
+				    }
+				}
+			    }
+			}
+			# clean junk cells (interior and exterior)
+			if ($opt_clean_junk_cells) {
+			    if (scalar($plug_tr->subrecs()) < 4) {
+				# junk cells always contain less than 4 subrecords
+				my $contains_new_data = 0;
+				foreach my $type (map { $_->subtype() } $plug_tr->subrecs()) {
+				    if (not $JUNKCELL_SUBTYPE{$type} or
+					$plug_tr->get($type)->subbuf() ne $mast_tr->get($type)->subbuf()) {
+					# record contains subrecords or some new data, so it isn't junk
+					$contains_new_data++;
+					last;
+				    }
+				}
+				unless ($contains_new_data) {
+				    print " Cleaned Junk CELL:  $id\n";
+				    return; # return undef to delete this record
+				}
+			    }
+			}
+		    } # master has same cell (by id)
+		}
+		my @what;
+		push(@what, 'AMBI') if ($cleaned_ambi);
+		push(@what, 'WHGT') if ($cleaned_whgt);
+		if (@what) {
+		    print " Cleaned redundant " . join(',', @what) . " from CELL: $id\n";
+		}
 	    }
 	} elsif ($rectype eq 'TES3') {
+	    $plug_tr->decode;
 	    foreach my $master ($plug_tr->getall('MAST', 'master')) {
 		$my_master{lc($master)}++;
 		load_master($master);
 	    }
 	}
 	if ($opt_clean_dups) {
+	    my $id = $plug_tr->decode()->id;
 	    foreach my $master (keys %{my_master}) {
 		if (my $mast_tr = $MASTER_ID->{$master}->{$id}->{$rectype}) {
 		    if ($duptype{$rectype} and
@@ -5248,8 +5015,11 @@ sub cmd_clean {
 		}
 	    }
 	}
-	my $newrec = $plug_tr->encode(); # update record buffer if we have modified it
-	return($newrec, $plug_tr->hdrflags);
+	if ($record_modified) {
+	    return($plug_tr->encode());
+	} else {
+	    return('');		# passthrough
+	}
     };
     if ($opt_clean_replace) {
 	process_plugin_for_update($plugin, $fun);
@@ -5263,17 +5033,16 @@ sub cmd_dump {
     my $dump_banner;
     $dump_banner = "\nPlugin: $plugin\n" unless ($opt_no_banner);
     my $fun = sub {
-	my($rec_match, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
+	my($rec_match, $rectype, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode
 	return unless ($rec_match);
 	my $unkstr = (DBG) ? sprintf("  Unk:%04x", $tr->unk) : '';
-	my $id = $tr->id();
+	my $id = $tr->id;
 	if ($dump_banner) {
 	    print $dump_banner;
 	    $dump_banner = "";
 	}
 	# pretty print
-	$print_rec ||= $tr->tostr();
-	my $rectype = $tr->rectype;
+	$print_rec ||= $tr->tostr;
 	if ($opt_list) {
 	    if ($rectype eq 'CELL') {
 		my $objcnt = (defined $tr->{SH}->{FRMR}) ? scalar(@{$tr->{SH}->{FRMR}}) : 0;
@@ -5281,46 +5050,34 @@ sub cmd_dump {
 	    } else {
 		print "$rectype: $id\n";
 	    }
-	} elsif ($opt_dump_raw) {
-	    if ($opt_cell_object_match and ($rectype eq 'CELL')) {
-		my @frmr_data;
-		my $frmr_match = 0;
-		my @newrec = ();
-		my $first_frmr_seen = 0;
-		my $subrec_str = '';
-		my $tostr;
-		foreach my $tsr ($tr->subrecs()) {
-		    my $subtype = $tsr->subtype();
-		    $subrec_str .= $tsr->tostr();
-		    if ($first_frmr_seen) {
-			if ($subtype eq 'FRMR') {
-			    if ($subrec_str =~ /$opt_cell_object_match/i) {
-				$frmr_match++;
-				push(@newrec, @frmr_data);
-			    }
-			    $subrec_str = '';
-			    @frmr_data = (); # start a new group
-			}
-			push(@frmr_data, pack("a4L/a", $subtype, $tsr->getbuf()));
-		    } else {
-			if ($subtype eq 'FRMR') {
-			    $first_frmr_seen = 1;
-			    push(@frmr_data, pack("a4L/a", $subtype, $tsr->getbuf()));
-			} else {
-			    push(@newrec, pack("a4L/a", $subtype, $tsr->getbuf()));
-			}
+	} elsif ($opt_cell_object_match and ($rectype eq 'CELL')) {
+	    my @groups = @{split_groups($tr)};
+	    my @newcell = shift(@groups); # take header
+	    my $selected = 0;
+	    my $nam0_tsr;
+	    my $n = 0;
+	    foreach my $gref (@groups) {
+		my @this_group = @$gref; # all the subrecs in a FRMR (object instance) group
+		if ($this_group[0]->subtype eq 'NAM0') {
+		    push(@newcell, $nam0_tsr = $this_group[0]);
+		} else {
+		    my $gstring = join("\n", map { $_->tostr } @this_group);
+		    if (((not $opt_cell_object_match) or ($gstring =~ /$opt_cell_object_match/i)) and
+			((not $opt_cell_object_no_match) or ($gstring !~ /$opt_cell_object_no_match/i))) {
+			push(@newcell, @this_group);
+			$selected++;
+			$n++ if (defined $nam0_tsr); # count objects after NAM0 marker
 		    }
 		}
-		if ($subrec_str =~ /$opt_cell_object_match/i) {
-		    $frmr_match++;
-		    push(@newrec, @frmr_data);
+	    }
+	    if ($selected) {
+		$nam0_tsr->{object_count} = $n;	# update NAM0
+		my $newtr = CELL->new([@newcell]);
+		if ($opt_dump_raw) {
+		    write_rec($RAWOUT, $newtr);
+		} else {
+		    print $newtr->tostr;
 		}
-		if ($frmr_match) {
-		    my $newrec = join("", @newrec);
-		    print $RAWOUT pack("a4LLLa*", $rectype, length($newrec), $tr->hdrunk, $tr->hdrflags, $newrec);
-		}
-	    } else {
-		print $RAWOUT pack("a4LLLa*", $rectype, $tr->reclen, $tr->hdrunk, $tr->hdrflags, $tr->recbuf);
 	    }
 	} else {
 	    print "\n$print_rec\n" if ($print_rec);
@@ -5336,11 +5093,13 @@ sub cmd_recover {
     my $buff;
     my $buff_size = 4096;
     my $expected = "TES3";
-    my $inp_len = sysseek($inp, 0, SEEK_END); # seek to end
-    my $inp_offset = sysseek($inp, 0, SEEK_SET); # seek to start
+    my $inp_len = -s $plugin;
+    my $inp_offset = 0;
     my $rectypes = join('|', keys %TES3::Record::RECTYPES);
     print qq{$plugin: length = $inp_len\n};
     my @removed;
+    my $recovered = 0;
+    no warnings;
   READREC:
     while ($inp_offset < $inp_len) {
 	my($rectype, $tr);
@@ -5348,43 +5107,50 @@ sub cmd_recover {
 	    ($rectype, $tr) = read_rec($inp, $expected, $plugin);
 	    $expected = undef;
 	    abort "Error, Invalid record type: $rectype\n" unless ($TES3::Record::RECTYPES{$rectype});
-	    $tr->decode();
-	    my $id = $tr->id;
+	    my $id = $tr->decode()->id;
 	    foreach my $subtype (map {$_->subtype} $tr->subrecs()) {
-		abort qq{Error, Invalid record subtype: "$subtype"\n} unless ($TES3::Record::RECTYPES{$rectype}->{$subtype});
+		die qq{Error, Invalid record subtype: "$rectype.$subtype"\n} unless ($TES3::Record::RECTYPES{$rectype}->{$subtype});
 	    }
 	    printf "Offset: %8d  Found: $rectype $id\n", $inp_offset if (DBG);
+	    $recovered++;
 	};
 	if ($@) {
-	    warn $@;
+	    warn $@ if (DBG);
 	    # start a scan from last input offset for something that looks like a record header
 	    my $start_offset = $inp_offset;
 	    print qq{READ ERROR on record starting at: $start_offset\n};
-	    $inp_offset = sysseek($inp, $inp_offset + 1, SEEK_SET);
+	    seek($inp, $inp_offset + 1, SEEK_SET) and
+		$inp_offset = tell($inp);;
 	    print qq{Scanning for records from: $inp_offset\n};
+	    my $lost_data;
 	    while (1) {
-		my $n_read = sysread($inp, $buff, $buff_size + $typlen);
+		my $n_read = read($inp, $buff, $buff_size + $typlen);
 		last READREC if ($n_read == 0); # EOF
 		if (my($stuff, $rectype) = split(/($rectypes)/, $buff)) {
 		    my $new_offset = $inp_offset + length($stuff);
+		    $lost_data += $stuff;
 		    print qq{Scan found $rectype at: $new_offset\n};
-		    $inp_offset = sysseek($inp, $new_offset, SEEK_SET);
+		    seek($inp, $new_offset, SEEK_SET) and
+			$inp_offset = tell($inp);
 		    push(@removed, [$start_offset, $new_offset]);
 		    last;
 		} else {
 		    # Just in case record header started at end boundary, back up by len of rec ID
-		    $inp_offset = sysseek($inp,  0 - $typlen, SEEK_CUR) if ($n_read == ($buff_size + $typlen));
+		    if ($n_read == ($buff_size + $typlen)) {
+			seek($inp,  0 - $typlen, SEEK_SET) and
+			    $inp_offset = tell($inp);
+		    }
 		}
 	    }
 	} else {
 	    # everything was AOK
 	    write_rec($out, $tr);
-	    $inp_offset = sysseek($inp, 0, SEEK_CUR); # set inp_offset to current seek position
+	    $inp_offset = tell($inp); # set inp_offset to current position
 	}
     }
-    if (@removed) {
+    if ($recovered and @removed) { # some good data preserved, some bad data discarded
 	my $n = scalar(@removed);
-	print "Recovery removed $n section@{[($n > 1) ? 's' : '']} of bad data:\n";
+	print "Removed $n section@{[($n > 1) ? 's' : '']} of bad data:\n";
 	my $total = 0;
 	foreach my $chunk (@removed) {
 	    my $lost = $chunk->[1] - $chunk->[0];
@@ -5397,7 +5163,7 @@ sub cmd_recover {
 	}
 	fix_output($inp, $out, $plugin, 1);
     } else {
-	print "Recovery found no bad data in $plugin\n";
+	print "Unable to recover data from $plugin\n";
 	cleanup_temp($inp, $plugin);
     }
 } # cmd_recover
@@ -5408,9 +5174,9 @@ sub cmd_shell {
     print "> ";
     my $perlstuff = '';
     my $done = 0;
-    while (<>) {
-	$perlstuff = join('', $perlstuff, $_);
-	if (/^$/ or ($perlstuff =~ /^[^\n]*;$/)) {
+    while (my $line = <>) {
+	$perlstuff = join('', $perlstuff, $line);
+	if ($line =~ /^$/ or ($perlstuff =~ /^[^\n]*;$/)) {
 	    my $result = eval($perlstuff);
 	    if ($@) {
 		print "psh ERROR: $@\n> ";
