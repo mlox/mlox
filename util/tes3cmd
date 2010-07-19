@@ -9,7 +9,7 @@ $::VERSION = "0.37h";
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
-# TEST: cmd_dump
+#  cmd_dump
 #  cmd_codectest
 #  cmd_header
 #  cmd_multipatch
@@ -21,15 +21,15 @@ $::VERSION = "0.37h";
 #  cmd_esp
 #  cmd_overdial
 #  cmd_recover (try to recover at subrecord granularity? save lost data and dump like od)
-# TEST: cmd_delete
-# TEST: cmd_clean
+#  cmd_delete
 # TEST: cmd_modify (fix doco for helpers)
+# TEST: cmd_clean
 # TEST: cmd_fixit
 
 # TBD:
 # implement "canonical" dump format
 # improve corrupted INFO detection, and possibly clean them
-# when dumping NPC_, read FACT to set up FACTION data hashes.
+# when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
 # implement a "repack" command: bsaunpack + tesfiles/resourcecheck + clean
 # implement logfile for detail output (delete, modify, clean, multipatch)
 # put commands and opts in a big dispatch table?
@@ -44,6 +44,7 @@ $::VERSION = "0.37h";
 # reformat overdial output? just list each topic once, with list of plugins that have it
 # implement script compiler
 # add new commands:
+# * "buildcache" (build up all the cache files for cleaning, lookups, etc)
 # * "describecodec" (print text description of TES3 codec)
 # * "undo" (revert to last backups for modifying commands)
 # * "tidy" (remove cache and undo stuff)
@@ -131,7 +132,7 @@ package TES3::Util;
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(abort assert dbg err prn));
+    Util->import(qw(abort assert dbg err msg prn));
 }
 
 
@@ -267,7 +268,7 @@ BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
     use constant NOWRAP => grep(/^-?-no-wrap$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(abort assert dbg err prn));
+    Util->import(qw(abort assert dbg err msg prn));
 }
 use Text::Wrap qw(wrap);
 use Data::Dumper;
@@ -930,13 +931,13 @@ sub unpack_float_array {
 }
 sub pack_float_array { pack("f*", map { $_[0]->{$_} } (1..$_[0]->{_last_idx})); }
 my @RD_float_array_ess = ([], { decode => \&unpack_float_array,
-			    encode => \&pack_float_array,
-			    fieldnames => sub { (1..$_[0]->{_last_idx}); },
-			    tostr => sub {
-				my($self) = @_;
-				"Float_Vals: " . join(", ", map { sprintf("%0.2f", $self->{$_}) } 1..$self->{_last_idx});
-			    },
-			    rdflags => [qw(ess)]});
+				encode => \&pack_float_array,
+				#fieldnames => sub { (1..$_[0]->{_last_idx}); },
+				tostr => sub {
+				    my($self) = @_;
+				    "Float_Vals: " . join(", ", map { sprintf("%0.2f", $self->{$_}) } 1..$self->{_last_idx});
+				},
+				rdflags => [qw(ess)]});
 
 sub unpack_long_array {
     my($self, $buff) = @_;
@@ -948,13 +949,13 @@ sub unpack_long_array {
 }
 sub pack_long_array { pack("l*", map { $_[0]->{$_} } (1..$_[0]->{_last_idx})); }
 my @RD_long_array_ess  = ([], { decode => \&unpack_long_array,
-			    encode => \&pack_long_array,
-			    fieldnames => sub { (1..$_[0]->{_last_idx}); },
-			    tostr => sub {
-				my($self) = @_;
-				"Long_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
-			    },
-			    rdflags => [qw(ess)]});
+				encode => \&pack_long_array,
+				#fieldnames => sub { (1..$_[0]->{_last_idx}); },
+				tostr => sub {
+				    my($self) = @_;
+				    "Long_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
+				},
+				rdflags => [qw(ess)]});
 
 sub unpack_short_array {
     my($self, $buff) = @_;
@@ -966,13 +967,13 @@ sub unpack_short_array {
 }
 sub pack_short_array { pack("s*", map { $_[0]->{$_} } (1..$_[0]->{_last_idx})); }
 my @RD_short_array_ess = ([], { decode => \&unpack_short_array,
-			    encode => \&pack_short_array,
-			    fieldnames => sub { (1..$_[0]->{_last_idx}); },
-			    tostr => sub {
-				my($self) = @_;
-				"Short_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
-			    },
-			    rdflags => [qw(ess)]});
+				encode => \&pack_short_array,
+				#fieldnames => sub { (1..$_[0]->{_last_idx}); },
+				tostr => sub {
+				    my($self) = @_;
+				    "Short_Vals: " . join(", ", map { $self->{$_} } 1..$self->{_last_idx});
+				},
+				rdflags => [qw(ess)]});
 
 my @RD_widx = ([["equipped_index", "l"], # JMS index into NPCO inventory items of those that are equipped
 		["ammo_flag", "l"]],
@@ -1214,7 +1215,7 @@ my @RECDEFS =
 				     $self->{x_angle}, $self->{y_angle}, $self->{z_angle}));
 		     }
 		 },
-		 fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{flags}) {
@@ -1578,8 +1579,8 @@ my @RECDEFS =
 		      my($self) = @_;
 		      my $str = $self->{response};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
-		      $str =~ s/\n/\n\t\t/g;
-		      "Response:\t$str";
+		      #$str =~ s/\n/\n\t\t/g;
+		      "Response:\n".((NOWRAP) ? $str : wrap("\t", "\t", $str));
 		  },
 		}],
 	       [NNAM => [["next_id", "Z*"]]],
@@ -1814,7 +1815,7 @@ my @RECDEFS =
 				     $self->{unk1}, $self->{unk2}, $self->{unk3},  $self->{gold}));
 		     }
 		 },
-		 fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		 tostr => sub {
 		     my($self) = @_;
 		     my $faction = $self->{faction};
@@ -1993,7 +1994,7 @@ my @RECDEFS =
 			      $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight});
 		     }
 		 },
-		 fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{blizzard}) {
@@ -2140,7 +2141,7 @@ my @RECDEFS =
 		      my $l2 = $len >> 32;
 		      pack("L2", $l1, $l2);
 		  },
-		  fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
+		  #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works
 		  tostr => sub {
 		      my($self) = @_;
 		      return("Length:$self->{length}");
@@ -2196,17 +2197,6 @@ sub new_from_tr {
 	    _hdrflags_ => ($copyhdr) ? $self->hdrflags : 0,
 	    _hdrunk_ => ($copyhdr) ? $self->hdrunk : 0,
 	    _recbuf_ => ''}, $self->rectype);
-}
-
-# TES3::Record->new_copy
-sub new_copy {
-    my($class, $tr) = @_;
-    my $self = { _rectype_ => $tr->rectype,
-		 _hdrflags_ => $tr->hdrflags,
-		 _hdrunk_ => $tr->hdrunk,
-		 _recbuf_ => $tr->recbuf };
-    bless($self, $self->{_rectype_});	# we re-bless into the class "$rectype"
-    return($self->decode);
 }
 
 # tr->recbuf
@@ -2510,11 +2500,11 @@ sub gen_subrec_methods {
 	    }
 	}			# tsr->tostr
 
-	# tsr->fieldnames()
-	unless ($package->can('fieldnames')) {
-	    $method = "${package}::fieldnames";
-	    *$method = sub { @fieldnames; };
-	}
+#	# tsr->fieldnames()
+#	unless ($package->can('fieldnames')) {
+#	    $method = "${package}::fieldnames";
+#	    *$method = sub { @fieldnames; };
+#	}
     } 				# finished processing list of subrec fields
 
     no strict "refs";
@@ -2599,6 +2589,7 @@ sub gen_class {
 		foreach my $subrecref (@$init) {
 		    my($subtype, $subhash) = @{$subrecref};
 		    no strict 'refs';
+		    dbg("($rectype)->new(): subtype=$subtype") if (DBG);
 		    $self->append("${rectype}::${subtype}"->new($subhash));
 		}
 	    } else {
@@ -2686,7 +2677,10 @@ sub gen_class {
     # tr->subrecs()
     unless ($rectype->can('subrecs')) {
 	$method = "${rectype}::subrecs";
-	*$method = sub { @{$_[0]->{SL}}; };
+	*$method = sub {
+	    abort("undefined SL") if (DBG and not defined $_[0]->{SL});
+	    @{$_[0]->{SL}};
+	};
     }
 
     # $tr->tostr()
@@ -2696,7 +2690,7 @@ sub gen_class {
 	    use strict "refs";
 	    my($self) = @_;
 	    my $dialstr = ($rectype eq 'INFO') ? " ($CURRENT_DIAL)" : '';
-	    qq{Record: $rectype "@{[$self->id()]}"$dialstr Flags: @{[$self->hdrflagstr()]}\n} .
+	    qq{Record: $rectype "@{[$self->id]}"$dialstr Flags:@{[$self->hdrflagstr()]}\n} .
 		join("\n", map { (($RDFLAGS{${rectype}."::".$_->subtype()}->{startgroup}) ? $GROUPMARGIN : $MARGIN).$_->subtype().": ".$_->tostr() } @{$self->{SL}});
 	};
     }
@@ -2746,7 +2740,7 @@ package main;
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(abort assert dbg err prn));
+    Util->import(qw(abort assert dbg err msg prn));
 }
 
 TES3::Record::generate_classes();
@@ -3238,48 +3232,48 @@ OPTIONS:
 	turn on debug messages
 
  --cell-object-match <regex>
-	when printing cells, only print the matching objects in the cell
+	Only delete the objects in the cell that match <regex>
 
  --cell-object-no-match <regex>
-	when printing cells, only print the non-matching objects in the cell
+	Only delete objects in the cell that do not match <regex>
 
  --exterior
-	if record is CELL, only match if it is an Exterior
+	if record is CELL, only delete if it is an Exterior
 
  --flag* <flag>
-	only modify records with given flag. Flags may be given symbolically
+	only delete records with given flag. Flags may be given symbolically
 	as: (deleted, persistent, ignored, blocked), or via their numeric
 	values (i.e. persistent is 0x400).
 
  --id* <id-regex>
-	only process records whose ids match regular expression pattern
+	only delete records whose ids match regular expression pattern
 	<id-regex>
 
  --interior
-	if record is CELL, only match if it is an Interior
+	if record is CELL, only delete if it is an Interior
 
  --match <regex>
-	only process records that match given regular expression <regex>
+	only delete records that match given regular expression <regex>
 
  --no-match <regex>
-	only process records that do not match given regular expression
+	only delete records that do not match given regular expression
 	<regex>
 
  --sub-match <regex>
-	only modify the subrecords that match <regex>
+	only delete the subrecords that match <regex>
 
  --sub-no-match <regex>
-	only modify the subrecords that do not match <regex>
+	only delete the subrecords that do not match <regex>
 
  --type* <record-type>
-	only modify records with the given <record-type>
+	only delete records with the given <record-type>
 
  Note: starred (*) options can be repeated.
 
 DESCRIPTION:
 
-Deletes records/subrecords from the plugin. You can really damage things with
-this command, so be careful!
+Deletes entire records, or subrecords, or object instances from cells. You can
+really damage things with this command, so be careful!
 
 Note: documentation for regular expressions:
   http://www.perl.com/doc/manual/html/pod/perlre.html
@@ -3287,7 +3281,7 @@ Note: documentation for regular expressions:
 EXAMPLES:
 
 # Delete all records with IDs matching "foo":
-# Note that this doesn't also delete records that may depend on "foo".
+# (Note that this doesn't also delete records that may depend on "foo").
 tes3cmd delete --id foo "my plugin.esp"
 };
 
@@ -3911,7 +3905,6 @@ sub open_for_read {
 sub open_for_write {
     my($plugin) = @_;
     my $fh = IO::Handle->new;
-    (-f $plugin) or abort(qq{Not a plain file});
     open($fh, ">", $plugin) or abort(qq{opening "$plugin" for output ($!)});
     binmode($fh, ':raw') or abort(qq{setting binmode on "$plugin" ($!)});
     return($fh);
@@ -3975,7 +3968,7 @@ sub fix_output {
 		abort(qq{Renaming "$plugtmp" to "$newname" ($!)});;
 	    }
 	    $opt_header_update_record_count = 1;
-	    update_header($newname, [qw(QUIET)]);
+	    update_header($newname, [qw(QUIET NOBACKUP)]);
 	    utime($atime, $mtime, $newname);
 	    print qq{Output saved in: "$newname"\nOriginal unaltered: "$plugin"\n};
 	} else {
@@ -3987,7 +3980,7 @@ sub fix_output {
 		abort(qq{Renaming "$plugtmp" to "$plugin" ($!)});
 	    }
 	    $opt_header_update_record_count = 1;
-	    update_header($plugin, [qw(QUIET)]);
+	    update_header($plugin, [qw(QUIET NOBACKUP)]);
 	    utime($atime, $mtime, $plugin);
 	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
 	}
@@ -4435,7 +4428,7 @@ sub buffalize {
 	    $refidx = $tsr->{refidx} unless (defined $refidx);
 	} else {
 	    $objname = $tsr->{name}
-		if (undefined $refidx and $tsr->subtype eq 'NAME');
+		if (not(defined $refidx) and $tsr->subtype eq 'NAME');
 	    $recbuf .= $tsr->subbuf;
 	}
     }
@@ -4888,9 +4881,9 @@ sub diff_output {
 	if (open($fh, ">$diff_file")) {
 	    print $fh join("\n", @{$diff});
 	    close($fh);
-	    err("Created diff file: $diff_file");
+	    msg("Created diff file: $diff_file");
 	} else {
-	    err("opening $diff_file for output ($!)");
+	    err("Opening $diff_file for output ($!)");
 	}
     }
 }
@@ -4934,7 +4927,7 @@ sub cmd_diff {
 	    }
 	}
 	foreach my $rectype (keys %{$obj1->{$id}}) {
-	    next if ($rectype eq 'TES3');
+	    #next if ($rectype eq 'TES3'); # but maybe we do want to compare ...
 	    if (defined(my $rec2 = $obj2->{$id}->{$rectype})) {
 		my $tr1 = $obj1->{$id}->{$rectype};
 		# TBD remove ignored types if ($rectype eq 'CELL');
@@ -4996,34 +4989,30 @@ sub cmd_delete {
     my $delete_subrecords = ($opt_sub_match or $opt_sub_no_match);
     my $delete_cell_objects = ($opt_cell_object_match or $opt_cell_object_no_match);
     my $fun = sub {
-	my($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags) = @_;
-	my($rec_match, undef, undef, $print_rec) =
-	    rec_match($plugin, $rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags); # calls tr->decode()
+	my($rectype0, $tr0, $wanted_ids, $wanted_types, $wanted_flags) = @_;
+	my($rec_match, $rectype, $tr, $print_rec) =
+	    rec_match($plugin, $rectype0, $tr0, $wanted_ids, $wanted_types, $wanted_flags); # calls tr->decode()
 	# we pass through all records that did not match the standard record selection switches of rec_match
 	return($tr) unless ($rec_match);
 	my $id = $tr->id;
 	if ($delete_subrecords) {
 	    # we are processing sub-records
-	    my $newrec = '';
 	    my @newtr;
 	    foreach my $tsr ($tr->subrecs()) {
 		my $subrec_str = $tsr->tostr;
-		if ($opt_sub_match or $opt_sub_no_match) {
-		    if (((not $wanted_types) or ($wanted_types->{$tsr->subtype})) and
-			((not $opt_sub_match) or ($subrec_str =~ /$opt_sub_match/i)) and
-			((not $opt_sub_no_match) or ($subrec_str !~ /$opt_sub_no_match/i))) {
-			my $id = $tr->id;
-			print "[$rectype $id] DELETED SUBRECORD: $subrec_str\n";
-		    } else {
-			push(@newtr, $tsr);
-		    }
+		#((not $wanted_types) or ($wanted_types->{$tsr->subtype})) and  ## maybe something like this
+		if (((not $opt_sub_match) or ($subrec_str =~ /$opt_sub_match/i)) and
+		    ((not $opt_sub_no_match) or ($subrec_str !~ /$opt_sub_no_match/i))) {
+		    print "[$rectype $id] DELETED SUBRECORD: $subrec_str\n";
+		} else {
+		    push(@newtr, $tsr);
 		}
 	    }
 	    return(${rectype}->new([@newtr]));
 	} elsif ($delete_cell_objects) {
 	    if ($rectype eq 'CELL') {
 		my @groups = @{split_groups($tr)};
-		my @newcell = shift(@groups); # take header
+		my @newcell = @{shift(@groups)}; # take header
 		my $deletions = 0;
 		my $nam0_tsr;
 		my $n = 0;
@@ -5035,10 +5024,10 @@ sub cmd_delete {
 			my($gstring, $name, $refidx);
 			foreach my $tsr (@this_group) {
 			    $gstring .= $tsr->tostr;
-			    $name = $tsr->get('NAME', 'name')
-				if (undefined $name and $tsr->subtype eq 'NAME');
-			    $refidx = $tsr->get('FRMR', 'refidx')
-				if (undefined $refidx and $tsr->subtype eq 'FRMR');
+			    $name = $tsr->{name}
+				if (not(defined($name)) and $tsr->subtype eq 'NAME');
+			    $refidx = $tsr->{refidx}
+				if (not(defined($refidx)) and $tsr->subtype eq 'FRMR');
 			}
 			if (((not $opt_cell_object_match) or ($gstring =~ /$opt_cell_object_match/i)) and
 			    ((not $opt_cell_object_no_match) or ($gstring !~ /$opt_cell_object_no_match/i))) {
@@ -5052,6 +5041,7 @@ sub cmd_delete {
 		}
 		if ($deletions) {
 		    $nam0_tsr->{reference_count} = $n;	# update NAM0
+		    dbg("newcell:".Dumper(\@newcell)) if (DBG);
 		    return(CELL->new([@newcell]));
 		} else {
 		    return(''); # passthrough
@@ -5115,7 +5105,7 @@ sub cmd_modify {
 	if ($modified) {
 	    my $newrec = $tr->encode()->recbuf;
 	    if ($newrec ne $oldrec) {
-		msg("MODIFIED RECORD:\n" . $newrec->tostr);
+		msg("MODIFIED RECORD:\n" . $tr->tostr);
 		return($tr);
 	    }
 	}
