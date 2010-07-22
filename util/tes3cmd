@@ -9,10 +9,10 @@ $::VERSION = "0.37h";
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
-# TEST: cmd_dump
-# TEST: cmd_codectest
-# TEST: cmd_header
-# TEST: cmd_multipatch
+#  cmd_dump
+#  cmd_testcodec
+#  cmd_header
+#  cmd_multipatch
 # TEST: cmd_common
 # TEST: cmd_diff
 # TEST: cmd_shell
@@ -27,6 +27,8 @@ $::VERSION = "0.37h";
 # TEST: cmd_fixit
 
 # TBD:
+# fix bsa dates for Steam versions
+# can we remove cyclic relationship between tr <-> tsr?
 # add report of stats (plugins scanned, etc) for multipatch and clean.
 # add options used to header of multipatch
 # implement "canonical" dump format???
@@ -47,7 +49,7 @@ $::VERSION = "0.37h";
 # implement script compiler
 # add new commands:
 # * "buildcache" (build up all the cache files for cleaning, lookups, etc)
-# * "describecodec" (print text description of TES3 codec)
+# * "codec" (print text description of TES3 codec)
 # * "undo" (revert to last backups for modifying commands)
 # * "tidy" (remove cache and undo stuff)
 # * "undump" (text to record, can't undump from wrong version)
@@ -1434,6 +1436,7 @@ my @RECDEFS =
 		{
 		 decode => sub {
 		     my($self, $buff) = @_;
+		     $self->{_subbuf_} = $buff;
 		     $self->{type} = unpack("C", $buff);
 		     # stash the current dialog type:name for decorating INFO tostr's
 		     $CURRENT_DIAL = "$DIAL_TYPE{$self->{type}}:".$self->{_parent_}->{_id_};
@@ -1484,7 +1487,8 @@ my @RECDEFS =
 			 ["unknown", "l"], ["flags", "L"]],
 		{ tostr => sub {
 		      my($self) = @_;
-		      my @ranks = (defined $FACTION_RANK{$self->{_parent_}->{_id_}}) ? @{$FACTION_RANK{$self->{_parent_}->{_id_}}} : ();
+		      my @ranks = ((defined $self->{_parent_}->{_id_}) and (defined $FACTION_RANK{$self->{_parent_}->{_id_}})) ?
+			  @{$FACTION_RANK{$self->{_parent_}->{_id_}}} : ();
 		      my $n = 1;
 		      my @tostr = (sprintf("Attrib_1:(%s)  Attrib_2:(%s)  Flags:%s  Unknown:%d",
 					   $ATTRIBUTE{$self->{attrib_1}}, $ATTRIBUTE{$self->{attrib_2}},
@@ -1512,7 +1516,8 @@ my @RECDEFS =
 		{ tostr => sub {
 		      my($self) = @_;
 		      #dbg(qq{Adding: $self->{rank} to FACTION_RANK: $self->{_parent_}->{_id_}}) if (DBG);
-		      push(@{$FACTION_RANK{$self->{_parent_}->{_id_}}}, $self->{rank});
+		      push(@{$FACTION_RANK{$self->{_parent_}->{_id_}}}, $self->{rank})
+			  if (defined $FACTION_RANK{$self->{_parent_}});
 		      "Rank:$self->{rank}";
 		  }}],
 	      ], { rdflags => [qw(mergeable)] }],
@@ -1808,13 +1813,13 @@ my @RECDEFS =
 			 return(pack("SC8C27CSSSCCCxL",
 				     $self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi},
 				     $self->{spd}, $self->{end}, $self->{per}, $self->{lck},
-				     $self->{block}, $self->{armorer}, $self->{mediumarmor}, $self->{heavyarmor},
-				     $self->{bluntweapon}, $self->{longblade}, $self->{axe}, $self->{spear},
+				     $self->{block}, $self->{armorer}, $self->{medium_armor}, $self->{heavy_armor},
+				     $self->{blunt_weapon}, $self->{long_blade}, $self->{axe}, $self->{spear},
 				     $self->{athletics}, $self->{enchant}, $self->{destruction}, $self->{alteration},
 				     $self->{illusion}, $self->{conjuration}, $self->{mysticism}, $self->{restoration},
 				     $self->{alchemy}, $self->{unarmored}, $self->{security}, $self->{sneak},
-				     $self->{acrobatics}, $self->{lightarmor}, $self->{shortblade}, $self->{marksman},
-				     $self->{mercantile}, $self->{speechcraft}, $self->{handtohand},
+				     $self->{acrobatics}, $self->{light_armor}, $self->{short_blade}, $self->{marksman},
+				     $self->{mercantile}, $self->{speechcraft}, $self->{hand_to_hand},
 				     $self->{rep}, $self->{health}, $self->{magicka}, $self->{fatigue},
 				     $self->{disposition}, $self->{faction}, $self->{rank}, $self->{gold}));
 		     } else {
@@ -2108,8 +2113,8 @@ my @RECDEFS =
 		   rdflags => [qw(ess)] }],
      # TBD: CHECK CS
      [SSCR => [
-	       [NAME => [["id", "Z*"]]],
-	       [DATA => [["name", "Z*"]]],
+	       [NAME => [["id", ["Z*", "a*"]]]],
+	       [DATA => [["name", ["Z*", "a*"]]]],
 	      ]],
      [STAT => [
 	       [NAME => [["id", "Z*"]]],
@@ -2131,7 +2136,7 @@ my @RECDEFS =
 				$ver =~ s/0+$//;
 				my $description = $self->{description};
 				$description =~ tr/\r//d if ($^O eq 'linux');
-				return(sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"$self->{author}"\n${MARGIN}Description:"$description"\n${MARGIN}NRecords:$self->{n_records}}, ($self->{is_master}) ? "True" : "False")); },
+				return(sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"$self->{author}"\n${MARGIN}Description:"$description"\n${MARGIN}N_Records:$self->{n_records}}, ($self->{is_master}) ? "True" : "False")); },
 		}],
 	       [MAST => [["master", "Z*"]], { rdflags => [qw(startgroup)] }],
 	       [DATA => [],
@@ -2278,7 +2283,16 @@ sub decode {
 # tr->encode()
 sub encode {
     my($self) = @_;
-    $self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype(), $_->encode()) } $self->subrecs());
+    if (1){
+	my @vals;
+	foreach my $tsr ($self->subrecs) {
+	    $tsr->encode;
+	    push(@vals, pack("a4L/a*", $tsr->subtype, $tsr->subbuf));
+	}
+	$self->{_recbuf_} = join("", @vals);
+    } else {
+	$self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype, $_->encode()->subbuf) } $self->subrecs);
+    }
     return($self);
 }
 
@@ -2512,9 +2526,12 @@ sub gen_subrec_methods {
 	    $method = "${package}::encode";
 	    *$method = sub {
 		use strict "refs";
-		my @vals;
-		push(@vals, $_[0]->{$_}) foreach (@fieldnames); # $_[0] is self
-		pack($encode_pack_format, @vals);
+		my($self) = @_;
+#		my @vals;
+#		push(@vals, $self->{$_}) foreach (@fieldnames);
+#		$self->{_subbuf_} = pack($encode_pack_format, @vals);
+		$self->{_subbuf_} = pack($encode_pack_format, map {$self->{$_}} @fieldnames);
+		return($self);
 	    };
 	}
 
@@ -2604,7 +2621,8 @@ sub gen_subrec_methods {
     $method = "${package}::new";
     *$method = sub {
 	use strict "refs";
-	my($class, $hashref) = @_;
+	my($class, $hashref, $parent) = @_;
+	$hashref->{_parent_} = $parent;
 	bless($hashref, $class);
     };
 
@@ -2673,6 +2691,7 @@ sub gen_class {
 	my($rectype, $init) = @_;
 	my $self = { _hdrflags_ => 0, _hdrunk_ => 0 }; # _recbuf_ is undef for write_rec to check
 	bless($self, $rectype);
+	#dbg("(RECTYPE)->new() dump init=".Dumper($init));
 	if (defined $init and ref($init) eq 'ARRAY') {
 	    if (ref($init->[0]) eq 'ARRAY') {
 		# allow caller to pass in an array of structs to be constructed into subrec objects
@@ -3173,7 +3192,8 @@ OPTIONS:
  --type* <record-type>
 	only modify records with the given <record-type>
 
- Note: starred (*) options can be repeated.
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
 
 Modifies records/subrecords from the plugin. You can really damage things with
 this command, so be careful!
@@ -3368,7 +3388,8 @@ OPTIONS:
  --type* <record-type>
 	only delete records with the given <record-type>
 
- Note: starred (*) options can be repeated.
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
 
 DESCRIPTION:
 
@@ -3485,7 +3506,8 @@ OPTIONS:
  --not-equal|--ne
 	report objects in plugin1 that are different in plugin2
 
- Note: starred (*) options can be repeated.
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
 
 DESCRIPTION:
 
@@ -3601,7 +3623,8 @@ OPTIONS:
  --type* <record-type>
 	only dump records with the given <record-type>
 
- Note: starred (*) options can be repeated.
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
 
 DESCRIPTION:
 
@@ -3615,17 +3638,26 @@ Note: documentation for regular expressions:
 
 EXAMPLES:
 
-# Dump all records from a plugin (this could generate a lot of output):
-tes3cmd dump "my plugin.esp"
+# List all the records in the plugin, just one per line, by type and ID:
+tes3cmd dump --list "plugin.esp"
 
-# Dump all records with IDs matching "foo":
-tes3cmd dump --id foo "plugin.esp"
+# Dump all records from a plugin. we redirect the output to a file as there
+# can be a lot of output:
+tes3cmd dump "my plugin.esp" > "my plugin_dump.txt"
+
+# Dump all records with IDs exactly matching "foo":
+tes3cmd dump --exact-id foo "plugin.esp"
 
 # Dump all the DIAL and INFO records from a plugin:
 tes3cmd dump --type dial --type info "plugin.esp"
 
 # Dump all records flagged as persistent (by name) and blocked (by value)
 tes3cmd dump --flag persistent --flag 0x2000 "my plugin.esp"
+
+# Dump all object instances in cells that match "galbedir":
+# (this will just show you the cell header, and subrecords just for Galbedir
+# and her chest in the cell: "Balmora, Guild of Mages"):
+tes3cmd dump --type cell --cell-object-match galbedir Morrowind.esm
 };
 
 our $opt_dump_no_wrap;
@@ -3760,13 +3792,18 @@ sub opts_wikiout {
 	usage("Usage: tes3cmd -wikiout");
 }
 
-our $opt_codectest_continue;
-our @opt_codectest_excluded_type = ();
-sub opts_codectest {
+sub opts_codec {
+    GetOptions(@STDOPT) or
+	usage("Usage: tes3cmd -codec");
+}
+
+our $opt_testcodec_continue;
+our @opt_testcodec_excluded_type = ();
+sub opts_testcodec {
     GetOptions(@STDOPT,
-	       'continue|c' => \$opt_codectest_continue,
-	       'excluded-type|ignored-type|x=s@' => \@opt_codectest_excluded_type)
-	or usage("Usage: tes3cmd -codectest [--excluded-type|-x excluded_type]");
+	       'continue|c' => \$opt_testcodec_continue,
+	       'excluded-type|ignored-type|x=s@' => \@opt_testcodec_excluded_type)
+	or usage("Usage: tes3cmd -testcodec [--excluded-type|-x excluded_type]");
 }
 
 ### DATA DEFINITIONS
@@ -3904,7 +3941,8 @@ my %CMDS =
      "multipatch"  => [ \&opts_multipatch,  \&cmd_multipatch,  'm', "Patches problems in your active plugins"],
      "overdial"    => [ \&opts_overdial,    \&cmd_overdial,    'm', "Identify overlapping dialog (a source of missing topic bugs)"],
      "recover"     => [ \&opts_recover,     \&cmd_recover,     's', "Recover usable records from plugin with 'bad form' errors"],
-     "-codectest"  => [ \&opts_codectest,   \&cmd_codectest,   's', "Test TES3 codec"],
+     "-testcodec"  => [ \&opts_testcodec,   \&cmd_testcodec,   's', "Test TES3 codec"],
+     "-codec"      => [ \&opts_codec,       \&cmd_codec,       'm', "Describe TES3 record codec"],
      "-shell"      => [ \&opts_shell,       \&cmd_shell,       'm', "run a TES3 REPL"],
      "-wikiout"    => [ \&opts_wikiout,     \&cmd_wikiout,     'm', "Output wiki formatted help"],
     );
@@ -4723,14 +4761,14 @@ sub process_plugin_for_update {
 
 ### COMMANDS
 
-sub cmd_codectest {
+sub cmd_testcodec {
     my($plugin) = @_;
-    dbg("cmd_codectest($plugin)") if (DBG);
+    dbg("cmd_testcodec($plugin)") if (DBG);
     return if ($plugin =~ /^test_/);
     my %exclude;
-    if (@opt_codectest_excluded_type) {
+    if (@opt_testcodec_excluded_type) {
 	# optional types to exclude
-	foreach (@opt_codectest_excluded_type) { $exclude{uc($_)}++; }
+	foreach (@opt_testcodec_excluded_type) { $exclude{uc($_)}++; }
     }
     print "\n", ("=" x 65), "\n";
     print "TESTING codec on: $plugin ...\n";
@@ -4741,18 +4779,22 @@ sub cmd_codectest {
 	foreach my $tsr ($tr->subrecs()) {
 	    my $oldsubrec = $tsr->subbuf;
 	    die "no buf: " . Dumper($tsr). "\n" if (not defined $oldsubrec);
-	    my $newsubrec = $tsr->encode()->recbuf;
+
+#	    my $newsubrec = $tsr->encode()->subbuf;
+	    $tsr->encode();
+	    my $newsubrec = $tsr->subbuf;
+
 	    my $fulltype = $tsr->fulltype;
 	    unless ($exclude{$fulltype}) {
 		if ($newsubrec ne $oldsubrec) {
-		    msg("CODEC FAILURE on ($id): ${fulltype}:");
+		    msg("CODEC FAILURE on ($id) SUBTYPE: ${fulltype}:");
 		    if (length($newsubrec) != length($oldsubrec)) {
 			msg("Encoded length mismatch: subrec: @{[length($oldsubrec)]}  newrec: @{[length($newsubrec)]}");
 		    }
 		    dumpit('original', $oldsubrec);
 		    dumpit('re-coded', $newsubrec);
 		    #msg(Dumper($tsr));
-		    abort("Test Halted") unless ($opt_codectest_continue);
+		    abort("Test Halted") unless ($opt_testcodec_continue);
 		}
 	    }
 	    $trnew->append($tsr);
@@ -4760,18 +4802,19 @@ sub cmd_codectest {
 	my $newrec = $trnew->encode()->recbuf;
 	unless ($exclude{$rectype}) {
 	    if ((my $rec = $tr->recbuf) ne $newrec) {
-		msg("CODEC FAILURE on record ${rectype}:");
+		msg("CODEC FAILURE on ($id) RECTYPE:  ${rectype}:");
 		dumpit('original', $rec);
 		dumpit('re-coded', $newrec);
 		my $print_rec = $tr->tostr;
 		msg("Full Record:\n$print_rec");
+		#dbg("trnew Dump=".Dumper($trnew)); exit;
 	    }
 	}
 	return($trnew);
 	$trnew->DESTROY;
     };
     process_plugin_for_update($plugin, $fun, "test_");
-} # cmd_codectest
+} # cmd_testcodec
 
 sub cmd_fixit {
     dbg("cmd_fixit") if (DBG);
@@ -5033,6 +5076,8 @@ sub cmd_multipatch {
 		my $data_tsr = $tr->get('DATA');
 		my $ambi_tsr = $tr->get('AMBI');
 		$data_tsr->{fog_density} = $ambi_tsr->{fog_density} = 0.01;
+		$data_tsr->encode;
+		$ambi_tsr->encode;
 		write_rec($out, CELL->new([$name_tsr, $data_tsr, $ambi_tsr]));
 	    }
 	}
@@ -5120,11 +5165,19 @@ sub diff_output {
 sub cmd_diff {
     my($plugin1, $plugin2) = @_;
     dbg("cmd_diff($plugin1, $plugin2)") if (DBG);
-    my %ignore_type;
+    my %ignore_rectype;
+    my %ignore_subtypes;
     foreach my $typ (@opt_diff_ignore_types) {
 	my($rectype, $subtype) = split(/\./, $typ);
-	$subtype ||= '';
-	$ignore_type{$rectype}->{$subtype} = 1;
+	$ignore_rectype{$rectype}++;
+	$ignore_subtypes{$rectype}->{$subtype}++ if (defined $subtype);
+    }
+    foreach my $rectype (keys %ignore_subtypes) {
+	if (my @subtypes = keys %{$ignore_subtypes{$rectype}}) {
+	    $ignore_subtypes{$rectype} = '^(\s*\*?(?:' . join('|', grep {/\w/} @subtypes) . '):)';
+	} else {
+	    delete $ignore_subtypes{$rectype};
+	}
     }
     my $obj1 = read_objects($plugin1);
     my $obj2 = read_objects($plugin2);
@@ -5161,16 +5214,20 @@ sub cmd_diff {
 	    }
 	}
 	foreach my $rectype (keys %{$obj1->{$id}}) {
-	    next if ($ignore_type{$rectype});
-	    my $ignore_subtypes_re = '^(\s*\*?(?:' . join('|', grep {/\w/} keys %{$ignore_type{$rectype}}) . '):)';
+	    if (defined $ignore_rectype{$rectype}) {
+		dbg("Ignoring rectype: $rectype".Dumper(\%ignore_rectype)) if (DBG);
+		next;
+	    }
+	    #my $ignore_subtypes_re = '^(\s*\*?(?:' . join('|', grep {/\w/} keys %{$ignore_type{$rectype}}) . '):)';
+	    my $ignore_subtypes_re = $ignore_subtypes{$rectype};
 	    if (defined(my $rec2 = $obj2->{$id}->{$rectype})) {
 		my $tr1 = $obj1->{$id}->{$rectype};
 		my $print_rec1 = $tr1->tostr;
-		$print_rec1 =~ s/$ignore_subtypes_re}.*/$1 [IGNORED]/mg if ($ignore_subtypes_re);
+		$print_rec1 =~ s/$ignore_subtypes_re}.*/$1 [IGNORED]/mg if (defined $ignore_subtypes_re);
 		$print_rec1 =~ s/^(\s*?\*?FRMR:.*?ModIdx:)\d+/$1 [IGNORED]/mi if ($rectype eq 'CELL');
 		my $tr2 = $obj2->{$id}->{$rectype};
 		my $print_rec2 = $tr2->tostr;
-		$print_rec2 =~ s/$ignore_subtypes_re}.*/$1 [IGNORED]/mg if ($ignore_subtypes_re);
+		$print_rec2 =~ s/$ignore_subtypes_re}.*/$1 [IGNORED]/mg if (defined $ignore_subtypes_re);
 		$print_rec1 =~ s/^(\s*?\*?FRMR:.*?ModIdx:)\d+/$1 [IGNORED]/mi if ($rectype eq 'CELL');
 		if ($print_rec1 eq $print_rec2) {
 		    push(@p1_equal_p2, "$rectype: $id") if ($opt_diff_equal);
@@ -5691,7 +5748,7 @@ sub cmd_dump {
 	    $list_record->();
 	} elsif ($opt_cell_object_match and ($rectype eq 'CELL')) {
 	    my @groups = @{split_groups($tr)};
-	    my @newcell = shift(@groups); # take header
+	    my @newcell = @{shift(@groups)}; # take header
 	    my $selected = 0;
 	    my $nam0_tsr;
 	    my $n = 0;
@@ -5836,6 +5893,19 @@ sub cmd_shell {
 	    $perlstuff = '';
 	} else {
 	    print "- ";
+	}
+    }
+}
+
+sub cmd_codec {
+    dbg("cmd_codec") if (DBG);
+    no strict;
+    $| = 1;
+    print "> ";
+    foreach (@RECDEFS) {
+	foreach my $defref (@{$_}) {
+	    #gen_subrec_methods($rectype, @{$defref});
+	    # TBD
 	}
     }
 }
