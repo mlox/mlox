@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 $::VERSION = "0.37h";
-# tes3cmd: command line tool to do various hacks on a TES3 plugin
+# tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
@@ -13,24 +13,24 @@ $::VERSION = "0.37h";
 #  cmd_testcodec
 #  cmd_header
 #  cmd_multipatch
-# TEST: cmd_common
-# TEST: cmd_diff
-# TEST: cmd_shell
-# TEST: cmd_wikiout
-# TEST: cmd_esm
-# TEST: cmd_esp
-# TEST: cmd_overdial
-# TEST: cmd_recover (try to recover at subrecord granularity? save lost data and dump like od)
-# TEST: cmd_delete
-# TEST: cmd_modify (fix doco for helpers, test subrec moddy)
-# TEST: cmd_clean
-# TEST: cmd_fixit
+#  cmd_common
+#  cmd_diff
+#  cmd_shell
+#  cmd_wikiout
+#  cmd_esm
+#  cmd_esp
+#  cmd_overdial
+#  cmd_recover (try to recover at subrecord granularity? save lost data and dump like od)
+#  cmd_delete
+#  cmd_modify (fix doco for helpers, test subrec moddy)
+#  cmd_clean
+#  cmd_fixit
 
 # TBD:
 # fix bsa dates for Steam versions
 # can we remove cyclic relationship between tr <-> tsr?
 # add report of stats (plugins scanned, etc) for multipatch and clean.
-# add options used to header of multipatch
+# add options used to header of multipatch?
 # implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
 # when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
@@ -358,7 +358,8 @@ my %ARMOR_TYPE = (0 => "Helmet",
 		  9 => "Left_Bracer",
 		  10 => "Right_Bracer");
 
-my %ATTRIBUTE = (0 => "Strength",
+my %ATTRIBUTE = (-1 => "None",
+		 0 => "Strength",
 		 1 => "Intelligence",
 		 2 => "Willpower",
 		 3 => "Agility",
@@ -654,7 +655,7 @@ my %PLAYABLE = ( 0 => "Non-Playable", 1 => "Playable" );
 my %RADT_FLAGS = ("playable" => 0x01,
 		  "beast_race" => 0x02);
 
-my %RANGE_TYPE = (0 => "Self", 1 => "Touch", 2 => "Target");
+my %RANGE_TYPE = (-1 => "None", 0 => "Self", 1 => "Touch", 2 => "Target");
 
 my %HDR_FLAGS = ("deleted"     => 0x0020,
 		 "persistent"  => 0x0400,
@@ -664,34 +665,34 @@ $HDR_FLAGS{substr($_, 0, 1)} = $HDR_FLAGS{$_} foreach (keys %HDR_FLAGS);
 
 my %SEX = (0 => "Male", 1 => "Female", 0xFF => "None");
 
-my %SKILL = ( 0 => "Block",
-	      1 => "Armorer",
-	      2 => "Medium_Armor",
-	      3 => "Heavy_Armor",
-	      4 => "Blunt_Weapon",
-	      5 => "Long_Blade",
-	      6 => "Axe",
-	      7 => "Spear",
-	      8 => "Athletics",
-	      9 => "Enchant",
-	      10 => "Destruction",
-	      11 => "Alteration",
-	      12 => "Illusion",
-	      13 => "Conjuration",
-	      14 => "Mysticism",
-	      15 => "Restoration",
-	      16 => "Alchemy",
-	      17 => "Unarmored",
-	      18 => "Security",
-	      19 => "Sneak",
-	      20 => "Acrobatics",
-	      21 => "Light_Armor",
-	      22 => "Short_Blade",
-	      23 => "Marksman",
-	      24 => "Mercantile",
-	      25 => "Speechcraft",
-	      26 => "Hand_To_Hand",
-	      -1 => "None");
+my %SKILL = (-1 => "None",
+	     0 => "Block",
+	     1 => "Armorer",
+	     2 => "Medium_Armor",
+	     3 => "Heavy_Armor",
+	     4 => "Blunt_Weapon",
+	     5 => "Long_Blade",
+	     6 => "Axe",
+	     7 => "Spear",
+	     8 => "Athletics",
+	     9 => "Enchant",
+	     10 => "Destruction",
+	     11 => "Alteration",
+	     12 => "Illusion",
+	     13 => "Conjuration",
+	     14 => "Mysticism",
+	     15 => "Restoration",
+	     16 => "Alchemy",
+	     17 => "Unarmored",
+	     18 => "Security",
+	     19 => "Sneak",
+	     20 => "Acrobatics",
+	     21 => "Light_Armor",
+	     22 => "Short_Blade",
+	     23 => "Marksman",
+	     24 => "Mercantile",
+	     25 => "Speechcraft",
+	     26 => "Hand_To_Hand");
 
 my %SKILL_ACTIONS =
     (0 => [qw(Successful_Block)],		 # Block
@@ -1063,7 +1064,7 @@ my $RD_Actor_Data =
       ["unknown_1", "L"])];
 
 my @RD_Enchantment =
-    ([["spell_effect", "S"], ["skill", "c"], ["attribute", "C"], ["range", "L"],
+    ([["spell_effect", "S"], ["skill", "c"], ["attribute", "c"], ["range", "c"], ["Unused", "H6"],
       ["area", "L"], ["duration", "L"], ["mag_min", "L"], ["mag_max", "L"]],
      { tostr => sub {
 	   my($self) = @_;
@@ -1073,7 +1074,7 @@ my @RD_Enchantment =
 	   } elsif ($spell =~ /_skill$/i) {
 	       $spell .= "/$SKILL{$self->{skill}}";
 	   }
-	   sprintf "Spell_Effect:%s  Range:%s  Area:%d  Duration:%d  Mag_Min:%d  Mag_Max:%d",
+	   sprintf "Spell_Effect:(%s)  Range:(%s)  Area:%d  Duration:%d  Mag_Min:%d  Mag_Max:%d",
 	       $spell, $RANGE_TYPE{$self->{range}}, $self->{area}, $self->{duration}, $self->{mag_min}, $self->{mag_max} },
      });
 
@@ -1307,8 +1308,8 @@ my @RECDEFS =
 		 }],
      [CLAS => [
 	       [NAME => [["id", "Z*"]]],
-	       [CLDT => [["primary_attribute_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["primary_attribute_2", "L", { lookup => \%ATTRIBUTE }],
+	       [CLDT => [["primary_attribute_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["primary_attribute_2", "l", { lookup => \%ATTRIBUTE }],
 			 ["specialization", "L", { lookup => \%SPECIALIZATION }],
 			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
 			 ["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }],
@@ -1471,8 +1472,8 @@ my @RECDEFS =
 		  }
 		}],
 	       [ANAM => [["faction", "a*"]], { rdflags => [qw(startgroup)] }],
-	       [FADT => [["attrib_1", "L", { lookup => \%ATTRIBUTE}],
-			 ["attrib_2", "L", { lookup => \%ATTRIBUTE}],
+	       [FADT => [["attrib_1", "l", { lookup => \%ATTRIBUTE}],
+			 ["attrib_2", "l", { lookup => \%ATTRIBUTE}],
 			 ["at1_1", "l"], ["at2_1", "l"], ["sk1_1", "l"], ["sk2_1", "l"], ["rep_1", "l"],
 			 ["at1_1", "l"], ["at2_1", "l"], ["sk1_1", "l"], ["sk2_1", "l"], ["rep_1", "l"],
 			 ["at1_1", "l"], ["at2_1", "l"], ["sk1_1", "l"], ["sk2_1", "l"], ["rep_1", "l"],
@@ -1563,8 +1564,8 @@ my @RECDEFS =
 		  },
 		}],
 	       [CNAM => [["class", "Z*"]]],
-	       [DATA => [["unknown_1", "L"], ["disposition", "L"], ["rank", "C"],
-			 ["sex", "C"], ["pc_rank", "C"], ["unknown_1", "C"]],
+	       [DATA => [["unknown_1", "L"], ["disposition", "L"], ["rank", "c"],
+			 ["sex", "C"], ["pc_rank", "c"], ["unknown_1", "C"]],
 		{ tostr => sub {
 		      my($self) = @_;
 		      if ($CURRENT_DIAL =~ /^Journal/i) {
@@ -1572,9 +1573,9 @@ my @RECDEFS =
 		      } else {
 			  sprintf("Disposition:%s  Rank:%s  Sex:%s  PC_Rank:%s",
 				  $self->{disposition},
-				  ($self->{rank} == 255) ? "None" : $self->{rank},
+				  ($self->{rank} == -1) ? "None" : $self->{rank},
 				  $SEX{$self->{sex}},
-				  ($self->{pc_rank} == 255) ? "None" : $self->{pc_rank});
+				  ($self->{pc_rank} == -1) ? "None" : $self->{pc_rank});
 		      }
 		  }
 		}],
@@ -1795,7 +1796,7 @@ my @RECDEFS =
 			      unpack("SC6L", $buff);
 		     } elsif (length($buff) == 52) {
 			 my $i = 0;
-			 foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
+			 foreach my $skill_level (unpack("x[SC8]c27", $buff)) {
 			     $self->{lc($SKILL{$i++})} = $skill_level;
 			 }
 			 ($self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi}, $self->{spd},
@@ -1910,14 +1911,14 @@ my @RECDEFS =
 			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
 			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
 			 ["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_Female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
-			 ["attr_male_1", "L", { lookup => \%ATTRIBUTE }], ["attr_female_1", "L", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_Female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
+			 ["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }],
 			 ["male_height", "f"], ["female_height", "f"],
 			 ["male_weight", "f"], ["female_weight", "f"],
 			 ["flags", "L", { symflags => \%RADT_FLAGS }]],
@@ -2052,9 +2053,9 @@ my @RECDEFS =
 	       [SLSD => @RD_short_array_ess],
 	      ]],
      [SKIL => [
-	       [INDX => [["id", "L", { lookup => \%SKILL }]]],
+	       [INDX => [["id", "l", { lookup => \%SKILL }]]],
 	       [DESC => @RD_Description],
-	       [SKDT => [["attribute", "L", { lookup => \%ATTRIBUTE }],
+	       [SKDT => [["attribute", "l", { lookup => \%ATTRIBUTE }],
 			 ["specialization", "L", { lookup => \%SPECIALIZATION }],
 			 ["use_value_1", "f"], ["use_value_1", "f"],
 			 ["use_value_1", "f"], ["use_value_1", "f"]],
@@ -2357,10 +2358,10 @@ sub dump {
 	    }
 	} else {
 	    if ($banner) { print $banner; undef $banner; }
-	    print $tsr->tostr,"\n"; # print entire subrec
+	    print "  $subtype: ",$tsr->tostr,"\n"; # print entire subrec
 	}
     }
-    return($self);
+    return('');			# passthrough
 }
 
 # decode flags of a record field
@@ -2867,9 +2868,9 @@ my $RECTYPE_LEN = 4;
 
 # common Options
 our @STDOPT = (qw(debug verbose));
-our $opt_cell_object_match;
-our $opt_cell_object_no_match;
 our $opt_exterior;
+our $opt_instance_match;
+our $opt_instance_no_match;
 our $opt_interior;
 our $opt_list;
 our $opt_match;
@@ -2882,9 +2883,9 @@ our $opt_report_only;
 our $opt_separator;
 our $opt_sub_match;
 our $opt_sub_no_match;
+our @opt_exact_id = ();
 our @opt_flag;
 our @opt_id = ();
-our @opt_exact_id = ();
 our @opt_type = ();
 
 my %CLEAN_PLUGIN =
@@ -2961,8 +2962,8 @@ OPTIONS:
  --debug
 	turn on debug messages
 
- --cell-objects
-	clean objects from cells when duped from masters
+ --instances
+	clean object instances from cells when duped from masters
 
  --cell-params
 	clean cell subrecords AMBI,WHGT duped from masters
@@ -2989,21 +2990,21 @@ DESCRIPTION:
 Cleans plugins of various junk. If no cleaning options are selected, the
 default is to assume the options:
 
-  --cell-objects --cell-params --dups --gmsts --junk-cells
+  --instances --cell-params --dups --gmsts --junk-cells
 
 The goal of the "clean" command is that it should always be safe to use it
 with no options to get the default cleaning behavior. The different cleaning
 operations are explained below:
 
-Cell Objects (--cell-objects)
+Object Instances (--instances)
 
   The clean command will clean objects in the plugin that match objects in any
-  of its masters. Objects in cells are defined as byte sequences starting in
-  the subrecord following a FRMR subrecord, and match only if this is the same
-  byte sequence as in the master, along with the same Object-Index from the
-  FRMR. NAM0 subrecords are not part of cell objects, and if objects are
-  deleted from a cell, the NAM0 subrecord for the cell is updated to reflect
-  any changing object count.
+  of its masters. Object instances in cells are defined as byte sequences
+  starting in the subrecord following a FRMR subrecord, and match only if this
+  is the same byte sequence as in the master, along with the same Object-Index
+  from the FRMR. NAM0 subrecords are not part of object instances, and if
+  instances are deleted from a cell, the NAM0 subrecord for the cell is
+  updated to reflect any changing instance count.
 
 Cell Params (--cell-params)
 
@@ -3057,7 +3058,7 @@ tes3cmd clean --replace *.esm *.esp > clean.txt
 };
 
 our $opt_clean_all = 0;
-our $opt_clean_cell_objects = 0;
+our $opt_clean_instances = 0;
 our $opt_clean_cell_params = 0;
 our $opt_clean_dups = 0;
 our $opt_clean_gmsts = 0;
@@ -3067,7 +3068,7 @@ sub opts_clean {
     $_[0] && do { usage($CLEAN_USAGE); };
     GetOptions(@STDOPT,
 	       'all'           => \$opt_clean_all,
-	       'cell-objects'  => \$opt_clean_cell_objects,
+	       'instances'     => \$opt_clean_instances,
 	       'cell-params'   => \$opt_clean_cell_params,
 	       'dups'          => \$opt_clean_dups,
 	       'gmsts'         => \$opt_clean_gmsts,
@@ -3076,13 +3077,13 @@ sub opts_clean {
 	       'output-dir',
 	       'replace'       => \$opt_clean_replace)
 	or usage($CLEAN_USAGE);
-    unless ($opt_clean_cell_objects or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
+    unless ($opt_clean_instances or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
 	# turn on all safe cleaning options if none are selected.
-	$opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+	$opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     }
     if ($opt_clean_all) {
 	# turn on all cleaning options (in future we may add some that are possibly unsafe)
-	$opt_clean_cell_objects = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+	$opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     }
 }
 
@@ -3195,17 +3196,16 @@ OPTIONS:
  Note: starred (*) options can be repeated, and matching of strings is not
  case-sensitive.
 
-Modifies records/subrecords from the plugin. You can really damage things with
-this command, so be careful!
-
+This command allows you to do complex batch modifications of plugin records.
+You can really damage things with this command, so be careful!
 
 Note: documentation for regular expressions:
   http://www.perl.com/doc/manual/html/pod/perlre.html
 
 Example(s):
 
-# print the the cell "Ashmelech" from Morrowind.esm
-tes3cmd modify --type cell --id ashmelech --run "print $R->tostr" Morrowind.esm
+# Just print the the cell "Ashmelech" from Morrowind.esm. (no modification).
+tes3cmd modify --type cell --id ashmelech --run "$R->dump" Morrowind.esm
 
 # Problem: Aleanne's clothing mods do not have restocking inventory
 # Solution: create a small patch to change the counts for inventory containers
@@ -3348,11 +3348,11 @@ OPTIONS:
  --debug
 	turn on debug messages
 
- --cell-object-match <regex>
-	Only delete the objects in the cell that match <regex>
+ --instance-match <regex>
+	Only delete the object instances in the cell that match <regex>
 
- --cell-object-no-match <regex>
-	Only delete objects in the cell that do not match <regex>
+ --instance-no-match <regex>
+	Only delete object instances in the cell that do not match <regex>
 
  --exact-id* <id-string>
 	only delete records whose ids exactly match given <id-string>
@@ -3393,24 +3393,30 @@ OPTIONS:
 
 DESCRIPTION:
 
-Deletes entire records, or subrecords, or object instances from cells. You can
-really damage things with this command, so be careful!
+Deletes entire records, or subrecords from records, or object instances from
+cell records. You can really damage things with this command, so be careful!
 
 Note: documentation for regular expressions:
   http://www.perl.com/doc/manual/html/pod/perlre.html
 
 EXAMPLES:
 
-# Delete all records with IDs matching "foo":
+# Delete all records with IDs matching the pattern: "foo":
 # (Note that this doesn't also delete records that may depend on "foo").
 tes3cmd delete --id foo "my plugin.esp"
+
+# Delete all GMST records from a plugin:
+tes3cmd delete --type gmst plugin.esp
+
+# Delete all records flagged as "ignored":
+tes3cmd delete --flag ignored plugin.esp
 };
 
 sub opts_delete {
     $_[0] && do { usage($DELETE_USAGE); };
     GetOptions(@STDOPT,
-	       'cell-object-match=s',
-	       'cell-object-no-match=s',
+	       'instance-match=s',
+	       'instance-no-match=s',
 	       'exact-id=s@',
 	       'exterior',
 	       'flag=s@',
@@ -3495,16 +3501,16 @@ OPTIONS:
 	ignore given type(s)
 
  --1-not-2|--e1
-	report objects in plugin1 that do not exist in plugin2
+	report records in plugin1 that do not exist in plugin2
 
  --2-not-1|--e2
-	report objects in plugin2 that do not exist in plugin1
+	report records in plugin2 that do not exist in plugin1
 
  --equal|--eq
-	report objects in plugin1 that are equal in plugin2
+	report records in plugin1 that are equal in plugin2
 
  --not-equal|--ne
-	report objects in plugin1 that are different in plugin2
+	report records in plugin1 that are different in plugin2
 
  Note: starred (*) options can be repeated, and matching of strings is not
  case-sensitive.
@@ -3516,7 +3522,7 @@ A summary report with up to four sections is printed to standard output
 that gives an overview of differences, as lists of record IDs.
 (Report sections that would have no items are not printed).
 
-When objects in plugin1 are different in plugin2, each of these objects is
+When records in plugin1 are different in plugin2, each of these records is
 printed in detail to a file "plugin1-diff.txt" and "plugin2-diff.txt", which
 can then be compared textually using a tool such as WinMerge or Emacs' ediff
 function. Note that the output records will be sorted alphabetically by record
@@ -3568,11 +3574,13 @@ OPTIONS:
  --debug
 	turn on debug messages
 
- --cell-object-match <regex>
-	when printing cells, only print the matching objects in the cell
+ --instance-match <regex>
+	when printing cells, only print the matching object instances in the
+	cell
 
- --cell-object-no-match <regex>
-	when printing cells, only print the non-matching objects in the cell
+ --instance-no-match <regex>
+	when printing cells, only print the non-matching object instances in
+	the cell
 
  --exact-id* <id-string>
 	only dump records whose ids exactly match given <id-string>
@@ -3657,7 +3665,7 @@ tes3cmd dump --flag persistent --flag 0x2000 "my plugin.esp"
 # Dump all object instances in cells that match "galbedir":
 # (this will just show you the cell header, and subrecords just for Galbedir
 # and her chest in the cell: "Balmora, Guild of Mages"):
-tes3cmd dump --type cell --cell-object-match galbedir Morrowind.esm
+tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
 };
 
 our $opt_dump_no_wrap;
@@ -3667,12 +3675,12 @@ my $RAWOUT;
 sub opts_dump {
     $_[0] && do { usage($DUMP_USAGE); };
     GetOptions(@STDOPT,
-	       'cell-object-match=s',
-	       'cell-object-no-match=s',
 	       'exact-id=s@',
 	       'exterior',
 	       'flag=s@',
 	       'id=s@',
+	       'instance-match=s',
+	       'instance-no-match=s',
 	       'interior',
 	       'list',
 	       'match=s',
@@ -4167,7 +4175,8 @@ sub write_rec {
 
 sub open_for_read {
     my($plugin) = @_;
-    (-f $plugin) or abort(qq{Not a plain file}); # TBD failed on clean BB_Clothiers_of_Vvardenfell_v1.1-jms_patch.esp, NG_New_Carnithus'_Armamentarium-jms-patch.esp, LGNPC_TelMora_v1_20-jms_patch.esp
+    $CURRENT_PLUGIN = $plugin;
+    (-d $plugin) and abort(qq{Input is a directory});
     my $fh = IO::Handle->new;
     open($fh, "<", $plugin) or abort(qq{opening "$plugin" for input ($!)});
     binmode($fh, ':raw') or abort("setting binmode on $plugin ($!)");
@@ -4184,6 +4193,7 @@ sub open_for_write {
 
 sub open_for_update {
     my($plugin) = @_;
+    $CURRENT_PLUGIN = $plugin;
     my $fh = IO::Handle->new;
     open($fh, "+<", $plugin) or abort(qq{opening "$plugin" for read/write ($!)});
     binmode($fh, ':raw') or abort(qq{setting binmode on "$plugin" ($!)});
@@ -4434,7 +4444,7 @@ sub load_leveled_lists {
 	if (defined($levdat->{$lc_plugin})) {
 	    # update plugins that have changed size
 	    unless ($curr_size == $levdat->{$lc_plugin}->{_size_}) {
-		err("Leveled List Cache UPDATING: $plugin");
+		msg("Leveled List Cache UPDATING: $plugin");
 		delete $levdat->{$lc_plugin};
 		$invalid = 1;
 	    }
@@ -4560,7 +4570,7 @@ sub update_header {
 		if ($opt_header_multiline) {
 		    print qq{$plugin:\n  AUTH=$hedr_tsr->{author}\n  DESC=$hedr_tsr->{description}\n};
 		} else {
-		    my $msg = qq{$plugin:  AUTH=$hedr_tsr->{author}  DESC=$hedr_tsr->{description}};
+		    my $msg = qq{$plugin: AUTH=$hedr_tsr->{author}  DESC=$hedr_tsr->{description}};
 		    $msg =~ s/(\r)?\n/\\r\\n/gm;
 		    print "$msg\n";
 		}
@@ -4802,7 +4812,7 @@ sub cmd_testcodec {
 	my $newrec = $trnew->encode()->recbuf;
 	unless ($exclude{$rectype}) {
 	    if ((my $rec = $tr->recbuf) ne $newrec) {
-		msg("CODEC FAILURE on ($id) RECTYPE:  ${rectype}:");
+		msg("CODEC FAILURE on ($id) RECTYPE: ${rectype}:");
 		dumpit('original', $rec);
 		dumpit('re-coded', $newrec);
 		my $print_rec = $tr->tostr;
@@ -4819,7 +4829,7 @@ sub cmd_testcodec {
 sub cmd_fixit {
     dbg("cmd_fixit") if (DBG);
     # clean everything and replace originals
-    $opt_clean_replace = $opt_clean_cell_objects = $opt_clean_cell_params =
+    $opt_clean_replace = $opt_clean_instances = $opt_clean_cell_params =
 	$opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     cmd_clean($_) foreach ($T3->load_order());
     # generate all patches
@@ -4827,6 +4837,7 @@ sub cmd_fixit {
 	$opt_multipatch_summons_persist = 1;
     cmd_multipatch();
     # synchronize plugin headers to masters
+    msg("\n\nSynchronizing Plugin Headers...");
     $opt_header_update_masters = $opt_header_update_record_count = 1;
     cmd_header($_) foreach ($T3->load_order());
 }
@@ -4989,8 +5000,7 @@ sub multipatch_merge_leveled_lists {
 
 sub cmd_multipatch {
     dbg("cmd_multipatch") if (DBG);
-    print "Miss Multipatch says:\n" if (DBG or VERBOSE);
-    print "Scanning Active Plugins...\n";
+    print "\nMultipatch: Scanning Active Plugins...\n";
     my $patch_file = "multipatch.esp";
     my $patch_path = "$TES3::Util::DATADIR/$patch_file";
     my %fogcell;		# fogbugged cells
@@ -5185,12 +5195,12 @@ sub cmd_diff {
 	print "Plugin1: $plugin1\n";
 	print "Plugin2: $plugin2\n";
     }
-    my @p1_not_p2;	     # objects in plugin1 that do not exist in plugin2
-    my @p2_not_p1;	     # objects in plugin2 that do not exist in plugin1
-    my @p1_equal_p2;	     # objects in plugin1 that are equal in plugin2
-    my @p1_diff_p2;	     # objects in plugin1 that are different in plugin2
+    my @p1_not_p2;	     # records in plugin1 that do not exist in plugin2
+    my @p2_not_p1;	     # records in plugin2 that do not exist in plugin1
+    my @p1_equal_p2;	     # records in plugin1 that are equal in plugin2
+    my @p1_diff_p2;	     # records in plugin1 that are different in plugin2
     my @diffs;		     # detailed diffs
-    my @typediffs;	     # objects with same id that differ in rectype
+    my @typediffs;	     # records with same id that differ in rectype
     my(@diff1, @diff2);
     foreach my $id (keys %{$obj1}) {
 	if ($opt_diff_types) {
@@ -5218,7 +5228,6 @@ sub cmd_diff {
 		dbg("Ignoring rectype: $rectype".Dumper(\%ignore_rectype)) if (DBG);
 		next;
 	    }
-	    #my $ignore_subtypes_re = '^(\s*\*?(?:' . join('|', grep {/\w/} keys %{$ignore_type{$rectype}}) . '):)';
 	    my $ignore_subtypes_re = $ignore_subtypes{$rectype};
 	    if (defined(my $rec2 = $obj2->{$id}->{$rectype})) {
 		my $tr1 = $obj1->{$id}->{$rectype};
@@ -5281,19 +5290,20 @@ sub cmd_delete {
     my($plugin) = @_;
     dbg("cmd_delete($plugin)") if (DBG);
     my $delete_subrecords = ($opt_sub_match or $opt_sub_no_match);
-    my $delete_cell_objects = ($opt_cell_object_match or $opt_cell_object_no_match);
+    my $delete_instances = ($opt_instance_match or $opt_instance_no_match);
     my $fun = sub {
 	my($rectype0, $tr0, $wanted_ids, $wanted_types, $wanted_flags) = @_;
 	my($rec_match, $rectype, $tr, $print_rec) =
 	    rec_match($plugin, $rectype0, $tr0, $wanted_ids, $wanted_types, $wanted_flags); # calls tr->decode()
 	# we pass through all records that did not match the standard record selection switches of rec_match
-	return($tr) unless ($rec_match);
+	return('') unless ($rec_match);
 	my $id = $tr->id;
 	if ($delete_subrecords) {
 	    # we are processing sub-records
 	    my @newtr;
 	    foreach my $tsr ($tr->subrecs()) {
 		my $subrec_str = $tsr->tostr;
+		my @deletion_msgs;
 		#((not $wanted_types) or ($wanted_types->{$tsr->subtype})) and  ## maybe something like this
 		if (((not $opt_sub_match) or ($subrec_str =~ /$opt_sub_match/i)) and
 		    ((not $opt_sub_no_match) or ($subrec_str !~ /$opt_sub_no_match/i))) {
@@ -5302,8 +5312,13 @@ sub cmd_delete {
 		    push(@newtr, $tsr);
 		}
 	    }
-	    return(${rectype}->new([@newtr]));
-	} elsif ($delete_cell_objects) {
+	    if (scalar(@newtr) == 0) {
+		print "DELETED: $rectype $id (all subrecords were deleted)\n";
+		return(undef);
+	    } else {
+		return(${rectype}->new([@newtr]));
+	    }
+	} elsif ($delete_instances) {
 	    if ($rectype eq 'CELL') {
 		my @groups = @{split_groups($tr)};
 		my @newcell = @{shift(@groups)}; # take header
@@ -5323,9 +5338,9 @@ sub cmd_delete {
 			    $refidx = $tsr->{refidx}
 				if (not(defined($refidx)) and $tsr->subtype eq 'FRMR');
 			}
-			if (((not $opt_cell_object_match) or ($gstring =~ /$opt_cell_object_match/i)) and
-			    ((not $opt_cell_object_no_match) or ($gstring !~ /$opt_cell_object_no_match/i))) {
-			    print "[CELL: $id] DELETED CELL OBJECT: $name Refidx:$refidx\n";
+			if (((not $opt_instance_match) or ($gstring =~ /$opt_instance_match/i)) and
+			    ((not $opt_instance_no_match) or ($gstring !~ /$opt_instance_no_match/i))) {
+			    print "[CELL: $id] DELETED OBJECT INSTANCE: $name Refidx:$refidx\n";
 			    $deletions++;
 			} else {
 			    push(@newcell, @this_group);
@@ -5378,7 +5393,7 @@ sub cmd_modify {
     my $fun = sub {
 	my($rec_match, $rectype, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode()
 	# we pass through all records that did not match the standard record selection switches of rec_match
-	return($tr) unless ($rec_match);
+	return('') unless ($rec_match);
 	my $id = $tr->id;
 	my $oldrec = $tr->recbuf;
 	my $modified = 0;
@@ -5548,15 +5563,15 @@ sub cmd_clean {
 		    print " Cleaned Evil GMST Bloodmoon: $id\n";
 		    return;	# return undef to delete
 		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
-		    print " Cleaned Evil GMST Tribunal:  $id\n";
+		    print " Cleaned Evil GMST Tribunal: $id\n";
 		    return;	# return undef to delete
 		}
 	    }
 	} elsif ($rectype eq 'CELL') {
 	    my $cleaned_ambi;
 	    my $cleaned_whgt;
-	    if ($opt_clean_cell_objects) {
-		# CLEAN CELL OBJECTS
+	    if ($opt_clean_instances) {
+		# CLEAN OBJECT INSTANCES FROM CELLS
 		# clean a FRMR group in plugin cell if its following subrecs exactly match
 		# a FRMR group with the same Refidx from one of the masters
 		my $id = $plug_tr->decode()->id;
@@ -5573,7 +5588,7 @@ sub cmd_clean {
 			push(@newcell, $nam0_tsr = $this_group[0]);
 		    } else {
 			my($plug_refidx, $plug_buf, $plug_objname) = buffalize(@this_group);
-		      CHECK_MASTER_CELL_OBJECTS:
+		      CHECK_MASTER_INSTANCES:
 			foreach my $master (keys %{my_master}) {
 			    next unless (defined $MASTER_ID->{$master}->{$id}->{$rectype});
 			    dbg("master=$master  CELL.ID=$id  DUMP=".Dumper($MASTER_ID->{$master}->{$id})) if (DBG);
@@ -5589,7 +5604,7 @@ sub cmd_clean {
 					if ($plug_buf eq $mast_buf) {
 					    $cleaned++;
 					    $cell_modified++;
-					    last CHECK_MASTER_CELL_OBJECTS; # done with all masters
+					    last CHECK_MASTER_INSTANCES; # done with all masters
 					}
 					last; # done with this master
 				    }
@@ -5598,7 +5613,7 @@ sub cmd_clean {
 			    }
 			}
 			if ($cleaned) {
-			    print " Cleaned redundant object ($plug_objname FRMR: $plug_refidx) from CELL: $id\n";
+			    print " Cleaned redundant object instance ($plug_objname FRMR: $plug_refidx) from CELL: $id\n";
 			} else {
 			    push(@newcell, @this_group); # no clean
 			    $n++ if (defined $nam0_tsr); # count objects after NAM0 marker
@@ -5667,7 +5682,7 @@ sub cmd_clean {
 				    }
 				}
 				unless ($contains_new_data) {
-				    print " Cleaned Junk CELL:  $id\n";
+				    print " Cleaned Junk CELL: $id\n";
 				    return; # return undef to delete this record
 				}
 			    }
@@ -5698,7 +5713,7 @@ sub cmd_clean {
 		    if ($duptype{$rectype} and
 			($plug_tr->recbuf() eq $mast_recbuf) and
 			($plug_tr->hdrflags eq $mast_hdrflags)) {
-			print " Cleaned Duplicate $rectype:  $id\n";
+			print " Cleaned Duplicate $rectype: $id\n";
 			return;
 		    }
 		}
@@ -5746,7 +5761,7 @@ sub cmd_dump {
 	$print_rec ||= $tr->tostr;
 	if ($opt_list) {
 	    $list_record->();
-	} elsif ($opt_cell_object_match and ($rectype eq 'CELL')) {
+	} elsif ($opt_instance_match and ($rectype eq 'CELL')) {
 	    my @groups = @{split_groups($tr)};
 	    my @newcell = @{shift(@groups)}; # take header
 	    my $selected = 0;
@@ -5758,8 +5773,8 @@ sub cmd_dump {
 		    push(@newcell, $nam0_tsr = $this_group[0]);
 		} else {
 		    my $gstring = join("\n", map { $_->tostr } @this_group);
-		    if (((not $opt_cell_object_match) or ($gstring =~ /$opt_cell_object_match/i)) and
-			((not $opt_cell_object_no_match) or ($gstring !~ /$opt_cell_object_no_match/i))) {
+		    if (((not $opt_instance_match) or ($gstring =~ /$opt_instance_match/i)) and
+			((not $opt_instance_no_match) or ($gstring !~ /$opt_instance_no_match/i))) {
 			push(@newcell, @this_group);
 			$selected++;
 			$n++ if (defined $nam0_tsr); # count objects after NAM0 marker
@@ -5773,7 +5788,7 @@ sub cmd_dump {
 		    $list_record->("Raw Output:");
 		    write_rec($RAWOUT, $newtr);
 		} else {
-		    print $newtr->tostr;
+		    print $newtr->tostr."\n";
 		}
 		$newtr->DESTROY;
 	    }
