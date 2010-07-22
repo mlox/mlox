@@ -72,6 +72,11 @@ $::VERSION = "0.37h";
 # **** deleted body parts from clothes (redefining the set of body parts for a CLOT) (grouped subrecs)
 # **** handle patch plugins that are *supposed* to only override the patchee (auto-detect?)
 
+BEGIN {
+    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
+}
+
 use Carp;
 use IO::Handle;
 use Fcntl qw(SEEK_SET SEEK_CUR SEEK_END);
@@ -87,8 +92,6 @@ use warnings;
 
 my $R;				# current record for modify command
 my $CURRENT_PLUGIN = '';
-
-$SIG{__DIE__} = sub { Carp::confess("@_\n"); };
 
 ### CLASS: Util
 
@@ -129,7 +132,11 @@ system less secure.
 END
 	}
     }
-    die qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis\n"};
+    if (DBG) {
+	Carp::confess(qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis\n"});
+    } else {
+	die(qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis\n"});
+    }
 }
 
 package TES3::Util;
@@ -1186,7 +1193,8 @@ my @RECDEFS =
 	       [DATA => [],
 		{
 		 decode => sub {
-		     my($self, $buff) = @_;
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
 		     if (length($buff) == 24) {
 			 ($self->{x}, $self->{y}, $self->{z},
@@ -1194,12 +1202,12 @@ my @RECDEFS =
 		     } elsif (length($buff) == 12) {
 			 my($flags, $unk, $fog) = unpack("LLf", $buff);
 			 if ($flags & 0x01) { # Interior
-			     $self->{_parent_}->{_is_interior_} = 1;
+			     $parent->{_is_interior_} = 1;
 			     $self->{flags} = $flags;
 			     $self->{unknown} = $unk;
 			     $self->{fog_density} = $fog;
 			 } else { # Exterior
-			     $self->{_parent_}->{_is_interior_} = 0;
+			     $parent->{_is_interior_} = 0;
 			     $self->{flags} = $flags;
 			     ($self->{x}, $self->{y}) = unpack("x[L]ll", $buff);
 			 }
@@ -1436,11 +1444,12 @@ my @RECDEFS =
 	       [DATA => [["type", "C"]],
 		{
 		 decode => sub {
-		     my($self, $buff) = @_;
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
 		     $self->{type} = unpack("C", $buff);
 		     # stash the current dialog type:name for decorating INFO tostr's
-		     $CURRENT_DIAL = "$DIAL_TYPE{$self->{type}}:".$self->{_parent_}->{_id_};
+		     $CURRENT_DIAL = "$DIAL_TYPE{$self->{type}}:".$self->{_id_};
 		     return($self);
 		 }}],
 	       [XIDX => [["index", "l"]], { rdflags => [qw(ess)] }],
@@ -1488,8 +1497,8 @@ my @RECDEFS =
 			 ["unknown", "l"], ["flags", "L"]],
 		{ tostr => sub {
 		      my($self) = @_;
-		      my @ranks = ((defined $self->{_parent_}->{_id_}) and (defined $FACTION_RANK{$self->{_parent_}->{_id_}})) ?
-			  @{$FACTION_RANK{$self->{_parent_}->{_id_}}} : ();
+		      my @ranks = ((defined $self->{_id_}) and (defined $FACTION_RANK{$self->{_id_}})) ?
+			  @{$FACTION_RANK{$self->{_id_}}} : ();
 		      my $n = 1;
 		      my @tostr = (sprintf("Attrib_1:(%s)  Attrib_2:(%s)  Flags:%s  Unknown:%d",
 					   $ATTRIBUTE{$self->{attrib_1}}, $ATTRIBUTE{$self->{attrib_2}},
@@ -1516,9 +1525,8 @@ my @RECDEFS =
 	       [RNAM => [["rank", ["Z32", "a32"]]],
 		{ tostr => sub {
 		      my($self) = @_;
-		      #dbg(qq{Adding: $self->{rank} to FACTION_RANK: $self->{_parent_}->{_id_}}) if (DBG);
-		      push(@{$FACTION_RANK{$self->{_parent_}->{_id_}}}, $self->{rank})
-			  if (defined $FACTION_RANK{$self->{_parent_}});
+		      #dbg(qq{Adding: $self->{rank} to FACTION_RANK: $self->{_id_}}) if (DBG);
+		      push(@{$FACTION_RANK{$self->{_id_}}}, $self->{rank});
 		      "Rank:$self->{rank}";
 		  }}],
 	      ], { rdflags => [qw(mergeable)] }],
@@ -1788,7 +1796,8 @@ my @RECDEFS =
 	       [NPDT => [],
 		{
 		 decode => sub {
-		     my($self, $buff) = @_;
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
 		     if (length($buff) == 12) {
 			 ($self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
@@ -1979,7 +1988,8 @@ my @RECDEFS =
 	       [WEAT => [],
 		{
 		 decode => sub {
-		     my($self, $buff) = @_;
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
 		     if (length($buff) == 10) {
 			 ($self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
@@ -2065,7 +2075,7 @@ my @RECDEFS =
 				       $ATTRIBUTE{$self->{attribute}},
 				       $SPECIALIZATION{$self->{specialization}});
 		     my $n = 1;
-		     foreach my $action (@{$SKILL_ACTIONS{$self->{_parent_}->{_id_}}}) {
+		     foreach my $action (@{$SKILL_ACTIONS{$self->{_id_}}}) {
 			 $str .= sprintf("\n\tUse_Value_$n(%s):%0.2f", $action, $self->{"use_value_$n"});
 			 $n++;
 		     }
@@ -2143,7 +2153,8 @@ my @RECDEFS =
 	       [DATA => [],
 		{
 		 decode => sub {
-		     my($self, $buff) = @_;
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
 		     my($l1, $l2) = unpack("L2", $buff);
 		     dbg("TES3.DATA l1=$l1 l2=$l2") if (DBG);
@@ -2271,8 +2282,8 @@ sub decode {
 	}
     }
     while (my($subtype, $subbuf) = splice(@parts, 0, 2)) {
-	my $tsr = { _parent_ => $self };
-	bless($tsr, "${rectype}::${subtype}")->decode($subbuf);
+	my $tsr = {};
+	bless($tsr, "${rectype}::${subtype}")->decode($subbuf, $self);
 	$self->{_id_} = lc($tsr->{id}) if (defined $tsr->{id}); # Note! record IDs are lowercased for easy comparison!
 	# inline $tr->append()
 	push(@{$self->{SL}}, $tsr);
@@ -2513,7 +2524,8 @@ sub gen_subrec_methods {
 	    $method = "${package}::decode";
 	    *$method = sub {
 		use strict "refs";
-		my($self, $subbuf) = @_;
+		my($self, $subbuf, $parent) = @_;
+		$self->{_id_} = $parent->{_id_};
 		my(@vals) = unpack($decode_pack_format, $self->{_subbuf_} = $subbuf);
 		assert(scalar(@vals) == scalar(@fieldnames),
 		       "decode(): number of field values (@vals) does not match number of field names (@fieldnames)") if (DBG);
@@ -2580,7 +2592,7 @@ sub gen_subrec_methods {
 				    push(@values, "($symval)");
 				}
 			    } else {
-				err(qq{${package}::tostr(ID=$self->{_parent_}->{_id_}): do not know how to lookup symbolic value for: "$fieldname" ($self->{$fieldname})});
+				err(qq{${package}::tostr(ID=$self->{_id_}): do not know how to lookup symbolic value for: "$fieldname" ($self->{$fieldname})});
 				push(@values, "$self->{$fieldname}");
 			    }
 			} elsif (defined $symflags->{$fieldname}) {
@@ -2591,7 +2603,7 @@ sub gen_subrec_methods {
 				    push(@values, "[$symval]");
 				}
 			    } else {
-				err(qq{${package}::tostr(ID=$self->{_parent_}->{_id_}): do not know how to calculate symbolic flags for: "$fieldname"});
+				err(qq{${package}::tostr(ID=$self->{_id_}): do not know how to calculate symbolic flags for: "$fieldname"});
 				push(@values, "$self->{$fieldname}");
 			    }
 			} else {
@@ -2623,18 +2635,9 @@ sub gen_subrec_methods {
     *$method = sub {
 	use strict "refs";
 	my($class, $hashref, $parent) = @_;
-	$hashref->{_parent_} = $parent;
+	$hashref->{_id_} = $parent->{_id_};
 	bless($hashref, $class);
     };
-
-    # tsr->DESTROY()
-#    $method = "${package}::DESTROY";
-#    *$method = sub {
-#	use strict "refs";
-#	my($self) = @_;
-#	dbg("tsr->DESTROY @{[$self->subtype]}") if (DBG);
-#	delete $self->{_parent_};
-#    };
 
     # tsr->subbuf()
     $method = "${package}::subbuf";
@@ -2715,9 +2718,6 @@ sub gen_class {
     *$method = sub {
 	use strict "refs";
 	my($self) = @_;
-	foreach my $tsr (@{$self->{SL}}) {
-	    delete $tsr->{_parent_};
-	}
 	delete $self->{SL};
 	delete $self->{SH};
     };
@@ -2729,7 +2729,7 @@ sub gen_class {
 	my($self, @subrecs) = @_;
 	push(@{$self->{SL}}, @subrecs);
 	foreach my $tsr (@subrecs) {
-	    $tsr->{_parent_} = $self;
+	    $tsr->{_id_} = $self->{_id_};
 	    push(@{$self->{SH}->{$tsr->subtype()}}, $tsr);
 	}
 	$self;
@@ -2848,8 +2848,6 @@ sub generate_classes {
 package main;
 
 BEGIN {
-    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
-    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
     Util->import(qw(abort assert dbg err msg prn));
 }
 
@@ -4718,7 +4716,7 @@ sub process_plugin_for_read {
 	    $expected = undef;
 	    last if (not defined $rectype);
 	    $fun->($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
-	    $tr->DESTROY;
+	    #$tr->DESTROY;
 	}
     };
     err($@) if ($@);
@@ -4743,7 +4741,7 @@ sub process_plugin_for_update {
 		    write_rec($out, $trnew);
 		    dbg("process_plugin_for_update: record modified") if (DBG);
 		    $modified++;
-		    $trnew->DESTROY;
+		    #$trnew->DESTROY;
 		} else {	# null return record, so pass original rec through unchanged
 		    dbg("process_plugin_for_update: record PASSED THROUGH unmodified") if (DBG);
 		    write_rec($out, $tr);
@@ -4752,7 +4750,7 @@ sub process_plugin_for_update {
 		dbg("process_plugin_for_update: record deleted") if (DBG);
 		$modified++;
 	    }
-	    $tr->DESTROY;
+	    #$tr->DESTROY;
 	}
     };
     if ($@) {
@@ -4821,7 +4819,6 @@ sub cmd_testcodec {
 	    }
 	}
 	return($trnew);
-	$trnew->DESTROY;
     };
     process_plugin_for_update($plugin, $fun, "test_");
 } # cmd_testcodec
@@ -4872,6 +4869,7 @@ sub multipatch_check_fogbug {
     } else {
 	if (defined($fogcell->{$name})) {
 	    print qq{  [FOGBUG] CORRECTED $plugin CELL: $name\n} if (VERBOSE);
+	    #$fogcell->{$name}->[0]->DESTROY;
 	    delete $fogcell->{$name};
 	}
     }
@@ -5088,7 +5086,9 @@ sub cmd_multipatch {
 		$data_tsr->{fog_density} = $ambi_tsr->{fog_density} = 0.01;
 		$data_tsr->encode;
 		$ambi_tsr->encode;
-		write_rec($out, CELL->new([$name_tsr, $data_tsr, $ambi_tsr]));
+		my $newcell = CELL->new([$name_tsr, $data_tsr, $ambi_tsr]);
+		write_rec($out, $newcell);
+		#$newcell->DESTROY;
 	    }
 	}
 	if ($nsumcrea) {
@@ -5556,14 +5556,17 @@ sub cmd_clean {
 		my $val = $plug_tr->get($type, $field);
 		unless (defined $val) {
 		    print " Cleaned GMST with no value: $id\n";
+		    #$plug_tr->DESTROY;
 		    return;
 		}
 		my $hexval = unpack("H*", "$type $val");
 		if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Bloodmoon: $id\n";
+		    #$plug_tr->DESTROY;
 		    return;	# return undef to delete
 		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Tribunal: $id\n";
+		    #$plug_tr->DESTROY;
 		    return;	# return undef to delete
 		}
 	    }
@@ -5604,12 +5607,14 @@ sub cmd_clean {
 					if ($plug_buf eq $mast_buf) {
 					    $cleaned++;
 					    $cell_modified++;
+					    #$mast_tr->DESTROY;
 					    last CHECK_MASTER_INSTANCES; # done with all masters
 					}
+					#$mast_tr->DESTROY;
 					last; # done with this master
 				    }
 				}
-				$mast_tr->DESTROY;
+				#$mast_tr->DESTROY;
 			    }
 			}
 			if ($cleaned) {
@@ -5622,6 +5627,7 @@ sub cmd_clean {
 		}
 		if ($cell_modified) {
 		    $nam0_tsr->{reference_count} = $n;	# update NAM0
+		    #$plug_tr->DESTROY;
 		    $plug_tr = CELL->new([@newcell]);
 		    $record_modified++;
 		}
@@ -5683,11 +5689,13 @@ sub cmd_clean {
 				}
 				unless ($contains_new_data) {
 				    print " Cleaned Junk CELL: $id\n";
+				    #$plug_tr->DESTROY;
+				    #$mast_tr->DESTROY;
 				    return; # return undef to delete this record
 				}
 			    }
 			}
-			$mast_tr->DESTROY;
+			#$mast_tr->DESTROY;
 		    } # master has same cell (by id)
 		}
 		my @what;
@@ -5714,6 +5722,7 @@ sub cmd_clean {
 			($plug_tr->recbuf() eq $mast_recbuf) and
 			($plug_tr->hdrflags eq $mast_hdrflags)) {
 			print " Cleaned Duplicate $rectype: $id\n";
+			#$plug_tr->DESTROY;
 			return;
 		    }
 		}
@@ -5724,7 +5733,6 @@ sub cmd_clean {
 	} else {
 	    return('');		# passthrough
 	}
-	$plug_tr->DESTROY;
     };
     if ($opt_clean_replace) {
 	process_plugin_for_update($plugin, $fun);
@@ -5790,7 +5798,7 @@ sub cmd_dump {
 		} else {
 		    print $newtr->tostr."\n";
 		}
-		$newtr->DESTROY;
+		#$newtr->DESTROY;
 	    }
 	} else {
 	    if ($opt_dump_raw) {
