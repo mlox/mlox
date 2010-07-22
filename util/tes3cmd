@@ -1441,7 +1441,7 @@ my @RECDEFS =
 	      ], { rdflags => [qw(ess)] }],
      [DIAL => [
 	       [NAME => [["id", "Z*"]]],
-	       [DATA => [["type", "C"]],
+	       [DATA => [["type", "C", { lookup => \%DIAL_TYPE }]],
 		{
 		 decode => sub {
 		     my($self, $buff, $parent) = @_;
@@ -3645,20 +3645,20 @@ Note: documentation for regular expressions:
 EXAMPLES:
 
 # List all the records in the plugin, just one per line, by type and ID:
-tes3cmd dump --list "plugin.esp"
+tes3cmd dump --list "Drug Realism.esp"
 
 # Dump all records from a plugin. we redirect the output to a file as there
 # can be a lot of output:
-tes3cmd dump "my plugin.esp" > "my plugin_dump.txt"
+tes3cmd dump "DwemerClock.esp" > "DwemerClock-dump.txt"
 
 # Dump all records with IDs exactly matching "foo":
-tes3cmd dump --exact-id foo "plugin.esp"
+tes3cmd dump --exact-id 2247227652827822061 LGNPC_AldVelothi_v1_20.esp
 
 # Dump all the DIAL and INFO records from a plugin:
-tes3cmd dump --type dial --type info "plugin.esp"
+tes3cmd dump --type dial --type info "abotWhereAreAllBirdsGoing.esp"
 
-# Dump all records flagged as persistent (by name) and blocked (by value)
-tes3cmd dump --flag persistent --flag 0x2000 "my plugin.esp"
+# Dump all records flagged as persistent (by name) OR blocked (by value)
+tes3cmd dump --flag persistent --flag 0x2000 "Suran_Underworld_2.5.esp"
 
 # Dump all object instances in cells that match "galbedir":
 # (this will just show you the cell header, and subrecords just for Galbedir
