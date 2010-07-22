@@ -27,7 +27,9 @@ $::VERSION = "0.37h";
 # TEST: cmd_fixit
 
 # TBD:
-# implement "canonical" dump format
+# add report of stats (plugins scanned, etc) for multipatch and clean.
+# add options used to header of multipatch
+# implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
 # when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
 # implement a "repack" command: bsaunpack + tesfiles/resourcecheck + clean
@@ -221,7 +223,7 @@ sub datafiles_map {
     return($self->{datafiles_map} = list_files($DATADIR));
 }
 
-sub datapath { "$DATADIR/" . $_[0]->datafiles_map()->{lc($_[1])}; }
+sub datapath { "$DATADIR/" . $_[0]->datafiles_map()->{lc($_[1])}; } # TBD check params: Use of uninitialized value in concatenation (.) or string at /home/doug/bin/tes3cmd line 226.
 sub datafile { $_[0]->datafiles_map()->{lc($_[1])}; }
 
 sub ini_file {
@@ -1580,8 +1582,12 @@ my @RECDEFS =
 		      my($self) = @_;
 		      my $str = $self->{response};
 		      $str =~ tr/\r//d if ($^O eq 'linux');
-		      #$str =~ s/\n/\n\t\t/g;
-		      "Response:\n".((NOWRAP) ? $str : wrap("\t", "\t", $str));
+		      if (length($str) < 60) {
+			  return("Response: $str");
+		      } else {
+			  $str = wrap("\t", "\t", $str) unless (NOWRAP);
+			  return("Response:\n$str");
+		      }
 		  },
 		}],
 	       [NNAM => [["next_id", "Z*"]]],
@@ -2799,7 +2805,7 @@ sub gen_class {
     *$method = sub {
 	use strict "refs";
 	my($self, $subtype, $field) = @_;
-	return(undef) unless (defined $self->{SH}->{$subtype});
+	return() unless (defined $self->{SH}->{$subtype});
 	if (defined $field) {
 	    # return matching field from all subrecs of type
 	    return(map { $_->{$field} } @{$self->{SH}->{$subtype}});
@@ -3982,9 +3988,35 @@ sub read_rec {
     return($rectype, $recbuf, $hdrflags, $hdrunk);
 }
 
-sub quick_parse {
-    my($rectype, $recbuf) = @_;
-    my %subrecs;
+sub read_quick_parse {
+    my($fh, $expected_type, $plugin) = @_;
+    # read a record
+    my $rec_hdr = "";
+    my $n_read = read($fh, $rec_hdr, $hdr_size);
+    if (not $n_read) {
+	if (defined $n_read) {
+	    return(undef);	# EOF
+	} else {
+	    abort(qq{Error on read() ($!)});
+	}
+    }
+    if ($n_read != $hdr_size) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{read_rec(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
+    }
+    my($rectype, $rec_len, $hdrunk, $hdrflags) = unpack("a4LLL", $rec_hdr);
+    if (defined($expected_type) and $expected_type ne $rectype) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{read_rec(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
+    }
+    my $recbuf = "";
+    $n_read = read($fh, $recbuf, $rec_len);
+    if ($n_read != $rec_len) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{read_rec(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $rec_len bytes, got $n_read});
+    }
+    # parse record into a subrecs hash
+    my %subrecs;	# hash of (subtype => subbuf_list);
     eval {
 	my @parts = unpack("(a4L/a*)*", $recbuf);
 	while (my($subtype, $subbuf) = splice(@parts, 0, 2)) {
@@ -4004,59 +4036,83 @@ sub quick_parse {
 		if (defined $subbuf) {
 		    push(@{$subrecs{$subtype}}, $subbuf);
 		} else {
-		    err("quick_parse(): ${rectype}.${subtype} has malformed subbuf");
+		    err("read_quick_parse(): ${rectype}.${subtype} has malformed subbuf");
 		}
 		$p += $sublen;
 	    } else {
 		if ($TES3::Record::RECTYPES{$rectype}->{$subtype}) {
-		    err("quick_parse(): ${rectype}.${subtype} has malformed recbuf");
+		    err("read_quick_parse(): ${rectype}.${subtype} has malformed recbuf");
 		} else {
-		    err(qq{quick_parse(): $rectype has malformed subtype: "$subtype"});
+		    err(qq{read_quick_parse(): $rectype has malformed subtype: "$subtype"});
 		}
 	    }
 	}
     }
-    return(\%subrecs);		# returns a hash of (subtype, subbuf_list);
-}
-
-# TBD - sync with RECDEFS
-sub rec_id {
-    my($rectype, $srh) = @_;
+    # calculate record id
+    my $id;
     if ($NAMED_TYPE{$rectype}) { # This rectype uses the NAME subrec as its ID
-	return(lc(unpack("Z*", ($srh->{NAME}[0]))));
+	$id = (lc(unpack("Z*", ($subrecs{NAME}[0]))));
     } elsif ($rectype eq "INFO") {
-	return(unpack("Z*", $srh->{INAM}[0]));
+	$id = (unpack("Z*", $subrecs{INAM}[0]));
     } elsif ($rectype eq "CELL") {
-	my $name = unpack("Z*", ($srh->{NAME}[0]));
-	my $data = $srh->{DATA}[0];
+	my $name = unpack("Z*", ($subrecs{NAME}[0]));
+	my $data = $subrecs{DATA}[0];
 	my($flags) = unpack("L", $data);
 	if ($flags & 1) {	# interior
-	    return($name);
+	    $id = ($name);
 	} else {		# exterior
 	    unless ($name) {
-		$name = (defined $srh->{RGNN}) ? unpack("Z*", $srh->{RGNN}[0]) : 'Wilderness';
+		$name = (defined $subrecs{RGNN}) ? unpack("Z*", $subrecs{RGNN}[0]) : 'Wilderness';
 	    }
-	    my($x, $y) = unpack("x[L]ll", $srh->{DATA}[0]);
-	    return("$name ($x, $y)");
+	    my($x, $y) = unpack("x[L]ll", $subrecs{DATA}[0]);
+	    $id = "$name ($x, $y)";
 	}
     } elsif ($rectype eq "SCPT") {
-	return(lc(unpack("Z32", $srh->{SCHD}[0])));
-    } elsif (defined $srh->{INDX}) {
-	return(unpack("L", $srh->{INDX}[0]));
+	$id = lc(unpack("Z32", $subrecs{SCHD}[0]));
+    } elsif (defined $subrecs{INDX}) {
+	$id = unpack("L", $subrecs{INDX}[0]);
     } elsif ($rectype eq "LAND") {
-	my($x, $y) = unpack("ll", $srh->{INTV}[0]);
-	return("($x, $y)");
+	my($x, $y) = unpack("ll", $subrecs{INTV}[0]);
+	$id = "($x, $y)";
     } elsif ($rectype eq "TES3") {
-	return('');
+	$id = ('');
     }
-    return(undef);
+    # rec_id
+    return($rectype, $id, \%subrecs, $recbuf, $hdrflags, $hdrunk);
 }
 
 sub read_tr {
-    my($fh, $expected, $plugin) = @_;
-    my($rectype, $recbuf, $hdrflags, $hdrunk) = read_rec($fh, $expected, $plugin);
+    my($fh, $expected_type, $plugin) = @_;
+    my $rec_hdr = "";
+    my $n_read = read($fh, $rec_hdr, $hdr_size);
+    if (not $n_read) {
+	if (defined $n_read) {
+	    return(undef);	# EOF
+	} else {
+	    abort(qq{Error on read() ($!)});
+	}
+    }
+    if ($n_read != $hdr_size) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{read_rec(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
+    }
+    my($rectype, $rec_len, $hdrunk, $hdrflags) = unpack("a4LLL", $rec_hdr);
     return(undef) unless defined $rectype;
-    return($rectype, TES3::Record->new_from_recbuf($rectype, $recbuf, $hdrflags, $hdrunk));
+    if (defined($expected_type) and $expected_type ne $rectype) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{read_rec(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
+    }
+    my $recbuf = "";
+    $n_read = read($fh, $recbuf, $rec_len);
+    if ($n_read != $rec_len) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{read_rec(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $rec_len bytes, got $n_read});
+    }
+    return($rectype,
+	   bless({ _rectype_ => $rectype,
+		   _hdrflags_ => $hdrflags,
+		   _hdrunk_ => $hdrunk,
+		   _recbuf_ => $recbuf }, $rectype)); # return a TES3 object
 }
 
 sub write_rec {
@@ -4073,8 +4129,8 @@ sub write_rec {
 
 sub open_for_read {
     my($plugin) = @_;
+    (-f $plugin) or abort(qq{Not a plain file}); # TBD failed on clean BB_Clothiers_of_Vvardenfell_v1.1-jms_patch.esp, NG_New_Carnithus'_Armamentarium-jms-patch.esp, LGNPC_TelMora_v1_20-jms_patch.esp
     my $fh = IO::Handle->new;
-    (-f $plugin) or abort(qq{Not a plain file});
     open($fh, "<", $plugin) or abort(qq{opening "$plugin" for input ($!)});
     binmode($fh, ':raw') or abort("setting binmode on $plugin ($!)");
     return($fh);
@@ -4239,6 +4295,7 @@ sub master_cache_path {
 
 sub load_master_cache {
     my($esm) = @_;
+    # TBD why are we getting undefs here? check clean NG_New_Carnithus'_Armamentarium-jms-patch.esp
     my $mcache = master_cache_path($esm);
     if ($opt_no_cache) {
 	unlink($mcache) if (-f $mcache);
@@ -4253,7 +4310,8 @@ sub load_master_cache {
 		$MASTER_ID->{$esm} = $master_data;
 		print "Loaded cached Master: <DATADIR>/$esm\n";
 	    } else {
-		abort("Cache Invalidated for: $esm (curr_size == $curr_size, prev_size == $prev_size)");
+		msg("Cache Invalidated for: $esm (curr_size == $curr_size, prev_size == $prev_size)");
+		return(0);
 	    }
 	} else {
 	    abort("retrieving master cache for: $esm");
@@ -4288,13 +4346,11 @@ sub load_master {
     print "Loading Master: $esm\n";
     my $inp = open_for_read($T3->datapath($esm));
     eval {
-	while (my($rectype, $recbuf, $hdrflags, $hdrunk) = read_rec($inp, undef, $esm)) {
+	while (my($rectype, $id, $srh, $recbuf, $hdrflags, $hdrunk) = read_quick_parse($inp, undef, $esm)) {
 	    last if (not defined $rectype);
 	    next if ($hdrflags & $HDR_FLAGS{ignored});
 	    next if (defined $types and not $types->{$rectype});
 	    #dbg("rec_type = $rectype") if (DBG);
-	    my $srh = quick_parse($rectype, $recbuf);
-	    my $id = rec_id($rectype, $srh);
 	    abort("undefined recbuf from read_rec") unless defined $recbuf;
 	    $MASTER_ID->{$esm}->{$id}->{$rectype} = [$recbuf, $hdrflags];
 	}
@@ -4712,6 +4768,7 @@ sub cmd_codectest {
 	    }
 	}
 	return($trnew);
+	$trnew->DESTROY;
     };
     process_plugin_for_update($plugin, $fun, "test_");
 } # cmd_codectest
@@ -5480,6 +5537,7 @@ sub cmd_clean {
 					last; # done with this master
 				    }
 				}
+				$mast_tr->DESTROY;
 			    }
 			}
 			if ($cleaned) {
@@ -5508,7 +5566,9 @@ sub cmd_clean {
 			    if ($opt_clean_cell_params) { # check for redundant AMBI/WHGT
 				# CLEAN AMBI
 				unless ($cleaned_ambi) {
-				    if (defined($plug_tr->get('AMBI')) and ($plug_tr->get('AMBI')->subbuf eq $mast_tr->get('AMBI')->subbuf)) {
+				    my $plug_ambi = $plug_tr->get('AMBI');
+				    my $mast_ambi = $mast_tr->get('AMBI');
+				    if (defined($plug_ambi) and defined($mast_ambi) and ($plug_ambi->subbuf eq $mast_ambi->subbuf)) {
 					$plug_tr->delete_subtype('AMBI');
 					$cleaned_ambi++;
 				    }
@@ -5519,11 +5579,8 @@ sub cmd_clean {
 				    my $plugin_whgt = $plug_tr->get('WHGT', 'water_height');
 				    my $whgt_type = 'WHGT';
 				    unless (defined $plugin_whgt) {
-					if ($plug_tr->subtype eq 'INTV') {
-					    # this would be unusual. I think INTV water heights must be from very old Construction Sets.
-					    $plugin_whgt = $plug_tr->get('INTV', 'water_height');
-					    $whgt_type = 'INTV';
-					}
+					$plugin_whgt = $plug_tr->get('INTV', 'water_height');
+					$whgt_type = 'INTV';
 				    }
 				    my $master_whgt = $mast_tr->get('WHGT', 'water_height');
 				    unless (defined $master_whgt) {
@@ -5558,6 +5615,7 @@ sub cmd_clean {
 				}
 			    }
 			}
+			$mast_tr->DESTROY;
 		    } # master has same cell (by id)
 		}
 		my @what;
@@ -5594,6 +5652,7 @@ sub cmd_clean {
 	} else {
 	    return('');		# passthrough
 	}
+	$plug_tr->DESTROY;
     };
     if ($opt_clean_replace) {
 	process_plugin_for_update($plugin, $fun);
@@ -5659,6 +5718,7 @@ sub cmd_dump {
 		} else {
 		    print $newtr->tostr;
 		}
+		$newtr->DESTROY;
 	    }
 	} else {
 	    if ($opt_dump_raw) {
