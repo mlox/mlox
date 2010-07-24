@@ -29,19 +29,17 @@ $::VERSION = "0.37j";
 
 
 # TBD:
+# sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair
-# Implement "--stash-backups" so that unsightly backups are plonked into Data Files/tes3cmd/backups
+# Implement "--hide-backups" and "--backup-dir" so that unsightly backups are plonked into Data Files/tes3cmd/backups
 # fix bsa dates for Steam versions
 # add report of stats (plugins scanned, etc) for multipatch and clean.
-# add options used to header of multipatch?
 # implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
 # when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
 # implement a "repack" command: bsaunpack + tesfiles/resourcecheck + clean
-# implement logfile for detail output (delete, modify, clean, multipatch)?
-# put commands and opts in a big dispatch table?
-# allow commands to be abbreviated?
-# TES3::File (open_for_read, backup, etc)?
+# logfile for detail output (delete, modify, clean, multipatch)?
+# TES3::File (open_for_input, backup, etc)?
 # implement proper verbosity
 # cleanup .tmp if die
 # and add more examples, esp. "modify"
@@ -77,6 +75,7 @@ $::VERSION = "0.37j";
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
 }
 
@@ -106,6 +105,7 @@ BEGIN {
     # reached, we define the following constants so that we only compile
     # debug/help code into the program when it it actually needed.
     use constant DBG => scalar(grep(/^(?:-d|-?-debug)$/, @ARGV));
+    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
 
     use Exporter ();
@@ -114,14 +114,11 @@ BEGIN {
     our %EXPORT_TAGS = ( FIELDS => [ @EXPORT_OK ] );
 }
 
-sub assert {
-    my($cond, $msg) = @_;
-    Carp::confess($msg) unless ($cond);
-}
 sub err { warn "[ERROR ($CURRENT_PLUGIN): @_]\n"; }
 sub dbg { warn "[DEBUG ($CURRENT_PLUGIN): @_]\n"; }
 sub msg { warn "@_\n"; }
 sub prn { print "@_\n"; }
+sub assert { my($bool, $msg) = @_; Carp::confess("Assertion Failed: $msg") unless ($bool); }
 sub abort {
     my($msg) = @_;
     my $diagnosis = '';
@@ -147,6 +144,7 @@ package TES3::Util;
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
     Util->import(qw(abort assert dbg err msg prn));
 }
@@ -193,7 +191,7 @@ sub find_datadir {
     return($DATADIR) if (defined($DATADIR));
     my $dir = Cwd::getcwd;
     dbg("checking for data dir in: $dir") if (DBG);
-    while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
+    while (-d $dir) {
 	my $datadir = list_files($dir)->{"data files"};
 	my $mwexe = list_files($dir)->{"morrowind.exe"};
 	if ($datadir and $mwexe) {
@@ -214,7 +212,7 @@ sub find_datadir {
 	$dir = join("/", @parts);
 	dbg(qq{Checking for "Data Files" in: $dir}) if (DBG);
     }
-    err(qq{Can't find "Data Files" directory, functionality reduced. Run me under "Morrowind" somewhere.});
+    err(qq{Can't find "Data Files" directory, functionality reduced. You must first\ncd (change directory) to somewhere under where Morrowind is installed.});
     return(undef);		# not running under morrowind directory
 }
 
@@ -244,8 +242,10 @@ sub ini_file {
     my($self, $reload) = @_;
     return($self->{ini_file})
 	if (defined($self->{ini_file} and not $reload));
-    my $mwfiles = list_files("$DATADIR/..");
-    return($self->{ini_file} = "$DATADIR/../$mwfiles->{'morrowind.ini'}");
+    my $mwdir = $DATADIR;
+    $mwdir =~ s![\\/]data files.*!!i;
+    my $mwfiles = list_files($mwdir);
+    return($self->{ini_file} = "$mwdir/$mwfiles->{'morrowind.ini'}");
 }
 
 sub load_order {
@@ -276,6 +276,7 @@ package TES3::SubRecord;
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
     Util->import(qw(abort assert dbg err msg prn));
 }
@@ -302,6 +303,7 @@ package TES3::Record;
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
     use constant NOWRAP => grep(/^-?-no-wrap$/, @ARGV);
     use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
     Util->import(qw(abort assert dbg err msg prn));
@@ -958,59 +960,68 @@ sub dbg_word {
 	unpack("H8", $longstr), unpack("f", $longstr), unpack("l", $longstr), unpack("s2", $longstr), unpack("c4", $longstr));
 }
 
-sub unpack_float_array {
-    my($self, $buff) = @_;
-    my $i = 0;
-    $self->{_subbuf_} = $buff;
-    $self->{$i++} = $_ foreach (unpack("f*", $buff));
-    $self->{_last_idx} = $i - 1;
-    $self;
-}
-sub pack_float_array { pack("f*", map { $_[0]->{$_} } (0..$_[0]->{_last_idx})); }
-my @RD_float_array_ess = ([], { decode => \&unpack_float_array,
-				encode => \&pack_float_array,
-				#fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
-				tostr => sub {
-				    my($self) = @_;
-				    "Float_Array: " . join(", ", map { sprintf("$_=%0.2f", $self->{$_}) } 0..$self->{_last_idx});
-				},
-				rdflags => [qw(ess)]});
+my @RD_float_array_ess =
+    ([], { decode => sub {
+	       my($self, $buff) = @_;
+	       my $i = 0;
+	       $self->{_subbuf_} = $buff;
+	       $self->{$i++} = $_ foreach (unpack("f*", $buff));
+	       $self->{_last_idx} = $i - 1;
+	       return($self);
+	   },
+	   encode => sub {
+	       my $self = @_;
+	       $self->{_subbuf_} = pack("f*", map { $self->{$_} } (0..$self->{_last_idx}));
+	       return($self);
+	   },
+	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
+	   tostr => sub {
+	       my($self) = @_;
+	       "Float_Array: " . join(", ", map { sprintf("$_=%0.2f", $self->{$_}) } 0..$self->{_last_idx});
+	   },
+	   rdflags => [qw(ess)]});
 
-sub unpack_long_array {
-    my($self, $buff) = @_;
-    $self->{_subbuf_} = $buff;
-    my $i = 0;
-    $self->{$i++} = $_ foreach (unpack("l*", $buff));
-    $self->{_last_idx} = $i - 1;
-    $self;
-}
-sub pack_long_array { pack("l*", map { $_[0]->{$_} } (0..$_[0]->{_last_idx})); }
-my @RD_long_array_ess  = ([], { decode => \&unpack_long_array,
-				encode => \&pack_long_array,
-				#fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
-				tostr => sub {
-				    my($self) = @_;
-				    "Long_Array: " . join(", ", map { "$_=$self->{$_}" } 0..$self->{_last_idx});
-				},
-				rdflags => [qw(ess)]});
+my @RD_long_array_ess =
+    ([], { decode => sub {
+	       my($self, $buff) = @_;
+	       $self->{_subbuf_} = $buff;
+	       my $i = 0;
+	       $self->{$i++} = $_ foreach (unpack("l*", $buff));
+	       $self->{_last_idx} = $i - 1;
+	       return($self);
+	   },
+	   encode => sub {
+	       my($self) = @_;
+	       $self->{_subbuf_} = pack("l*", map { $self->{$_} } (0..$self->{_last_idx}));
+	       return($self);
+	   },
+	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
+	   tostr => sub {
+	       my($self) = @_;
+	       "Long_Array: " . join(", ", map { "$_=$self->{$_}" } 0..$self->{_last_idx});
+	   },
+	   rdflags => [qw(ess)]});
 
-sub unpack_short_array {
-    my($self, $buff) = @_;
-    $self->{_subbuf_} = $buff;
-    my $i = 0;
-    $self->{$i++} = $_ foreach (unpack("s*", $buff));
-    $self->{_last_idx} = $i - 1;
-    $self;
-}
-sub pack_short_array { pack("s*", map { $_[0]->{$_} } (0..$_[0]->{_last_idx})); }
-my @RD_short_array_ess = ([], { decode => \&unpack_short_array,
-				encode => \&pack_short_array,
-				#fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
-				tostr => sub {
-				    my($self) = @_;
-				    "Short_Array: " . join(", ", map { "$_=$self->{$_}" } 0..$self->{_last_idx});
-				},
-				rdflags => [qw(ess)]});
+my @RD_short_array_ess =
+    ([], { decode => sub {
+	       my($self, $buff) = @_;
+	       $self->{_subbuf_} = $buff;
+	       my $i = 0;
+	       $self->{$i++} = $_ foreach (unpack("s*", $buff));
+	       $self->{_last_idx} = $i - 1;
+	       return($self);
+	   },
+	   encode => sub {
+	       my($self) = @_;
+	       $self->{_subbuf_} = pack("s*", map { $self->{$_} } (0..$self->{_last_idx}));
+	       return($self);
+	   },
+	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
+	   tostr => sub {
+	       my($self) = @_;
+	       "Short_Array: " . join(", ", map { "$_=$self->{$_}" } 0..$self->{_last_idx});
+	   },
+	   rdflags => [qw(ess)]});
 
 my @RD_widx = ([["equipped_index", "l"], # JMS index into NPCO inventory items of those that are equipped
 		["ammo_flag", "l"]],
@@ -1200,11 +1211,11 @@ my @RECDEFS =
 	       [TNAM => [["image", "Z*"]]]
 	      ], { rdflags => [qw(mergeable)] }],
      [CELL => [
-	       [AMBI => [["ambient", "L"], ["sunlight", "L"],
-			 ["fog", "L"], ["fog_density", "f"]],
+	       [AMBI => [["ambient", "L"], ["sunlight", "L"], ["fog", "L"], ["fog_density", "f"]],
 		{ tostr => sub {
 		      my($self) = @_;
-		      join("  ", map { ucfirst($_) . ':' . color_tostr($self->{$_}) } (qw(ambient sunlight fog)));
+		      join("  ", map { ucfirst($_) . ':' . color_tostr($self->{$_}) } (qw(ambient sunlight fog))) .
+			  sprintf(" Fog_Density:%0.2f", $self->{fog_density});
 		  }}
 	       ],
 	       [FRMR => [["refidx", "S"], ["unknown", "C"], ["modidx", "C"]],
@@ -1224,12 +1235,12 @@ my @RECDEFS =
 			 ($self->{x}, $self->{y}, $self->{z},
 			  $self->{x_angle}, $self->{y_angle}, $self->{z_angle}) = unpack("f6", $buff);
 		     } elsif (length($buff) == 12) {
-			 my($flags, $unk, $fog) = unpack("LLf", $buff);
+			 my($flags, $unk, $fogden) = unpack("LLf", $buff);
 			 if ($flags & 0x01) { # Interior
 			     $parent->{_is_interior_} = 1;
 			     $self->{flags} = $flags;
 			     $self->{unknown} = $unk;
-			     $self->{fog_density} = $fog;
+			     $self->{fog_density} = $fogden;
 			 } else { # Exterior
 			     $parent->{_is_interior_} = 0;
 			     $self->{flags} = $flags;
@@ -1244,14 +1255,15 @@ my @RECDEFS =
 		     my($self) = @_;
 		     if (exists $self->{flags}) {
 			 if ($self->{flags} & 0x01) { # Interior
-			     return(pack("LLf", $self->{flags}, $self->{unknown}, $self->{fog_density}));
+			     $self->{_subbuf_} = pack("LLf", $self->{flags}, $self->{unknown}, $self->{fog_density});
 			 } else { # Exterior
-			     return(pack("Lll", $self->{flags}, $self->{x}, $self->{y}));
+			     $self->{_subbuf_} = pack("Lll", $self->{flags}, $self->{x}, $self->{y});
 			 }
 		     } else {
-			 return(pack("f6", $self->{x}, $self->{y}, $self->{z},
-				     $self->{x_angle}, $self->{y_angle}, $self->{z_angle}));
+			 $self->{_subbuf_} = pack("f6", $self->{x}, $self->{y}, $self->{z},
+						  $self->{x_angle}, $self->{y_angle}, $self->{z_angle});
 		     }
+		     return($self);
 		 },
 		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
 		 tostr => sub {
@@ -1295,6 +1307,7 @@ my @RECDEFS =
 	       [CHRD => @RD_long_array_ess, { rdflags => [qw(ess)] }],
 	       [CRED => $RD_Unknown, { rdflags => [qw(ess)] }],
 	       [CSHN => $RD_Unknown, { rdflags => [qw(ess)] }],
+	       [CSSN => [["name", "Z*"]], { rdflags => [qw(ess)] }],
 	       [CSTN => [["target", "Z*"]], { rdflags => [qw(ess)] }], # guessing this is: "Cast/Current Spell Target Name"
 	       [FGTN => [["following_target_name", "Z*"]], { rdflags => [qw(ess)] }],
 	       [LSHN => $RD_Unknown, { rdflags => [qw(ess)] }],
@@ -1566,7 +1579,7 @@ my @RECDEFS =
 		   rdflags => [qw(ess)] }],
      # TBD: Investigate .ess
      [GAME => [			# ess, single record, no id
-	       [GMDT => [["current_cell", ["Z64", "a64"]], ["grid_x", "l"], ["grid_y", "l"], ["long_1", "l"], ["long_1", "l"], ["unknown_1", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
+	       [GMDT => [["current_cell", ["Z64", "a64"]], ["x", "l"], ["y", "l"], ["long_1", "l"], ["long_1", "l"], ["unknown_1", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
 	      ], { id => sub {'()'}, rdflags => [qw(ess)] }],
      [GLOB => [
 	       [NAME => [["id", "Z*"]]],
@@ -1689,7 +1702,7 @@ my @RECDEFS =
 	      ], { rdflags => [qw(ess)] }],
      # TBD: prettify?
      [LAND => [
-	       [INTV => [["grid_x", "l"], ["grid_y", "l"]]],
+	       [INTV => [["x", "l"], ["y", "l"]]],
 	       [DATA => $RD_Unknown],
 	       [VCLR => $RD_Unknown],
 	       [VHGT => $RD_Unknown],
@@ -1701,7 +1714,7 @@ my @RECDEFS =
 		       return($self->{_id_}) if (defined $self->{_id_});
 		       my $x = $self->get('INTV', 'x');
 		       my $y = $self->get('INTV', 'y');
-		       return($self->{_id_} = "($x, $y") if (defined($x) and defined($y));
+		       return($self->{_id_} = "($x, $y)") if (defined($x) and defined($y));
 		       err("Bad LAND id: missing INTV");
 		       dbg(Dumper($self)) if (DBG);
 		   }
@@ -1839,7 +1852,7 @@ my @RECDEFS =
 			 ($self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi}, $self->{spd},
 			  $self->{end}, $self->{per}, $self->{lck}, $self->{rep}, $self->{health},
 			  $self->{magicka}, $self->{fatigue}, $self->{disposition}, $self->{faction},
-			  $self->{rank}, $self->{gold}) = unpack("SC8x[C27]CSSSCCCxCL", $buff);
+			  $self->{rank}, $self->{gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
 		     } else {
 			 $self->bad_length(length($buff));
 		     }
@@ -1849,32 +1862,36 @@ my @RECDEFS =
 		     my($self) = @_;
 		     if (exists $self->{magicka}) {
 			 #warn("DUMP=".Dumper($self));
-			 return(pack("SC8C27CSSSCCCxCL",
-				     # short
-				     $self->{level},
-				     # C8
-				     $self->{str}, $self->{int}, $self->{wil}, $self->{agi},
-				     $self->{spd}, $self->{end}, $self->{per}, $self->{lck},
-				     # C27
-				     $self->{block}, $self->{armorer}, $self->{medium_armor}, $self->{heavy_armor},
-				     $self->{blunt_weapon}, $self->{long_blade}, $self->{axe}, $self->{spear},
-				     $self->{athletics}, $self->{enchant}, $self->{destruction}, $self->{alteration},
-				     $self->{illusion}, $self->{conjuration}, $self->{mysticism}, $self->{restoration},
-				     $self->{alchemy}, $self->{unarmored}, $self->{security}, $self->{sneak},
-				     $self->{acrobatics}, $self->{light_armor}, $self->{short_blade}, $self->{marksman},
-				     $self->{mercantile}, $self->{speechcraft}, $self->{hand_to_hand},
-				     # C
-				     $self->{rep},
-				     # S3
-				     $self->{health}, $self->{magicka}, $self->{fatigue},
-				     # C3
-				     $self->{disposition}, $self->{faction}, $self->{rank},
-				     # L
-				     $self->{gold}));
+			 $self->{_subbuf_} =
+			     pack("SC8C27CSSSCCCxL",
+				  # S
+				  $self->{level},
+				  # C8
+				  $self->{str}, $self->{int}, $self->{wil}, $self->{agi},
+				  $self->{spd}, $self->{end}, $self->{per}, $self->{lck},
+				  # C27
+				  $self->{block}, $self->{armorer}, $self->{medium_armor}, $self->{heavy_armor},
+				  $self->{blunt_weapon}, $self->{long_blade}, $self->{axe}, $self->{spear},
+				  $self->{athletics}, $self->{enchant}, $self->{destruction}, $self->{alteration},
+				  $self->{illusion}, $self->{conjuration}, $self->{mysticism}, $self->{restoration},
+				  $self->{alchemy}, $self->{unarmored}, $self->{security}, $self->{sneak},
+				  $self->{acrobatics}, $self->{light_armor}, $self->{short_blade}, $self->{marksman},
+				  $self->{mercantile}, $self->{speechcraft}, $self->{hand_to_hand},
+				  # C
+				  $self->{rep},
+				  # S3
+				  $self->{health}, $self->{magicka}, $self->{fatigue},
+				  # C3
+				  $self->{disposition}, $self->{faction}, $self->{rank},
+				  # L
+				  $self->{gold});
+			 assert(length($self->{_subbuf_}) == 52, "Invalid NPDT length (@{[length($self->{_subbuf_})]})") if (ASSERT);
 		     } else {
-			 return(pack("SC6L", $self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
-				     $self->{unk1}, $self->{unk2}, $self->{unk3},  $self->{gold}));
+			 $self->{_subbuf_} =
+			     pack("SC6L", $self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
+				  $self->{unk1}, $self->{unk2}, $self->{unk3},  $self->{gold});
 		     }
+		     return($self);
 		 },
 		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
 		 tostr => sub {
@@ -2007,6 +2024,7 @@ my @RECDEFS =
 	       [ACSL => $RD_Unknown],
 	       [ACTN => [["unknown_1", "L"]]], # Actor Number???
 	       [ANIS => [["unknown_1", "H*"]]],
+	       [APUD => $RD_Unknown],
 	       [CHRD => @RD_long_array_ess],
 	       [CSHN => $RD_Unknown],
 	       [CSTN => $RD_Unknown],
@@ -2049,15 +2067,18 @@ my @RECDEFS =
 		 encode => sub {
 		     my($self) = @_;
 		     if (exists $self->{blizzard}) {
-			 pack("C10",
-			      $self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
-			      $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
-			      $self->{snow}, $self->{blizzard});
+			 $self->{_subbuf_} =
+			     pack("C10",
+				  $self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
+				  $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
+				  $self->{snow}, $self->{blizzard});
 		     } else {
-			 pack("C8",
-			      $self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
-			      $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight});
+			 $self->{_subbuf_} = 
+			     pack("C8",
+				  $self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
+				  $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight});
 		     }
+		     return($self);
 		 },
 		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
 		 tostr => sub {
@@ -2205,10 +2226,11 @@ my @RECDEFS =
 		     $self;
 		 },
 		 encode => sub {
-		     my $len = $_[0]->{length};
-		     my $l1 = ($len & 0xffffffff);
-		     my $l2 = ($len >> 32);
-		     pack("L2", $l1, $l2);
+		     my($self) = @_;
+		     my $l1 = ($self->{length} & 0xffffffff);
+		     my $l2 = ($self->{length} >> 32);
+		     $self->{_subbuf_} = pack("L2", $l1, $l2);
+		     return($self);
 		 },
 		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
 		 tostr => sub {
@@ -2362,16 +2384,7 @@ sub decode {
 # tr->encode()
 sub encode {
     my($self) = @_;
-    if (1){
-	my @vals;
-	foreach my $tsr ($self->subrecs) {
-	    $tsr->encode;
-	    push(@vals, pack("a4L/a*", $tsr->subtype, $tsr->subbuf));
-	}
-	$self->{_recbuf_} = join("", @vals);
-    } else {
-	$self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype, $_->encode()->subbuf) } $self->subrecs);
-    }
+    $self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype, $_->encode()->subbuf) } $self->subrecs);
     return($self);
 }
 
@@ -2607,9 +2620,6 @@ sub gen_subrec_methods {
 	    *$method = sub {
 		use strict "refs";
 		my($self) = @_;
-#		my @vals;
-#		push(@vals, $self->{$_}) foreach (@fieldnames);
-#		$self->{_subbuf_} = pack($encode_pack_format, @vals);
 		$self->{_subbuf_} = pack($encode_pack_format, map {$self->{$_}} @fieldnames);
 		return($self);
 	    };
@@ -2920,19 +2930,59 @@ BEGIN {
 
 TES3::Record::generate_classes();
 
-### CONSTANTS
+### MAIN CONSTANTS
 
 use constant { MIN_TES3_PLUGIN_SIZE => 324 };
 
-### GLOBALS (Miscellaneous)
+### MAIN GLOBALS (Miscellaneous)
 
 my $T3 = new TES3::Util;
 my $MASTER_ID;			# data loaded from masters
 my $GLOBCHARS = '*?';		# for filename globbing on Windows
 my $RECTYPE_LEN = 4;
+my $DUMP_RAWOUT;
 
-# common Options
-our @STDOPT = (qw(debug verbose));
+my %CLEAN_PLUGIN =
+    (
+     'bloodmoon.esm'             => 'Bethesda Master',
+     'fogpatch.esp'              => 'does not need cleaning',
+     'gmst fix.esp'              => 'intentionally contain Evil GMSTs',
+     'gmst vaccine.esp'          => 'intentionally contain Evil GMSTs',
+     'mashed lists.esp'          => 'does not need cleaning',
+     'merged_dialogs.esp'        => 'does not need cleaning, but you should delete it anyway',
+     'merged_leveled_lists.esp'  => 'does not need cleaning, but you should use "tes3cmd multipatch" instead',
+     'merged_objects.esp'        => 'does not need cleaning',
+     'morrowind.esm'             => 'Bethesda Master',
+     'multipatch.esp'            => 'does not need cleaning',
+     'tribunal.esm'              => 'Bethesda Master',
+    );
+
+my %NOPATCH_PLUGIN =
+    (
+     'bloodmoon.esm'             => 'Bethesda Master',
+     'cellnamepatch.esp'         => 'does not need patching (obsolete)',
+     'fogpatch.esp'              => 'does not need patching (obsolete)',
+     'mashed lists.esp'          => 'does not need patching',
+     'merged_dialogs.esp'        => 'does not need patching, but you should delete it anyway',
+     'merged_leveled_lists.esp'  => 'does not need patching, but you should use "tes3cmd multipatch" instead',
+     'merged_objects.esp'        => 'does not need patching',
+     'morrowind.esm'             => 'Bethesda Master',
+     'multipatch.esp'            => 'does not need patching',
+     'tribunal.esm'              => 'Bethesda Master',
+    );
+
+my %ORIGINAL_DATE =
+    ( 'bloodmoon.bsa' => 1051807050,
+      'bloodmoon.esm' => 1051807050,
+      'morrowind.bsa' => 1024695106,
+      'morrowind.esm' => 1024695106,
+      'tribunal.bsa'  => 1035940926,
+      'tribunal.esm'  => 1035940926,
+    );
+
+
+### MAIN COMMON COMMAND OPTIONS
+our @STDOPT = (qw(assert debug verbose));
 our $opt_exterior;
 our $opt_instance_match;
 our $opt_instance_no_match;
@@ -2953,27 +3003,58 @@ our @opt_flag;
 our @opt_id = ();
 our @opt_type = ();
 
-my %CLEAN_PLUGIN =
+### MAIN COMMAND OPTIONS
+our $opt_active_off;
+our $opt_active_on;
+
+our $opt_clean_all = 0;
+our $opt_clean_instances = 0;
+our $opt_clean_cell_params = 0;
+our $opt_clean_dups = 0;
+our $opt_clean_gmsts = 0;
+our $opt_clean_junk_cells = 0;
+our $opt_clean_replace = 0;
+
+our @opt_diff_ignore_types = ();
+our $opt_diff_1_not_2;
+our $opt_diff_2_not_1;
+our $opt_diff_equal;
+our $opt_diff_not_equal;
+our $opt_diff_types;
+
+our $opt_dump_no_wrap;
+our $opt_dump_raw;
+our $opt_dump_raw_with_header;
+
+our $opt_header_author = '';
+our $opt_header_description = '';
+our $opt_header_multiline = 0;
+our $opt_header_synchronize;
+our $opt_header_update_masters;
+our $opt_header_update_record_count = 0;
+
+our $opt_modify_program_file = '';
+our $opt_modify_replace = '';
+our $opt_modify_run = '';
+
+our $opt_multipatch_cellnames;
+our $opt_multipatch_fogbug;
+our $opt_multipatch_merge_lists;
+our $opt_multipatch_no_activate;
+our $opt_multipatch_summons_persist;
+
+our $opt_overdial_single;
+
+our $opt_testcodec_continue;
+our @opt_testcodec_excluded_type = ();
+
+### MAIN COMMAND DISPATCH TABLE
+my %COMMAND;
+%COMMAND =
     (
-     'bloodmoon.esm'             => 'Bethesda Master',
-     'fogpatch.esp'              => 'does not need cleaning',
-     'gmst fix.esp'              => 'intentionally contain Evil GMSTs',
-     'gmst vaccine.esp'          => 'intentionally contain Evil GMSTs',
-     'mashed lists.esp'          => 'does not need cleaning',
-     'merged_dialogs.esp'        => 'does not need cleaning, but you should delete it anyway',
-     'merged_leveled_lists.esp'  => 'does not need cleaning, but you should use "tes3cmd multipatch" instead',
-     'merged_objects.esp'        => 'does not need cleaning',
-     'morrowind.esm'             => 'Bethesda Master',
-     'multipatch.esp'            => 'does not need cleaning',
-     'tribunal.esm'              => 'Bethesda Master',
-    );
-
-
-### USAGES AND OPTION PROCESSING
-
-sub usage { print "@_\n"; exit(1); }
-
-my $ACTIVE_USAGE = q{Usage: tes3cmd active OPTIONS plugin1.esp [plugin2.esp...]
+     active =>
+     { description => qq{Add/Remove/List Plugins in your load order},
+       usage => q{Usage: tes3cmd active OPTIONS plugin1.esp [plugin2.esp...]
 
 OPTIONS:
  --debug
@@ -2990,67 +3071,15 @@ DESCRIPTION:
 Activates the specified plugins. When no options are specified, just prints
 current active load order.
 
-};
+},
+       options => ['off' => \$opt_active_off,
+		   'on'  => \$opt_active_on],
+       preprocess => \&cmd_active,
+     },
 
-our $opt_active_off;
-our $opt_active_on;
-sub opts_active {
-    $_[0] && do { usage($ACTIVE_USAGE); };
-    GetOptions(@STDOPT,
-	       'off'    => \$opt_active_off,
-	       'on'     => \$opt_active_on)
-	or usage($ACTIVE_USAGE);
-}
-
-my $FIXIT_USAGE = q{Usage: tes3cmd fixit
-
-DESCRIPTION:
-
-The fixit command does the following operations:
-- Cleans all your plugins ("tes3cmd clean")
-- Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
-- Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
-};
-
-sub opts_fixit {
-    $_[0] && do { usage($FIXIT_USAGE); };
-    GetOptions(@STDOPT) or usage($FIXIT_USAGE);
-}
-
-my $RECOVER_USAGE = q{Usage: tes3cmd recover OPTIONS plugin...
-
-OPTIONS:
- --debug
-	turn on debug messages
-
-DESCRIPTION:
-
-Attempts to recover readable records from a damaged plugin. You should only
-use this when Morrowind gives the following type of error on your plugin:
-
-"Trying to load a bad form in TES3File::NextForm"
-
-The main reason you would get this error is if the file has been physically
-corrupted, where records have been overwritten with random binary junk, or
-if the file has been truncated, or otherwise damaged.
-
-This is not for fixing what is commonly referred to as "savegame corruption",
-which is not actually corruption but bad data.
-
-In any case, you will get detailed output on what tes3cmd finds damaged.
-
-EXAMPLE(S):
-
-# fix my damaged plugin:
-tes3cmd recover "my plugin.esp"
-};
-
-sub opts_recover {
-    $_[0] && do { usage($RECOVER_USAGE); };
-    GetOptions(@STDOPT) or usage($RECOVER_USAGE);
-}
-
-my $CLEAN_USAGE = q{Usage: tes3cmd clean OPTIONS plugin...
+     clean =>
+     { description => qq{Clean plugins of Evil GMSTs, junk cells, and more},
+       usage => q{Usage: tes3cmd clean OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -3149,64 +3178,356 @@ tes3cmd clean --output-dir Clean "my plugin1.esp" "my plugin2.esp"
 # clean all plugins in the current directory, replacing the originals with
 # the cleaned versions and save the diagnostic output to a file (clean.txt):
 tes3cmd clean --replace *.esm *.esp > clean.txt
-};
+},
+       options => ['all'           => \$opt_clean_all,
+		   'instances'     => \$opt_clean_instances,
+		   'cell-params'   => \$opt_clean_cell_params,
+		   'dups'          => \$opt_clean_dups,
+		   'gmsts'         => \$opt_clean_gmsts,
+		   'junk-cells'    => \$opt_clean_junk_cells,
+		   'no-cache',
+		   'output-dir',
+		   'replace'       => \$opt_clean_replace],
 
-our $opt_clean_all = 0;
-our $opt_clean_instances = 0;
-our $opt_clean_cell_params = 0;
-our $opt_clean_dups = 0;
-our $opt_clean_gmsts = 0;
-our $opt_clean_junk_cells = 0;
-our $opt_clean_replace = 0;
-sub opts_clean {
-    $_[0] && do { usage($CLEAN_USAGE); };
-    GetOptions(@STDOPT,
-	       'all'           => \$opt_clean_all,
-	       'instances'     => \$opt_clean_instances,
-	       'cell-params'   => \$opt_clean_cell_params,
-	       'dups'          => \$opt_clean_dups,
-	       'gmsts'         => \$opt_clean_gmsts,
-	       'junk-cells'    => \$opt_clean_junk_cells,
-	       'no-cache',
-	       'output-dir',
-	       'replace'       => \$opt_clean_replace)
-	or usage($CLEAN_USAGE);
-    unless ($opt_clean_instances or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
-	# turn on all safe cleaning options if none are selected.
-	$opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
-    }
-    if ($opt_clean_all) {
-	# turn on all cleaning options (in future we may add some that are possibly unsafe)
-	$opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
-    }
-}
+       preprocess => sub {
+	   unless ($opt_clean_instances or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
+	       # turn on all safe cleaning options if none are selected.
+	       $opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+	   }
+	   if ($opt_clean_all) {
+	       # turn on all cleaning options (in future we may add some that are possibly unsafe)
+	       $opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+	   }
+       },
+       process => \&cmd_clean,
+     },
 
-my $ESP_USAGE = q{Usage: tes3cmd esp OPTIONS master...
+     common =>
+     { description => qq{Find record IDs common between two plugins},
+       usage => q{Usage: tes3cmd common OPTIONS plugin1 plugin2
 
 OPTIONS:
  --debug
 	turn on debug messages
 
- --overwrite
-	overwrite output if it exists
-
 DESCRIPTION:
 
-Copies input master (.esm) to a plugin (.esp). If the output file already
-exists, you must add the --overwrite option to overwrite it.
+Prints the IDs of records that the 2 given plugins have in common.
 
 EXAMPLES:
 
-# output is: "my plugin.esp"
-tes3cmd esp "my plugin.esm"
-};
+# Show the records in common between my plugin and Morrowind.esm:
+tes3cmd common "my plugin.esp" "Morrowind.esm"
+},
+       options => [],
+       preprocess => \&cmd_common,
+     },
 
-sub opts_esp {
-    $_[0] && do { usage($ESP_USAGE); };
-    GetOptions(@STDOPT, 'overwrite') or usage($ESP_USAGE);
-}
+     delete =>
+     { description => qq{Delete records/subrecords/object instances from plugin},
+       usage => q{Usage: tes3cmd delete OPTIONS plugin...
 
-my $ESM_USAGE = q{Usage: tes3cmd esm OPTIONS plugin...
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --instance-match <regex>
+	Only delete the object instances in the cell that match <regex>
+
+ --instance-no-match <regex>
+	Only delete object instances in the cell that do not match <regex>
+
+ --exact-id* <id-string>
+	only delete records whose ids exactly match given <id-string>
+
+ --exterior
+	if record is CELL, only delete if it is an Exterior
+
+ --flag* <flag>
+	only delete records with given flag. Flags may be given symbolically
+	as: (deleted, persistent, ignored, blocked), or via their numeric
+	values (i.e. persistent is 0x400).
+
+ --id* <id-regex>
+	only delete records whose ids match regular expression pattern
+	<id-regex>
+
+ --interior
+	if record is CELL, only delete if it is an Interior
+
+ --match <regex>
+	only delete records that match given regular expression <regex>
+
+ --no-match <regex>
+	only delete records that do not match given regular expression
+	<regex>
+
+ --sub-match <regex>
+	only delete the subrecords that match <regex>
+
+ --sub-no-match <regex>
+	only delete the subrecords that do not match <regex>
+
+ --type* <record-type>
+	only delete records with the given <record-type>
+
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
+
+DESCRIPTION:
+
+Deletes entire records, or subrecords from records, or object instances from
+cell records. You can really damage things with this command, so be careful!
+
+Note: documentation for regular expressions:
+  http://www.perl.com/doc/manual/html/pod/perlre.html
+
+EXAMPLES:
+
+# Delete all records with IDs matching the pattern: "foo":
+# (Note that this doesn't also delete records that may depend on "foo").
+tes3cmd delete --id foo "my plugin.esp"
+
+# Delete all GMST records from a plugin:
+tes3cmd delete --type gmst plugin.esp
+
+# Delete all records flagged as "ignored":
+tes3cmd delete --flag ignored plugin.esp
+
+# Delete the poisonbloom spell subrecords from all current "_mca_" NPCs in quicksave.ess:
+tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave.ess
+},
+
+       options => ['instance-match=s',
+		   'instance-no-match=s',
+		   'exact-id=s@',
+		   'exterior',
+		   'flag=s@',
+		   'id=s@',
+		   'interior',
+		   'match=s',
+		   'no-match|M=s',
+		   'sub-match=s',
+		   'sub-no-match|M=s',
+		   'type=s@'],
+       process => \&cmd_delete,
+     },
+
+     diff =>
+     { description => qq{Report differences between two plugins},
+ usage => q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
+
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --ignore-type* <record-type>
+	ignore given type(s)
+
+ --1-not-2|--e1
+	report records in plugin1 that do not exist in plugin2
+
+ --2-not-1|--e2
+	report records in plugin2 that do not exist in plugin1
+
+ --equal|--eq
+	report records in plugin1 that are equal in plugin2
+
+ --not-equal|--ne
+	report records in plugin1 that are different in plugin2
+
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
+
+DESCRIPTION:
+
+Prints a report on the differences between the two TES3 files.
+A summary report with up to four sections is printed to standard output
+that gives an overview of differences, as lists of record IDs.
+(Report sections that would have no items are not printed).
+
+When records in plugin1 are different in plugin2, each of these records is
+printed in detail to a file "plugin1-diff.txt" and "plugin2-diff.txt", which
+can then be compared textually using a tool such as WinMerge or Emacs' ediff
+function. Note that the output records will be sorted alphabetically by record
+type to make the comparison using these tools easier.
+
+To reduce a great deal of "uninteresting" differences when diffing savegames,
+the the ModIndex field of CELL.FRMR records are automatically ignored. (Note
+that in this case, the ObjIndex appears to only be incremented by one).
+
+EXAMPLES:
+
+# Print report on differences between 2 savegames (output to diff.out):
+tes3cmd diff "save1000.ess" "save2000.ess" > diff.out
+
+# You can also use the --ignore-type switch to ignore further subfields in
+# order to help reduce the amount of differences as in the following example.
+# Report on differences, but ignore the subfields CREA.AIDT and CELL.ND3D:
+tes3cmd diff --ignore-type crea.aidt --ignore-type cell.nd3d testa0000.ess testb0000.ess > diff.out
+
+# Just print the records that differ
+tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
+},
+       options => ['ignore-type=s@'   => \@opt_diff_ignore_types,
+		   '1-not-2|e1'       => \$opt_diff_1_not_2,
+		   '2-not-1|e2'       => \$opt_diff_2_not_1,
+		   'equal|eq'         => \$opt_diff_equal,
+		   'types'            => \$opt_diff_types,
+		   'not-equal|ne'     => \$opt_diff_not_equal],
+
+       preprocess => sub {
+	   unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal or $opt_diff_types) {
+	       $opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
+	   }
+	   cmd_diff();
+       },
+     },
+
+     dump =>
+     { description => qq{Dump records as text for easy study},
+	usage => q{Usage: tes3cmd dump OPTIONS plugin...
+
+ OPTIONS:
+  --debug
+	 turn on debug messages
+
+  --instance-match <regex>
+	 when printing cells, only print the matching object instances in the
+	 cell
+
+  --instance-no-match <regex>
+	 when printing cells, only print the non-matching object instances in
+	 the cell
+
+  --exact-id* <id-string>
+	 only dump records whose ids exactly match given <id-string>
+
+  --exterior
+	 if record is CELL, only match if it is an Exterior
+
+  --flag* <flag>
+	 only dump records with given flag. Flags may be given symbolically
+	 as: (deleted, persistent, ignored, blocked), or via their numeric
+	 values (i.e. persistent is 0x400).
+
+  --id* <id-regex>
+	 only process records whose ids match regular expression pattern
+	 <id-regex>
+
+  --interior
+	 if record is CELL, only match if it is an Interior
+
+  --list
+	 only list the ids of the records to be dumped, instead of the entire record
+
+  --match <regex>
+	 only process records that match given regular expression <regex>
+
+  --no-banner
+	 do not print banner identifying the current plugin
+
+  --no-match <regex>
+	 only process records that do not match given regular expression
+	 <regex>
+
+  -no-wrap
+	 Some long fields are wrapped for output by default, but that behavior
+	 can be turned off with this option.
+
+  --raw <file>
+	 dump raw records to <file>, instead of as text
+
+  --raw-with-header <file>
+	 dump raw records with an initial TES3 header record to <file>
+
+  --separator <string>
+	 separate subrecords with given <string>. Normally subrecords are
+	 separated by line-breaks. You can use this option to change that so
+	 they are all printed on one line.
+
+  --type* <record-type>
+	 only dump records with the given <record-type>
+
+  Note: starred (*) options can be repeated, and matching of strings is not
+  case-sensitive.
+
+ DESCRIPTION:
+
+ Dumps the plugin to stdout in text form for easy perusal or in raw form for
+ extracting a subset of records to create a new plugin. For large plugins, the
+ text output can be voluminous. In the text output, a starred subrecord
+ indicates it is related to following subrecords.
+
+ Note: documentation for regular expressions:
+   http://www.perl.com/doc/manual/html/pod/perlre.html
+
+ EXAMPLES:
+
+ # List all the records in the plugin, just one per line, by type and ID:
+ tes3cmd dump --list "Drug Realism.esp"
+
+ # Dump all records from a plugin. we redirect the output to a file as there
+ # can be a lot of output:
+ tes3cmd dump "DwemerClock.esp" > "DwemerClock-dump.txt"
+
+ # Dump all records with IDs exactly matching "foo":
+ tes3cmd dump --exact-id 2247227652827822061 LGNPC_AldVelothi_v1_20.esp
+
+ # Dump all the DIAL and INFO records from a plugin:
+ tes3cmd dump --type dial --type info "abotWhereAreAllBirdsGoing.esp"
+
+ # Dump all records flagged as persistent (by name) OR blocked (by value)
+ tes3cmd dump --flag persistent --flag 0x2000 "Suran_Underworld_2.5.esp"
+
+ # Dump all object instances in cells that match "galbedir":
+ # (this will just show you the cell header, and subrecords just for Galbedir
+ # and her chest in the cell: "Balmora, Guild of Mages"):
+ tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
+ },
+	options => ['exact-id=s@',
+		    'exterior',
+		    'flag=s@',
+		    'id=s@',
+		    'instance-match=s',
+		    'instance-no-match=s',
+		    'interior',
+		    'list',
+		    'match=s',
+		    'no-banner|B',
+		    'no-match|M=s',
+		    'no-wrap',
+		    'raw-with-header=s'   => \$opt_dump_raw_with_header,
+		    'raw=s'               => \$opt_dump_raw,
+		    'separator=s',
+		    'type=s@'],
+
+	preprocess =>  sub {
+	    $opt_dump_raw = $opt_dump_raw_with_header
+		if ($opt_dump_raw_with_header);
+	    abort("did you forget to give a filename for raw output?")
+		if (defined($opt_dump_raw) and $opt_dump_raw =~ /^-/);
+
+	    # write out the header here as we would like to be able to append to it from multiple input plugins
+	    $DUMP_RAWOUT = open_for_output($opt_dump_raw)
+		if ($opt_dump_raw);
+	    print $DUMP_RAWOUT make_header()
+		if ($opt_dump_raw_with_header);
+	},
+	process => \&cmd_dump,
+	postprocess => sub {
+	    if ($opt_dump_raw) {
+		close($DUMP_RAWOUT);
+		$opt_header_update_record_count = 1;
+		update_header($opt_dump_raw, [qw(QUIET NOBACKUP)]);
+		print "\nRaw records saved in $opt_dump_raw\n";
+	    }
+	},
+     },
+
+     esm =>
+     { description => qq{Convert plugin (esp) to master (esm)},
+       usage => q{Usage: tes3cmd esm OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -3224,14 +3545,177 @@ EXAMPLES:
 
 # output is: "my plugin.esm"
 tes3cmd esm "my plugin.esp"
-};
+},
+       options => ['overwrite'],
+       process => \&cmd_esm,
+     },
 
-sub opts_esm {
-    $_[0] && do { usage($ESM_USAGE); };
-    GetOptions(@STDOPT, 'overwrite') or usage($ESM_USAGE);
-}
+     esp =>
+     { description => qq{Convert master (esm) to plugin (esp)},
+       usage => q{Usage: tes3cmd esp OPTIONS master...
 
-my $MODIFY_USAGE = q{Usage: tes3cmd modify OPTIONS plugin...
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --overwrite
+	overwrite output if it exists
+
+DESCRIPTION:
+
+Copies input master (.esm) to a plugin (.esp). If the output file already
+exists, you must add the --overwrite option to overwrite it.
+
+EXAMPLES:
+
+# output is: "my plugin.esp"
+tes3cmd esp "my plugin.esm"
+},
+       options => ['overwrite'],
+       process => \&cmd_esp,
+     },
+
+     fixit =>
+     { description => qq{tes3cmd fixes everything it knows how to fix},
+       usage => q{Usage: tes3cmd fixit
+
+DESCRIPTION:
+
+The fixit command does the following operations:
+- Cleans all your plugins ("tes3cmd clean")
+- Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
+- Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
+},
+       options => [],
+       preprocess => \&cmd_fixit,
+     },
+
+     header =>
+     { description => qq{Read/Write plugin Author/Description, sync to masters...},
+       usage => qq{Usage: tes3cmd header OPTIONS plugin...
+
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --author <author>
+	set the Author field to <author>
+
+ --description <desc>
+	set the Description field to <desc>
+
+ --multiline
+	multi-line output for listing field contents
+
+ --synchronize
+	same as: --update-masters --update-record-count
+
+ --update-masters
+	updates master list to reflect new versions
+
+ --update-record-count
+	update record count in header
+
+DESCRIPTION:
+
+When no options are given, the author and description are printed.
+
+Author and Description field values are normally replaced by the given string.
+But if the string begins with a "+", the existing value is appended with the
+new given value.
+
+If a given value contains the string "\\n", it will be replaced by a CRLF.
+
+Note:
+ - the Author value should fit in $TES3::Record::HDR_AUTH_LENGTH bytes.
+ - the Description value should fit in $TES3::Record::HDR_DESC_LENGTH bytes.
+
+If the value supplied won't fit into the plugin header field, you will be
+warned.
+
+The --update-masters (or --synchronize) option will clear any warnings
+Morrowind gives when it starts up that say: "One or more plugins could not
+find the correct versions of the master files they depend on..."
+
+EXAMPLES:
+
+# Show the Author/Description fields for a plugin:
+tes3cmd header "my plugin.esp"
+
+# Set the Author field to "john.moonsugar":
+tes3cmd header --author john.moonsugar "plugin.esp"
+
+# Append " and friends" to the Author field:
+tes3cmd header --author "+ and friends" "plugin.esp"
+
+# Append a Version number to a plugin Description field:
+tes3cmd header --description "+\\nVersion: 1.0" "plugin.esp"
+
+# update header field for the number of records in the plugin (if incorrect)
+# and sync the list of masters to the masters installed in "Data Files"
+tes3cmd header --synchronize "my plugin.esp"
+},
+       options => ['author=s'              => \$opt_header_author,
+		   'description=s'         => \$opt_header_description,
+		   'multiline'             => \$opt_header_multiline,
+		   'synchronize'           => \$opt_header_synchronize,
+		   'update-masters'        => \$opt_header_update_masters,
+		   'update-record-count'   => \$opt_header_update_record_count],
+
+       preprocess => sub {
+	   $opt_header_update_masters = $opt_header_update_record_count = 1
+	       if ($opt_header_synchronize);
+       },
+       process => \&cmd_header,
+     },
+
+     help =>
+     { preprocess => sub {
+	   my $command_list;
+	   foreach (sort keys %COMMAND) {
+	       $command_list .= "  $_\n    $COMMAND{$_}->{description}.\n"
+		   unless (($_ eq 'help') or ($_ =~ /^-/));
+	   }
+	   print <<"EOF";
+Usage: tes3cmd COMMAND OPTIONS plugins...
+
+VERSION: $::VERSION
+
+tes3cmd is a low-level command line tool that can examine, edit, and delete
+records from a TES3 plugin for Morrowind. It can also generate various patches
+and clean plugins too.
+
+COMMANDS
+$command_list
+
+FOR HELP ON INDIVIDUAL COMMANDS:
+
+  tes3cmd help <command>
+
+GENERAL HELP:
+
+OPTIONS given to commands may be abbreviated, as long as the abbreviations are
+unique.
+
+Commands mostly for Morrowind Players: "clean", "header --synchronize". and
+"multipatch" (also see: the "fixit" command which rolls these together).
+
+Commands mostly for Modders: "dump", "esp/esm", "modify", and "delete".
+
+tes3cmd uses Perl regular expressions for string matching, the full
+documentation can be found here:
+   http://www.perl.com/doc/manual/html/pod/perlre.html
+You should at least be aware that the characters "\\.?*+|^\$()[]{}" have
+special meaning in a regular expression and that they are unlike characters
+used for matching on a Windows command line.
+EOF
+	   exit(1);
+       },
+     },
+
+     modify =>
+     { description => qq{Powerful batch record modification via user code extensions},
+       usage => q{Usage: tes3cmd modify OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -3312,31 +3796,27 @@ tes3cmd dump --type cont --raw-with-header ale_patch.esp ale_clothing_v?.esp
 tes3cmd modify --type cont --run "$R->set({f=>'Count'}, -3)" ale_patch.esp
 # Note: on Linux, the quoting would be a little different:
 tes3cmd modify --type cont --run '$R->set({f=>"Count"}, -3)' ale_patch.esp
-};
+},
+       options => ['exact-id=s@',
+		   'exterior',
+		   'flag=s@',
+		   'id=s@',
+		   'interior',
+		   'match=s',
+		   'no-match|M=s',
+		   'program-file=s'     => \$opt_modify_program_file,
+		   'replace=s'          => \$opt_modify_replace,
+		   'run=s'              => \$opt_modify_run,
+		   'sub-match=s',
+		   'sub-no-match|M=s',
+		   'type=s@'],
 
-our $opt_modify_program_file = '';
-our $opt_modify_replace = '';
-our $opt_modify_run = '';
-sub opts_modify {
-    $_[0] && do { usage($MODIFY_USAGE); };
-    GetOptions(@STDOPT,
-	       'exact-id=s@',
-	       'exterior',
-	       'flag=s@',
-	       'id=s@',
-	       'interior',
-	       'match=s',
-	       'no-match|M=s',
-	       'program-file=s' => \$opt_modify_program_file,
-	       'replace=s' => \$opt_modify_replace,
-	       'run=s' => \$opt_modify_run,
-	       'sub-match=s',
-	       'sub-no-match|M=s',
-	       'type=s@')
-	or usage($MODIFY_USAGE);
-}
+       process => \&cmd_modify,
+     },
 
-my $MULTIPATCH_USAGE = q{Usage: tes3cmd multipatch
+     multipatch =>
+     { description => qq{Patches problems, merges leveled lists, etc.},
+       usage => q{Usage: tes3cmd multipatch
 
 OPTIONS:
  --debug
@@ -3415,124 +3895,27 @@ EXAMPLES:
 
 # Create the patch plugin "multipatch.esp"
 tes3cmd multipatch
-};
+},
+       options => ['cellnames'       => \$opt_multipatch_cellnames,
+		   'fogbug'          => \$opt_multipatch_fogbug,
+		   'merge-lists'     => \$opt_multipatch_merge_lists,
+		   'no-activate'     => \$opt_multipatch_no_activate,
+		   'no-cache',
+		   'summons-persist' => \$opt_multipatch_summons_persist],
 
-our $opt_multipatch_cellnames;
-our $opt_multipatch_fogbug;
-our $opt_multipatch_merge_lists;
-our $opt_multipatch_no_activate;
-our $opt_multipatch_summons_persist;
-sub opts_multipatch {
-    $_[0] && do { usage($MULTIPATCH_USAGE); };
-    GetOptions(@STDOPT,
-	       'cellnames'    => \$opt_multipatch_cellnames,
-	       'fogbug'       => \$opt_multipatch_fogbug,
-	       'merge-lists'  => \$opt_multipatch_merge_lists,
-	       'no-activate'  => \$opt_multipatch_no_activate,
-	       'no-cache',
-	       'summons-persist' => \$opt_multipatch_summons_persist)
-	or usage($MULTIPATCH_USAGE);
+       preprocess => sub {
+	   unless ($opt_multipatch_cellnames or $opt_multipatch_fogbug or
+		   $opt_multipatch_merge_lists or $opt_multipatch_summons_persist) {
+	       # by default turn on all options if none are selected
+	       $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
+	   }
+	   cmd_multipatch();
+       },
+     },
 
-    unless ($opt_multipatch_cellnames or $opt_multipatch_fogbug or
-	    $opt_multipatch_merge_lists or $opt_multipatch_summons_persist) {
-	# by default turn on all options if none are selected
-	$opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
-    }
-}
-
-
-my $DELETE_USAGE = q{Usage: tes3cmd delete OPTIONS plugin...
-
-OPTIONS:
- --debug
-	turn on debug messages
-
- --instance-match <regex>
-	Only delete the object instances in the cell that match <regex>
-
- --instance-no-match <regex>
-	Only delete object instances in the cell that do not match <regex>
-
- --exact-id* <id-string>
-	only delete records whose ids exactly match given <id-string>
-
- --exterior
-	if record is CELL, only delete if it is an Exterior
-
- --flag* <flag>
-	only delete records with given flag. Flags may be given symbolically
-	as: (deleted, persistent, ignored, blocked), or via their numeric
-	values (i.e. persistent is 0x400).
-
- --id* <id-regex>
-	only delete records whose ids match regular expression pattern
-	<id-regex>
-
- --interior
-	if record is CELL, only delete if it is an Interior
-
- --match <regex>
-	only delete records that match given regular expression <regex>
-
- --no-match <regex>
-	only delete records that do not match given regular expression
-	<regex>
-
- --sub-match <regex>
-	only delete the subrecords that match <regex>
-
- --sub-no-match <regex>
-	only delete the subrecords that do not match <regex>
-
- --type* <record-type>
-	only delete records with the given <record-type>
-
- Note: starred (*) options can be repeated, and matching of strings is not
- case-sensitive.
-
-DESCRIPTION:
-
-Deletes entire records, or subrecords from records, or object instances from
-cell records. You can really damage things with this command, so be careful!
-
-Note: documentation for regular expressions:
-  http://www.perl.com/doc/manual/html/pod/perlre.html
-
-EXAMPLES:
-
-# Delete all records with IDs matching the pattern: "foo":
-# (Note that this doesn't also delete records that may depend on "foo").
-tes3cmd delete --id foo "my plugin.esp"
-
-# Delete all GMST records from a plugin:
-tes3cmd delete --type gmst plugin.esp
-
-# Delete all records flagged as "ignored":
-tes3cmd delete --flag ignored plugin.esp
-
-# Delete the poisonbloom spell subrecords from all current "_mca_*" NPCs in quicksave.ess:
-tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave.ess
-};
-
-sub opts_delete {
-    $_[0] && do { usage($DELETE_USAGE); };
-    GetOptions(@STDOPT,
-	       'instance-match=s',
-	       'instance-no-match=s',
-	       'exact-id=s@',
-	       'exterior',
-	       'flag=s@',
-	       'id=s@',
-	       'interior',
-	       'match=s',
-	       'no-match|M=s',
-	       'sub-match=s',
-	       'sub-no-match|M=s',
-	       'type=s@')
-	or usage($DELETE_USAGE);
-}
-
-my $OVERDIAL_USAGE = q{Usage: tes3cmd overdial OPTIONS plugin...
+     overdial =>
+     { description => qq{Identify overlapping dialog (a source of missing topic bugs)},
+       usage => q{Usage: tes3cmd overdial OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -3561,17 +3944,14 @@ Example(s):
 
 # Show dialog overlaps between Lokken and SU:
 tes3cmd overdial "BT_Whitewolf_2_0.esm" "Suran_Underworld_2.5.esp"
-};
+},
+       options => ['single' => \$opt_overdial_single],
+       preprocess => \&cmd_overdial,
+     },
 
-our $opt_overdial_single;
-sub opts_overdial {
-    $_[0] && do { usage($OVERDIAL_USAGE); };
-    GetOptions(@STDOPT,
-	       'single' => \$opt_overdial_single)
-	or usage($OVERDIAL_USAGE);
-}
-
-my $COMMON_USAGE = q{Usage: tes3cmd common OPTIONS plugin1 plugin2
+     recover =>
+     { description => qq{Recover usable records from plugin with 'bad form' errors},
+       usage => q{Usage: tes3cmd recover OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -3579,351 +3959,96 @@ OPTIONS:
 
 DESCRIPTION:
 
-Prints the IDs of records that the 2 given plugins have in common.
+Attempts to recover readable records from a damaged plugin. You should only
+use this when Morrowind gives the following type of error on your plugin:
 
-EXAMPLES:
+"Trying to load a bad form in TES3File::NextForm"
 
-# Show the records in common between my plugin and Morrowind.esm:
-tes3cmd common "my plugin.esp" "Morrowind.esm"
-};
+The main reason you would get this error is if the file has been physically
+corrupted, where records have been overwritten with random binary junk, or
+if the file has been truncated, or otherwise damaged.
 
-sub opts_common {
-    $_[0] && do { usage($COMMON_USAGE); };
-    GetOptions(@STDOPT) or usage($COMMON_USAGE);
-}
+This is not for fixing what is commonly referred to as "savegame corruption",
+which is not actually corruption but bad data.
 
+In any case, you will get detailed output on what tes3cmd finds damaged.
 
-my $DIFF_USAGE = q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
+EXAMPLE(S):
 
-OPTIONS:
- --debug
-	turn on debug messages
+# fix my damaged plugin:
+tes3cmd recover "my plugin.esp"
+},
+       options => [],
+       process => \&cmd_recover,
+     },
 
- --ignore-type* <record-type>
-	ignore given type(s)
-
- --1-not-2|--e1
-	report records in plugin1 that do not exist in plugin2
-
- --2-not-1|--e2
-	report records in plugin2 that do not exist in plugin1
-
- --equal|--eq
-	report records in plugin1 that are equal in plugin2
-
- --not-equal|--ne
-	report records in plugin1 that are different in plugin2
-
- Note: starred (*) options can be repeated, and matching of strings is not
- case-sensitive.
-
-DESCRIPTION:
-
-Prints a report on the differences between the two TES3 files.
-A summary report with up to four sections is printed to standard output
-that gives an overview of differences, as lists of record IDs.
-(Report sections that would have no items are not printed).
-
-When records in plugin1 are different in plugin2, each of these records is
-printed in detail to a file "plugin1-diff.txt" and "plugin2-diff.txt", which
-can then be compared textually using a tool such as WinMerge or Emacs' ediff
-function. Note that the output records will be sorted alphabetically by record
-type to make the comparison using these tools easier.
-
-To reduce a great deal of "uninteresting" differences when diffing savegames,
-the the ModIndex field of CELL.FRMR records are automatically ignored. (Note
-that in this case, the ObjIndex appears to only be incremented by one).
-
-EXAMPLES:
-
-# Print report on differences between 2 savegames (output to diff.out):
-tes3cmd diff "save1000.ess" "save2000.ess" > diff.out
-
-# You can also use the --ignore-type switch to ignore further subfields in
-# order to help reduce the amount of differences as in the following example.
-# Report on differences, but ignore the subfields CREA.AIDT and CELL.ND3D:
-tes3cmd diff --ignore-type crea.aidt --ignore-type cell.nd3d testa0000.ess testb0000.ess > diff.out
-
-# Just print the records that differ
-tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
-};
-
-our @opt_diff_ignore_types = ();
-our $opt_diff_1_not_2;
-our $opt_diff_2_not_1;
-our $opt_diff_equal;
-our $opt_diff_not_equal;
-our $opt_diff_types;
-sub opts_diff {
-    $_[0] && do { usage($DIFF_USAGE); };
-    GetOptions(@STDOPT,
-	       'ignore-type=s@' => \@opt_diff_ignore_types,
-	       '1-not-2|e1'       => \$opt_diff_1_not_2,
-	       '2-not-1|e2'       => \$opt_diff_2_not_1,
-	       'equal|eq'         => \$opt_diff_equal,
-	       'types'            => \$opt_diff_types,
-	       'not-equal|ne'     => \$opt_diff_not_equal)
-	or usage($DIFF_USAGE);
-
-    unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal or $opt_diff_types) {
-	$opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
-    }
-}
-
-my $DUMP_USAGE = q{Usage: tes3cmd dump OPTIONS plugin...
+     "resetdates" =>
+     { description => qq{Reset dates of Bethesda Data Files to original settings},
+       usage => qq{Usage: tes3cmd resetdates
 
 OPTIONS:
  --debug
 	turn on debug messages
 
- --instance-match <regex>
-	when printing cells, only print the matching object instances in the
-	cell
-
- --instance-no-match <regex>
-	when printing cells, only print the non-matching object instances in
-	the cell
-
- --exact-id* <id-string>
-	only dump records whose ids exactly match given <id-string>
-
- --exterior
-	if record is CELL, only match if it is an Exterior
-
- --flag* <flag>
-	only dump records with given flag. Flags may be given symbolically
-	as: (deleted, persistent, ignored, blocked), or via their numeric
-	values (i.e. persistent is 0x400).
-
- --id* <id-regex>
-	only process records whose ids match regular expression pattern
-	<id-regex>
-
- --interior
-	if record is CELL, only match if it is an Interior
-
- --list
-	only list the ids of the records to be dumped, instead of the entire record
-
- --match <regex>
-	only process records that match given regular expression <regex>
-
- --no-banner
-	do not print banner identifying the current plugin
-
- --no-match <regex>
-	only process records that do not match given regular expression
-	<regex>
-
- -no-wrap
-	Some long fields are wrapped for output by default, but that behavior
-	can be turned off with this option.
-
- --raw <file>
-	dump raw records to <file>, instead of as text
-
- --raw-with-header <file>
-	dump raw records with an initial TES3 header record to <file>
-
- --separator <string>
-	separate subrecords with given <string>. Normally subrecords are
-	separated by line-breaks. You can use this option to change that so
-	they are all printed on one line.
-
- --type* <record-type>
-	only dump records with the given <record-type>
-
- Note: starred (*) options can be repeated, and matching of strings is not
- case-sensitive.
-
 DESCRIPTION:
 
-Dumps the plugin to stdout in text form for easy perusal or in raw form for
-extracting a subset of records to create a new plugin. For large plugins, the
-text output can be voluminous. In the text output, a starred subrecord
-indicates it is related to following subrecords.
+Resets the dates of the Bethesda masters (.esm) and archives (.bsa) to their
+original settings. This may help those people who have problems with textures
+and meshes being overridden by the vanilla resources (e.g. with the Steam 
+version of Morrowind.
 
-Note: documentation for regular expressions:
-  http://www.perl.com/doc/manual/html/pod/perlre.html
+Example(s):
 
-EXAMPLES:
+# fix the date settings of Bethesda data files:
+tes3cmd resetdates
+},
+       options => [],
+       preprocess => \&cmd_resetdates,
+     },
 
-# List all the records in the plugin, just one per line, by type and ID:
-tes3cmd dump --list "Drug Realism.esp"
+     '-codec' =>
+     { description => qq{Describe TES3 record codec (not implemented)},
+       usage => qq{Usage: tes3cmd -codec\n},
+       options => [],
+       preprocess => \&cmd_codec,
+     },
 
-# Dump all records from a plugin. we redirect the output to a file as there
-# can be a lot of output:
-tes3cmd dump "DwemerClock.esp" > "DwemerClock-dump.txt"
+     '-shell' =>
+     { description => qq{run a TES3 REPL},
+       usage => qq{Usage: tes3cmd -shell\n},
+       options => [],
+       preprocess => \&cmd_shell,
+     },
 
-# Dump all records with IDs exactly matching "foo":
-tes3cmd dump --exact-id 2247227652827822061 LGNPC_AldVelothi_v1_20.esp
+     '-testcodec' =>
+     { description => qq{Test TES3 codec orthogonality},
+       usage => qq{Usage: tes3cmd -testcodec [--excluded-type|-x excluded_type]\n},
+       options => ['continue|c'            => \$opt_testcodec_continue,
+		   'excluded-type|x=s@'    => \@opt_testcodec_excluded_type],
+       process => \&cmd_testcodec,
+     },
 
-# Dump all the DIAL and INFO records from a plugin:
-tes3cmd dump --type dial --type info "abotWhereAreAllBirdsGoing.esp"
+     '-wikiout' =>
+     { description => qq{Output wiki formatted help},
+       usage => qq{Usage: tes3cmd -wikiout\n},
+       options => [],
+       preprocess => \&cmd_wikiout,
+     },
+    );				# end of COMMAND DISPATCH TABLE
 
-# Dump all records flagged as persistent (by name) OR blocked (by value)
-tes3cmd dump --flag persistent --flag 0x2000 "Suran_Underworld_2.5.esp"
-
-# Dump all object instances in cells that match "galbedir":
-# (this will just show you the cell header, and subrecords just for Galbedir
-# and her chest in the cell: "Balmora, Guild of Mages"):
-tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
-};
-
-our $opt_dump_no_wrap;
-our $opt_dump_raw;
-our $opt_dump_raw_with_header;
-my $RAWOUT;
-sub opts_dump {
-    $_[0] && do { usage($DUMP_USAGE); };
-    GetOptions(@STDOPT,
-	       'exact-id=s@',
-	       'exterior',
-	       'flag=s@',
-	       'id=s@',
-	       'instance-match=s',
-	       'instance-no-match=s',
-	       'interior',
-	       'list',
-	       'match=s',
-	       'no-banner|B',
-	       'no-match|M=s',
-	       'no-wrap',
-	       'raw-with-header=s' => \$opt_dump_raw_with_header,
-	       'raw=s' => \$opt_dump_raw,
-	       'separator=s',
-	       'type=s@')
-	or usage($DUMP_USAGE);
-
-    $opt_dump_raw = $opt_dump_raw_with_header
-	if ($opt_dump_raw_with_header);
-    abort("did you forget to give a filename for raw output?")
-	if (defined($opt_dump_raw) and $opt_dump_raw =~ /^-/);
-
-    # write out the header here as we would like to be able to append to it from multiple input plugins
-    $RAWOUT = open_for_write($opt_dump_raw)
-	if ($opt_dump_raw);
-    print $RAWOUT make_header()
-	if ($opt_dump_raw_with_header);
-}
-
-my $HEADER_USAGE = qq{Usage: tes3cmd header OPTIONS plugin...
-
-OPTIONS:
- --debug
-	turn on debug messages
-
- --author <author>
-	set the Author field to <author>
-
- --description <desc>
-	set the Description field to <desc>
-
- --multiline
-	multi-line output for listing field contents
-
- --synchronize
-	same as: --update-masters --update-record-count
-
- --update-masters
-	updates master list to reflect new versions
-
- --update-record-count
-	update record count in header
-
-DESCRIPTION:
-
-When no options are given, the author and description are printed.
-
-Author and Description field values are normally replaced by the given string.
-But if the string begins with a "+", the existing value is appended with the
-new given value.
-
-If a given value contains the string "\\n", it will be replaced by a CRLF.
-
-Note:
- - the Author value should fit in $TES3::Record::HDR_AUTH_LENGTH bytes.
- - the Description value should fit in $TES3::Record::HDR_DESC_LENGTH bytes.
-
-If the value supplied won't fit into the plugin header field, you will be
-warned.
-
-The --update-masters (or --synchronize) option will clear any warnings
-Morrowind gives when it starts up that say: "One or more plugins could not
-find the correct versions of the master files they depend on..."
-
-EXAMPLES:
-
-# Show the Author/Description fields for a plugin:
-tes3cmd header "my plugin.esp"
-
-# Set the Author field to "john.moonsugar":
-tes3cmd header --author john.moonsugar "plugin.esp"
-
-# Append " and friends" to the Author field:
-tes3cmd header --author "+ and friends" "plugin.esp"
-
-# Append a Version number to a plugin Description field:
-tes3cmd header --description "+\\nVersion: 1.0" "plugin.esp"
-
-# update header field for the number of records in the plugin (if incorrect)
-# and sync the list of masters to the masters installed in "Data Files"
-tes3cmd header --synchronize "my plugin.esp"
-};
-
-our $opt_header_author = '';
-our $opt_header_description = '';
-our $opt_header_multiline = 0;
-our $opt_header_synchronize;
-our $opt_header_update_masters;
-our $opt_header_update_record_count = 0;
-sub opts_header {
-    $_[0] && do { usage($HEADER_USAGE); };
-    GetOptions(@STDOPT,
-	       'author=s' => \$opt_header_author,
-	       'description=s' => \$opt_header_description,
-	       'multiline' => \$opt_header_multiline,
-	       'synchronize' => \$opt_header_synchronize,
-	       'update-masters' => \$opt_header_update_masters,
-	       'update-record-count' => \$opt_header_update_record_count)
-	or usage($HEADER_USAGE);
-
-    $opt_header_update_masters = $opt_header_update_record_count = 1
-	if ($opt_header_synchronize);
-}
-
-sub opts_shell {
-    GetOptions(@STDOPT) or
-	usage("Usage: tes3cmd -shell");
-}
-
-sub opts_wikiout {
-    GetOptions(@STDOPT) or
-	usage("Usage: tes3cmd -wikiout");
-}
-
-sub opts_codec {
-    GetOptions(@STDOPT) or
-	usage("Usage: tes3cmd -codec");
-}
-
-our $opt_testcodec_continue;
-our @opt_testcodec_excluded_type = ();
-sub opts_testcodec {
-    GetOptions(@STDOPT,
-	       'continue|c' => \$opt_testcodec_continue,
-	       'excluded-type|ignored-type|x=s@' => \@opt_testcodec_excluded_type)
-	or usage("Usage: tes3cmd -testcodec [--excluded-type|-x excluded_type]");
-}
+# command aliases
+$COMMAND{'-help'}  = $COMMAND{help};
+$COMMAND{'--help'} = $COMMAND{help};
 
 ### DATA DEFINITIONS
 
-# these types are for records to be cleaned from plugins when duped from a master:
+# these rectypes are for records to be cleaned from plugins when duped from a master:
 my @CLEAN_DUP_TYPES =
     qw(ACTI ALCH APPA ARMO BODY BOOK BSGN CELL CLAS CLOT CONT CREA DOOR ENCH
        FACT GLOB GMST INFO INGR LAND LEVC LEVI LIGH LOCK MGEF MISC NPC_
        PGRD PROB RACE REGN REPA SCPT SKIL SNDG SOUN SPEL SSCR STAT WEAP);
 
+# list of summoned creatures for multipatch
 my %SUMMONED_CREATURES = map { $_, 1 }
     ('centurion_fire_dead',
      'wraith_sul_senipul',
@@ -3948,7 +4073,7 @@ my %SUMMONED_CREATURES = map { $_, 1 }
      'bm_wolf_grey_summon',
      'bm_wolf_bone_summon');
 
-# Evil GMSTs for Tribunal (values are hexencoded)
+# Evil GMSTs from Tribunal (values are hexencoded) for cleaning
 my %EVIL_TB =
     (scompanionshare => '5354525620436f6d70616e696f6e205368617265',
      scompanionwarningbuttonone => '53545256204c657420746865206d657263656e61727920717569742e',
@@ -3963,7 +4088,7 @@ my %EVIL_TB =
      steleportdisabled => '535452562054656c65706f72746174696f6e206d6167696320646f6573206e6f7420776f726b20686572652e',
      );
 
-# Evil GMSTs for Bloodmoon (values are hexencoded)
+# Evil GMSTs from Bloodmoon (values are hexencoded) for cleaning
 my %EVIL_BM =
     (fcombatdistancewerewolfmod => '464c5456209a99993e',
      ffleedistance => '464c54562000803b45',
@@ -4028,86 +4153,10 @@ my %EVIL_BM =
      swerewolfrestmessage => '5354525620596f752063616e6e6f74207265737420696e2077657265776f6c6620666f726d2e',
     );
 
+# cells with only these subtypes are candidates for "junk" cell cleaning.
 my %JUNKCELL_SUBTYPE = (NAME => 1, DATA => 1, RGNN => 1);
 
-### DISPATCHER
-
-my %CMDS =
-    (
-     # Type is 's' for commands that operate on one plugin at a time,
-     # 'm' for multiple plugins at a time.
-     #                    Options_fn         Command_fn        Type Description
-     "active"      => [ \&opts_active,      \&cmd_active,      'm', "Add/Remove/List Plugins in your load order"],
-     "clean"       => [ \&opts_clean,       \&cmd_clean,       's', "Clean plugins of Evil GMSTs, junk cells, and more"],
-     "common"      => [ \&opts_common,      \&cmd_common,      'm', "Find record IDs common between two plugins"],
-     "delete"      => [ \&opts_delete,      \&cmd_delete,      's', "Delete records from plugin"],
-     "diff"        => [ \&opts_diff,        \&cmd_diff,        'm', "Report differences between two plugins"],
-     "dump"        => [ \&opts_dump,        \&cmd_dump,        's', "Dump records as text"],
-     "esm"         => [ \&opts_esm,         \&cmd_esm,         's', "Convert plugin (esp) to master (esm)"],
-     "esp"         => [ \&opts_esp,         \&cmd_esp,         's', "Convert master (esm) to plugin (esp)"],
-     "fixit"       => [ \&opts_fixit,       \&cmd_fixit,       'm', "Fixes everything it knows how to fix"],
-     "header"      => [ \&opts_header,      \&cmd_header,      's', "Read/Write plugin Author/Description, sync to masters..."],
-     "help"        => [ \&opts_help ],
-     "modify"      => [ \&opts_modify,      \&cmd_modify,      's', "Powerful batch record modification via user code extensions"],
-     "multipatch"  => [ \&opts_multipatch,  \&cmd_multipatch,  'm', "Patches problems, merges leveled lists, etc."],
-     "overdial"    => [ \&opts_overdial,    \&cmd_overdial,    'm', "Identify overlapping dialog (a source of missing topic bugs)"],
-     "recover"     => [ \&opts_recover,     \&cmd_recover,     's', "Recover usable records from plugin with 'bad form' errors"],
-     "-testcodec"  => [ \&opts_testcodec,   \&cmd_testcodec,   's', "Test TES3 codec"],
-     "-codec"      => [ \&opts_codec,       \&cmd_codec,       'm', "Describe TES3 record codec (not implemented)"],
-     "-shell"      => [ \&opts_shell,       \&cmd_shell,       'm', "run a TES3 REPL"],
-     "-wikiout"    => [ \&opts_wikiout,     \&cmd_wikiout,     'm', "Output wiki formatted help"],
-    );
-
-my $command_list;
-foreach (sort keys %CMDS) {
-    $command_list .= "  $_\n    $CMDS{$_}->[3].\n"
-	unless (($_ eq 'help') or ($_ =~ /^-/));
-}
-my $USAGE_ALL = qq{Usage: tes3cmd COMMAND OPTIONS plugins...
-
-VERSION: $::VERSION
-
-tes3cmd is a low-level command line tool that can examine, edit, and delete
-records from a TES3 plugin for Morrowind. It can also generate various patches
-and clean plugins too.
-
-COMMANDS
-$command_list
-
-FOR HELP ON INDIVIDUAL COMMANDS:
-
-  tes3cmd help <command>
-
-GENERAL HELP:
-
-OPTIONS given to commands may be abbreviated, as long as the abbreviations are
-unique.
-
-Normal users will probably be mostly interested in the "clean", "multipatch",
-and "headers --synchronize" commands, which for convenience are all rolled
-into the "fixit" command. The other commands, like "dump", "modify", and
-"delete" will mostly appeal to modders.
-
-tes3cmd uses Perl regular expressions for string matching, the full
-documentation can be found here:
-   http://www.perl.com/doc/manual/html/pod/perlre.html
-You should at least be aware that the characters "\\.?*+|^\$()[]{}" have
-special meaning in a regular expression and that they are unlike characters
-used for matching on a Windows command line.
-};
-
-sub opts_help {
-    if (my $cmd_name = shift(@ARGV)) {
-	if (my $cmd_ref = $CMDS{$cmd_name}) {
-	    $cmd_ref->[0]->(1);	# exits
-	} else {
-	    usage($USAGE_ALL);
-	}
-    }
-    usage($USAGE_ALL);
-}
-
-### IO AND CACHING
+### MAIN IO AND CACHING
 
 my $hdr_size = 16;
 sub read_rec {
@@ -4278,7 +4327,7 @@ sub write_rec {
     print $fh pack("a4LLLa*", $tr->rectype, $tr->reclen, $tr->hdrunk, $tr->hdrflags, $tr->recbuf);
 }
 
-sub open_for_read {
+sub open_for_input {
     my($plugin) = @_;
     $CURRENT_PLUGIN = $plugin;
     (-d $plugin) and abort(qq{Input is a directory});
@@ -4288,7 +4337,13 @@ sub open_for_read {
     return($fh);
 }
 
-sub open_for_write {
+sub close_input {
+    my($inp) = @_;
+    $CURRENT_PLUGIN = '';
+    close($inp);
+}
+
+sub open_for_output {
     my($plugin) = @_;
     my $fh = IO::Handle->new;
     open($fh, ">", $plugin) or abort(qq{opening "$plugin" for output ($!)});
@@ -4311,8 +4366,8 @@ sub make_temp {
 	if ($plugin !~ /\.(es[mps])$/i);
     my $plugtmp = "$plugin.tmp";
     (-f $plugin) or abort(qq{Not a plain file});
-    my $inp = open_for_read($plugin);
-    my $out = open_for_write($plugtmp);
+    my $inp = open_for_input($plugin);
+    my $out = open_for_output($plugtmp);
     return($inp, $out);
 }
 
@@ -4373,11 +4428,13 @@ sub fix_output {
     } else {
 	abort(qq{"$plugin" name does not end in .esm/.esp/.ess});
     }
+    $CURRENT_PLUGIN = '';
 } # fix_output
 
 sub cleanup_temp {
     my($inp, $plugin) = @_;
     close($inp);
+    $CURRENT_PLUGIN = '';
     my $plugtmp = "$plugin.tmp";
     unlink($plugtmp);
 }
@@ -4385,7 +4442,7 @@ sub cleanup_temp {
 # make a map of id -> recbuf for each plugin
 sub read_records {
     my($plugin, $fun) = @_;
-    my $inp = open_for_read($plugin);
+    my $inp = open_for_input($plugin);
     my %plugin_id = ();
     eval {
 	while (my($rectype, $tr) = read_tr($inp, undef, $plugin)) {
@@ -4400,13 +4457,13 @@ sub read_records {
 	}
     };
     err($@) if ($@);
-    close($inp);
+    close_input($inp);
     return(\%plugin_id);
 }
 
 sub read_objects {
     my($plugin) = @_;
-    my $inp = open_for_read($plugin);
+    my $inp = open_for_input($plugin);
     my %plugin_id = ();
     eval {
 	while (my($rectype, $tr) = read_tr($inp, undef, $plugin)) {
@@ -4417,13 +4474,13 @@ sub read_objects {
 	}
     };
     err($@) if ($@);
-    close($inp);
+    close_input($inp);
     return(\%plugin_id);
 }
 
 sub read_dialogs {
     my($plugin, $dialref) = @_;
-    my $inp = open_for_read($plugin);
+    my $inp = open_for_input($plugin);
     eval {
 	while (my($rectype, $tr) = read_tr($inp, undef, $plugin)) {
 	    last if (not defined $rectype);
@@ -4435,7 +4492,7 @@ sub read_dialogs {
 	}
     };
     err($@) if ($@);
-    close($inp);
+    close_input($inp);
 }
 
 sub master_cache_path {
@@ -4447,7 +4504,6 @@ sub master_cache_path {
 
 sub load_master_cache {
     my($esm) = @_;
-    # TBD why are we getting undefs here? check clean NG_New_Carnithus'_Armamentarium-jms-patch.esp
     my $mcache = master_cache_path($esm);
     if ($opt_no_cache) {
 	unlink($mcache) if (-f $mcache);
@@ -4496,7 +4552,7 @@ sub load_master {
     }
     return if (load_master_cache($esm)); # load pre-parsed data
     print "Loading Master: $esm\n";
-    my $inp = open_for_read($T3->datapath($esm));
+    my $inp = open_for_input($T3->datapath($esm));
     eval {
 	while (my($rectype, $id, $srh, $recbuf, $hdrflags, $hdrunk) = read_quick_parse($inp, undef, $esm)) {
 	    last if (not defined $rectype);
@@ -4508,7 +4564,7 @@ sub load_master {
 	}
     };
     err($@) if ($@);
-    close($inp);
+    close_input($inp);
     save_master_cache($esm);
 }
 
@@ -4558,7 +4614,7 @@ sub load_leveled_lists {
 	    $invalid = 1;
 	}
 	if ($invalid) {
-	    my $inp = open_for_read($T3->datapath($plugin));
+	    my $inp = open_for_input($T3->datapath($plugin));
 	    eval {
 		while (my($rectype, $tr) = read_tr($inp, undef)) {
 		    last if (not defined $rectype);
@@ -4568,7 +4624,7 @@ sub load_leveled_lists {
 		    $levdat->{$lc_plugin}->{$rectype}->{$tr->id} = $tr;
 		}
 	    };
-	    close($inp);
+	    close_input($inp);
 	    if ($@) {
 		err($@);
 		delete $levdat->{$lc_plugin};
@@ -4588,7 +4644,21 @@ sub load_leveled_lists {
     return($levdat);
 } # load_leveled_lists
 
-### UTILITIES
+### MAIN UTILITIES
+
+sub diff_output {
+    my($diff_file, $diff) = @_;
+    if (@{$diff}) {
+	my $fh = IO::Handle->new;
+	if (open($fh, ">$diff_file")) {
+	    print $fh join("\n", @{$diff});
+	    close($fh);
+	    msg("Created diff file: $diff_file");
+	} else {
+	    err("Opening $diff_file for output ($!)");
+	}
+    }
+}
 
 sub make_header {
     my($opt) = @_;
@@ -4784,7 +4854,7 @@ sub rec_match {
 sub get_record_count {
     my($plugin) = @_;
     my $count = -1;		# we don't count the TES3 record
-    process_plugin_for_read($plugin, sub { $count++; }); # TBD:faster just to read_rec??
+    process_plugin_for_input($plugin, sub { $count++; }); # TBD:faster just to read_rec??
     return($count);
 }
 
@@ -4811,9 +4881,9 @@ sub buffalize {
     return($refidx, $recbuf, $objname);
 }
 
-sub process_plugin_for_read {
+sub process_plugin_for_input {
     my($plugin, $fun) = @_;
-    my $inp = open_for_read($plugin);
+    my $inp = open_for_input($plugin);
     my $expected = "TES3";
     my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
     # process each record in the plugin
@@ -4822,12 +4892,11 @@ sub process_plugin_for_read {
 	    $expected = undef;
 	    last if (not defined $rectype);
 	    $fun->($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
-	    #$tr->DESTROY;
 	}
     };
     err($@) if ($@);
-    close($inp);
-} # process_plugin_for_read
+    close_input($inp);
+} # process_plugin_for_input
 
 sub process_plugin_for_update {
     my($plugin, $fun, $prefix) = @_;
@@ -4847,7 +4916,6 @@ sub process_plugin_for_update {
 		    write_rec($out, $trnew);
 		    dbg("process_plugin_for_update: record modified") if (DBG);
 		    $modified++;
-		    #$trnew->DESTROY;
 		} else {	# null return record, so pass original rec through unchanged
 		    dbg("process_plugin_for_update: record PASSED THROUGH unmodified") if (DBG);
 		    write_rec($out, $tr);
@@ -4856,7 +4924,6 @@ sub process_plugin_for_update {
 		dbg("process_plugin_for_update: record deleted") if (DBG);
 		$modified++;
 	    }
-	    #$tr->DESTROY;
 	}
     };
     if ($@) {
@@ -4873,7 +4940,7 @@ sub process_plugin_for_update {
     }
 } # process_plugin_for_update
 
-### COMMANDS
+### MAIN COMMANDS
 
 sub cmd_testcodec {
     my($plugin) = @_;
@@ -4893,11 +4960,9 @@ sub cmd_testcodec {
 	foreach my $tsr ($tr->subrecs()) {
 	    my $oldsubrec = $tsr->subbuf;
 	    die "no buf: " . Dumper($tsr). "\n" if (not defined $oldsubrec);
-
-#	    my $newsubrec = $tsr->encode()->subbuf;
-	    $tsr->encode();
-	    my $newsubrec = $tsr->subbuf;
-
+	    my $newsubrec = $tsr->encode()->subbuf;
+#	    $tsr->encode();
+#	    my $newsubrec = $tsr->subbuf;
 	    my $fulltype = $tsr->fulltype;
 	    unless ($exclude{$fulltype}) {
 		if ($newsubrec ne $oldsubrec) {
@@ -4947,10 +5012,10 @@ sub cmd_fixit {
 
 sub cmd_wikiout {
     dbg("cmd_wikiout") if (DBG);
-    foreach my $cmd (sort keys %CMDS) {
+    foreach my $cmd (sort keys %COMMAND) {
 	next if (($cmd eq 'help') or ($cmd =~ /^-/));
 	my $usage = eval "\$@{[uc $cmd]}_USAGE";
-	my $desc = $CMDS{$cmd}->[3];
+	my $desc = $COMMAND{$cmd}->{description};
 	$usage =~ s/'/''/g;
 	print "==$cmd - _${desc}_==\n{{{\n$usage\n}}}\n\n";
     }
@@ -4975,7 +5040,6 @@ sub multipatch_check_fogbug {
     } else {
 	if (defined($fogcell->{$name})) {
 	    print qq{  [FOGBUG] CORRECTED $plugin CELL: $name\n} if (VERBOSE);
-	    #$fogcell->{$name}->[0]->DESTROY;
 	    delete $fogcell->{$name};
 	}
     }
@@ -5112,10 +5176,12 @@ sub cmd_multipatch {
     my %sumcrea;		# critters needing persistent flag
     my $merged_lists = multipatch_merge_leveled_lists() if ($opt_multipatch_merge_lists);
     foreach my $plugin ($T3->load_order()) {
-	next if ($plugin eq $patch_file);
-	next if (($plugin eq "fogpatch.esp") or ($plugin eq "cellnamepatch.esp"));
-	print "Scanning plugin: $plugin\n" if (DBG);
-	my $inp = open_for_read($T3->datapath($plugin));
+	if (my $reason = $NOPATCH_PLUGIN{lc($plugin)}) {
+	    msg("Skipping $plugin: ${reason}.");
+	    next;
+	}
+	print "Scanning plugin: $plugin\n";
+	my $inp = open_for_input($T3->datapath($plugin));
 	my $expected = "TES3";
 	eval {
 	    while (my($rectype, $tr) = read_tr($inp, $expected, $plugin)) {
@@ -5159,7 +5225,7 @@ sub cmd_multipatch {
 	    }
 	};
 	print $@ if ($@);
-	close($inp);
+	close_input($inp);
     }
     my $nfogbugs = scalar keys %fogcell;
     my $nrenrevs = scalar(grep {defined} map {$_->{OUTPUTFLAG}} values(%rencell));
@@ -5167,7 +5233,7 @@ sub cmd_multipatch {
     if ($nfogbugs or $nrenrevs or $nsumcrea or $merged_lists) {
 	print "\n".("="x75)."\n";
 	print "A multipatch has been conjured for you to address the following issues:\n";
-	my $out = open_for_write($patch_path);
+	my $out = open_for_output($patch_path);
 	print $out make_header({description => "MultiPatch\n\nVersion: $::VERSION"});
 	if ($nrenrevs) {
 	    print "\nPreserving the following $nrenrevs CELL renamings:\n";
@@ -5189,12 +5255,12 @@ sub cmd_multipatch {
 		my $name_tsr = $tr->get('NAME');
 		my $data_tsr = $tr->get('DATA');
 		my $ambi_tsr = $tr->get('AMBI');
-		$data_tsr->{fog_density} = $ambi_tsr->{fog_density} = 0.01;
-		$data_tsr->encode;
-		$ambi_tsr->encode;
-		my $newcell = CELL->new([$name_tsr, $data_tsr, $ambi_tsr]);
+		$ambi_tsr->{fog_density} = 0.01;
+		$data_tsr->{fog_density} = 0.01;
+#		$data_tsr->encode;
+#		$ambi_tsr->encode;
+		my $newcell = CELL->new([$name_tsr, $data_tsr->encode, $ambi_tsr->encode]);
 		write_rec($out, $newcell);
-		#$newcell->DESTROY;
 	    }
 	}
 	if ($nsumcrea) {
@@ -5215,7 +5281,13 @@ sub cmd_multipatch {
 	    print "\nMerged Leveled Lists ($count{LEVC} LEVC, $count{LEVI} LEVI)\n";
 	}
 	close($out);
+	my @options;
+	push(@options, 'cellnames') if $opt_multipatch_cellnames;
+	push(@options, 'fogbug') if $opt_multipatch_fogbug;
+	push(@options, 'merge_lists') if $opt_multipatch_merge_lists;
+	push(@options, 'summons_persist') if $opt_multipatch_summons_persist;
 	$opt_header_update_record_count = 1;
+	$opt_header_description = "+ \r\nOPT: ".join(",", @options);
 	update_header($patch_path, [qw(QUIET NOBACKUP)]);
 	unless ($opt_multipatch_no_activate) {
 	    print "\n";
@@ -5267,20 +5339,6 @@ sub cmd_common {
 	}
     };
     read_records($plugin2, $compare_fun);
-}
-
-sub diff_output {
-    my($diff_file, $diff) = @_;
-    if (@{$diff}) {
-	my $fh = IO::Handle->new;
-	if (open($fh, ">$diff_file")) {
-	    print $fh join("\n", @{$diff});
-	    close($fh);
-	    msg("Created diff file: $diff_file");
-	} else {
-	    err("Opening $diff_file for output ($!)");
-	}
-    }
 }
 
 sub cmd_diff {
@@ -5667,17 +5725,14 @@ sub cmd_clean {
 		my $val = $plug_tr->get($type, $field);
 		unless (defined $val) {
 		    print " Cleaned GMST with no value: $id\n";
-		    #$plug_tr->DESTROY;
 		    return;
 		}
 		my $hexval = unpack("H*", "$type $val");
 		if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Bloodmoon: $id\n";
-		    #$plug_tr->DESTROY;
 		    return;	# return undef to delete
 		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
 		    print " Cleaned Evil GMST Tribunal: $id\n";
-		    #$plug_tr->DESTROY;
 		    return;	# return undef to delete
 		}
 	    }
@@ -5718,14 +5773,11 @@ sub cmd_clean {
 					if ($plug_buf eq $mast_buf) {
 					    $cleaned++;
 					    $cell_modified++;
-					    #$mast_tr->DESTROY;
 					    last CHECK_MASTER_INSTANCES; # done with all masters
 					}
-					#$mast_tr->DESTROY;
 					last; # done with this master
 				    }
 				}
-				#$mast_tr->DESTROY;
 			    }
 			}
 			if ($cleaned) {
@@ -5738,7 +5790,6 @@ sub cmd_clean {
 		}
 		if ($cell_modified) {
 		    $nam0_tsr->{reference_count} = $n;	# update NAM0
-		    #$plug_tr->DESTROY;
 		    $plug_tr = CELL->new([@newcell]);
 		    $record_modified++;
 		}
@@ -5800,13 +5851,10 @@ sub cmd_clean {
 				}
 				unless ($contains_new_data) {
 				    print " Cleaned Junk CELL: $id\n";
-				    #$plug_tr->DESTROY;
-				    #$mast_tr->DESTROY;
 				    return; # return undef to delete this record
 				}
 			    }
 			}
-			#$mast_tr->DESTROY;
 		    } # master has same cell (by id)
 		}
 		my @what;
@@ -5834,7 +5882,6 @@ sub cmd_clean {
 			($plug_tr->recbuf() eq $mast_recbuf) and
 			($plug_tr->hdrflags eq $mast_hdrflags)) {
 			print " Cleaned Duplicate $rectype: $id\n";
-			#$plug_tr->DESTROY;
 			return;
 		    }
 		}
@@ -5906,22 +5953,21 @@ sub cmd_dump {
 		my $newtr = CELL->new([@newcell]);
 		if ($opt_dump_raw) {
 		    $list_record->("Raw Output:");
-		    write_rec($RAWOUT, $newtr);
+		    write_rec($DUMP_RAWOUT, $newtr);
 		} else {
 		    print $newtr->tostr."\n";
 		}
-		#$newtr->DESTROY;
 	    }
 	} else {
 	    if ($opt_dump_raw) {
 		$list_record->("Raw Output:");
-		write_rec($RAWOUT, $tr);
+		write_rec($DUMP_RAWOUT, $tr);
 	    } else {
 		print "\n$print_rec\n" if ($print_rec);
 	    }
 	}
     };
-    process_plugin_for_read($plugin, $fun);
+    process_plugin_for_input($plugin, $fun);
 } # cmd_dump
 
 sub cmd_recover {
@@ -6050,67 +6096,84 @@ sub cmd_active {
     # we are either activating or deactivating plugins here
     my %active;
     my $n = 0;
-    my $ini = Config::IniFiles->new( -file => $T3->ini_file );
-    if ($opt_active_off) {
-	# TBD - check that given plugins exist in Data Files
-	my %off = map { lc($_), 1 } (@plugins);
-	foreach my $param ($ini->Parameters('Game Files')) {
-	    my $plugin = $ini->val('Game Files', $param);
-	    if ($T3->datafile($plugin)) {
-		my $lc_plugin = lc($plugin);
-		dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
-		if (defined $off{$lc_plugin}) {
-		    msg("DEACTIVATED: $plugin");
-		} else {
-		    $active{$lc_plugin} = $plugin;
+    if ($opt_active_on or $opt_active_off) {
+	if (my $ini = Config::IniFiles->new( -file => $T3->ini_file )) {
+	    if ($opt_active_off) {
+		my %off = map { lc($_), 1 } (@plugins);
+		foreach my $param ($ini->Parameters('Game Files')) {
+		    my $plugin = $ini->val('Game Files', $param);
+		    if ($T3->datafile($plugin)) {
+			my $lc_plugin = lc($plugin);
+			dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+			if (defined $off{$lc_plugin}) {
+			    msg("DEACTIVATED: $plugin");
+			} else {
+			    $active{$lc_plugin} = $plugin;
+			}
+		    } else {
+			dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
+		    }
+		    $ini->delval('Game Files', $param);
 		}
-	    } else {
-		dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
-	    }
-	    $ini->delval('Game Files', $param);
-	}
-	$ini->newval('Game Files', "GameFile".$n++, $_) foreach (sort values %active);
-	$ini->RewriteConfig;
-    } elsif ($opt_active_on) {
-	# add plugins user wants activated to active list if they exist in Data Files
-	foreach my $param ($ini->Parameters('Game Files')) {
-	    my $plugin = $ini->val('Game Files', $param);
-	    if ($T3->datafile($plugin)) {
-		dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
-		$active{lc($plugin)} = $plugin;
-	    } else {
-		dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
-	    }
-	    $ini->delval('Game Files', $param);
-	}
-	foreach my $plugin (@plugins) {
-	    if ($T3->datafile($plugin)) {
-		my $lc_plugin = lc($plugin);
-		dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
-		unless (defined $active{$lc_plugin}) {
-		    msg("ACTIVATED: $plugin");
-		    $active{$plugin} = $plugin;
+	    } elsif ($opt_active_on) {
+		# add plugins user wants activated to active list if they exist in Data Files
+		foreach my $param ($ini->Parameters('Game Files')) {
+		    my $plugin = $ini->val('Game Files', $param);
+		    if ($T3->datafile($plugin)) {
+			dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+			$active{lc($plugin)} = $plugin;
+		    } else {
+			dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
+		    }
+		    $ini->delval('Game Files', $param);
 		}
-	    } else {
-		err(qq{$plugin not found in Data Files});
+		foreach my $plugin (@plugins) {
+		    if ($T3->datafile($plugin)) {
+			my $lc_plugin = lc($plugin);
+			dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+			unless (defined $active{$lc_plugin}) {
+			    msg("ACTIVATED: $plugin");
+			    $active{$plugin} = $plugin;
+			}
+		    } else {
+			err(qq{$plugin not found in Data Files});
+		    }
+		}
 	    }
+	    $ini->newval('Game Files', "GameFile".$n++, $_) foreach (sort values %active);
+	    $ini->RewriteConfig;
+	} else {
+	    abort("Failed to load INI file: ".$T3->ini_file."\nError: @Config::IniFiles::errors");
 	}
-	$ini->newval('Game Files', "GameFile".$n++, $_) foreach (sort values %active);
-	$ini->RewriteConfig;
     } else {
 	print "\nLOAD ORDER:\n";
 	print "$_\n" foreach ($T3->load_order);
     }
 }
 
+sub cmd_resetdates {
+    foreach my $file_name (sort keys %ORIGINAL_DATE) {
+	my $file_path = $T3->datapath($file_name);
+	my($atime, $mtime) = (stat($file_path))[8,9];
+	my $origtime = $ORIGINAL_DATE{$file_name};
+	if ($mtime != $origtime) {
+	    msg("Reset Date of: $file_name to: ".scalar(localtime($origtime)));
+	    utime($origtime, $origtime, $file_path);
+	}
+    }
+}
+
 sub main {
-    usage($USAGE_ALL)
+    msg("ASSERTIONS ON!") if (ASSERT);
+    $COMMAND{help}->preprocess()
 	if ((scalar(@ARGV) == 0) or (scalar(@ARGV) == 1 and $ARGV[0] =~ /help/i));
-    my $cmd_ref;
     my $cmd_name = shift(@ARGV);
-    usage($USAGE_ALL) unless ($cmd_ref = $CMDS{$cmd_name});
-    my($cmd_getopts, $cmd, $type) = @{$cmd_ref};
-    $cmd_getopts->();
+    my $cmd_ref = $COMMAND{$cmd_name};
+    dbg("Command Selected: $cmd_name") if (DBG);
+    $COMMAND{help}->preprocess()
+	unless ($cmd_ref = $COMMAND{$cmd_name});
+    GetOptions(@STDOPT,@{$cmd_ref->{options}}) or die($cmd_ref->{usage}."\n");
+    # see if we need to glob any following plugin names
     my @plugins;
     foreach my $arg (@ARGV) {
 	if ($arg =~ /[$GLOBCHARS]/) {
@@ -6119,29 +6182,31 @@ sub main {
 	    push(@plugins, $arg);
 	}
     }
+    # put plugins in load order
+    @plugins = sort { -M $b <=> -M $a } @plugins;
+    # if standard option --output-dir was used, ensure destination exists
     if ($opt_output_dir and not -d $opt_output_dir) {
 	eval { mkdir($opt_output_dir, 0755); };
 	abort($@) if ($@);
     }
-    if ($type eq 'm') {
-	# these commands process multiple plugins at once
-	$cmd->(@plugins);
-    } else {		    # type eq 's'
-	# put plugins in load order
-	@plugins = sort { -M $b <=> -M $a } @plugins;
-	# these commands process a single plugin at a time
-	usage($USAGE_ALL) if (scalar(@plugins) == 0);
+    if (defined(my $pre = $cmd_ref->{preprocess})) {
+	# run the pre-process function
+	dbg("$cmd_name: Executing Pre-Process function") if (DBG);
+	$pre->(@plugins);
+    }
+    if (defined(my $process = $cmd_ref->{process})) {
+	# process individual plugins
+	$COMMAND{help}->preprocess() if (scalar(@plugins) == 0);
+	dbg("$cmd_name: Executing Process function") if (DBG);
 	foreach my $plugin (@plugins) {
-	    $CURRENT_PLUGIN = $plugin;
 	    $CURRENT_DIAL = undef;
-	    $cmd->($plugin);
+	    $process->($plugin);
 	}
-	if ($opt_dump_raw) {
-	    close($RAWOUT);
-	    $opt_header_update_record_count = 1;
-	    update_header($opt_dump_raw, [qw(QUIET NOBACKUP)]);
-	    print "\nRaw records saved in $opt_dump_raw\n";
-	}
+    }
+    if (defined(my $post = $cmd_ref->{postprocess})) {
+	# run the post-process function
+	dbg("$cmd_name: Executing Post-Process function") if (DBG);
+	$post->(@plugins);
     }
 } # main
 
