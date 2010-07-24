@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37h";
+$::VERSION = "0.37j";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -20,30 +20,34 @@ $::VERSION = "0.37h";
 #  cmd_esm
 #  cmd_esp
 #  cmd_overdial
-#  cmd_recover (try to recover at subrecord granularity? save lost data and dump like od)
+#  cmd_recover (save lost data and dump like od?)
 #  cmd_delete
 #  cmd_modify (fix doco for helpers, test subrec moddy)
 #  cmd_clean
 #  cmd_fixit
+#  cmd_active
+
 
 # TBD:
+# savegame cleaner: reset NPC heads/hair
+# Implement "--stash-backups" so that unsightly backups are plonked into Data Files/tes3cmd/backups
 # fix bsa dates for Steam versions
-# can we remove cyclic relationship between tr <-> tsr?
 # add report of stats (plugins scanned, etc) for multipatch and clean.
 # add options used to header of multipatch?
 # implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
 # when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
 # implement a "repack" command: bsaunpack + tesfiles/resourcecheck + clean
-# implement logfile for detail output (delete, modify, clean, multipatch)
+# implement logfile for detail output (delete, modify, clean, multipatch)?
 # put commands and opts in a big dispatch table?
-# allow commands to be abbreviated
-# TES::File (open_for_read, backup, etc)
+# allow commands to be abbreviated?
+# TES3::File (open_for_read, backup, etc)?
 # implement proper verbosity
 # cleanup .tmp if die
 # and add more examples, esp. "modify"
 # write some tests
 # clean would be sped up if command added a "clean <size>" mark to plugin (SSCR + VERSION + length + date at EOF? mark ignored?)
+#    it would probably not be good to change size of masters, at least.
 # GUI
 # reformat overdial output? just list each topic once, with list of plugins that have it
 # implement script compiler
@@ -57,7 +61,6 @@ $::VERSION = "0.37h";
 # * "conflict" (detailed report, toggle mergeable records from report)
 # * "lint" (splice in tes3lint functionality)
 # * "multipatch", to include:
-# ** --activate switch to add it to [Game Files]
 # ** automatically patch overdial problems???
 # ** generate book rotate scripts (need compiler)
 # ** generate multimark scripts (need compiler)
@@ -87,6 +90,7 @@ use Getopt::Long qw(:config auto_abbrev);
 use Data::Dumper;
 use Storable;
 use Cwd;
+use Config::IniFiles;
 use strict;
 use warnings;
 
@@ -191,7 +195,8 @@ sub find_datadir {
     dbg("checking for data dir in: $dir") if (DBG);
     while (($dir =~ m!\bmorrowind\b!i) and (-d $dir)) {
 	my $datadir = list_files($dir)->{"data files"};
-	if ($datadir) {
+	my $mwexe = list_files($dir)->{"morrowind.exe"};
+	if ($datadir and $mwexe) {
 	    $DATADIR = "$dir/$datadir";
 	    msg(qq{DATADIR = $DATADIR}) if (VERBOSE);
 	    $TES3CMD_DIR = "$DATADIR/tes3cmd";
@@ -232,12 +237,12 @@ sub datafiles_map {
     return($self->{datafiles_map} = list_files($DATADIR));
 }
 
-sub datapath { "$DATADIR/" . $_[0]->datafiles_map()->{lc($_[1])}; } # TBD check params: Use of uninitialized value in concatenation (.) or string at /home/doug/bin/tes3cmd line 226.
+sub datapath { "$DATADIR/" . $_[0]->datafiles_map()->{lc($_[1])}; }
 sub datafile { $_[0]->datafiles_map()->{lc($_[1])}; }
 
 sub ini_file {
     my($self, $reload) = @_;
-    return(@{$self->{ini_file}})
+    return($self->{ini_file})
 	if (defined($self->{ini_file} and not $reload));
     my $mwfiles = list_files("$DATADIR/..");
     return($self->{ini_file} = "$DATADIR/../$mwfiles->{'morrowind.ini'}");
@@ -248,29 +253,48 @@ sub load_order {
     return(@{$self->{load_order}})
 	if (defined($self->{load_order} and not $reload));
     abort("DATADIR not defined") unless (defined($DATADIR));
-    my $ini = $self->ini_file;
+    my $ini = Config::IniFiles->new( -file => $self->ini_file );
     my @active;
-    my $fh = IO::Handle->new;
-    if (open($fh, "<$ini")) {
-	dbg(qq{INI is: "$ini"}) if (DBG);
-	while (<$fh>) {
-	    if (my($plugin) = (/GameFile\d+=([^\r\n]*)/)) {
-		if ($self->datafile($plugin)) {
-		    dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
-		    push(@active, $plugin);
-		} else {
-		    dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
-		}
-	    }
+    foreach my $param ($ini->Parameters('Game Files')) {
+	my $plugin = $ini->val('Game Files', $param);
+	if ($self->datafile($plugin)) {
+	    dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+	    push(@active, $plugin);
+	} else {
+	    dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
 	}
-    } else {
-	err(qq{Opening "$ini" for input ($!)});
     }
     my @sorted = sort_by_date($DATADIR, @active);
     return(@{$self->{load_order} = [grep(/\.esm$/i, @sorted), grep(/\.esp$/i, @sorted)]});
 }
 
 ### END OF TES3::Util
+
+### CLASS: TES3::SubRecord
+
+package TES3::SubRecord;
+
+BEGIN {
+    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
+    Util->import(qw(abort assert dbg err msg prn));
+}
+use Data::Dumper;
+use strict;
+
+# tsr->decode (for unknown subtypes)
+sub decode {
+    my($self, $subbuf, $parent) = @_;
+    my $package = ref($self);
+    $self->{_id_} = $parent->{_id_};
+    msg("Encountered unknown subtype: $package for: $self->{_id_}");
+    my $len = length($subbuf);
+    my $sep = ($len < 20) ? "  " : "\n\t";
+    $self->{unknown} = sprintf("[UNKNOWN SUBREC: length:%d${sep}hex:%s${sep}str:%s]",
+			       $len, unpack("H*", $self->{_subbuf_} = $subbuf),
+			       substr((($_ = $subbuf) =~ tr/\000-\037\177-\377//d, $_), 0, 80));
+    return($self);
+}
 
 ### CLASS: TES3::Record
 
@@ -1247,7 +1271,7 @@ my @RECDEFS =
 		     }
 		 },
 		}],
-	       [DNAM => [["door_id", "Z*"]]],
+	       [DNAM => [["door_destination", "Z*"]]],
 	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
 	       [FLTV => [["unknown_1", "f"]]],
 	       [INDX => $RD_Unknown],
@@ -1277,6 +1301,8 @@ my @RECDEFS =
 	       [LSTN => $RD_Unknown, { rdflags => [qw(ess)] }],
 	       [LVCR => $RD_Unknown, { rdflags => [qw(ess)] }],
 	       [MNAM => $RD_Unknown, { rdflags => [qw(ess)] }],
+	       [MPCD => $RD_Unknown, { rdflags => [qw(ess)] }],
+	       [MPNT => $RD_Unknown, { rdflags => [qw(ess)] }],
 	       [MVRF => [["moved_ref", "L"]]], # .ess???
 	       [NAM8 => $RD_Unknown, { rdflags => [qw(ess)] }],
 	       [NAM9 => [["owner", "L"]], { rdflags => [qw(ess)] }],
@@ -1423,11 +1449,12 @@ my @RECDEFS =
      # TBD: Investigate .ess
      [CREC => [
 	       [NAME => [["id", "Z*"]]],
+	       [AI_E => $RD_Unknown],
 	       [AI_F => $RD_Unknown],
 	       [AI_T => $RD_Unknown],
 	       [AI_W => $RD_Unknown],
 	       [INDX => $RD_Unknown],
-	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }],
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array_ess],
@@ -1438,6 +1465,7 @@ my @RECDEFS =
 	       [XHLT => [["health", "L"]]],
 	       [XIDX => $RD_Unknown],
 	       [XSCL => [["scale", "f"]]],
+	       [XSOL => [["soul", "Z*"]]],
 	      ], { rdflags => [qw(ess)] }],
      [DIAL => [
 	       [NAME => [["id", "Z*"]]],
@@ -1538,7 +1566,7 @@ my @RECDEFS =
 		   rdflags => [qw(ess)] }],
      # TBD: Investigate .ess
      [GAME => [			# ess, single record, no id
-	       [GMDT => [["current_cell", "Z*"], ["unknown", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
+	       [GMDT => [["current_cell", ["Z64", "a64"]], ["grid_x", "l"], ["grid_y", "l"], ["long_1", "l"], ["long_1", "l"], ["unknown_1", "H*"]]], # there is junk following the cell name ... not clear if there's a max cell name size?
 	      ], { id => sub {'()'}, rdflags => [qw(ess)] }],
      [GLOB => [
 	       [NAME => [["id", "Z*"]]],
@@ -1661,7 +1689,7 @@ my @RECDEFS =
 	      ], { rdflags => [qw(ess)] }],
      # TBD: prettify?
      [LAND => [
-	       [INTV => [["x", "l"], ["y", "l"]]],
+	       [INTV => [["grid_x", "l"], ["grid_y", "l"]]],
 	       [DATA => $RD_Unknown],
 	       [VCLR => $RD_Unknown],
 	       [VHGT => $RD_Unknown],
@@ -1756,7 +1784,7 @@ my @RECDEFS =
 	       [AI_F => $RD_Unknown],
 	       [AI_T => $RD_Unknown],
 	       [AI_W => $RD_Unknown],
-	       [NPCO => [["count", "l"], ["Name", ["Z*", "a32"]]]],
+	       [NPCO => [["count", "l"], ["Name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }],
 	       [NPDT => $RD_Unknown],
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
@@ -1786,8 +1814,8 @@ my @RECDEFS =
 	       [BNAM => [["head_model", "Z*"]]],
 	       [CNAM => [["class", "Z*"]]],
 	       [CNDT => [["data", "Z*"]]],
-	       [DNAM => $RD_Unknown],
-	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
+	       [DNAM => [["door_destination", "Z*"]], { rdflags => [qw(ess)] }],
+	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]], { rdflags => [qw(ess)] }],
 	       [FLAG => [["flags", "L", { symflags => \%NPC_FLAGS }]]],
 	       [KNAM => [["hair_model", "Z*"]]],
 	       [MODL => [["model", "Z*"]]],
@@ -1805,13 +1833,13 @@ my @RECDEFS =
 			      unpack("SC6L", $buff);
 		     } elsif (length($buff) == 52) {
 			 my $i = 0;
-			 foreach my $skill_level (unpack("x[SC8]c27", $buff)) {
+			 foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
 			     $self->{lc($SKILL{$i++})} = $skill_level;
 			 }
 			 ($self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi}, $self->{spd},
 			  $self->{end}, $self->{per}, $self->{lck}, $self->{rep}, $self->{health},
 			  $self->{magicka}, $self->{fatigue}, $self->{disposition}, $self->{faction},
-			  $self->{rank}, $self->{gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
+			  $self->{rank}, $self->{gold}) = unpack("SC8x[C27]CSSSCCCxCL", $buff);
 		     } else {
 			 $self->bad_length(length($buff));
 		     }
@@ -1820,9 +1848,14 @@ my @RECDEFS =
 		 encode => sub {
 		     my($self) = @_;
 		     if (exists $self->{magicka}) {
-			 return(pack("SC8C27CSSSCCCxL",
-				     $self->{level}, $self->{str}, $self->{int}, $self->{wil}, $self->{agi},
+			 #warn("DUMP=".Dumper($self));
+			 return(pack("SC8C27CSSSCCCxCL",
+				     # short
+				     $self->{level},
+				     # C8
+				     $self->{str}, $self->{int}, $self->{wil}, $self->{agi},
 				     $self->{spd}, $self->{end}, $self->{per}, $self->{lck},
+				     # C27
 				     $self->{block}, $self->{armorer}, $self->{medium_armor}, $self->{heavy_armor},
 				     $self->{blunt_weapon}, $self->{long_blade}, $self->{axe}, $self->{spear},
 				     $self->{athletics}, $self->{enchant}, $self->{destruction}, $self->{alteration},
@@ -1830,8 +1863,14 @@ my @RECDEFS =
 				     $self->{alchemy}, $self->{unarmored}, $self->{security}, $self->{sneak},
 				     $self->{acrobatics}, $self->{light_armor}, $self->{short_blade}, $self->{marksman},
 				     $self->{mercantile}, $self->{speechcraft}, $self->{hand_to_hand},
-				     $self->{rep}, $self->{health}, $self->{magicka}, $self->{fatigue},
-				     $self->{disposition}, $self->{faction}, $self->{rank}, $self->{gold}));
+				     # C
+				     $self->{rep},
+				     # S3
+				     $self->{health}, $self->{magicka}, $self->{fatigue},
+				     # C3
+				     $self->{disposition}, $self->{faction}, $self->{rank},
+				     # L
+				     $self->{gold}));
 		     } else {
 			 return(pack("SC6L", $self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
 				     $self->{unk1}, $self->{unk2}, $self->{unk3},  $self->{gold}));
@@ -1967,6 +2006,7 @@ my @RECDEFS =
 	       [ACSC => $RD_Unknown],
 	       [ACSL => $RD_Unknown],
 	       [ACTN => [["unknown_1", "L"]]], # Actor Number???
+	       [ANIS => [["unknown_1", "H*"]]],
 	       [CHRD => @RD_long_array_ess],
 	       [CSHN => $RD_Unknown],
 	       [CSTN => $RD_Unknown],
@@ -1977,6 +2017,8 @@ my @RECDEFS =
 	       [STPR => $RD_Unknown],
 	       [TGTN => [["target", "a*"]]],
 	       [WNAM => [["readied_spell", "Z*"]]],
+	       [XNAM => [["enchanted_item", "Z*"]]],
+	       [YNAM => $RD_Unknown],
 	       [XSCL => [["scale", "f"]]],
 	      ], { rdflags => [qw(ess)] }],
      [REGN => [
@@ -2110,7 +2152,7 @@ my @RECDEFS =
 	      ], { rdflags => [qw(mergeable)] }],
      # TBD: Investigate .ess
      [SPLM => [			# ess, single record, no id
-	       [NAME => [["name", "L"]]],
+	       [NAME => [["name", "L"]], { rdflags => [qw(startgroup)] }],
 	       [CNAM => [["unknown_1", "L"], ["unknown_1", "Z*"]]],
 	       [NAM0 => [["unknown_1", "C"]]],
 	       [NPDT => [["name", ["Z32", "a32"]], ["unknown_1", "H16"], ["magnitude", "l"],
@@ -2120,6 +2162,7 @@ my @RECDEFS =
 	       [TNAM => [["target", "Z*"]]],
 	       [VNAM => [["unknown_1", "L"]]],
 	       [XNAM => [["unknown_1", "C"]]],
+	       [INAM => [["unknown_1", "H10"], ["name", "Z23"], ["unknown_1", "H*"]]],
 	      ], { id => sub {'()'},
 		   rdflags => [qw(ess)] }],
      # TBD: CHECK CS
@@ -2147,7 +2190,7 @@ my @RECDEFS =
 				$ver =~ s/0+$//;
 				my $description = $self->{description};
 				$description =~ tr/\r//d if ($^O eq 'linux');
-				return(sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"$self->{author}"\n${MARGIN}Description:"$description"\n${MARGIN}N_Records:$self->{n_records}}, ($self->{is_master}) ? "True" : "False")); },
+				sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"%s"\n${MARGIN}Description:"%s"\n${MARGIN}N_Records:%d}, ($self->{is_master}) ? "True" : "False", $self->{author}, $description, $self->{n_records}); },
 		}],
 	       [MAST => [["master", "Z*"]], { rdflags => [qw(startgroup)] }],
 	       [DATA => [],
@@ -2283,7 +2326,31 @@ sub decode {
     }
     while (my($subtype, $subbuf) = splice(@parts, 0, 2)) {
 	my $tsr = {};
-	bless($tsr, "${rectype}::${subtype}")->decode($subbuf, $self);
+	my $package = "${rectype}::${subtype}";
+	bless($tsr, $package);
+	eval { $tsr->decode($subbuf, $self); };
+	if ($@) {
+	    if ($@ =~ /Can't locate object method/) {
+		# magically create subrecord class for unknown subtypes
+		msg("Encountered unknown subtype: ${rectype}::${subtype}");
+		no strict "refs";
+		# tsr->decode
+		my $method = "${package}::tostr";
+		*$method = sub {
+		    use strict "refs";
+		    my($self) = @_;
+		    my $len = length($self->{_subbuf_});
+		    my $sep = ($len < 20) ? "  " : "\n\t";
+		    sprintf("[UNKNOWN SUBREC: length:%d${sep}hex:%s${sep}str:%s]",
+			    $len, $self->{unknown}, substr((($_ = $self->{_subbuf_}) =~ tr/\000-\037\177-\377//d, $_), 0, 70));
+		};
+		use strict "refs";
+		gen_subrec_methods($rectype, $subtype, [["unknown", "H*"]], {});
+		$tsr->decode($subbuf, $self);
+	    } else {
+		die $@;
+	    }
+	}
 	$self->{_id_} = lc($tsr->{id}) if (defined $tsr->{id}); # Note! record IDs are lowercased for easy comparison!
 	# inline $tr->append()
 	push(@{$self->{SL}}, $tsr);
@@ -2906,6 +2973,35 @@ my %CLEAN_PLUGIN =
 
 sub usage { print "@_\n"; exit(1); }
 
+my $ACTIVE_USAGE = q{Usage: tes3cmd active OPTIONS plugin1.esp [plugin2.esp...]
+
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --off
+	deactivate given plugins
+
+ --on
+	activate given plugins
+
+DESCRIPTION:
+
+Activates the specified plugins. When no options are specified, just prints
+current active load order.
+
+};
+
+our $opt_active_off;
+our $opt_active_on;
+sub opts_active {
+    $_[0] && do { usage($ACTIVE_USAGE); };
+    GetOptions(@STDOPT,
+	       'off'    => \$opt_active_off,
+	       'on'     => \$opt_active_on)
+	or usage($ACTIVE_USAGE);
+}
+
 my $FIXIT_USAGE = q{Usage: tes3cmd fixit
 
 DESCRIPTION:
@@ -3255,6 +3351,9 @@ OPTIONS:
  --merge-lists
 	merges leveled lists used in your active plugins
 
+ --no-activate
+	do not automatically activate multipatch.esp
+
  --no-cache
 	do not create cache files (used for speedier operation)
 
@@ -3321,6 +3420,7 @@ tes3cmd multipatch
 our $opt_multipatch_cellnames;
 our $opt_multipatch_fogbug;
 our $opt_multipatch_merge_lists;
+our $opt_multipatch_no_activate;
 our $opt_multipatch_summons_persist;
 sub opts_multipatch {
     $_[0] && do { usage($MULTIPATCH_USAGE); };
@@ -3328,6 +3428,7 @@ sub opts_multipatch {
 	       'cellnames'    => \$opt_multipatch_cellnames,
 	       'fogbug'       => \$opt_multipatch_fogbug,
 	       'merge-lists'  => \$opt_multipatch_merge_lists,
+	       'no-activate'  => \$opt_multipatch_no_activate,
 	       'no-cache',
 	       'summons-persist' => \$opt_multipatch_summons_persist)
 	or usage($MULTIPATCH_USAGE);
@@ -3408,6 +3509,9 @@ tes3cmd delete --type gmst plugin.esp
 
 # Delete all records flagged as "ignored":
 tes3cmd delete --flag ignored plugin.esp
+
+# Delete the poisonbloom spell subrecords from all current "_mca_*" NPCs in quicksave.ess:
+tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave.ess
 };
 
 sub opts_delete {
@@ -3933,6 +4037,7 @@ my %CMDS =
      # Type is 's' for commands that operate on one plugin at a time,
      # 'm' for multiple plugins at a time.
      #                    Options_fn         Command_fn        Type Description
+     "active"      => [ \&opts_active,      \&cmd_active,      'm', "Add/Remove/List Plugins in your load order"],
      "clean"       => [ \&opts_clean,       \&cmd_clean,       's', "Clean plugins of Evil GMSTs, junk cells, and more"],
      "common"      => [ \&opts_common,      \&cmd_common,      'm', "Find record IDs common between two plugins"],
      "delete"      => [ \&opts_delete,      \&cmd_delete,      's', "Delete records from plugin"],
@@ -3941,14 +4046,14 @@ my %CMDS =
      "esm"         => [ \&opts_esm,         \&cmd_esm,         's', "Convert plugin (esp) to master (esm)"],
      "esp"         => [ \&opts_esp,         \&cmd_esp,         's', "Convert master (esm) to plugin (esp)"],
      "fixit"       => [ \&opts_fixit,       \&cmd_fixit,       'm', "Fixes everything it knows how to fix"],
-     "header"      => [ \&opts_header,      \&cmd_header,      's', "Read/Write plugin header fields (author, description)"],
+     "header"      => [ \&opts_header,      \&cmd_header,      's', "Read/Write plugin Author/Description, sync to masters..."],
      "help"        => [ \&opts_help ],
      "modify"      => [ \&opts_modify,      \&cmd_modify,      's', "Powerful batch record modification via user code extensions"],
-     "multipatch"  => [ \&opts_multipatch,  \&cmd_multipatch,  'm', "Patches problems in your active plugins"],
+     "multipatch"  => [ \&opts_multipatch,  \&cmd_multipatch,  'm', "Patches problems, merges leveled lists, etc."],
      "overdial"    => [ \&opts_overdial,    \&cmd_overdial,    'm', "Identify overlapping dialog (a source of missing topic bugs)"],
      "recover"     => [ \&opts_recover,     \&cmd_recover,     's', "Recover usable records from plugin with 'bad form' errors"],
      "-testcodec"  => [ \&opts_testcodec,   \&cmd_testcodec,   's', "Test TES3 codec"],
-     "-codec"      => [ \&opts_codec,       \&cmd_codec,       'm', "Describe TES3 record codec"],
+     "-codec"      => [ \&opts_codec,       \&cmd_codec,       'm', "Describe TES3 record codec (not implemented)"],
      "-shell"      => [ \&opts_shell,       \&cmd_shell,       'm', "run a TES3 REPL"],
      "-wikiout"    => [ \&opts_wikiout,     \&cmd_wikiout,     'm', "Output wiki formatted help"],
     );
@@ -4335,8 +4440,7 @@ sub read_dialogs {
 
 sub master_cache_path {
     my($esm) = @_;
-    my $cname = "$TES3::Util::TES3CMD_DIR/$esm";
-    $cname =~ s/\.esm$/.dat/;
+    my $cname = "$TES3::Util::TES3CMD_DIR/${esm}.cache";
     dbg("master_cache_path($esm) -> $cname") if (DBG);
     return($cname);
 }
@@ -4366,7 +4470,7 @@ sub load_master_cache {
 	}
     };
     if ($@) {
-	err($@) unless ($@ =~ /can't open .*\.dat: No such file or directory/);
+	err($@) unless ($@ =~ /: No such file or directory/);
 	return(0);
     } else {
 	return(1);
@@ -4410,7 +4514,7 @@ sub load_master {
 
 sub load_leveled_lists {
     my $levdat = {};
-    my $leveled_list_cache_file = "$TES3::Util::TES3CMD_DIR/leveled_lists_cache.dat";
+    my $leveled_list_cache_file = "$TES3::Util::TES3CMD_DIR/leveled_lists_data.cache";
     # load cache
     if ($opt_no_cache) {
 	unlink($leveled_list_cache_file)
@@ -5103,6 +5207,7 @@ sub cmd_multipatch {
 	}
 	if ($merged_lists) {
 	    my %count;
+	    $count{LEVC} = $count{LEVI} = 0;
 	    foreach my $tr (@$merged_lists) {
 		$count{$tr->rectype()}++;
 		write_rec($out, $tr);
@@ -5112,7 +5217,11 @@ sub cmd_multipatch {
 	close($out);
 	$opt_header_update_record_count = 1;
 	update_header($patch_path, [qw(QUIET NOBACKUP)]);
-	print qq{\nOutput is: "$patch_file", don't forget to activate it!\n};
+	unless ($opt_multipatch_no_activate) {
+	    print "\n";
+	    $opt_active_on = 1;
+	    cmd_active($patch_file);
+	}
     } else {
 	print qq{\nNo patching necessary. "multipatch.esp" not generated.\n};
     }
@@ -5705,6 +5814,7 @@ sub cmd_clean {
 		push(@what, 'WHGT') if ($cleaned_whgt);
 		if (@what) {
 		    print " Cleaned redundant " . join(',', @what) . " from CELL: $id\n";
+		    $record_modified++;
 		}
 	    }
 	} elsif ($rectype eq 'TES3') {
@@ -5840,7 +5950,7 @@ sub cmd_recover {
 	    foreach my $subtype (map {$_->subtype} $tr->subrecs()) {
 		die qq{Error, Invalid record subtype: "$rectype.$subtype"\n} unless ($TES3::Record::RECTYPES{$rectype}->{$subtype});
 	    }
-	    printf "Offset: %8d  Found: $rectype $id\n", $inp_offset if (DBG);
+	    printf("Offset: %8d  Found: %s %s\n", $inp_offset, $rectype, $id) if (DBG);
 	    $recovered++;
 	};
 	if ($@) {
@@ -5932,6 +6042,64 @@ sub cmd_codec {
 	    #gen_subrec_methods($rectype, @{$defref});
 	    # TBD
 	}
+    }
+}
+
+sub cmd_active {
+    my(@plugins) = @_;
+    # we are either activating or deactivating plugins here
+    my %active;
+    my $n = 0;
+    my $ini = Config::IniFiles->new( -file => $T3->ini_file );
+    if ($opt_active_off) {
+	# TBD - check that given plugins exist in Data Files
+	my %off = map { lc($_), 1 } (@plugins);
+	foreach my $param ($ini->Parameters('Game Files')) {
+	    my $plugin = $ini->val('Game Files', $param);
+	    if ($T3->datafile($plugin)) {
+		my $lc_plugin = lc($plugin);
+		dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+		if (defined $off{$lc_plugin}) {
+		    msg("DEACTIVATED: $plugin");
+		} else {
+		    $active{$lc_plugin} = $plugin;
+		}
+	    } else {
+		dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
+	    }
+	    $ini->delval('Game Files', $param);
+	}
+	$ini->newval('Game Files', "GameFile".$n++, $_) foreach (sort values %active);
+	$ini->RewriteConfig;
+    } elsif ($opt_active_on) {
+	# add plugins user wants activated to active list if they exist in Data Files
+	foreach my $param ($ini->Parameters('Game Files')) {
+	    my $plugin = $ini->val('Game Files', $param);
+	    if ($T3->datafile($plugin)) {
+		dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+		$active{lc($plugin)} = $plugin;
+	    } else {
+		dbg(qq{MISSING Gamefile: "$1"}) if (DBG);
+	    }
+	    $ini->delval('Game Files', $param);
+	}
+	foreach my $plugin (@plugins) {
+	    if ($T3->datafile($plugin)) {
+		my $lc_plugin = lc($plugin);
+		dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
+		unless (defined $active{$lc_plugin}) {
+		    msg("ACTIVATED: $plugin");
+		    $active{$plugin} = $plugin;
+		}
+	    } else {
+		err(qq{$plugin not found in Data Files});
+	    }
+	}
+	$ini->newval('Game Files', "GameFile".$n++, $_) foreach (sort values %active);
+	$ini->RewriteConfig;
+    } else {
+	print "\nLOAD ORDER:\n";
+	print "$_\n" foreach ($T3->load_order);
     }
 }
 
