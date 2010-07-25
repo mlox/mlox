@@ -74,6 +74,7 @@ fogpatch.esp
 Merged_Leveled_Lists.esp
 Merged_Objects.esp
 Merged_Dialogs.esp
+multipatch.esp
 Piratelords Trade Enhancements.esp
 NOM 2.12.esp
 NOM 2.13.esp
@@ -6379,7 +6380,8 @@ Bloodmoon.esm
 [Note]
  The MPP (Morrowind Patch Project) includes the Brittlewind fix, and it is recommended you use that instead.
 [ALL Brittlewind fix.esp
-     [NOT Morrowind Patch v1.6.4.esm]]
+     [NOT [ANY Morrowind Patch v1.6.4.esm
+	       Morrowind Patch v1.6.5-BETA.esm]]]
 
 ;; GCD_WE_patch
 ;; "Load order shouldn't matter for this patch."
@@ -9128,14 +9130,6 @@ LGNPC_Pelagiad_v1_22.esp
  http://www.lgnpc.org/downloads
 [VER < 1.20 LGNPC_PaxRedoran_v<VER>.esp]
 
-[Note]
- A newer version is available to download on PES.
-[SIZE !467889 Less_Generic_Bloodmoon.esp]
-
-[Note]
- A newer version is available to download on PES.
-[SIZE !757802 Less_Generic_Tribunal.esp]
-
 [Conflict]
  Use only one plugin:
  "LGNPC_TelUvirith_*_UI.esp" for users of Uvirith Inside
@@ -9227,6 +9221,24 @@ LGNPC_Secret_Masters_v?_??.esp
 ;;[Order]
 ;;LGNPC_NoLore_v?_??.esp
 ;;ExcuseMe.esp
+
+;;;
+;; The "unofficial" less generics:
+;;;
+[Note]
+ You appear to have an older version of Less Generic Bloodmoon, you can find the latest here:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5908
+[VER < 1.2 Less_Generic_Bloodmoon.esp]
+
+[Note]
+ You appear to have an older version Less Generic Nerevarine, you can find the latest here: 
+  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7380
+[VER < 1.21 Less_Generic_Nerevarine.esp]
+
+[Note]
+ You appear to have an older version Less Generic Tribunal, you can find the latest here: 
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7339
+[VER < 1.1 Less_Generic_Tribunal.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9777,58 +9789,63 @@ Melee Missiles v1.2.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Melian's Teleport Mod [melian]
 
-;;Dragon32- Ref: mel_tpp_1_2_readme.html
+; (Ref: mel_tpp_1_3_readme.html)
 [Order]
-mel_teleportPlugin_1_2.esp
-mel_teleportPlugin_1_2_Patches.esp
-mel_teleportPlugin_1_2_JulanAddon.esp
+mel_teleportPlugin_1_3.esp
+mel_teleportPlugin_1_3_Patches.esp
+mel_teleportPlugin_1_3_JulanAddon.esp
 
 [Requires]
- (Ref: mel_tpp_1_2_readme.html)
-mel_teleportPlugin_1_2_Patches.esp
-mel_teleportPlugin_1_2.esp
+ (Ref: mel_tpp_1_3_readme.html)
+mel_teleportPlugin_1_3_Patches.esp
+mel_teleportPlugin_1_3.esp
+
+[Order]
+Tribun_Laura_3_0.esp
+mel_teleportPlugin_1_3_Patches.esp
 
 [Requires]
- "mel_teleportPlugin_1_2_Patches.esp" patches the companions from Emma's "The White Wolf of the Lokken Mountain", Qarl's "The Underground" and Emma's "Laura Craft Romance and Adventure mod" so that they are compatible with "Melian's Teleport Mod"
- (Ref: mel_tpp_1_2_readme.html)
-[ALL mel_teleportPlugin_1_2.esp
+ "mel_teleportPlugin_1_3_Patches.esp" patches the companions from Emma's "The White Wolf of the Lokken Mountain", Qarl's "The Underground" and Emma's "Laura Craft Romance and Adventure mod" so that they are compatible with "Melian's Teleport Mod"
+ (Ref: mel_tpp_1_3_readme.html)
+[ALL mel_teleportPlugin_1_3.esp
      [ANY BT_Whitewolf_2_0.esp
           BT_Whitewolf_2_0.esm
           THE_UNDERGROUND_2.esp
           Tribun_Laura_3_0.esp]]
-mel_teleportPlugin_1_2_Patches.esp
+mel_teleportPlugin_1_3_Patches.esp
 
-;; Dragon32- Changes made to two scripts (AA_LokkTeleportDetection and AA_LokkTeleportDetectionsmall) in Lokken, so load patch after Lokken
 [Order]
 BT_Whitewolf_2_0.esp
-mel_teleportPlugin_1_2_Patches.esp
+mel_teleportPlugin_1_3_Patches.esp
 
-;; Dragon32- Changes made to two scripts (A11SmileyTele and A11Tele) in The Underground, load patch after The Underground
+; (Ref: mel_tpp_1_3_readme.html)
 [Order]
 THE_UNDERGROUND_2.esp
-mel_teleportPlugin_1_2_Patches.esp
-
-;; Dragon32- Changes made to a script (11AA_TeleportDetection) in Laura Craft, load patch after Laura Craft
-[Order]
-Tribun_Laura_3_0.esp
-mel_teleportPlugin_1_2_Patches.esp
+mel_teleportPlugin_1_3_Patches.esp
 
 [Requires]
- "mel_teleportPlugin_1_2_JulanAddon.esp" enables other companions to travel with the player and Julan, from Kateri's "Julan, Ashlander Companion" mod, at two points in his quest.
- (Ref: mel_tpp_1_2_readme.html)
-mel_teleportPlugin_1_2_JulanAddon.esp
-[ALL mel_teleportPlugin_1_2_Patches.esp
+ "mel_teleportPlugin_1_3_JulanAddon.esp" enables other companions to travel with the player and Julan, from Kateri's "Julan, Ashlander Companion" mod, at two points in his quest.
+ (Ref: mel_tpp_1_3_readme.html)
+mel_teleportPlugin_1_3_JulanAddon.esp
+[ALL mel_teleportPlugin_1_3_Patches.esp
      KS_Julan_Ashlander Companion_1.3.esp]
 
-;;Dragon32- Ref: mel_tpp_1_2_readme.html
+; (Ref: mel_tpp_1_3_readme.html)
 [Order]
 Heaven's Lookout.esp
 mel_teleportPlugin_HeavensLookoutPatch.esp
 
 [Requires]
- (Ref: mel_tpp_1_2_readme.html)
+ (Ref: mel_tpp_1_3_readme.html)
 mel_teleportPlugin_HeavensLookoutPatch.esp
 Heaven's Lookout.esp
+
+[Note]
+ There is a newer version of "Melian's Teleport Mod" available. You should upgrade:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=113445&id=8153
+mel_teleportPlugin_1_2.esp
+mel_teleportPlugin_1_1.esp
+mel_teleportPlugin_1_0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10236,6 +10253,10 @@ Morrowind Advanced.esm
 
 [Order]
 Morrowind Patch v1.6.4.esm
+Morrowind Advanced.esm
+
+[Order]
+Morrowind Patch v1.6.5-BETA.esm
 Morrowind Advanced.esm
 
 ;; Note that you will still need to run "MW_Adv_Required.esp" after the
@@ -10878,6 +10899,15 @@ Morrowind Comes Alive.esm
 MCA - Zero Town Baddies.esp
 [ANY [SIZE 2707833 MCA.esm] ;standard 5.2
      [SIZE 2519851 MCA.esm]] ;The Undead-compatible version
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MDP - Maar Gan (More Detailed Places) [ragox]
+
+[Note]
+ !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 18384 MDP - Maar Gan.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12419,6 +12449,7 @@ Object Permanence Full.esm
 ;; Dragon32: Note in 'OPM v1.21.txt' about timestamps
 [Order]
 Morrowind Patch v1.6.4.esm
+Morrowind Patch v1.6.5-BETA.esm
 Object Permanence Full.esm
 Object Permanence Morrowind.esm
 Object Permanence Tribunal.esm
@@ -16595,16 +16626,20 @@ Building Up Uvirith's Grave 1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MPP [TES Morrowind Community, ThePal, Baldurdash, and quorn]
+;; @MPP (Morrowind Patch Project) [TES Morrowind Community, ThePal, Baldurdash, and quorn]
 
 [Note]
- The latest version of the Morrowind Patch (updated by quorn) is "Morrowind Patch v1.6.4.esm". "Morrowind Patch v1.6.4 (WIP).esm" is the older Work in Progress version. (mlox only tracks the latest version, so it's strongly suggested that you upgrade).
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
- http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
+ You have an older version of the MPP (Morrowind Patch Project) installed. The latest version is 1.6.4 (updated by quorn) and available from one of the following links:
+  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
+  http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
+ You may also wish to consider using the v1.6.5-BETA version available here:
+  http://www.sendspace.com/file/mmaydw
+Morrowind Patch v1.6.2.esm
+Morrowind Patch v1.6.3.esm
 Morrowind Patch v1.6.4 (WIP).esm
 
 [Note]
- The latest MPP Release 1.6.4 no longer needs or provides these patch files.
+ Since release 1.6.4, the MPP no longer needs or provides these patch files.
 UUMPP LGNPC Andus Tradehouse fix.esp
 UUMPP LGNPC wild nix hounds fix.esp
 UUMPP Bloated Morrowind removal patch.esp
@@ -16613,19 +16648,22 @@ UUMPP Bloated Morrowind Patch v1.6.4.esp
 [Conflict]
  The MPP obsoletes "ARJAN_VampireFly_Fix.esp" (Arjan Wardekker)
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP, just like the "Vampire Levitation Fix" (Kal Choedan).
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 ARJAN_VampireFly_Fix.esp
 
 [Conflict]
  The MPP obsoletes the "vampirequestrepair.esp"
  (Ref: Gluby's comment @ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3404 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 vampirequestrepair.esp
 
 [Conflict]
  The MPP obsoletes the "Writ Bug Fix".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=970900&pid=14090164&st=20&#entry14090164 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Writ Bug Fix.esp
 
 [Note]
@@ -16653,26 +16691,31 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
 [Conflict]
  The MPP obsoletes Correct Spell Sounds (Zener).
  (Ref: Dragon32. I checked the alterations Correct Spell Sounds made against those made by MPP. The MPP makes a better fist of it as it changed Demoralize Humanoid to Illusion, Correct Spell Sounds missed that change).
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Correct Spell Sounds.esp
 
 [Conflict]
  The MPP obsoletes Edwinna Elbert's Book (Alphax).
  (Ref: Morrowind_Patch_v1.6.4\Patch Documentation\Bug Fixes.txt)
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_edwinna_book.esp
 
 ; Dragon32 - from here: http://nightmare2013.brashendeavors.net/
 [Conflict]
  The MPP obsoletes Bloodmoon EEC Stock Certificate fix (Nightmare2013).
  (Ref: Morrowind_Patch_v1.6.4\Patch Documentation\Bug Fixes.txt)
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 fixdialog-bmeec-stockcertificate-notrib.esp
 
 [Conflict]
  The MPP obsoletes Tribunal Crimson Plague Quest Tweaker v0.01 (Max a.k.a. ~NOBODY~).
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=946462&view=findpost&p=13837411
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
+
 Tribunal Crimson Plague tweaker.esp
 
 [Conflict]
@@ -16680,102 +16723,112 @@ Tribunal Crimson Plague tweaker.esp
  (Ref: "Morrowind patch changes.htm")
 Ring Texture Fix.esp
 [ANY Morrowind Patch v1.6.3.esm
-     Morrowind Patch v1.6.4.esm]
+     Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 
 [Conflict]
  Using the MPP and Ascended Sleeper SFX together invalidates the need for Warlord Jim's Creature Sound Fix plugin.
  (Ref: "Sound Fix readme.txt", "UUMPP-full-readme.txt", "AscendedSleeperSFX.txt")
 soundfix.esp
-[ALL Morrowind Patch v1.6.4.esm
+[ALL [ANY Morrowind Patch v1.6.4.esm
+	  Morrowind Patch v1.6.5-BETA.esm]
      AscendedSleeperSFX.esp]
 
 [Order]
 Bloodmoon.esm
 Morrowind Patch v1.6.4.esm
+Morrowind Patch v1.6.5-BETA.esm
 
 [Note]
  The MPP now contains the Baldurdash Text Patch (with the exception of corrections to books).
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=924590&view=findpost&p=13409684 )
-[ALL Morrowind Patch v1.6.4.esm
+[ALL [ANY Morrowind Patch v1.6.4.esm
+	  Morrowind Patch v1.6.5-BETA.esm]
      Text Patch for Morrowind with Tribunal & Bloodmoon.esp]
 
 [Conflict]
  The MPP fixes the fog density parameter in the cell "Sotha Sil, Dome of Serlyn", so you don't also need the plugin "Dome of Serlyn fix.esp".
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Dome of Serlyn fix.esp
 
 [Conflict]
  The MPP also fixes the problem with Trebonius challenging you when you are only a wizard, so the ArchMage_Fix_0604.esp is obsolete.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=122 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 ArchMage_Fix_0604.esp
 
 [Conflict]
  The MPP also fixes the problem with the Medium Armor Master Trainer. So the MPP makes "SecretMasterFix.esp" obsolete.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=130 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 SecretMasterFix.esp
 
 [Conflict]
  The MPP also fixes the problem with advancement to Telvanni magister.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=157 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Telvanni_Archmagister_Fix.esp
 
 [Conflict]
  The MPP also fixes all the same bugs as Questfix-1.2.esp.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1123 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Questfix-1.2.esp
 
 [Conflict]
  !! "Nerevarine Greeting tweaks.esp" contains Evil GMSTs and is obsoleted by the MPP 1.64 or greater. You should use just the MPP instead.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Nerevarine Greeting tweaks.esp
 
 [Conflict]
  !! "lfx_nerevarine_greetings.esp" and "ExcuseMe.esp" both try to solve the problem of too many "Excuse me, Nerevarine" greetings. The MPP has also addressed this by filtering that dialogue better. It is recommended you use the MPP instead.
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_nerevarine_greetings.esp
 ExcuseMe.esp
 
 [Conflict]
  The MPP contains AlphaX's ten pace boot fix (lfx_tenpace_tribunal) and also obsoletes Tenpacebootsfix by 'DIE CLIFFRACER DIE DIE'
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_tenpace_tribunal.esp
 Tenpacebootsfix.esp
 
 [Conflict]
  The MPP obsoletes "Heartwood" by Midgetalien. Both plugins modify the Spriggans so that the Heartwood ingredient is dropped.
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 heartwood.esp
 
 [Conflict]
  The MPP obsoletes "Ash Ghoul Hearts" by Denina. Both plugins modify the Ash Ghouls so ghoul hearts are randomly dropped.
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Ash Ghoul Hearts.esp
 
 [Conflict]
  The MPP obsoletes "Wild Rare Ingredients v1.00" by Alphax.
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_merged-uniques.esp
 
 [Conflict]
  The MPP obsoletes "Wild Rare Ingredients v1.00" by Alphax..
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_ingredients-uniques.esp
-
-[Note]
- The latest version of the Morrowind Patch 1.6.4 (updated by quorn) supersedes Thepal's UMP, use the new 1.6.4 version instead.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7347
- http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4519
-Morrowind Patch v1.6.2.esm
-Morrowind Patch v1.6.3.esm
 
 [Conflict]
  The MPP contains Daleth's Book Placement Fix
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 [ANY Book Placement Fix - Bloodmoon.esp
      Book Placement Fix - Morrowind.esp
      Book Placement Fix - Tribunal.esp]
@@ -16883,160 +16936,183 @@ word_use_fix.esp
  The MPP obsoletes Ebony Greaves (TommyKhajiit).
  This fix has been superseded by Sapphron's Ebony Armor Fixes v1.1 that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 acsEbonyGreaves.esp
 
 [Conflict]
  The MPP obsoletes Bal Molagmer Quests (HappyHannah).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Bal Molagmer Fix.esp
 
 [Conflict]
  The MPP obsoletes Buoyant Class Fix (Shiva7663).
  This fix has been superseded by Shiva7663's Bugfix01 that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 BouyantClassFix.esp
 
 [Conflict]
  The MPP obsoletes Sliver's Devil Tanto Fix (Sliver).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Clean Devil_Tanto_Bug_Fix.esp
 
 [Conflict]
  The MPP obsoletes Colony Spriggan Fix (Falnor).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Colony Spriggan Fix.esp
 
 [Conflict]
  The MPP obsoletes Dren Plantation Faction Tweak (Shiva7663).
  This fix has been superseded by Shiva7663's Bugfix01 that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 DrenFactionTweaks.esp
 
 [Conflict]
  The MPP obsoletes Fast Eddie Fix (Shiva7663).
  This fix has been superseded by Shiva7663's Bugfix01 that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 fast_eddie_fix.esp
 
 [Conflict]
  The MPP obsoletes Female Ice Gauntlet Fix (Lee Matthias).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Female Ice Gauntlet Fix.esp
 
 [Conflict]
  The MPP obsoletes False Incarnate Fix (Ciante).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 fix_false_incarnate.esp
 
 [Conflict]
  The MPP obsoletes Glass Arrow Fix (GlassBoy).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Glass arrow fix.esp
 
 [Conflict]
  The MPP obsoletes Gnisis Guard Fix (Puma Man).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Gnisis Gaurd Fix.esp
 
 [Conflict]
  The MPP obsoletes Master Trainers Fix (HitokiriOTD).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Master Trainer Fix v.01.esp
 
 [Conflict]
  The MPP obsoletes Master Aryon Fix (Robin).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 milyn_faram_fix_0529.esp
 
 [Conflict]
  The MPP obsoletes Quest Fix (emerald avatar).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Quest Fix.esp
 
 [Conflict]
  The MPP obsoletes Golena Sadri Hidden Player Fix (Emprint).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 SadriHiddenPlayerFix.esp
 
 [Conflict]
  The MPP obsoletes Sadrith Haunting Fix (Robink).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Sadrith_Haunting_Fix_0530.esp
 
 [Conflict]
  The MPP obsoletes Shakti's Secret Masters Fix v1.1c (Shakti).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 shakti_secret_masters_fix.esp
 
 [Conflict]
  The MPP obsoletes God 2.0's Telvanni Quest-Fix (God 2.0).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Telvanni Quest fix v.1.0.esp
 
 [Conflict]
  The MPP obsoletes Tel Fyr Amulet Fix v1.0 Final (Zobator).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Tel_Fyr_Amulet_Fix.esp
 
 [Conflict]
  The MPP obsoletes Trebonius-Antabolis Fix (FatherFrost).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 TreboniusAntabolisFix_0606.esp
 
 [Conflict]
  The MPP obsoletes Vampire Levitation Fix (Kal Choedan).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 vampfix.esp
 
 [Conflict]
  The MPP obsoletes Word Use Fix (PCC a.k.a. Blockhead).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 word_use_fix.esp
 
 [Conflict]
  The MPP obsoletes Cjad's Templar Pauldron Fix.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Cjad's Templar Pauldron Fix.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17047,31 +17123,36 @@ Cjad's Templar Pauldron Fix.esp
 [Conflict]
  The MPP obsoletes BM Armor Fix v1.0 [Misty Moon].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 BM-Armor-FIX.esp
 
 [Conflict]
  The MPP obsoletes Bloodmoon Female Armor Fix v0.3 [The Other Felix].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 BMFemArmorFix.esp
 
 [Conflict]
  The MPP obsoletes BM Wolf Greaves Fix [Aedroth].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 bm_wolf_greaves_fix.esp
 
 [Conflict]
  The MPP obsoletes Snow Bear Boot Fix [Corrodedsoul].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Snow Bear boot fix.esp
 
 [Conflict]
  The MPP obsoletes BugFix01 [shiva7663].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 shvBugFix01.esp
 
 [Conflict]
@@ -17080,19 +17161,22 @@ shvBugFix01.esp
  differences, like with the light spell, and elemental shields, so it
  looks like user preference here. the other fixes are the same.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 shvBugFix02.esp
 
 [Conflict]
  The MPP obsoletes Cattle Fix [ps33/Peter].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 cattle_fix.esp
 
 [Conflict]
  The MPP obsoletes Corprus Bugfix [Inki].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 corpusbugfix.esp
 
 [Conflict]
@@ -17101,146 +17185,169 @@ corpusbugfix.esp
  different textures for the groin piece. the MPP one matches the
  ground greaves. user preference for the groin mesh
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Ebony Armor Fixes.esp
 
 [Conflict]
  The MPP obsoletes Eisenfaust's "Crusader Class Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Crusader Class Fix.esp
 
 [Conflict]
  The MPP obsoletes Eisenfaust's "Ebonheart Warehouse Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Ebonheart Warehouse Fix.esp
 
 [Conflict]
  The MPP obsoletes Eisenfaust's "Pieces of the Blade Fix.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Pieces of the Blade Fix.esp
 
 [Conflict]
  The MPP obsoletes Eisenfaust's "St Llothis Fix.esp"
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 St Llothis Fix.esp
 
 [Conflict]
  The MPP obsoletes Eisenfaust's "Telvanni Guard Fix.esp".
  "abyssmal terror" reports that the MPP fix is a little different, so which one you use is a matter of preference.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Telvanni Guard Fix.esp
 
 [Conflict]
  The MPP obsoletes Factor Fix v1.0 [Mithrim].
  "abyssmal terror" reports: the MPP sort of fixes it, but doesn't have an activator that corrects the rank if you already are the factor of the EEC before the fix. Use this one if you are already the factor of the EEC in Bloodmoon.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Factor_fix.esp
 
 [Conflict]
  The MPP obsoletes Hasphat's Books v1.0 [Monica21].
  "abyssmal terror" reports: the MPP changes hasphat's note, it says the books can be found in vivec, which they are placed in the secret library. This mod adds them to the bookseller in Balmora. there's no issues using both, except the note no longer mentions the bookseller.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 HasphatsBooks.esp
 
 [Conflict]
  The MPP obsoletes "Pelagiad Fix.esp" from MiniMods Collection [ManaUser].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Pelagiad Fix.esp
 
 [Conflict]
  The MPP obsoletes NoLore Solstheim [Adam]
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 NoLore Solstheim.esp
 
 [Conflict]
  The MPP does something similar to Solstheim Undialog [SeekerVI].
  "abyssmal terror" reports: Solstheim Undialog integrates the topic into morrowind better, and should be used if preferred.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Solstien_undialog.esp
 
 [Conflict]
  The MPP obsoletes Ralen Hlaalo Quest Reward Fix [Stephane Geney].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Ralen_Hlaalo_reward_fix.esp
 
 [Conflict]
  The MPP obsoletes Templar Pauldrons Fix [Counciler].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 [ANY Clean_Templar_Pauldron_Fix_v11.esp
      Clean Templar Pauldron Fix.esp]	;and the earlier version too
 
 [Conflict]
  The MPP obsoletes Tribunal Quest Fix v1.0 [Enmesharra].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 TribunalQuestFix.esp
 
 [Conflict]
  The MPP obsoletes Uupse Fyr Bug Fix [Wormlore].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 UupseFix.esp
 
 [Conflict]
  The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_heartwood.esp
 
 [Conflict]
  The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_holly.esp
 
 [Conflict]
  The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_hornlily.esp
 
 [Conflict]
  The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_ingredients.esp
 
 [Conflict]
  The MPP obsoletes Wild Rare Ingredients v1.00 [Alphax].
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 lfx_rare_merged.esp
 
 [Conflict]
  The MPP does something similar to Almalexia Undialog [SeekerVI].
  "abyssmal terror" reports: the MPP adds nolore to the unfiltered topics, Almalexia Undialog filters those dialog to temple members, so it's removed from more NPCs. Use the Almalexia Undialog to get rid of the tribunal almalexia dialog from most NPCs.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Almalexia_undialog.esp
 
 [Conflict]
  The MPP obsoletes Bloodmoon Ammo Fix v1.0609 [Srikandi].
  "abyssmal terror" reports: both fixes the single counts of ammo, but in different ways. Srikandi adds more ammo in general in varying stacks, while the MPP adds less ammo in general, but in stacks of 20 like in the rest of containers. both modify the same lists, and Srikandi's fix can be used over the MPP.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 BloodmoonAmmoFix.esp
 
 [Conflict]
  The MPP obsoletes Brittlewind Fix [64057]. ("Brittlewind Fix.esp" is also distributed in "Galsiahs Character Development").
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
 Brittlewind Fix.esp
 
 
