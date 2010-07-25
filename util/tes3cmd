@@ -32,7 +32,6 @@ $::VERSION = "0.37j";
 # sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair
 # Implement "--hide-backups" and "--backup-dir" so that unsightly backups are plonked into Data Files/tes3cmd/backups
-# fix bsa dates for Steam versions
 # add report of stats (plugins scanned, etc) for multipatch and clean.
 # implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
@@ -50,6 +49,7 @@ $::VERSION = "0.37j";
 # reformat overdial output? just list each topic once, with list of plugins that have it
 # implement script compiler
 # add new commands:
+# * "sos" (save our save) for doing a binary search for bad records/subrecords in a savegame
 # * "buildcache" (build up all the cache files for cleaning, lookups, etc)
 # * "codec" (print text description of TES3 codec)
 # * "undo" (revert to last backups for modifying commands)
@@ -57,7 +57,7 @@ $::VERSION = "0.37j";
 # * "undump" (text to record, can't undump from wrong version)
 # * "combine" (merge listed plugins into one plugin)
 # * "conflict" (detailed report, toggle mergeable records from report)
-# * "lint" (splice in tes3lint functionality)
+# # # # # # # # # # # # # # #
 # * "multipatch", to include:
 # ** automatically patch overdial problems???
 # ** generate book rotate scripts (need compiler)
@@ -72,6 +72,17 @@ $::VERSION = "0.37j";
 # **** autocalced vs. non-autocalced NPCs NPDT
 # **** deleted body parts from clothes (redefining the set of body parts for a CLOT) (grouped subrecs)
 # **** handle patch plugins that are *supposed* to only override the patchee (auto-detect?)
+# # # # # # # # # # # # # # #
+# lint:
+# * check for dialog edits that lose part of the filter.
+# * add note about creating a shortcut on Windows
+# * check for addtopic of non-existant dialog topics?
+# * add a check for missing icons, etc.?
+# * add a check for signrotate contamination (difficult to impossible)
+# * check for use of position(cell) in INFO results!
+# * OVR-REC specials: PGRD.????
+# * check for use of == on floats in scripts! (gamehour)
+# * duplicate records should also check for change in flags!
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
@@ -974,7 +985,7 @@ my @RD_float_array_ess =
 	       $self->{_subbuf_} = pack("f*", map { $self->{$_} } (0..$self->{_last_idx}));
 	       return($self);
 	   },
-	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
+	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # NOTYET (and implement ordering)
 	   tostr => sub {
 	       my($self) = @_;
 	       "Float_Array: " . join(", ", map { sprintf("$_=%0.2f", $self->{$_}) } 0..$self->{_last_idx});
@@ -1016,7 +1027,7 @@ my @RD_short_array_ess =
 	       $self->{_subbuf_} = pack("s*", map { $self->{$_} } (0..$self->{_last_idx}));
 	       return($self);
 	   },
-	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
+	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # NOTYET (and implement ordering)
 	   tostr => sub {
 	       my($self) = @_;
 	       "Short_Array: " . join(", ", map { "$_=$self->{$_}" } 0..$self->{_last_idx});
@@ -1265,7 +1276,7 @@ my @RECDEFS =
 		     }
 		     return($self);
 		 },
-		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # NOTYET check this works (and implement ordering)
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{flags}) {
@@ -1893,7 +1904,7 @@ my @RECDEFS =
 		     }
 		     return($self);
 		 },
-		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # NOTYET check this works (and implement ordering)
 		 tostr => sub {
 		     my($self) = @_;
 		     my $faction = $self->{faction};
@@ -2080,7 +2091,7 @@ my @RECDEFS =
 		     }
 		     return($self);
 		 },
-		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # NOTYET check this works (and implement ordering)
 		 tostr => sub {
 		     my($self) = @_;
 		     if (exists $self->{blizzard}) {
@@ -2232,7 +2243,7 @@ my @RECDEFS =
 		     $self->{_subbuf_} = pack("L2", $l1, $l2);
 		     return($self);
 		 },
-		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # TBD check this works (and implement ordering)
+		 #fieldnames => sub { grep {!/^_/} keys %{$_[0]}; }, # NOTYET check this works (and implement ordering)
 		 tostr => sub {
 		     my($self) = @_;
 		     return("Length:$self->{length}");
@@ -2449,7 +2460,7 @@ sub dump {
 	    }
 	} else {
 	    if ($banner) { print $banner; undef $banner; }
-	    print "  $subtype: ",$tsr->tostr,"\n"; # print entire subrec
+	    print " [$i] $subtype: ",$tsr->tostr,"\n"; # print entire subrec
 	}
     }
     return('');			# passthrough
@@ -2502,7 +2513,7 @@ sub gen_custom {
     }
 }
 
-# TBD - unimplemented
+# NOTYET
 sub pretty_columns {
     my($fnameref, $fmtref) = @_;
     my $print_format;
@@ -2515,7 +2526,7 @@ sub pretty_columns {
 	push(@{$columns{$column_name}}, [$fname, shift(@formats)]);
     }
     foreach my $column_name (sort keys %columns) {
-	# TBD
+	# NOTYET
     }
     # return our pretty columns
     @{$fnameref} = @fieldnames;
@@ -2980,6 +2991,11 @@ my %ORIGINAL_DATE =
       'tribunal.esm'  => 1035940926,
     );
 
+my $lint_fog_density;
+my $lint_no_expansion_funs;
+my $lint_header_fields;
+my $lint_modified_info;
+my $lint_expansion_functions;
 
 ### MAIN COMMON COMMAND OPTIONS
 our @STDOPT = (qw(assert debug verbose));
@@ -3033,6 +3049,34 @@ our $opt_header_synchronize;
 our $opt_header_update_masters;
 our $opt_header_update_record_count = 0;
 
+our $opt_lint_all;
+our $opt_lint_recommended;
+our $opt_lint_autocalc_spells;
+our $opt_lint_bloodmoon_dependency;
+our $opt_lint_cell_00;
+our $opt_lint_clean;
+our $opt_lint_deprecated_lists;
+our $opt_lint_duplicate_info;
+our $opt_lint_duplicate_records;
+our $opt_lint_expansion_dependency;
+our $opt_lint_evil_gmsts;
+our $opt_lint_fogbug;
+our $opt_lint_fogsync;
+our $opt_lint_getsoundplaying;
+our $opt_lint_junk_cells;
+our $opt_lint_master_sync;
+our $opt_lint_menumode;
+our $opt_lint_missing_author;
+our $opt_lint_missing_description;
+our $opt_lint_missing_version;
+our $opt_lint_modified_info;
+our $opt_lint_modified_info_id;
+our $opt_lint_record_count;
+our $opt_lint_overrides;
+our $opt_lint_no_bloodmoon_functions;
+our $opt_lint_no_tribunal_functions;
+our $opt_lint_scripted_doors;
+
 our $opt_modify_program_file = '';
 our $opt_modify_replace = '';
 our $opt_modify_run = '';
@@ -3054,6 +3098,10 @@ my %COMMAND;
     (
      active =>
      { description => qq{Add/Remove/List Plugins in your load order},
+       options => [@STDOPT,
+		   'off' => \$opt_active_off,
+		   'on'  => \$opt_active_on],
+       preprocess => \&cmd_active,
        usage => q{Usage: tes3cmd active OPTIONS plugin1.esp [plugin2.esp...]
 
 OPTIONS:
@@ -3072,13 +3120,32 @@ Activates the specified plugins. When no options are specified, just prints
 current active load order.
 
 },
-       options => ['off' => \$opt_active_off,
-		   'on'  => \$opt_active_on],
-       preprocess => \&cmd_active,
      },
 
      clean =>
      { description => qq{Clean plugins of Evil GMSTs, junk cells, and more},
+       options => [@STDOPT,
+		   'all'           => \$opt_clean_all,
+		   'instances'     => \$opt_clean_instances,
+		   'cell-params'   => \$opt_clean_cell_params,
+		   'dups'          => \$opt_clean_dups,
+		   'gmsts'         => \$opt_clean_gmsts,
+		   'junk-cells'    => \$opt_clean_junk_cells,
+		   'no-cache',
+		   'output-dir',
+		   'replace'       => \$opt_clean_replace],
+
+       preprocess => sub {
+	   unless ($opt_clean_instances or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
+	       # turn on all safe cleaning options if none are selected.
+	       $opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+	   }
+	   if ($opt_clean_all) {
+	       # turn on all cleaning options (in future we may add some that are possibly unsafe)
+	       $opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
+	   }
+       },
+       process => \&cmd_clean,
        usage => q{Usage: tes3cmd clean OPTIONS plugin...
 
 OPTIONS:
@@ -3179,31 +3246,12 @@ tes3cmd clean --output-dir Clean "my plugin1.esp" "my plugin2.esp"
 # the cleaned versions and save the diagnostic output to a file (clean.txt):
 tes3cmd clean --replace *.esm *.esp > clean.txt
 },
-       options => ['all'           => \$opt_clean_all,
-		   'instances'     => \$opt_clean_instances,
-		   'cell-params'   => \$opt_clean_cell_params,
-		   'dups'          => \$opt_clean_dups,
-		   'gmsts'         => \$opt_clean_gmsts,
-		   'junk-cells'    => \$opt_clean_junk_cells,
-		   'no-cache',
-		   'output-dir',
-		   'replace'       => \$opt_clean_replace],
-
-       preprocess => sub {
-	   unless ($opt_clean_instances or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
-	       # turn on all safe cleaning options if none are selected.
-	       $opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
-	   }
-	   if ($opt_clean_all) {
-	       # turn on all cleaning options (in future we may add some that are possibly unsafe)
-	       $opt_clean_instances = $opt_clean_cell_params = $opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
-	   }
-       },
-       process => \&cmd_clean,
      },
 
      common =>
      { description => qq{Find record IDs common between two plugins},
+       options => [@STDOPT],
+       preprocess => \&cmd_common,
        usage => q{Usage: tes3cmd common OPTIONS plugin1 plugin2
 
 OPTIONS:
@@ -3219,12 +3267,24 @@ EXAMPLES:
 # Show the records in common between my plugin and Morrowind.esm:
 tes3cmd common "my plugin.esp" "Morrowind.esm"
 },
-       options => [],
-       preprocess => \&cmd_common,
      },
 
      delete =>
      { description => qq{Delete records/subrecords/object instances from plugin},
+       options => [@STDOPT,
+		   'instance-match=s',
+		   'instance-no-match=s',
+		   'exact-id=s@',
+		   'exterior',
+		   'flag=s@',
+		   'id=s@',
+		   'interior',
+		   'match=s',
+		   'no-match|M=s',
+		   'sub-match=s',
+		   'sub-no-match|M=s',
+		   'type=s@'],
+       process => \&cmd_delete,
        usage => q{Usage: tes3cmd delete OPTIONS plugin...
 
 OPTIONS:
@@ -3297,25 +3357,24 @@ tes3cmd delete --flag ignored plugin.esp
 # Delete the poisonbloom spell subrecords from all current "_mca_" NPCs in quicksave.ess:
 tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave.ess
 },
-
-       options => ['instance-match=s',
-		   'instance-no-match=s',
-		   'exact-id=s@',
-		   'exterior',
-		   'flag=s@',
-		   'id=s@',
-		   'interior',
-		   'match=s',
-		   'no-match|M=s',
-		   'sub-match=s',
-		   'sub-no-match|M=s',
-		   'type=s@'],
-       process => \&cmd_delete,
      },
 
      diff =>
      { description => qq{Report differences between two plugins},
- usage => q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
+       options => [@STDOPT,
+		   'ignore-type=s@'   => \@opt_diff_ignore_types,
+		   '1-not-2|e1'       => \$opt_diff_1_not_2,
+		   '2-not-1|e2'       => \$opt_diff_2_not_1,
+		   'equal|eq'         => \$opt_diff_equal,
+		   'types'            => \$opt_diff_types,
+		   'not-equal|ne'     => \$opt_diff_not_equal],
+
+       preprocess => sub {
+	   unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal or $opt_diff_types) {
+	       $opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
+	   }
+	   cmd_diff();
+       usage => q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
 OPTIONS:
  --debug
@@ -3369,24 +3428,50 @@ tes3cmd diff --ignore-type crea.aidt --ignore-type cell.nd3d testa0000.ess testb
 # Just print the records that differ
 tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 },
-       options => ['ignore-type=s@'   => \@opt_diff_ignore_types,
-		   '1-not-2|e1'       => \$opt_diff_1_not_2,
-		   '2-not-1|e2'       => \$opt_diff_2_not_1,
-		   'equal|eq'         => \$opt_diff_equal,
-		   'types'            => \$opt_diff_types,
-		   'not-equal|ne'     => \$opt_diff_not_equal],
-
-       preprocess => sub {
-	   unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal or $opt_diff_types) {
-	       $opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
-	   }
-	   cmd_diff();
        },
      },
 
      dump =>
      { description => qq{Dump records as text for easy study},
-	usage => q{Usage: tes3cmd dump OPTIONS plugin...
+	options => [@STDOPT,
+		    'exact-id=s@',
+		    'exterior',
+		    'flag=s@',
+		    'id=s@',
+		    'instance-match=s',
+		    'instance-no-match=s',
+		    'interior',
+		    'list',
+		    'match=s',
+		    'no-banner|B',
+		    'no-match|M=s',
+		    'no-wrap',
+		    'raw-with-header=s'   => \$opt_dump_raw_with_header,
+		    'raw=s'               => \$opt_dump_raw,
+		    'separator=s',
+		    'type=s@'],
+	preprocess =>  sub {
+	    $opt_dump_raw = $opt_dump_raw_with_header
+		if ($opt_dump_raw_with_header);
+	    abort("did you forget to give a filename for raw output?")
+		if (defined($opt_dump_raw) and $opt_dump_raw =~ /^-/);
+
+	    # write out the header here as we would like to be able to append to it from multiple input plugins
+	    $DUMP_RAWOUT = open_for_output($opt_dump_raw)
+		if ($opt_dump_raw);
+	    print $DUMP_RAWOUT make_header()
+		if ($opt_dump_raw_with_header);
+	},
+	process => \&cmd_dump,
+	postprocess => sub {
+	    if ($opt_dump_raw) {
+		close($DUMP_RAWOUT);
+		$opt_header_update_record_count = 1;
+		update_header($opt_dump_raw, [qw(QUIET NOBACKUP)]);
+		print "\nRaw records saved in $opt_dump_raw\n";
+	    }
+	},
+       usage => q{Usage: tes3cmd dump OPTIONS plugin...
 
  OPTIONS:
   --debug
@@ -3485,48 +3570,12 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
  # and her chest in the cell: "Balmora, Guild of Mages"):
  tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
  },
-	options => ['exact-id=s@',
-		    'exterior',
-		    'flag=s@',
-		    'id=s@',
-		    'instance-match=s',
-		    'instance-no-match=s',
-		    'interior',
-		    'list',
-		    'match=s',
-		    'no-banner|B',
-		    'no-match|M=s',
-		    'no-wrap',
-		    'raw-with-header=s'   => \$opt_dump_raw_with_header,
-		    'raw=s'               => \$opt_dump_raw,
-		    'separator=s',
-		    'type=s@'],
-
-	preprocess =>  sub {
-	    $opt_dump_raw = $opt_dump_raw_with_header
-		if ($opt_dump_raw_with_header);
-	    abort("did you forget to give a filename for raw output?")
-		if (defined($opt_dump_raw) and $opt_dump_raw =~ /^-/);
-
-	    # write out the header here as we would like to be able to append to it from multiple input plugins
-	    $DUMP_RAWOUT = open_for_output($opt_dump_raw)
-		if ($opt_dump_raw);
-	    print $DUMP_RAWOUT make_header()
-		if ($opt_dump_raw_with_header);
-	},
-	process => \&cmd_dump,
-	postprocess => sub {
-	    if ($opt_dump_raw) {
-		close($DUMP_RAWOUT);
-		$opt_header_update_record_count = 1;
-		update_header($opt_dump_raw, [qw(QUIET NOBACKUP)]);
-		print "\nRaw records saved in $opt_dump_raw\n";
-	    }
-	},
      },
 
      esm =>
      { description => qq{Convert plugin (esp) to master (esm)},
+       options => [@STDOPT, 'overwrite'],
+       process => \&cmd_esm,
        usage => q{Usage: tes3cmd esm OPTIONS plugin...
 
 OPTIONS:
@@ -3546,12 +3595,12 @@ EXAMPLES:
 # output is: "my plugin.esm"
 tes3cmd esm "my plugin.esp"
 },
-       options => ['overwrite'],
-       process => \&cmd_esm,
      },
 
      esp =>
      { description => qq{Convert master (esm) to plugin (esp)},
+       options => [@STDOPT, 'overwrite'],
+       process => \&cmd_esp,
        usage => q{Usage: tes3cmd esp OPTIONS master...
 
 OPTIONS:
@@ -3571,12 +3620,12 @@ EXAMPLES:
 # output is: "my plugin.esp"
 tes3cmd esp "my plugin.esm"
 },
-       options => ['overwrite'],
-       process => \&cmd_esp,
      },
 
      fixit =>
      { description => qq{tes3cmd fixes everything it knows how to fix},
+       options => [@STDOPT],
+       preprocess => \&cmd_fixit,
        usage => q{Usage: tes3cmd fixit
 
 DESCRIPTION:
@@ -3585,13 +3634,25 @@ The fixit command does the following operations:
 - Cleans all your plugins ("tes3cmd clean")
 - Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
 - Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
+- Resets Dates on Bethesda data files
 },
-       options => [],
-       preprocess => \&cmd_fixit,
      },
 
      header =>
      { description => qq{Read/Write plugin Author/Description, sync to masters...},
+       options => [@STDOPT,
+		   'author=s'              => \$opt_header_author,
+		   'description=s'         => \$opt_header_description,
+		   'multiline'             => \$opt_header_multiline,
+		   'synchronize'           => \$opt_header_synchronize,
+		   'update-masters'        => \$opt_header_update_masters,
+		   'update-record-count'   => \$opt_header_update_record_count],
+
+       preprocess => sub {
+	   $opt_header_update_masters = $opt_header_update_record_count = 1
+	       if ($opt_header_synchronize);
+       },
+       process => \&cmd_header,
        usage => qq{Usage: tes3cmd header OPTIONS plugin...
 
 OPTIONS:
@@ -3655,18 +3716,6 @@ tes3cmd header --description "+\\nVersion: 1.0" "plugin.esp"
 # and sync the list of masters to the masters installed in "Data Files"
 tes3cmd header --synchronize "my plugin.esp"
 },
-       options => ['author=s'              => \$opt_header_author,
-		   'description=s'         => \$opt_header_description,
-		   'multiline'             => \$opt_header_multiline,
-		   'synchronize'           => \$opt_header_synchronize,
-		   'update-masters'        => \$opt_header_update_masters,
-		   'update-record-count'   => \$opt_header_update_record_count],
-
-       preprocess => sub {
-	   $opt_header_update_masters = $opt_header_update_record_count = 1
-	       if ($opt_header_synchronize);
-       },
-       process => \&cmd_header,
      },
 
      help =>
@@ -3713,11 +3762,293 @@ EOF
        },
      },
 
-     modify =>
-     { description => qq{Powerful batch record modification via user code extensions},
-       usage => q{Usage: tes3cmd modify OPTIONS plugin...
+     lint =>
+     { description => qq{Scan plugins and report possible problems},
+       options => [@STDOPT,
+		   'all'		    => \$opt_lint_all,
+		   'autocalc-spells'	    => \$opt_lint_autocalc_spells,
+		   'bloodmoon-dependency'   => \$opt_lint_bloodmoon_dependency,
+		   'cell-00'		    => \$opt_lint_cell_00,
+		   'clean'		    => \$opt_lint_clean,
+		   'deprecated-lists'	    => \$opt_lint_deprecated_lists,
+		   'duplicate-info'	    => \$opt_lint_duplicate_info,
+		   'duplicate-records'	    => \$opt_lint_duplicate_records,
+		   'expansion-dependency'   => \$opt_lint_expansion_dependency,
+		   'evil-gmsts'		    => \$opt_lint_evil_gmsts,
+		   'fogbug'		    => \$opt_lint_fogbug,
+		   'fogsync'		    => \$opt_lint_fogsync,
+		   'getsoundplaying'	    => \$opt_lint_getsoundplaying,
+		   'junk-cells'		    => \$opt_lint_junk_cells,
+		   'master-sync'	    => \$opt_lint_master_sync,
+		   'menumode'		    => \$opt_lint_menumode,
+		   'missing-author'	    => \$opt_lint_missing_author,
+		   'missing-description'    => \$opt_lint_missing_description,
+		   'missing-version'	    => \$opt_lint_missing_version,
+		   'modified-info'	    => \$opt_lint_modified_info,
+		   'modified-info_id'	    => \$opt_lint_modified_info_id,
+		   'record-count'	    => \$opt_lint_record_count,
+		   'overrides'		    => \$opt_lint_overrides,
+		   'no-bloodmoon-functions' => \$opt_lint_no_bloodmoon_functions,
+		   'no-tribunal-functions'  => \$opt_lint_no_tribunal_functions,
+		   'scripted-doors'	    => \$opt_lint_scripted_doors,
+		  ],
+       preprocess => sub {
+	   if ($opt_lint_recommended) {
+	       $opt_lint_bloodmoon_dependency = 1;
+	       $opt_lint_clean = 1;
+	       $opt_lint_deprecated_lists = 1;
+	       $opt_lint_duplicate_records = 1;
+	       $opt_lint_evil_gmsts = 1;
+	       $opt_lint_expansion_dependency = 1;
+	       $opt_lint_fogbug = 1;
+	       $opt_lint_fogsync = 1;
+	       $opt_lint_junk_cells = 1;
+	       $opt_lint_modified_info_id = 1;
+	   } elsif ($opt_lint_all) {
+	       $opt_lint_autocalc_spells = 1;
+	       $opt_lint_bloodmoon_dependency = 1;
+	       $opt_lint_cell_00 = 1;
+	       $opt_lint_clean = 1;
+	       $opt_lint_deprecated_lists = 1;
+	       $opt_lint_duplicate_info = 1;
+	       $opt_lint_duplicate_records = 1;
+	       $opt_lint_expansion_dependency = 1;
+	       $opt_lint_evil_gmsts = 1;
+	       $opt_lint_fogbug = 1;
+	       $opt_lint_fogsync = 1;
+	       $opt_lint_getsoundplaying = 1;
+	       $opt_lint_junk_cells = 1;
+	       $opt_lint_master_sync = 1;
+	       $opt_lint_menumode = 1;
+	       $opt_lint_missing_author = 1;
+	       $opt_lint_missing_description = 1;
+	       $opt_lint_missing_version = 1;
+	       $opt_lint_modified_info = 1;
+	       $opt_lint_modified_info_id = 1;
+	       $opt_lint_record_count = 1;
+	       $opt_lint_overrides = 1;
+	       $opt_lint_no_bloodmoon_functions = 1;
+	       $opt_lint_no_tribunal_functions = 1;
+	       $opt_lint_scripted_doors = 1;
+	   }
 
-OPTIONS:
+	   $lint_fog_density = 1	  if ($opt_lint_fogbug or $opt_lint_fogsync);
+	   $lint_no_expansion_funs = 1    if ($opt_lint_no_tribunal_functions or $opt_lint_no_bloodmoon_functions);
+	   $lint_header_fields = 1	  if ($opt_lint_missing_author or $opt_lint_missing_description or
+					      $opt_lint_missing_version or $opt_lint_record_count);
+	   $lint_modified_info = 1	  if ($opt_lint_modified_info or $opt_lint_modified_info_id);
+	   $lint_expansion_functions = 1  if ($opt_lint_bloodmoon_dependency or $opt_lint_expansion_dependency);
+       },
+       process => \&cmd_lint,
+       usage => qq{Usage: tes3cmd lint OPTIONS plugins...
+
+OPTIONS
+
+ --all/recommended
+	Enable all or recommended output options. When --recommended is
+	selected only the following options are enabled:
+	--bloodmoon-dependency, --clean, --deprecated-lists,
+	--duplicate-records, --evil-gmsts, fog-sync, --fogbug, --junk-cells,
+	--modified-info-id, --expansion-dependency
+
+ --autocalc-spells
+	The plugin defines autocalc'ed spells.
+
+ --bloodmoon-dependency
+	The plugin uses Bloodmoon specific functions, so it needs version
+	1.6.1820, but the plugin does not list Bloodmoon.esm in its list of
+	Masters. This is similar to the EXP-DEP flag, but it is for Bloodmoon
+	only.
+
+ --cell-00
+	This means that an apparently dirty copy of cell (0, 0) is included in
+	the plugin. This cell is often accidentally modified since it is the
+	default cell displayed in the cell view window.
+
+ --clean
+	If this flag is used, then a plugin that is not flagged with any of
+	the flags below will be flagged "CLEAN". It really just means: "found
+	nothing of interest".
+
+ --deprecated-lists
+	This flag indicates that the plugin makes deprecated use of scripting
+	functions to modify standard Bethesda Leveled Lists. This is bad
+	because these lists will then be stored in the user's savegame just
+	like any other changed object. Since savegames load after all plugins
+	(including "Mashed Lists.esp" which contains merged leveled lists),
+	this means that merged leveled lists will be ignored. Note that this
+	warning only applies to changes to Bethesda lists. Changes to leveled
+	lists specific to the mod will not be flagged. For more about the
+	problem of using scripting functions to modify Bethesda lists see:
+	http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+
+ --duplicate-info
+	indicates the exact INFO dialog with the same ID, text and filter
+	exists in one of the masters of this plugin. This may be a problem, or
+	maybe not. Sometimes duplicate dialog is intentional in order for
+	dialog sorting to be correct. It's only a mistake if it really was
+	unintentional.
+
+ --duplicate-records
+	These are records in the plugin that are exact duplicates of records
+	that occur in one of the masters. These are sometimes referred to as
+	"dirty" or "unclean" entries.
+
+ --evil-gmsts
+	You know this one! This means that some of the "72 Evil GMSTs" are
+	present in this plugin and that they have the same exact value as the
+	original GMST in the master .esm. Other GMSTs not in the list of known
+	Evil GMSTs or GMSTs that have been modified from their original values
+	are not flagged. Note that it is also possible to have other GMSTs
+	show up in the DUP-REC list, but those are not from the list of 72
+	GMSTs that would get introduced by the Construction Set.
+
+ --expansion-dependency
+	The plugin requires either Tribunal or Bloodmoon because it uses
+	engine features not present in the original Morrowind such as startup
+	scripts or Tribunal functions, but the plugin has not listed any
+	expansions in its list of Masters. This is not necessarily a problem,
+	but it may contradict the Readme for the           mod sometimes.
+ --fog-sync
+	This flag indicates that for some reason that the fog density setting
+	in the CELL.DATA subrecord is not equal to the fog density setting in
+	the CELL.AMBI subrecord. This is unusual, it's probably caused by
+	editing the plugin in Enchanted Editor, and it's probably harmless,
+	but you can resync the values by editing that cell in the Construction
+	Set.
+
+ --fogbug
+	The plugin has an interior CELL with a fog density of 0.0, and the
+	cell is not marked to "behave as exterior". This circumstance can
+	trigger the "fog bug" in some graphics cards, resulting in the cell
+	being rendered as a black or featureless blank screen.
+
+ --getsoundplaying
+	The plugin appears to use the scripting function GetSoundPlaying to
+	detect events (as opposed to managing the playing of sound files).
+	GetSoundPlaying fails consistently on a small number of users'
+	systems, so these users will encounter problems with these scripts.
+	Note that tes3lint uses regular expressions to detect the purpose for
+	using GetSoundPlaying, and it will sometimes get false positives. For
+	more about the GetSoundPlaying problem see:
+	http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
+
+ --junk-cells
+	These are bogus external CELL records that crop up in many plugins,
+	due to a Construction Set bug. They contain only NAME, DATA and
+	sometimes RGNN subrecords, and the flags in the DATA subrecord are
+	unchanged from the flags in the Master.
+
+ --master_sync
+	Checks the plugin is in sync with its masters by checking their size
+	against the size recorded in the plugin header. This is usually never
+	a problem, but it means that Morrowind will give the warning: "One of
+	the files that "(plugin)" is dependent on has changed since the last
+	save..."
+
+ --menumode
+	The plugin contains scripts that do not check menumode. Each script
+	will be printed in the details section. This may or may not be
+	intentional, so the flag is optional and only included in the -a
+	switch.
+
+ --missing-author
+	The plugin header is missing the Author field. It is strongly
+	recommended that authors put their name or handle in the Author field.
+
+ --missing-description
+	The plugin header is missing a description field. It is strongly
+	recommended that a short description of the plugin is entered in this
+	field.
+
+ --missing-version
+	The plugin header description field is missing a "Version: X.Y"
+	string. It is strongly recommended that the version number be added to
+	the description. This version number is very helpful in documenting
+	which version of the plugin a user is using. This information is used
+	by tools such as Wrye Mash and mlox. The regular expression pattern
+	used by Wrye Mash to match the version is: "^(Version:?)
+	*([-0-9\\.]*\\+?) *\\r?\$". (mlox will match a much wider variety of
+	version number formats). It is safest to use a string of the format:
+	"Version: X.Y", on a line by itself.
+
+ --modified-info
+	indicates that an INFO dialog with the same ID exists in the master,
+	but this plugin has modified the text or the filter. This is quite
+	common when a plugin intentionally modifies a master's dialog, but it
+	often a problem when due to unintentional changes. A MOD-INF flag may
+	have an associated MOD-IID flag. The modified Info record is dumped in
+	a very cursory fashion (the binary bits are ust trimmed out) in order
+	to give a quick identification.
+
+ --modified-info-id
+	indicates that the exact same INFO dialog text exists in this plugin
+	as in a master, but under a different ID. When associated with a
+	MOD-INF, this situation may be due to creating new dialog by copying
+	the original, and then accidentally editing the original instead of
+	the copy which may cause bad dialog problems and should probably be
+	investigated further.
+
+ --no-bloodmoon-functions
+	Bloodmoon.esm is listed as a master, but tes3lint did not detect any
+	usage of Bloodmoon functions. (Note that there may be other reasons
+	for listing Bloodmoon as a master).
+
+ --no-tribunal-functions
+	Tribunal.esm is listed as a master, but tes3lint did not detect any
+	usage of Tribunal functions. (Note that there may be other reasons for
+	listing Tribunal as a master).
+
+ --overrides
+	The plugin contains record(s) that override the record with the same
+	ID in one of its masters.
+
+ --record-count
+	This means that the number of records recorded in the TES3 plugin
+	header field does not match the actual number of records in the
+	plugin. This situation is not known to cause any errors or warnings in
+	the CS or in the Morrowind game itself, so it's just presented as a
+	matter of interest.
+
+ --scripted-doors
+	The plugin adds scripts to Bethesda doors, which has the potential
+	to break any script in the same cell that uses the CellChanged
+	function. CellChanged in that cell will always return 0 from now on.
+	See: http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
+
+DESCRIPTION
+
+The lint command normally only prints output for interesting things it finds.
+If it finds nothing for a plugin, no output is generated unless the --clean
+option is given. When something interesting is found, a flag is printed after
+the plugin name. On following lines, an indented report is printed that gives
+more detail about the flagged items.
+
+},
+     },
+
+     modify =>
+     {
+      description => qq{Powerful batch record modification via user code extensions},
+      options => [@STDOPT,
+		  'exact-id=s@',
+		  'exterior',
+		  'flag=s@',
+		  'id=s@',
+		  'interior',
+		  'match=s',
+		  'no-match|M=s',
+		  'program-file=s'     => \$opt_modify_program_file,
+		  'replace=s'          => \$opt_modify_replace,
+		  'run=s'              => \$opt_modify_run,
+		  'sub-match=s',
+		  'sub-no-match|M=s',
+		  'type=s@'],
+
+      process => \&cmd_modify,
+      usage => q{Usage: tes3cmd modify OPTIONS plugin...
+
+	OPTIONS:
  --debug
 	turn on debug messages
 
@@ -3793,29 +4124,30 @@ tes3cmd dump --type cont ale_clothing_v?.esp
 # Step 1: Create the patch file ale_patch.esp containing just the container records:
 tes3cmd dump --type cont --raw-with-header ale_patch.esp ale_clothing_v?.esp
 # Step 2: Change all the count fields for the containers in Aleanne's Clothing to -3 (for restocking wares)
-tes3cmd modify --type cont --run "$R->set({f=>'Count'}, -3)" ale_patch.esp
+tes3cmd modify --type cont --run "$R->set({f=>'count'}, -3)" ale_patch.esp
 # Note: on Linux, the quoting would be a little different:
-tes3cmd modify --type cont --run '$R->set({f=>"Count"}, -3)' ale_patch.esp
+tes3cmd modify --type cont --run '$R->set({f=>"count"}, -3)' ale_patch.esp
 },
-       options => ['exact-id=s@',
-		   'exterior',
-		   'flag=s@',
-		   'id=s@',
-		   'interior',
-		   'match=s',
-		   'no-match|M=s',
-		   'program-file=s'     => \$opt_modify_program_file,
-		   'replace=s'          => \$opt_modify_replace,
-		   'run=s'              => \$opt_modify_run,
-		   'sub-match=s',
-		   'sub-no-match|M=s',
-		   'type=s@'],
-
-       process => \&cmd_modify,
      },
 
      multipatch =>
      { description => qq{Patches problems, merges leveled lists, etc.},
+       options => [@STDOPT,
+		   'cellnames'       => \$opt_multipatch_cellnames,
+		   'fogbug'          => \$opt_multipatch_fogbug,
+		   'merge-lists'     => \$opt_multipatch_merge_lists,
+		   'no-activate'     => \$opt_multipatch_no_activate,
+		   'no-cache',
+		   'summons-persist' => \$opt_multipatch_summons_persist],
+
+       preprocess => sub {
+	   unless ($opt_multipatch_cellnames or $opt_multipatch_fogbug or
+		   $opt_multipatch_merge_lists or $opt_multipatch_summons_persist) {
+	       # by default turn on all options if none are selected
+	       $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
+	   }
+	   cmd_multipatch();
+       },
        usage => q{Usage: tes3cmd multipatch
 
 OPTIONS:
@@ -3896,25 +4228,12 @@ EXAMPLES:
 # Create the patch plugin "multipatch.esp"
 tes3cmd multipatch
 },
-       options => ['cellnames'       => \$opt_multipatch_cellnames,
-		   'fogbug'          => \$opt_multipatch_fogbug,
-		   'merge-lists'     => \$opt_multipatch_merge_lists,
-		   'no-activate'     => \$opt_multipatch_no_activate,
-		   'no-cache',
-		   'summons-persist' => \$opt_multipatch_summons_persist],
-
-       preprocess => sub {
-	   unless ($opt_multipatch_cellnames or $opt_multipatch_fogbug or
-		   $opt_multipatch_merge_lists or $opt_multipatch_summons_persist) {
-	       # by default turn on all options if none are selected
-	       $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists = $opt_multipatch_summons_persist = 1;
-	   }
-	   cmd_multipatch();
-       },
      },
 
      overdial =>
      { description => qq{Identify overlapping dialog (a source of missing topic bugs)},
+       options => [@STDOPT, 'single' => \$opt_overdial_single],
+       preprocess => \&cmd_overdial,
        usage => q{Usage: tes3cmd overdial OPTIONS plugin...
 
 OPTIONS:
@@ -3945,12 +4264,12 @@ Example(s):
 # Show dialog overlaps between Lokken and SU:
 tes3cmd overdial "BT_Whitewolf_2_0.esm" "Suran_Underworld_2.5.esp"
 },
-       options => ['single' => \$opt_overdial_single],
-       preprocess => \&cmd_overdial,
      },
 
      recover =>
      { description => qq{Recover usable records from plugin with 'bad form' errors},
+       options => [@STDOPT],
+       process => \&cmd_recover,
        usage => q{Usage: tes3cmd recover OPTIONS plugin...
 
 OPTIONS:
@@ -3978,12 +4297,12 @@ EXAMPLE(S):
 # fix my damaged plugin:
 tes3cmd recover "my plugin.esp"
 },
-       options => [],
-       process => \&cmd_recover,
      },
 
-     "resetdates" =>
+     resetdates =>
      { description => qq{Reset dates of Bethesda Data Files to original settings},
+       options => [@STDOPT],
+       preprocess => \&cmd_resetdates,
        usage => qq{Usage: tes3cmd resetdates
 
 OPTIONS:
@@ -4002,37 +4321,36 @@ Example(s):
 # fix the date settings of Bethesda data files:
 tes3cmd resetdates
 },
-       options => [],
-       preprocess => \&cmd_resetdates,
      },
 
      '-codec' =>
      { description => qq{Describe TES3 record codec (not implemented)},
-       usage => qq{Usage: tes3cmd -codec\n},
-       options => [],
+       options => [@STDOPT],
        preprocess => \&cmd_codec,
+       usage => qq{Usage: tes3cmd -codec\n},
      },
 
      '-shell' =>
      { description => qq{run a TES3 REPL},
-       usage => qq{Usage: tes3cmd -shell\n},
-       options => [],
+       options => [@STDOPT],
        preprocess => \&cmd_shell,
+       usage => qq{Usage: tes3cmd -shell\n},
      },
 
      '-testcodec' =>
      { description => qq{Test TES3 codec orthogonality},
-       usage => qq{Usage: tes3cmd -testcodec [--excluded-type|-x excluded_type]\n},
-       options => ['continue|c'            => \$opt_testcodec_continue,
+       options => [@STDOPT,
+		   'continue|c'            => \$opt_testcodec_continue,
 		   'excluded-type|x=s@'    => \@opt_testcodec_excluded_type],
        process => \&cmd_testcodec,
+       usage => qq{Usage: tes3cmd -testcodec [--excluded-type|-x excluded_type]\n},
      },
 
      '-wikiout' =>
      { description => qq{Output wiki formatted help},
-       usage => qq{Usage: tes3cmd -wikiout\n},
-       options => [],
+       options => [@STDOPT],
        preprocess => \&cmd_wikiout,
+       usage => qq{Usage: tes3cmd -wikiout\n},
      },
     );				# end of COMMAND DISPATCH TABLE
 
@@ -4996,6 +5314,8 @@ sub cmd_testcodec {
 
 sub cmd_fixit {
     dbg("cmd_fixit") if (DBG);
+    # reset dates on Bethesda data files
+    cmd_resetdates();
     # clean everything and replace originals
     $opt_clean_replace = $opt_clean_instances = $opt_clean_cell_params =
 	$opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
@@ -6165,14 +6485,14 @@ sub cmd_resetdates {
 
 sub main {
     msg("ASSERTIONS ON!") if (ASSERT);
-    $COMMAND{help}->preprocess()
+    $COMMAND{help}->{preprocess}()
 	if ((scalar(@ARGV) == 0) or (scalar(@ARGV) == 1 and $ARGV[0] =~ /help/i));
     my $cmd_name = shift(@ARGV);
     my $cmd_ref = $COMMAND{$cmd_name};
     dbg("Command Selected: $cmd_name") if (DBG);
-    $COMMAND{help}->preprocess()
+    $COMMAND{help}->{preprocess}()
 	unless ($cmd_ref = $COMMAND{$cmd_name});
-    GetOptions(@STDOPT,@{$cmd_ref->{options}}) or die($cmd_ref->{usage}."\n");
+    GetOptions(@{$cmd_ref->{options}}) or die($cmd_ref->{usage}."\n");
     # see if we need to glob any following plugin names
     my @plugins;
     foreach my $arg (@ARGV) {
@@ -6196,7 +6516,7 @@ sub main {
     }
     if (defined(my $process = $cmd_ref->{process})) {
 	# process individual plugins
-	$COMMAND{help}->preprocess() if (scalar(@plugins) == 0);
+	$COMMAND{help}->{preprocess}() if (scalar(@plugins) == 0);
 	dbg("$cmd_name: Executing Process function") if (DBG);
 	foreach my $plugin (@plugins) {
 	    $CURRENT_DIAL = undef;
