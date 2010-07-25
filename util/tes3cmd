@@ -31,7 +31,6 @@ $::VERSION = "0.37k";
 # TBD:
 # sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair
-# Implement "--hide-backups" and "--backup-dir" so that unsightly backups are plonked into Data Files/tes3cmd/backups
 # add report of stats (plugins scanned, etc) for multipatch and clean.
 # implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
@@ -3000,7 +2999,10 @@ my $lint_expansion_functions;
 
 ### MAIN COMMON COMMAND OPTIONS
 our @STDOPT = (qw(assert debug verbose));
+our @MODOPT = ("backup-dir", "hide-backups");
+our $opt_backup_dir = $T3->datapath('tes3cmd')."/backups";
 our $opt_exterior;
+our $opt_hide_backups;
 our $opt_instance_match;
 our $opt_instance_no_match;
 our $opt_interior;
@@ -3103,7 +3105,7 @@ my %COMMAND;
 		   'off' => \$opt_active_off,
 		   'on'  => \$opt_active_on],
        preprocess => \&cmd_active,
-       usage => q{Usage: tes3cmd active OPTIONS plugin1.esp [plugin2.esp...]
+       usage => qq{Usage: tes3cmd active OPTIONS plugin1.esp [plugin2.esp...]
 
 OPTIONS:
  --debug
@@ -3126,6 +3128,7 @@ current active load order.
      clean =>
      { description => qq{Clean plugins of Evil GMSTs, junk cells, and more},
        options => [@STDOPT,
+		   @MODOPT,
 		   'all'           => \$opt_clean_all,
 		   'instances'     => \$opt_clean_instances,
 		   'cell-params'   => \$opt_clean_cell_params,
@@ -3147,22 +3150,31 @@ current active load order.
 	   }
        },
        process => \&cmd_clean,
-       usage => q{Usage: tes3cmd clean OPTIONS plugin...
+       usage => qq{Usage: tes3cmd clean OPTIONS plugin...
 
 OPTIONS:
  --debug
 	turn on debug messages
 
- --instances
-	clean object instances from cells when duped from masters
+ --backup-dir
+	where backup files get stored. The default is:
+	$opt_backup_dir
 
  --cell-params
 	clean cell subrecords AMBI,WHGT duped from masters
+
  --dups
 	clean other complete records duped from masters
 
  --gmsts
 	clean Evil GMSTs
+
+ --hide-backups
+	any created backup files will get stashed in the backup directory
+	(--backup-dir)
+
+ --instances
+	clean object instances from cells when duped from masters
 
  --junk-cells
 	clean junk cells (no new info from definition in masters)
@@ -3253,7 +3265,7 @@ tes3cmd clean --replace *.esm *.esp > clean.txt
      { description => qq{Find record IDs common between two plugins},
        options => [@STDOPT],
        preprocess => \&cmd_common,
-       usage => q{Usage: tes3cmd common OPTIONS plugin1 plugin2
+       usage => qq{Usage: tes3cmd common OPTIONS plugin1 plugin2
 
 OPTIONS:
  --debug
@@ -3273,6 +3285,7 @@ tes3cmd common "my plugin.esp" "Morrowind.esm"
      delete =>
      { description => qq{Delete records/subrecords/object instances from plugin},
        options => [@STDOPT,
+		   @MODOPT,
 		   'instance-match=s',
 		   'instance-no-match=s',
 		   'exact-id=s@',
@@ -3286,17 +3299,15 @@ tes3cmd common "my plugin.esp" "Morrowind.esm"
 		   'sub-no-match|M=s',
 		   'type=s@'],
        process => \&cmd_delete,
-       usage => q{Usage: tes3cmd delete OPTIONS plugin...
+       usage => qq{Usage: tes3cmd delete OPTIONS plugin...
 
 OPTIONS:
  --debug
 	turn on debug messages
 
- --instance-match <regex>
-	Only delete the object instances in the cell that match <regex>
-
- --instance-no-match <regex>
-	Only delete object instances in the cell that do not match <regex>
+ --backup-dir
+	where backup files get stored. The default is:
+	$opt_backup_dir
 
  --exact-id* <id-string>
 	only delete records whose ids exactly match given <id-string>
@@ -3309,9 +3320,19 @@ OPTIONS:
 	as: (deleted, persistent, ignored, blocked), or via their numeric
 	values (i.e. persistent is 0x400).
 
+ --hide-backups
+	any created backup files will get stashed in the backup directory
+	(--backup-dir)
+
  --id* <id-regex>
 	only delete records whose ids match regular expression pattern
 	<id-regex>
+
+ --instance-match <regex>
+	Only delete the object instances in the cell that match <regex>
+
+ --instance-no-match <regex>
+	Only delete object instances in the cell that do not match <regex>
 
  --interior
 	if record is CELL, only delete if it is an Interior
@@ -3376,7 +3397,7 @@ tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave
 	   }
 	   cmd_diff();
        },
-       usage => q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
+       usage => qq{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
 OPTIONS:
  --debug
@@ -3472,7 +3493,7 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 		print "\nRaw records saved in $opt_dump_raw\n";
 	    }
 	},
-       usage => q{Usage: tes3cmd dump OPTIONS plugin...
+       usage => qq{Usage: tes3cmd dump OPTIONS plugin...
 
  OPTIONS:
   --debug
@@ -3575,9 +3596,10 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 
      esm =>
      { description => qq{Convert plugin (esp) to master (esm)},
-       options => [@STDOPT, 'overwrite'],
+       options => [@STDOPT,
+		   'overwrite'],
        process => \&cmd_esm,
-       usage => q{Usage: tes3cmd esm OPTIONS plugin...
+       usage => qq{Usage: tes3cmd esm OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -3600,9 +3622,10 @@ tes3cmd esm "my plugin.esp"
 
      esp =>
      { description => qq{Convert master (esm) to plugin (esp)},
-       options => [@STDOPT, 'overwrite'],
+       options => [@STDOPT,
+		   'overwrite'],
        process => \&cmd_esp,
-       usage => q{Usage: tes3cmd esp OPTIONS master...
+       usage => qq{Usage: tes3cmd esp OPTIONS master...
 
 OPTIONS:
  --debug
@@ -3625,9 +3648,23 @@ tes3cmd esp "my plugin.esm"
 
      fixit =>
      { description => qq{tes3cmd fixes everything it knows how to fix},
-       options => [@STDOPT],
+       options => [@STDOPT,
+		   @MODOPT],
        preprocess => \&cmd_fixit,
-       usage => q{Usage: tes3cmd fixit
+       usage => qq{Usage: tes3cmd fixit
+
+OPTIONS
+
+ --debug
+	turn on debug messages
+
+ --backup-dir
+	where backup files get stored. The default is:
+	$opt_backup_dir
+
+ --hide-backups
+	any created backup files will get stashed in the backup directory
+	(--backup-dir)
 
 DESCRIPTION:
 
@@ -3642,6 +3679,7 @@ The fixit command does the following operations:
      header =>
      { description => qq{Read/Write plugin Author/Description, sync to masters...},
        options => [@STDOPT,
+		   @MODOPT,
 		   'author=s'              => \$opt_header_author,
 		   'description=s'         => \$opt_header_description,
 		   'multiline'             => \$opt_header_multiline,
@@ -3663,8 +3701,16 @@ OPTIONS:
  --author <author>
 	set the Author field to <author>
 
+ --backup-dir
+	where backup files get stored. The default is:
+	$opt_backup_dir
+
  --description <desc>
 	set the Description field to <desc>
+
+ --hide-backups
+	any created backup files will get stashed in the backup directory
+	(--backup-dir)
 
  --multiline
 	multi-line output for listing field contents
@@ -4035,6 +4081,7 @@ more detail about the flagged items.
      {
       description => qq{Powerful batch record modification via user code extensions},
       options => [@STDOPT,
+		  @MODOPT,
 		  'exact-id=s@',
 		  'exterior',
 		  'flag=s@',
@@ -4050,11 +4097,20 @@ more detail about the flagged items.
 		  'type=s@'],
 
       process => \&cmd_modify,
-      usage => q{Usage: tes3cmd modify OPTIONS plugin...
+
+#TBD new examples:
+#tes3cmd modify --type cont --run '$R->dump' ale_clothing_v0.esp
+#tes3cmd modify --type cont --run '$R->set({i=>[29],f=>"count"}, 4)' ale_clothing_v0.esp
+
+      usage => qq{Usage: tes3cmd modify OPTIONS plugin...
 
 	OPTIONS:
  --debug
 	turn on debug messages
+
+ --backup-dir
+	where backup files get stored. The default is:
+	$opt_backup_dir
 
  --exact-id* <id-string>
 	only modify records whose ids exactly match given <id-string>
@@ -4066,6 +4122,10 @@ more detail about the flagged items.
 	only modify records with given flag. Flags may be given symbolically
 	as: (deleted, persistent, ignored, blocked), or via their numeric
 	values (i.e. persistent is 0x400).
+
+ --hide-backups
+	any created backup files will get stashed in the backup directory
+	(--backup-dir)
 
  --id* <id-regex>
 	only modify records whose ids match regular expression pattern
@@ -4118,7 +4178,7 @@ Note: documentation for regular expressions:
 Example(s):
 
 # Just print the the cell "Ashmelech" from Morrowind.esm. (no modification).
-tes3cmd modify --type cell --id ashmelech --run "$R->dump" Morrowind.esm
+tes3cmd modify --type cell --id ashmelech --run "\$R->dump" Morrowind.esm
 
 # Problem: Aleanne's clothing mods do not have restocking inventory
 # Solution: create a small patch to change the counts for inventory containers
@@ -4128,9 +4188,9 @@ tes3cmd dump --type cont ale_clothing_v?.esp
 # Step 1: Create the patch file ale_patch.esp containing just the container records:
 tes3cmd dump --type cont --raw-with-header ale_patch.esp ale_clothing_v?.esp
 # Step 2: Change all the count fields for the containers in Aleanne's Clothing to -3 (for restocking wares)
-tes3cmd modify --type cont --run "$R->set({f=>'count'}, -3)" ale_patch.esp
+tes3cmd modify --type cont --run "\$R->set({f=>'count'}, -3)" ale_patch.esp
 # Note: on Linux, the quoting would be a little different:
-tes3cmd modify --type cont --run '$R->set({f=>"count"}, -3)' ale_patch.esp
+tes3cmd modify --type cont --run '\$R->set({f=>"count"}, -3)' ale_patch.esp
 },
      },
 
@@ -4152,7 +4212,7 @@ tes3cmd modify --type cont --run '$R->set({f=>"count"}, -3)' ale_patch.esp
 	   }
 	   cmd_multipatch();
        },
-       usage => q{Usage: tes3cmd multipatch
+       usage => qq{Usage: tes3cmd multipatch
 
 OPTIONS:
  --debug
@@ -4238,7 +4298,7 @@ tes3cmd multipatch
      { description => qq{Identify overlapping dialog (a source of missing topic bugs)},
        options => [@STDOPT, 'single' => \$opt_overdial_single],
        preprocess => \&cmd_overdial,
-       usage => q{Usage: tes3cmd overdial OPTIONS plugin...
+       usage => qq{Usage: tes3cmd overdial OPTIONS plugin...
 
 OPTIONS:
  --debug
@@ -4272,20 +4332,29 @@ tes3cmd overdial "BT_Whitewolf_2_0.esm" "Suran_Underworld_2.5.esp"
 
      recover =>
      { description => qq{Recover usable records from plugin with 'bad form' errors},
-       options => [@STDOPT],
+       options => [@STDOPT,
+		   @MODOPT],
        process => \&cmd_recover,
-       usage => q{Usage: tes3cmd recover OPTIONS plugin...
+       usage => qq{Usage: tes3cmd recover OPTIONS plugin...
 
 OPTIONS:
  --debug
 	turn on debug messages
+
+ --backup-dir
+	where backup files get stored. The default is:
+	$opt_backup_dir
+
+ --hide-backups
+	any created backup files will get stashed in the backup directory
+	(--backup-dir)
 
 DESCRIPTION:
 
 Attempts to recover readable records from a damaged plugin. You should only
 use this when Morrowind gives the following type of error on your plugin:
 
-"Trying to load a bad form in TES3File::NextForm"
+  "Trying to load a bad form in TES3File::NextForm"
 
 The main reason you would get this error is if the file has been physically
 corrupted, where records have been overwritten with random binary junk, or
@@ -4696,6 +4765,14 @@ sub make_temp {
 
 sub unique_backup_name {
     my($plugbak) = @_;
+    if ($opt_hide_backups) {
+	unless (-d $opt_backup_dir) {
+	    mkdir($opt_backup_dir, 0755) or
+		abort(qq{Unable to make directory: "$opt_backup_dir" ($!)});
+	}
+	my($file, $dir) = fileparse($plugbak);
+	$plugbak = "${opt_backup_dir}/${file}";
+    }
     my($ext) = ($plugbak =~ /\.(es[mps])$/i);
     while (-f $plugbak) {
 	$plugbak =~ s/(?:~(\d+))?\.$ext$/'~' . (($1||0) + 1) . ".$ext"/e;
@@ -4746,7 +4823,9 @@ sub fix_output {
 	    $opt_header_update_record_count = 1;
 	    update_header($plugin, [qw(QUIET NOBACKUP)]);
 	    utime($atime, $mtime, $plugin);
-	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$plugbak"\n};
+	    my $destination = $plugbak;
+	    $destination =~ s!$DATADIR!<DATADIR>!;
+	    print qq{Output saved in: "$plugin"\nOriginal backed up to: "$destination"\n};
 	}
     } else {
 	abort(qq{"$plugin" name does not end in .esm/.esp/.ess});
