@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37j";
+$::VERSION = "0.37k";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -48,6 +48,7 @@ $::VERSION = "0.37j";
 # GUI
 # reformat overdial output? just list each topic once, with list of plugins that have it
 # implement script compiler
+# # # # # # # # # # # # # # #
 # add new commands:
 # * "sos" (save our save) for doing a binary search for bad records/subrecords in a savegame
 # * "buildcache" (build up all the cache files for cleaning, lookups, etc)
@@ -147,7 +148,7 @@ END
     if (DBG) {
 	Carp::confess(qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis\n"});
     } else {
-	die(qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis\n"});
+	Carp::croak(qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis\n"});
     }
 }
 
@@ -1006,7 +1007,7 @@ my @RD_long_array_ess =
 	       $self->{_subbuf_} = pack("l*", map { $self->{$_} } (0..$self->{_last_idx}));
 	       return($self);
 	   },
-	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # TBD (and implement ordering)
+	   #fieldnames => sub { (0..$_[0]->{_last_idx}); }, # NOTYET (and implement ordering)
 	   tostr => sub {
 	       my($self) = @_;
 	       "Long_Array: " . join(", ", map { "$_=$self->{$_}" } 0..$self->{_last_idx});
@@ -3374,6 +3375,7 @@ tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave
 	       $opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
 	   }
 	   cmd_diff();
+       },
        usage => q{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
 OPTIONS:
@@ -3428,7 +3430,6 @@ tes3cmd diff --ignore-type crea.aidt --ignore-type cell.nd3d testa0000.ess testb
 # Just print the records that differ
 tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 },
-       },
      },
 
      dump =>
@@ -3720,12 +3721,15 @@ tes3cmd header --synchronize "my plugin.esp"
 
      help =>
      { preprocess => sub {
-	   my $command_list;
-	   foreach (sort keys %COMMAND) {
-	       $command_list .= "  $_\n    $COMMAND{$_}->{description}.\n"
-		   unless (($_ eq 'help') or ($_ =~ /^-/));
-	   }
-	   print <<"EOF";
+	   if (my $cmd_name = shift(@ARGV)) {
+	       die($COMMAND{$cmd_name}->{usage}."\n");
+	   } else {
+	       my $command_list;
+	       foreach (sort keys %COMMAND) {
+		   $command_list .= "  $_\n    $COMMAND{$_}->{description}.\n"
+		       unless (($_ eq 'help') or ($_ =~ /^-/));
+	       }
+	       die <<"EOF";
 Usage: tes3cmd COMMAND OPTIONS plugins...
 
 VERSION: $::VERSION
@@ -3758,7 +3762,7 @@ You should at least be aware that the characters "\\.?*+|^\$()[]{}" have
 special meaning in a regular expression and that they are unlike characters
 used for matching on a Windows command line.
 EOF
-	   exit(1);
+	   }
        },
      },
 
@@ -4647,6 +4651,7 @@ sub write_rec {
 
 sub open_for_input {
     my($plugin) = @_;
+    defined($plugin) or abort("no plugin(s) specified!");
     $CURRENT_PLUGIN = $plugin;
     (-d $plugin) and abort(qq{Input is a directory});
     my $fh = IO::Handle->new;
@@ -4988,7 +4993,7 @@ sub make_header {
 			 ($opt->{description} || "(generated)"),
 			 ($opt->{n_records} || 0)));
     my $tes3 = pack("a4LLLa*", 'TES3', length($hedr), (my $unk = 0), (my $flags = 0), $hedr);
-    die("Invalid TES3 header definition has incorrect size.")
+    abort("Invalid TES3 header definition has incorrect size.")
 	unless (length($tes3) == MIN_TES3_PLUGIN_SIZE);
     return($tes3);
 }
@@ -6406,7 +6411,7 @@ sub cmd_codec {
     foreach (@RECDEFS) {
 	foreach my $defref (@{$_}) {
 	    #gen_subrec_methods($rectype, @{$defref});
-	    # TBD
+	    # NOTYET
 	}
     }
 }
@@ -6502,7 +6507,6 @@ sub main {
 	    push(@plugins, $arg);
 	}
     }
-    # put plugins in load order
     @plugins = sort { -M $b <=> -M $a } @plugins;
     # if standard option --output-dir was used, ensure destination exists
     if ($opt_output_dir and not -d $opt_output_dir) {
