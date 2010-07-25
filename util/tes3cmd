@@ -9,23 +9,27 @@ $::VERSION = "0.37k";
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
-#  cmd_dump
-#  cmd_testcodec
-#  cmd_header
-#  cmd_multipatch
-#  cmd_common
-#  cmd_diff
-#  cmd_shell
-#  cmd_wikiout
-#  cmd_esm
-#  cmd_esp
-#  cmd_overdial
-#  cmd_recover (save lost data and dump like od?)
-#  cmd_delete
-#  cmd_modify (fix doco for helpers, test subrec moddy)
-#  cmd_clean
-#  cmd_fixit
-#  cmd_active
+#  active
+#  clean
+#  common
+#  delete
+#  diff
+#  dump
+#  esm
+#  esp
+#  fixit
+#  header
+#  help
+#  lint
+#  modify (fix doco for helpers, test subrec moddy)
+#  multipatch
+#  overdial
+#  recover (save lost data and dump like od?)
+#  resetdates
+#  -codec
+#  -shell
+#  -testcodec
+#  -wikiout
 
 
 # TBD:
@@ -4386,8 +4390,8 @@ DESCRIPTION:
 
 Resets the dates of the Bethesda masters (.esm) and archives (.bsa) to their
 original settings. This may help those people who have problems with textures
-and meshes being overridden by the vanilla resources (e.g. with the Steam 
-version of Morrowind.
+and meshes being overridden by the vanilla resources (e.g. as can happen with
+the Steam version of Morrowind).
 
 Example(s):
 
@@ -4428,8 +4432,8 @@ tes3cmd resetdates
     );				# end of COMMAND DISPATCH TABLE
 
 # command aliases
-$COMMAND{'-help'}  = $COMMAND{help};
-$COMMAND{'--help'} = $COMMAND{help};
+#$COMMAND{'-help'}  = $COMMAND{help};
+#$COMMAND{'--help'} = $COMMAND{help};
 
 ### DATA DEFINITIONS
 
@@ -6569,9 +6573,9 @@ sub cmd_resetdates {
 
 sub main {
     msg("ASSERTIONS ON!") if (ASSERT);
-    $COMMAND{help}->{preprocess}()
-	if ((scalar(@ARGV) == 0) or (scalar(@ARGV) == 1 and $ARGV[0] =~ /help/i));
     my $cmd_name = shift(@ARGV);
+    $COMMAND{help}->{preprocess}()
+	if ((scalar(@ARGV) == 0) or (scalar(@ARGV) == 1 and ($cmd_name =~ /help/i)));
     my $cmd_ref = $COMMAND{$cmd_name};
     dbg("Command Selected: $cmd_name") if (DBG);
     $COMMAND{help}->{preprocess}()
