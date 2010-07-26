@@ -36,7 +36,6 @@ $::VERSION = "0.37k";
 # sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair
 # add report of stats (plugins scanned, etc) for multipatch and clean.
-# implement "canonical" dump format???
 # improve corrupted INFO detection, and possibly clean them
 # when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
 # implement a "repack" command: bsaunpack + tesfiles/resourcecheck + clean
@@ -58,7 +57,7 @@ $::VERSION = "0.37k";
 # * "codec" (print text description of TES3 codec)
 # * "undo" (revert to last backups for modifying commands)
 # * "tidy" (remove cache and undo stuff)
-# * "undump" (text to record, can't undump from wrong version)
+# * "undump" (canonical text to record, can't undump from wrong version)
 # * "combine" (merge listed plugins into one plugin)
 # * "conflict" (detailed report, toggle mergeable records from report)
 # # # # # # # # # # # # # # #
@@ -3396,10 +3395,11 @@ tes3cmd delete --type npc_ --match _mca_ --sub-match spell:poisonbloom quicksave
 		   'not-equal|ne'     => \$opt_diff_not_equal],
 
        preprocess => sub {
+	   my(@plugins) = @_;
 	   unless ($opt_diff_1_not_2 or $opt_diff_2_not_1 or $opt_diff_equal or $opt_diff_not_equal or $opt_diff_types) {
 	       $opt_diff_1_not_2 = $opt_diff_2_not_1 = $opt_diff_equal = $opt_diff_not_equal = $opt_diff_types = 1;
 	   }
-	   cmd_diff();
+	   cmd_diff(@plugins);
        },
        usage => qq{Usage: tes3cmd diff OPTIONS plugin1 plugin2
 
@@ -6575,7 +6575,7 @@ sub main {
     msg("ASSERTIONS ON!") if (ASSERT);
     my $cmd_name = shift(@ARGV);
     $COMMAND{help}->{preprocess}()
-	if ((scalar(@ARGV) == 0) or (scalar(@ARGV) == 1 and ($cmd_name =~ /help/i)));
+	if ((not defined($cmd_name)) or ($cmd_name =~ /help/i));
     my $cmd_ref = $COMMAND{$cmd_name};
     dbg("Command Selected: $cmd_name") if (DBG);
     $COMMAND{help}->{preprocess}()
