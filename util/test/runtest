@@ -1,0 +1,603 @@
+#!/usr/bin/perl
+
+use Carp;
+use Data::Dumper;
+use Test::More;
+use strict;
+use warnings;
+
+#################################################################
+# GLOBALS
+#################################################################
+my %DOTEST = map {$_,1} ((@ARGV) ? @ARGV : ('all'));
+my $MWDIR = "$ENV{HOME}/morrowind/Data Files"; # where to grab Bethesda files
+my $TOPDIR = "$ENV{HOME}/mlox/util";
+my $TES3CMD = "$TOPDIR/tes3cmd";  # command being tested
+my $TESTDIR = "$TOPDIR/test";
+my $NTESTS = 0;
+my($output, $plugin, $plugin_tmp, $master, @plugins);
+
+#################################################################
+# Helper functions
+#################################################################
+sub hr { warn "-"x70,"\n"; }	# (horizontal rule)
+
+sub runcmd {
+    my($cmd, @plugins) = @_;
+    my @quoted_plugins = map { (my $p = $_) =~ s/(\W)/\\$1/g; $p } @plugins;
+    return(`$TES3CMD $cmd @quoted_plugins 2>&1`);
+}
+
+sub reset_test_data {
+    chdir($TESTDIR) or die qq{chdir($TESTDIR) FAILED ($!)};
+    hr();
+    system("rm -rf morrowind");
+    warn "Refreshing test sandbox...\n";
+    system("rsync -uva data/ morrowind/");
+
+    warn "Setting up Bethesda Data Files...\n";
+    foreach my $datafile (qw(Morrowind Tribunal Bloodmoon)) {
+	foreach my $ext (qw(esm bsa)) {
+	    unless (-f qq{morrowind/Data Files/${datafile}.$ext}) {
+		system(qq{cp -vp "$MWDIR/${datafile}.$ext" "morrowind/Data Files"});
+		die qq{cp "$MWDIR/${datafile}.$ext" "morrowind/Data Files" FAILED}
+		    unless (-f qq{morrowind/Data Files/${datafile}.$ext});
+	    }
+	}
+    }
+    hr();
+    chdir("morrowind/Data Files") or die qq{chdir("<TESTDIR>/morrowind/Data Files") FAILED ($!)};
+}
+
+sub revert {
+    my($plugin) = @_;
+    my $backup = $plugin;
+    $backup =~ s/(\.es[mp])$/~1${1}/;
+    if (-e $backup) {
+	unlink($plugin) or die qq{Error deleting "$plugin" ($!)};
+	rename($backup, $plugin) or die qq{Error renaming "$backup" to "$plugin"};
+	warn "Reverted: $plugin\n";
+    } else {
+	carp("ERROR, can't revert non-existant backup: $backup");
+    }
+}
+
+sub damage_plugin {
+    my($plugin, $offset, $length, $replacement) = @_;
+    my $plugin_length = (-s $plugin);
+    open(INP, "<", $plugin) or die(qq{Error opening "$plugin" for input ($!)});
+    open(OUT, ">", "$plugin.tmp") or die(qq{Error opening "$plugin.tmp" for output ($!)});
+    my $buffer;
+    # read bytes from 0 to offset
+    my $nread = read(INP, $buffer, $offset);
+    print OUT $buffer if ($nread > 0);
+    print OUT $replacement if ($replacement);
+    # skip $length bytes
+    $nread = read(INP, $_, $length) if ($length > 0);
+    # read rest of bytes to EOF
+    $nread = read(INP, $buffer, ($plugin_length - $offset));
+    print OUT $buffer if ($nread > 0);
+    warn qq{Created test damage in "$plugin" at $offset\n};
+    close(INP);
+    close(OUT);
+    rename("$plugin.tmp", $plugin) or die(qq{Error renaming "$plugin.tmp" -> "$plugin"});
+}
+
+#################################################################
+# Initialize
+#################################################################
+reset_test_data();
+
+#################################################################
+#  test "help" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{help}) {
+    # start test outside Morrowind install
+    chdir($TESTDIR);
+    $output = runcmd("help");
+
+    like($output, qr/^VERSION:/m, q{help output should contain VERSION"});
+    like($output, qr/^Usage:/m, q{help output should contain 'Usage:"});
+    # (when running outside of Morrowind install):
+    like($output, qr/Can't find "Data Files" directory/, q{help output should contain 'Can't find "Data Files"'});
+    like($output, qr/^GENERAL HELP/m, q{help output should contain "GENERAL HELP"});
+    ok(-d "tes3cmd", q{TES3CMD_DIR created});
+    rmdir("tes3cmd") or die qq{Error on rmdir("tes3cmd") ($!)};
+    # now cd into the Morrowind install
+    chdir("$TESTDIR/morrowind/Data Files");
+    # (when running inside of Morrowind install):
+    $output = runcmd('--help');
+    like($output, qr/^COMMANDS/m, qq{--help output should contain COMMANDS});
+    unlike($output, qr/Can't find "Data Files" directory/, q{--help output should not contain 'Can't find "Data Files"'});
+    # increment the test counter
+    $NTESTS += 7;
+}
+#################################################################
+#  test "active" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{active}) {
+    $output = runcmd('active');
+    is($output, qq{\nLOAD ORDER:\nMorrowind.esm\nTribunal.esm\nBloodmoon.esm\n}, q{Initial load order just Bethesda masters});
+
+    my $first_plugin;
+    @plugins = ();
+    foreach my $plugin (`ls *.esp`) {
+	chomp($plugin);
+	$first_plugin = $plugin if (not defined $first_plugin);
+	push(@plugins, $plugin);
+    }
+    $output = runcmd('active --on', @plugins);
+    is($output, join("\n", map {"ACTIVATED: $_"} @plugins)."\n", q{Activate all test plugins});
+    ok(defined $first_plugin, q{We have at least one test plugin});
+    is(runcmd('active --off', $first_plugin), qq{DEACTIVATED: $first_plugin\n}, qq{Deactivate plugin ($first_plugin)});
+    is(runcmd('active --on', $first_plugin), qq{ACTIVATED: $first_plugin\n}, qq{Re-activate plugin ($first_plugin)});
+    # increment the test counter
+    $NTESTS += 5;
+}
+#################################################################
+#  test "clean" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{clean}) {
+    $output = runcmd('clean', $plugin = "Vurt's Ashlands Overhaul.esp");
+    like($output, qr/Evil-GMST Bloodmoon:\s+61\b/, qq{"$plugin": Cleaned 61 Evil Bloodmoon GMSTs});
+    like($output, qr/Evil-GMST Tribunal:\s+11\b/, qq{"$plugin": Cleaned 11 Evil Tribunal GMSTs});
+    like($output, qr/junk-CELL:\s+23\b/, qq{"$plugin": Cleaned 23 junk-CELLs});
+
+    $output = runcmd('clean', $plugin = "Pyromancer v2.esp");
+    like($output, qr/duplicate record:\s+3\b/, qq{"$plugin": Cleaned 3 duplicate records});
+    like($output, qr/junk-CELL:\s+19\b/, qq{"$plugin": Cleaned 19 junk-CELLs});
+    like($output, qr/redundant CELL.AMBI:\s+1\b/, qq{"$plugin": Cleaned 1 redundant CELL.AMBI});
+    like($output, qr/redundant CELL.WHGT:\s+1\b/, qq{"$plugin": Cleaned 1 redundant CELL.WHGT});
+
+    $output = runcmd('clean', $plugin = "Juniper's Twin Lamps (1.1 Tribunal).esp");
+    like($output, qr/duplicate record:\s+25\b/, qq{"$plugin": Cleaned 25 duplicate records});
+    like($output, qr/junk-CELL:\s+26\b/, qq{"$plugin": Cleaned 26 junk-CELLs});
+    like($output, qr/redundant CELL.AMBI:\s+15\b/, qq{"$plugin": Cleaned 15 redundant CELL.AMBI});
+    like($output, qr/redundant CELL.WHGT:\s+16\b/, qq{"$plugin": Cleaned 16 redundant CELL.WHGT});
+    like($output, qr/duplicate object instance:\s+267\b/, qq{"$plugin": Cleaned 267 duplicate object instances});
+    # increment the test counter
+    $NTESTS += 12;
+}
+#################################################################
+#  test "common" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{common}) {
+    @plugins = ("Juniper's Twin Lamps (1.1 Tribunal).esp", "OfficialMods_v5.esp");
+    $output = runcmd('common', @plugins);
+    is($output, <<EOF, qq{found records common between: @plugins});
+  LTEX: sand
+  LTEX: sand_02
+  LTEX: ma_rock04
+  LTEX: ma_crackedearth
+  LTEX: ma_lava06
+  LTEX: ma_lavarock
+  LTEX: ma_lavaflow
+  LTEX: ma_lava03
+  LTEX: ma_lava04
+  LTEX: ma_lava05
+  LTEX: tx_bc_bank.tga
+  LTEX: tx_bc_mud.tga
+  LTEX: tx_bc_rock_03.tga
+  CELL: ald-ruhn (-2, 6)
+  CELL: seyda neen (-2, -9)
+  CELL: hla oad (-6, -5)
+  CELL: bitter coast region (-6, -7)
+  CELL: bitter coast region (-7, -6)
+  CELL: gnaar mok (-8, 3)
+  CELL: khartag point (-9, 4)
+  CELL: bitter coast region (-9, 3)
+  CELL: bitter coast region (-10, 5)
+  CELL: bitter coast region (-12, 3)
+  CELL: bitter coast region (-12, 2)
+  CELL: bitter coast region (-12, 1)
+  CELL: bitter coast region (-13, 4)
+  CELL: bitter coast region (-13, 3)
+  CELL: bitter coast region (-13, 2)
+  CELL: bitter coast region (-13, 1)
+  CELL: bitter coast region (-14, 5)
+  CELL: bitter coast region (-14, 4)
+  CELL: bitter coast region (-14, 2)
+  CELL: west gash region (-15, 7)
+  CELL: west gash region (-16, 8)
+  CELL: west gash region (-16, 7)
+  CELL: suran, suran slave market
+  DIAL: latest rumors
+  INFO: 31548130972094426071
+  DIAL: greeting 1
+  INFO: 17516113621450112980
+  INFO: 190592792723126084
+  DIAL: greeting 5
+EOF
+    # increment the test counter
+    $NTESTS += 1;
+}
+#################################################################
+#  test "delete" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{delete}) {
+    is(runcmd('delete --type gmst', "OfficialMods_v5.esp"), <<EOF, qq{deleting by record type});
+DELETED: GMST ssavegamenomemory
+DELETED: GMST smaximumsavegamemessage
+DELETED: GMST sauto_run
+DELETED: GMST screateclassmenuwarning
+DELETED: GMST s3dhardware
+DELETED: GMST s3dsoftware
+DELETED: GMST sdifficulty
+DELETED: GMST seasy
+DELETED: GMST shard
+DELETED: GMST fnpchealthbartime
+DELETED: GMST fnpchealthbarfade
+DELETED: GMST fdifficultymult
+Output saved in: "OfficialMods_v5.esp"
+Original backed up to: "OfficialMods_v5~1.esp"
+EOF
+    revert("OfficialMods_v5.esp");
+    is(runcmd('delete --id "ashlands region \(3, 4\)"', "Vurt's Ashlands Overhaul.esp"), <<EOF, qq{deleting by record id});
+DELETED: CELL ashlands region (3, 4)
+Output saved in: "Vurt's Ashlands Overhaul.esp"
+Original backed up to: "Vurt's Ashlands Overhaul~1.esp"
+EOF
+    revert("Vurt's Ashlands Overhaul.esp");
+    is(runcmd('delete --flag deleted', "Juniper's Twin Lamps (1.1 Tribunal).esp"), <<EOF, qq{deleting by record header flag (deleted)});
+DELETED: INFO 1215227585220936854
+Output saved in: "Juniper's Twin Lamps (1.1 Tribunal).esp"
+Original backed up to: "Juniper's Twin Lamps (1.1 Tribunal)~1.esp"
+EOF
+    revert("Juniper's Twin Lamps (1.1 Tribunal).esp");
+    # increment the test counter
+    $NTESTS += 3;
+}
+#################################################################
+#  test "diff" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{diff}) {
+    # we only need to delete here if we didn't delete in previous test of "delete" command:
+    runcmd('delete --type gmst', "OfficialMods_v5.esp") unless (-f "OfficialMods_v5~1.esp");
+    $output = runcmd('diff', "OfficialMods_v5.esp", "OfficialMods_v5~1.esp");
+    like($output, qr/Records in "OfficialMods_v5~1.esp" not in "OfficialMods_v5.esp" \(12\):/, qq{diff OfficialMods 2-not-1});
+    like($output, qr/Records that are equal in "OfficialMods_v5.esp" and "OfficialMods_v5~1.esp" \(813\):/, qq{diff OfficialMods equal});
+    like($output, qr/Records that are different between "OfficialMods_v5.esp" and "OfficialMods_v5~1.esp" \(1\):/, qq{diff OfficialMods different});
+    revert("OfficialMods_v5.esp");
+    # increment the test counter
+    $NTESTS += 3;
+}
+#################################################################
+#  test "dump" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{dump}) {
+    is(runcmd('dump --list --type dial --type info', "Chalk30-Base.esp"), <<EOF, qq{dump dialog from Chalk30});
+
+Plugin: Chalk30-Base.esp
+ DIAL: chalk
+ INFO: 182942479323169413
+ INFO: 303701971169356525
+ INFO: 31545104961647224735
+ INFO: 182214251535912444
+ INFO: 3055169651430813550
+ INFO: 29088211039425266
+ INFO: 14700665143604771
+ INFO: 937717196166176187
+ INFO: 142261385446728282
+ INFO: 15847306651762130795
+EOF
+
+    is(runcmd('dump --no-banner --type spel --id aa_lok_heal', "BT_Whitewolf_2_0.esm"), <<EOF, qq{dump spel aa_lok_heal from Lokken});
+
+Record: SPEL "aa_lok_heal" Flags:0x0000 ()
+  NAME: ID:aa_Lok_heal
+  FNAM: Name:Hearth Heal
+  SPDT: Type:(Spell)  Spell_Cost:0  Flags:[0x0004 (Always_Succeeds)]
+  ENAM: Spell_Effect:(Restore_Health)  Range:(Self)  Area:0  Duration:1  Mag_Min:20  Mag_Max:80
+EOF
+
+    is(runcmd('dump --no-banner --list --flag blocked', "Suran_Underworld_2.5.esp"), <<EOF, qq{dump blocked records from Suran Underworld});
+ NPC_: a_ss_narayla
+ NPC_: a_vp_scaurus_dead
+ NPC_: a_vp_shirrva_dead
+ NPC_: a_vp_jerek_dead
+ NPC_: a_vp_keverin_dead
+ NPC_: a_vp_klein_dead
+ NPC_: a_cr_terrel_dead
+EOF
+
+    is(runcmd('dump --no-banner --type fact --id "twin lamps"', "Juniper's Twin Lamps (1.1 Tribunal).esp"), <<EOF, qq{dump "twin lamps" faction from Juniper's Twin Lamps});
+
+Record: FACT "twin lamps" Flags:0x0000 ()
+  NAME: Twin Lamps
+  FNAM: Name:Twin Lamps
+  RNAM: Rank:Friend
+  RNAM: Rank:Agent
+  RNAM: Rank:Vigilante
+  RNAM: Rank:Luminary
+  RNAM: Rank:Beacon
+  RNAM: Rank:Truth-Teller
+  RNAM: Rank:Light-Bringer
+  RNAM: Rank:Liberator
+  FADT: Attrib_1:(Speed)  Attrib_2:(Intelligence)  Flags:0x0000 ()  Unknown:-1
+	(Rank:Friend)         At1_1: 0   At2_1: 0   Sk1_1: 0   Sk2_1: 0   Rep_1:  0
+	(Rank:Agent)          At1_2:25   At2_2:25   Sk1_2: 0   Sk2_2: 0   Rep_2: 10
+	(Rank:Vigilante)      At1_3:30   At2_3:30   Sk1_3:10   Sk2_3: 0   Rep_3: 20
+	(Rank:Luminary)       At1_4:33   At2_4:33   Sk1_4:15   Sk2_4: 5   Rep_4: 25
+	(Rank:Beacon)         At1_5:35   At2_5:35   Sk1_5:20   Sk2_5:10   Rep_5: 30
+	(Rank:Truth-Teller)   At1_6:35   At2_6:35   Sk1_6:25   Sk2_6:15   Rep_6: 40
+	(Rank:Light-Bringer)  At1_7:40   At2_7:40   Sk1_7:30   Sk2_7:20   Rep_7: 45
+	(Rank:Liberator)      At1_8:50   At2_8:50   Sk1_8:40   Sk2_8:30   Rep_8: 50
+	sk_1:(Speechcraft)    sk_2:(Sneak)          sk_3:(Security)     
+	sk_4:(Unarmored)      sk_5:(Athletics)      sk_6:(None)         
+ *ANAM: Faction:Telvanni
+  INTV: Reaction:-3
+EOF
+    # increment the test counter
+    $NTESTS += 4;
+}
+#################################################################
+#  test "esm" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{esm} or $DOTEST{esp}) { # this test also sets up for "esp" test
+    $plugin = "Pyromancer v2.esp";
+    $master = $plugin; $master =~ s/esp$/esm/;
+    is(runcmd('esm', $plugin), qq{"$plugin" copied to "$master"\n}, qq{"$plugin" copied to "$master"});
+    $plugin_tmp = $plugin . ".tmp";
+    ok(rename($plugin, $plugin_tmp), qq{rename("$plugin", "$plugin_tmp")});
+    # increment the test counter
+    $NTESTS += 2;
+}
+#################################################################
+#  test "esp" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{esm}) {
+    is(runcmd('esp', $master), qq{"$master" copied to "$plugin"\n}, qq{"$master" copied to "$plugin"});
+    is(system(qq{cmp "$plugin" "$plugin_tmp"}) >> 8, 0, qq{Comparing new "$plugin" to original});
+    # increment the test counter
+    $NTESTS += 2;
+}
+#################################################################
+#  test "header" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{header}) {
+    like(runcmd('header', $plugin = 'Chalk30-Base.esp'), qr/Chalk30-Base.esp: AUTH=ManaUser  DESC=v3.0.+?Adds chalk to the game. Chalk can be found in at least one store in most cities./s, qq{read author/description for: $plugin});
+    is(runcmd('header --synchronize', $plugin = "mebridith.esp"), qq{  mebridith.esp: Synchronized master "Morrowind.esm" length: 79821084 --> 79837557\n}, qq{synchronize header for $plugin});
+    my $dummy_subrecs =
+	pack("a4L/a*", 'NAME', pack("Z*", "tes3cmd_test_dummy_global")) .
+	    pack("a4L/a*", 'FLTV', pack("f", 123.0)) .
+		pack("a4L/a", 'FNAM', "f");
+    my $dummy_rec = pack("a4LLLa*", 'GLOB', length($dummy_subrecs), (my $reclen2 = 0), (my $hdrflags = 0), $dummy_subrecs);
+    @plugins = ("Chalk30-Base.esp",
+		"Juniper's Twin Lamps (1.1 Tribunal).esp",
+		"OfficialMods_v5.esp",
+		"Pyromancer v2.esp");
+    foreach my $plugin (@plugins) {
+	open(PLUG, ">>", $plugin) or die(qq{Error opening $plugin for append});
+	print PLUG $dummy_rec;
+	close(PLUG);
+    }
+    is(runcmd('header --update-record-count', @plugins), <<EOF, qq{Updated record counts of selected plugins});
+  Chalk30-Base.esp: Updated Record Count: 529 --> 530
+  Juniper's Twin Lamps (1.1 Tribunal).esp: Updated Record Count: 1453 --> 1454
+  OfficialMods_v5.esp: Updated Record Count: 831 --> 832
+  Pyromancer v2.esp: Updated Record Count: 109 --> 110
+EOF
+    # increment the test counter
+    $NTESTS += 3;
+}
+#################################################################
+#  test "help" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{help}) {
+    like(runcmd('help active'), qr/ --off/, qq{help for "active" contains '--off'});
+    like(runcmd('help clean'), qr/ --instances/, qq{help for "clean" contains '--instances'});
+    like(runcmd('help common'), qr/plugins have in common/, qq{help for "common" contains 'plugins have in common'});
+    like(runcmd('help delete'), qr/ --exact-id\* <id-string>\n	only delete records whose ids exactly match/, qq{help for "delete" contains '--exact-id* <id-string>...'});
+    like(runcmd('help diff'), qr/ --not-equal/, qq{help for "diff" contains '--not-equal'});
+    like(runcmd('help dump'), qr/ --interior/, qq{help for "dump" contains '--interior'});
+    like(runcmd('help esm'), qr/ --overwrite/, qq{help for "esm" contains '--overwrite'});
+    like(runcmd('help esp'), qr/ --overwrite/, qq{help for "esp" contains '--overwrite'});
+    like(runcmd('help fixit'), qr/ --backup-dir/, qq{help for "fixit" contains '--backup-dir'});
+    like(runcmd('help header'), qr/ --description <desc>/, qq{help for "header" contains '--description <desc>'});
+    like(runcmd('help modify'), qr/ --run "<code>"/, qq{help for "modify" contains '--run "<code>"'});
+    like(runcmd('help multipatch'), qr/ --summons-persist/, qq{help for "multipatch" contains '--summons-persist"'});
+    like(runcmd('help overdial'), qr/ --single/, qq{help for "overdial" contains '--single"'});
+    like(runcmd('help recover'), qr/Trying to load a bad form in TES3File::NextForm/, qq{help for "recover" contains 'Trying to load a bad form in TES3File::NextForm"'});
+    like(runcmd('help resetdates'), qr/Resets the dates of the Bethesda masters/, qq{help for "resetdates" contains 'Resets the dates of the Bethesda masters"'});
+    # increment the test counter
+    $NTESTS += 15;
+}
+#################################################################
+#  test "lint" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{lint}) {
+    # increment the test counter
+    $NTESTS += 0;
+}
+#################################################################
+#  test "modify" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{modify}) {
+    is(runcmd(q{dump --type cont --raw-with-header ale_patch.esp}, "ale_clothing_v0.esp", "ale_clothing_v1.esp"), <<EOF, qq{dumped raw records to ale_patch.esp});
+
+Plugin: ale_clothing_v0.esp
+Raw Output: CONT: _aleanne_chest
+
+Plugin: ale_clothing_v1.esp
+Raw Output: CONT: _aleanne_chest_2
+
+Raw records saved in ale_patch.esp
+EOF
+    unlike(runcmd(q{modify --type cont --run '\$R->set({f=>"count"}, -3)'}, "ale_patch.esp"), qr/NPCO: Count:-[^3]\b/, qq{check that all counts in patch are "-3"});
+    # increment the test counter
+    $NTESTS += 2;
+}
+#################################################################
+#  test "multipatch" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{multipatch}) {
+    $output = runcmd('multipatch');
+    like($output, qr/Skipping Morrowind.esm: Bethesda Master/, qq{multipatch skips Morrowind.esm});
+    like($output, qr/Skipping Tribunal.esm: Bethesda Master/, qq{multipatch skips Tribunal.esm});
+    like($output, qr/Skipping Bloodmoon.esm: Bethesda Master/, qq{multipatch skips Bloodmoon.esm});
+    like($output, qr/Scanning plugin: OfficialMods_v5.esp/, qq{multipatch scans OfficialMods_v5.esp});
+    like($output, qr/A multipatch has been conjured/, qq{multipatch has been conjured});
+    like($output, qr/Resetting the following 12 Summoned Creatures persistence/, qq{multipatch resets 12 summoned creatures persistence});
+    like($output, qr/Merged Leveled Lists \(107 LEVC, 23 LEVI\)/, qq{multipatch merges: (107 LEVC, 23 LEVI)});
+    like($output, qr/ACTIVATED: multipatch.esp/, qq{multipatch.esp is activated});
+    # increment the test counter
+    $NTESTS += 8;
+}
+#################################################################
+#  test "overdial" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{overdial}) {
+    @plugins = ("BT_Whitewolf_2_0.esm", "Suran_Underworld_2.5.esp");
+    $output = runcmd('overdial', @plugins);
+    is($output, <<EOF, qq{overlapping dialogue for: @plugins});
+BT_Whitewolf_2_0.esm:                    "big white wolf"
+Suran_Underworld_2.5.esp:                "wolf"
+
+BT_Whitewolf_2_0.esm:                    "to rescue me"
+Suran_Underworld_2.5.esp:                "rescue me"
+
+BT_Whitewolf_2_0.esm:                    "cure for the wolf"
+Suran_Underworld_2.5.esp:                "wolf"
+
+BT_Whitewolf_2_0.esm:                    "talked to my brother"
+Suran_Underworld_2.5.esp:                "my brother"
+
+BT_Whitewolf_2_0.esm:                    "not an ordinary wolf"
+Suran_Underworld_2.5.esp:                "wolf"
+
+BT_Whitewolf_2_0.esm:                    "thief in the basement"
+Suran_Underworld_2.5.esp:                "basement"
+
+BT_Whitewolf_2_0.esm:                    "done anything wrong"
+Suran_Underworld_2.5.esp:                "anything"
+
+EOF
+    # increment the test counter
+    $NTESTS += 1;
+}
+#################################################################
+#  test "recover" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{recover}) {
+    damage_plugin("mebridith.esp", 8733, 3, "BARF");
+    is(runcmd('recover', "mebridith.esp"), <<EOF, qq{test "recover" on damaged mebridith.esp});
+mebridith.esp: length = 93859
+READ ERROR on record starting at: 8829
+Scanning for records from: 8830
+Scan found NPC_ at: 8830
+Removed 1 section of bad data:
+  From:     8829 To:     8830  (lost 1 bytes)
+Output saved in: "mebridith.esp"
+Original backed up to: "mebridith~1.esp"
+EOF
+    # increment the test counter
+    $NTESTS += 1;
+}
+#################################################################
+#  test "resetdates" command
+#################################################################
+my %ORIGINAL_DATE =
+    ( 'bloodmoon.bsa' => 1051807050,
+      'bloodmoon.esm' => 1051807050,
+      'morrowind.bsa' => 1024695106,
+      'morrowind.esm' => 1024695106,
+      'tribunal.bsa'  => 1035940926,
+      'tribunal.esm'  => 1035940926,
+    );
+if ($DOTEST{all} or $DOTEST{resetdates}) {
+    my $mtime = time;
+    # modify dates on all beth files
+    foreach my $file (qw(Morrowind Tribunal Bloodmoon)) { foreach my $ext (qw(esm bsa)) {
+	utime($mtime, $mtime, "$file.$ext");
+    }}
+    is(runcmd('resetdates'), <<EOF, qq{resetting modified dates on 6 Bethesda files});
+Reset Date of: bloodmoon.bsa to: Thu May  1 12:37:30 2003
+Reset Date of: bloodmoon.esm to: Thu May  1 12:37:30 2003
+Reset Date of: morrowind.bsa to: Fri Jun 21 17:31:46 2002
+Reset Date of: morrowind.esm to: Fri Jun 21 17:31:46 2002
+Reset Date of: tribunal.bsa to: Tue Oct 29 20:22:06 2002
+Reset Date of: tribunal.esm to: Tue Oct 29 20:22:06 2002
+EOF
+    is(runcmd('resetdates'), "", qq{resetting un-modded Bethesda dates, which should be a no-op});
+    # check the dates are correct
+    foreach my $file (qw(Morrowind Tribunal Bloodmoon)) { foreach my $ext (qw(esm bsa)) {
+	my $master = "$file.$ext";
+	my($atime, $mtime) = (stat($master))[8,9];
+	my $mtime_orig = $ORIGINAL_DATE{lc($master)};
+	cmp_ok($mtime, '==', $mtime_orig, qq{checking date for: "$master" reset to: $mtime_orig});
+	$NTESTS++;
+    }}
+    # increment the test counter
+    $NTESTS += 2;
+}
+#################################################################
+#  test "fixit" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{fixit}) {
+    # increment the test counter
+    $NTESTS += 0;
+}
+#################################################################
+#  test "-codec" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{'-codec'}) {
+    # increment the test counter
+    $NTESTS += 0;
+}
+#################################################################
+#  test "-testcodec" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{'-testcodec'}) {
+    is(runcmd('-testcodec --ignore-cruft', "Morrowind.esm"), <<EOF, qq{testcodec on "Morrowind.esm"});
+
+=================================================================
+TESTING codec on: Morrowind.esm ...
+Output saved in: "test_Morrowind.esm"
+Original unaltered: "Morrowind.esm"
+
+The following types in the original plugins contain cruft:
+  CREA.AI_F
+  FACT.RNAM
+  NPC_.AI_F
+  REGN.SNAM
+EOF
+    is(runcmd('-testcodec --ignore-cruft', "Tribunal.esm"), <<EOF, qq{testcodec on "Tribunal.esm"});
+
+=================================================================
+TESTING codec on: Tribunal.esm ...
+Output saved in: "test_Tribunal.esm"
+Original unaltered: "Tribunal.esm"
+
+The following types in the original plugins contain cruft:
+  CREA.AI_F
+  FACT.RNAM
+  NPC_.AI_F
+  REGN.SNAM
+EOF
+    is(runcmd('-testcodec --ignore-cruft', "Bloodmoon.esm"), <<EOF, qq{testcodec on "Bloodmoon.esm"});
+
+=================================================================
+TESTING codec on: Bloodmoon.esm ...
+Output saved in: "test_Bloodmoon.esm"
+Original unaltered: "Bloodmoon.esm"
+
+The following types in the original plugins contain cruft:
+  CREA.AI_E
+  CREA.AI_F
+  NPC_.AI_F
+  REGN.SNAM
+  SCPT.SCHD
+EOF
+
+    # increment the test counter
+    $NTESTS += 3;
+}
+#################################################################
+#  test "-wikiout" command
+#################################################################
+if ($DOTEST{all} or $DOTEST{'-wikiout'}) {
+    # increment the test counter
+    $NTESTS += 0;
+}
+
+done_testing($NTESTS);
