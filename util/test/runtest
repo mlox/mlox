@@ -32,10 +32,10 @@ sub reset_test_data {
     chdir($TESTDIR) or die qq{chdir($TESTDIR) FAILED ($!)};
     hr();
     system("rm -rf morrowind");
-    warn "Refreshing test sandbox...\n";
-    system("rsync -uva data/ morrowind/");
+    warn "[Refreshing test sandbox...]\n";
+    system("rsync -uva --exclude .svn data/ morrowind/");
 
-    warn "Setting up Bethesda Data Files...\n";
+    warn "[Setting up Bethesda Data Files...]\n";
     foreach my $datafile (qw(Morrowind Tribunal Bloodmoon)) {
 	foreach my $ext (qw(esm bsa)) {
 	    unless (-f qq{morrowind/Data Files/${datafile}.$ext}) {
@@ -56,7 +56,7 @@ sub revert {
     if (-e $backup) {
 	unlink($plugin) or die qq{Error deleting "$plugin" ($!)};
 	rename($backup, $plugin) or die qq{Error renaming "$backup" to "$plugin"};
-	warn "Reverted: $plugin\n";
+	warn "[Reverted: $plugin]\n";
     } else {
 	carp("ERROR, can't revert non-existant backup: $backup");
     }
@@ -77,7 +77,7 @@ sub damage_plugin {
     # read rest of bytes to EOF
     $nread = read(INP, $buffer, ($plugin_length - $offset));
     print OUT $buffer if ($nread > 0);
-    warn qq{Created test damage in "$plugin" at $offset\n};
+    warn qq{[Created test damage in "$plugin" at $offset]\n};
     close(INP);
     close(OUT);
     rename("$plugin.tmp", $plugin) or die(qq{Error renaming "$plugin.tmp" -> "$plugin"});
@@ -357,6 +357,7 @@ if ($DOTEST{all} or $DOTEST{esm}) {
 if ($DOTEST{all} or $DOTEST{header}) {
     like(runcmd('header', $plugin = 'Chalk30-Base.esp'), qr/Chalk30-Base.esp: AUTH=ManaUser  DESC=v3.0.+?Adds chalk to the game. Chalk can be found in at least one store in most cities./s, qq{read author/description for: $plugin});
     is(runcmd('header --synchronize', $plugin = "mebridith.esp"), qq{  mebridith.esp: Synchronized master "Morrowind.esm" length: 79821084 --> 79837557\n}, qq{synchronize header for $plugin});
+    revert("mebridith.esp");
     my $dummy_subrecs =
 	pack("a4L/a*", 'NAME', pack("Z*", "tes3cmd_test_dummy_global")) .
 	    pack("a4L/a*", 'FLTV', pack("f", 123.0)) .
