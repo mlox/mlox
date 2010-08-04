@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37l";
+$::VERSION = "0.37m";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -13,19 +13,17 @@ $::VERSION = "0.37l";
 # "recover" needs to detect overwritten length fields, perhaps by backing up 1 record to previous good record start, and scan from there
 # sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair (recapitate)
-# add report of stats (plugins scanned, etc) for multipatch and clean.
-# improve corrupted INFO detection, and possibly clean them
-# when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data)
+# improve corrupted INFO (mwedit) detection, and possibly clean them
+# when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data) (Check CS)
 # implement a "repack" command: bsaunpack + tesfiles/resourcecheck + clean
-# logfile for detail output (delete, modify, clean, multipatch)?
 # TES3::File (open_for_input, backup, etc)?
 # implement proper verbosity
 # cleanup .tmp if die
 # and add more examples, esp. "modify"
-# write some tests
 # clean would be sped up if command added a "clean <size>" mark to plugin (use unused space in header?)
-#    it would probably not be good to change size of masters, at least.
+#    but it would probably not be good to change size of masters, at least.
 # GUI
+# add tes3spell after GUI
 # reformat overdial output? just list each topic once, with list of plugins that have it
 # implement script compiler
 # # # # # # # # # # # # # # #
@@ -77,6 +75,8 @@ use Fcntl qw(SEEK_SET SEEK_CUR SEEK_END);
 use File::Basename;
 use File::Spec;
 use File::Copy;
+use File::Find;
+use Image::Magick;
 use Getopt::Long qw(:config auto_abbrev);
 use Data::Dumper;
 use Storable;
@@ -1915,7 +1915,7 @@ my @RECDEFS =
 	       [CNAM => @RD_Unknown],
 	       [DNAM => [["dialog_topic", "Z*"]]],
 	       [ENAM => [(["unknown_1", "l"]) x 2]],
-	       [FNAM => [["long_1", "l"], ["long_1", "l"], ["long_1", "l"], ["faction", "Z16"], ["float_1", "f"], ["float_1", "f"], ["long_1", "l"], ["long_1", "l"]]],
+	       [FNAM => [["long_1", "l"], ["long_1", "l:%-2d"], ["long_1", "l"], ["faction", "Z16"], ["float_1", "f"], ["float_1", "f"], ["long_1", "l"], ["long_1", "l"]]],
 	       [KNAM => [ (["unknown_1", "c"], ["spell_1", ["Z35:%-25s", "a35"]], ["long_1", "l:%d\n\t"]) x 10 ]], # hotkeys
 	       [LNAM => [(["unknown_1", "l"]) x 2]],
 	       [MNAM => [["mnam", "Z*"]]],
@@ -2243,12 +2243,58 @@ sub new_from_recbuf {
 	    _recbuf_ => $recbuf }, $rectype);
 }
 
+# factory that creates new TES3::Records from reading records from filehandle
+my $hdr_size = 16;
+sub new_from_input {
+    my($class, $fh, $expected_type, $plugin) = @_;
+    my $rec_hdr = "";
+    my $n_read = read($fh, $rec_hdr, $hdr_size);
+    if (not $n_read) {
+	if (defined $n_read) {
+	    return(undef);	# EOF
+	} else {
+	    abort(qq{Error on read() ($!)});
+	}
+    }
+    if ($n_read != $hdr_size) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{new_from_input(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
+    }
+    # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
+    my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
+    return(undef) unless defined $rectype;
+    if (defined($expected_type) and $expected_type ne $rectype) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{new_from_input(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
+    }
+    my $recbuf = "";
+    $n_read = read($fh, $recbuf, $reclen);
+    if ($n_read != $reclen) {
+	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	abort(qq{new_from_input(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $reclen bytes, got $n_read});
+    }
+    return(bless({ _rectype_ => $rectype,
+		   _hdrflags_ => $hdrflags,
+		   _recbuf_ => $recbuf }, $rectype)); # return a TES3 object
+} # new_from_input
+
 # tr->new_from_tr - create a new blank tr record object with same type as parameter
 sub new_from_tr {
     my($self, $copyhdr) = @_;
     bless({ _rectype_ => $self->rectype,
 	    _hdrflags_ => ($copyhdr) ? $self->hdrflags : 0,
 	    _recbuf_ => ''}, $self->rectype);
+}
+
+sub write_rec {
+    my($self, $fh) = @_;
+    if (DBG) {
+	abort("null rectype") if not defined $self->rectype;
+	abort("null reclen") if not defined $self->reclen;
+	abort("null hdrflags") if not defined $self->hdrflags;
+    }
+    $self->encode() unless (defined $self->{_recbuf_});
+    print $fh pack("a4LLLa*", $self->rectype, $self->reclen, (my $reclen2 = 0), $self->hdrflags, $self->recbuf);
 }
 
 # tr->recbuf
@@ -2581,7 +2627,7 @@ sub gen_subrec_methods {
 #	    if (scalar(@fieldnames) > 3) {
 #		$print_format = pretty_columns(\@fieldnames, \@formats);
 #	    } else {
-		$print_format = join("  ", @formats);
+#		$print_format = join("  ", @formats);
 #	    }
 	    if (my $ncol = $COLUMNS{$package}) {
 		my $width = int(70 / $ncol);
@@ -2601,6 +2647,16 @@ sub gen_subrec_methods {
 		    }
 		}
 		$print_format = join("\n\t", @columnized_lines);
+	    } else {
+		my $last_format = ' ';
+		foreach my $fmt (@formats) {
+		    if ($last_format =~ /\s$/) {
+			$print_format .= $fmt;
+		    } else {
+			$print_format .= '  ' . $fmt;
+		    }
+		    $last_format = $fmt;
+		}
 	    }
 	    my $check_lookups = grep { defined $lookup->{$_} } @fieldnames;
 	    my $check_symflags = grep { defined $symflags->{$_} } @fieldnames;
@@ -2922,12 +2978,13 @@ my %NOPATCH_PLUGIN =
 
 # name -> seconds since the epoch
 my %ORIGINAL_DATE =
-    ( 'bloodmoon.bsa' => 1051807050,
-      'bloodmoon.esm' => 1051807050,
-      'morrowind.bsa' => 1024695106,
-      'morrowind.esm' => 1024695106,
-      'tribunal.bsa'  => 1035940926,
-      'tribunal.esm'  => 1035940926,
+    (
+     'morrowind.bsa' => 1024695106,  # Fri Jun 21 17:31:46 2002
+     'morrowind.esm' => 1024695106,  # Fri Jun 21 17:31:46 2002
+     'tribunal.bsa'  => 1035940926,  # Tue Oct 29 20:22:06 2002
+     'tribunal.esm'  => 1035940926,  # Tue Oct 29 20:22:06 2002
+     'bloodmoon.bsa' => 1051807050,  # Thu May  1 12:37:30 2003
+     'bloodmoon.esm' => 1051807050,  # Thu May  1 12:37:30 2003
     );
 
 my $lint_fog_density;
@@ -3436,102 +3493,102 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 	},
        usage => qq{Usage: tes3cmd dump OPTIONS plugin...
 
- OPTIONS:
-  --debug
+OPTIONS:
+ --debug
 	 turn on debug messages
 
-  --instance-match <regex>
+ --instance-match <regex>
 	 when printing cells, only print the matching object instances in the
 	 cell
 
-  --instance-no-match <regex>
+ --instance-no-match <regex>
 	 when printing cells, only print the non-matching object instances in
 	 the cell
 
-  --exact-id* <id-string>
+ --exact-id* <id-string>
 	 only dump records whose ids exactly match given <id-string>
 
-  --exterior
+ --exterior
 	 if record is CELL, only match if it is an Exterior
 
-  --flag* <flag>
+ --flag* <flag>
 	 only dump records with given flag. Flags may be given symbolically
 	 as: (deleted, persistent, ignored, blocked), or via their numeric
 	 values (i.e. persistent is 0x400).
 
-  --id* <id-regex>
+ --id* <id-regex>
 	 only process records whose ids match regular expression pattern
 	 <id-regex>
 
-  --interior
+ --interior
 	 if record is CELL, only match if it is an Interior
 
-  --list
+ --list
 	 only list the ids of the records to be dumped, instead of the entire record
 
-  --match <regex>
+ --match <regex>
 	 only process records that match given regular expression <regex>
 
-  --no-banner
+ --no-banner
 	 do not print banner identifying the current plugin
 
-  --no-match <regex>
+ --no-match <regex>
 	 only process records that do not match given regular expression
 	 <regex>
 
-  -wrap
+ -wrap
 	 Wrap some long fields for more nicely formatted output.
 
-  --raw <file>
+ --raw <file>
 	 dump raw records to <file>, instead of as text
 
-  --raw-with-header <file>
+ --raw-with-header <file>
 	 dump raw records with an initial TES3 header record to <file>
 
-  --separator <string>
+ --separator <string>
 	 separate subrecords with given <string>. Normally subrecords are
 	 separated by line-breaks. You can use this option to change that so
 	 they are all printed on one line.
 
-  --type* <record-type>
+ --type* <record-type>
 	 only dump records with the given <record-type>
 
-  Note: starred (*) options can be repeated, and matching of strings is not
-  case-sensitive.
+ Note: starred (*) options can be repeated, and matching of strings is not
+ case-sensitive.
 
- DESCRIPTION:
+DESCRIPTION:
 
- Dumps the plugin to stdout in text form for easy perusal or in raw form for
- extracting a subset of records to create a new plugin. For large plugins, the
- text output can be voluminous. In the text output, a starred subrecord
- indicates it is related to following subrecords.
+Dumps the plugin to stdout in text form for easy perusal or in raw form for
+extracting a subset of records to create a new plugin. For large plugins, the
+text output can be voluminous. In the text output, a starred subrecord
+indicates it is related to following subrecords.
 
- Note: documentation for regular expressions:
-   http://www.perl.com/doc/manual/html/pod/perlre.html
+Note: documentation for regular expressions:
+  http://www.perl.com/doc/manual/html/pod/perlre.html
 
- EXAMPLES:
+EXAMPLES:
 
- # List all the records in the plugin, just one per line, by type and ID:
- tes3cmd dump --list "Drug Realism.esp"
+# List all the records in the plugin, just one per line, by type and ID:
+tes3cmd dump --list "Drug Realism.esp"
 
- # Dump all records from a plugin. we redirect the output to a file as there
- # can be a lot of output:
- tes3cmd dump "DwemerClock.esp" > "DwemerClock-dump.txt"
+# Dump all records from a plugin. we redirect the output to a file as there
+# can be a lot of output:
+tes3cmd dump "DwemerClock.esp" > "DwemerClock-dump.txt"
 
- # Dump all records with IDs exactly matching "foo":
- tes3cmd dump --exact-id 2247227652827822061 LGNPC_AldVelothi_v1_20.esp
+# Dump all records with IDs exactly matching "2247227652827822061":
+tes3cmd dump --exact-id 2247227652827822061 LGNPC_AldVelothi_v1_20.esp
 
- # Dump all the DIAL and INFO records from a plugin:
- tes3cmd dump --type dial --type info "abotWhereAreAllBirdsGoing.esp"
+# Dump all the DIAL and INFO records from a plugin:
+tes3cmd dump --type dial --type info "abotWhereAreAllBirdsGoing.esp"
 
- # Dump all records flagged as persistent (by name) OR blocked (by value)
- tes3cmd dump --flag persistent --flag 0x2000 "Suran_Underworld_2.5.esp"
+# Dump all records flagged as persistent (by name) OR blocked (by value)
+tes3cmd dump --flag persistent --flag 0x2000 "Suran_Underworld_2.5.esp"
 
- # Dump all object instances in cells that match "galbedir":
- # (this will just show you the cell header, and subrecords just for Galbedir
- # and her chest in the cell: "Balmora, Guild of Mages"):
- tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
- },
+# Dump all object instances in cells that match "galbedir":
+# (this will just show you the cell header, and subrecords just for Galbedir
+# and her chest in the cell: "Balmora, Guild of Mages"):
+tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
+},
      },
 
      esm =>
@@ -3593,8 +3650,7 @@ tes3cmd esp "my plugin.esm"
        preprocess => \&cmd_fixit,
        usage => qq{Usage: tes3cmd fixit
 
-OPTIONS
-
+OPTIONS:
  --debug
 	turn on debug messages
 
@@ -3613,6 +3669,26 @@ The fixit command does the following operations:
 - Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
 - Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
 - Resets Dates on Bethesda data files
+},
+     },
+
+     -gentexnames =>
+     { description => qq{Generate textures that display their filenames, for easy IDing},
+       options => [@STDOPT,
+		   'no-recurse',
+		   'match-files',
+		   'output-dir',
+		   'overwrite'],
+
+       usage => qq{Usage: tes3cmd header OPTIONS plugin...
+
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --output-dir <dir>
+	set output directory to <dir> (default is where input plugin is)
+
 },
      },
 
@@ -3834,8 +3910,7 @@ EOF
        process => \&cmd_lint,
        usage => qq{Usage: tes3cmd lint OPTIONS plugins...
 
-OPTIONS
-
+OPTIONS:
  --all/recommended
 	Enable all or recommended output options. When --recommended is
 	selected only the following options are enabled:
@@ -4040,7 +4115,7 @@ more detail about the flagged items.
 
       usage => qq{Usage: tes3cmd modify OPTIONS plugin...
 
-	OPTIONS:
+OPTIONS:
  --debug
 	turn on debug messages
 
@@ -4180,13 +4255,12 @@ OPTIONS:
 
 DESCRIPTION:
 
-The multipatch produces a patch file based on your current load order to
-solve various problems. You should regenerate your multipatch whenever you
-change your load order. After you have generated the multipatch.esp plugin,
-you should enable it in your active plugins. The goal of the "multipatch"
-command is that it should always be safe to use it with no options to get the
-default patching behavior. If no options are specified, the following options
-are assumed:
+The multipatch produces a patch file based on your current load order to solve
+various problems. You should regenerate your multipatch whenever you change
+your load order. The goal of the "multipatch" command is that it should always
+be safe to use it with no options to get the default patching behavior (if you
+do find any problems, please report them and they will be fixed ASAP). When no
+options are specified, the following options are assumed:
 
   --cellnames --fogbug --merge-lists --summons-persist
 
@@ -4194,20 +4268,19 @@ The different patching operations are explained below:
 
 Cell Name Patch (--cellnames)
 
-  Creates a patch plugin to ensure renamed cells are not accidentally reverted
-  to their original name.
+  Creates a patch to ensure renamed cells are not accidentally reverted to
+  their original name.
 
-  This command solves the following plugin conflict that causes bugs:
+  This solves the following plugin conflict that causes bugs:
   * Master A names external CELL (1, 1) as: "".
   * Plugin B renames CELL (1, 1) to: "My City".
   * Plugin C modifies CELL (1, 1), using the original name "", reverting
     plugin B's renaming.
   * References in plugin B (such as in scripts) that refer to "My City" break.
 
-  This command scans your currently active plugin load order for cell name
-  reversions, and ensures whenever possible that cell renaming is properly
-  maintained. You should regenerate your cellnamepatch whenever you change your
-  load order.
+  This option works by scanning your currently active plugin load order for
+  cell name reversions like those in the above example, and ensures whenever
+  possible that cell renaming is properly maintained.
 
 Fog Bug Patch (--fogbug)
 
@@ -4216,9 +4289,8 @@ Fog Bug Patch (--fogbug)
   except for some light sources, and no amount of light, night-eye, or gamma
   setting will make the interior visible. This is known as the "fog bug".
 
-  This command creates a patch plugin that fixes all fogbugged cells in your
-  active plugins by setting the fog density of those cells to a non-zero
-  value.
+  This option creates a patch that fixes all fogbugged cells in your active
+  plugins by setting the fog density of those cells to a non-zero value.
 
 Summoned creatures persists (--summons-persist)
 
@@ -4226,8 +4298,8 @@ Summoned creatures persists (--summons-persist)
   cell where an NPC has summoned a creature. The simple workaround is to flag
   summoned creatures as persistent. The Morrowind Patch Project implements
   this fix, however other mods coming later in the load order often revert it.
-  This multipatch option ensures that known summoned creatures are flagged as
-  persistent.
+  This option to the multipatch ensures that known summoned creatures are
+  flagged as persistent.
 
 EXAMPLES:
 
@@ -4492,7 +4564,6 @@ my %JUNKCELL_SUBTYPE = (NAME => 1, DATA => 1, RGNN => 1);
 
 ### MAIN IO AND CACHING
 
-my $hdr_size = 16;
 sub read_rec {
     my($fh, $expected_type, $plugin) = @_;
     my $rec_hdr = "";
@@ -4508,7 +4579,7 @@ sub read_rec {
 	my $inp_offset = tell($fh) - $n_read - $hdr_size;
 	abort(qq{read_rec(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
     }
-    # I suspect $reclen2 is the hi word of a 64-bit double long, it is effectively unused.
+    # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rectype) {
 	my $inp_offset = tell($fh) - $n_read - $hdr_size;
@@ -4539,7 +4610,7 @@ sub read_quick_parse {
 	my $inp_offset = tell($fh) - $n_read - $hdr_size;
 	abort(qq{read_quick_parse(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
     }
-    # I suspect $reclen2 is the hi word of a 64-bit double long, it is effectively unused.
+    # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
     if (defined($expected_type) and $expected_type ne $rectype) {
 	my $inp_offset = tell($fh) - $n_read - $hdr_size;
@@ -4612,6 +4683,8 @@ sub read_quick_parse {
 	$id = "($x, $y)";
     } elsif ($NO_ID_TYPE{$rectype}) {
 	$id = ('()');
+    } elsif ($rectype eq "SSCR") {
+	$id = unpack("Z32", $subrecs{DATA}[0]);
     } else {
 	abort("Oops! Don't know how to make ID for rectype: $rectype");
     }
@@ -4620,51 +4693,6 @@ sub read_quick_parse {
 }
 
 #assert()
-
-sub read_tr {
-    my($fh, $expected_type, $plugin) = @_;
-    my $rec_hdr = "";
-    my $n_read = read($fh, $rec_hdr, $hdr_size);
-    if (not $n_read) {
-	if (defined $n_read) {
-	    return(undef);	# EOF
-	} else {
-	    abort(qq{Error on read() ($!)});
-	}
-    }
-    if ($n_read != $hdr_size) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
-	abort(qq{read_tr(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
-    }
-    # I suspect $reclen2 is the hi word of a 64-bit double long, it is effectively unused.
-    my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
-    return(undef) unless defined $rectype;
-    if (defined($expected_type) and $expected_type ne $rectype) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
-	abort(qq{read_tr(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
-    }
-    my $recbuf = "";
-    $n_read = read($fh, $recbuf, $reclen);
-    if ($n_read != $reclen) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
-	abort(qq{read_tr(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $reclen bytes, got $n_read});
-    }
-    return($rectype,
-	   bless({ _rectype_ => $rectype,
-		   _hdrflags_ => $hdrflags,
-		   _recbuf_ => $recbuf }, $rectype)); # return a TES3 object
-}
-
-sub write_rec {
-    my($fh, $tr) = @_;
-    if (DBG) {
-	abort("null rectype") if not defined $tr->rectype;
-	abort("null reclen") if not defined $tr->reclen;
-	abort("null hdrflags") if not defined $tr->hdrflags;
-    }
-    $tr->encode() unless (defined $tr->{_recbuf_});
-    print $fh pack("a4LLLa*", $tr->rectype, $tr->reclen, (my $reclen2 = 0), $tr->hdrflags, $tr->recbuf);
-}
 
 sub open_for_input {
     my($plugin) = @_;
@@ -4795,14 +4823,13 @@ sub read_records {
     my $inp = open_for_input($plugin);
     my %plugin_id = ();
     eval {
-	while (my($rectype, $tr) = read_tr($inp, undef, $plugin)) {
-	    last if (not defined $tr);
+	while (my $tr = TES3::Record->new_from_input($inp, undef, $plugin)) {
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 	    my $id = $tr->decode()->id;
 	    if ($fun) {
-		$fun->($rectype, $id, $tr);
+		$fun->($tr->rectype, $id, $tr);
 	    } else {
-		$plugin_id{$rectype}->{$id} = 1 if (defined $id);
+		$plugin_id{$tr->rectype}->{$id} = 1 if (defined $id);
 	    }
 	}
     };
@@ -4816,11 +4843,10 @@ sub read_objects {
     my $inp = open_for_input($plugin);
     my %plugin_id = ();
     eval {
-	while (my($rectype, $tr) = read_tr($inp, undef, $plugin)) {
-	    last if (not defined $tr);
+	while (my $tr = TES3::Record->new_from_input($inp, undef, $plugin)) {
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 	    my $id = $tr->decode()->id;
-	    $plugin_id{$id}->{$rectype} = $tr if (defined $id);
+	    $plugin_id{$id}->{$tr->rectype} = $tr if (defined $id);
 	}
     };
     err($@) if ($@);
@@ -4832,10 +4858,9 @@ sub read_dialogs {
     my($plugin, $dialref) = @_;
     my $inp = open_for_input($plugin);
     eval {
-	while (my($rectype, $tr) = read_tr($inp, undef, $plugin)) {
-	    last if (not defined $rectype);
+	while (my $tr = TES3::Record->new_from_input($inp, undef, $plugin)) {
 	    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
-	    next if ($rectype ne "DIAL");
+	    next if ($tr->rectype ne "DIAL");
 	    my $id = $tr->decode()->id;
 	    my $type = $tr->get('DATA', 'type');
 	    $dialref->{$plugin}->{$id}++ if ($type == 0 and $id);
@@ -4966,12 +4991,11 @@ sub load_leveled_lists {
 	if ($invalid) {
 	    my $inp = open_for_input($T3->datapath($plugin));
 	    eval {
-		while (my($rectype, $tr) = read_tr($inp, undef)) {
-		    last if (not defined $rectype);
-		    next unless ($rectype =~ /^LEV[CI]$/);
+		while (my $tr = TES3::Record->new_from_input($inp, undef, $plugin)) {
+		    next unless ($tr->rectype =~ /^LEV[CI]$/);
 		    next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 		    $tr->decode;
-		    $levdat->{$lc_plugin}->{$rectype}->{$tr->id} = $tr;
+		    $levdat->{$lc_plugin}->{$tr->rectype}->{$tr->id} = $tr;
 		}
 	    };
 	    close_input($inp);
@@ -5035,7 +5059,7 @@ sub make_header {
 			 ($opt->{author} || "tes3cmd"),
 			 ($opt->{description} || "(generated)"),
 			 ($opt->{n_records} || 0)));
-    # I suspect $reclen2 is the hi word of a 64-bit double long, it is effectively unused.
+    # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my $tes3 = pack("a4LLLa*", 'TES3', length($hedr), (my $reclen2 = 0), (my $flags = 0), $hedr);
     abort("Invalid TES3 header definition has incorrect size.")
 	unless (length($tes3) == MIN_TES3_PLUGIN_SIZE);
@@ -5054,7 +5078,10 @@ sub update_header {
     my $master;
     my($atime, $mtime) = (stat($plugin))[8,9];
     my $fh = open_for_update($plugin);
-    my($rectype, $tr) = read_tr($fh, 'TES3', $plugin);
+    my $tr = TES3::Record->new_from_input($fh, 'TES3', $plugin);
+    unless (defined $tr) {
+	# oops (TBD)
+    }
     my $tes3len = length($tr->decode()->recbuf);
     my $update_msg = '';
     my $modified = 0;
@@ -5132,7 +5159,7 @@ sub update_header {
 	$tr->encode;
 	if ($tr->reclen() == $tes3len) {
 	    seek($fh, 0, SEEK_SET);
-	    write_rec($fh, $tr);
+	    $tr->write_rec($fh);
 	} else {
 	    abort("update_header(): output header size incorrect (expected:$tes3len, got: @{[$tr->reclen()]})");
 	}
@@ -5265,10 +5292,9 @@ sub process_plugin_for_input {
     my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
     # process each record in the plugin
     eval {
-	while (my($rectype, $tr) = read_tr($inp, $expected, $plugin)) {
+	while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
 	    $expected = undef;
-	    last if (not defined $rectype);
-	    $fun->($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
+	    $fun->($tr->rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
 	}
     };
     err($@) if ($@);
@@ -5283,19 +5309,18 @@ sub process_plugin_for_update {
     my $modified;
     # process each record in the plugin
     eval {
-	while (my($rectype, $tr) = read_tr($inp, $expected, $plugin)) {
+	while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
 	    $expected = undef;
-	    last if (not defined $rectype);
 	    # function can delete, modify, or pass rec thru
-	    my $trnew = $fun->($rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
+	    my $trnew = $fun->($tr->rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
 	    if (defined $trnew) { # rec was kept
 		if ($trnew) {	   # rec was changed
-		    write_rec($out, $trnew);
+		    $trnew->write_rec($out);
 		    dbg("process_plugin_for_update: record modified") if (DBG);
 		    $modified++;
 		} else {	# null return record, so pass original rec through unchanged
 		    dbg("process_plugin_for_update: record PASSED THROUGH unmodified") if (DBG);
-		    write_rec($out, $tr);
+		    $tr->write_rec($out);
 		}
 	    } else {		# undefined return indicates rec to be deleted
 		dbg("process_plugin_for_update: record deleted") if (DBG);
@@ -5577,9 +5602,9 @@ sub cmd_multipatch {
 	my $inp = open_for_input($T3->datapath($plugin));
 	my $expected = "TES3";
 	eval {
-	    while (my($rectype, $tr) = read_tr($inp, $expected, $plugin)) {
+	    while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
 		$expected = undef;
-		last if (not defined $rectype);
+		my $rectype = $tr->rectype;
 		next if ($tr->hdrflags & $HDR_FLAGS{ignored});
 		if ($opt_multipatch_fogbug or $opt_multipatch_cellnames) {
 		    if ($rectype eq 'CELL') {
@@ -5634,7 +5659,7 @@ sub cmd_multipatch {
 		if ($rencell{$coord}->{OUTPUTFLAG}) {
 		    if (my $tr = $rencell{$coord}->{REC}) {
 			print qq{  CELL: ($coord) -> NAME: "$rencell{$coord}->{NAME}"\n};
-			write_rec($out, $tr);
+			$tr->write_rec($out);
 		    }
 		}
 	    }
@@ -5650,10 +5675,8 @@ sub cmd_multipatch {
 		my $ambi_tsr = $tr->get('AMBI');
 		$ambi_tsr->{fog_density} = 0.01;
 		$data_tsr->{fog_density} = 0.01;
-#		$data_tsr->encode;
-#		$ambi_tsr->encode;
 		my $newcell = CELL->new([$name_tsr, $data_tsr->encode, $ambi_tsr->encode]);
-		write_rec($out, $newcell);
+		$newcell->write_rec($out);
 	    }
 	}
 	if ($nsumcrea) {
@@ -5661,7 +5684,7 @@ sub cmd_multipatch {
 	    foreach my $id (sort keys %sumcrea) {
 		print "  CREA: $id\n";
 		my $tr = $sumcrea{$id};
-		write_rec($out, $tr);
+		$tr->write_rec($out);
 	    }
 	}
 	if ($merged_lists) {
@@ -5669,7 +5692,7 @@ sub cmd_multipatch {
 	    $count{LEVC} = $count{LEVI} = 0;
 	    foreach my $tr (@$merged_lists) {
 		$count{$tr->rectype()}++;
-		write_rec($out, $tr);
+		$tr->write_rec($out);
 	    }
 	    print "\nMerged Leveled Lists ($count{LEVC} LEVC, $count{LEVI} LEVI)\n";
 	}
@@ -6318,8 +6341,7 @@ sub cmd_clean {
     if (scalar keys %stats > 0) {
 	print qq{\nCleaning Stats for "$plugin":\n};
 	foreach my $stat (sort keys %stats) {
-	    my $count = $stats{$stat};
-	    printf "  %30s:  %4d\n", $stat, $count;
+	    printf "  %30s:  %4d\n", $stat, $stats{$stat};
 	}
     }
 } # cmd_clean
@@ -6376,7 +6398,7 @@ sub cmd_dump {
 		my $newtr = CELL->new([@newcell]);
 		if ($opt_dump_raw) {
 		    $list_record->("Raw Output:");
-		    write_rec($DUMP_RAWOUT, $newtr);
+		    $newtr->write_rec($DUMP_RAWOUT);
 		} else {
 		    print $newtr->tostr."\n";
 		}
@@ -6384,7 +6406,7 @@ sub cmd_dump {
 	} else {
 	    if ($opt_dump_raw) {
 		$list_record->("Raw Output:");
-		write_rec($DUMP_RAWOUT, $tr);
+		$tr->write_rec($DUMP_RAWOUT);
 	    } else {
 		print "\n$print_rec\n" if ($print_rec);
 	    }
@@ -6412,7 +6434,9 @@ sub cmd_recover {
     while ($inp_offset < $inp_len) {
 	my($rectype, $tr);
 	eval {
-	    ($rectype, $tr) = read_tr($inp, $expected, $plugin);
+	    $tr = TES3::Record->new_from_input($inp, $expected, $plugin);
+	    last READREC unless (defined $tr);
+	    my $rectype = $tr->rectype;
 	    $expected = undef;
 	    abort("Error, Invalid record type: $rectype") unless ($TES3::Record::RECTYPES{$rectype});
 	    my $id = $tr->decode()->id;
@@ -6452,7 +6476,7 @@ sub cmd_recover {
 	    }
 	} else {
 	    # everything was AOK
-	    write_rec($out, $tr);
+	    $tr->write_rec($out);
 	    $inp_offset = tell($inp); # set inp_offset to current position
 	}
     }
@@ -6569,10 +6593,12 @@ sub cmd_active {
 	    abort("Failed to load INI file: ".$T3->ini_file."\nError: @Config::IniFiles::errors");
 	}
     } else {
-	print "\nLOAD ORDER:\n";
-	print "$_\n" foreach ($T3->load_order);
+	print "[LOAD ORDER]\n";
+	my $n = 0;
+	foreach ($T3->load_order) { print "$_\n"; $n++; }
+	print "[$n Active Plugins]\n";
     }
-}
+} # cmd_active
 
 sub cmd_resetdates {
     foreach my $file_name (sort keys %ORIGINAL_DATE) {
@@ -6598,7 +6624,6 @@ sub main {
     GetOptions(@{$cmd_ref->{options}}) or die($cmd_ref->{usage}."\n");
     # glob plugin names containing glob chars
     my @plugins = map { (/[$GLOBCHARS]/) ? glob($_) : $_ } @ARGV;
-    # TBD: sort in load order if we are in Data Files?
     # if standard option --output-dir was used, ensure destination exists
     if ($opt_output_dir and not -d $opt_output_dir) {
 	eval { mkdir($opt_output_dir, 0755); };
