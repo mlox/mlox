@@ -117,7 +117,7 @@ if ($DOTEST{all} or $DOTEST{help}) {
 #################################################################
 if ($DOTEST{all} or $DOTEST{active}) {
     $output = runcmd('active');
-    is($output, qq{\nLOAD ORDER:\nMorrowind.esm\nTribunal.esm\nBloodmoon.esm\n}, q{Initial load order just Bethesda masters});
+    is($output, qq{[LOAD ORDER]\nMorrowind.esm\nTribunal.esm\nBloodmoon.esm\n[3 Active Plugins]\n}, q{Initial load order just Bethesda masters});
 
     my $first_plugin;
     @plugins = ();
@@ -145,7 +145,7 @@ if ($DOTEST{all} or $DOTEST{clean}) {
 
     $output = runcmd('clean', $plugin = "Pyromancer v2.esp");
     like($output, qr/duplicate record:\s+3\b/, qq{"$plugin": Cleaned 3 duplicate records});
-    like($output, qr/junk-CELL:\s+19\b/, qq{"$plugin": Cleaned 19 junk-CELLs});
+    like($output, qr/junk-CELL:\s+24\b/, qq{"$plugin": Cleaned 24 junk-CELLs});
     like($output, qr/redundant CELL.AMBI:\s+1\b/, qq{"$plugin": Cleaned 1 redundant CELL.AMBI});
     like($output, qr/redundant CELL.WHGT:\s+1\b/, qq{"$plugin": Cleaned 1 redundant CELL.WHGT});
 
