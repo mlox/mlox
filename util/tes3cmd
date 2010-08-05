@@ -103,7 +103,7 @@ BEGIN {
 
     use Exporter ();
     our @ISA = qw(Exporter);
-    our @EXPORT_OK = qw(abort assert err dbg prn msg list_files sort_by_date RELOAD);
+    our @EXPORT_OK = qw(abort assert err dbg prn msg list_files mkpath sort_by_date RELOAD);
     our %EXPORT_TAGS = ( FIELDS => [ @EXPORT_OK ] );
 }
 
@@ -152,6 +152,22 @@ sub list_files {
 	abort(qq{Opening "$dir" ($!)});
     }
     return(\%files);
+}
+
+sub mkpath {
+    my($path, $perms_in) = @_;
+    my $perms = $perms_in || 0755;
+    my $dir = ($path =~ m!^/!) ? "" : ".";
+    foreach my $name (split(m!/!, $path)) {
+	$dir = "$dir/$name";
+	unless (-d $dir) {
+	    unless (mkdir($dir, $perms)) {
+		print STDERR qq{mkpath(): Error creating "$dir" ($!)\n};
+		return(0);
+	    }
+	}
+    }
+    return(1);
 }
 
 # sort list of files by their modification date
@@ -2926,7 +2942,7 @@ sub generate_classes {
 package main;
 
 BEGIN {
-    Util->import(qw(abort assert dbg err msg prn RELOAD));
+    Util->import(qw(abort assert dbg err mkpath msg prn RELOAD));
 }
 
 TES3::Record::generate_classes();
@@ -3041,6 +3057,9 @@ our $opt_dump_wrap;
 our $opt_dump_raw;
 our $opt_dump_raw_with_header;
 
+our $opt_gentexnames_no_recurse;
+our @opt_gentexnames_exclude_file;
+
 our $opt_header_author = '';
 our $opt_header_description = '';
 our $opt_header_multiline = 0;
@@ -3090,7 +3109,7 @@ our $opt_overdial_single;
 
 our $opt_testcodec_continue;
 our $opt_testcodec_ignore_cruft;
-our @opt_testcodec_excluded_type = ();
+our @opt_testcodec_exclude_type = ();
 
 ### MAIN COMMAND DISPATCH TABLE
 my %COMMAND;
@@ -3675,19 +3694,17 @@ The fixit command does the following operations:
      -gentexnames =>
      { description => qq{Generate textures that display their filenames, for easy IDing},
        options => [@STDOPT,
-		   'no-recurse',
-		   'match-files',
-		   'output-dir',
+		   'no-recurse'     => \$opt_gentexnames_no_recurse,
+		   'exclude-file'   => \@opt_gentexnames_exclude_file,
 		   'overwrite'],
-
-       usage => qq{Usage: tes3cmd header OPTIONS plugin...
+       preprocess => \&cmd_gentexnames,
+       usage => qq{Usage: tes3cmd gentexnames OPTIONS plugin...
 
 OPTIONS:
  --debug
 	turn on debug messages
 
- --output-dir <dir>
-	set output directory to <dir> (default is where input plugin is)
+DESCRIPTION:
 
 },
      },
@@ -4428,10 +4445,10 @@ tes3cmd resetdates
      { description => qq{Test TES3 codec orthogonality},
        options => [@STDOPT,
 		   'continue|c'            => \$opt_testcodec_continue,
-		   'excluded-type|x=s@'    => \@opt_testcodec_excluded_type,
+		   'exclude-type|x=s@'    => \@opt_testcodec_exclude_type,
 		   'ignore-cruft'          => \$opt_testcodec_ignore_cruft],
        process => \&cmd_testcodec,
-       usage => qq{Usage: tes3cmd -testcodec [--excluded-type|-x excluded_type]\n},
+       usage => qq{Usage: tes3cmd -testcodec [--exclude-type|-x exclude_type]\n},
      },
 
      '-wikiout' =>
@@ -5349,9 +5366,9 @@ sub cmd_testcodec {
     dbg("cmd_testcodec($plugin)") if (DBG);
     return if ($plugin =~ /^test_/);
     my %exclude;
-    if (@opt_testcodec_excluded_type) {
+    if (@opt_testcodec_exclude_type) {
 	# optional types to exclude
-	foreach (@opt_testcodec_excluded_type) { $exclude{uc($_)}++; }
+	foreach (@opt_testcodec_exclude_type) { $exclude{uc($_)}++; }
     }
     print "\n", ("=" x 65), "\n";
     print "TESTING codec on: $plugin ...\n";
@@ -6610,6 +6627,74 @@ sub cmd_resetdates {
 	    utime($origtime, $origtime, $file_path);
 	}
     }
+}
+
+sub gentexname {
+    my($texture_path) = @_;
+    # (CWD is DATADIR)
+    $texture_path =~ s!^\./!!;
+    unless (-e $texture_path) {
+	msg("$texture_path does not exist");
+	return;
+    }
+    unless (-f $texture_path) {
+	msg("$texture_path not a plain file");
+	return;
+    }
+    unless ($texture_path =~ /\.(bmp|tga|dds)$/i) {
+	msg("unrecognized extension: $texture_path");
+	return;
+    }
+    my $path = $texture_path;
+    $path =~ s!^(\./)?textures/!!i;
+    my $output_dir = "$TES3CMD_DIR/textures.named";
+    if ($texture_path =~ m!/(target|menu_.*)\.(bmp|tga|dds)$!io) {
+	msg("Using original UI texture: $texture_path");
+	copy($texture_path, "$output_dir/$path") or abort("Error, copy failed $texture_path -> $output_dir/$path ($!)");
+	return;
+    }
+    my($file, $dir) = fileparse($path);
+    my $name = lc($file);
+    $name =~ s/\.[^.]+$//;
+    my $output = $output_dir . "/" . $dir . "/" . $name . ".tga";
+    if (-e $output and not $opt_overwrite) {
+	msg("Output Exists: $output");
+	return;
+    }
+    my $outdir = dirname($output);
+    dbg("\npath=$texture_path\noutput=$output\noutdir=$outdir") if (DBG);
+    unless (-d $outdir) {
+	dbg("mkpath($outdir)") if (DBG);
+	unless (mkpath($outdir)) {
+	    abort(qq{Error creating output dir: "$outdir" ($!)});
+	}
+    }
+    my $label = $file;
+    my $img = Image::Magick->new;
+    $img->Set(size => '256x256');
+    $img->ReadImage('xc:white');
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 16);
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 80);
+    $img->Flip();
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 16);
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 80);
+    $img->Flop();
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 48);
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 112);
+    $img->Flip();
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 48);
+    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 112);
+    $img->Write($output);
+    my $tmpname = $output;
+    $tmpname =~ s!.*/data files/!!i;
+    msg("CREATED: $tmpname");
+} # gentexname
+
+sub cmd_gentexnames {
+    my $excluded_files = (@opt_gentexnames_exclude_file) ? '('.join('|', @opt_gentexnames_exclude_file).')' : undef;
+    chdir($DATADIR);
+    my $textures_dir = $T3->datapath('textures');
+    finddepth({ wanted => sub { gentexname($File::Find::name, $excluded_files) }, no_chdir => 1}, $textures_dir);
 }
 
 sub main {
