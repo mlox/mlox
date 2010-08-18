@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37m";
+$::VERSION = "0.37n";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -19,7 +19,6 @@ $::VERSION = "0.37m";
 # TES3::File (open_for_input, backup, etc)?
 # implement proper verbosity
 # cleanup .tmp if die
-# and add more examples, esp. "modify"
 # clean would be sped up if command added a "clean <size>" mark to plugin (use unused space in header?)
 #    but it would probably not be good to change size of masters, at least.
 # GUI
@@ -43,7 +42,6 @@ $::VERSION = "0.37m";
 # ** generate multimark scripts (need compiler)
 # ** gmst/global tweaks: (timescale, fCombatAngleXY)
 # ** import faces/hairs (avoid conflicts by dropping rest of object definition)
-# ** turn-off auto-calced spells.
 # ** merge objects
 # *** Notes: pre-scan for mergeable objects, save to cache file (foreach plugin save ID,record_offset)
 #            only read mergeable objects into memory (in load order) if defined in more than 2 plugins
@@ -76,7 +74,6 @@ use File::Basename;
 use File::Spec;
 use File::Copy;
 use File::Find;
-use Image::Magick;
 use Getopt::Long qw(:config auto_abbrev);
 use Data::Dumper;
 use Storable;
@@ -2246,8 +2243,9 @@ my @RECDEFS =
 	      ], { rdflags => [qw(mergeable)] }],
     );				# End of @RECDEFS
 
-my %NAMED_TYPE; 		# those rectypes that use NAME subrec for their ID
-my %NO_ID_TYPE =		# rectypes that do not have an ID
+my %MERGE_OBJECT_TYPE;	    # rectypes of objects that will be merged in multipatch
+my %NAMED_TYPE;		    # those rectypes that use NAME subrec for their ID
+my %NO_ID_TYPE =	    # rectypes that do not have an ID
     map {$_,1} (qw(TES3 FMAP GAME PCDT SPLM VFXM ));
 
 # TES3::Record->new_from_recbuf "factory' for creating instances of the various record types
@@ -3057,9 +3055,6 @@ our $opt_dump_wrap;
 our $opt_dump_raw;
 our $opt_dump_raw_with_header;
 
-our $opt_gentexnames_no_recurse;
-our @opt_gentexnames_exclude_file;
-
 our $opt_header_author = '';
 our $opt_header_description = '';
 our $opt_header_multiline = 0;
@@ -3555,7 +3550,7 @@ OPTIONS:
 	 only process records that do not match given regular expression
 	 <regex>
 
- -wrap
+ --wrap
 	 Wrap some long fields for more nicely formatted output.
 
  --raw <file>
@@ -3688,24 +3683,6 @@ The fixit command does the following operations:
 - Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
 - Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
 - Resets Dates on Bethesda data files
-},
-     },
-
-     -gentexnames =>
-     { description => qq{Generate textures that display their filenames, for easy IDing},
-       options => [@STDOPT,
-		   'no-recurse'     => \$opt_gentexnames_no_recurse,
-		   'exclude-file'   => \@opt_gentexnames_exclude_file,
-		   'overwrite'],
-       preprocess => \&cmd_gentexnames,
-       usage => qq{Usage: tes3cmd gentexnames OPTIONS plugin...
-
-OPTIONS:
- --debug
-	turn on debug messages
-
-DESCRIPTION:
-
 },
      },
 
@@ -4172,7 +4149,7 @@ OPTIONS:
  --program-file <file>
 	load Perl code to run on each matched record from file named: <file>
 
- --replace /a/b/
+ --replace "/a/b/"
 	replace regular expression pattern "a" with value "b" for every field
 	value in every matching record. you can use any character instead of
 	the slash as long as it does not occur in "a" or "b". This is a very
@@ -4208,6 +4185,9 @@ Example(s):
 # Just print the the cell "Ashmelech" from Morrowind.esm. (no modification).
 tes3cmd modify --type cell --id ashmelech --run "\$R->dump" Morrowind.esm
 
+# Add the prefix "PC_" to the ID of all the statics in a plugin:
+tes3cmd modify --type stat --sub-match "id:" --replace "/^/PC_/" pc_data.esp
+
 # Problem: Aleanne's clothing mods do not have restocking inventory
 # Solution: create a small patch to change the counts for inventory containers
 #   to negative numbers so they will be restocking.
@@ -4222,9 +4202,9 @@ tes3cmd modify --type cont --run '\$R->set({f=>"count"}, -3)' ale_patch.esp
 
 # You can also specify a list of indices to restrict which subrecords are modified.
 # First, show the subrecord indices for container "_aleanne_chest" from: ale_clothing_v0.esp:
-tes3cmd modify --type cont --run '\$R->dump' ale_clothing_v0.esp
+tes3cmd modify --type cont --run "\$R->dump" ale_clothing_v0.esp
 # Then only modify the last 3 items:
-tes3cmd modify --type cont --run '\$R->set({i=>[-3..-1],f=>"count"}, 4)' ale_clothing_v0.esp
+tes3cmd modify --type cont --run "\$R->set({i=>[-3..-1],f=>'count'}, 4)" ale_clothing_v0.esp
 },
      },
 
@@ -4910,15 +4890,14 @@ sub load_master_cache {
 		$MASTER_ID->{$esm} = $master_data;
 		print "Loaded cached Master: <DATADIR>/$esm\n";
 	    } else {
-		msg("Cache Invalidated for: $esm (curr_size == $curr_size, prev_size == $prev_size)");
-		return(0);
+		die("Cache Invalidated for: $esm (curr_size == $curr_size, prev_size == $prev_size)");
 	    }
 	} else {
-	    abort("retrieving master cache for: $esm");
+	    die("Error retrieving master cache for: $esm");
 	}
     };
     if ($@) {
-	err($@) unless ($@ =~ /: No such file or directory/);
+	msg($@) unless ($@ =~ /: No such file or directory/);
 	return(0);
     } else {
 	return(1);
@@ -5097,7 +5076,8 @@ sub update_header {
     my $fh = open_for_update($plugin);
     my $tr = TES3::Record->new_from_input($fh, 'TES3', $plugin);
     unless (defined $tr) {
-	# oops (TBD)
+	err("Error reading TES3 header from $plugin");
+	return;
     }
     my $tes3len = length($tr->decode()->recbuf);
     my $update_msg = '';
@@ -5512,7 +5492,7 @@ sub multipatch_check_cell_rename_reversions {
 } # multipatch_check_cell_rename_reversions
 
 sub multipatch_merge_leveled_lists {
-    my @merged_lists;
+    my @merged_lists = ();
     my $levdat = load_leveled_lists();
     my $ll = {};
     foreach my $plugin ($T3->load_order()) {
@@ -6627,74 +6607,6 @@ sub cmd_resetdates {
 	    utime($origtime, $origtime, $file_path);
 	}
     }
-}
-
-sub gentexname {
-    my($texture_path) = @_;
-    # (CWD is DATADIR)
-    $texture_path =~ s!^\./!!;
-    unless (-e $texture_path) {
-	msg("$texture_path does not exist");
-	return;
-    }
-    unless (-f $texture_path) {
-	msg("$texture_path not a plain file");
-	return;
-    }
-    unless ($texture_path =~ /\.(bmp|tga|dds)$/i) {
-	msg("unrecognized extension: $texture_path");
-	return;
-    }
-    my $path = $texture_path;
-    $path =~ s!^(\./)?textures/!!i;
-    my $output_dir = "$TES3CMD_DIR/textures.named";
-    if ($texture_path =~ m!/(target|menu_.*)\.(bmp|tga|dds)$!io) {
-	msg("Using original UI texture: $texture_path");
-	copy($texture_path, "$output_dir/$path") or abort("Error, copy failed $texture_path -> $output_dir/$path ($!)");
-	return;
-    }
-    my($file, $dir) = fileparse($path);
-    my $name = lc($file);
-    $name =~ s/\.[^.]+$//;
-    my $output = $output_dir . "/" . $dir . "/" . $name . ".tga";
-    if (-e $output and not $opt_overwrite) {
-	msg("Output Exists: $output");
-	return;
-    }
-    my $outdir = dirname($output);
-    dbg("\npath=$texture_path\noutput=$output\noutdir=$outdir") if (DBG);
-    unless (-d $outdir) {
-	dbg("mkpath($outdir)") if (DBG);
-	unless (mkpath($outdir)) {
-	    abort(qq{Error creating output dir: "$outdir" ($!)});
-	}
-    }
-    my $label = $file;
-    my $img = Image::Magick->new;
-    $img->Set(size => '256x256');
-    $img->ReadImage('xc:white');
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 16);
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 80);
-    $img->Flip();
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 16);
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 80);
-    $img->Flop();
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 48);
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 112);
-    $img->Flip();
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 48);
-    $img->Annotate('font' => 'Helvetica', 'pointsize' => 16, 'gravity' => 'center', 'text' => "$label", 'y' => 112);
-    $img->Write($output);
-    my $tmpname = $output;
-    $tmpname =~ s!.*/data files/!!i;
-    msg("CREATED: $tmpname");
-} # gentexname
-
-sub cmd_gentexnames {
-    my $excluded_files = (@opt_gentexnames_exclude_file) ? '('.join('|', @opt_gentexnames_exclude_file).')' : undef;
-    chdir($DATADIR);
-    my $textures_dir = $T3->datapath('textures');
-    finddepth({ wanted => sub { gentexname($File::Find::name, $excluded_files) }, no_chdir => 1}, $textures_dir);
 }
 
 sub main {
