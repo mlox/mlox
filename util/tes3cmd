@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37n";
+$::VERSION = "0.37o";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -1044,6 +1044,7 @@ my @RD_widx = ([["equipped_index", "l"], # JMS index into NPCO inventory items o
 		 },
 	       });
 
+my @RD_AI_Activate = ([["target_id", ["Z32", "a32"]], ["unknown_1", "C"]]);
 my @RD_AI_Travel = ([["x", "f"], ["y", "f"], ["z", "f"], ["unknown_1", "l"]]); # unknown is some sort of flags ???
 my @RD_AI_Escort = ([["x", "l"], ["y", "l"], ["z", "l"], ["duration", "S"], ["target_id", ["Z32", "a32"]], ["unknown_1", "S"]]);
 my @RD_AI_Follow = @RD_AI_Escort;
@@ -1478,6 +1479,7 @@ my @RECDEFS =
 	      ], { rdflags => [qw(mergeable)] }],
      [CREC => [
 	       [NAME => [["id", "Z*"]]],
+	       [AI_A => @RD_AI_Activate],
 	       [AI_E => @RD_AI_Escort],
 	       [AI_F => @RD_AI_Follow],
 	       [AI_T => @RD_AI_Travel],
@@ -1817,6 +1819,7 @@ my @RECDEFS =
 	       [FNAM => [["name", "Z*"]]],
 	       [AIDT => [["hello", "C"], ["unknown_1", "C"], ["fight", "C"], ["flee", "C"], ["alarm", "C"],
 			 ["unknown_1", "H6"], ["flags", "L", { symflags => \%AIDT_FLAGS }]]],
+	       [AI_A => @RD_AI_Activate],
 	       [AI_E => @RD_AI_Escort],
 	       [AI_F => @RD_AI_Follow],
 	       [AI_T => @RD_AI_Travel],
@@ -1953,6 +1956,7 @@ my @RECDEFS =
 	       [ITEX => [["icon", "Z*"]]],
 	       [MODL => [["model", "Z*"]]],
 	       [PBDT => [["weight", "f"], ["value", "L"], ["quality", "f"], ["uses", "L"]], { rdflags => [qw(mergeable)] }],
+	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [QUES => [
 	       [NAME => [["id", "Z*"]]],
@@ -2197,14 +2201,16 @@ my @RECDEFS =
 		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
 		     my($l1, $l2) = unpack("L2", $buff);
-		     dbg("TES3.DATA l1=$l1 l2=$l2") if (DBG);
 		     $self->{length} = $l1 + ($l2 << 32);
+		     dbg("TES3.DATA decoding  l1=$l1  l2=$l2  length=$self->{length}") if (DBG);
 		     $self;
 		 },
 		 encode => sub {
 		     my($self) = @_;
 		     my $l1 = ($self->{length} & 0xffffffff);
-		     my $l2 = ($self->{length} >> 32);
+		     my $ld = ($self->{length} - 0xffffffff);
+		     my $l2 = ($ld > 0) ? $ld : 0;
+		     dbg("TES3.DATA encoding  l1=$l1  l2=$l2  length=$self->{length}") if (DBG);
 		     $self->{_subbuf_} = pack("L2", $l1, $l2);
 		     return($self);
 		 },
@@ -2369,7 +2375,7 @@ sub decode {
 	if ($@) {
 	    if ($@ =~ /Can't locate object method/) {
 		# magically create subrecord class for unknown subtypes
-		msg("Encountered unknown subtype: ${rectype}::${subtype}");
+		dbg("Encountered unknown subtype: ${rectype}::${subtype}");
 		no strict "refs";
 		# tsr->decode
 		my $method = "${package}::tostr";
