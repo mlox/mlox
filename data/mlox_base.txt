@@ -116,7 +116,7 @@ MWInhabitants Freeform (Vol 1).esp
 BMExtras.esp
 Clean Black Queen Chronicles Ver 2.5.esp
 EcoAdj(Sri+Ingredients).esp
-GIANTS.esm
+;;GIANTS.esm ; patched by Z4K_Giants_AddToLev_Patch.esp (see below)
 MTT Vol III.esp
 Melee Missiles v1.2.esp
 TribIntegration.esp
@@ -130,7 +130,7 @@ NoM 2.1 with BEER!.esp
 NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
 NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
-Stinkers.esp
+;;Stinkers.esp ; patched by Gaius Atrius' "Stinkers and Bathers v2.0" (see below)
 ;;The Wilderness Mod 2.0.esm  ; patched by ab01Wilderness2.1patch.esp (see below)
 ;;The Wilderness Mod 2.0 T & B.esm ; patched by ab01Wilderness2.1patch.esp (see below)
 
@@ -6497,6 +6497,29 @@ Clean Ghostgate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GIANTS v2.7.1 "Ultimate" [The Puma Man]
+
+[Requires]
+ "GIANTS.esm" uses deprecated AddToLev* function to modify Bethsoft leveled lists. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see:
+ http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ You can download Z4kW0lf's patch from that link.
+GIANTS.esm
+Z4K_Giants_AddToLev_Patch.esp
+
+[Conflict]
+ The Puma Man's "GIANTS" mod includes his "Gnisis Guard Fix" mod
+ (Ref: GIANTS ULTIMATE.doc)
+GIANTS.esm
+Gnisis Gaurd Fix.esp
+
+;;Dragon32: This is the Morrowind-only version
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1363239 GIANTS.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GIANTS Creature Remover V.1.1 [Puma Man/Sargothe]
 
 ;; expdep
@@ -6505,6 +6528,280 @@ Clean Ghostgate.esp
 GIANTS_No_Gore_Patch.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_AncientLich.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Apostates.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Apparitions-Spectres.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_AscendedMummies.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Automations.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_BlackShadows.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_BrownZombies.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_CaveTrolls.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Demons.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Dragonlings.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Dragons.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_DwemerPrototypes.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_DwemerSpiders.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_DwemerSpikers.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_DwemerWasps.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_EarthGolems-Colossus.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_EarthSpriggans.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_EasterEggs.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_EbonyGolems.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_ElderImps.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_FacesOftheForest.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_FireDaedra.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_FireSpurts.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_FlamingSkulls.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_FrostElementals.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_FrostSprites.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Giants.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_GiantSkeletons.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_GlassGolems.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Gore_Patch.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Gorgos.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Harpies.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_IceImps.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Imps(Common).esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_KillerNetch.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Lich.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_LichKings.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_MountainTrolls.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Mummies.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_NightSpriggans.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_NightSprites.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Nymphs.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_PackNixHounds.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Phantasms.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Phantoms.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_ReaverKingpins.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_RedZombies.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Reiklers.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_RotWorms.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Scorpions.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_SeaDevils.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_SeaTitans.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Seducers.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Shades.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_ShalkStalkers.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_SkeletalHands.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_skeletongladiators.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_SkeletonKnights.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Spiders.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_SprigganFamines.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_TitanSkeletons.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_VampireAncients.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_VampireLords.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_WildVampires.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_WingedNightSprites.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No_Wraiths.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GIANTS Dragon patch [Moobler]
+
+;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it[Order]
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS dragon patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6521,6 +6818,10 @@ GIANTS_No Nude.esp
 GIANTS.esm
 ; this dependancy is listed in header - is rule still required? Giants.esm is not included and there is no readme, so no explanation of dependancy, although it would seem to remove nude NPCs from the GIANTs mod
 
+;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_No Nude.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GIANTS Patch [HelioS/Michael Bennett]
@@ -6530,6 +6831,53 @@ GIANTS.esm
  (Ref: "GIANTS Patch Readme.txt")
 [SIZE 1841362 GIANTS.esm]
 HelioS - Giants Fix.esp
+
+[Order]
+;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it[Order]
+GIANTS Ultimate Control file.esp
+HelioS - Giants Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GIANTS Ultimate Bugfixes [Feanor the Redguard]
+
+;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it
+[Order]
+GIANTS Ultimate Control file.esp
+Feanor the Redguard's GIANTS Ultimate Bugfixes.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GIANTS Ultimate no monsters in cities [PEHOH]
+
+[Conflict]
+ Use only one plugin:
+  'GIANTS Ultimate no monsters in cities MW.esp' - If you have Morrowind only
+  'GIANTS Ultimate no monsters in cities B.esp' - If you have Morrowind and Bloodmoon
+  'GIANTS Ultimate no monsters in cities T.esp' - If you have Morrowind and Tribunal
+  'GIANTS Ultimate no monsters in cities TB.esp' - If you have Morrowind, Tribunal and Bloodmoon
+ (Ref: "GIANTS Ultimate no monsters in cities.txt")
+GIANTS Ultimate no monsters in cities B.esp
+GIANTS Ultimate no monsters in cities MW.esp
+GIANTS Ultimate no monsters in cities T.esp
+GIANTS Ultimate no monsters in cities TB.esp
+
+;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS Ultimate no monsters in cities B.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS Ultimate no monsters in cities MW.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS Ultimate no monsters in cities T.esp
+
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS Ultimate no monsters in cities TB.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7153,6 +7501,25 @@ Havish Mini Patch.esp
  ! (Ref: Havish Patch Readme.txt)
 Havish Mini Patch.esp
 Havish.esm
+
+[Patch]
+ CaptainJorge's "Havish Necessities of Morrowind Patch" adds NoM functionality to the normal wells, NoM food to the tavernkeeper's stock and NoM supplies to the trader and pawnbroker in Havish 1.3.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7803
+ (Ref: Readme - Havish 1-3 NoM Patch.txt)
+havish13_nom_patch.esp
+[ALL [VER = 1.3 Havish.esm]
+     NOM 2.13.esp]
+
+; (Ref: Readme - Havish 1-3 NoM Patch.txt)
+[Order]
+havish13_nom_patch.esp
+NOM 2.13.esp
+
+[Note]
+ Version 1.3 of JOG's Havish mod already includes Lochnarus' "Forested Havish" addon.
+ (Ref: havish.txt)
+[ALL [VER = 1.3 Havish.esm]
+     Forested_Havish_Add-on.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8029,6 +8396,7 @@ Bloodmoon.esm
 ;;Dragon32: The fix included with Improved Teleportation is for v1.0 of the Constance and Beryl mods. I can only find downloads for v1.2 and v1.1,respectively. Constance v1.0 seems to be called "constance1_0.esp" and 1.2 has "Ver 1.1" in file header. Beryl 1.1 has "Ver 1_1" in file header
 ;; See their separate entries for other rules
 [Patch]
+ The fix ('IT Beryl and Constance Fix.esp') included with cdcooley's "Improved Teleportation" is only for v1.0 of Grumpy and Emma's "Companion Beryl" and "Thief companion Constance" mods, later versions of these companion mods do not need the fix.
 IT Beryl and Constance Fix.esp
 [ALL ImprovedTeleportation2.0.esp
      [ANY [VER<1.1 1gr_Comp_Beryl.esp]
@@ -8530,7 +8898,10 @@ Tribunal.esm
 ;;Dragon32: No reference, from a note I made for myself back in June 2004 :-)
 [Note]
  !! "The Kynarian Knights" has a script error in the 'adddivine' script, which is attached to the 'kynarian_priestess' NPC.
- !! To fix this you need to edit the script. Change the line that reads 'kynarian_priestess->AddTopic, "divine items"' to 'AddTopic, "divine items"'
+ !! To fix this you need to edit the 'adddivine' script, change the line that reads:
+ !!   kynarian_priestess->AddTopic, "divine items"
+ !! To:
+ !!   AddTopic, "divine items"
 [ANY [SIZE 64535 kynareth.esp]
      [SIZE 324570 Knights of Tamriel.esp]] ;Tarnsman's merged mod doesn't fix this
 
@@ -9255,6 +9626,22 @@ LGNPC_Secret_Masters_v?_??.esp
  (Ref: LightTheWay_ReadMe.txt)
 LightTheWayBMAddon.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Literature Care Package [Xenolord]
+
+;;Dragon32: Looks like the square brackets in the plugin name are screwing up the SIZE check.
+;;[Note]
+;; !! This plugin contains evil GMSTs.
+;; !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+;;[SIZE 121298 Xenolord's Literature Care Package [Uncensored Version].esp]
+
+[Conflict]
+ Use ONLY ONE plugin.
+ (Ref: XLCP Read Me.txt)
+Xenolord's Literature Care Package [Uncensored Version].esp
+Xenolord's Literature Care Package [Censored Version].esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10683,7 +11070,7 @@ MCA v5.2 - Lite.esp
 [ANY [SIZE 2707833 MCA.esm]
      [SIZE 2519851 MCA.esm]]
 
-;;Dragon23: Jeoshua's  "MCA 5.1 Lighter" said to load hos version before any merged levelled list plugin. I assume this is the case with MrE_Man's mod too.
+;;Dragon23: Jeoshua's  "MCA 5.1 Lighter" said to load his version before any merged levelled list plugin. I assume this is the case with MrE_Man's mod too.
 [Order]
 MCA v5.2 - Lite.esp
 Mashed Lists.esp
@@ -11358,11 +11745,14 @@ Pursuit Enhanced.esp
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a, or MGE v3.5.6 or later.
 mel_teleportPlugin_1_2.esp
+Census and Excise Office.esp
+UL_MWSE_patch.esp
+UL_Primus_MWSE.esp
 
 ;;Dragon32 - On Melian's teleport mod, above. Original (1.0) said it wasn't compatible with MGE's built-in MWSE. Latest version (1.2) changes this to say its compatible with MGE 3.8.0-rev118, however AFAIK the last change to MGE's inbuilt MWSE came in v3.5.6 of MGE when MWSE 0.9.4 functions were added.
 
 [Note]
- These mods require Morrowind Script Extender (MWSE) v0.9.4a and will not run with MGE v3.8.0's inbuilt version of MWSE.
+ These mods require Morrowind Script Extender (MWSE) v0.9.4a and will not run with MGE's inbuilt version of MWSE.
 MCA_Companions_Enhanced.esp
 
 ;Dragon32: Unknown MWSE versions required:
@@ -12797,6 +13187,23 @@ Princess Lokken PostQuest Improvements.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Princess Trees [Princess Stomper]
+
+;;Dragon32: "Princess Trees" contains a number of LAND records, load BE after so that "Princess Trees" doesn't interfere with BE.
+[Order]
+Princess Trees.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+
+;;Dragon32: "Princess Trees" contains a number of LAND records, load "A Portcullis for Moonmoth" after so that "Princess Trees" doesn't interfere with it.
+[Order]
+Princess Trees.esp
+A Portcullis for Moonmoth (v1.1).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Printing Press [Aquan and dongle]
 
 [Conflict]
@@ -13040,6 +13447,12 @@ Suran-Waterfront-v-4.4.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2056524 PW_Redesigned Vivec-Vivec_Expansion.esp]
+
+[Conflict]
+ Pseron Wyrd's 'PW_Redesigned Vivec-Vivec_Expansion.esp' combines Piratelord's "Redesigned Vivec" with Hoghead the Horrible's "Vivec Expansion". There is no need to use the constiuent mods with Pseron Wyrd's combined mod.
+PW_Redesigned Vivec-Vivec_Expansion.esp
+[ANY Redesigned Vivec.esp
+     Vivec Expansion 2.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13362,60 +13775,38 @@ Realistic Weather v2.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Redesigned Vivec [Piratelord]
 
-[Conflict]
- Use only one of these patches, depending on whether you have COM, MCA or both installed.
- (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt")
-Clean Redesigned Vivec - com_mca patch.esp
-Clean Redesigned Vivec - MCA patch.esp
-Clean Redesigned Vivec - COM patch.esp
+; JMS - TBD remove this later
+; Dragon32 - think we need it. Not sure of v1.0's SIZE so just used anything that's not v2.0's
+[Patch]
+ 'Redesigned Vivec CoM Changes.esp' moves the children from version 1.0 of Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec".
+ (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
+Redesigned Vivec CoM Changes.esp
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+     [SIZE !1683326 MW_Children_1_0.esm]]
 
-[Conflict]
- Use only one of these patches. They both move NPCs added by COM in a way that is compatible with Redesigned Vivec.
-Clean Redesigned Vivec - COM patch.esp
+;Dragon32: Doesn't have CoM in the file header
+[Requires]
+ 'Redesigned Vivec CoM Changes.esp' requires version 1.0 of Emma's "Children of Morrowind" mod and both expansions.
+Redesigned Vivec CoM Changes.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     Morrowind.esm
+     [SIZE !1683326 MW_Children_1_0.esm]]
+
+[Note]
+ ! "Redesigned Vivec CoM Changes.esp" is not compatible with version 2.0 of Emma's "Children of Morrowind".
+ ! You should examine Jac's updates to Redesigned Vivec that are compatible:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
+[ALL Redesigned Vivec MCA Changes.esp
+     [SIZE 1683326 MW_Children_1_0.esm]]
+
+[Order]
+Redesigned Vivec.esp
 Redesigned Vivec CoM Changes.esp
 
 [Patch]
- COM and MCA add NPCs to Vivec that will be out of place in Redesigned Vivec unless you use this patch:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
- (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt")
-Clean Redesigned Vivec - com_mca patch.esp
-[ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
-     MCA.esm
-     MW_Children_1_0.esm]
-
-[Patch]
- MCA adds NPCs to Vivec that will be out of place in Redesigned Vivec unless you use this patch:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
- (Ref: "Redesigned Vivec - MCA patch readme.txt")
-Clean Redesigned Vivec - MCA patch.esp
-[ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
-     MCA.esm]
-
-[Patch]
- COM adds NPCs to Vivec that will be out of place in Redesigned Vivec unless you use either of these patches:
- 1: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
- (Ref: "Redesigned Vivec_Children of Morrowind Readme.txt")
- 2: "Redesigned Vivec CoM Changes.esp" moves the children from Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec."
- (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
-[ANY Clean Redesigned Vivec - COM patch.esp
-     Redesigned Vivec CoM Changes.esp]
-[ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
-     MW_Children_1_0.esm]
-
-; JMS - TBD remove this later
-;[Patch]
-; "Redesigned Vivec CoM Changes.esp" moves the children from Emma's "Children of Morrowind" so they are compatible with Piratelord's "Redesigned Vivec."
-; (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
-;Redesigned Vivec CoM Changes.esp
-;[ALL [ANY Redesigned Vivec.esp
-;          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
-;     MW_Children_1_0.esm]
-
-[Patch]
- "Redesigned Vivec MCA Changes.esp" moves the NPCs from version 4.1 of Neoptolemus's "Morrowind Comes Alive" so they are compatible with Piratelord's "Redesigned Vivec."
+ "Redesigned Vivec MCA Changes.esp" moves the NPCs from version 4.1 of Neoptolemus's "Morrowind Comes Alive" so they are compatible with Piratelord's "Redesigned Vivec".
  (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
 Redesigned Vivec MCA Changes.esp
 [ALL [ANY Redesigned Vivec.esp
@@ -13423,9 +13814,15 @@ Redesigned Vivec MCA Changes.esp
      Morrowind Comes Alive.esm]
 
 [Note]
- ! "Redesigned Vivec MCA Changes.esp" is not compatible with version 5.* of Neoptolemus's "Morrowind Comes Alive."
+ ! "Redesigned Vivec MCA Changes.esp" is not compatible with version 5.0 or later of Neoptolemus' "Morrowind Comes Alive".
+ ! You should examine Jac's updates to Redesigned Vivec that are compatible with version 5.2 of Neoptolemus' "Morrowind Comes Alive":
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8446
 [ALL Redesigned Vivec MCA Changes.esp
      MCA.esm]
+
+[Order]
+Redesigned Vivec.esp
+Redesigned Vivec MCA Changes.esp
 
 [Conflict]
  The standard version of Grumblepunk's "House of Mannequins" is not compatible with Piratelord's "Redesigned Vivec", Piratelord has released a replacement plugin.
@@ -13433,6 +13830,10 @@ Redesigned Vivec MCA Changes.esp
 [ALL [ANY Redesigned Vivec.esp
           PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
      [SIZE 457977 House of Mannequins v1.0.esp]]
+
+[Order]
+Redesigned Vivec.esp
+House of Mannequins v1.0.esp
 
 [Conflict]
  Piratelord has released a "Redesigned Vivec"-compatible version of the "Area Effect Arrows" plugin by Bethesda. You should use this plugin instead.
@@ -13442,6 +13843,69 @@ Redesigned Vivec MCA Changes.esp
      [ANY AreaEffectArrows XB Edition.esp
           Area Effect Arrows.esp
           [SIZE !30094 AreaEffectArrows.esp]]]
+
+[Order]
+Redesigned Vivec.esp
+Area Effect Arrows.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Redesigned Vivec updates [Jac]
+
+[Conflict]
+ You should not use Piratelord's original Redesigned Vivec (or Pseron Wyrd's mod that merges Piratelord's mod with Hoghead the Horrible's "Vivec Expansion") with any of the updates released by Jac.
+ Whilst the readmes do say "Do use this mod with PL's original RV mod" this is a typo and the rather critical word "not" is missing.
+ (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt"
+       "Redesigned Vivec - MCA patch readme.txt"
+       "Redesigned Vivec_Children of Morrowind Readme.txt")
+[ALL [ANY Redesigned Vivec.esp
+          PW_Redesigned Vivec-Vivec_Expansion.esp]
+     [ANY Clean Redesigned Vivec - COM patch.esp
+          Clean Redesigned Vivec - com_mca patch.esp
+          Clean Redesigned Vivec - MCA patch.esp]]
+
+[Conflict]
+ Use only one of these patches, depending on whether you have Emma's "Children of Morrowind", Neoptolemus' "Morrowind Comes Alive" or both installed.
+  'Clean Redesigned Vivec - com_mca patch.esp' - If you have Emma's "Children of Morrowind" and Neoptolemus' "Morrowind Comes Alive"
+  'Clean Redesigned Vivec - MCA patch.esp' - If you just have Neoptolemus's "Morrowind Comes Alive"
+  'Clean Redesigned Vivec - COM patch.esp' - If you just have Emma's "Morrowind Children"
+ (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt"
+       "Redesigned Vivec - MCA patch readme.txt"
+       "Redesigned Vivec_Children of Morrowind Readme.txt")
+Clean Redesigned Vivec - com_mca patch.esp
+Clean Redesigned Vivec - MCA patch.esp
+Clean Redesigned Vivec - COM patch.esp
+
+;Dragon32: The MCA.esm in the file header is size 2707833. That is the original size of MCA v5.2, not The Undead-compatible version (that's 2519851)
+[Requires]
+ Jac's "Redesigned Vivec/Morrowind Comes Alive Patch" requires both expansions and v5.2 of Neoptolemus's "Morrowind Comes Alive"
+ (Ref: "Redesigned Vivec - MCA patch readme.txt")
+Clean Redesigned Vivec - MCA patch.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     Morrowind.esm
+     [ANY [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]] ;The Undead-compatible version
+
+[Requires]
+ Jac's "Redesigned Vivec/Children of Morrowind Patch" requires both expansions and v2.0 of Emma's "Children of Morrowind"
+ (Ref: Redesigned Vivec_Children of Morrowind Readme.txt)
+Clean Redesigned Vivec - COM patch.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     Morrowind.esm
+     [SIZE 1683326 MW_Children_1_0.esm]]
+
+[Requires]
+ Jac's "Redesigned Vivec/Children of Morrowind & Morrowind Comes Alive Patch" requires both expansions, v5.2 of Neoptolemus's "Morrowind Comes Alive" and v2.0 of Emma's "Children of Morrowind"
+ (Ref: Redesigned Vivec_Children of Morrowind Readme.txt)
+Clean Redesigned Vivec - com_mca patch.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     Morrowind.esm
+     [SIZE 1683326 MW_Children_1_0.esm]
+     [ANY [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]] ;The Undead-compatible version]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14984,7 +15448,7 @@ Steel Broadsword Fix.esp
 [Conflict]
  "In case you use the Provincial Bath Shoppe v.1 by Korana (with Stinkers), be sure to check *ALSO* Provincial_Bath_Shoppe_for_Stinkers.esp *INSTEAD* of the Provincial_Bath_Shoppe_v1.esp."
  (Ref: "Stinkers_ReadMe_v1.71.txt")
-[ANY Stinkers.esp
+[ANY [VER <2 Stinkers.esp]
      Provincial_Bath _Shoppe_for_Stinkers.esp]
 Provincial_Bath _Shoppe_v1.esp
 
@@ -14992,7 +15456,7 @@ Provincial_Bath _Shoppe_v1.esp
  "Load Rose_Cottage_Bathing_Patch.esp ... to have the benefits of the bathing mod when you bathe in the Ascadian Rose Cottage bath tub."
  (Ref: "Stinkers_ReadMe_v1.71.txt")
 Rose_Cottage_Bathing_Patch.esp
-[ALL Stinkers.esp
+[ALL [VER <2 Stinkers.esp]
      Ascadian_Rose_Cottage_ver1.0.esp]
 
 ;; (Ref: "Stinkers_ReadMe_v1.71.txt")
@@ -15006,7 +15470,7 @@ Rose_Cottage_Bathing_Patch.esp
 [Conflict]
  When using Stinkers mod with "Gardeners of Morrowind", you should use the version of "Gardeners of Morrowind.esp" that is included in the Stinkers mod.
  (Ref: "Stinkers_ReadMe_v1.71.txt")
-Stinkers.esp
+[VER <2 Stinkers.esp]
 [SIZE !364308 Gardeners of Morrowind.esp]
 
 ;; (Ref: "Stinkers_ReadMe_v1.71.txt")
@@ -15023,11 +15487,94 @@ BE_Bathing_Patch.esp
 [Patch]
  (Ref: "Stinkers_ReadMe_v1.71.txt")
 BE_Bathing_Patch.esp
-[ALL Stinkers.esp
+[ALL [VER <2 Stinkers.esp]
      [ANY Balmora Expansion v1.4.esp
 	  Balmora Expansion v1.4+(1.4).esp
           Balmora Expansion - LITE 1.0.esp
 	  BE+(1.4) Better Looking Morrowind.esp]]
+
+[Note]
+ !! grVulture's "Stinkers" uses deprecated AddToLev* function to modify Bethsoft leveled lists. Using this plugin will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one. If you have used this plugin, you can clean modified leveled lists from your savegame using the "Repair All" feature of "Wrye Mash". For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see:
+ !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists 
+ !! Gaius Atrius has updated grVulture's "The Bathing Mod" removing its use of the AddtoLev* function:
+ !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
+[VER <2 Stinkers.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Stinkers and Bathers v2.0 [Gaius Atrius]
+
+[Conflict]
+ The new Provincial Bath Shoppe plugin is meant as a replacement for the original Provincial Bath Shoppe plugin
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+[ANY [ANY [VER >1.71 Stinkers.esp]
+          StinkersBE.esp]
+     Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp]
+Provincial_Bath _Shoppe_v1.esp
+
+[Patch]
+ The Ascadian Rose Cottage patch is to be used with BOTH the Ascadian Rose Cottage mod, and Stinkers v2
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+Stinkers v2 - Ascadian Rose Cottage Patch.esp
+[ALL [ANY [VER >1.71 Stinkers.esp]
+          StinkersBE.esp]
+     Ascadian_Rose_Cottage_ver1.0.esp]
+
+;;Dragon32: Assume load order is the same as for grVulture's plugins
+[Order]
+Ascadian_Rose_Cottage_ver1.0.esp
+Stinkers v2 - Ascadian Rose Cottage Patch.esp
+[Order]
+Stinkers.esp
+StinkersBE.esp
+Stinkers v2 - Ascadian Rose Cottage Patch.esp
+
+[Conflict]
+ The alternative plugin, 'StinkersBE.esp' for users of Balmora Expansion, should be used INSTEAD of the original 'Stinkers.esp' plugin
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+[ALL [VER >1.71 Stinkers.esp]
+     [ANY Balmora Expansion v1.4.esp
+          Balmora Expansion v1.4+(1.4).esp
+          Balmora Expansion - LITE 1.0.esp
+          BE+(1.4) Better Looking Morrowind.esp]]
+
+[Conflict]
+ Use only one plugin:
+  StinkersBE.esp - If you have Balmora Expansion
+  Stinkers.esp - If you do not have Balmora Expansion
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+[VER >1.71 Stinkers.esp]
+StinkersBE.esp
+
+;; (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+;; No mention of 'StinkersBE - Fylberding Patch.esp' but as it modifies a BE NPC it needs to load after whichever BE mod someone's using
+[Order]
+StinkersBE.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+StinkersBE - Fylberding Patch.esp
+
+[Requires]
+ 'StinkersBE - Fylberding Patch.esp' enables Fylberding, from Balmora Expansion, to sell soaps as intended.
+StinkersBE - Fylberding Patch.esp
+[ALL StinkersBE.esp
+     [ANY Balmora Expansion v1.4.esp
+          Balmora Expansion v1.4+(1.4).esp
+          Balmora Expansion - LITE 1.0.esp
+          BE+(1.4) Better Looking Morrowind.esp]]
+
+[Note]
+ 'Stinkers v2 - Modder's Resource.esp' should not be added into your game, it is for modders to add objects from "Stinkers and Bathers v2.0" to their mods and of itself adds nothing to the game world.
+Stinkers v2 - Modder's Resource.esp
+
+; "The Bathing Mod 2 has conflict with LGNPC Aldruhn 1.20, both changing cell Ashlands -1,6 and should load last."
+; Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__16358587
+[Order]
+LGNPC_Aldruhn_v?_??.esp
+Stinkers.esp
+StinkersBE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16477,44 +17024,93 @@ UshindraHeads.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Uvirith Inside [The DopeHatMan]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1106458 Uvirith Inside.esp]
+
+[Conflict]
+ Do not run with ThaEgbird's "Uvirith's Vault" or Grumblepunk's "Uvirith Unleashed" with The DopeHatMan's "Uvirith Inside", as both mods are included
+ (Ref: Readme - Uvirith Inside v 1.51.txt)
+Uvirith Inside.esp
+[ANY Uvirith Unleashed v1.2.esp
+     uvirithvaultv10.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Uvirith's Legacy [StuporStar]
 
+;;Old versions
 [Note]
- A new version of Uvirith's Legacy is available, you should upgrade.
+ A new version of StuporStar's "Uvirith's Legacy" is available, you should upgrade.
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
 [ANY Uvirith's Legacy_ALPHA1.08.esp
-     Uvirith's Legacy_BETA1.09.esp]
+     Uvirith's Legacy_BETA1.09.esp
+     Uvirith's Legacy_ALPHA1.10.esp]
 
-[Note]
- This patch is from an older version of Uvirith's Legacy. The new version of this patch is called "UL_Srikandy_patch_BM.esp".
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
-UL_Srikandy_patch_2.1.esp
-
-[Note]
- Uvirith's Legacy Beta 1.10 is missing meshes in the main archive. Uvirith'sLegacy_HotFix.rar is available for download from the Uvirith's Legacy entry at PES, and contains these missing files. This archive is continually updated as bug reports come in.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
-Uvirith's Legacy_ALPHA1.10.esp
-
-[Patch]
- Use "UL_Srikandy_patch_BM.esp" when using Sri's Alchemy BM with Uvirith's Legacy.
- (Ref: "Uvrith's Legacy_beta_README.txt")
-UL_Srikandy_patch_BM.esp
-[ALL Uvirith's Legacy_BETA1.10.esp
-     Sris_Alchemy_BM.esp]
+;;Add-ons
+;;
+;;Morrowind Script Extender
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+UL_MWSE_patch.esp
 
 [Order]
-Uvirith's Legacy_BETA1.10.esp
-UL_Srikandy_patch_BM.esp
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+UL_Primus_MWSE.esp
 
+;;Rise of House Telvanni
+[Note]
+ It is suggested you use "UL_RoHT_Compatibility_1.4.esp" when using both Stuporstar's "Uvirith's Legacy" and "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ "Uvirith's Legacy"and "Rise of House Telvanni" are fully compatible as they stand, this patch is not required for compatibility. "Uvirith's Legacy" functions perfectly well with "Rise of House Telvanni" without it.
+ (Ref: "Uvrith's Legacy_README.txt")
+[ALL Uvirith's Legacy_Final_2.0.esp
+     UL_RoHT_1.4_Compatibility.esp]
+
+[Requires]
+ The optional "UL_RoHT_Compatibility_1.4.esp" patch should only be used if you are also running v1.3 or later of "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ (Ref: "Uvrith's Legacy_README.txt")
+UL_RoHT_1.4_Compatibility.esp
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [VER >1.2 Rise of House Telvanni.esm]]
+
+[Note]
+ ! This RoHT compatibility patch should no longer be used with version 2.0 of "Uvirith's Legacy". A new version of the patch is available for version 2.0 of "Uvirith's Legacy" and should be used instead.
+ ! (Ref: "Uvrith's Legacy_README.txt")
+[ALL [ANY UL_RoHT_Compatibility.esp
+          UL_RoHT_Compatibility_1.3.esp]
+     Uvirith's Legacy_Final_2.0.esp]
+
+;;Chess Add-on
 [Order]
-Sris_Alchemy_BM.esp
-UL_Srikandy_patch_BM.esp
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+UL_chess_addon.esp
 
-[Patch]
- Use "Uvirith's Legacy Book Jackets Add-on.esp" when using Book Jackets with Uvirith's Legacy.
- (Ref: "Uvrith's Legacy_beta_README.txt")
+;;Book Jackets
+[Requires]
+ 'Uvirith's Legacy Book Jackets Add-on.esp' requires either Daleth's "Book Jackets" or Nicholiathan's "Librarian" mods.
+ (Ref: "Uvrith's Legacy_README.txt")
 Uvirith's Legacy Book Jackets Add-on.esp
-[ALL Uvirith's Legacy_BETA1.10.esp
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
+	       Librarian with Jackets BM Trib.esp]
+	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
+		    Book Jackets - Morrowind.esp]
+	       [ANY Book Jackets - Tribunal - BookRotate.esp
+		    Book Jackets - Tribunal.esp]
+	       [ANY Book Jackets - Bloodmoon - BookRotate.esp
+		    Book Jackets - Bloodmoon.esp]]]]
+
+[Note]
+ 'Uvirith's Legacy Book Jackets Add-on.esp' is not required for compatibility, but it will make the sorter books look much better when using Daleth's "Book Jackets" (or Nicholiathan's "Librarian") with "Uvirith's Legacy".
+ (Ref: "Uvrith's Legacy_README.txt")
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [NOT Uvirith's Legacy Book Jackets Add-on.esp]
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
 	       Librarian with Jackets BM Trib.esp]
 	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
@@ -16525,73 +17121,177 @@ Uvirith's Legacy Book Jackets Add-on.esp
 		    Book Jackets - Bloodmoon.esp]]]]
 
 [Order]
-Uvirith's Legacy_BETA1.10.esp
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
 [Order]
 Book Jackets - *.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
+[Order]
+Librarian with Jackets *.esp
+Uvirith's Legacy Book Jackets Add-on.esp
+
+;;Srikandi Alchemy
 [Note]
- Use the optional "UL_RoHT_Compatibility_1.3.esp" when using "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al. The compatability patch adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter.
- (Ref: "Uvrith's Legacy_beta_README.txt")
-[ALL Uvirith's Legacy_BETA1.10.esp
-     UL_RoHT_Compatibility_1.3.esp]
+ This patch is from an older version of Stuporstar's "Uvirith's Legacy". The new version of this patch is called 'UL_Srikandy_patch_BM.esp'.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
+UL_Srikandy_patch_2.1.esp
 
 [Requires]
- The optional "UL_RoHT_Compatibility_1.3.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, should only be used if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
-UL_RoHT_Compatibility_1.3.esp
-[ALL Uvirith's Legacy_BETA1.10.esp
-     Rise of House Telvanni.esm]
+ 'UL_Srikandy_patch_BM.esp' requires Srikandi's "Alchemy BM" and Stuporstar's "Uvirith's Legacy".
+ (Ref: "Uvrith's Legacy_README.txt")
+UL_Srikandy_patch_BM.esp
+[ALL Uvirith's Legacy_Final_2.0.esp
+     Sris_Alchemy_BM.esp]
 
 [Note]
- ! This RoHT compatibility patch is no longer needed with beta 1.09 of "Uvirith's Legacy". A new version of the patch is available for beta 1.10 of "Uvirith's Legacy" and should be used instead.
- ! (Ref: "Uvrith's Legacy_beta_README.txt")
-[ALL UL_RoHT_Compatibility.esp
-     [ANY Uvirith's Legacy_BETA1.10.esp
-          Uvirith's Legacy_BETA1.09.esp]]
+ 'UL_Srikandy_patch_BM.esp' is not required for compatibility, but adds all the Srikandi's "Alchemy BM" ingredients to Tel Uvirith's Secret Lab and Storage Room.
+ (Ref: "Uvrith's Legacy_README.txt")
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [NOT UL_Srikandy_patch_BM.esp]
+     Sris_Alchemy_BM.esp]
 
-[Patch]
- Use "UL_TLM_ambiance.esp" when using The Lighing Mod with Uvirith's Legacy, otherwise the light in interiors will be very bright.
- (Ref: "Uvrith's Legacy_beta_README.txt")
-UL_TLM_ambiance.esp
-[ALL Uvirith's Legacy_BETA1.10.esp
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+UL_Srikandy_patch_BM.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+UL_Srikandy_patch_BM.esp
+
+;;The Lighting Mod
+[Note]
+ Use 'UL_TLM_ambiance.esp' when using Sensei's "The Lighing Mod" with "Uvirith's Legacy", otherwise the light in interiors will be very bright.
+ (Ref: "Uvrith's Legacy_README.txt")
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [NOT UL_TLM_ambiance.esp]
      [ANY TLM - Ambient Light + Fog Update.esp
           TLM - Complete.esp]]
 
 [Order]
-Uvirith's Legacy_BETA1.10.esp
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
 UL_TLM_ambiance.esp
 
-; Dragon32: This order from Stuporstar forum post
+; Dragon32: This order from Stuporstar forum post (albeit for beta v1.10)
 ; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15273304
 [Order]
-Uvirith's Legacy_BETA1.10.esp
+Uvirith's Legacy_Final_2.0.esp
 TLM - Complete.esp
 
-; Dragon32: Based on above Order, enforce same load order for this module of TLM too
+; Dragon32: Based on above Order rule, enforce same load order for this module of TLM too
 [Order]
-Uvirith's Legacy_BETA1.10.esp
+Uvirith's Legacy_Final_2.0.esp
 TLM - Ambient Light + Fog Update.esp
 
-; Dragon32: See "Uvrith's Legacy_beta_README.txt", refers to v1.10 of "Less Generic NPCs (LGNPC) Tel Uvirith"
+;;Children of Morrowind
+[Requires]
+ 'Uvirith's Legacy CoM Add-on.esp' turns apprentice Gavyn and servant Meiree from Stuporstar's "Uvirith's Legacy" into teenagers using Emma's "Children of Morrowind" mod.
+ (Ref: "Uvrith's Legacy_README.txt")
+Uvirith's Legacy CoM Add-on.esp
+[ALL Uvirith's Legacy_Final_2.0.esp
+     MW_Children_1_0.esm]
+
+[Note]
+ As you use Emma's "Children of Morrowind" mod it's suggested you use the 'Uvirith's Legacy CoM Add-on.esp' add-on that turns apprentice Gavyn and servant Meiree into teenagers.
+ (Ref: "Uvrith's Legacy_README.txt")
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [NOT Uvirith's Legacy CoM Add-on.esp]
+     MW_Children_1_0.esm]
+
 [Order]
-LGNPC_TelUvirith_v<VER>.esp
-Uvirith's Legacy_BETA1.10.esp
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy CoM Add-on.esp
+
+;;Ash Armor Divine Domina
+[Requires]
+ This add-on for Stuporstar's "Uvirith's Legacy" will suit up the female version of Ash-Kosh with armor from Jeremy McGuinn's "Divine Domina" series.
+ (Ref: "Uvrith's Legacy_README.txt")
+UL_AshArmor_DivineDomina.esp
+[ALL Uvirith's Legacy_Final_2.0.esp
+     Divine_domina_part_1.esp]
+
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+UL_AshArmor_DivineDomina.esp
+
+;;Ash Armor Plankye
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+UL_AshArmor_Plankye.esp
+
+;;Compatibility
+;;
+;; LGNPC Tel Uvirith
+; Dragon32: See "Uvrith's Legacy_README.txt", refers to being compatible with v1.20 of "Less Generic NPCs (LGNPC) Tel Uvirith"
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+LGNPC_TelUvirith_v?_??.esp
+Uvirith's Legacy_Final_2.0.esp
 
 [Conflict]
- Uvirith's Legacy is not compatible with Uvirith Inside, as it has been derived from that mod and does many of the same things.
- (Ref: "Uvrith's Legacy_beta_README.txt")
-Uvirith's Legacy_BETA1.10.esp
-Uvirith Inside.esp
+ You should use the standard "LGNPC Tel Uvirith" mod with Stuporstar's "Uvirith's Legacy" rather than the Uvirith Inside version of "LGNPC Tel Uvirith"
+ (Ref: "Uvrith's Legacy_README.txt")
+Uvirith's Legacy_Final_2.0.esp
+LGNPC_TelUvirith_UI_v?_??.esp
 
+;; Building Up Uvirith's Grave
 [Conflict]
- Uvirith's Legacy and Building Up Uvirith's Grave are not currently compatible as they both make changes to Tel Uvirith.
- (Ref: "Uvrith's Legacy_beta_README.txt")
-Uvirith's Legacy_BETA1.10.esp
+ Stuporstar's "Uvirith's Legacy" and Acheron's "Building Up Uvirith's Grave" are not compatible as they both make changes to Tel Uvirith.
+ You should consider using Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" that replaces the old "Building Up Uvirith's Grave" with a new "Uvirith's Legacy"-compatible one
+ (Ref: "Uvrith's Legacy_README.txt")
+Uvirith's Legacy_Final_2.0.esp
 Building Up Uvirith's Grave 1.1.esp
 
-;; Dragon32: Asked StuporStar about the lack of this plugin. "UL_Obliv&LGNPC_Booksorter.esp" is for Ostar's
+;; Uvirith Inside
+[Conflict]
+ Stuporstar's "Uvirith's Legacy" is not compatible with The DopeHatMan's "Uvirith Inside", as it has been derived from that mod and does many of the same things.
+ (Ref: "Uvrith's Legacy_README.txt")
+Uvirith's Legacy_Final_2.0.esp
+Uvirith Inside.esp
+
+;;Necessities of Morrowind
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+NOM 2.13.esp
+UL_NoM2.13_backwardscompat.esp
+
+[Order]
+; Ref: "Uvrith's Legacy_README.txt"
+Uvirith's Legacy_Final_2.0.esp
+NOM 3.0.esp
+
+[Requires]
+ "Uvirith's Legacy" includes resources from Taddeus' "Necessities of Morrowind" v3.0, the 'UL_NoM2.13_backwardscompat.esp' compatibility patch adds the old "Necessities of Morrowind" scripts to these new "Necessities of Morrowind" resources.
+ (Ref: "Uvrith's Legacy_README.txt")
+UL_NoM2.13_backwardscompat.esp
+[ALL NOM 2.13.esp
+     Uvirith's Legacy_Final_2.0.esp]
+
+;;The Bathing Mod 2
+[Order]
+; "Uvrith's Legacy_README.txt" - "Bathing Mod compatible objects have been added to all bathing areas of the tower"
+; So, load the mod that defines those objects before the mod that uses them.
+Stinkers.esp
+Uvirith's Legacy_Final_2.0.esp
+
+;;Vampire Embrace
+[Order]
+; "Uvrith's Legacy_README.txt" - "The apprentice [and the tower staff are] fully VE compatible"
+; So, load the mod that defines those objects before the mod that uses them.
+Vampire_Embrace.esp
+Uvirith's Legacy_Final_2.0.esp
+
+;; Dragon32: rules removed in updates for beta versions:
+;;
+;; Asked StuporStar about the lack of this plugin. "UL_Obliv&LGNPC_Booksorter.esp" is for Ostar's
 ;; "Oblivion and LGNPC Books." That plugin's been removed from circulation due to problems in circulating  Oblivion
 ;; content for Morrowind. So StuporStar removed the Booksorter addon with BETA1.09 of Uvirith's Legacy.
 ;; It *can* still be used, StuporStar's left the space designated for the LGNPC books unoccupied, so it will still
@@ -16606,6 +17306,22 @@ Building Up Uvirith's Grave 1.1.esp
 ;; [Order]
 ;; Uvirith's Legacy_ALPHA1.08.esp
 ;; UL_RoHT_Compatibility.esp
+;;
+;;
+;;
+;; Dragon32: Rules removed in update to v2.0:
+;;
+;; [Note]
+;;  Uvirith's Legacy Beta 1.10 is missing meshes in the main archive. Uvirith'sLegacy_HotFix.rar is available for download from the Uvirith's Legacy entry at PES, and contains these missing files. This archive is continually updated as bug reports come in.
+;;  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
+;; Uvirith's Legacy_ALPHA1.10.esp
+;;
+;; [Note]
+;;  ! This RoHT compatibility patch is no longer needed with beta 1.09 of "Uvirith's Legacy". A new version of the patch is available for beta 1.10 of "Uvirith's Legacy" and should be used instead.
+;;  ! (Ref: "Uvrith's Legacy_beta_README.txt")
+;; [ALL UL_RoHT_Compatibility.esp
+;;      [ANY Uvirith's Legacy_BETA1.10.esp
+;;           Uvirith's Legacy_BETA1.09.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16615,6 +17331,16 @@ Building Up Uvirith's Grave 1.1.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 87603 Uvirith Outpost v1.6.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Uvirith Unleashed [Grumblepunk]
+
+[Note]
+ If you are running ThaEgbird's "Uvirith's Vault" with Grumblepunk's "Uvirith Unleashed" you may need to delete the boulders in the basement, opposite the female Dunmer body, for access.
+ (Ref: UU v1.2 ReadMe.txt)
+[ALL Uvirith Unleashed v1.2.esp
+     uvirithvaultv10.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17410,6 +18136,36 @@ Grass Beta_Tamriel rebuilt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampire Embrace [Cortex]
+
+[Note]
+ 'Vampire_Embrace_SaveGameUpdater.esp' should only be used when updating a savegame that used an old version of "Vampire Embrace". 
+ (Ref: "Vampire_Embrace_SaveGameUpdater.txt")
+Vampire_Embrace_SaveGameUpdater.esp
+
+[Order]
+; Ref: Vampire_Embrace_Readme.TXT
+quarraclan.esp
+Vampire_Embrace.esp
+
+;;Dragon32: Couldn't find a compatibility patch in the version of Torgulf's I could download (1.2), from the mlox rules seems that there's a v1.21 (see entry) but no VE patch mentioned there
+[Conflict]
+ Torgulf's "NPC Soultrapping" will not work with Cortex's "Vampire Embrace" without an, as yet unavailable, compatibility patch. 
+ (Ref: Vampire_Embrace_Readme.TXT)
+Vampire_Embrace.esp
+[ANY Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
+     Torgulf's NPC Soultrapping 1.2 Bloodmoon.esp]
+
+[Conflict]
+ "Vampire Embrace" is not compatible with "Nox Vampire" by S. Patrick Gallaty
+ (Ref: Vampire_Embrace_Readme.TXT)
+Vampire_Embrace.esp
+nox_vamp_0.93b.esp
+
+;Dragon32: According to readme it's incompatible with "Vampire's Social Life" and "Vampire Birth Signs v0.001", can't find downloads
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Load Order - based on Yacoby's web page
 ;; (Ref: http://yacoby.silgrad.com/MW/Modlists/Loadorder.htm )
 
@@ -17816,6 +18572,12 @@ Vampire_Embrace.esp
 ; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
 [Order]
 Wakim's Game Improvement 9.esp
+Vampire_Embrace.esp
+
+; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
+; Dragon32: Added Order rule for the combined Wakim's mod with no-glo. See also "Vampire_Embrace_Readme.TXT"
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
 Vampire_Embrace.esp
 
 
