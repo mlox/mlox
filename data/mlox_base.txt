@@ -431,12 +431,12 @@ time.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @abotGuars 1.15 [abot]
+;; @abotGuars 1.16 [abot]
 
 [Note]
  ! There is a newer version of abot's Guars available, you may want to upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6112
-[VER < 1.15 abotGuars.esp]
+[VER < 1.16 abotGuars.esp]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -1278,13 +1278,17 @@ Better Bodies.esp
 ;; @Aragon Ashlander Tent MWSE Patch [Bjam]
 
 [Requires]
+ bjam's "Aragon Ashlander Tent MWSE Patch" requires either Aragon's "Ashlander Tent" or Gaius Atrius' "Ashlander Tent DX"
+ (Ref: Bjam_Aragon_at_MWSEpatch.txt)
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8546 )
 [ANY bjam_Aragon_at_MWSEpatch_v1.0.esp
      bjam_at_MWSE_patch.esp]
-AshlanderTent.esp
+[ANY AshlanderTent.esp
+     AshlanderTentDX.esp] ;Gaius Atrius' Ashlander Tent DX
 
 [Conflict]
- Choose ONLY ONE of these plugins.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+ When using bjam's "Aragon Ashlander Tent MWSE Patch" the landmass plugins that came with Aragon's mod are no longer required.
+ (Ref: Bjam_Aragon_at_MWSEpatch.txt)
 [ANY bjam_Aragon_at_MWSEpatch_v1.0.esp
      bjam_at_MWSE_patch.esp]
 [ANY AshlanderTent-AldVendras.esp
@@ -1302,6 +1306,17 @@ AshlanderTent.esp
      AshlanderTent-TheBlackMill.esp
      AshlanderTent-Veldion.esp
      AshlanderTent-Ysgramor.esp]
+
+;Dragon32: Assumed this is correct load order
+[Order]
+AshlanderTent.esp
+bjam_Aragon_at_MWSEpatch_v1.0.esp
+bjam_at_MWSE_patch.esp
+
+[Order]
+AshlanderTentDX.esp
+bjam_Aragon_at_MWSEpatch_v1.0.esp
+bjam_at_MWSE_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1562,6 +1577,285 @@ Bloodmoon.esm
 [Note]
  The latest version of Ashlander Caravan is called Ashlander Traders, which can be downloaded on PES.
 Ashlander Caravan.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ashlander Tent [aragon]
+
+;Dragon32: See also - Aragon Ashlander Tent MWSE Patch [Bjam] 
+
+;Dragon32: My guesses on Order rules but they make sense to me
+
+;Ald Vendras
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-AldVendras.esp
+[ALL [ANY Ald-Vendras_V31.esp
+          Ald-Vendras_V31-LoKKen.esp
+          Ald-Vendras_V31-LoKKen-SC.esp]
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-AldVendras.esp
+
+[Order]
+Ald-Vendras_V31.esp
+Ald-Vendras_V31-LoKKen.esp
+Ald-Vendras_V31-LoKKen-SC.esp
+AshlanderTent-AldVendras.esp
+
+;Annastia
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-Annastia.esp
+[ALL Annastia V3.3.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-Annastia.esp
+
+[Order]
+Annastia V3.3.esp
+AshlanderTent-Annastia.esp
+
+;Bloody Oath
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-BloodyOath.esp
+[ALL Bloody Oath_v1.0.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-BloodyOath.esp
+
+[Order]
+Bloody Oath_v1.0.esp
+AshlanderTent-BloodyOath.esp
+
+;Booty Island
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-BootyIsland.esp
+[ALL Booty.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-BootyIsland.esp
+
+[Order]
+Booty.esp
+AshlanderTent-BootyIsland.esp
+
+;Children of the Night 2
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-Con2.esp
+[ALL C0N2 v1.01.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-Con2.esp
+
+[Order]
+C0N2 v1.01.esp
+AshlanderTent-Con2.esp
+
+;Havish
+;Havish.esm not in file header
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-Havish.esp
+[ALL Havish.esm
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-Havish.esp
+
+;Inferno Island
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-InfernoIsland.esp
+[ALL Inferno's Island Revisited.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-InfernoIsland.esp
+
+[Order]
+Inferno's Island Revisited.esp
+AshlanderTent-InfernoIsland.esp
+
+;Korobal
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-Korobal.esp
+[ALL Korobal v1.2.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-Korobal.esp
+
+[Order]
+Korobal v1.2.esp
+AshlanderTent-Korobal.esp
+
+;Lothovar's Legacy
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-LothavorsLegacy.esp
+[ALL Lothavor's Legacy.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-LothavorsLegacy.esp
+
+[Order]
+Lothavor's Legacy.esp
+AshlanderTent-LothavorsLegacy.esp
+
+;Sea of Destiny
+;Sea-of-Destiny.esm not in file header
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-SeaOfDestiny.esp
+[ALL Sea-of-Destiny.esm
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-SeaOfDestiny.esp
+
+;Stanegau Island
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-StanegauIsland.esp
+[ALL Stanegau Island.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-StanegauIsland.esp
+
+[Order]
+Stanegau Island.esp
+AshlanderTent-StanegauIsland.esp
+
+;Sword of Perithia
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-SwordOfPerithia.esp
+[ALL SOPBeta1.4.esp
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-SwordOfPerithia.esp
+
+[Order]
+SOPBeta1.4.esp
+AshlanderTent-SwordOfPerithia.esp
+
+;The Black Mill
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-TheBlackMill.esp
+[ALL [ANY TheBlackMill11.esp
+          TheBlackMill11fixedtransposedNOMified.esp]
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-TheBlackMill.esp
+
+[Order]
+TheBlackMill11.esp
+AshlanderTent-TheBlackMill.esp
+
+[Order]
+TheBlackMill11fixedtransposedNOMified.esp
+AshlanderTent-TheBlackMill.esp
+
+;Veldion
+;Veldion2.0.esm not in file header
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-Veldion.esp
+[ALL Veldion2.0.esm
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-Veldion.esp
+
+;Beyond Ys Gramor
+;Beyond YsGramor v2.5.esm not in file header
+[Requires]
+ (Ref: AshlanderTent Readme.txt)
+AshlanderTent-Ysgramor.esp
+[ALL Beyond YsGramor v2.5.esm
+     AshlanderTent.esp]
+
+[Order]
+AshlanderTent.esp
+AshlanderTent-Ysgramor.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ashlander Tent DX [Gaius Atrius]
+
+;Dragon32: See also - Aragon Ashlander Tent MWSE Patch [Bjam] 
+
+;Not specified in readme but addon uses activator defined in k_in_tent.esp
+[Requires]
+ 'AshlanderTentDX - Kirel IW Addon.esp' requires Kirel's "Interior Tent Sounds addon for Kirel's Interior Weather"
+AshlanderTentDX - Kirel IW Addon.esp
+k_in_tent.esp
+
+[Order]
+AshlanderTentDX.esp
+AshlanderTentDX - Kirel IW Addon.esp
+
+[Order]
+k_in_tent.esp
+AshlanderTentDX - Kirel IW Addon.esp
+
+;NoM 2.13 version
+[Requires]
+ 'AshlanderTentDX - NOM Addon.esp' requires Necessities of Morrowind 2.13
+[SIZE 2287 AshlanderTentDX - NOM Addon.esp]
+[ALL AshlanderTentDX.esp
+     NOM 2.13.esp]
+
+;Dragon32: Load order for 2.13 should duplicate the v3.0 one
+; http://forums.bethsoft.com/index.php?/topic/1101395-relz-ashlander-tent-dx/page__view__findpost__p__16458559
+[Order]
+AshlanderTentDX.esp
+AshlanderTentDX - NOM Addon.esp
+NOM 2.13.esp
+
+;NoM3.0 version
+[Requires]
+ 'AshlanderTentDX - NOM Addon.esp' requires Necessities of Morrowind 3.0
+ (Ref: ReadMe - ATDX - NOM v3 Addon.txt)
+[SIZE 2875 AshlanderTentDX - NOM Addon.esp]
+[ALL AshlanderTentDX.esp
+     NOM 3.0.esp]
+
+; Ref: 'ReadMe - ATDX - NOM v3 Addon.txt' - "This plugin is to be placed AFTER Ashlander Tent DX, but BEFORE NOM v3 in your plugin load order"
+[Order]
+AshlanderTentDX.esp
+AshlanderTentDX - NOM Addon.esp
+NOM 3.0.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Assassin Weaponry  [Skaled]
@@ -3545,6 +3839,24 @@ Book Rotate - Morrowind v1.1.esp
 [ANY Book Rotate.esm
      Book Rotate - Tribunal v5.3.esp
      Book Rotate - Bloodmoon v5.3.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Booty Island [JOG]
+
+; Dragon32: Booty Island modifies an NPC from the Illuminated Order mod, so should load later
+; Ref: Booty.txt
+[Order]
+Illuminated Order v1.0.esp
+Booty.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Booty.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Booty.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7103,6 +7415,62 @@ Gothic Attire Complete v1-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Grandmaster of Hlaalu [Lady Galadriel]
+
+[Requires]
+ Better Bodies is required for the Grandmaster's robe.
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+Grandmaster of Hlaalu.esp
+Better Bodies.esp
+
+[Conflict]
+ Lady Galadriel's "Grandmaster of Hlaalu" includes Ithilien87's "Hlaalu Rank Adjust"
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+Hlaalu Rank-Adjust v1.0.esp
+Grandmaster of Hlaalu.esp
+
+[Conflict]
+ Lady Galadriel's "Grandmaster of Hlaalu" conflicts with "Indarys Unleashed" by Michael "HelioS" Bennett.
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+Indarys Unleashed.esp
+Grandmaster of Hlaalu.esp
+
+[Conflict]
+ Lady Galadriel's "Grandmaster of Hlaalu" conflicts with "New Rethan Manor" by Monica21.
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+New Rethan Manor.esp
+Grandmaster of Hlaalu.esp
+
+[Conflict]
+ Lady Galadriel's "Grandmaster of Hlaalu" conflicts with "Join All Houses" by heph.
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+Join All Houses.esp
+Grandmaster of Hlaalu.esp
+
+[Conflict]
+ Lady Galadriel's "Grandmaster of Hlaalu" conflicts with "Rethan Expansion" by Baratheon79.
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+[ANY BAR_RethanExpansion_v2.2.esp
+     BAR_RethanExpansion_v2.2_NoM.esp]
+Grandmaster of Hlaalu.esp
+
+; I assume this is the mod meant by "Suran Expanded"
+[Conflict]
+ Lady Galadriel's "Grandmaster of Hlaalu" conflicts with "Suran Extended" by Princess Stomper (and so Nicholiathan's "New Suran Extended").
+ (Ref: Grandmaster of Hlaalu - readme.rtf)
+[ANY New Suran Extended 1.5.esp
+     Balanced NSE 1.5.esp
+     New Suran Extended CoM 1.5.esp
+     Balanced NSE CoM 1.5.esp
+     Clean Suran Extended.esp
+     Suran Extended Family.esp]
+Grandmaster of Hlaalu.esp
+
+;;Dragon32
+;Apparently also conflicts with "Sailable Rivers (or whatever the name is - landscape)" and "Rethan Manor Enhanched", according to the readme. No idea what the plugin names are for those.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism [ManaUser]
 
 ;; (Ref: "Graphic Herbalism Readme.txt")
@@ -8449,6 +8817,16 @@ Infernal SummoningV1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Inferno's Island Revisited [Inferno]
+
+[Conflict]
+ "Inferno's Island Revisited is a remade plugin based on the old Inferno's Island and Inferno's Palace plugins."
+ (Ref: Inferno's Island Revisited (README).txt)
+Inferno's Island Revisited.esp
+[ANY InfernosIsland_0903.esp
+     Inferno's Palace (Powergamers Version).esp]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Iorya Dragon's Tel Uvirith Tower  [Iorya Dragon]
 
 [Note]
@@ -8560,6 +8938,16 @@ Wyr Jeweler v1.01 c.250.esp
   J-ninja_v.1.0_m_NoQuest.esp - The "J-Ninja" armor is defined but not added into the game  world
 J-ninja_v.1.0_m.esp
 J-ninja_v.1.0_m_NoQuest.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Join All Houses [Heph]
+
+[Conflict]
+ Heph's "Join All Houses" mod is based on FatherFrost's "AllHousesMod"
+ (Ref: Join All Houses.txt)
+Join All Houses.esp
+AllHousesMod.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8853,6 +9241,18 @@ Syc_HerbalismforPurists_BM.esp
 Syc_HerbalismforPurists_TB.esp
 Syc_HerbalismforPurists_TB-ONLY.esp
 
+;Dragon32: Not mentioned in readme but scripts in k_in_tent.esp use sounds defined in main plugin
+[Requires]
+ "Interior Tent Sounds addon for Kirel's Interior Weather" requires Kirel's original mod
+k_in_tent.esp
+[ANY k_weather.esp
+     k_weather (louder sounds).esp]
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+k_in_tent.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kirstenhaas  [Bob Curtin]
@@ -8950,6 +9350,39 @@ Knights of Tamriel.esp
 Kobu's Skills.esp
 Kobu's Hard Skills.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Korobal [Korobal Mod Team]
+
+[Patch]
+ As you use The Puma Man's "GIANTS" mod with "Korobal Island" you should install the provided patch plugin
+ (Ref: Readme_Korobal.txt)
+KI-GU-TBM_Comp.esp
+[ALL Korobal v1.2.esp
+     [SIZE 1915997 GIANTS.esm]] ;All expansions version
+
+;Dragon32: Logical to have the patch load after the main mod
+[Order]
+Korobal v1.2.esp
+KI-GU-TBM_Comp.esp
+
+[Patch]
+ As you use The Puma Man's "GIANTS" mod with "Korobal Island" you should install the provided patch plugin
+ (Ref: Readme_Korobal.txt)
+KI-GU-Trib_comp.esp
+[ALL Korobal v1.2.esp
+     [SIZE 1825067 GIANTS.esm]] ;Tribunal version
+
+;Dragon32: Logical to have the patch load after the main mod
+[Order]
+Korobal v1.2.esp
+KI-GU-Trib_comp.esp
+
+[Conflict]
+ "[Korobal] has a landmass conflict with Moon Spawn"
+ (Ref: Readme_Korobal.txt)
+Korobal v1.2.esp
+Moons_Spawn_V1.3.3_Non_Patched.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Korsuth [Jake Whiton]
@@ -9779,6 +10212,36 @@ LA_MWSE Addon.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 32449 Lothlorien 2.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lothovar's Legacy [Erstam]
+
+[Requires]
+ 'Lothavor's Legacy BB addon.esp' enables Better Bodies meshes for Lothavor's Children.
+ (Ref: Lothavors_Legacy.rar\DANGER - DON'T READ ME.txt)
+Lothavor's Legacy BB addon.esp
+Lothavor's Legacy.esp
+
+;Ref: Lothavors_Legacy.rar\DANGER - DON'T READ ME.txt
+[Order]
+Lothavor's Legacy.esp
+Lothavor's Legacy BB addon.esp
+
+[Conflict]
+ 'LL Companion & Objects BB.esp' and 'LL Companion & Objects.esp' should only be enabled when you have completely finished the storyline and are back on Vvardenfell.
+ (Ref: Lothavors_Legacy.rar\LL_replacement.zip\instructions.txt)
+[ANY LL Companion & Objects BB.esp
+     LL Companion & Objects.esp]
+Lothavor's Legacy.esp
+
+[Conflict]
+ You should only enable one of these plugins
+  LL Companion & Objects BB.esp - If you previously used the Better Bodies addon ('Lothavor's Legacy BB addon.esp')
+  LL Companion & Objects.esp - If you did not use the Better Bodies addon
+ (Ref: Lothavors_Legacy.rar\LL_replacement.zip\instructions.txt)
+LL Companion & Objects BB.esp
+LL Companion & Objects.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11704,6 +12167,8 @@ ImprovedTeleportation2.0.esp
  These mods require Morrowind Script Extender (MWSE) v0.9.2 or later, or MGE v3.0.3 or later.
 ASH2.0.esp
 Better Telekinesis.esp
+bjam_Aragon_at_MWSEpatch_v1.0.esp
+bjam_at_MWSE_patch.esp
 Controlled Jumps.esp
 Decorator+.esp
 Decorator+ (Balanced).esp
@@ -12038,7 +12503,7 @@ NX9_Guard_LGRedoran_Patch.ESP
  NazoX9's "NX9_Guard_LGRedoran_Patch.ESP" fixes incompatibilities between ostar's "Less Generic Tribunal" and NazoX9's "Guards"
  http://tesnexus.com/downloads/file.php?id=27765
 NX9_Guard_LGTrib_patch.ESP
-[ALL Less Generic Tribunal.esp
+[ALL Less_Generic_Tribunal.esp
      NX9_Guards_Complete.ESP]
 
 ;; Dragon32: Not specified (no readme) but a check in TESPCD shows the patch changing a NPC from the "Guards mod, hence this load order. No apparent change to Less Generic Tribunal. Also, think the NPC is a "dirty" reference and not actually needed.
@@ -13854,7 +14319,6 @@ Area Effect Arrows.esp
 
 [Conflict]
  You should not use Piratelord's original Redesigned Vivec (or Pseron Wyrd's mod that merges Piratelord's mod with Hoghead the Horrible's "Vivec Expansion") with any of the updates released by Jac.
- Whilst the readmes do say "Do use this mod with PL's original RV mod" this is a typo and the rather critical word "not" is missing.
  (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt"
        "Redesigned Vivec - MCA patch readme.txt"
        "Redesigned Vivec_Children of Morrowind Readme.txt")
@@ -13973,40 +14437,54 @@ RKWerewolf-NoTrib.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rethan Expansion Version 2.2 [Baratheon79]
 
+[Note]
+ There is a new version of Baratheon79's "Rethan Expansion" available, you should upgrade. See:
+ http://baratheon79.rpgmods.com/ 
+[ANY BAR_RethanExpansion_v2.1.esp
+     BAR_RethanExpansion_v2.1_NoM.esp]
+
+[Note]
+ Baratheon79's "Rethan Expansion" supports Srikandi's "Sri Alchemy", in the form of ingredient jars for the new ingredients. To enable it open the console and type:
+   set RE_SAloaded to 1
+ (Ref: "Rethan Expansion v2.2 Readme.txt")
+[ALL [ANY BAR_RethanExpansion_v2.2.esp
+          BAR_RethanExpansion_v2.2_NoM.esp]
+     Sris_Alchemy_BM.esp]
+
 [Conflict]
  "If you are using Necessities of Morrowind and want to have a well in the stronghold that you can easily get to, use the BAR_RethanExpansion_v2.1_NoM.esp file. Otherwise, use BAR_RethanExpansion_v2.1.esp. Just don't use both, or you will encounter lots of doubling."
  (Ref: "Rethan Expansion v2.2 Readme.txt")
-BAR_RethanExpansion_v2.1.esp
-BAR_RethanExpansion_v2.1_NoM.esp
+BAR_RethanExpansion_v2.2.esp
+BAR_RethanExpansion_v2.2_NoM.esp
 
 [Requires]
  (Ref: "Rethan Expansion v2.2 Readme.txt")
-BAR_RethanExpansion_v2.1.esp
+BAR_RethanExpansion_v2.2.esp
 Tribunal.esm
 
 [Requires]
  (Ref: "Rethan Expansion v2.2 Readme.txt")
-BAR_RethanExpansion_v2.1_NoM.esp
+BAR_RethanExpansion_v2.2_NoM.esp
 [ALL NOM 2.13.esp
      Tribunal.esm
      Bloodmoon.esm]
 
 [Conflict]
  (Ref: "Rethan Expansion v2.2 Readme.txt")
-[ANY BAR_RethanExpansion_v2.1.esp
-     BAR_RethanExpansion_v2.1_NoM.esp]
+[ANY BAR_RethanExpansion_v2.2.esp
+     BAR_RethanExpansion_v2.2_NoM.esp]
 Indarys Unleashed.esp
 
 [Conflict]
  (Ref: "Rethan Expansion v2.2 Readme.txt")
-[ANY BAR_RethanExpansion_v2.1.esp
-     BAR_RethanExpansion_v2.1_NoM.esp]
+[ANY BAR_RethanExpansion_v2.2.esp
+     BAR_RethanExpansion_v2.2_NoM.esp]
 New Rethan Manor.esp
 
 ; Ref: Rethan Expansion v2.2 Readme.txt
 [Order]
 NOM 2.13.esp
-BAR_RethanExpansion_v2.1_NoM.esp
+BAR_RethanExpansion_v2.2_NoM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14060,6 +14538,10 @@ Ring Capability Shop - TR+BM.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rise of House Telvanni [Pozzo, Karpik777, bhl et al.]
 
+[Note]
+ There is a newer version of "Rise of House Telvanni" available, you should upgrade.
+[VER<1.41 Rise of House Telvanni.esm]
+
 [Requires]
  (Ref: "Rise of House Telvanni Readme.txt)
 Rise of House Telvanni.esm
@@ -14102,6 +14584,35 @@ RoHT Havish Patch.esp
 RoHT TLSH Patch.esp
 [ALL Rise of House Telvanni.esm
      Nevena's Twin Lamps & Slave Hunters 1.5.esp]
+
+;Load the RoHT patch after the main mod.
+[Order]
+Nevena's Twin Lamps & Slave Hunters 1.5.esp
+RoHT TLSH Patch.esp
+
+[Patch]
+ You should use "RoHT NoM Addon.esp" a patch for Taddeus' "Necessities of Morrowind".
+ (Ref: "Rise of House Telvanni Readme.txt")
+RoHT NoM Addon.esp
+[ALL Rise of House Telvanni.esm
+     NOM 2.13.esp]
+
+[Note]
+ "RoHT NoM Addon.esp" was made before the release of Taddeus' "Necessities of Morrowind" version 3.0. This "Rise of House Telvanni" addon may not be compatible with version 3 of Taddeus' mod.
+ (Ref: "Rise of House Telvanni Readme.txt")
+[ALL RoHT NoM Addon.esp
+     Rise of House Telvanni.esm
+     NOM 3.0.esp]
+
+[Patch]
+ "RoHT Taddeus Balancing.esp" changes the stats and values of RoHT's armors and weapons so that they blend in with Taddeus' changes. It is recommended that you only use this patch if you are also using Taddeus' mods.
+ (Ref: "Rise of House Telvanni Readme.txt")
+RoHT Taddeus Balancing.esp
+[ALL Rise of House Telvanni.esm
+     [ANY Taddeus'BalancedArmors.esp
+          Taddeus'BalancedArmors_Rotate.esp]
+     [ANY Taddeus'BalancedWeapons.esp
+          Taddeus'BalancedWeapons_Rotate.esp]]
 
 [Note]
  Both these mods make changes to Fast Eddie, "Building Up Uvirith's Grave" moves Fast Eddie to Uvirith's Grave  and "Rise of House Telvanni" might move him back or vice versa. This does not affect each mod's functionality.
@@ -14148,6 +14659,18 @@ RoHT TLSH Patch.esp
  ! The Pixie's "Ushindra Beach" requires that the player talks to Ald'ruhn's Mages Guild guide, Estirdalin. In  RoHT, she might be forced to leave.
  ! (Ref: "Rise of House Telvanni Readme.txt")
 [ALL UshindraBeach.esp
+     Rise of House Telvanni.esm]
+
+[Note]
+ !! "Rise of House Telvanni" and Endrek's "Sixth House" mod are compatible as long as the player doesn't try to actively play them both at the same time.
+ !! (Ref: "Rise of House Telvanni Readme.txt")
+[ALL Sixth House.esp
+     Rise of House Telvanni.esm]
+
+[Conflict]
+ "Rise of House Telvanni" and Lady Galadriel's "Grandmaster of House Hlaalu" have unresolved conflicts. A simple cure for Telvanni players is not to run the two mods simultaneously.
+ (Ref: "Rise of House Telvanni Readme.txt")
+[ALL Grandmaster of Hlaalu.esp
      Rise of House Telvanni.esm]
 
 
@@ -15494,8 +16017,8 @@ BE_Bathing_Patch.esp
 	  BE+(1.4) Better Looking Morrowind.esp]]
 
 [Note]
- !! grVulture's "Stinkers" uses deprecated AddToLev* function to modify Bethsoft leveled lists. Using this plugin will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one. If you have used this plugin, you can clean modified leveled lists from your savegame using the "Repair All" feature of "Wrye Mash". For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see:
- !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists 
+ !! grVulture's "Stinkers" uses deprecated AddToLev* function to modify Bethsoft leveled lists. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see:
+ !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
  !! Gaius Atrius has updated grVulture's "The Bathing Mod" removing its use of the AddtoLev* function:
  !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
 [VER <2 Stinkers.esp]
@@ -15704,6 +16227,25 @@ Suran_Underworld_2.5-jms_patch.esp
 [ALL Suran_Underworld_2.5.esp
      [ANY BT_Whitewolf_2_0.esp
           BT_Whitewolf_2_0.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sword of Perithia [Andre Sergoyan]
+
+;Dragon32: Logical to have the patch load after the main mod
+[Order]
+SOPBeta1.4.esp
+SOP1.4Patch1.34.esp
+
+[Requires]
+ Ensure you load the latest patch for "Sword of Perithia"
+SOPBeta1.4.esp
+SOP1.4Patch1.34.esp
+
+[Note]
+ !! "Do not use other plugins with [Sword of Perithia]. There are only a select few that will be successfully compatibile with SOP.  (A short list of compatibile plugins: All SOP Patches, Waikem's Game Improvements, Rhed's heads.)"
+ !! (Ref: readme_SwordofthePerithia.txt)
+SOPBeta1.4.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18625,11 +19167,12 @@ wl_lodge_vi.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Life 1.15 [abot]
+;; @Water Life 1.17 [abot]
 
 [Note]
  ! A new version of "Water Life" is available, you should upgrade.
-[VER < 1.15 abotWaterLife.esm]
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=258
+[VER < 1.17 abotWaterLife.esm]
 
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
@@ -18846,12 +19389,12 @@ Seyda Neen Floating Home.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Where Are All Birds Going? 1.13 [abot]
+;; @Where Are All Birds Going? 1.14 [abot]
 
 [Note]
  ! A new version of "Where Are All Birds Going?" is available, you should upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2786
-[VER < 1.13 abotWhereAreAllBirdsGoing.esp]
+[VER < 1.14 abotWhereAreAllBirdsGoing.esp]
 
 [Requires]
  Tribunal/Bloodmoon engine required.
