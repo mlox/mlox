@@ -6124,10 +6124,11 @@ Advanced Guards.esp
      ADVANCED GUARDS.esm]
 
 [Note]
- To preserve the changes made to guards made by Tarnsman's "THE Morrowind NPC Makeover" you should load his Advanced Guards.esp when running The Puma Man's "Advanced Guards."
- (Ref: THE Morrowind NPC Makeover_readme.doc)
+ ! To preserve the changes made to guards made by Tarnsman's "THE Morrowind NPC Makeover" you should load his Advanced Guards.esp when running The Puma Man's "Advanced Guards."
+ ! (Ref: THE Morrowind NPC Makeover_readme.doc)
 [ALL ADVANCED GUARDS.esm
-     THE Morrowind NPC Makeover.esm]
+     THE Morrowind NPC Makeover.esm
+     [NOT Advanced Guards.esp]]
 
 ;; Dragon32: As Tarnsman's mod duplicates the functionality of The Puma Man's GUARDS.esp we should duplicate its load order rules.
 [Order]
@@ -11617,6 +11618,12 @@ MCA and NOM Courtesan Patch.esp
 NOM 2.13.esp
 MCA and NOM Food and Drink Patch.esp
 
+[Requires]
+ (Ref: MCA-NOM patch readme.txt)
+MCA and NOM Food and Drink Patch.esp
+[ALL NOM 2.13.esp
+     Morrowind Comes Alive.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA Salusa Staves Addon [Marbred]
@@ -11712,9 +11719,18 @@ mca_5.2_vivec_redux.esp
 ;; @MCA Wizard Hats Addon [Marbred]
 
 [Requires]
- Marbred's "MCA 5.1 Wizard Hats Addon" requires both version 5.1 of Neoptolemus' "Morrowind Comes Alive"
- If you wish to use it with version 5.2 of "Morrowind Comes Alive" then you need to remove the '_MCA_illusionist_alt_m' NPC record from Marbred's mod.
- If you wish to use it with The Undead-compatible version of MCA v5.2 then as well you will need to remove the following NPC records: '_MCA_BM_skel_shaman', '_MCA_dremora_battlemage', '_MCA_phan_mage', '_MCA_phan_sorceror', '_MCA_skel_mage', '_MCA_skel_sorceror', '_MCA_zombie_mage01' and '_MCA_zombie_mage02'
+ Marbred's "MCA 5.1 Wizard Hats Addon" requires version 5.1 of Neoptolemus' "Morrowind Comes Alive"
+ If you wish to use it with version 5.2 of "Morrowind Comes Alive" then you need to remove this NPC record from Marbred's mod:
+   _MCA_illusionist_alt_m
+ If you wish to use it with The Undead-compatible version of MCA v5.2 then as well you will need to remove the following NPC records:
+   _MCA_BM_skel_shaman
+   _MCA_dremora_battlemage
+   _MCA_phan_mage
+   _MCA_phan_sorceror
+   _MCA_skel_mage
+   _MCA_skel_sorceror
+   _MCA_zombie_mage01
+   _MCA_zombie_mage02'
  (Ref: MCA51WizHatsAddon.zip\Readme - MCA Wizard Hats Addon.txt)
 [SIZE 143700 MCA Wizard Hats Addon.esp]
 [SIZE 2458536 MCA.esm]
@@ -12770,6 +12786,7 @@ Wakim's Game Improvement 9.esp		     ;\
 Wakim's Game Improvements with No-glo v9.esp ; } these are actually mutally exclusive
 Balance - Magic Effects.esp		     ;/
 NEDE v1.2.esp
+NEDE WGI patch.esp
 
 [Patch]
  (Ref: "Readme New Elemental Damage Effects v1.2.txt")
