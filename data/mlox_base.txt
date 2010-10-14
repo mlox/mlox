@@ -19178,6 +19178,49 @@ wl_lodge_vi.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Water Level Fix [Taddeus]
+
+[Requires]
+ If you have Bloodmoon, but not Tribunal, you will want to activate both "Water Level Fix - MW.esp" and "Water Level Fix - BM.esp".
+ (Ref: "Water Level Fix/Readme.txt")
+Water Level Fix - BM.esp
+[ALL Morrowind.esm
+     Bloodmoon.esm
+     Water Level Fix - MW.esp]
+
+[Requires]
+ If you have Tribunal, but not Bloddmoon, you will want to activate both "Water Level Fix - MW.esp" and "Water Level Fix - TB.esp".
+ (Ref: "Water Level Fix/Readme.txt")
+Water Level Fix - TB.esp
+[ALL Morrowind.esm
+     Tribunal.esm
+     Water Level Fix - MW.esp]
+
+[Requires]
+ (Ref: "Water Level Fix/Readme.txt")
+Water Level Fix - Full.esp
+[ALL Morrowind.esm
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ If you have both Tribunal and Bloodmoon expansions, you should just use "Water Level Fix - Full.esp".
+ (Ref: "Water Level Fix/Readme.txt")
+Water Level Fix - Full.esp
+[ANY Water Level Fix - MW.esp
+     Water Level Fix - TB.esp
+     Water Level Fix - BM.esp]
+
+[Conflict]
+ If you have both Tribunal and Bloodmoon expansions, you should just use "Water Level Fix - Full.esp".
+ (Ref: "Water Level Fix/Readme.txt")
+[ANY Water Level Fix - TB.esp
+     Water Level Fix - BM.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Water Life 1.17 [abot]
 
 [Note]
