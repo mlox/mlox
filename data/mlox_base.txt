@@ -15988,7 +15988,12 @@ Steel Broadsword Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Stinkers [grVulture]
+;; @Stinkers 1.71 (a/k/a The Bathing Mod) [grVulture]
+
+[Note]
+ ! The original Bathing Mod (Stinkers) by grVulture has been revised and updated to Version 2 by Gaius Atrius. You may want to upgrade:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
+[VER <2 Stinkers.esp]
 
 [Conflict]
  "In case you use the Provincial Bath Shoppe v.1 by Korana (with Stinkers), be sure to check *ALSO* Provincial_Bath_Shoppe_for_Stinkers.esp *INSTEAD* of the Provincial_Bath_Shoppe_v1.esp."
@@ -16047,7 +16052,7 @@ BE_Bathing_Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Stinkers and Bathers v2.0 [Gaius Atrius]
+;; @Stinkers 2.0 (a/k/a The Bathing Mod v2) [Gaius Atrius]
 
 [Conflict]
  The new Provincial Bath Shoppe plugin is meant as a replacement for the original Provincial Bath Shoppe plugin
@@ -16057,6 +16062,11 @@ BE_Bathing_Patch.esp
      Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp]
 Provincial_Bath _Shoppe_v1.esp
 
+[Conflict]
+ These two plugins are from two different versions of The Bathing Mod, and should not be used together. If you want to use version 2.0 of the mod by Gaius Atrius, you should remove the old "Provincial_Bath _Shoppe_for_Stinkers.esp" by grVulture.
+Provincial_Bath _Shoppe_for_Stinkers.esp
+Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp
+
 [Patch]
  The Ascadian Rose Cottage patch is to be used with BOTH the Ascadian Rose Cottage mod, and Stinkers v2
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
@@ -16065,7 +16075,12 @@ Stinkers v2 - Ascadian Rose Cottage Patch.esp
           StinkersBE.esp]
      Ascadian_Rose_Cottage_ver1.0.esp]
 
-;;Dragon32: Assume load order is the same as for grVulture's plugins
+[Conflict]
+ These two plugins are from two different versions of The Bathing Mod, and should not be used together. If you want to use version 2.0 of the mod by Gaius Atrius, you should remove the old "Ascadian_Rose_Cottage_ver1.0.esp" by grVulture.
+Ascadian_Rose_Cottage_ver1.0.esp
+Stinkers v2 - Ascadian Rose Cottage Patch.esp
+
+;; JMS - order confirmed by Gaius Atrius via PM
 [Order]
 Ascadian_Rose_Cottage_ver1.0.esp
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
@@ -16075,20 +16090,21 @@ StinkersBE.esp
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
 
 [Conflict]
- The alternative plugin, 'StinkersBE.esp' for users of Balmora Expansion, should be used INSTEAD of the original 'Stinkers.esp' plugin
+ When using Stinkers/The Bathing Mod V2 with Balmora Expansion, use "StinkersBE.esp" INSTEAD of "Stinkers.esp".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
-[ALL [VER >1.71 Stinkers.esp]
-     [ANY Balmora Expansion v1.4.esp
-          Balmora Expansion v1.4+(1.4).esp
-          Balmora Expansion - LITE 1.0.esp
-          BE+(1.4) Better Looking Morrowind.esp]]
+[VER >1.71 Stinkers.esp]
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp
+     StinkersBE.esp]
 
 [Conflict]
  Use only one plugin:
   StinkersBE.esp - If you have Balmora Expansion
   Stinkers.esp - If you do not have Balmora Expansion
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
-[VER >1.71 Stinkers.esp]
+Stinkers.esp
 StinkersBE.esp
 
 ;; (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
@@ -16101,14 +16117,15 @@ Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 StinkersBE - Fylberding Patch.esp
 
-[Requires]
- 'StinkersBE - Fylberding Patch.esp' enables Fylberding, from Balmora Expansion, to sell soaps as intended.
+[Patch]
+ When using the Bathing Mod V2 with Balmora Expansion, there is a small problem with Fylberding not selling his soaps, which is corrected by using "StinkersBE - Fylberding Patch.esp".
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
 StinkersBE - Fylberding Patch.esp
 [ALL StinkersBE.esp
      [ANY Balmora Expansion v1.4.esp
-          Balmora Expansion v1.4+(1.4).esp
-          Balmora Expansion - LITE 1.0.esp
-          BE+(1.4) Better Looking Morrowind.esp]]
+	  Balmora Expansion v1.4+(1.4).esp
+	  Balmora Expansion - LITE 1.0.esp
+	  BE+(1.4) Better Looking Morrowind.esp]]
 
 [Note]
  'Stinkers v2 - Modder's Resource.esp' should not be added into your game, it is for modders to add objects from "Stinkers and Bathers v2.0" to their mods and of itself adds nothing to the game world.
