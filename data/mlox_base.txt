@@ -8974,7 +8974,8 @@ Journey's End- Wilderness Mod add-on.esp
  (Ref: "JOURNEY'S END_1.1_README.txt")
 [ANY Jounrey's End- Alchemy add-on.esp
      Journey's End- Alchemy add-on.esp]
-Sris_Alchemy.esp
+Sris_Alchemy.esp			; from Sri's Homeopathic Alchemy (not Sri's Alchemy, Bloodmoon Edition).
+                                        ; JMS - TBD check to see if the bloodmoon edition also works.
 
 [Requires]
  "Requires the Wilderness Mod to run."
@@ -17644,57 +17645,80 @@ Uvirith Inside.esp
 
 ;;Old versions
 [Note]
- A new version of StuporStar's "Uvirith's Legacy" is available, you should upgrade.
+ A new version of StuporStar's "Uvirith's Legacy" is available, you should upgrade:
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
 [ANY Uvirith's Legacy_ALPHA1.08.esp
      Uvirith's Legacy_BETA1.09.esp
-     Uvirith's Legacy_ALPHA1.10.esp]
+     Uvirith's Legacy_BETA1.10.esp]
 
 ;;Add-ons
 ;;
 ;;Morrowind Script Extender
+[Requires]
+ Adds MWSE scripting to a few things already present in UL.
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_MWSE_patch.esp
+Uvirith's Legacy_Final_2.0.esp
+
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_MWSE_patch.esp
 
+[Requires]
+ Adds improved teleport scripting to Primus.
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_Primus_MWSE.esp
+Uvirith's Legacy_Final_2.0.esp
+
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_Primus_MWSE.esp
 
 ;;Rise of House Telvanni
 [Note]
- It is suggested you use "UL_RoHT_Compatibility_1.4.esp" when using both Stuporstar's "Uvirith's Legacy" and "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
- "Uvirith's Legacy"and "Rise of House Telvanni" are fully compatible as they stand, this patch is not required for compatibility. "Uvirith's Legacy" functions perfectly well with "Rise of House Telvanni" without it.
- (Ref: "Uvrith's Legacy_README.txt")
-[ALL Uvirith's Legacy_Final_2.0.esp
-     UL_RoHT_1.4_Compatibility.esp]
+ You may want to use the optional "UL_RoHT_Compatibility_1.4.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ (Ref: "Uvirith's Legacy_README.txt")
+[ALL [NOT UL_RoHT_Compatibility_1.4.esp]
+     Uvirith's Legacy_Final_2.0.esp
+     Rise of House Telvanni.esm]
+;[Note]
+; It is suggested you use "UL_RoHT_Compatibility_1.4.esp" when using both Stuporstar's "Uvirith's Legacy" and "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+; "Uvirith's Legacy"and "Rise of House Telvanni" are fully compatible as they stand, this patch is not required for compatibility. "Uvirith's Legacy" functions perfectly well with "Rise of House Telvanni" without it.
+; (Ref: "Uvirith's Legacy_README.txt")
+;[ALL Uvirith's Legacy_Final_2.0.esp
+;     UL_RoHT_1.4_Compatibility.esp]
 
 [Requires]
- The optional "UL_RoHT_Compatibility_1.4.esp" patch should only be used if you are also running v1.3 or later of "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
- (Ref: "Uvrith's Legacy_README.txt")
+ The optional "UL_RoHT_Compatibility_1.4.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, should only be used if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ (Ref: "Uvirith's Legacy_README.txt")
 UL_RoHT_1.4_Compatibility.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
      [VER >1.2 Rise of House Telvanni.esm]]
 
 [Note]
  ! This RoHT compatibility patch should no longer be used with version 2.0 of "Uvirith's Legacy". A new version of the patch is available for version 2.0 of "Uvirith's Legacy" and should be used instead.
- ! (Ref: "Uvrith's Legacy_README.txt")
+ ! (Ref: "Uvirith's Legacy_README.txt")
 [ALL [ANY UL_RoHT_Compatibility.esp
           UL_RoHT_Compatibility_1.3.esp]
      Uvirith's Legacy_Final_2.0.esp]
 
 ;;Chess Add-on
+[Requires]
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_chess_addon.esp
+Uvirith's Legacy_Final_2.0.esp
+
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_chess_addon.esp
 
 ;;Book Jackets
 [Requires]
  'Uvirith's Legacy Book Jackets Add-on.esp' requires either Daleth's "Book Jackets" or Nicholiathan's "Librarian" mods.
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 Uvirith's Legacy Book Jackets Add-on.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
@@ -17708,7 +17732,7 @@ Uvirith's Legacy Book Jackets Add-on.esp
 
 [Note]
  'Uvirith's Legacy Book Jackets Add-on.esp' is not required for compatibility, but it will make the sorter books look much better when using Daleth's "Book Jackets" (or Nicholiathan's "Librarian") with "Uvirith's Legacy".
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 [ALL Uvirith's Legacy_Final_2.0.esp
      [NOT Uvirith's Legacy Book Jackets Add-on.esp]
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
@@ -17721,7 +17745,7 @@ Uvirith's Legacy Book Jackets Add-on.esp
 		    Book Jackets - Bloodmoon.esp]]]]
 
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 Uvirith's Legacy Book Jackets Add-on.esp
 
@@ -17737,42 +17761,43 @@ Uvirith's Legacy Book Jackets Add-on.esp
 [Note]
  This patch is from an older version of Stuporstar's "Uvirith's Legacy". The new version of this patch is called 'UL_Srikandy_patch_BM.esp'.
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
+UL_Srikandy_patch_BM.esp
 UL_Srikandy_patch_2.1.esp
 
 [Requires]
- 'UL_Srikandy_patch_BM.esp' requires Srikandi's "Alchemy BM" and Stuporstar's "Uvirith's Legacy".
- (Ref: "Uvrith's Legacy_README.txt")
-UL_Srikandy_patch_BM.esp
+ Use "UL_Srikandy_patch.esp" when using Sri's Alchemy BM with Uvirith's Legacy. This plug-in adds all the SA ingredients to the main sorting table.
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_Srikandy_patch.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
      Sris_Alchemy_BM.esp]
 
 [Note]
- 'UL_Srikandy_patch_BM.esp' is not required for compatibility, but adds all the Srikandi's "Alchemy BM" ingredients to Tel Uvirith's Secret Lab and Storage Room.
- (Ref: "Uvrith's Legacy_README.txt")
-[ALL Uvirith's Legacy_Final_2.0.esp
-     [NOT UL_Srikandy_patch_BM.esp]
+ 'UL_Srikandy_patch.esp' is not required for compatibility, but adds all the Srikandi's "Alchemy BM" ingredients to Tel Uvirith's Secret Lab and Storage Room.
+ (Ref: "Uvirith's Legacy_README.txt")
+[ALL [NOT UL_Srikandy_patch.esp]
+     Uvirith's Legacy_Final_2.0.esp
      Sris_Alchemy_BM.esp]
 
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_Srikandy_patch_BM.esp
 
 [Order]
 Sris_Alchemy_BM.esp
-UL_Srikandy_patch_BM.esp
+UL_Srikandy_patch.esp
 
 ;;The Lighting Mod
-[Note]
- Use 'UL_TLM_ambiance.esp' when using Sensei's "The Lighing Mod" with "Uvirith's Legacy", otherwise the light in interiors will be very bright.
- (Ref: "Uvrith's Legacy_README.txt")
+[Patch]
+ Use "UL_TLM_ambiance.esp" when using The Lighing Mod with Uvirith's Legacy, otherwise the light in interiors will be very bright.
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_TLM_ambiance.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
-     [NOT UL_TLM_ambiance.esp]
      [ANY TLM - Ambient Light + Fog Update.esp
           TLM - Complete.esp]]
 
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_TLM_ambiance.esp
 
@@ -17790,54 +17815,60 @@ TLM - Ambient Light + Fog Update.esp
 ;;Children of Morrowind
 [Requires]
  'Uvirith's Legacy CoM Add-on.esp' turns apprentice Gavyn and servant Meiree from Stuporstar's "Uvirith's Legacy" into teenagers using Emma's "Children of Morrowind" mod.
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 Uvirith's Legacy CoM Add-on.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
      MW_Children_1_0.esm]
 
 [Note]
  As you use Emma's "Children of Morrowind" mod it's suggested you use the 'Uvirith's Legacy CoM Add-on.esp' add-on that turns apprentice Gavyn and servant Meiree into teenagers.
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 [ALL Uvirith's Legacy_Final_2.0.esp
      [NOT Uvirith's Legacy CoM Add-on.esp]
      MW_Children_1_0.esm]
 
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 Uvirith's Legacy CoM Add-on.esp
 
 ;;Ash Armor Divine Domina
 [Requires]
  This add-on for Stuporstar's "Uvirith's Legacy" will suit up the female version of Ash-Kosh with armor from Jeremy McGuinn's "Divine Domina" series.
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 UL_AshArmor_DivineDomina.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
      Divine_domina_part_1.esp]
 
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_AshArmor_DivineDomina.esp
 
 ;;Ash Armor Plankye
+[Requires]
+ "UL_AshArmor_Plankye.esp" will suit up the female version of Ash-Kosh with Plankye's female daedric cuirass for Uvirith's Legacy Final 2.0.
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_AshArmor_Plankye.esp
+Uvirith's Legacy_Final_2.0.esp
+
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 UL_AshArmor_Plankye.esp
 
 ;;Compatibility
 ;;
 ;; LGNPC Tel Uvirith
-; Dragon32: See "Uvrith's Legacy_README.txt", refers to being compatible with v1.20 of "Less Generic NPCs (LGNPC) Tel Uvirith"
+; Dragon32: See "Uvirith's Legacy_README.txt", refers to being compatible with v1.20 of "Less Generic NPCs (LGNPC) Tel Uvirith"
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 LGNPC_TelUvirith_v?_??.esp
 Uvirith's Legacy_Final_2.0.esp
 
 [Conflict]
  You should use the standard "LGNPC Tel Uvirith" mod with Stuporstar's "Uvirith's Legacy" rather than the Uvirith Inside version of "LGNPC Tel Uvirith"
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 Uvirith's Legacy_Final_2.0.esp
 LGNPC_TelUvirith_UI_v?_??.esp
 
@@ -17845,46 +17876,46 @@ LGNPC_TelUvirith_UI_v?_??.esp
 [Conflict]
  Stuporstar's "Uvirith's Legacy" and Acheron's "Building Up Uvirith's Grave" are not compatible as they both make changes to Tel Uvirith.
  You should consider using Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" that replaces the old "Building Up Uvirith's Grave" with a new "Uvirith's Legacy"-compatible one
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 Uvirith's Legacy_Final_2.0.esp
 Building Up Uvirith's Grave 1.1.esp
 
 ;; Uvirith Inside
 [Conflict]
  Stuporstar's "Uvirith's Legacy" is not compatible with The DopeHatMan's "Uvirith Inside", as it has been derived from that mod and does many of the same things.
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 Uvirith's Legacy_Final_2.0.esp
 Uvirith Inside.esp
 
 ;;Necessities of Morrowind
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 NOM 2.13.esp
 UL_NoM2.13_backwardscompat.esp
 
 [Order]
-; Ref: "Uvrith's Legacy_README.txt"
+; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_Final_2.0.esp
 NOM 3.0.esp
 
 [Requires]
  "Uvirith's Legacy" includes resources from Taddeus' "Necessities of Morrowind" v3.0, the 'UL_NoM2.13_backwardscompat.esp' compatibility patch adds the old "Necessities of Morrowind" scripts to these new "Necessities of Morrowind" resources.
- (Ref: "Uvrith's Legacy_README.txt")
+ (Ref: "Uvirith's Legacy_README.txt")
 UL_NoM2.13_backwardscompat.esp
 [ALL NOM 2.13.esp
      Uvirith's Legacy_Final_2.0.esp]
 
 ;;The Bathing Mod 2
 [Order]
-; "Uvrith's Legacy_README.txt" - "Bathing Mod compatible objects have been added to all bathing areas of the tower"
+; "Uvirith's Legacy_README.txt" - "Bathing Mod compatible objects have been added to all bathing areas of the tower"
 ; So, load the mod that defines those objects before the mod that uses them.
 Stinkers.esp
 Uvirith's Legacy_Final_2.0.esp
 
 ;;Vampire Embrace
 [Order]
-; "Uvrith's Legacy_README.txt" - "The apprentice [and the tower staff are] fully VE compatible"
+; "Uvirith's Legacy_README.txt" - "The apprentice [and the tower staff are] fully VE compatible"
 ; So, load the mod that defines those objects before the mod that uses them.
 Vampire_Embrace.esp
 Uvirith's Legacy_Final_2.0.esp
@@ -17899,7 +17930,7 @@ Uvirith's Legacy_Final_2.0.esp
 ;; Name of Ostar's mod "Oblivion and LGNPC Books", Oblivion_and_LGNPC_Books.esp
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1037470&view=findpost&p=15186646
 ;; [Requires]
-;;  (Ref: "Uvrith's Legacy_beta_README.txt")
+;;  (Ref: "Uvirith's Legacy_beta_README.txt")
 ;; UL_Obliv&LGNPC_Booksorter.esp
 ;; Uvirith's Legacy_BETA1.09.esp
 ;;
@@ -17918,7 +17949,7 @@ Uvirith's Legacy_Final_2.0.esp
 ;;
 ;; [Note]
 ;;  ! This RoHT compatibility patch is no longer needed with beta 1.09 of "Uvirith's Legacy". A new version of the patch is available for beta 1.10 of "Uvirith's Legacy" and should be used instead.
-;;  ! (Ref: "Uvrith's Legacy_beta_README.txt")
+;;  ! (Ref: "Uvirith's Legacy_beta_README.txt")
 ;; [ALL UL_RoHT_Compatibility.esp
 ;;      [ANY Uvirith's Legacy_BETA1.10.esp
 ;;           Uvirith's Legacy_BETA1.09.esp]]
