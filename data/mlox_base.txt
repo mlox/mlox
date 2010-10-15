@@ -69,12 +69,12 @@
 Morrowind.esm
 
 [NearEnd]
+multipatch.esp
 Mashed Lists.esp
 fogpatch.esp
 Merged_Leveled_Lists.esp
 Merged_Objects.esp
 Merged_Dialogs.esp
-multipatch.esp
 Piratelords Trade Enhancements.esp
 NOM 2.12.esp
 NOM 2.13.esp
@@ -492,6 +492,7 @@ Tribunal.esm
 Acheron's Camping Gear 2.esp
 ACG2 NOM Compatible.esp
 
+;; JMS - this rule looks redundant, considering the Patch rule for this plugin, and that the Bethesda masters should be listed as dependencies in the plugin header.
 [Requires]
  (Ref: "ACG2 NOM Compatible.txt")
 ACG2 NOM Compatible.esp
@@ -5399,7 +5400,8 @@ DreamersAwakenedv1.0.esp
  This plugin is not compatible with NOM.
  (Ref: "Drinking Water Readme.txt")
 Drinking Water.esp
-NOM 2.13.esp
+[ANY NoM 3.0.esp
+     NOM 2.13.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6343,10 +6345,11 @@ Fire_Hurt_Tribunal.esp
      Fire_Hurt_bloodmoon.esp
      Fire_Hurt_morrowind.esp
      Fire_Hurt_Tribunal.esp]
-[ANY NOM 2.13.esp
-     Necessities of Morrowind 2.0.esp
+[ANY Necessities of Morrowind 2.0.esp
      Necessities of Morrowind 2.1.esp
-     NOM 2.12.esp]
+     NOM 2.12.esp
+     NOM 2.13.esp
+     NoM 3.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7791,7 +7794,8 @@ morrowind4fishBETA.esm
 
 [Note]
  ! JOG provides an update (havish_scimitar_gcd_update.rar) for Havish that includes a better compatibility fix for GCD than GCD_Havish_patch.esp:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=706
+
+! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=706
 GCD_Havish_patch.esp
 
 [Conflict]
@@ -19179,6 +19183,14 @@ wl_lodge_vi.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Water Level Fix [Taddeus]
+
+; Water Level Fix should come last in load order so we put it after multipatch, which is [Nearend]
+[Order]
+multipatch.esp
+Water Level Fix - Full.esp
+Water Level Fix - MW.esp
+Water Level Fix - TB.esp
+Water Level Fix - BM.esp
 
 [Requires]
  If you have Bloodmoon, but not Tribunal, you will want to activate both "Water Level Fix - MW.esp" and "Water Level Fix - BM.esp".
