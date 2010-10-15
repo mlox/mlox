@@ -6574,6 +6574,12 @@ GCD_107x_to_108_patch_MwOnly.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+[Conflict]
+ Posted by Galsiah at the Bethsoft forums: 'By the way, you don't need "State-Based Hit Points" if you're using GCD. GCD already adjusts health (or will when it's working ), so having SBHP do it too is asking for trouble.'
+ (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
+StateBasedHitPointsv1.1.esp
+Galsiahs Character Development.esp
+
 ;; "GCD settings fairly easy" ... "Do not use this with the hard settings esp"
 [Conflict]
  Only use one of the GCD Settings files.
@@ -14319,9 +14325,9 @@ Redesigned Vivec MCA Changes.esp
 [Conflict]
  The standard version of Grumblepunk's "House of Mannequins" is not compatible with Piratelord's "Redesigned Vivec", Piratelord has released a replacement plugin.
  (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
-[ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
-     [SIZE 457977 House of Mannequins v1.0.esp]]
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+[SIZE 457977 House of Mannequins v1.0.esp]
 
 [Order]
 Redesigned Vivec.esp
@@ -14330,11 +14336,11 @@ House of Mannequins v1.0.esp
 [Conflict]
  Piratelord has released a "Redesigned Vivec"-compatible version of the "Area Effect Arrows" plugin by Bethesda. You should use this plugin instead.
  (Ref: http://www.pirates.retreat.btinternet.co.uk/Vivec.htm )
-[ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
-     [ANY AreaEffectArrows XB Edition.esp
-          Area Effect Arrows.esp
-          [SIZE !30094 AreaEffectArrows.esp]]]
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
+[ANY AreaEffectArrows XB Edition.esp
+     Area Effect Arrows.esp
+     [SIZE !30094 AreaEffectArrows.esp]]
 
 [Order]
 Redesigned Vivec.esp
@@ -14349,11 +14355,11 @@ Area Effect Arrows.esp
  (Ref: "Redesigned Vivec_Children of Morrowind_Morrowind Comes Alive Readme.txt"
        "Redesigned Vivec - MCA patch readme.txt"
        "Redesigned Vivec_Children of Morrowind Readme.txt")
-[ALL [ANY Redesigned Vivec.esp
-          PW_Redesigned Vivec-Vivec_Expansion.esp]
-     [ANY Clean Redesigned Vivec - COM patch.esp
-          Clean Redesigned Vivec - com_mca patch.esp
-          Clean Redesigned Vivec - MCA patch.esp]]
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp]
+[ANY Clean Redesigned Vivec - COM patch.esp
+     Clean Redesigned Vivec - com_mca patch.esp
+     Clean Redesigned Vivec - MCA patch.esp]
 
 [Conflict]
  Use only one of these patches, depending on whether you have Emma's "Children of Morrowind", Neoptolemus' "Morrowind Comes Alive" or both installed.
@@ -14386,6 +14392,11 @@ Clean Redesigned Vivec - COM patch.esp
      Tribunal.esm
      Morrowind.esm
      [SIZE 1683326 MW_Children_1_0.esm]]
+
+[Conflict]
+ Use only one of these patches. They both move NPCs added by COM in a way that is compatible with Redesigned Vivec.
+Clean Redesigned Vivec - COM patch.esp
+Redesigned Vivec CoM Changes.esp
 
 [Requires]
  Jac's "Redesigned Vivec/Children of Morrowind & Morrowind Comes Alive Patch" requires both expansions, v5.2 of Neoptolemus's "Morrowind Comes Alive" and v2.0 of Emma's "Children of Morrowind"
@@ -16250,6 +16261,12 @@ Suran-Waterfront-v-4.4.esp
 ;NoM 2.12-03a with BEER!.esp
 ;NOM 2.13.esp
 ;Suran_Underworld_2.5.esp
+
+; reported by CoolShady, Tyraa Rane offered an unpublished patch, apparently by Korana.
+[Conflict]
+ It has been reported that Suran Underworld and Solstheim Castle make conflicting changes to the docks at Fort Frostmoth.
+Clean Solstheim_Castle_v1.1.esp
+Suran_Underworld_2.5.esp
 
 [Conflict]
  Suran Underworld places its Abandoned House in the same spot as Suran Archery Store.
