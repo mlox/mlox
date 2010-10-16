@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.57"
+Version = "0.58"
 
 import locale
 import os
@@ -53,6 +53,7 @@ if __name__ == "__main__":
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
 # re_rule matches the start of a rule.
+# TBD: check end-bracket pattern
 re_rule = re.compile(r'^\[(version|order|nearend|nearstart|conflict|note|patch|requires)((?:\s+.[^\]]*)?)\](.*)$', re.IGNORECASE)
 re_base_version = re.compile(r'^\[version\s+([^\]]*)\]', re.IGNORECASE)
 # line for multiline messages
@@ -64,11 +65,9 @@ re_gamefile = re.compile(r'GameFile\d+=([^\r\n]*)', re.IGNORECASE)
 # and remove that if present on all lines.
 re_sloppy_plugin = re.compile(r'^(?:(?:DBG:\s+)?[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
-# TBD: allow brackets in filenames (oops)
 re_plugin = re.compile(r'^(\S.*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
 # (we allow '*' and '?' for filename matching).
-# TBD: allow brackets in filenames (oops)
 re_plugin_illegal = re.compile(r'[\"\\/=+<>:;|\^]')
 # metacharacters for filename expansion
 re_plugin_meta = re.compile(r'([*?])')
@@ -79,7 +78,7 @@ re_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER|SIZE)\s*', re.IGNORECASE)
 re_end_fun = re.compile(r'^\]\s*')
 re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s+([^\]]+)\]', re.IGNORECASE)
 # for parsing a size predicate
-re_size_fun = re.compile(r'\[SIZE\s*(!?)(\d+)\s+([^\]]+)\]', re.IGNORECASE)
+re_size_fun = re.compile(r'\[SIZE\s*(!?)(\d+)\s+(\S.*?\.es[mp]\b)\s*\]', re.IGNORECASE)
 # for parsing a version number
 ver_delim = r'[_.-]'
 re_ver_delim = re.compile(ver_delim)
