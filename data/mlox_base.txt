@@ -12963,6 +12963,14 @@ Creatures.esp
 NoM_Creatures Loot PHW.esp
 NoM_Creatures Loot Standard.esp
 
+;;Dragon32: Load 'NoM_Creatures Loot PHW.esp' after the various mods that make animals passive
+[Order]
+animalbehave.esp
+Passive_Healthy_Wildlife.esp
+Passive Wildlife Vvardenfell.esp
+Rational Wildlife.esp
+NoM_Creatures Loot PHW.esp
+
 [Patch]
  "NoM_BF Compatibility Patch.esp" provides compatibility for NoM 3.0 and Barabus' Fireplaces 2.
  (Ref: "Readme NoM 3.0.html")
@@ -12988,11 +12996,15 @@ NoM_CoM Compatibility Patch.esp
  (Ref: "Readme NoM 3.0.html")
 NoM_IO Compatibility Patch.esp
 [ALL NoM 3.0.esp
-     Illuminated Order v1.0.esp]
+     [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+          Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
 ; (Ref: "Readme NoM 3.0.html")
 [Order]
 Illuminated Order v1.0.esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 NoM 3.0.esp
 NoM_IO Compatibility Patch.esp
 
