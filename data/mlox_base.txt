@@ -2963,6 +2963,9 @@ NoM 2.12-03a with BEER!.esp
 ;; IndyBank must be loaded before Balmora Expansion and after Beer!
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [Order]
+;; IndyBank must be loaded before Balmora Expansion and after Beer!
+;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+[Order]
 BEER! Combo v1.12-03a (PR esm v2.4fix).esp
 BEER! Combo v1.12-03a (PR esp v2.4fix).esp
 BEER! Combo v1.12-03a.esp
@@ -2974,6 +2977,9 @@ NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
 NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
 Indybank.esp
+Indybank-NoHouses.esp
+IndybankWC.esp
+WalledCity_IndyBank.esp
 Balmora Expansion V1.4.esp
 Balmora Expansion v1.4+(1.4).esp
 Balmora Expansion - LITE 1.0.esp
@@ -3640,6 +3646,27 @@ Blood and Gore Wilderness add-on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloodlines [Carnithus]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+
+[Requires]
+ Bloodlines requires Bloodmoon, Tribunal and Cortex's "Vampire Embrace" version 1.35 or above.
+ (Ref: BLOOD LINES READ ME!!!.txt)
+Blood Lines I_BloodMoon.esp
+[ALL [VER>1.34 Vampire_Embrace.esp]
+     Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ Bloodlines requires Tribunal and Cortex's "Vampire Embrace" version 1.3 or above.
+ (Ref: BLOOD LINES READ ME!!!.txt)
+Blood Lines I_Tribunal.esp
+[ALL [VER>1.29 Vampire_Embrace.esp]
+     Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @ Bloodmoon Extras - Fixed levelled lists v0.2 [Dragon32, TheOtherFelix]
 
 ;; Dragon32 - Information about TheOtherFelix's original mod's use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
@@ -4007,6 +4034,52 @@ Building Up Uvirith's Legacy1.0.ESP
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 30996 BuyFurniture.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Buyable Ghorak Manor [Monica21]
+
+[Requires]
+ (Ref: readme_BuyableGhorakManor_v3.1.rtf)
+[ANY BuyableGhorakManorM.esp
+     BuyableGhorakManorF.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Do not enable both versions of Buyable Ghorak Manor.
+  BuyableGhorakManorM.esp - for male characters
+  BuyableGhorakManorF.esp - for female characters
+ (Ref: readme_BuyableGhorakManor_v3.1.rtf)
+BuyableGhorakManorM.esp
+BuyableGhorakManorF.esp
+
+;; Ref: readme_BuyableGhorakManor_v3.1.rtf
+[Order]
+BuyableGhorakManorF.esp
+BuyableGhorakManorM.esp
+NOM 2.13.esp
+
+[Conflict]
+ The original fireplaces in Ghorak Manor were replaced with versions of Barabus’ and will remain if using Buyable Ghorak Manor. You can edit Barabus’ esp file, or use the disable and setdelete commands on the fireplaces.
+ (Ref: readme_BuyableGhorakManor_v3.1.rtf)
+[ANY BuyableGhorakManorM.esp
+     BuyableGhorakManorF.esp]
+Barabus' fireplaces 2.esp
+
+[Conflict]
+ An orc baby is added to the clan in Ghorak Manor, and the baby remains on the floor of the alchemy lab. You can use the disable and setdelete commands if you wish
+ (Ref: readme_BuyableGhorakManor_v3.1.rtf)
+[ANY BuyableGhorakManorM.esp
+     BuyableGhorakManorF.esp]
+MW_Children_1_0.esm
+
+[Conflict]
+ Statics from the window/corner pieces appear in the wrong parts of the house. In-game fix is to use the disable and setdelete commands on the statics.
+ (Ref: readme_BuyableGhorakManor_v3.1.rtf)
+[ANY BuyableGhorakManorM.esp
+     BuyableGhorakManorF.esp]
+Windows Glow.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5213,6 +5286,98 @@ FireHeaven Deora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Deylendor's VE MCA Patch [Deylendor]
+
+[Requires]
+ Deylendor's "VE MCA Patch" requires version 5.1 or 5.2 of Neoptolemus' "Morrowind Comes Alive" and version 2.4 of Cortex's "Vampire Embrace".
+ (Ref: Deylendor's VE MCA Patch - Readme.txt)
+Vampire Embrace MCA Patch.esp
+[ALL [VER>2.39 Vampire_Embrace.esp]
+     [ANY [SIZE 2458536 MCA.ESM]
+          [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]]
+
+;;Dragon32: Looks like scripts refer to some VE objects, also plugin date is in August 2017
+[Order]
+Vampire Embrace.esp
+Vampire Embrace MCA Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Diablerie [AlienSlof & Peter]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+
+[Requires]
+ "Diablerie" requires Cortex's "Vampire Embrace" version 2.4 and Zennorious' "Vampiric Hunger III" 1.1 or 1.2
+ (Ref: Diablerie_Readme.txt)
+Diablerie.esp
+[ALL [VER>2.39 Vampire_Embrace.esp]
+     [VER>1.0 Vampiric Hunger Base.esp]
+     Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ Some features of "Diablerie" have been added into AlienSlof & Peter's "Scent of Blood" version 1.2, ensure you have the correct version.
+ (Ref: Diablerie_Readme.txt)
+[ALL Diablerie.esp
+     [NOT [VER<1.2 ScentOfBlood.esp]
+          [VER<1.2 ScentOfBlood_MCA.esp]
+          [VER<1.2 ScentOfBlood_MCA_VR.esp]
+          [VER<1.2 ScentOfBlood_MWSE_AddOn.esp]
+          [VER<1.2 ScentOfBlood_VR.esp]]]
+
+[Requires]
+ The optional MWSE-Addon requires the main "Diablerie" mod and will adjust the levels of the three clan leaders to scale with the levels of the ancients from Vampire Realism.
+ (Ref: Diablerie_Readme.txt)
+Diablerie_MWSE_AddOn.esp
+Diablerie.esp
+
+;;Dragon32: Diablerie should load after GCD 1.07 or 1.08. Not clear whether should load after *all* the GCD mods or just the main ESP. Played safe and duplicated the GCD load order here. Looks like Diablerie contains a number of Globals from GCD.
+;;(Ref: Diablerie_Readme.txt)
+[Order]
+Galsiahs Character Development.esp
+GCD StartScript for Trib or Bloodmoon.esp
+GCD better balanced birthsigns.esp
+GCD Over 60 level speedup.esp
+GCD Restore Potions Fix.esp
+GCD settings fairly easy.esp
+GCD settings hard.esp
+GCD - Cult of the Clouds patch.esp
+GCD_Havish_patch.esp
+GCD_SS_patch.esp
+GCD TEO compatibility patch.esp
+GCD_VH_patch2.esp
+CharGen Revamped delay2.esp
+Brittlewind fix.esp
+GCD_WE_patch.esp
+GCD_107x_to_108_patch.esp
+GCD_107x_to_108_patch_MwOnly.esp
+Diablerie.esp
+
+[Order]
+Diablerie.esp
+ScentOfBlood.esp
+
+[Order]
+Diablerie.esp
+ScentOfBlood_VR.esp
+
+[Order]
+Diablerie.esp
+ScentOfBlood_MCA.esp
+
+;;Dragon32 - This is in "@Vampire Load Order - based on Yacoby's web page"
+;;[Order]
+;;Diablerie.esp
+;;ScentOfBlood_MCA_VR.esp
+
+[Order]
+Diablerie.esp
+ScentOfBlood_MCA_VR_NoStake.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dinky Monsta  [Tom Hackett aka FoRx]
 
 [Note]
@@ -5542,6 +5707,26 @@ Dwarves! MCA addon v2.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Clock [Smileyz, TheLys, Kir]
+
+[Note]
+ ! As you do not use McAsmod's "Werewolves" you should consider switching to Kir's version of the Dwemer Clock
+ ! (Ref: Dwemer Clock 1.2.txt)
+ ! http://www.tesnexus.com/downloads/file.php?id=14889
+[ALL [ANY [SIZE 4315 DwemerClock.esp]
+          Dwemer Clock v12.esp]
+     [NOT Werewolves.esp]]
+
+[Note]
+ ! As you do use McAsmod's "Werewolves" you should consider switching to TheLys' version of the Dwemer Clock
+ ! (Ref: Dwemer Clock 1.2.txt; readme_dwemerclock_TheLys.txt)
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1536
+[ALL [ANY [SIZE 4315 DwemerClock.esp]
+          [SIZE 23039 DwemerClock.esp]]
+     Werewolves.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dwemer Coin Gun 4.3 [DoubleBrewski]
 
 [Requires]
@@ -5697,6 +5882,29 @@ pcc_knaarus_02.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 7401 Ebonite Race.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Economy Adjuster [HotFusion]
+
+[Conflict]
+ If you use 'EcoAdj(Sri+Ingredients).esp', use it instead of EcoAdjIngredients and Srikandi's mod. It should replace them both.
+ (Ref: EcoAdj(Sri+Ingredients)Readme.txt)
+EcoAdj(Sri+Ingredients).esp
+[ANY EcoAdj Ingredients.esp
+     Sris_Alchemy_BM.esp]
+
+[Requires]
+ You are missing "Sri Alchemy BM List Patch". 'EcoAdj(Sri+Ingredients).esp' includes Srikandi's Alchemy mod which uses deprecated AddToLev* functions to modify Bethsoft leveled lists.
+ For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ Some patches may be available at that link.
+EcoAdj(Sri+Ingredients).esp
+Sri Alchemy BM List Patch.esp
+
+;;Dragon32: Load Wrye's patch after the mod including Srikandi's alchemy
+[Order]
+EcoAdj(Sri+Ingredients).esp
+Sri Alchemy BM List Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6583,7 +6791,8 @@ GCD_107x_to_108_patch_MwOnly.esp
 [Conflict]
  Posted by Galsiah at the Bethsoft forums: 'By the way, you don't need "State-Based Hit Points" if you're using GCD. GCD already adjusts health (or will when it's working ), so having SBHP do it too is asking for trouble.'
  (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
-StateBasedHitPointsv1.1.esp
+[ANY StateBasedHitPointsv1.1.esp
+     StateBasedHitPoints1.0.esp]
 Galsiahs Character Development.esp
 
 ;; "GCD settings fairly easy" ... "Do not use this with the hard settings esp"
@@ -7550,6 +7759,33 @@ GH_Extra_ES1.3 Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism TR [Spiffyman]
+
+[Requires]
+ Spiffyman's "Graphic Herbalism TR" requires ManaUser's "Graphic Herbalism" and "Tamriel Rebuilt" Maps 1 and 2
+ (Ref: Graphic Herbalism TR Readme.txt)
+Graphic Herbalism TR.esp
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm
+     Graphic Herbalism.esp]
+
+[Requires]
+ Spiffyman's  'Graphic Herbalism TR Extra.esp' requires both his original 'Graphic Herbalism TR.ESP' and ManaUser's 'Graphic Herbalism Extra.esp'
+ (Ref: Graphic Herbalism TR Readme.txt)
+Graphic Herbalism TR Extra.esp
+[ALL Graphic Herbalism TR.esp
+     Graphic Herbalism Extra.esp]
+
+;; Load my "Graphic Herbalism TR" mods after the non-TR versions
+[Order]
+Graphic Herbalism.esp
+Graphic Herbalism Extra.esp
+Graphic Herbalism TR.esp
+Graphic Herbalism TR Extra.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Great House Dagoth [The Mad God]
 
 [Patch]
@@ -8052,6 +8288,16 @@ Bloated Morrowind.esp
 [ANY Syc_HerbalismforPurists.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 Flora Glow 1.0.esp
+
+[Note]
+ !! "Herbalism for Purists" has an error in its Kollop script. To fix it open the script editor and edit the 'syc_HFP_kollop_01' script.
+ !! Change the line:
+ !!   Player->additem "random_pearl", 1
+ !! To:
+ !!   Player->additem "ingred_pearl_01", 1
+ !! Alternatively, BTB has released a version of "Herbalism for Purists" that removes all changes to kollups:
+ !! http://btb2.free.fr/morrowind.html
+[SIZE 77593 Syc_HerbalismforPurists.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9132,6 +9378,27 @@ Kahleigh's Retreat v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Keening Reforged [Kiteflyer61 & Jac]
+
+[Conflict]
+ Choose only one plugin:
+  Keening_Reforged_v1.3.ESP - Suggested for purists, as the weapons in 2.0 stetch lore
+  Keening_Reforged_v2.0.ESP - Allows Keening to be reforged into one of six other weapon types
+  Keening_Reforged_v2.0_GDR.ESP - For players of Darknut's Greater Dwemer Ruins vol I
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8474 )
+Keening_Reforged_v2.0_GDR.ESP
+Keening_Reforged_v1.3.ESP
+Keening_Reforged_v2.0.ESP
+
+[Requires]
+ 'Keening_Reforged_v2.0_GDR.ESP' is for players of Darknut's Greater Dwemer Ruins vol I 
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8474 )
+Keening_Reforged_v2.0_GDR.ESP
+[ANY DN-GDRv1_NOM.esp
+     DN-GDRv1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Keening Replacer 1.1 [lochnarus]
 
 [Note]
@@ -9590,7 +9857,10 @@ Blood and Gore Wilderness add-on.esp
 Blood and Gore patch for GIANTS Trib.esp
 Tribun_Laura_3_0.esp
 
-;;Dragon32 - According to readme Laura should load after Giants by The Pumaman too. Giants is an ESM so should load first anyway. No load order rule created.
+;;Dragon32 - According to readme Laura should load after Giants by The Pumaman too. Giants is an ESM so should load first anyway. There is, though, this control file thingy so setting something up to load Laura afer that.
+[Order]
+GIANTS Ultimate Control file.esp
+Tribun_Laura_3_0.esp
 
 ;;Various addons for Laura Craft
 [Patch]
@@ -9678,20 +9948,31 @@ NPC LCV Locks.esp
 
 ;; I'd like to be able to test for MCA 4.1, but MCA.esm(at least 5.2)
 ;; does not contain a version string. - JMS
-[Note]
+;; Dragon32: MCA 4.* called "Morrowind Comes Alive.esm", MCA 5.* called "MCA.esm"
+[Requires]
  Wrye says: "You should only use it if you're using LCV schedules and MCA 4.1 (it does not work with the newer MCA 5.0, so far as I know.)"
  (Ref: http://wrye.ufrealms.net/LCV.html )
 LCV MCA 4.1 Patch.esp
-
-[Requires]
-LCV MCA 4.1 Patch.esp
-NPC LCV Schedules 03.esp
+[ALL NPC LCV Schedules 03.esp
+     Morrowind Comes Alive.esm]
 
 [Requires]
  This plugin uses a Startup script, so it requires at least one of the expansions.
 NPC LCV Schedules 03.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+;;LCV Wolverine Hall
+[Requires]
+ LCV Wolverine Hall requires that at least version 03-13 of LCV Schedules be active.
+ (Ref: LCV Wolverine Hall.html)
+[VER>03-12 NPC LCV Schedules 03.esp]
+LCV Wolverine Hall 01.esp
+
+;;Ref: LCV Wolverine Hall.html
+[Order]
+NPC LCV Schedules 03.esp
+LCV Wolverine Hall 01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10145,6 +10426,13 @@ Librarian with Jackets BM Trib.esp
      Book Jackets - Bloodmoon.esp
      Book Jackets - Tribunal - BookRotate.esp
      Book Jackets - Tribunal.esp]
+
+[Conflict]
+ The book rotate version of "Librarian" requires that 'Book Rotate - Tribunal v5.3.esp' and 'Book Rotate - Bloodmoon v5.3.esp' be unchecked.
+ (Ref: Librarian 104 readme.txt)
+Librarian with Jackets & Rotate BM Trib.esp
+[ANY Book Rotate - Tribunal v5.3.esp
+     Book Rotate - Bloodmoon v5.3.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11181,6 +11469,13 @@ Unarmored_Corrector_V01_TRIB.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA - Morrowind Comes Alive [Neoptolemus]
 
+;;Dragon32: MCA.ESM size and version
+;;[SIZE 2442550 Morrowind Comes Alive.esm] = MCA 4.1
+;;[SIZE 2303212 MCA.ESM] = MCA 5.0
+;;[SIZE 2458536 MCA.ESM] = MCA 5.1
+;;[SIZE 2707833 MCA.ESM] = MCA 5.2 basic
+;;[SIZE 2519851 MCA.ESM] = MCA 5.2 The Undead-compatible version
+
 [Note]
  ! "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you have not already done so, install "MCA 5.2 - The Undead 3.0 Compatible" from:
  ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354
@@ -12199,6 +12494,7 @@ bjam_at_MWSE_patch.esp
 Controlled Jumps.esp
 Decorator+.esp
 Decorator+ (Balanced).esp
+Diablerie_MWSE_AddOn.esp
 Enhanced Detection.esp
 Fliggerty's Fleeing Fetchers.esp
 GRM_Companion_Recall_Ring.esp
@@ -12214,6 +12510,9 @@ npce_mwse_patch.esp
 Oblivion-Style Spellcasting.esp
 Protective Guards.esp
 Raven Wings.esp
+ScentOfBlood_MWSE_AddOn.esp
+VampiricIllusion_MWSE_AddOn.esp
+ve_comp_control.esp
 
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.2a or later, or MGE v3.1 or later.
@@ -12232,6 +12531,7 @@ Visceral Discernment.esp
  These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
 Avenge Your Death!.esp
 Pursuit Enhanced.esp
+Werewolf ReEquip.esp
 
 ;;Dragon32: As I understand things MGE 3.5.6 added the functions from MWSE v0.9.4. *However* there remains one MWSE function that could not be implemented in MGE. At the time of writing there is only one mod that makes use of that function (MCA_Companions_Enhanced.esp). According to the MWSE v0.9.4a release notes "contains no new features over 0.9.4. However, one bug [...] has been fixed."
 [Note]
@@ -13666,7 +13966,34 @@ Pearls Enhanced - HFP patch v2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Peasant Gowns Replacer [Korana]
+
+[Requires]
+ 'PeasantGownsReplacerTRIB.esp' requires Morrowind and Tribunal. You WILL need to run both the replacer for Morrowind and the Tribunal esp in order for the Tribunal replacer addon to work correctly.
+ (Ref: Peasant Gowns Replacer READ-ME.txt)
+PeasantGownsReplacerTRIB.esp
+[ALL PeasantGownsReplacer.esp
+     Tribunal.esm]
+
+[Order]
+PeasantGownsReplacer.esp
+PeasantGownsReplacerTRIB.esp
+
+[Conflict]
+ 'PeasantGownsReplacer.esp' adds the shop to the game world. Please discontinue use of 'BB2_Peasant_Gowns.esp' and use 'PeasantGownsReplacer.esp' instead. Otherwise there are potential doubling issues.
+ (Ref: Peasant Gowns Replacer READ-ME.txt)
+PeasantGownsReplacer.esp
+BB2_Peasant_Gowns.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Pegas Horse Ranch [MADMAX and Team]
+
+[Note]
+ ! You have an old version and should upgrade.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2811
+[ANY [VER<3.1 Pegas Horse Ranch v?.?.esm]
+     [VER<3.1 Pegas Horse Ranch v?.?.esp]]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -14993,18 +15320,18 @@ The Sable Dragon.esp
 
 [Requires]
  (Ref: The Sable Dragon, Read Me.txt)
-The Sable Dragon1.5.esp
+The Sable Dragon 1.5.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
 
 ;;  (Ref: The Sable Dragon, Read Me.txt)
 [Order]
 Vality's Bitter Coast Addon.esp
-The Sable Dragon1.5.esp
+The Sable Dragon 1.5.esp
 
 ;;  (Ref: The Sable Dragon, Read Me.txt)
 [Order]
-The Sable Dragon1.5.esp
+The Sable Dragon 1.5.esp
 NOM 2.13.esp
 
 
@@ -15140,7 +15467,19 @@ SauronsAbode252.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Scent of Blood 1.1 [AlienSlof & Peter]
+;; @Scent of Blood 1.2 [AlienSlof & Peter]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+
+[Note]
+ ! The latest version of "Scent of Blood" is version 1.2, you should upgrade.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3624
+[ANY [VER<1.2 ScentOfBlood.esp]
+     [VER<1.2 ScentOfBlood_MCA.esp]
+     [VER<1.2 ScentOfBlood_MCA_VR.esp]
+     [VER<1.2 ScentOfBlood_MWSE_AddOn.esp]
+     [VER<1.2 ScentOfBlood_VR.esp]
+     ScentOfBlood_MCA_VR_NoStake.esp]
 
 [Conflict]
  Install ONLY ONE of these plugins depending on your mod setup:
@@ -15166,7 +15505,7 @@ ScentOfBlood_VR.esp
  (Ref: "ScentOfBlood_Readme.txt")
 [ANY ScentOfBlood.esp
      ScentOfBlood_VR.esp]
-MCA.esm
+Morrowind Comes Alive.esm
 
 [Conflict]
  "ScentOfBlood.esp" and "ScentOfBlood_MCA.esp" are not meant to be run if you have Vampire Realism. You should be using one of the VR compatible plugins of ScentOfBlood.
@@ -15176,12 +15515,12 @@ MCA.esm
 Vampire Realism II.esp
 
 [Conflict]
- These versions of ScentOfBlood require MCA, but you do not have MCA active!
+ These versions of "Scent of Blood" require version 4 of Neoptolemus' "Morrowind Comes Alive", but you do not have MCA active!
  (Ref: "ScentOfBlood_Readme.txt")
 [ANY ScentOfBlood_MCA.esp
      ScentOfBlood_MCA_VR.esp
      ScentOfBlood_MCA_VR_NoStake.esp]
-[NOT MCA.esm]
+[NOT Morrowind Comes Alive.esm]
 
 [Conflict]
  These versions of ScentOfBlood require Vampire Realism, but you do not have Vampire Realism active!
@@ -15192,10 +15531,10 @@ Vampire Realism II.esp
 [NOT Vampire Realism II.esp]
 
 [Conflict]
- You can remove the MCA-VR patch as it is included in "ScentOfBlood_MCA_VR.esp".
- (Ref: "ScentOfBlood_Readme.txt")
+ You can remove the "Morrowind Comes Alive Vampire Realism Patch" as it is included in 'ScentOfBlood_MCA_VR.esp'.
+ (Ref: ScentOfBlood_Readme.txt)
 ScentOfBlood_MCA_VR.esp
-MCA - Vampire Realism Patch.esp
+Morrowind Comes Alive Vampire Realism Patch.esp
 
 [Requires]
  (Ref: "ScentOfBlood_Readme.txt")
@@ -15215,6 +15554,97 @@ ScentOfBlood_MWSE_AddOn.esp
      ScentOfBlood_MWSE_AddOn.esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+;;Dragon32: Only 'ScentOfBlood_MCA_VR.esp' included in "@Vampire Load Order - based on Yacoby's web page"
+;;Duplicate that list's load order for the other "Scent of Blood" plugins
+[Order]
+Suran_Underworld_2.5.esp
+Scripted_Spells.esp
+Vampire_Embrace.esp
+Blood Lines I_BloodMoon.esp
+Blood Lines I_Tribunal.esp
+Vampire Realism II.esp
+Vampire Realism II - TB Add-On.esp
+Vampire Realism II - BM Add-On.esp
+Vampire Realism II - BL Patch.esp
+Vampire Realism II - VE Patch.esp
+Vampiric Hunger Base.esp
+Vampiric Hunger Extended.esp
+Vampiric Hunger - SU.esp
+Vampiric Hunger MGE Addon for MGE 1.11+.esp
+VampiricIllusion.esp
+VampiricIllusion_MWSE_AddOn.esp
+Diablerie.esp
+Diablerie_MWSE_AddOn.esp
+ScentOfBlood.esp
+ve_comp_control.esp
+vampiric_regeneration.esp
+vampiric_mist.esp
+
+[Order]
+Suran_Underworld_2.5.esp
+Scripted_Spells.esp
+Vampire_Embrace.esp
+Blood Lines I_BloodMoon.esp
+Blood Lines I_Tribunal.esp
+Vampire Realism II.esp
+Vampire Realism II - TB Add-On.esp
+Vampire Realism II - BM Add-On.esp
+Vampire Realism II - BL Patch.esp
+Vampire Realism II - VE Patch.esp
+Vampiric Hunger Base.esp
+Vampiric Hunger Extended.esp
+Vampiric Hunger - SU.esp
+Vampiric Hunger MGE Addon for MGE 1.11+.esp
+VampiricIllusion.esp
+VampiricIllusion_MWSE_AddOn.esp
+Diablerie.esp
+Diablerie_MWSE_AddOn.esp
+ScentOfBlood_MCA.esp
+ve_comp_control.esp
+vampiric_regeneration.esp
+vampiric_mist.esp
+
+[Order]
+Suran_Underworld_2.5.esp
+Scripted_Spells.esp
+Vampire_Embrace.esp
+Blood Lines I_BloodMoon.esp
+Blood Lines I_Tribunal.esp
+Vampire Realism II.esp
+Vampire Realism II - TB Add-On.esp
+Vampire Realism II - BM Add-On.esp
+Vampire Realism II - BL Patch.esp
+Vampire Realism II - VE Patch.esp
+Vampiric Hunger Base.esp
+Vampiric Hunger Extended.esp
+Vampiric Hunger - SU.esp
+Vampiric Hunger MGE Addon for MGE 1.11+.esp
+VampiricIllusion.esp
+VampiricIllusion_MWSE_AddOn.esp
+Diablerie.esp
+Diablerie_MWSE_AddOn.esp
+ScentOfBlood_VR.esp
+ve_comp_control.esp
+vampiric_regeneration.esp
+vampiric_mist.esp
+
+;;MWSE add-on ordering rules
+[Order]
+ScentOfBlood.esp
+ScentOfBlood_MWSE_AddOn.esp
+
+[Order]
+ScentOfBlood_MCA.esp
+ScentOfBlood_MWSE_AddOn.esp
+
+[Order]
+ScentOfBlood_MCA_VR.esp
+ScentOfBlood_MWSE_AddOn.esp
+
+[Order]
+ScentOfBlood_VR.esp
+ScentOfBlood_MWSE_AddOn.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16067,6 +16497,24 @@ SF NPC111 - Hilgya Exp1 Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Starfire over Telvannis [Blade117]
+
+[Requires]
+ "Starfire over Telvannis" requires Starfire's "NPC Additions" and "Tamriel Rebuilt" Maps 1 and 2
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8442 )
+Starfire Over Telvannis.esp
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm
+     Starfires NPC Additions ver-1.11.esp]
+
+;;Dragon32: Logical to load the addon after Starfire's main mod
+[Order]
+Starfires NPC Additions ver-1.11.esp
+Starfire Over Telvannis.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Star Wars Episode 1 The Darkness of Tamriel [The_Avenger]
 
 [Note]
@@ -16095,6 +16543,22 @@ Cali_StarstoneOutpost.esp
 [Order]
 Cali_StarstoneOutpost.esp
 StarstoneShields.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @State-Based HP Mod [Talrivian]
+
+[Conflict]
+ You don't need "State-Based Hit Points" if you are using "Galsiah's Character Development", it already adjusts health.
+ (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
+Talrivian's State-Based HP Mod v.2.2.esp
+Galsiahs Character Development.esp
+
+[Note]
+ ! Talrivian has released an updated verion of HotFusion4's "State-Based Hit Points":
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8626
+[ANY StateBasedHitPoints1.0.esp
+     StateBasedHitPointsv1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16862,6 +17326,20 @@ Ice_CNS_FemaleTelvanniRobeV2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Telvannis Comes Alive [Aeven]
+
+[Requires]
+ Aeven's "Telvannis Comes Alive" requires version 5.2 of Neoptolemus' "Morrowind Comes Alive" and "Tamriel Rebuilt" Maps 1 and 2 
+ (Ref: AEV_TCA.rar\Readme.txt)
+AEV_TCA.esp
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm
+     [ANY [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]] ; The Undead compatible version
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Temperature [zappara]
 
 [Requires]
@@ -16960,6 +17438,19 @@ BE+(1.4) Better Looking Morrowind.esp
 Balmora Expansion v1.4+(1.4).esp
 BE+(1.4) Better Looking Morrowind.esp
 BE-Callenwald.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Texture Fix - Tamriel Rebuilt [Slartibartfast]
+
+;;DRagon32: No dependencies in plugin header
+[Requires]
+ "Texture Fix - Tamriel Rebuilt" requires "Tamriel Rebuilt" maps 1 and 2
+ (Ref: Readme - Texture Fix- Tamriel Rebuilt.txt)
+Texture Fix -TR -1.0.esp
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17187,6 +17678,7 @@ TLM - AdjMod - Bank 2.2.esp
 Indybank.esp
 Indybank-NoHouses.esp
 IndybankWC.esp
+WalledCity_IndyBank.esp
 TLM - AdjMod - Bank 2.2.esp
 
 [Patch]
@@ -17276,10 +17768,13 @@ TIM_MW.esp
      TIM_MW_SirLuthor.esp]
 
 [Note]
- Ensure you have the meshes and/or textures from "JamesW's Lockpicks, Probes, and Repair Items Retex" or "Sir Luthor's Tools" installed.
- (Ref: readme_Tools Integrative Modifications.txt)
-[ANY TIM_MW_JamesW.esp
-     TIM_MW_SirLuthor.esp]
+ !! Ensure you have the meshes and/or textures from "JamesW's Lockpicks, Probes, and Repair Items Retex" or "Sir Luthor's Tools" installed.
+ !! (Ref: readme_Tools Integrative Modifications.txt)
+[ANY [ALL TIM_MW_JamesW.esp
+          [NOT SirLuthor-Tools.esp]]
+     [ALL TIM_MW_SirLuthor.esp
+          [NOT [ANY JamesW's Lockpicks And Probes Retextures.esp
+                    JamesW's Repairs Retex.esp]]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18923,36 +19418,6 @@ Grass Beta_Tamriel rebuilt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Vampire Embrace [Cortex]
-
-[Note]
- 'Vampire_Embrace_SaveGameUpdater.esp' should only be used when updating a savegame that used an old version of "Vampire Embrace". 
- (Ref: "Vampire_Embrace_SaveGameUpdater.txt")
-Vampire_Embrace_SaveGameUpdater.esp
-
-[Order]
-; Ref: Vampire_Embrace_Readme.TXT
-quarraclan.esp
-Vampire_Embrace.esp
-
-;;Dragon32: Couldn't find a compatibility patch in the version of Torgulf's I could download (1.2), from the mlox rules seems that there's a v1.21 (see entry) but no VE patch mentioned there
-[Conflict]
- Torgulf's "NPC Soultrapping" will not work with Cortex's "Vampire Embrace" without an, as yet unavailable, compatibility patch. 
- (Ref: Vampire_Embrace_Readme.TXT)
-Vampire_Embrace.esp
-[ANY Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
-     Torgulf's NPC Soultrapping 1.2 Bloodmoon.esp]
-
-[Conflict]
- "Vampire Embrace" is not compatible with "Nox Vampire" by S. Patrick Gallaty
- (Ref: Vampire_Embrace_Readme.TXT)
-Vampire_Embrace.esp
-nox_vamp_0.93b.esp
-
-;Dragon32: According to readme it's incompatible with "Vampire's Social Life" and "Vampire Birth Signs v0.001", can't find downloads
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Load Order - based on Yacoby's web page
 ;; (Ref: http://yacoby.silgrad.com/MW/Modlists/Loadorder.htm )
 
@@ -18982,12 +19447,59 @@ vampiric_mist.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampire Auto-Blood injector [Sladle]
+
+[Requires]
+ (Ref: Vampire Blood Injector Readme.txt)
+Vampire Auto-Blood Injector.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     Vampire_Embrace.esp
+     Vampiric Hunger Base.esp
+     Vampiric Hunger Extended.esp]
+
+;;Dragon32: Checked in TESPCD and this mod makes a number of changes to VH NPCs, misc items and a script.
+[Order]
+Vampiric Hunger Base.esp
+Vampire Auto-Blood Injector.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Embrace 2.4 [Cortex]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
 
 [Requires]
 Vampire_Embrace.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ 'Vampire_Embrace_SaveGameUpdater.esp' should only be used when updating a savegame that used an old version of "Vampire Embrace". 
+ (Ref: "Vampire_Embrace_SaveGameUpdater.txt")
+Vampire_Embrace_SaveGameUpdater.esp
+
+[Order]
+; Ref: Vampire_Embrace_Readme.TXT
+quarraclan.esp
+Vampire_Embrace.esp
+
+;;Dragon32: Couldn't find a compatibility patch in the version of Torgulf's I could download (1.2), from the mlox rules seems that there's a v1.21 (see entry) but no VE patch mentioned there
+[Conflict]
+ Torgulf's "NPC Soultrapping" will not work with Cortex's "Vampire Embrace" without an, as yet unavailable, compatibility patch. 
+ (Ref: Vampire_Embrace_Readme.TXT)
+Vampire_Embrace.esp
+[ANY Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
+     Torgulf's NPC Soultrapping 1.2 Bloodmoon.esp]
+
+[Conflict]
+ "Vampire Embrace" is not compatible with "Nox Vampire" by S. Patrick Gallaty
+ (Ref: Vampire_Embrace_Readme.TXT)
+Vampire_Embrace.esp
+nox_vamp_0.93b.esp
+
+;Dragon32: According to readme it's incompatible with "Vampire's Social Life" and "Vampire Birth Signs v0.001", can't find downloads
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18997,6 +19509,21 @@ Vampire_Embrace.esp
  (Ref: "ve_comp_control_readme.txt")
 ve_comp_control.esp
 Vampire_Embrace.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampire_Embrace-jms_combat_bite_patch (John Moonsugar)
+
+[Requires]
+ 'Vampire_Embrace-jms_combat_bite_patch.esp' modifies a couple of scripts from Cortex's "Vampire Embrace".
+ (Ref: Vampire_Embrace-jms_combat_bite_patch.txt)
+Vampire_Embrace-jms_combat_bite_patch.esp
+Vampire Embrace.esp
+
+;Ref: Vampire_Embrace-jms_combat_bite_patch.txt
+[Order]
+Vampire Embrace.esp
+Vampire_Embrace-jms_combat_bite_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19011,6 +19538,8 @@ Vampire Hider.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Realism II [Jaxalot]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
 
 ;; Vampire Realism II comes after "Blood Lines" and before
 ;; "Vampiric Hunger III"
@@ -19036,6 +19565,9 @@ Vampire Realism II.esp
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [Order]
 Indybank.esp
+Indybank-NoHouses.esp
+IndybankWC.esp
+WalledCity_IndyBank.esp
 Vampire Realism II.esp
 
 [Conflict]
@@ -19072,6 +19604,51 @@ Vampire Realism II - VE Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampire Realism II - VH Patch [Pwin]
+
+[Requires]
+ (Ref: Readme Vampire Realism II - VH Patch.txt)
+Vampire Realism II - VH Patch.esp
+[ALL Vampire Realism II.esp
+     Vampiric Hunger Base.esp]
+
+;;Dragon32: VR and VH order from "Vampire Load Order"
+[Order]
+Vampire Realism II.esp
+Vampiric Hunger Base.esp
+Vampire Realism II - VH Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampire Remove Sun Damage V1.7 [Pseudopath]
+
+;Dragon32: Has check for VH_Exist global ("When this variable is 1 then this mod is active" - developer notes, Readme_VH.htm) and sets other VH globals, so needs to load after VH.
+[Order]
+Vampiric Hunger Base.esp
+Vampire_Remove_Sun_Damage.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampire Upgrade [John W. Martin]
+
+[Conflict]
+ You don't need both of these files in your game
+ (Ref: vampire_upgrade1.2.zip\ReadMe.txt)
+Vamp_Upgrade_No_feeding.esp
+Vamp_Upgrade.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6408 Vamp_Upgrade.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6249 Vamp_Upgrade_No_feeding.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @vampires_slayers  [DarkOrder Studio]
 
 [Note]
@@ -19082,6 +19659,84 @@ Vampire Realism II - VE Patch.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampiric Hunger III v1.2 [zennorious]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+
+[Requires]
+ Zennorious' "Vampiric Hunger" requires Bloodmoon, Tribunal and Cortex's "Vampire Embrace" version 2.3 or greater. 
+ (Ref: Readme_VH.htm)
+Vampiric Hunger Base.esp
+[ALL [VER>2.29 Vampire Embrace.esp]
+     Bloodmoon.esm
+     Tribunal.esm]
+
+[Conflict]
+ The new vampiric spells in Zennorious' "Vampiric Hunger III" are based on those from John W. Martin's "Vampire Upgrade", there is no need to run "Vampire Upgrade" with "Vampiric Hunger III".
+ (Ref: Readme_VH.htm)
+Vampiric Hunger Base.esp
+[ANY Vamp_Upgrade_No_feeding.esp
+     Vamp_Upgrade.esp]
+
+[Conflict]
+ Do not enable the separately released 'Vampiric Hunger Bloodlust Effect.esp', there is a newer, updated version in the version 1.2 "Vampiric Hunger" package
+ (Ref: Readme_VH.htm)
+[VER=1.2 Vampiric Hunger Base.esp]
+Vampiric Hunger Bloodlust Effect.esp
+
+[Requires]
+ 'Vampiric Hunger Extended.esp' is an addon for 'Vampiric Hunger Base.esp'
+ (Ref: Readme_VH.htm)
+Vampiric Hunger Extended.esp
+Vampiric Hunger Base.esp
+
+;;Readme_VH.htm - "change the mod loading order by putting Bloodlines below Vampire Embrace and Vampiric Hunger - BL.esp below Bloodlines" and "The Vampiric Hunger Bloodlines patch is compatible with Vampire Realism's but Vampiric Hunger's patch must be the newer"
+;;Dragon32: Not in "Vampire Load Order"
+[Order]
+Blood Lines I_BloodMoon.esp
+Blood Lines I_Tribunal.esp
+Vampire Realism II - BL Patch.esp
+Vampiric Hunger Base.esp
+Vampiric Hunger - BL.esp
+
+[Conflict]
+ Choose only one plugin:
+  Vampiric Hunger MGE Addon for MGE 1.11+.esp - If you have MGE v1.11 or a later version.
+  Vampiric Hunger MGE Addon for MGE 1.10f-.esp - If you have MGE v1.10f or a previous version.
+  Vampiric Hunger Bloodlust Effect.esp - This is an old version and should not be used.
+ (Ref: Readme_VH.htm) 
+Vampiric Hunger MGE Addon for MGE 1.11+.esp
+Vampiric Hunger MGE Addon for MGE 1.10f-.esp
+Vampiric Hunger Bloodlust Effect.esp
+
+[Note]
+ !! To make Zennorious' "Vampiric Hunger" compatible with Jaxalot's "Vampire Realism" you must disable one of the mods' hunger and scripted sun damage feature with their configuration menu. 
+ !! (Ref: Readme_VH.htm)
+[ALL Vampiric Hunger Base.esp
+     Vampire Realism II.esp]
+
+;;Dragon32: Zennorius gives the e.g. of Werewolf Forget. Checked a bunch of other werewolf mods for this variable check
+[Conflict]
+ These mods check the "PCKnownWerewolf" variable (when this variable is 1 every NPC will attack you when they see you). 'Vampiric Hunger Extended.esp' uses this variable to make the nearby NPCs attack you when you drink blood or embrace in front of others.
+ This conflict can cause problems so you should disable the Crowd Attack in Vampiric Hunger Extended's configuration menu.
+ (Ref: Readme_VH.htm)
+Vampiric Hunger Extended.esp
+[ANY WW Forget II.esp
+     Werewolf reequip.esp
+     Sg_werewolfclans.esp
+     Werewolfrealism-moononly.esp
+     Werewolfrealism-moononly_changeatwill.esp
+     Were-better.esp]
+
+[Note]
+ This is a demonstration plugin and not intended for full play
+ (Ref: Vampiric_Hunger_III-1450.zip\VH Clan Example.zip\VH Clan Example_Readme.txt)
+VH Clan Example.esp
+
+[Requires]
+ (Ref: Vampiric_Hunger_III-1450.zip\VH Clan Example.zip\VH Clan Example_Readme.txt)
+VH Clan Example.esp
+[ALL Vampiric Hunger Base.esp
+     Vampire Embrace.esp]
 
 ;; Vampiric Hunger Base wants to override some of GCDs globals, so it
 ;; should come after GCD, checked with TESPCD - JMS
@@ -19115,6 +19770,137 @@ Vampiric Hunger - BL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampiric Illusion 1.4 [AlienSlof & Peter]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+
+[Requires]
+ "Vampiric Illusion" requires Zennorious' "Vampiric Hunger III" v1.1 or v1.2; Cortex's "Scripted Spells" v1.5 and "Vampire Embrace" v2.4
+ (Ref: VampiricIllusion_Readme.txt)
+VampiricIllusion.esp
+[ALL [VER>1.0 Vampiric Hunger Base.esp]
+     [VER>1.4 Scripted_Spells.esp]
+     [VER>2.39 Vampire Embrace.esp]]
+
+[Requires]
+ The "Vampiric Illusion" MWSE addon needs the base "Vampiric Illusion" mod installed.
+ (Ref: VampiricIllusion_Readme.txt)
+VampiricIllusion_MWSE_AddOn.esp
+VampiricIllusion.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampiric Regeneration 1.2 [AlienSlof & Peter]
+
+;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+
+[Requires]
+ "Vampiric Regeneration" requires Zennorious' "Vampiric Hunger III"; Jaxalot's "Vampire Realism II" and "Vampire Embrace" v2.4
+ (Ref: Vampiric Regeneration Readme.txt)
+vampiric_regeneration.esp
+[ALL Vampiric Hunger Base.esp
+     Vampire Realism II.esp
+     [VER>2.39 Vampire Embrace.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vampiric Visages [MagicNakor]
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_Breton_Vampires_1_v1.esp
+MN_Breton_Vampires_1_v2.esp
+MN_Breton_Vampires_2_v1.esp
+MN_Breton_Vampires_2_v2.esp
+MN_Breton_Vampires_3_v1.esp
+MN_Breton_Vampires_3_v2.esp
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_DarkElf_Vampires_1_v1.esp
+MN_DarkElf_Vampires_1_v2.esp
+MN_DarkElf_Vampires_2_v1.esp
+MN_DarkElf_Vampires_2_v2.esp
+MN_DarkElf_Vampires_3_v1.esp
+MN_DarkElf_Vampires_3_v2.esp
+MN_DarkElf_Vampires_4_v1.esp
+MN_DarkElf_Vampires_4_v2.esp
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_HighElf_Vampires_1v1.esp
+MN_HighElf_Vampires_1v2.esp
+MN_HighElf_Vampires_2v1.esp
+MN_HighElf_Vampires_2v2.esp
+MN_HighElf_Vampires_3v1.esp
+MN_HighElf_Vampires_3v2.esp
+MN_HighElf_Vampires_4v1.esp
+MN_HighElf_Vampires_4v2.esp
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_Imperial_Vampires_1_v1.esp
+MN_Imperial_Vampires_1_v2.esp
+MN_Imperial_Vampires_2_v1.esp
+MN_Imperial_Vampires_2_v2.esp
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_Nord_Vampires_1_v1.esp
+MN_Nord_Vampires_1_v2.esp
+MN_Nord_Vampires_2_v1.esp
+MN_Nord_Vampires_2_v2.esp
+MN_Nord_Vampires_3_v1.esp
+MN_Nord_Vampires_3_v2.esp
+MN_Nord_Vampires_4_v1.esp
+MN_Nord_Vampires_4_v2.esp
+MN_Nord_Vampires_5_v1.esp
+MN_Nord_Vampires_5_v2.esp
+MN_Nord_Vampires_6_v1.esp
+MN_Nord_Vampires_6_v2.esp
+MN_Nord_Vampires_7_v1.esp
+MN_Nord_Vampires_7_v2.esp
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_Redguard_Vampires_1v1.esp
+MN_Redguard_Vampires_1v2.esp
+MN_Redguard_Vampires_2v1.esp
+MN_Redguard_Vampires_2v2.esp
+MN_Redguard_Vampires_3v1.esp
+MN_Redguard_Vampires_3v2.esp
+
+[Conflict]
+ Choose only one "Vampiric Visages" face pack plugin per race.
+ (Ref: Vampiric Visages Readme.txt)
+MN_WoodElf_Vampires_1v1.esp
+MN_WoodElf_Vampires_1v2.esp
+MN_WoodElf_Vampires_2v1.esp
+MN_WoodElf_Vampires_2v2.esp
+MN_WoodElf_Vampires_3v1.esp
+MN_WoodElf_Vampires_3v2.esp
+MN_WoodElf_Vampires_4v1.esp
+MN_WoodElf_Vampires_4v2.esp
+
+[Note]
+ These are modder's resources and do not add anything to the game. You probably do not want to load them in a game you are playing.
+ (Ref: Vampiric Visages Readme.txt)
+MN_Breton_Vampires_Modders.esp
+MN_DarkElf_Vampires_Modders.esp
+MN_HighElf_Vampires_Modders.esp
+MN_Imperial_Vampires_Modders.esp
+MN_Nord_Vampires_Modders.esp
+MN_Redguard_Vampires_Modders.esp
+MN_WoodElf_Vampires_Modders.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @VariedVampiricVisages [MagicNakor]
 
 [Note]
@@ -19133,6 +19919,86 @@ Varied Vampiric Visages.esp
 Varied Vampiric Visages.esp
 [ANY Blood Lines I_BloodMoon.esp
      Blood Lines I_Tribunal.esp]
+
+[Conflict]
+ Use only one plugin:
+  Varied Vampiric Visages.esp - If you have Vampire Embrace, Vampire Realism and Bloodlines
+  Varied Vampiric Visages - ND.esp - If you do not have these additional mods
+ (Ref: Varied Vampires Readme.txt)
+Varied Vampiric Visages.esp
+Varied Vampiric Visages - ND.esp
+
+;;Dragon32: Did a "single vs all" check in TESPCD, 'Varied Vampiric Visages.esp' makes changes to "Vampire Realism" NPC entries
+[Order]
+Vampire Realism II.esp
+Varied Vampiric Visages.esp
+
+[Note]
+ !! Ensure you have loaded the resources from MagicNakor's "Vampiric Visages" for his "Varied Vampiric Visages" to work properly.
+ !! (Ref: Varied Vampires Readme.txt)
+[ALL [ANY Varied Vampiric Visages.esp
+          Varied Vampiric Visages - ND.esp]
+     [NOT [ANY MN_Breton_Vampires_Modders.esp
+               MN_Breton_Vampires_1_v1.esp
+               MN_Breton_Vampires_1_v2.esp
+               MN_Breton_Vampires_2_v1.esp
+               MN_Breton_Vampires_2_v2.esp
+               MN_Breton_Vampires_3_v1.esp
+               MN_Breton_Vampires_3_v2.esp]]
+     [NOT [ANY MN_DarkElf_Vampires_Modders.esp
+               MN_DarkElf_Vampires_1_v1.esp
+               MN_DarkElf_Vampires_1_v2.esp
+               MN_DarkElf_Vampires_2_v1.esp
+               MN_DarkElf_Vampires_2_v2.esp
+               MN_DarkElf_Vampires_3_v1.esp
+               MN_DarkElf_Vampires_3_v2.esp
+               MN_DarkElf_Vampires_4_v1.esp
+               MN_DarkElf_Vampires_4_v2.esp]]
+     [NOT [ANY MN_HighElf_Vampires_Modders.esp
+               MN_HighElf_Vampires_1v1.esp
+               MN_HighElf_Vampires_1v2.esp
+               MN_HighElf_Vampires_2v1.esp
+               MN_HighElf_Vampires_2v2.esp
+               MN_HighElf_Vampires_3v1.esp
+               MN_HighElf_Vampires_3v2.esp
+               MN_HighElf_Vampires_4v1.esp
+               MN_HighElf_Vampires_4v2.esp]]
+     [NOT [ANY MN_Imperial_Vampires_Modders.esp
+               MN_Imperial_Vampires_1_v1.esp
+               MN_Imperial_Vampires_1_v2.esp
+               MN_Imperial_Vampires_2_v1.esp
+               MN_Imperial_Vampires_2_v2.esp]]
+     [NOT [ANY MN_Nord_Vampires_Modders.esp
+               MN_Nord_Vampires_1_v1.esp
+               MN_Nord_Vampires_1_v2.esp
+               MN_Nord_Vampires_2_v1.esp
+               MN_Nord_Vampires_2_v2.esp
+               MN_Nord_Vampires_3_v1.esp
+               MN_Nord_Vampires_3_v2.esp
+               MN_Nord_Vampires_4_v1.esp
+               MN_Nord_Vampires_4_v2.esp
+               MN_Nord_Vampires_5_v1.esp
+               MN_Nord_Vampires_5_v2.esp
+               MN_Nord_Vampires_6_v1.esp
+               MN_Nord_Vampires_6_v2.esp
+               MN_Nord_Vampires_7_v1.esp
+               MN_Nord_Vampires_7_v2.esp]]
+     [NOT [ANY MN_Redguard_Vampires_Modders.esp
+               MN_Redguard_Vampires_1v1.esp
+               MN_Redguard_Vampires_1v2.esp
+               MN_Redguard_Vampires_2v1.esp
+               MN_Redguard_Vampires_2v2.esp
+               MN_Redguard_Vampires_3v1.esp
+               MN_Redguard_Vampires_3v2.esp]]
+     [NOT [ANY MN_WoodElf_Vampires_Modders.esp
+               MN_WoodElf_Vampires_1v1.esp
+               MN_WoodElf_Vampires_1v2.esp
+               MN_WoodElf_Vampires_2v1.esp
+               MN_WoodElf_Vampires_2v2.esp
+               MN_WoodElf_Vampires_3v1.esp
+               MN_WoodElf_Vampires_3v2.esp
+               MN_WoodElf_Vampires_4v1.esp
+               MN_WoodElf_Vampires_4v2.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19650,13 +20516,153 @@ Westly's Master Headpack X.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @were-realism1_7 [Sabregirl]
+;; @Werewolf Clans of Vvardenfell [Sabregirl]
+
+[Note]
+ !! AFTER becoming a werewolf you will need to start these scripts:
+ !!  Startscript Full_moon_warning
+ !!  Startscript werefood
+ !! (Ref: werewolfclans-O-vvardenfell-readme.rtf)
+[ALL SG_werewolfclans.esp
+     werewolfrealism-moononly.esp]
+
+[Note]
+ !! AFTER becoming a werewolf you will need to start this script:
+ !!  Startscript Changeatwillscript
+ !! (Ref: werewolfclans-O-vvardenfell-readme.rtf)
+[ALL SG_werewolfclans.esp
+     werewolfrealism-moononly_changeatwill.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 4759 fightmodfreeGMST-Fix.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Werewolf Realism [Sabregirl]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
  (Ref: "DONTREADME_were-realism-moononly.rtf")
 werewolfrealism-moononly.esp
 werewolfrealism-moononly_changeatwill.esp
+
+[Conflict]
+ Sabregirl's "Werewolf Realism" includes a Daggerfall-style Hircine ring. You do not need The Mad God's "Hircine Ring Fix" or 	No one of consequence's "Old style Hircine Ring".
+ (Ref: DONTREADME_were-realism-moononly.rtf)
+[ANY werewolfrealism-moononly_changeatwill.esp
+     werewolfrealism-moononly.esp]
+[ANY Hircine Ring Fix.esp
+     old-Hircine-ring.esp]
+
+[Note]
+ Sabregirl's "Werewolf Realism" does similar things to her "Were-better" mod. Review the documentation and see if you wish to or need to run both mods.
+ (Ref: DONTREADME_were-realism-moononly.rtf)
+[ALL were-better.esp
+     [ANY werewolfrealism-moononly_changeatwill.esp
+          werewolfrealism-moononly.esp]]
+
+[Note]
+ !! The "Dwemer Clock" mod does not appear to function properly with Sabregirl's "Werewolf Realism".
+ !! It is not clear from Sabregirl's readme whether Kir's update to TheLys' enhancement of Smileyz original "Dwemer Clock" mod also does not function properly with Sabregirl's "Werewolf Realism".
+ !! (Ref: DONTREADME_were-realism-moononly.rtf)
+[ALL [ANY werewolfrealism-moononly_changeatwill.esp
+          werewolfrealism-moononly.esp]
+     [ANY Dwemer Clock v12.esp
+          [SIZE 23039 DwemerClock.esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Werewolf Realism - Vampire Werewolf patch [blade9722]
+
+[Patch]
+ blade9722's 'Werevampire_realism_changeatwill_patch.esp' allows the player to use Cortex's "Vampire Werewolf" and Sabregirl's "Werewolf Realism" mods together. 
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4935
+ (Ref: Werewolf_realism_vampire_patch.txt)
+Werevampire_realism_changeatwill_patch.esp
+[ALL Vampire_Werewolf.esp
+     werewolfrealism-moononly_changeatwill.esp]
+
+[Patch]
+ blade9722's 'Werevampire_realism_moononly_patch.esp' allows the player to use Cortex's "Vampire Werewolf" and Sabregirl's "Werewolf Realism" mods together. 
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4935
+ (Ref: Werewolf_realism_vampire_patch.txt)
+Werevampire_realism_moononly_patch.esp
+[ALL Vampire_Werewolf.esp
+     werewolfrealism-moononly.esp]
+
+;;Dragon32: Order from "Werewolf_realism_vampire_patch.txt"
+[Order]
+Vampire_Werewolf.esp
+werewolfrealism-moononly.esp
+Werevampire_realism_moononly_patch.esp
+
+[Order]
+Vampire_Werewolf.esp
+werewolfrealism-moononly_changeatwill.esp
+Werevampire_realism_changeatwill_patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Werewolf ReEquip [Yacoby]
+
+;;Dragon32: Identified these plugins myself
+[Conflict]
+ Yacoby's "Werewolf ReEquip" is incompatible with mods that alter the 'WereChangeScript' script, as these do. See "Werewolf ReEquip - Readme.txt" for how you can make them compatible.
+ (Ref: Werewolf ReEquip - Readme.txt)
+Werewolf ReEquip.esp
+[ANY werewolfrealism-moononly.esp
+     werewolfrealism-moononly_changeatwill.esp
+     old-Hircine-ring.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Werewolves [McAsmod team]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1445738 Werewolves.esp]
+
+[Conflict]
+ "Werewolves" is not compatible with Mephisto's "Cap Remover" mod.
+ (Ref: werewolves_mod_readme.htm)
+Werewolves.esp
+CapRemover 1.2 alpha.esp
+
+[Conflict]
+ "Werewolves" is not compatible with Nik's "Dark Powers" mod.
+ (Ref: werewolves_mod_readme.htm)
+Werewolves.esp
+Dark Powers v2.0.esp
+
+[Requires]
+ (Ref: werewolves_mod_readme.htm)
+Werewolves.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: werewolves_mod_readme.htm)
+Werewolves BM add-on.esp
+[ALL Werewolves.esp
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ ! The McAsmod team recommend some changes to Morrowind.ini, see the readme file.
+ ! (Ref: werewolves_mod_readme.htm)
+Werewolves.esp
+
+;;Dragon32: TheLy's enhanced Dwemer Clock uses some Werewolve's global variables
+[Order]
+Werewolves.esp
+Dwemer Clock v12.esp
+
+;;Dragon32: Load add-on after the main mod
+[Order]
+Werewolves.esp
+Werewolves BM add-on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
