@@ -3214,7 +3214,7 @@ BirthsignsAMFun_MW.esp
 ; Dragon32: Gluby clued me onto this by PM. This mod doesn't alter existing birthsigns, it creates new ones. So, in a TESTool merge with any mod that happens to also define these birthsigns (say, WGI), you're going to get both the new power and the original one, even if you place BAMF later in load order.
 ; So, BAMF needs to load after Merged Objects.
 [Order]
-Merged Objects.esp
+Merged_Objects.esp
 BirthsignsAMFun_BM.esp
 BirthsignsAMFun_MW.esp
 
@@ -9815,7 +9815,7 @@ Lazslo_Manor_TR.esp
 ;;Merged_Objects.esp
 ;;Ebony_fix.esp
 ;;
-;;Dragon32 - above is original entry for this plugin. Below is rules I've created based on readmes. I have *not* included the load order rule for laura_ebony_fix.esp to load after Merged Objects.esp
+;;Dragon32 - above is original entry for this plugin. Below is rules I've created based on readmes. I have *not* included the load order rule for laura_ebony_fix.esp to load after Merged_Objects.esp
 
 [Requires]
  (Ref: Readme_Laura_Craft_romance_mod_2_2.txt)
@@ -14448,7 +14448,7 @@ RAMF_Mer.esp
 ; Dragon32: Gluby clued me onto this by PM. This mod has a similar issue with Merged Objects as Alaisiagae's Birthsigns Are More Fun, q.v. So, in a TESTool merge with any mod that happens to also alter racial abilities (say, WGI), you're going to get both the new ones from RAMF and the original one, even if you place RAMF later in load order.
 ; So, BAMF needs to load after Merged Objects.
 [Order]
-Merged Objects.esp
+Merged_Objects.esp
 RAMF_Mer_for_NPCs.esp
 RAMF.esp
 RAMF_for_NPCs.esp
@@ -18338,20 +18338,20 @@ UL_Primus_MWSE.esp
 
 ;;Rise of House Telvanni
 [Note]
- You may want to use the optional "UL_RoHT_Compatibility_1.4.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ You may want to use the optional "UL_RoHT_1.4_Compatibility.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
  (Ref: "Uvirith's Legacy_README.txt")
-[ALL [NOT UL_RoHT_Compatibility_1.4.esp]
+[ALL [NOT UL_RoHT_1.4_Compatibility.esp]
      Uvirith's Legacy_Final_2.0.esp
      Rise of House Telvanni.esm]
 ;[Note]
-; It is suggested you use "UL_RoHT_Compatibility_1.4.esp" when using both Stuporstar's "Uvirith's Legacy" and "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+; It is suggested you use "UL_RoHT_1.4_Compatibility.esp" when using both Stuporstar's "Uvirith's Legacy" and "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
 ; "Uvirith's Legacy"and "Rise of House Telvanni" are fully compatible as they stand, this patch is not required for compatibility. "Uvirith's Legacy" functions perfectly well with "Rise of House Telvanni" without it.
 ; (Ref: "Uvirith's Legacy_README.txt")
 ;[ALL Uvirith's Legacy_Final_2.0.esp
 ;     UL_RoHT_1.4_Compatibility.esp]
 
 [Requires]
- The optional "UL_RoHT_Compatibility_1.4.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, should only be used if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ The optional "UL_RoHT_1.4_Compatibility.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, should only be used if you are also running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
  (Ref: "Uvirith's Legacy_README.txt")
 UL_RoHT_1.4_Compatibility.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
@@ -20440,7 +20440,7 @@ WeaponFix164_WCM_addon.esp
      farrp_WeaponCompilationMod_V2.esp]
 
 [Note]
- The Weapon Fix plugin does not include body parts for Leia's Double Wield Mod. This means the defensive weapons will not be visible in game. To fix this you will need to run TESTool's Merge Objects function and enable the Merged Objects.esp.
+ The Weapon Fix plugin does not include body parts for Leia's Double Wield Mod. This means the defensive weapons will not be visible in game. To fix this you will need to run TESTool's Merge Objects function and enable the Merged_Objects.esp.
  (Ref: Dragon32, examined the plugins)
 [ALL Leias_Dual_Wield_03.esp
      weaponFix177.esp
