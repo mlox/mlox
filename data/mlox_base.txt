@@ -116,7 +116,7 @@ Undead arise from death 2.0.esp
 MWInhabitants Freeform (Vol 1).esp
 BMExtras.esp
 Clean Black Queen Chronicles Ver 2.5.esp
-EcoAdj(Sri+Ingredients).esp
+;;EcoAdj(Sri+Ingredients).esp ;can be patched by "Sri Alchemy BM List Patch.esp", see Economy Adjuster [HotFusion] below.
 ;;GIANTS.esm ; patched by Z4K_Giants_AddToLev_Patch.esp (see below)
 MTT Vol III.esp
 Melee Missiles v1.2.esp
@@ -131,6 +131,7 @@ NoM 2.1 with BEER!.esp
 NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
 NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
+Sris_Alchemy_Trib.esp
 ;;Stinkers.esp ; patched by Gaius Atrius' "Stinkers and Bathers v2.0" (see below)
 ;;The Wilderness Mod 2.0.esm  ; patched by ab01Wilderness2.1patch.esp (see below)
 ;;The Wilderness Mod 2.0 T & B.esm ; patched by ab01Wilderness2.1patch.esp (see below)
@@ -771,6 +772,29 @@ Aduls_Arsenal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Balance [Beancounter501]
+
+[Requires]
+ (Ref: Alchemy_Balance_V1-Readme.txt)
+Alchemy_Balance_V1.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Use only one plugin.
+ (Ref: Alchemy_Balance_V1-Readme.txt)
+Alchemy_Balance_V1.esp
+Alchemy_Balance_V1_LITE.esp
+
+[Conflict]
+ You should use "Alchemy_Balance_V1_LITE.esp" instead.
+ (Ref: Alchemy_Balance_V1-Readme.txt)
+Alchemy_Balance_V1.esp
+[ANY Sris_Alchemy_BM.esp
+     Sris_Alchemy_Trib.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alchemy Boxes [PawPrintExpress]
 
 [Note]
@@ -1343,6 +1367,15 @@ bjam_at_MWSE_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Archives [Lyrian]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 260046 Archives BETA RELZ v2.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Arch-Mage's quarters [Magelord648]
 
 ;; expdep
@@ -1551,6 +1584,36 @@ Bloodmoon.esm
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 149087 Ascadia 1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ascadian Rose Cottage [Korana]
+
+;;"the esp for Necessities of Morrowind needs to be loaded AFTER the cottage esp"
+;;Ascadian Rose Cottage READ IT.txt
+[Order]
+Ascadian_Rose_Cottage_ver1.0.esp
+NOM 2.13.esp
+
+;;Dragon32: Might as well as add an equivalent order rule for v3
+[Order]
+Ascadian_Rose_Cottage_ver1.0.esp
+NoM 3.0.esp
+
+;;Dragon32: readme talks of "More Leaves and Foliage", I think this means skyfire76's "More Trees and Foliage". However, skyfire76's mod does not use activators for its trees, which is what causes the unfixable by ESP problem.
+[Conflict]
+ With TheLys' "Seasons" or ayse's "Foliage Season" there will be trees floating in front of the Ascadian Rose Cottage. If you are using one of these mods, the only known fix is to use the console Delete command, an esp fix would not work.
+ (Ref: Ascadian Rose Cottage READ IT.txt)
+Ascadian_Rose_Cottage_ver1.0.esp
+[ANY Seasons.esm
+     FoliageSeason.esp]
+
+[Note]
+ ! Korana's "Ascadian Rose Cottage" may have some slight tree blending issues with "Leafy Morrowind" and "Forested Morrowind"
+ ! (Ref: Ascadian Rose Cottage READ IT.txt)
+[ALL Ascadian_Rose_Cottage_ver1.0.esp
+     [ANY Forested Morrowind.esp
+          Leafy Morrowind.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2633,6 +2696,25 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Expanded and Forested MW compatibility [Sintek]
+
+[Conflict]
+ "Balmora Expanded and Forested MW compatibility" is a fix for the problems of running Max's "Forested Morrowind" with "Balmora Expanded", such as trees blocking paths and draping over NPCs so you are unable to converse with them.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=587 )
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
+Forested Morrowind.esp
+
+[Conflict]
+ "BEx-FM.esp" replaces "Forested Morrowind", so be sure to uncheck "Forested Morrowind".
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=587 )
+Forested Morrowind.esp
+BEx-FM.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Farmers Market [EchoFlame]
 
 [Requires]
@@ -2837,6 +2919,16 @@ Balmora University V2.30.esp ; Crlsniper
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balrog Race [Richard "Raptor" Powell]
+
+[Conflict]
+ Use only one plugin.
+ (Ref: balrograce001.zip\readme.txt)
+BalrogRaceOnly.esp
+BalrogRaceOnlyWingless.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Banner House  [Len Alox]
 
 [Note]
@@ -2857,6 +2949,16 @@ CM_Partners_3.0.esp
 ;;TBD
 ;;Readme says:
 ;;3.Known conflicts:  Wakim's Game Improvements, Twin Lamps, Nevenna's Exslaves and Partners, Nevenna's Club and Courtiers, and Friends and Rivals.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bathhouse in Vivec [ayse]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 25025 Bathhouse.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bathing Mod  [sisco]
@@ -3063,6 +3165,83 @@ Better Heads Bloodmoon addon.esm
 Better Heads Tribunal addon.esm
 [ALL Tribunal.esm
      Better Heads.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Heads Modular [Motoki, et. al.]
+
+[Patch]
+ Use "BH_Bretons_M_BM.esm" with Bloodmoon.
+ (Ref: Readme_BH_Modular.txt)
+BH_Bretons_M_BM.esm
+[ALL Bloodmoon.esm
+     BH_Bretons_M.esm]
+
+[Patch]
+ Use "BH_DarkElves_M_BM.esm" with Bloodmoon.
+ (Ref: Readme_BH_Modular.txt)
+BH_DarkElves_M_BM.esm
+[ALL Bloodmoon.esm
+     BH_DarkElves_M.esm]
+
+[Patch]
+ Use "BH_Imperials_F_BM.esm" with Bloodmoon.
+ (Ref: Readme_BH_Modular.txt)
+BH_Imperials_F_BM.esm
+[ALL Bloodmoon.esm
+     BH_Imperials_F.esm]
+
+[Patch]
+ Use "BH_Imperials_M_BM.esm" with Bloodmoon.
+ (Ref: Readme_BH_Modular.txt)
+BH_Imperials_M_BM.esm
+[ALL Bloodmoon.esm
+     BH_Imperials_M.esm]
+
+[Note]
+ "BH_Nords_F_BM.esm" will replace the Bethesda heads that came with Bloodmoon so if you want the regular MW Nords replaced but not the Bloodmoon Nords then do not use the Nord Bloodmoon addons.
+ Use "BH_Nords_F_BM.esm" with Bloodmoon.
+ (Ref: Readme_BH_Modular.txt)
+[ALL Bloodmoon.esm
+     BH_Nords_F.esm
+     BH_Nords_F_BM.esm]
+
+[Note]
+ "BH_Nords_F_BM.esm" will replace the Bethesda heads that came with Bloodmoon so if you want the regular MW Nords replaced but not the Bloodmoon Nords then do not use the Nord Bloodmoon addons.
+ (Ref: Readme_BH_Modular.txt)
+[ALL Bloodmoon.esm
+     BH_Nords_F.esm
+     BH_Nords_M_BM.esm]
+
+[Note]
+ You can use the ESP versions to edit some of the selections and modify to your taste. However, you should convert the modified ESP to an ESM, to minimise conflicts. 
+ (Ref: Readme_BH_Modular.txt)
+[ANY BH_WoodElves_M.esp
+     BH_Argonians_F.esp
+     BH_Argonians_M.esp
+     BH_Barenziah_Replace.esp
+     BH_Bretons_F.esp
+     BH_Bretons_M.esp
+     BH_Bretons_M_BM.esp
+     BH_DarkElves_F.esp
+     BH_DarkElves_M.esp
+     BH_DarkElves_M_BM.esp
+     BH_Helseth_Replace.esp
+     BH_HighElves_F.esp
+     BH_HighElves_M.esp
+     BH_Imperials_F.esp
+     BH_Imperials_F_BM.esp
+     BH_Imperials_M.esp
+     BH_Imperials_M_BM.esp
+     BH_Nords_F.esp
+     BH_Nords_F_BM.esp
+     BH_Nords_M.esp
+     BH_Nords_M_BM.esp
+     BH_Orcs_F.esp
+     BH_Orcs_M.esp
+     BH_Redguards_F.esp
+     BH_Redguards_M.esp
+     BH_WoodElves_F.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3685,6 +3864,19 @@ BMExtrasFixedLL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BloodMoon-FIX 1.2 [Misty Moon]
+
+[Note]
+ The Morrowind Patch Project (MPP) fixes Wolf Greaves, Ice Female Gauntlets and Snow Bear Boots.
+ If you can live without the tweaks to some Bloodmoon creature's attack/flee settings then you do not need this plugin.
+BloodMoon-FIX.esm
+
+[Order]
+Bloodmoon.esm
+BloodMoon-FIX.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon Landscape Overhaul 1.0 [Slartibartfast]
 
 [Order]
@@ -3947,10 +4139,19 @@ Texture Fix 1.8.esm
 Juniper's Twin Lamps (1.1 Tribunal).esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
 
-;; Need to load Twin Lamps after Advanced Guard's
-;; guard remover otherwise "tl_mineguard"s are removed
+;;Dragon32: Need to load Twin Lamps after Advanced Guard's guard remover otherwise "tl_mineguard"s are removed
 [Order]
 Guard-Remover.esp
+Juniper's Twin Lamps (1.1 Tribunal).esp
+
+;;Dragon32: Similar problem with NazoX9's Guards
+;; http://forums.bethsoft.com/index.php?/topic/1122552-console-command-for-restoring-objects/
+[Order]
+NX9Guards_Hlaalu.esp
+Juniper's Twin Lamps (1.1 Tribunal).esp
+
+[Order]
+NX9_Guards_Complete.ESP
 Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
@@ -4127,6 +4328,27 @@ Tribunal.esm
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 37376 CalderaTeleport.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cali's Clothing 1.2 [Calislahn]
+
+[Note]
+ ! There is a new version, 1.2, of "Cali's Clothing" available, you should upgrade:
+ ! http://www.calislahn.com/elder-scrolls/clothing/
+Cali's Clothing.esp
+
+[Note]
+ "Cali's Clothing" changes Millie Hastien’s services so she sells armor for the coats. "Cali's Clothing" should load after any other mods that add items to her shop. Otherwise she will not sell them.
+ If necessary you can create an Order rule in mlox_user.txt
+ (Ref: http://www.calislahn.com/elder-scrolls/clothing/ )
+Cali's Clothing v1.2.esp
+
+;;Dragon32: mods identified as adding items
+[Order]
+Thigh High Boots 2.0.esp
+Ultimate Clothing Mod_Skirts_v1.00.esp
+Cali's Clothing v1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4337,6 +4559,15 @@ Christmas At Lokken.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Clannfear Sprite [PhyntosWasp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 10735 cf_sprite.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Classic Stories by Eric Carle V1.0 [Cassadyr]
 
 [Note]
@@ -4352,6 +4583,18 @@ Christmas At Lokken.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 11713 Clear Glass.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cliffracer-FIX [Misty Moon]
+
+[Conflict]
+ Misty Moon's "Cliffracer-FIX" makes cliffracers not so eager to attack. You are using another mod that makes creatures, including cliffracers, less aggressive. Review whether you need Misty Moon's mod loaded as well.
+Cliffracer-FIX.esp
+[ANY animalbehave.esp
+     Passive_Healthy_Wildlife.esp
+     Passive Wildlife Vvardenfell.esp
+     Rational Wildlife.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4381,6 +4624,21 @@ night gallery.esp
  CoV and Kahleigh's Retreat make incompatible landscape changes to the Caldera cell (-2, 2). When CoV is loaded first, a landscape tear appears on the side of the Wailing Wench Tavern. When CoV is loaded after, then the front of Kahleigh's Retreat is floating up in the air. A reasonable fix is to delete the 2 LAND records from CoV: (-1, 2) and (-2, 2) from BB_Clothiers_of_Vvardenfell_v1.1.esp.
 [SIZE 851243 BB_Clothiers_of_Vvardenfell_v1.1.esp]
 Kahleigh's Retreat v1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Clothing Vendor 1.2 [Silaria]
+
+[Requires]
+ (Ref: "Sils_Clothing_Vendor_v1.2_READMENOT.txt")
+Sils_Clothing_Vendor_v1.2.esp
+Better Bodies.esp
+
+[Conflict]
+ You no longer need to run Silaria's "Ultimate Clothing Mod - Shirts" with her "Clothing Mod"
+ (Ref: "Sils_Clothing_Vendor_v1.2_READMENOT.txt")
+Sils_UCM_Shirt01_BB.esp
+Sils_Clothing_Vendor_v1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5027,6 +5285,7 @@ DN-GDRv1_NOM.esp
 
 [Patch]
  MoonAndStar's "Great House Dagoth/ Darknut's Greater Dwemer Ruins Compatibility Patch" patches TheMadGod's "Great House Dagoth" for use with Darknut's "Greater Dwemer Ruins".
+ http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4319
  (Ref.Readme GHD-DNGDR Patch.txt)
 [ANY DNGDR-GHD Patch OV.esp
           DNGDR-GHD Patch.esp]
@@ -5451,6 +5710,124 @@ Distant Land Weather Fog.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Disturb the Dead 3.31 [zappara]
+
+[Requires]
+ (Ref: readme_Disturb_the_dead_3.31.txt)
+Disturb_the_dead.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ (Ref: readme_Disturb_the_dead_3.31.txt)
+Disturb_the_dead_TB.esp
+Tribunal.esm
+
+[Conflict]
+ Only enable one plugin:
+  Disturb_the_dead.esp - If you have both Bloodmoon and Tribunal
+  Disturb_the_dead_TB.esp - If you just have Tribunal
+ (Ref: readme_Disturb_the_dead_3.31.txt)
+Disturb_the_dead.esp
+Disturb_the_dead_TB.esp
+
+[Patch]
+ Enable the patch if you have Srikandi's "Homeopathic Alchemy Bloodmoon" mod enabled.
+ (Ref: readme_Disturb_the_dead_3.31.txt)
+Disturb_the_dead_BM_SA_Addon.esp
+[ALL Disturb_the_dead.esp
+     Sris_Alchemy_BM.esp]
+
+;;Dragon32: Order assumed
+[Order]
+Disturb_the_dead.esp
+Disturb_the_dead_BM_SA_Addon.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Disturb_the_dead_BM_SA_Addon.esp
+
+[Patch]
+ Enable the patch if you have Srikandi's "Homeopathic Alchemy Tribunal" mod enabled.
+ (Ref: readme_Disturb_the_dead_3.31.txt)
+Disturb_the_dead_TB_SA_Addon.esp
+[ALL Disturb_the_dead_TB.esp
+     Sris_Alchemy_Trib.esp]
+
+;;Dragon32: Order assumed
+[Order]
+Disturb_the_dead_TB.esp
+Disturb_the_dead_TB_SA_Addon.esp
+
+[Order]
+Sris_Alchemy_Trib.esp
+Disturb_the_dead_TB_SA_Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Disturb the Dead Addons 2.0 [zappara]
+
+;;Dragon32: Don't have information on "Explorers" v1 or v1.5
+
+[Conflict]
+ ENABLE ONLY ONE ADDON AT A TIME!!!
+  Disturb_The_Dead_Explorers_Addon.esp - If you have Disturb the Dead and ExplorersFull or ExplorersTombs mods enabled (v1.0 or 1.5).
+  Disturb_The_Dead_Explorers_SA_BM_Addon.esp - If you have Disturb the Dead and ExplorersFull or ExplorersTombs mods enabled (v1.0 or 1.5) and Srikandi's Homeopathic Alchemy Bloodmoon mod enabled.
+  Disturb_The_Dead_Explorers_SA_TB_Addon.esp - If you have Disturb the Dead and ExplorersFull or ExplorersTombs mods enabled (v1.0 or 1.5) and Srikandi's Homeopathic Alchemy Tribunal mod enabled
+  Disturb_The_Dead_ExplorersFull25_Addon.esp - If you have Disturb the Dead and ExplorersFull25 (v2.5) mods enabled
+  Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp - If you have Disturb the Dead and ExplorersFull25 (v2.5) and Srikandi's Homeopathic Alchemy Bloodmoon mods enabled.
+ (Ref: readme_Disturb_the_dead_Addons.txt)
+Disturb_The_Dead_Explorers_Addon.esp
+Disturb_The_Dead_Explorers_SA_BM_Addon.esp
+Disturb_The_Dead_Explorers_SA_TB_Addon.esp
+Disturb_The_Dead_ExplorersFull25_Addon.esp
+Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
+
+[Patch]
+  Available from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=7871
+ (Ref: readme_Disturb_the_dead_Addons.txt)
+Disturb_The_Dead_ExplorersFull25_Addon.esp
+[ALL Disturb_the_dead.esp
+     Explorers25Full.esp]
+
+;;readme_Disturb_the_dead_Addons.txt: make sure that the Addon is loaded after the Disturb the Dead and Explorers mods have been loaded
+[Order]
+Disturb_the_dead.esp
+Disturb_The_Dead_ExplorersFull25_Addon.esp
+
+[Order]
+Explorers25Full.esp
+Disturb_The_Dead_ExplorersFull25_Addon.esp
+
+[Patch]
+ Available from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=7871
+ (Ref: readme_Disturb_the_dead_Addons.txt)
+Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
+[ALL Disturb_the_dead.esp
+     Explorers25Full.esp
+     Sris_Alchemy_BM.esp]
+
+[Conflict]
+ Disable 'Disturb_the_dead_SA_BM_Addon.esp' if you have used it earlier
+ (Ref: readme_Disturb_the_dead_Addons.txt)
+Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
+Disturb_the_dead_BM_SA_Addon.esp
+
+;;readme_Disturb_the_dead_Addons.txt: make sure that the Addon is loaded after the Disturb the Dead and Explorers mods have been loaded
+[Order]
+Disturb_the_dead.esp
+Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
+
+[Order]
+Explorers25Full.esp
+Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Divine Domina [Jeremy McGuinn]
 
 ; Dragon32: Examining plugins in TESPCD shows a conflict between these two plugins, DD part 5 was released after DD part 2 and has a later modified date in the archive, so I've set it to load last
@@ -5560,6 +5937,15 @@ Better Bodies.esp
  !! You could fix the mod by removing AutoCalculate using the Construction Set.
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=1049424 )
 DreamersAwakenedv1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dress Pack [Baratheon79]
+
+[Requires]
+ (Ref: "BB Dress Pack Readme.txt")
+BAR_BB_dresspack.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6044,6 +6430,11 @@ Erengard Mines-MC-compatible.esp
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 144259 Erengard Mines-MC-compatible.esp]
 
+;:Dragon32: scripts in Erengard Mines use MC objects etc.
+[Order]
+Morrowind Crafting 2-1.esp
+Erengard Mines-MC-compatible.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Exotics Boutique 1.1 [TommyKhajiit]
@@ -6082,6 +6473,134 @@ GCD better balanced birthsigns.esp
  ! The latest version of Expanded Sounds is 1.3, you may want to upgrade:
  ! http://z13.invisionfree.com/Pirate_Lords_Mods/index.php?showtopic=35
 [SIZE !439651 Expanded Sounds.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Explorers 2.5 [Lord Lionmane]
+
+[Requires]
+ "Explorers" requires the Tribunal and Bloodmoon expansions.
+ (Ref: ExplorersV25ReadMe.txt)
+[ANY Explorers25Full.esp
+     Explorers25NoTombs.esp
+     Explorers25TombCompatibility.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Check ONE of the following files in the mod list:
+  Explorers25Full.esp - The full version of Explorers.
+  Explorers25NoTombs.esp - This version does not include changes to tombs.
+  Explorers25TombCompatibility.esp - This version removes the scripts (traps) and all loot except Mind Gems from urns in tombs.
+ (Ref: ExplorersV25ReadMe.txt)
+Explorers25Full.esp
+Explorers25NoTombs.esp
+Explorers25TombCompatibility.esp
+
+[Conflict]
+ zappara's Tribunal version of "Disturb the Dead" is not compatible with 'Explorers25Full.esp'; choose 'Explorers25NoTombs.esp' or 'Explorers25TombCompatibility.esp' instead.
+ (Ref: ExplorersV25ReadMe.txt)
+Explorers25Full.esp
+Disturb_the_dead.esp
+
+[Conflict]
+ "Herbalism Ultralight" is not compatible with Lord Lionmane's "Explorers".
+ (Ref: ExplorersV25ReadMe.txt)
+[ANY Explorers25Full.esp
+     Explorers25NoTombs.esp
+     Explorers25TombCompatibility.esp]
+Ultra Light Herbalism.esp
+
+[Conflict]
+ Mode_Locrian's "Herbalism Redux" is not compatible with these versions of Lord Lionmane's "Explorers"; use 'Explorers25Full.esp' and one of zappara's "Explorers Addons".
+ zappara's addons are available from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=3652
+ (Ref: ExplorersV25ReadMe.txt)
+[ANY Explorers25NoTombs.esp
+     Explorers25TombCompatibility.esp]
+[ANY Herbalism Redux 1.12a - Bloated MW.esp
+     Herbalism Redux 1.12a.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Explorers Addons 1.1 [zappara]
+
+[Patch]
+ Use 'Explorers25Full_Advanced_Herbalism_addon.esp' if you have enabled andoreth's "Advanced Herbalism" and the full version of Lord Lionmane's "Explorers 2.5"
+ Available from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=3652
+ (Ref: readme_Explorers25_Addons.txt)
+Explorers25Full_Advanced_Herbalism_addon.esp
+[ALL Explorers25Full.esp
+     Advanced Herbalism - TR & BM.esp]
+
+;; "Load order is important with these addons, make sure that the Addons are loaded after the Explorers and Herbalism/Resources Enhanced mods have been loaded."
+;; readme_Explorers25_Addons.txt
+[Order]
+Explorers25Full.esp
+Explorers25Full_Advanced_Herbalism_addon.esp
+
+[Order]
+Advanced Herbalism - TR & BM.esp
+Explorers25Full_Advanced_Herbalism_addon.esp
+
+[Patch]
+ Use 'Explorers25Full_Herbalism_Redux_addon.esp' if you have enabled Mode_Locrian's "Herbalism Redux" and the full version of Lord Lionmane's "Explorers 2.5"
+ Available from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=3652
+ (Ref: readme_Explorers25_Addons.txt)
+Explorers25Full_Herbalism_Redux_addon.esp
+[ALL Explorers25Full.esp
+     [ANY Herbalism Redux 1.12a - Bloated MW.esp
+          Herbalism Redux 1.12a.esp]]
+
+;; "Load order is important with these addons, make sure that the Addons are loaded after the Explorers and Herbalism/Resources Enhanced mods have been loaded."
+;; readme_Explorers25_Addons.txt
+[Order]
+Explorers25Full.esp
+Explorers25Full_Herbalism_Redux_addon.esp
+
+[Order]
+Herbalism Redux 1.12a - Bloated MW.esp
+Explorers25Full_Herbalism_Redux_addon.esp
+
+[Order]
+Herbalism Redux 1.12a.esp
+Explorers25Full_Herbalism_Redux_addon.esp
+
+[Patch]
+ Use 'Explorers25Full_Resources_Enhanced_addon.esp' if you have enabled TheLys' "Resources Enhanced" and the full version of Lord Lionmane's "Explorers 2.5"
+ Available from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=3652
+ (Ref: readme_Explorers25_Addons.txt)
+Explorers25Full_Resources_Enhanced_addon.esp
+[ALL Explorers25Full.esp
+     Resources Enhanced.esp]
+
+;; "Load order is important with these addons, make sure that the Addons are loaded after the Explorers and Herbalism/Resources Enhanced mods have been loaded."
+;; readme_Explorers25_Addons.txt
+[Order]
+Explorers25Full.esp
+Explorers25Full_Resources_Enhanced_addon.esp
+
+[Order]
+Resources Enhanced.esp
+Explorers25Full_Resources_Enhanced_addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Exquisite Robes II [WizBang]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 142830 Exquisite Robes II.esp]
+
+[Conflict]
+ WizBang's "Exquisite Robes II" contains the original six robes from his first version. There is no need to run both mods. 
+Exquisite Robes II.esp
+Exquisite_Robes.esp
+
+[Note]
+ ! WizBang's "Exquisite Robes II" contains the original six robes from his first version, as well as 18 new robes.
+ ! Download it from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=2175
+Exquisite_Robes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6594,6 +7113,7 @@ Fire_Hurt_Tribunal.esp
 
 [Conflict]
  It is suggested you use "Fishing Academy v2.54.esp", the other two plugins have dirty GMSTs.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1431
 Fishing Academy v2.0.esp
 Fishing Academy v2.53.esp
 Fishing Academy v2.54.esp
@@ -6604,6 +7124,11 @@ Fishing Academy v2.54.esp
 Fishing Academy v2.54.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ !! "Fishing Academy" uses Mark and Recall spells for teleportation. Please do not use these spells during the course of the game or some of the functions may NOT work properly.
+ !! (Ref: sns-readme.html)
+Fishing Academy v2.54.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6649,6 +7174,21 @@ Crystal_Forge.esp
      Trial.esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Foliage Season [ayse]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 586649 FoliageSeason.esp]
+
+[Conflict]
+ ayse's "Foliage Season" conflicts with "The Eldar plugin" by gianluca.
+ (Ref: FoliageSeason_ReadMe(E).txt)
+FoliageSeason.esp
+Eldar Plug In.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6720,6 +7260,26 @@ TheForgottenShields - Artifacts_NG.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fort Argonia [Dak-Hamee]
+
+[Requires]
+ Dak-Hamee's "Fort Argonia" requires both expansions, Dak-Hamee's "Storm Forge" and Zenorf's "Firstguard Armor"
+ (Ref: readme_fA.txt)
+FortArgonia.esp
+[ALL Tribunal.esm
+     StormForge.esp
+     Firstguard_Armour.esp]
+
+[Order]
+StormForge.esp
+FortArgonia.esp
+
+[Order]
+Firstguard_Armour.esp
+FortArgonia.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @FPS Optimizer 2.0 [mark_s]
 
 [Note]
@@ -6744,12 +7304,30 @@ Freed Slaves.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @French Maid Outfit [Drakron]
+
+[Requires]
+ (Ref: "French Maid Outfit.html")
+French Maid Outfit.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fun Broom Weapon  [Archeopterix aka. Archie]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1628 Broom.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Funkys Summer House [Richard Beveridge]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 69602 Funkys Summer House.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7733,27 +8311,77 @@ Bloated Morrowind.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism / Expanded Sounds Patch [philologos]
 
-[Note]
- ! These are older versions of the "Graphic Herbalism / Expanded Sounds Patch", you should upgrade:
- ! http://www.tesnexus.com/downloads/file.php?id=23108
-Graphic Herbalism ES1.3.esp
-Graphic Herbalism ES1.3 Extra.esp 
+;;GH_ES1.2 - For Expanded Sounds v1.2
+[Patch]
+ philologos' "GH_ES1.2 Patch.esp" patches "Expanded Sounds" 1.2 by PirateLord and "Graphic Herbalism" by ManaUser. Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
+ (Ref: Ref: GH_ES1.2 Patch.txt)
+GH_ES1.2 Patch.esp
+[ALL Graphic Herbalism.esp
+     [SIZE 438953 Expanded Sounds.esp]]
 
-; Ref: GH_ES1.2 Patch.txt / GH_ES1.3 Patch.txt
+[Requires]
+ (Ref: Ref: GH_ES1.2 Patch.txt)
+GH_Extra_ES1.2 Patch.esp
+[ALL Graphic Herbalism Extra.esp
+     GH_ES1.2 Patch.esp]
+
+; Ref: GH_ES1.2 Patch.txt
 [Order]
 Expanded Sounds.esp
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
 GH_ES1.2 Patch.esp
 GH_Extra_ES1.2 Patch.esp
+
+;;GH_ES1.3 - For Expanded Sounds v1.3
+[Note]
+ ! These are older versions of the "Graphic Herbalism / Expanded Sounds Patch", you should upgrade:
+ ! http://www.tesnexus.com/downloads/file.php?id=23108
+Graphic Herbalism ES1.3.esp
+Graphic Herbalism ES1.3 Extra.esp 
+
+[Patch]
+ philologos' "GH_ES1.3 Patch.esp" patches "Expanded Sounds" 1.3 by PirateLord and "Graphic Herbalism" by ManaUser. Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
+ (Ref: Ref: GH_ES1.3 Patch.txt)
+GH_ES1.3 Patch.esp
+[ALL Graphic Herbalism.esp
+     [SIZE 439651 Expanded Sounds.esp]]
+
+[Requires]
+ (Ref: Ref: GH_ES1.3 Patch.txt)
+GH_Extra_ES1.3 Patch.esp
+[ALL Graphic Herbalism Extra.esp
+     GH_ES1.3 Patch.esp]
+
+;  GH_ES1.3 Patch.txt
+[Order]
+Expanded Sounds.esp
+Graphic Herbalism.esp
+Graphic Herbalism Extra.esp
 GH_ES1.3 Patch.esp
 GH_Extra_ES1.3 Patch.esp
 
-[Conflict]
- Since you have version 1.3 of "Expanded Sounds", you should use the patch "GH_ES1.3 Patch.esp"/"GH_Extra_ES1.3 Patch.esp".
-[ANY GH_ES1.2 Patch.esp
-     GH_Extra_ES1.2 Patch.esp]
-[SIZE 439651 Expanded Sounds.esp]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism - Morrowind Crafting Patch [???]
+
+[Patch]
+ This adds Graphic Herbalism behaviour to Kelp and the "Sausage Plant" from Morrowind Crafting.
+ (Ref: GH MC Patch - Readme.txt)
+ Download it from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=7862
+GH MC Patch.esp
+[ALL Morrowind Crafting 2-1.esp
+     Graphic Herbalism.esp]
+
+;;Ref: GH MC Patch - Readme.txt
+[Order]
+Morrowind Crafting 2-1.esp
+GH MC Patch.esp
+
+;;Dragon32: Looks like this uses some globals from Graphic Herbalism too
+[Order]
+Graphic Herbalism.esp
+GH MC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8341,6 +8969,15 @@ Herbalism Redux ES Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @High Seas Trader [Max Yue]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1093586 High Seas Trader Beta 11-09AM 07-03-2004.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Hilgya the Seamstress  [Plangkye]
 
 [Requires]
@@ -8355,61 +8992,59 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Hold it [Danae]
-
-[Note]
- This plugin contains dirty references. It is recommended that you clean it with TESTool.
-[SIZE 718235 Hold it replacer.esp]
+;; @Hold It 1.6 [Danae]
 
 [Conflict]
- With 'Hold it replacer.esp' enabled the "Hold It" items are for sale at the Tel Aruhn trader, there is no  need to enable 'Hold it ressource.esp' as well.
- (Ref: Hold it-Read me.doc)
-Hold it ressource.esp
-Hold it replacer.esp
+ With 'Hold it - replacer.esp' enabled the "Hold It" items are for sale at the Tel Aruhn trader, there is no need to enable 'Hold it - resource.esp' as well.
+ (Ref: Hold it 1pt6 read me.txt)
+Hold it - resource.esp
+Hold it - replacer.esp
 
-;; Dragon32: I've set the Requires rules to use either the Resource or Replacer ESPs. I'd be surprised if  anyone used one of the addons without using the Replacer version but it's possible.
+;; Dragon32: I've set the Requires rules to use either the Resource or Replacer ESPs. I'd be surprised if anyone used one of the addons without using the Replacer version but it's possible.
 [Requires]
- (Ref: Hold it-Read me.doc)
+ "Hold it - MCA addon.esp" requires version 5.2 of Neoptolemus' "Morrowind Comes Alive".
+ (Ref: Hold it 1pt6 read me.txt)
 Hold it - MCA addon.esp
-[ALL [ANY Hold it replacer.esp
-          Hold it ressource.esp]
-     MCA.esm]
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
+     [ANY [SIZE 2707833 MCA.esm]
+          [SIZE 2519851 MCA.esm]]]
 
 ;; Dragon 32: 'Hold it - MCA addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
 [Order]
-Hold it ressource.esp
-Hold it replacer.esp
+Hold it - resource.esp
+Hold it - replacer.esp
 Hold it - MCA addon.esp
 
 [Requires]
- (Ref: Hold it-Read me.doc)
+ (Ref: Hold it 1pt6 read me.txt)
 Hold it - NOM addon.esp
-[ALL [ANY Hold it replacer.esp
-          Hold it ressource.esp]
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
      NOM 2.13.esp]
 
-;; Dragon 32: 'Hold it - NOM addon.esp' uses items from the main "Hold It" mod (resource or replacer) so  those should load first.
+;; Dragon 32: 'Hold it - NOM addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
 [Order]
-Hold it ressource.esp
-Hold it replacer.esp
+Hold it - resource.esp
+Hold it - replacer.esp
 Hold it - NOM addon.esp
 
-;; Dragon 32: 'Hold it - NOM addon.esp' makes changes to the NOM NPCs, for changes to work it needs to load  after NOM
+;; Dragon 32: 'Hold it - NOM addon.esp' makes changes to the NOM NPCs, for changes to work it needs to load after NOM
 [Order]
 NOM 2.13.esp
 Hold it - NOM addon.esp
 
 [Requires]
- (Ref: Hold it-Read me.doc)
+ (Ref: Hold it 1pt6 read me.txt)
 Hold it - SF npc addon.esp
-[ALL [ANY Hold it replacer.esp
-          Hold it ressource.esp]
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
      Starfires NPC Additions ver-1.11.esp]
 
 ;; Dragon 32: 'Hold it - SF npc addon.esp' uses items from the main "Hold It" mod (resource or replacer) so  those should load first.
 [Order]
-Hold it ressource.esp
-Hold it replacer.esp
+Hold it - resource.esp
+Hold it - replacer.esp
 Hold it - SF npc addon.esp
 
 ;; Dragon 32: 'Hold it - SF npc addon.esp' makes changes to Starfire's NPCs, for changes to work it needs to  load after Starfire's mod
@@ -8418,23 +9053,61 @@ Starfires NPC Additions ver-1.11.esp
 Hold it - SF npc addon.esp
 
 [Requires]
- (Ref: Hold it-Read me.doc)
-Hold it-COM addon.esp
-[ALL [ANY Hold it replacer.esp
-          Hold it ressource.esp]
+ (Ref: Hold it 1pt6 read me.txt)
+Hold it - COM addon.esp
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
      MW_Children_1_0.esm]
 
-;; Dragon 32: 'Hold it-COM addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+;; Dragon 32: 'Hold it - COM addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
 [Order]
-Hold it ressource.esp
-Hold it replacer.esp
-Hold it-COM addon.esp
+Hold it - resource.esp
+Hold it - replacer.esp
+Hold it - COM addon.esp
+
+[Requires]
+ (Ref: Hold it 1pt6 read me.txt)
+Hold it - TR addon.ESP
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
+     TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm]
+
+;; Dragon 32: 'Hold it - TR addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+[Order]
+Hold it - resource.esp
+Hold it - replacer.esp
+Hold it - TR addon.ESP
+
+[Conflict]
+ "Hold it - TR&CoM addon.ESP" combines "Hold it - COM addon" and "Hold it - TR addon" (so these 2 esp shouldn't be activated.
+ (Ref: Hold it 1pt6 read me.txt)
+Hold it - TR&CoM addon.ESP
+[ANY Hold it - TR addon.ESP
+     Hold it - COM addon.esp]
+
+[Requires]
+ (Ref: Hold it 1pt6 read me.txt)
+Hold it - TR&CoM addon.ESP
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
+     TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm
+     MW_Children_1_0.esm]
+
+;; Dragon 32: 'Hold it - TR&CoM addon.ESP' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+[Order]
+Hold it - resource.esp
+Hold it - replacer.esp
+Hold it - TR&CoM addon.ESP
 
 ;;Dragon32: Purported solution is to merge Hold It with appropriate LGNPC mods. I'm loath to do that, so just load order changes here. See Amenophis' original reports earlier in thread and Merge Objects solution later.
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15663093
 ;; So, load Hold It before all LGNPC mods.
 [Order]
-Hold it replacer.esp
+Hold it - replacer.esp
 Less Lore.esp
 LGNPC_NoLore_v?_??.esp
 Lgnpc_SN.esp
@@ -9109,6 +9782,15 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Island [Lonnie]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 701232 The Island v1.3.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Island Estate v1.1 [Valkyrie]
 
 [Note]
@@ -9482,6 +10164,15 @@ Clean Key Replacer MW Renamer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Kimonos [Opethgirlie]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 10215 NWkimono_01_final.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kirel's Interior Weather [Kirel]
 
 ; No mention of louder sounds in readme, checked ESPs with Enchanted Editor.
@@ -9686,6 +10377,11 @@ Moons_Spawn_V1.3.3_Non_Patched.esp
 MultiMark_KwernerPlugin.esp
 MultiMark.esp
 ;check if MultiMark_KwernerPlugin.esp requires or conflicts with standard .esp 
+
+;;Dragon32: Load MultiMark addon after main MultiMark plugin, as per other addons.
+[Order]
+MultiMark.esp
+MultiMark_KwernerPlugin.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10480,6 +11176,32 @@ Complete Doors and Locks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lord Alt Tab, the trader [James Leighton (Lord Alt Tab)]
+
+[Requires]
+ (Ref: "Lord Alt Tab ReadMe.txt")
+Lord Alt Tab.esp
+Better Bodies.esp
+
+[Patch]
+ With the "Lord Alt Tab" mod the front door to Ghorak Manor stops working. When you activate it the door swings open (like an internal door, not a cell-changing door) to show wall behind it. You could not enter Ghorak Manor through the front door (you had to go round to the backdoor).
+ "Lord Altab the Trader Fix" by Ginge13 fixes this:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5181
+LordAltabTrader Fix v0.1.esp
+Lord Alt Tab.esp
+
+;;Lord Altab the Trader Fix v0.1 - Ginge13
+[Requires]
+ (Ref: LordAltabTrader Fix Readme.txt)
+LordAltabTrader Fix v0.1.esp
+Lord Alt Tab.esp
+
+[Order]
+Lord Alt Tab.esp
+LordAltabTrader Fix v0.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lost Artifacts of Tamriel: MWSE Add-on [Fliggerty]
 
 ; Note: LA_MWSE Addon.esp is dependent on the ESM version of Lost Artifacts of Tamriel
@@ -10852,6 +11574,34 @@ newarrowsLITE.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Master Index Journalfix [DeusXMachina]
+
+;;Dragon32: Includes Beth's version and all the mods that include it
+[Note]
+ ! Bethesda's "Master Index" plugin is a pre-Tribunal mod and so doesn't use Tribunal's upgraded journal. DeusXMachina's "Master Index Journalfix" adds the "Master Index" to the open and finished questlists in the upgraded journal.
+ ! Download it from Morrowind Modding History: http://modhistory.fliggerty.com/index.php?dlid=7829
+ ! (Ref: DXM_mi_journalfix_readme.txt)
+[ALL [ANY master_index.esp
+          Wilderness Sounds.esp
+          Wilderness Sounds Bloodmoon.esp
+          Wilderness Sounds Tribunal.esp
+          Wilderness Sounds T & B.esp
+          Clean Official Plugins v1.1.esp
+          OfficialMods_v5.esp]
+     [NOT DXM_masterindex_journalfix.esp]
+     [ANY Tribunal.esm
+          Bloodmoon.esm]]
+
+[Requires]
+ DeusXMachina's "Master Index Journalfix" only works if you have the official "Master Index" plugin activated as well!
+ (Ref: DXM_mi_journalfix_readme.txt)
+DXM_masterindex_journalfix.esp
+[ANY master_index.esp
+     Wilderness Sounds.esp
+     Wilderness Sounds Bloodmoon.esp
+     Wilderness Sounds Tribunal.esp
+     Wilderness Sounds T & B.esp
+     Clean Official Plugins v1.1.esp
+     OfficialMods_v5.esp]
 
 ; Dragon32: Not mentioned in readme but logically, Journalfix has to load later
 ; than the Master Index plugin. Examined plugins and this seems to be the case.
@@ -13059,6 +13809,14 @@ NoM 3.0.esp
 Real_wildlife_2b Complete.esp
 NoM 3.0.esp
 
+;;Dragon32: "So the load order should be: Gluby's [Gluby's Creature Loot Mod v1.11] mod, then NoM creature loot, then NoM"
+;; http://forums.bethsoft.com/index.php?/topic/1116088-rel-necessities-of-morrowind-30/page__view__findpost__p__16476834
+[Order]
+Gluby's Creature Loot Mod v1.11.esp
+NoM_Creatures Loot PHW.esp
+NoM_Creatures Loot Standard.esp
+NoM 3.0.esp
+
 
 ;---------------------------------------------------
 ; Rules still applicable to older versions of NOM:
@@ -14352,6 +15110,11 @@ Bloodmoon.esm
  According to the Readme "This will run with or without the Master Index plugin. If you load this without the Master Index plugin you may see dialog warnings in the Warnings file and in the Construction Set, but the dialog should still work correctly." 
 propylons1.1.esp
 
+;;Dragon32: Despite above feel it's better to load Propylons after Master Index. Matches load order from file dates.
+[Order]
+master_index.esp
+propylons1.1.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Protective Guards [Fliggerty]
@@ -14717,6 +15480,15 @@ Realistic Weather v2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Re-Animated Morrowind Rat [PhyntosWasp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8420 ratking.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Redaynia Village  [Darkelfguy]
 ; already covered under: Ald Redaynia Extended [Princess Stomper], expanded for cleaned and uncleaned sizes.
 
@@ -14933,6 +15705,15 @@ RKWerewolf-NoTrib.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Respawns [Zenethor]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1820880 Respawns-TribunalBloodmoon.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rethan Expansion Version 2.2 [Baratheon79]
 
 [Note]
@@ -15121,7 +15902,14 @@ RoHT Taddeus Balancing.esp
 [Note]
  Bethesda Softwork's "Master Index Plugin" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
  (Ref: "Rise of House Telvanni Readme.txt")
-[ALL master_index.esp
+[ALL [ANY master_index.esp
+          Wilderness Sounds.esp
+          Wilderness Sounds Bloodmoon.esp
+          Wilderness Sounds Tribunal.esp
+          Wilderness Sounds T & B.esp
+          Clean Official Plugins v1.1.esp
+          OfficialMods_v5.esp
+          propylons1.1.esp]
      Rise of House Telvanni.esm]
 
 [Note]
@@ -15771,6 +16559,69 @@ SMTelAruhn.esp
 SMTelVos.esp
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Seasons [TheLys]
+
+[Requires]
+ TheLys' "Seasons" mod requires Tribunal or Bloodmoon because of scripts
+ (Ref: Seasons_ReadMe.txt)
+Seasons.esm
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ TheLys' "Seasons" is based on ayse's "Foliage Season" mod, there is no need to run both mods. 
+Seasons.esm
+FoliageSeason.esp
+
+;;Dragon32: Meh
+[Order]
+Morrowind.esm
+Seasons.esm
+
+[Conflict]
+ ayse's "Foliage Season", which TheLys' "Seasons" is expanded from, conflicts with "The Eldar plugin" by gianluca.
+ (Ref: FoliageSeason_ReadMe(E).txt)
+Seasons.esm
+Eldar Plug In.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sell & Sail Galleon [Emberwolf and Solanaceae]
+
+[Conflict]
+ NEVER run this mod and "Fishing Academy" at the same time
+ (Ref: sns-readme.html)
+SellnSailGalleon (v1.0).esp
+Fishing Academy v2.54.esp
+
+[Note]
+ !! "Sell & Sail Galleon" uses Mark and Recall spells for teleportation. Please do not use these spells during the course of the game or some of the functions may NOT work properly.
+ !! (Ref: sns-readme.html)
+SellnSailGalleon (v1.0).esp
+
+[Note]
+ !! There is a tiny terrain rip present just southwest of the "Sell & Sail Galleon" island when both this mod and "Silgrad Tower" are active
+ !! (Ref: sns-readme.html)
+[ALL SellnSailGalleon (v1.0).esp
+     silgrad_tower_internal_release_1-4_*.esp]
+
+;;SellnSail Bloodmoon addon v.1 by detritus2004
+[Patch]
+ detritus2004's "SellnSail Bloodmoon addon" adds fast travel destinations for Bloodmoon to "SellnSailGalleon" by Emberwolf et al.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=304
+ (Ref: Readme SellnSail Bloodmoon Addon.txt)
+SellnSail Bloodmoon addon.esp
+[ALL SellnSailGalleon (v1.0).esp
+     Bloodmoon.esm]
+
+;:Dragon32: addon modifies some scripts of original
+[Order]
+SellnSailGalleon (v1.0).esp
+SellnSail Bloodmoon addon.esp
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Serabul [Rellac]
 
@@ -16387,6 +17238,15 @@ SpellFix_No-WGI.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Spider Swords [Silaria]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1892 Silarias_SpiderSword.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Spuzzum's Interior Daylight [Spuzzum]
 
 [Requires]
@@ -16415,6 +17275,12 @@ Sri Alchemy BM List Patch.esp
  You can also get a replacement Sris_Alchemy_BM.esp that includes the patch here: http://www.tesnexus.com/downloads/file.php?id=20882
 [VER = 1.1109 Sris_Alchemy_BM.esp]
 Sri Alchemy BM List Patch.esp
+
+[Note]
+ ! You should use Srikandi's Alchemy Bloodmoon Edition.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1333
+[ALL Sris_Alchemy_Trib.esp
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16553,6 +17419,11 @@ Cali_StarstoneOutpost.esp
 [Order]
 Cali_StarstoneOutpost.esp
 StarstoneShields.esp
+
+[Requires]
+ Wulfgar's "Starstone Shields" needs Calislahn's "Starstone Outpost" to be loaded.
+StarstoneShields.esp
+Cali_StarstoneOutpost.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16860,10 +17731,30 @@ Suran-Waterfront-v-4.4.esp
 ;Suran_Underworld_2.5.esp
 
 ; reported by CoolShady, Tyraa Rane offered an unpublished patch, apparently by Korana.
+; [Conflict]
+;  It has been reported that Suran Underworld and Solstheim Castle make conflicting changes to the docks at Fort Frostmoth.
+; Clean Solstheim_Castle_v1.1.esp
+; Suran_Underworld_2.5.esp
+
+;;Korana's replacement is SIZE 2086052
 [Conflict]
- It has been reported that Suran Underworld and Solstheim Castle make conflicting changes to the docks at Fort Frostmoth.
-Clean Solstheim_Castle_v1.1.esp
-Suran_Underworld_2.5.esp
+ The docks at Fort Frostmoth were modified to accommodate a ship in the original version of "Suran Underworld", this has caused problems with some mods.
+ Korana has released a patch ("SU_Dock_Fix"): http://www.tesnexus.com/downloads/file.php?id=27167
+ (Ref: SU_Dock_Fix-27167.rar\IMPORTANT INFORMATION.txt)
+[SIZE 2086615 Suran_Underworld_2.5.esp]
+[ANY Clean Solstheim_Castle_v1.1.esp
+     BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+     BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+     BEER! Combo v1.12-03a.esp
+     BEER! Combo.esp
+     NoM 2.1 with BEER!.esp
+     NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
+     NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
+     NoM 2.12-03a with BEER!.esp
+     NOM 2.13.esp
+     BT_Whitewolf_2_0.esp
+     BT_Whitewolf_2_0.esm
+     BM_S_Inn.esp]
 
 [Conflict]
  Suran Underworld places its Abandoned House in the same spot as Suran Archery Store.
@@ -17543,6 +18434,15 @@ Constance1_0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Thigh-High Boots [Durgoth]
+
+[Requires]
+ (Ref: "Readme - Thigh High Boots 2.0.txt")
+Thigh High Boots 2.0.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Thirsk Expanded [Princess Stomper]
 
 [Conflict]
@@ -17556,6 +18456,15 @@ Thirsk Expanded Family.esp
  (Ref: "Thirsk Expanded Readme.rtf")
 Thirsk Expanded Family.esp
 MW_Children_1_0.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tight Dresses [Calislahn]
+
+[Requires]
+ (Ref: "Readme_Cali's_BB_V.2_Tight Dresses.txt")
+Cali's_BB_V.2_Tight_Dresses.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17724,6 +18633,15 @@ TLM - Sneak Modifiers (Code).esp
  (Ref: "TLM - ~Readme.htm")
 TLM - Sneak Modifiers (Code).esp
 True_Lights_And_Darkness_0.5.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Toggle Sneak 1.1 [Yacoby]
+
+[Note]
+ ! The highly recommended "Morrowind Code Patch" by Hrnchamd also changes the functionality of the sneak key to a toggle button (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you do not need "ToggleSneak.esp"
+ ! (Ref: http://www.tesnexus.com/downloads/file.php?id=19510 )
+ToggleSneak.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18008,7 +18926,16 @@ TheUberCrystalEggHunt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Ultimate Galeon [Madmax]
+;; @Ultimate Clothing Mod - Shirts [Silaria]
+
+[Requires]
+ (Ref: "Sils_UCM_Shirt01_READMENOT.txt")
+Sils_UCM_Shirt01_BB.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Galleon [Madmax]
 
 [Patch]
  (Ref: "UG readme.txt")
@@ -18045,6 +18972,16 @@ Ultimate Galleon v2.2.esp
 [Order]
 Ultimate Galleon v2.2.esp
 Ultimate Galleon Purchase Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Kilts [Silaria]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 9019 Ultimate_Kilts.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Underground [Qarl]
@@ -18231,6 +19168,15 @@ Unique Items.esp
   Unofficial MCA - City Attack Patch 2 - Removes the chance for a bandit to attack you altogether.
 Unofficial Morrowind Comes Alive - City Attack Patch 1.ESP
 Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Usagi of the Moon [???]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 13518 Usagi of the Moon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20058,6 +21004,20 @@ Vertical limit climbing mod 1.02.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vikings [Misty Moon]
+
+[Requires]
+ (Ref: Viking's.txt)
+Viking's.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     Better Bodies.esp
+     Better Heads.esm
+     Better Heads Tribunal addon.esm
+     Better Heads Bloodmoon addon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vivec Expansion [Hoghead the Horrible]
 
 ;;Dragon32: Also conflicts with the 'Dwemer Warship' mod, can't find a download
@@ -20306,7 +21266,7 @@ Water Level Fix - BM.esp
      Water Level Fix - MW.esp]
 
 [Requires]
- If you have Tribunal, but not Bloddmoon, you will want to activate both "Water Level Fix - MW.esp" and "Water Level Fix - TB.esp".
+ If you have Tribunal, but not Bloodmoon, you will want to activate both "Water Level Fix - MW.esp" and "Water Level Fix - TB.esp".
  (Ref: "Water Level Fix/Readme.txt")
 Water Level Fix - TB.esp
 [ALL Morrowind.esm
@@ -20923,7 +21883,9 @@ Wilderness Sounds T & B.esp
      Wilderness Sounds Tribunal.esp
      Wilderness Sounds T & B.esp]
 [ANY bcsounds.esp
-     master_index.esp]
+     [ANY master_index.esp
+          Clean Official Plugins v1.1.esp
+          OfficialMods_v5.esp]]
 
 ;; Load Wilderness Sounds after Leon "pancreas" Medado's Morrowind
 ;; Sound Enhancements and Duncann's Atmospheric Sound Effects
@@ -20976,6 +21938,15 @@ Ash Ghoul Hearts.esp
  (Ref: "lfx_rare_ingredients.txt")
 lfx_rare_ingredients.esp
 lfx_rare_ingredients-uniques.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Windmill in Caldera [ayse]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 141009 Windmill.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21041,6 +22012,265 @@ Wolf Manor bloodmoon addon.esp
  (Ref: "World_Of_Faces readme.txt")
 World_Of_Faces_Master.esm
 World_Of_Faces.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wrye World [Wrye]
+
+[Requires]
+ All the optional mods in "Wrye World" require "Wrye Base.esp" to be loaded.
+ (Ref: Wrye World.html)
+[ANY Wrye Travel.esp
+     Wrye Luggage.esp
+     Bar Dresses W BB.esp
+     Cali Clothing W.esp
+     Cali Dresses W BB.esp
+     Drakron Maid W BB.esp
+     Durgoth Boots W BB.esp
+     Durgoth Briefs W.esp
+     LAT W BB.esp
+     Lillia Clothing W.esp
+     Sils Clothing W BB.esp
+     Sils Skirts W.esp]
+Wrye Base.esp
+     
+;;Wrye Travel and expansion
+[Requires]
+ 'Wrye Travel Exp.esp' requires "Wrye Travel", both expansions and a version of Bethesda's "Master Index" plugin.
+ (Ref: Wrye World.html)
+Wrye Travel Exp.esp
+[ALL Wrye Travel.esp
+    [ANY master_index.esp
+         Wilderness Sounds.esp
+         Wilderness Sounds Bloodmoon.esp
+         Wilderness Sounds Tribunal.esp
+         Wilderness Sounds T & B.esp
+         Clean Official Plugins v1.1.esp
+         OfficialMods_v5.esp]
+    Bloodmoon.esm
+    Tribunal.esm]
+
+;;Dragon32: Load travel plugin after base mod and the travel expansion after the main travel mod
+[Order]
+Wrye Base.esp
+Wrye Travel.esp
+Wrye Travel Exp.esp
+
+;;Dragon32: load the travel plugin for the Master Index plugin after it
+[Order]
+master_index.esp
+Wrye Travel Exp.esp
+
+[Order]
+Wilderness Sounds.esp
+Wrye Travel Exp.esp
+
+[Order]
+Wilderness Sounds Bloodmoon.esp
+Wrye Travel Exp.esp
+
+[Order]
+Wilderness Sounds Tribunal.esp
+Wrye Travel Exp.esp
+
+[Order]
+Wilderness Sounds T & B.esp
+Wrye Travel Exp.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Wrye Travel Exp.esp
+
+[Order]
+OfficialMods_v5.esp
+Wrye Travel Exp.esp
+
+[Order]
+propylons1.1.esp
+Wrye Travel Exp.esp
+
+;;Dragon32: Also includes Firemoth location
+[Order]
+Siege at Firemoth.esp
+Wrye Travel Exp.esp
+
+;;Luggage addon
+;;Dragon32: Load luggage plugin after base mod
+[Order]
+Wrye Base.esp
+Wrye Luggage.esp
+
+;;Armor addon
+[Requires]
+ "Wrye Armor" requires the "Wrye Base" plugin and both expansions.
+ (Ref: Wrye World.html)
+Wrye Armor.esp
+[ALL Wrye Base.esp
+     Tribunal.esm
+     Bloodmoon.esm]
+
+;;Dragon32: Load armour plugin after base mod
+[Order]
+Wrye Base.esp
+Wrye Armor.esp
+
+;;clothing mods
+;; Baratheon79's BB Dress Pack
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Bar Dresses W BB.esp
+BAR_BB_dresspack.esp
+
+[Order]
+Wrye Base.esp
+Bar Dresses W BB.esp
+
+[Requires]
+ (Ref: Wrye World.html)
+Bar Dresses W BB.esp
+Better Bodies.esp
+
+;;Calislahn Clothing
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Cali Clothing W.esp
+Cali's Clothing v1.2.esp
+
+[Order]
+Wrye Base.esp
+Cali Clothing W.esp
+
+;;Calislahn Tight Dresses
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Cali Dresses W BB.esp
+Cali's_BB_V.2_Tight_Dresses.esp
+
+[Order]
+Wrye Base.esp
+Cali Dresses W BB.esp
+
+[Requires]
+ (Ref: Wrye World.html)
+Cali Dresses W BB.esp
+Better Bodies.esp
+
+;;Drakron's French Maid Outfit
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Drakron Maid W BB.esp
+French Maid Outfit.esp
+
+[Order]
+Wrye Base.esp
+Drakron Maid W BB.esp
+
+[Requires]
+ (Ref: Wrye World.html)
+Drakron Maid W BB.esp
+Better Bodies.esp
+
+;;Durgoth's Thigh High Boots
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Durgoth Boots W BB.esp
+Thigh High Boots 2.0.esp
+
+[Order]
+Wrye Base.esp
+Durgoth Boots W BB.esp
+
+[Requires]
+ (Ref: Wrye World.html)
+Durgoth Boots W BB.esp
+Better Bodies.esp
+
+;;Durgoth's briefs
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Durgoth Briefs W.esp
+Chainmail Tops+Slips 1.1.esp
+
+[Order]
+Wrye Base.esp
+Durgoth Briefs W.esp
+
+;;Durgoth's Thigh High Boots
+[Order]
+Wrye Base.esp
+Durgoth Boots W BB.esp
+
+[Note]
+ Wrye's "Durgoth Boots W BB.esp" does not add the traders from Durgoth's original "Thigh-High Boots". If you want Dugoth's three traders in your game but Wrye's names and qualities, then create a mlox rule in mlox_user.txt to load "Thigh High Boots 2.0.esp" earlier than "Durgoth Boots W BB.esp"
+ (Ref: Wrye World.html)
+[ALL Durgoth Boots W BB.esp
+     Thigh High Boots 2.0.esp]
+
+[Requires]
+ (Ref: Wrye World.html)
+Durgoth Boots W BB.esp
+Better Bodies.esp
+
+;;LAT BB
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Lord Alt Tab.esp
+LAT W BB.esp
+
+[Order]
+Wrye Base.esp
+LAT W BB.esp
+
+[Requires]
+ (Ref: Wrye World.html)
+LAT W BB.esp
+Better Bodies.esp
+
+;;Lillia Garb and Lillia Robes
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Lillia Clothing W.esp
+[ALL _Lillias_Robes_v1.0.esp
+     Lillias_Garb_v1.0.esp]
+
+[Order]
+Wrye Base.esp
+Lillia Clothing W.esp
+
+;;Silaria's Clothing
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Sils_Clothing_Vendor_v1.2.esp
+Sils Clothing W BB.esp
+
+[Order]
+Wrye Base.esp
+Sils Clothing W BB.esp
+
+[Requires]
+ (Ref: Wrye World.html)
+Sils Clothing W BB.esp
+Better Bodies.esp
+
+;;Silaria's Skirts
+[Conflict]
+ Do not use both ESPs.
+ (Ref: Wrye World.html)
+Clean Ultimate Clothing Mod_Skirts_v1.00.esp
+Sils Skirts W.esp
+
+[Order]
+Wrye Base.esp
+Sils Skirts W.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
