@@ -1244,21 +1244,43 @@ Antares' Big Mod <VER>.esp
 Antares' Big Mod 5.esp
 Bloodmoon.esm
 
+;;Dragon32: Patch for MCA 5.2
 [Patch]
  "Some functions of ABM, if used with NPC from MCA, will crash the game. With this patch, these new functions are not available for NPCs from MCA."
+ This patch is for version 5.2 of Neoptolemus' "Morrowind Comes Alive."
  (Note that the patch works with version 5 of Antares' Big Mod also).
  (Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892
 Antares' Big Mod 4 - MCA 5.2 - patch.esp
 [ALL [ANY Antares' Big Mod 4.esp
 	  Antares' Big Mod 5.esp]
-     MCA.esm]
-
+     [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]]
 
 ; Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt"
 [Order]
 Antares' Big Mod 4.esp
 Antares' Big Mod 5.esp ; The patch works for the new version 5 too.
 Antares' Big Mod 4 - MCA 5.2 - patch.esp
+
+;;Dragon32: Patch for MCA 6.0, assume works with ABM v4 and MCA v6.1 too
+[Patch]
+ "Some functions of ABM, if used with Npc from MCA, will crash the game. With this patch, these new functions are not available for Npcs from MCA."
+ This patch is for version 6.x of Neoptolemus' "Morrowind Comes Alive."
+ (Ref: "Antares' Big Mod 5 - MCA 6 - patch - README.txt")
+ http://www.freewebs.com/arcimaestroantares/antaresbigmod.htm
+Antares' Big Mod 5 - MCA 6 - patch.esp
+[ALL [ANY Antares' Big Mod 4.esp
+	  Antares' Big Mod 5.esp]
+     [ANY [SIZE 2551516 MCA.ESM]
+          [SIZE 2559987 MCA.ESM]
+          [SIZE 2597537 MCA.ESM]]]
+
+; Ref: "Antares' Big Mod 5 - MCA 6 - patch - README.txt"
+[Order]
+Antares' Big Mod 4.esp ; D32: Assume patch works for version 4 too.
+Antares' Big Mod 5.esp
+Antares' Big Mod 5 - MCA 6 - patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2397,14 +2419,6 @@ BE 1.4 -Golden Arrow fix-.esp
 
 [Patch]
  Zobator's "Golden Arrow Fix" for "Balmora Expansion" by Gorg et al corrects the file location for some of the golden arrows' meshes.
- (Ref: BE 1.4 -Golden Arrow fix-README.txt)
-BE 1.4 -Golden Arrow fix-.esp
-[ANY Balmora Expansion v1.4.esp
-     Balmora Expansion v1.4+(1.4).esp
-     Balmora Expansion - LITE 1.0.esp
-     BE+(1.4) Better Looking Morrowind.esp]
-
-[Requires]
  (Ref: BE 1.4 -Golden Arrow fix-README.txt)
 BE 1.4 -Golden Arrow fix-.esp
 [ANY Balmora Expansion v1.4.esp
@@ -6606,10 +6620,12 @@ Exquisite_Robes.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Extra Artifacts [ ]
 
+;;Dragon32 - [SIZE 31878 Extra Artifacts.esp] is v2.1; [SIZE 31008  Extra Artifacts.esp] is v1.1
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 31878 Extra Artifacts.esp]
+[ANY [SIZE 31878 Extra Artifacts.esp]
+     [SIZE 31008  Extra Artifacts.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6736,10 +6752,12 @@ THE Nord & Orc Facepack.esm
 THE Nord & Orc Facepack.esp
 
 [Requires]
- Tarnsman's "MCA Goblin-Men Addon.esp" adds NPCs from the Goblin-Men race to the levelled lists of Morrowind Comes Alive.
+ Tarnsman's "MCA Goblin-Men Addon.esp" adds NPCs from the Goblin-Men race to the levelled lists of version 5.2 of Neoptolemus' "Morrowind Comes Alive".
  (Ref: THE N & O Facepack_readme.doc)
 MCA Goblin-Men Addon.esp
-MCA.esm
+[ALL [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]
+     THE Nord & Orc Face Collection.esm]
 
 ;;THE Facepack Compilation
 [Requires]
@@ -7130,6 +7148,33 @@ Fishing Academy v2.54.esp
  !! (Ref: sns-readme.html)
 Fishing Academy v2.54.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fletcher Mod 2.0 [Locklear93]
+
+;;v1.4
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 57967 fletcher.esp]
+
+;;v2.0
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 77898 fletcher.esp]
+
+[Note]
+ ! Version 2.0 of the Fletcher Mod is available from Morrowind Modding History
+ ! http://modhistory.fliggerty.com/index.php?dlid=7886
+[VER<2.0 fletcher.esp]
+
+[Conflict]
+ Both "LGNPC Pelagiad" and Locklear93's "Fletcher Mod" change the merchant Mebestian Ence in Pelegiad. If "Fletcher Mod" loads first then Mebestian Ence will not have a fletching kit for sale, if "LGNPC Pelagiad" loads first then his LGNPC quests will not function.
+ You can create an Order rule in mlox_user.txt to specify the relative load order of these two mods to meet your wishes.
+ (Ref: http://escf.rethan-manor.net/index.php?topic=2065.msg21592#msg21592 )
+LGNPC_Pelagiad_v?_??.esp
+fletcher.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fligg's Slave Mod [Fliggerty]
@@ -8093,8 +8138,8 @@ Glow-Away.esp
  "Go To Jail 3.5 - B.esp" - If you only have Bloodmoon
  "Go To Jail 3.5 - T B.esp" - If you have Bloodmoon and Tribunal
  "Go To Jail 3.5 - T B - NOM.esp" - If you have Bloodmoon, Tribunal and Necessities of Morrowind
- "Go To Jail 3.5 - T B - MCA.esp" - If you have Bloodmoon, Tribunal and Morrowind Comes Alive
- "Go To Jail 3.5 - T B - MCA - NOM.esp" - If you have Bloodmoon, Tribunal, Necessities of Morrowind and Morrowind Comes Alive
+ "Go To Jail 3.5 - T B - MCA.esp" - If you have Bloodmoon, Tribunal and Morrowind Comes Alive v5.2
+ "Go To Jail 3.5 - T B - MCA - NOM.esp" - If you have Bloodmoon, Tribunal, Necessities of Morrowind and Morrowind Comes Alive v5.2
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T.esp
 Go To Jail 3.5 - B.esp
@@ -8137,20 +8182,22 @@ Go To Jail 3.5 - T B - NOM.esp
 Go To Jail 3.5 - T B - NOM.esp
 
 [Requires]
- "Go To Jail 3.5 - T B - MCA.esp" requires Morrowind Comes Alive
+ "Go To Jail 3.5 - T B - MCA.esp" requires Morrowind Comes Alive v5.2
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T B - MCA.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
-     MCA.esm]
+     [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]]
 
 [Requires]
- "Go To Jail 3.5 - T B - MCA - NOM.esp" requires Necessities of Morrowind and Morrowind Comes Alive
+ "Go To Jail 3.5 - T B - MCA - NOM.esp" requires Necessities of Morrowind and Morrowind Comes Alive v5.2
  (Ref: "Go to Jail 3.5 README.mht")
 Go To Jail 3.5 - T B - MCA - NOM.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
-     MCA.esm]
+     [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10797,12 +10844,16 @@ LGNPC_SoulSicknessPatch_v?_??.esp
 Less_Generic_Nerevarine.esp
 LGNPC_PaxRedoran_v?_??.esp
 
+;Dragon32: Unsure if this works with v6.x of MCA
 [Patch]
  "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
  (Ref: "LGNPC_SecretMasters_Readme.txt")
 LGNPC_SecretMasters_MCA5.esp
 [ALL LGNPC_SecretMasters_v?_??.esp
-     MCA.esm]
+     [ANY [SIZE 2303212 MCA.ESM]
+          [SIZE 2458536 MCA.ESM]
+          [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]]
 
 ;; expdep
 [Requires]
@@ -10958,8 +11009,9 @@ Uvirith Inside.esp
 LGNPC_TelUvirith_v<VER>_UI.esp
 
 [Note]
- !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in unexpected problems in both mods.
+ !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
  !! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
+ !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0)
 [ALL Vampire_Embrace.esp
      [ANY LGNPC_Aldruhn_v?_??_suppl.esp
           LGNPC_IndarysManor_v?_??.esp
@@ -11538,12 +11590,16 @@ Marandus Abode.esp
           Tribunal.esm]
      Morrowind Comes Alive.esm]
 
+;Dragon32: All v5.x versons
 [Requires]
  (Ref: Marandus Abode 2.0 readme.txt and Marandus Abode MCA Patch.txt)
 [SIZE 101439 Marandus Abode MCA Patch.esp]
 [ALL [ANY Bloodmoon.esm
           Tribunal.esm]
-     MCA.esm]
+     [ANY [SIZE 2303212 MCA.ESM]
+          [SIZE 2458536 MCA.ESM]
+          [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]]
 
 [Conflict]
  Use only one plugin, "Marandus Abode MCA Patch.esp" is an alternative plugin for users of "Morrowind Comes Alive" by Neoptolemus.
@@ -12217,18 +12273,31 @@ Unarmored_Corrector_V01_TRIB.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA - Morrowind Comes Alive [Neoptolemus]
 
-;;Dragon32: MCA.ESM size and version
+;;Dragon32: MCA size and version information
 ;;[SIZE 2442550 Morrowind Comes Alive.esm] = MCA 4.1
 ;;[SIZE 2303212 MCA.ESM] = MCA 5.0
 ;;[SIZE 2458536 MCA.ESM] = MCA 5.1
 ;;[SIZE 2707833 MCA.ESM] = MCA 5.2 basic
 ;;[SIZE 2519851 MCA.ESM] = MCA 5.2 The Undead-compatible version
+;;[SIZE 2551516 MCA.ESM] = MCA 6.0
+;;[SIZE 2559987 MCA.ESM] = MCA 6.0 from "MCA Fix.zip"
+;;[SIZE 2597537 MCA.ESM] = MCA 6.1
+
+;;**********
+;;v6.x rules
+;;**********
 
 [Note]
- ! "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you have not already done so, install "MCA 5.2 - The Undead 3.0 Compatible" from:
- ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354
- ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=847583&view=findpost&p=12338232 )
-The Undead - MCA5.2 Compatibility Patch.esp
+ ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 6.1, you should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=563
+[SIZE !2597537 MCA.ESM]
+
+;;Dragon32: Applies to 5.x and 6.x
+[Patch]
+ MCA - COV Addon.esp is recommended when you have both "Morrowind Comes Alive" and "Clothiers of Vvardenfell". It adds nice COV clothes to the MCA NPCs.
+MCA - COV Addon.esp
+[ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
+     MCA.esm]
 
 [Note]
  If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
@@ -12240,27 +12309,106 @@ The Undead - MCA5.2 Compatibility Patch.esp
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 MCA - COV Addon.esp
 
-[Patch]
- MCA - COV Addon.esp is recommended when you have both MCA and COV. It adds nice COV clothes to the MCA NPCs.
-MCA - COV Addon.esp
-[ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
-     MCA.esm]
-
-[Conflict]
- "MCA.esm" is the newer version, you do not need to run "Morrowind Comes Alive.esm" with it.
+;;Dragon32: Applies to 5.x and 6.x
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - Guards Patch.esp
 MCA.esm
-Morrowind Comes Alive.esm
+
+;;Dragon32: Applies to 5.x and 6.x
+[Requires]
+ (Ref: "MCA - Readme.txt")
+MCA - Vampire Realism Patch.esp
+[ALL MCA.esm
+     Vampire Realism II.esp]
+
+;;Dragon32: Patch uses some VR variables in scripts, probably best to load after VR
+[Order]
+Vampire Realism II.esp
+MCA - Vampire Realism Patch.esp
+
+;;Dragon32: MCA 6.0 and MCA 6.0 from "MCA Fix.zip"
+[Requires]
+ "Morrowind Comes Alive" v6.0 modifies Bethesda's Bed_Standard script, so it requires "MCA - NOM Patch.esp" to be compatible with Taddeus' "Necessities of Morrowind"
+ (Ref: "MCA - Readme.txt")
+MCA - NOM Patch.esp
+[ALL [ANY [SIZE 2551516 MCA.ESM]
+          [SIZE 2559987 MCA.ESM]]
+     NOM 2.13.esp]
 
 ;; MCA - NOM Patch.esp modifieds NOM's Bed_Standard script, so it should come after NOM - JMS
 [Order]
 NOM 2.13.esp
 MCA - NOM Patch.esp
 
+[Conflict]
+ MCA v6.1 no longer modifies Bethesda's Bed_Standard script, so it no longer requires a patch to be compatible with Necessities of Morrowind.
+ (Ref: MCA - Readme.txt)
+MCA - NOM Patch.esp
+[SIZE 2597537 MCA.ESM]
+
+
+[Conflict]
+ Version 6.0 and later of Neoptolemus' "Morrowind Comes Alive" merged in the changes from his "The Undead", this mod is now obsolete if you are using MCA 6.0 or above.
+ (Ref: MCA - Readme.txt)
+[ANY [SIZE 2551516 MCA.ESM]
+     [SIZE 2559987 MCA.ESM]
+     [SIZE 2597537 MCA.ESM]]
+The Undead.esm
+
+[Conflict]
+ Version 6.0 and later of Neoptolemus' "Morrowind Comes Alive" merged in the changes from his "Minions of House Dagoth", this mod is now obsolete if you are using MCA 6.0 or above.
+ (Ref: MCA - Readme.txt)
+[ANY [SIZE 2551516 MCA.ESM]
+     [SIZE 2559987 MCA.ESM]
+     [SIZE 2597537 MCA.ESM]]
+[ANY Minions of House Dagoth.esp
+     Minions of House Dagoth - No Undead.esp]
+
+[Note]
+ You do not have to have Jeremy McGuinn's "Divine Domina" activated to use 'MCA - Divine Domina Addon.esp'.
+ (Ref: MCA - Readme.txt)
+[ALL MCA - Divine Domina Addon.ESP
+     [ANY Divine_domina_part_1.esp
+          Divine_domina_part_2.esp
+          Divine_domina_part_3_Tribunal.esp
+          Divine_domina_part_4.esp
+          Divine_domina_part_5.esp]]
+
 [Requires]
- (Ref: "MCA - Readme.txt")
-MCA - Vampire Realism Patch.esp
-[ALL MCA.esm
-     Vampire Realism II.esp]
+ 'MCA - TR Addon.ESP' requires version 6.0 or greater of Neoptolemus' "Morrowind Comes Alive" and "Tamriel Rebuilt" Maps 1 and 2 
+ (Ref: MCA - Readme.txt)
+MCA - TR Addon.ESP
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm
+     [ANY [SIZE 2551516 MCA.ESM]
+          [SIZE 2559987 MCA.ESM]
+          [SIZE 2597537 MCA.ESM]]]
+
+[Note]
+ !! As of version 6.x, Neoptolemus' "Morrowind Comes Alive" now uses the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have installed it correctly.
+ !! (Ref: MCA - Readme.txt)
+[ALL [ANY [SIZE 2551516 MCA.ESM]
+          [SIZE 2559987 MCA.ESM]
+          [SIZE 2597537 MCA.ESM]]
+     [NOT Westly's Master Headpack X.esp]]
+
+;;**********
+;;v5.x rules
+;;**********
+;;Dragon32: For now, kept rules unique to 5.x versions.
+
+[Note]
+ ! "The Undead - MCA5.2 Compatibility Patch.esp" is not needed. If you have not already done so, install "MCA 5.2 - The Undead 3.0 Compatible" from:
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=4354
+ ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=847583&view=findpost&p=12338232 )
+The Undead - MCA5.2 Compatibility Patch.esp
+
+[Conflict]
+ "MCA.esm" is the newer version, you do not need to run "Morrowind Comes Alive.esm" with it.
+MCA.esm
+Morrowind Comes Alive.esm
 
 [Note]
  Under certain conditions, NPCs spawned by MCA will vanish. This is undesirable when you have used Vampire Embrace to turn them into your children or thrall. You might consider using the "Vampire Embrace MCA Patch" which keeps MCA-spawned NPCs in the game if they have been touched by "Vampire Embrace".
@@ -12281,29 +12429,29 @@ MCA - Vampire Realism Patch.esp
 [SIZE 2519851 MCA.esm] ;this is the MCA/Undead 3.0 compatible version
 [SIZE 150081 Vampire Embrace MCA Patch.esp] ; JMS - added size predicate so warning goes away if user deletes unneeded scripts.
 
+;;Dragon32: All the 5.x versions
 [Requires]
  (Ref: "MCA - Readme.txt")
 MCA - NOM Patch.esp
-[ALL MCA.esm
+[ALL [ANY [SIZE 2303212 MCA.ESM]
+          [SIZE 2458536 MCA.ESM]
+          [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]
      NOM 2.13.esp]
 
 [Requires]
- (Ref: "MCA - Readme.txt")
-MCA - Guards Patch.esp
-MCA.esm
-
-[Requires]
+ 'MCA - More Enemies.esp' requires v5.x of Neoptolemus' "Morrowind Comes Alive"
  (Ref: "MCA - Readme.txt")
 MCA - More Enemies.esp
-MCA.esm
+[ALL [ANY [SIZE 2303212 MCA.ESM]
+          [SIZE 2458536 MCA.ESM]
+          [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]]
 
+;;**********
 ;;v4.1 rules
+;;**********
 ;;Dragon32: Added rules for 4.1 as, from talk on the Forums, a number of people still use this version.
-
-[Conflict]
- Do not run both v4.1 and v5.* of Neoptolemus' "Morrowind Comes Alive" at the same time.
-MCA.esm
-Morrowind Comes Alive.esm
 
 ;; MCA - NOM Patch.esp modifieds NOM's Bed_Standard script, so it should come after NoM
 [Order]
@@ -12378,9 +12526,11 @@ Morrowind Comes Alive.esm
 ;; @MCA Companions Improved [Grant McDorman]
 
 [Requires]
+ Charles Cooley's (cdcooley) "Improved Teleportation" and version 5.2 of Neoptolemus' "Morrowind Comes Alive" are required
  (Ref: "MCA_Companions_Enhanced-ReadMe.txt")
 MCA_Companions_Enhanced.esp
-[ALL MCA.esm
+[ALL [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]
      ImprovedTeleportation2.0.esp]
 
 
@@ -12407,7 +12557,10 @@ Morrowind Comes Alive.esm
  Marbred's "MCA CM Armory Addon" requires version 5.* of Neoptolemus' "Morrowind Comes Alive". Whilst the readme mandates version 5.1 "MCA CM Armory Addon" will work with versions 5.0 and 5.2 of "Morrowind Comes Alive".
  (Ref: Readme - MCA cm armory Addon.txt)
 MCA cm Armory Addon.esp
-MCA.esm
+[ANY [SIZE 2303212 MCA.ESM]
+     [SIZE 2458536 MCA.ESM]
+     [SIZE 2707833 MCA.ESM]
+     [SIZE 2519851 MCA.ESM]]
 
 ;; Dragon32: Marbred's mod defines the appropriate records from the Cutthroat mod, there's no need to actually load it
 [Note]
@@ -13865,17 +14018,17 @@ Bloodmoon.esm
 [Patch]
  MW_CHILDREN_NSN_PATCH.esp is a compatibility patch for these two mods.
  (Ref: "Readme - Nerevar Say Nerevar.txt")
-Clean Nerevar Say Nerevar Again_v1.01.esp
-[ALL MW_CHILDREN_NSN_PATCH.esp
+MW_CHILDREN_NSN_PATCH.esp
+[ALL Clean Nerevar Say Nerevar Again_v1.01.esp
      MW_Children_1_0.esm]
 
 ;;Dragon32 - based on the dependency ("Morrowind Comes Alive.esm") the patch is for MCA v4.x
 [Patch]
  MCA_NSN_Patch.esp is a compatibility patch for these two mods.
  (Ref: "Readme - Nerevar Say Nerevar.txt")
-Clean Nerevar Say Nerevar Again_v1.01.esp
-[ALL MCA_NSN_Patch.esp
-     MCA.esm]
+MCA_NSN_Patch.esp
+[ALL Clean Nerevar Say Nerevar Again_v1.01.esp
+     Morrowind Comes Alive.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15449,6 +15602,18 @@ Real_wildlife_2b Complete.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Wildlife 2B - No Town Creatures [Aeven]
+
+;;Ref: RW2B_NoTownCreatures.txt
+[Order]
+Real_wildlife_2b Complete.esp
+RW2B_NoTownCreatures.ESP
+
+[Order]
+Real_wildlife_2b.esp
+RW2B_NoTownCreatures.ESP
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Realistic Weather [Mal'isirion]
@@ -17051,7 +17216,8 @@ WA_SoulGems(!).esp
  If you are using "Morrowind Comes Alive 5.2" by Neoptolemus then use the patch that rearranges MCA's additions to the South Wall Cornerclub
  (Ref: SWReadme.txt)
 SW_MCA5.2_Patch.esp
-[ALL MCA.esm
+[ALL [ANY [SIZE 2707833 MCA.ESM]
+          [SIZE 2519851 MCA.ESM]]
      South Wall.ESP]
 
 ;; Dragon32: Whilst not specified in the readme it makes sense to load the patch after the main ESP
@@ -21328,7 +21494,7 @@ NOM 2.13.esp
  Version 1.13 and above of abot's "Water Life" includes Arcimaestro Antares' "Gondoliers"
  (Ref: abotWaterLife.txt)
 [VER > 1.12 abotWaterLife.esm]
-Gondliers.esp
+Gondoliers.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
