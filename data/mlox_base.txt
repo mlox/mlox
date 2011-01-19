@@ -545,6 +545,43 @@ Aduls_Leggings_Bloodmoon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Advanced Alchemy 1.3 [DarkSCR]
+
+[Conflict]
+ "Don't use this mod with AtHomeAlchemy by Syclonix".
+ (Ref: Advanced Alchemy.txt)
+Advanced Alchemy.esp
+Syc_AtHomeAlchemy.esp
+
+[Requires]
+ "If you use either 'Dwemer Alchemy Set (1.00 R3).esp' or '£exa's Dwemer Alchemy V2 (EN).esm' check also the box next to the 'Advanced Alchemy - LDA Patch.esp' file."
+ (Ref: Advanced Alchemy.txt)
+Advanced Alchemy - LDA patch.esp
+Advanced Alchemy.esp
+
+;Dragon32: for when mlox can cope with extra characters, replace above
+;[Requires]
+;
+;Advanced Alchemy - LDA patch.esp
+;[ALL Advanced Alchemy.esp
+;     [ANY £exa's Dwemer Alchemy V2 (EN).esm
+;          Dwemer Alchemy Set (1.00 R3).esp]
+
+;Ref: Advanced Alchemy.txt
+[Order]
+Dwemer Alchemy Set (1.00 R3).esp
+Advanced Alchemy.esp
+Advanced Alchemy - LDA Patch.esp
+
+;Dragon32: for when mlox can cope with extra characters, replace above
+;[Order]
+;£exa's Dwemer Alchemy V2 (EN).esm
+;Dwemer Alchemy Set (1.00 R3).esp
+;Advanced Alchemy.esp
+;Advanced Alchemy - LDA Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Advanced Guards [Marty V. aka "The Puma Man"]
 
 ;Morrowind version
@@ -1427,9 +1464,11 @@ bjam_at_MWSE_patch.esp
  "AreaEffectArrows.esp" is the original plugin from Bethesda.
  "Area Effect Arrows.esp" from Particle_Arrow_Replacer_v30 adds particle effects.
  "AreaEffectArrows XB Edition.esp" by Xeth-Ban makes the plugin harder to abuse.
+ "Area Effect Projectiles.esp" is BTB's edited version.
 AreaEffectArrows.esp
 AreaEffectArrows XB Edition.esp
 Area Effect Arrows.esp
+Area Effect Projectiles.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1936,7 +1975,7 @@ NOM 2.13.esp
 [Requires]
  'AshlanderTentDX - NOM Addon.esp' requires Necessities of Morrowind 3.0
  (Ref: ReadMe - ATDX - NOM v3 Addon.txt)
-[SIZE 2875 AshlanderTentDX - NOM Addon.esp]
+[SIZE 4126 AshlanderTentDX - NOM Addon.esp]
 [ALL AshlanderTentDX.esp
      NOM 3.0.esp]
 
@@ -1968,12 +2007,35 @@ OfficialMods_v5.esp
 Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
 
+;Ghostnull's version of Area Effect Arrows
+[Order]
+Assassins Armory - No Scripts.esp
+Area Effect Arrows.esp
+Assassins Armory - Arrows.esp
+Assassins Armory - Bolt Rifles.esp
+
+;Xeth-Ban's version of Area Effect Arrows
+[Order]
+Assassins Armory - No Scripts.esp
+AreaEffectArrows XB Edition.esp
+Assassins Armory - Arrows.esp
+Assassins Armory - Bolt Rifles.esp
+
+;BTB's version of Area Effect Arrows
+[Order]
+Assassins Armory - No Scripts.esp
+Area Effect Projectiles.esp
+Assassins Armory - Arrows.esp
+Assassins Armory - Bolt Rifles.esp
+
 [Requires]
- "Assassins Armory - Arrows.esp" requires the AreaEffectArrows plugin
+ "Assassins Armory - Arrows.esp" requires Bethesda's "Area Effect Arrows" plugin or a modified version of it.
  (Ref: "Assassin's Armory readme.doc")
 Assassins Armory - Arrows.esp
 [ANY AreaEffectArrows.esp
+     Area Effect Arrows.esp
      AreaEffectArrows XB Edition.esp
+     Area Effect Projectiles.esp
      Clean Official Plugins v1.1.esp
      OfficialMods_v5.esp]
 
@@ -4170,6 +4232,107 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BTB's Game Improvements 8.5 [BTB]
+
+[Requires]
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Alchemy.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Equipment.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ !! "BTB - Alchemy.esp" is derived from HotFusion's "Economy Adjuster" mod, there is no point in running both mods.
+ !! (Ref: "morrowind_btb.zip\Readme.txt")
+[ALL BTB - Alchemy.esp
+     [ANY EcoAdj(Sri+Ingredients).esp
+          EcoAdj Ingredients.esp]]
+
+[Note]
+ ! "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both mods.
+ ! Note that it is possible for you to be running a combination of BTB's and Wakim's mods that renders this Note irrelevant, but my brain cannot work out the correct mlox rule structure
+ ! (Ref: "morrowind_btb.zip\Readme.txt")
+[ALL [ANY BTB - Character.esp
+          BTB - Character (Alternate).esp
+          BTB - Equipment.esp
+          BTB - Settings.esp
+          BTB - Settings (Alternate).esp
+          BTB - Spells.esp]
+     [ANY Balance - Character.esp
+          Balance - Magic Effects.esp
+          Balance - NPC Spellcasting.esp
+          Balance - game settings.esp
+          Balance - items.esp
+          Balance - spells.esp
+          Gameplay - Dialogue.esp
+          Gameplay - Faction.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+;; Ref: "morrowind_btb.zip\Readme.txt"
+[Order]
+BTB - Spells.esp
+BTB - Settings.esp
+
+[Order]
+BTB - Spells.esp
+BTB - Settings (Alternate).esp
+
+[Conflict]
+ "Dark Brotherhood Armor Replacer - Expanded" by Dimitri Mazieres conflicts with BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Equipment.esp
+[ANY DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp]
+
+[Conflict]
+ Do not run the original "Dark Brotherhood Armor Replacer - Expanded" plugins by Dimitri Mazieres with BTB's compatibility versions.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY DM_DB Armor Replacer-Exp (BTB Edit).esp
+     DM_DB Armor Replacer-ExpDDBA (BTB Edit).esp]
+[ANY DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "DM_DB Armor Replacer-ExpDDBA (BTB Edit).esp" delays the Dark Brotherhood attacks.
+DM_DB Armor Replacer-Exp (BTB Edit).esp
+DM_DB Armor Replacer-ExpDDBA (BTB Edit).esp
+
+[Conflict]
+ "Better Clothes" by Psychodog Studios and "More Better Clothes!" by Plangkye conflict with BTB's Equipment plugin. You should use BTB's "Better Clothes Complete (BTB Edit).esp" in the Extras folder.
+ Note that you will need the resources from *both* Psychodog Studios' and Plangkye's mods to use "Better Clothes Complete (BTB Edit).esp"
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Equipment.esp
+[ANY [ANY Better Clothes_v1.1.esp
+          Better Clothes_v1.1_Nac.esp]
+      More Better Clothes.esp]
+
+[Conflict]
+ BTB's "Alchemy" plugin has been merged with the "Heartwood" mod by Midgetalien.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+heartwood.esp
+BTB - Alchemy.esp
+
+[Conflict]
+ Only use ONE plugin, "BTB - Settings (Alternate).esp" omits the changes made by the original to the growth rates of major, minor, and, particularly, misc skills.
+ (Ref: Readme - Settings (Alternate).txt)
+BTB - Settings (Alternate).esp
+BTB - Settings.esp
+
+[Conflict]
+ Only use ONE plugin, "BTB - Character (Alternate).esp" does not modify the Khajiit Eye of Night spell into a permanent ability
+ (Ref: Readme - Character (Alternate).txt)
+BTB - Character (Alternate).esp
+BTB - Character.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BUUG - Building Up Uvirith's Grave [Acheron]
 
 ;; "If you wish to use the alchemy sorters for expansion packs or
@@ -4440,6 +4603,15 @@ Castle Vianden V2.1.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 20965 Cave Home.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CH91 Pirates [KodMan91]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 17049 CH91 Pirates.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10353,6 +10525,92 @@ Knights of Tamriel.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Knight saddle for Pegas Horse Ranch [Gawain]
+
+;;Dragon32: While readme says it needs 2.4 of Pegas it looks, to me, like it'll work with any version as it only replaces a single item of clothing
+
+[Requires]
+ (Ref: Knight saddle - readme.txt)
+Knight saddle -steel- for ESMversion.esp
+Pegas Horse Ranch v?.?.esm
+
+[Requires]
+ (Ref: Knight saddle - readme.txt)
+Knight saddle -steel- for ESPversion.esp
+Pegas Horse Ranch v?.?.esp
+
+[Conflict]
+ Do not use both plugins
+ (Ref: Knight saddle - readme.txt)
+Knight saddle -steel- for ESMversion.esp
+Knight saddle -steel- for ESPversion.esp
+
+[Order]
+Pegas Horse Ranch v?.?.esp
+Knight saddle -steel- for ESPversion.esp
+
+[Requires]
+ (Ref: Knight saddle - ebony - readme.txt)
+Knight saddle -ebony- for ESMversion.esp
+Pegas Horse Ranch v?.?.esm
+
+[Requires]
+ (Ref: Knight saddle - ebony - readme.txt)
+Knight saddle -ebony- for ESPversion.esp
+Pegas Horse Ranch v?.?.esp
+
+[Conflict]
+ Do not use both plugins
+ (Ref: Knight saddle - ebony - readme.txt)
+Knight saddle -ebony- for ESMversion.esp
+Knight saddle -ebony- for ESPversion.esp
+
+[Order]
+Pegas Horse Ranch v?.?.esp
+Knight saddle -ebony- for ESPversion.esp
+
+[Requires]
+ (Ref: Knight saddle - imperial steel - readme.txt)
+Knight saddle -imperial steel- for ESMversion.esp
+Pegas Horse Ranch v?.?.esm
+
+[Requires]
+ (Ref: Knight saddle - imperial steel - readme.txt)
+Knight saddle -imperial steel- for ESPversion.esp
+Pegas Horse Ranch v?.?.esp
+
+[Conflict]
+ Do not use both plugins
+ (Ref: Knight saddle - imperial steel - readme.txt)
+Knight saddle -imperial steel- for ESMversion.esp
+Knight saddle -imperial steel- for ESPversion.esp
+
+[Order]
+Pegas Horse Ranch v?.?.esp
+Knight saddle -imperial steel- for ESPversion.esp
+
+[Requires]
+ (Ref: Knight saddle - templar - readme.txt)
+Knight saddle -templar- for ESMversion.esp
+Pegas Horse Ranch v?.?.esm
+
+[Requires]
+ (Ref: Knight saddle - templar - readme.txt)
+Knight saddle -templar- for ESPversion.esp
+Pegas Horse Ranch v?.?.esp
+
+[Conflict]
+ Do not use both plugins
+ (Ref: Knight saddle - templar - readme.txt)
+Knight saddle -templar- for ESMversion.esp
+Knight saddle -templar- for ESPversion.esp
+
+[Order]
+Pegas Horse Ranch v?.?.esp
+Knight saddle -templar- for ESPversion.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kobu's Leveling Mod [Kobu]
 
 ; Order does not seem actually important? - JMS
@@ -10707,8 +10965,8 @@ NPC LCV Schedules 03.esp
 [Requires]
  LCV Wolverine Hall requires that at least version 03-13 of LCV Schedules be active.
  (Ref: LCV Wolverine Hall.html)
-[VER>03-12 NPC LCV Schedules 03.esp]
 LCV Wolverine Hall 01.esp
+[VER>03-12 NPC LCV Schedules 03.esp]
 
 ;;Ref: LCV Wolverine Hall.html
 [Order]
@@ -11117,6 +11375,41 @@ Bloodmoon.esm
  (Ref: XLCP Read Me.txt)
 Xenolord's Literature Care Package [Uncensored Version].esp
 Xenolord's Literature Care Package [Censored Version].esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lite Beer! Addon for NOMv3 [Gaius Atrius]
+
+[Requires]
+ Gaius Atrius' "Lite Beer! Addon" requires version 3 or above of Taddeus' "Necessities of Morrowind"
+ (Ref: Lite Beer! - Readme.txt)
+Lite Beer! Addon for NOMv3.esp
+NOM 3.0.esp
+
+;;Ref: Lite Beer! - Readme.txt
+[Order]
+NOM 3.0.esp
+Lite Beer! Addon for NOMv3.esp
+
+[Conflict]
+ Gaius Atrius' "Lite Beer! Addon" is a scaled down version of Tarnsman's "BEER!" mod and so will conflict with Tarnsman's original mod.
+ (Ref: Lite Beer! - Readme.txt) 
+Lite Beer! Addon for NOMv3.esp
+[ANY BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+     BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+     BEER! Combo v1.12-03a.esp
+     BEER! Combo.esp
+     BEER! with MCA.esp
+     BEER!.esp
+     NoM 2.1 with BEER!.esp
+     NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
+     NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
+     NoM 2.12-03a with BEER!.esp]
+
+[Note]
+ !! "The modder's resource plugin can be used to add the drinks from Lite Beer! to your mod [...] Do NOT use this plugin for gameplay!" 
+ (Ref: Lite Beer! - Readme.txt) 
+Lite Beer! Modder's Resource.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12147,6 +12440,15 @@ Morag_Tong_Armor_Replacer.esp
 [Order]
 J-ninja_v.1.0_m_NoQuest.esp
 Morag_Tong_Armor_Replacer.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @More Better Clothes! [Plangkye]
+
+;; Dragon32: More Better Clothes Readme.txt - "This mod must be loaded AFTER Better Clothes, or the Argonian shirt scripts won't work." So no Order rule for "Better Clothes_v1.1_Nac.esp" created.
+[Order]
+Better Clothes_v1.1.esp
+More Better Clothes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13437,8 +13739,9 @@ Werewolf ReEquip.esp
 ;;Dragon32: As I understand things MGE 3.5.6 added the functions from MWSE v0.9.4. *However* there remains one MWSE function that could not be implemented in MGE. At the time of writing there is only one mod that makes use of that function (MCA_Companions_Enhanced.esp). According to the MWSE v0.9.4a release notes "contains no new features over 0.9.4. However, one bug [...] has been fixed."
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a, or MGE v3.5.6 or later.
-mel_teleportPlugin_1_3.esp
+Advanced Alchemy.esp
 Census and Excise Office.esp
+mel_teleportPlugin_1_3.esp
 UL_MWSE_patch.esp
 UL_Primus_MWSE.esp
 
@@ -14721,9 +15024,10 @@ Oblivion-Style Spellcasting.esp
  "OfficialMods_v5.esp" is a compilation of all the official Bethesda mods. You should deactivate the individual mods it includes.
 OfficialMods_v5.esp
 [ANY AdamantiumArmor.esp
+     AreaEffectArrows.esp
      Area Effect Arrows.esp
      AreaEffectArrows XB Edition.esp
-     AreaEffectArrows.esp
+     Area Effect Projectiles.esp
      BCsounds.esp
      EBQ_Artifact.esp
      Entertainers.esp
@@ -14743,9 +15047,10 @@ Clean Official Plugins v1.1.esp
 [Conflict]
 Clean Official Plugins v1.1.esp
 [ANY AdamantiumArmor.esp
+     AreaEffectArrows.esp
      Area Effect Arrows.esp
      AreaEffectArrows XB Edition.esp
-     AreaEffectArrows.esp
+     Area Effect Projectiles.esp
      BCsounds.esp
      EBQ_Artifact.esp
      Entertainers.esp
@@ -15042,6 +15347,17 @@ PTE - BC Patch.esp
  ! (Ref: Playablechildren2_0_readme.txt)
 [ALL PlayableChildren2.0.esp
      [NOT MW_Children_1_0.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Potion/Scroll Icons and Potion Sort [rmrfstar]
+
+[Conflict]
+ rmrfstar's "Potion/Scroll Icons and Potion Sort" is a merge of Erasmus' "Potions" and "Scrolls" and Srikandi's "Potion Sorter Mod" mods. There is no need to run the original mods
+PSsorticon.esp
+[ANY PotionSorter.esp
+     Potions.esp
+     Scrollsv1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15737,7 +16053,8 @@ House of Mannequins v1.0.esp
      PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
 [ANY AreaEffectArrows XB Edition.esp
      Area Effect Arrows.esp
-     [SIZE !30094 AreaEffectArrows.esp]]
+     [SIZE !30094 AreaEffectArrows.esp]
+     Area Effect Projectiles.esp]
 
 [Order]
 Redesigned Vivec.esp
@@ -15980,32 +16297,67 @@ Ring Capability Shop - TR+BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Riptide's Face, Armor, & Clothing Replace Final [Riptide]
+
+[Conflict]
+ "Do not use both ESPS!":
+  Riptides Face & Clothing Replace + X-Jiits.esp - If you want Regan's X-jiits
+  Riptides Face & Clothing Replace Final.esp - If you do not want Regan's X-jiits
+ (Ref: renamed_RiptidesFace_ClothingReplaceFinal.ace\Please Read Me.txt)
+Riptides Face & Clothing Replace + X-Jiits.esp
+Riptides Face & Clothing Replace Final.esp
+
+;;Dragon32: ESM dependencies not in plugin header
+[Requires]
+ (Ref: renamed_RiptidesFace_ClothingReplaceFinal.ace\Please Read Me.txt)
+Riptides Face & Clothing Replace + X-Jiits.esp
+[ALL Better Heads.esm
+     Better Heads Tribunal addon.esm
+     Better Heads Bloodmoon addon.esm
+     Tribunal.esm
+     Bloodmoon.esm
+     X-jiit.esp]
+
+[Requires]
+ (Ref: renamed_RiptidesFace_ClothingReplaceFinal.ace\Please Read Me.txt)
+Riptides Face & Clothing Replace Final.esp
+[ALL Better Heads.esm
+     Better Heads Tribunal addon.esm
+     Better Heads Bloodmoon addon.esm
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ ! You do not appear to be running the latest version of "Riptide's Face, Armor, & clothing Replace"
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3929
+[ANY [SIZE !1081790 Riptides Face & Clothing Replace + X-Jiits.esp]
+     [SIZE !1079413 Riptides Face & Clothing Replace Final.esp]
+     Riptides Face Clothing  & Armor Replace.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rise of House Telvanni [Pozzo, Karpik777, bhl et al.]
 
 [Note]
  There is a newer version of "Rise of House Telvanni" available, you should upgrade.
-[VER<1.41 Rise of House Telvanni.esm]
+[VER<1.5 Rise of House Telvanni.esm]
 
 [Requires]
- (Ref: "Rise of House Telvanni Readme.txt)
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 Rise of House Telvanni.esm
 [ALL Bloodmoon.esm
      Tribunal.esm]
 
-[Note]
- There is a newer version of "Rise of House Telvanni" available, you should upgrade.
-[VER<1.3 Rise of House Telvanni.esm]
-
 [Patch]
  You should use "RoHT CoM Addon.esp", the addon for both RoHT and Emma's "Children of Morrowind" (CoM). It will move some children to safety in critical situations. It was made for CoM v2 but should also work with v1.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 RoHT CoM Addon.esp
 [ALL Rise of House Telvanni.esm
      MW_Children_1_0.esm]
 
 [Patch]
  You should use "RoHT GDR Aleft Patch.esp" a patch for Julian K. Spire's "Greater Dwemer Ruins: Aleft" (GDR  Aleft). GDR Aleft completely redesigns Aleft. This plugin moves a couple of RoHT's items so that RoHT remains  playable in conjunction with GDR: Aleft. It was made for GDR: Aleft v1.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 RoHT GDR Aleft Patch.esp
 [ALL Rise of House Telvanni.esm
      GDR09_Aleft.ESP]
@@ -16017,14 +16369,14 @@ GDR09_Aleft.ESP
 
 [Patch]
  You should use "RoHT Havish Patch.esp" a patch for JOG's "Havish". Some of Havish's quests require members of  the Mages Guild. This mod makes RoHT and Havish completely compatible with each other, even if you decide to  destroy the Mages Guild. It was made for Havish v1.2 but should also work with v1.0, v1.1, and v1.3.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 RoHT Havish Patch.esp
 [ALL Rise of House Telvanni.esm
      Havish.esm]
 
 [Patch]
   You should use "RoHT TLSH Patch.esp" a patch for Nevena's "Twin Lamps and Slave Hunters" (TLSH). TLSH requires Ilmeni Dren and Duke Dren. During RoHT's questline, Duke Dren will die, and Ilmeni Dren will become Vvardenfell's Duchess. This patch copies Duke Vedam Dren's dialogue over to Duchess Ilmeni Dren in order to restore full compatibility between RoHT and TLSH. It was made for TLSH v1.5.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 RoHT TLSH Patch.esp
 [ALL Rise of House Telvanni.esm
      Nevena's Twin Lamps & Slave Hunters 1.5.esp]
@@ -16035,22 +16387,22 @@ Nevena's Twin Lamps & Slave Hunters 1.5.esp
 RoHT TLSH Patch.esp
 
 [Patch]
- You should use "RoHT NoM Addon.esp" a patch for Taddeus' "Necessities of Morrowind".
- (Ref: "Rise of House Telvanni Readme.txt")
-RoHT NoM Addon.esp
+ You should use "RoHT NoM v2 Addon.esp" a patch for version 2.* of Taddeus' "Necessities of Morrowind".
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
+RoHT NoM v2 Addon.esp
 [ALL Rise of House Telvanni.esm
      NOM 2.13.esp]
 
-[Note]
- "RoHT NoM Addon.esp" was made before the release of Taddeus' "Necessities of Morrowind" version 3.0. This "Rise of House Telvanni" addon may not be compatible with version 3 of Taddeus' mod.
- (Ref: "Rise of House Telvanni Readme.txt")
-[ALL RoHT NoM Addon.esp
-     Rise of House Telvanni.esm
+[Patch]
+ You should use "RoHT NoM v3 Addon.esp" a patch for version 3.* of Taddeus' "Necessities of Morrowind".
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
+RoHT NoM v3 Addon.esp
+[ALL Rise of House Telvanni.esm
      NOM 3.0.esp]
 
 [Patch]
  "RoHT Taddeus Balancing.esp" changes the stats and values of RoHT's armors and weapons so that they blend in with Taddeus' changes. It is recommended that you only use this patch if you are also using Taddeus' mods.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 RoHT Taddeus Balancing.esp
 [ALL Rise of House Telvanni.esm
      [ANY Taddeus'BalancedArmors.esp
@@ -16060,13 +16412,13 @@ RoHT Taddeus Balancing.esp
 
 [Note]
  Both these mods make changes to Fast Eddie, "Building Up Uvirith's Grave" moves Fast Eddie to Uvirith's Grave  and "Rise of House Telvanni" might move him back or vice versa. This does not affect each mod's functionality.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL Building Up Uvirith's Grave 1.1.esp
      Rise of House Telvanni.esm]
 
 [Note]
  Bethesda Softwork's "Master Index Plugin" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL [ANY master_index.esp
           Wilderness Sounds.esp
           Wilderness Sounds Bloodmoon.esp
@@ -16077,50 +16429,53 @@ RoHT Taddeus Balancing.esp
           propylons1.1.esp]
      Rise of House Telvanni.esm]
 
-[Note]
- Charles Cooley's "Propylons v1.1" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
- (Ref: "Rise of House Telvanni Readme.txt")
-[ALL propylons1.1.esp
-     Rise of House Telvanni.esm]
+;; Dragon32: v1.5 readme: "Fixed compatibility for cdc_teleportation" I think it means this mod? Same author and Propylons conflict not in v1.5 readme.
+;; [Note]
+;;  Charles Cooley's "Propylons v1.1" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
+;;  (Ref: "Rise of House Telvanni Readme.txt")
+;; [ALL propylons1.1.esp
+;;      Rise of House Telvanni.esm]
 
 [Note]
  ! Princess Stomper's "Balmora Council Club" requires that the player talks to Duke Dren a lot which will become impossible during the questline of "Rise of House Telvanni".
- ! (Ref: "Rise of House Telvanni Readme.txt")
+ ! (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL [ANY Balmora Council Club EV.esp
           Balmora Council Club.esp]
      Rise of House Telvanni.esm]
 
 [Note]
  ! Princess Stomper's "Ebonheart Interior Expansion" requires that the player talks to Duke Dren a lot which will become impossible during the questline of "Rise of House Telvanni".
- ! (Ref: "Rise of House Telvanni Readme.txt")
+ ! (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL Clean Ebonheart Interior Expansion.esp
      Rise of House Telvanni.esm]
 
 [Note]
- !! There are conflicts between "Rise of House Telvanni" and "Less Generic  NPCs (LGNPC) Pax Redoran", v1.12 and earlier, and "Less Generic NPCs (LGNPC) Tel Uvirith", v1.10 and earlier.
- !! The LGNPC quests requires that the player talks to Duke Dren, which will become impossible during the questline of "Rise of House Telvanni".
- !! Patches for the LGNPC mods will be made with the next versions.
- !! (Ref: "Rise of House Telvanni Readme.txt")
+ !! There are conflicts between "Rise of House Telvanni" and "Less Generic NPCs (LGNPC) Pax Redoran", v1.20 and earlier, and versions of "Less Generic NPCs (LGNPC) Tel Uvirith" earlier than v1.20.
+ !! The LGNPC quests require that the player talks to Duke Dren, which will become impossible during the questline of "Rise of House Telvanni".
+ !! Patches for "Less Generic NPCs (LGNPC) Pax Redoran" will be made with the next version.
+ !! (Ref: "Rise of House Telvanni v1.5 Readme.txt")
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1045818&view=findpost&p=15175288 )
-[ALL [ANY [VER <1.13 LGNPC_PaxRedoran_v<VER>.esp]
-          [VER <1.11 LGNPC_TelUvirith_v<VER>.esp]]
+[ALL [ANY [VER < 1.21 LGNPC_PaxRedoran_v<VER>.esp]
+          [VER < 1.20 LGNPC_TelUvirith_v<VER>.esp]]
      Rise of House Telvanni.esm]
 
 [Note]
  ! The Pixie's "Ushindra Beach" requires that the player talks to Ald'ruhn's Mages Guild guide, Estirdalin. In  RoHT, she might be forced to leave.
- ! (Ref: "Rise of House Telvanni Readme.txt")
+ ! Version 1.2 of "Ushindra Beach" resolves this conflict
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6575
+ ! (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL UshindraBeach.esp
      Rise of House Telvanni.esm]
 
 [Note]
  !! "Rise of House Telvanni" and Endrek's "Sixth House" mod are compatible as long as the player doesn't try to actively play them both at the same time.
- !! (Ref: "Rise of House Telvanni Readme.txt")
+ !! (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL Sixth House.esp
      Rise of House Telvanni.esm]
 
 [Conflict]
  "Rise of House Telvanni" and Lady Galadriel's "Grandmaster of House Hlaalu" have unresolved conflicts. A simple cure for Telvanni players is not to run the two mods simultaneously.
- (Ref: "Rise of House Telvanni Readme.txt")
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 Grandmaster of Hlaalu.esp
 Rise of House Telvanni.esm
 
@@ -16149,6 +16504,25 @@ Rise of the Illuminated Lich.esp
 [Patch]
 Rocky Island v 1.1 Patch.esp
 Rocky Island v 1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @ROHTvsRiptideNPCfixes [Malik]
+
+;;Dragon32: Malik's plugin made for v1.3 of RoHT, not sure if it works with latest (1.5 at time of writing)
+[Patch]
+ Malik's "ROHTvsRiptideNPCfixes" fixes changes made by Riptides' "Face, Armor, & Clothing Replace" to NPCs from "Rise of House Telvanni" 1.3 by bhl et al.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7967
+ (Ref: Readme ROHTvsRiptideNPCfixes.txt)
+ROHTvsRiptide_NPCfixes.esp
+[ALL [VER=1.3 Rise of House Telvanni.esm]
+     [ANY Riptides Face & Clothing Replace + X-Jiits.esp
+          Riptides Face & Clothing Replace Final.esp]]
+
+[Order]
+Riptides Face & Clothing Replace Final.esp
+Riptides Face & Clothing Replace + X-Jiits.esp
+ROHTvsRiptide_NPCfixes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18000,11 +18374,11 @@ Sri Alchemy BM List Patch.esp
      bm_wolf_greaves_fix.esp 
      acsEbonyGreaves.esp
      DGLAdamantiumShields.esp
-     DivineDomina1.esp
-     DivineDomina2.esp
-     DivineDomina3.esp
-     DivineDomina4.esp
-     DivineDomina5.esp
+     Divine_domina_part_1.esp
+     Divine_domina_part_2.esp
+     Divine_domina_part_3_Tribunal.esp
+     Divine_domina_part_4.esp
+     Divine_domina_part_5.esp
      AV_female_armor.esp
      AV_fem_armor_Trib.esp
      OfficialMods_v5.esp
@@ -18035,6 +18409,33 @@ Taddeus'BalancedArmors_Rotate.esp
 [All Tribunal.esm 
      Bloodmoon.esm]
 
+[Conflict]
+ Jeremy McGuinn's "Divine Domina" series, included in "Taddeus' Balanced Armor", and "AVENGER'S female armor" by Avenger provide female versions of the Morrowind armors.
+[ANY AV_female_armor.esp
+     AV_fem_armor_Trib.esp]
+[ANY Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
+
+[Conflict]
+ Both Jeremy McGuinn's "Divine Domina" series, included in "Taddeus' Balanced Armor", and Sheikizza Icemane's "Female Templar Cuirass" provide a female version of the Templar cuirass.
+[ANY Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
+FEMALE_TEMPLAR_CUIRASS_V0.1.esp 
+
+[Conflict]
+ Both Jeremy McGuinn's "Divine Domina" series, included in "Taddeus' Balanced Armor", and Cyanvoid's "Female Cuirasses 2.0" provide female versions of the same cuirasses.
+female_cuirasses_2.0.esp
+[ANY Taddeus'BalancedArmors.esp 
+     Taddeus'BalancedArmors_Rotate.esp]
+
+[Note]
+ Sandman101's "H.E.L.L.U.V.A. Armor Completion" provides female versions of all of Morrowind's (including expansions) armors. "Taddeus' Balanced Armor" includes Jeremy McGuinn's "Divine Domina" series,which does the same.
+ To preserve Taddeus' changes to armor values you should load Taddeus' mod after Sandman101's by creating a custom Order rule in "mlox_user.txt"
+[ALL H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+     [ANY Taddeus'BalancedArmors.esp 
+          Taddeus'BalancedArmors_Rotate.esp]]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Taddeus' Balanced Objects [Taddeus]
 
@@ -18064,12 +18465,14 @@ Taddeus'BalancedObjects_Rotate.esp
 ;; @Taddeus' Balanced Weapons [Taddeus]
 
 [Conflict]
- Taddeus'BalancedWeapons includes a balanced version of the following plugin: (official) Area Effect Arrows. (Ref: Taddeus'BalancedWeapons - Readme.txt)
+ Taddeus'BalancedWeapons includes a balanced version of the following plugin: (official) Area Effect Arrows.
+ (Ref: Taddeus'BalancedWeapons - Readme.txt)
 [ANY Taddeus'BalancedWeapons.esp
      Taddeus'BalancedWeapons_Rotate.esp]
 [ANY AreaEffectArrows.esp
      AreaEffectArrows XB Edition.esp
-     Area Effect Arrows.esp]
+     Area Effect Arrows.esp
+     Area Effect Projectiles.esp]
 
 [Note]
  Taddeus'BalancedWeapons is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedWeapons - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
@@ -19367,34 +19770,29 @@ Useful Summoned Creatures.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Ushindra Beach [The Pixie]
+;; @Ushindra Beach 1.2 [The Pixie]
 
 [Requires]
- (Ref: "ushindra-v10-readme.txt")
-UshindraBeach.esp
-Better Bodies.esp
-
-
-[Requires]
- (Ref: "ushindra-v10-readme.txt")
-UshindraMH.esp
-[ALL Tribunal.esm
-     UshindraBeach.esp]
+ (Ref: "Ushindra Beach v1.2 Readme.txt")
+Ushindra Beach v1.2.esp
+[ALL Better Bodies.esp
+     Tribunal.esm]
 
 [Requires]
- (Ref: "ushindra-v10-readme.txt")
-UshindraHeads.esp
-[ALL UshindraBeach.esp
+ (Ref: "Ushindra Beach v1.2 Readme.txt")
+Ushindra Beach v1.2 Master Headpack X Addon.esp
+[ALL Ushindra Beach v1.2.esp
      Westly's Master Headpack X.esp]
 
-;; Ref: "ushindra-v10-readme.txt"
+;; Ref: "Ushindra Beach v1.2 Readme.txt"
 [Order]
-UshindraBeach.esp
-UshindraMH.esp
+Ushindra Beach v1.2.esp
+Ushindra Beach v1.2 Master Headpack X Addon.esp
 
+;;Dragon32: Only NPC records defined in the Addon.
 [Order]
-UshindraBeach.esp
-UshindraHeads.esp
+Westly's Master Headpack X.esp
+Ushindra Beach v1.2 Master Headpack X Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19607,11 +20005,13 @@ Uvirith's Legacy CoM Add-on.esp
 
 ;;Ash Armor Divine Domina
 [Requires]
- This add-on for Stuporstar's "Uvirith's Legacy" will suit up the female version of Ash-Kosh with armor from Jeremy McGuinn's "Divine Domina" series.
+ This add-on for Stuporstar's "Uvirith's Legacy" will suit up the female version of Ash-Kosh with armor from Jeremy McGuinn's "Divine Domina" series (the latter is included with "Taddeus' Balanced Armor").
  (Ref: "Uvirith's Legacy_README.txt")
 UL_AshArmor_DivineDomina.esp
 [ALL Uvirith's Legacy_Final_2.0.esp
-     Divine_domina_part_1.esp]
+     [ANY Taddeus'BalancedArmors.esp 
+          Taddeus'BalancedArmors_Rotate.esp
+          Divine_domina_part_1.esp]]
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
@@ -22461,6 +22861,20 @@ X-jiitCompanionsBM.esp
 [ANY X-jiitCompanionsTB.esp
      X-jiitCompanionsBM.esp]
 X-jiit.esp
+
+;;Dragon32 - "X-jiitTails.esp" alters some BODY records
+[Order]
+X-jiit.esp
+X-jiitTails.esp
+
+;;Dragon32: Ordering rules are logical
+[Order]
+X-jiit.esp
+X-jiitCompanionsBM.esp
+
+[Order]
+X-jiit.esp
+X-jiitCompanionsTB.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
