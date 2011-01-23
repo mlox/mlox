@@ -1046,6 +1046,32 @@ Castle_Dragonfall.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Aleanne Armor and Clothes [Aleanne]
+
+[Requires]
+ (Ref: "aleanne_clothing_v0.zip\Aleanne\readme.txt")
+ale_clothing_v0.esp
+Better Bodies.esp
+
+[Requires]
+ "Aleanne Armor and Clothes 2" needs the previous mod, "Aleanne Armor and Clothes", to function.
+ (Ref: "ale_clothing_v1.zip\Aleanne\readme.txt")
+ale_clothing_v1.esp
+ale_clothing_v0.esp
+
+;;Dragon32: Not in readme but both mods have "_ale_leather_skirt" object. Load the last released mod last
+[Order]
+ale_clothing_v0.esp
+ale_clothing_v1.esp
+
+[Note]
+ !! Some people have reported the Aleanne NPC disappearing from their game due to a local reference conflict. The Morrowind Code Patch by Hrnchamd ( http://www.tesnexus.com/downloads/file.php?id=19510 ) reduces the chances of such local reference conflicts, alternatively one can use Wrye Mash's Renumber Refs function ( http://wryemusings.com/Wrye%20Mash.html#RenumberRefs ) on one of the two "Aleanne Armor and Clothes" mods.
+ !! (Ref: http://forums.bethsoft.com/index.php?/topic/1055283-merchant-from-aleannes-clothing-mod-issue/page__view__findpost__p__15313079 )
+[ALL ale_clothing_v0.esp
+     ale_clothing_v1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alice's Garden 1.2 [GReG R.]
 
 [Conflict]
@@ -1147,6 +1173,16 @@ Bloodmoon.esm
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 529684 Andarysv1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animated Morrowind - Expanded [Wikart]
+
+[Requires]
+ "Animated Morrowind" by Arcimaestro Antares is required to play Wikart's "Animated Morrowind - Expanded"
+ (Ref: "Animated Morrowind - Expanded  - README.txt")
+Animated_Morrowind - Expanded.esp
+Animated Morrowind 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3190,6 +3226,15 @@ BB-argonian-sils-text.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Body Oblivion Style Dark Brotherhood Armor [Westly]
+
+[Requires]
+ (Ref: "Oblivion Style Dark Brotherhood README.txt")
+BB Dark Brotherhood by Westly.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Clothes [Psychodog Studios]
 
 [Order]
@@ -3390,6 +3435,17 @@ Amulets and Rings 2.1 Upgrade A.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2028 HelioS - Better Necromancers Amulet.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Skulls [tronvillain & nONatee]
+
+[Conflict]
+ "Better Skulls" by tronvillain & nONatee conflicts with "Skulls Improved" by razorfett147.
+ (Ref: "Better Skulls.txt")
+Better Skulls.ESP
+[ANY CAB_SkullzImproved.esp
+     CAB_SkullzImproved_TRBM.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3645,6 +3701,10 @@ animalbehave.esp
 [Order]
 Blasphemous Revenants.esp
 Passive Wildlife Vvardenfell.esp
+
+[Order]
+Blasphemous Revenants.esp
+Animal Behaviour.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4780,7 +4840,9 @@ Cliffracer-FIX.esp
 [ANY animalbehave.esp
      Passive_Healthy_Wildlife.esp
      Passive Wildlife Vvardenfell.esp
-     Rational Wildlife.esp]
+     Rational Wildlife.esp
+     Animal Behaviour.esp
+     wildlife_behaviour.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6088,6 +6150,32 @@ C0N2 v1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dracandros' Voice 2.71 [Dracandros]
+
+;;Dragon32: There's also a "Archmage's Voice" plugin, I can't find a download for it though
+[Conflict]
+ You should deactivate all other voice mods made by Dracandros when using "Dracandros' Voice".
+ (Ref: "dracandrosvoice_en.html")
+dracandrosvoice.esp
+[ANY archcanonsvoice.esp
+     hortatorsvoice.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dracandros' Voice Startup Mod [Eisenfaust]
+
+[Requires]
+ (Ref: "DVSM Readme.txt")
+DVSM.esp
+dracandrosvoice.esp
+
+;;Dragon32: Overwrites a dialogue entry
+[Order]
+dracandrosvoice.esp
+DVSM.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dragonbone Complete Set [Jayson]
 
 [Note]
@@ -7280,6 +7368,73 @@ Fire_Hurt_Tribunal.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 8029 Fireworks.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @1st Person Enhanced 1.2 [Darknut]
+
+[Requires]
+ Darknut's "1st Person Enhanced" requires loading either "DN_1st_Person_bodies.esp" (for LizTail's "New Beast Bodies") or "DN_1st_Person_bodies-AS.esp" (for Alienslof's "Better Beasts")
+ (Ref: "DN_1st_Person_Enhanced 1.2.7z\DN_1st_Person_Enhanced\readme.txt")
+DN_1st_Person_Armor.esp
+[ANY DN_1st_Person_bodies.esp
+     DN_1st_Person_bodies-AS.esp]
+
+[Conflict]
+ Choose one plugin:
+  DN_1st_Person_bodies.esp - If you use LizTail's "New Beast Bodies"
+  DN_1st_Person_bodies-AS.esp - If you use Alienslof's "Better Beasts"
+ (Ref: "DN_1st_Person_Enhanced 1.2.7z\DN_1st_Person_Enhanced\readme.txt")
+DN_1st_Person_bodies.esp
+DN_1st_Person_bodies-AS.esp
+
+[Requires]
+ "DN_1st_Person_bodies.esp" requires loading both LizTail's "New Beast Bodies" and Darknut's "DN_1st_Person_Armor.esp"
+ (Ref: "DN_1st_Person_Enhanced 1.2.7z\DN_1st_Person_Enhanced\readme.txt")
+DN_1st_Person_bodies.esp
+[ALL DN_1st_Person_Armor.esp
+     [ANY New Argonian Bodies - Mature.esp
+          New Argonian Bodies - Clean.esp
+          New Argonian Bodies (Silaria Textures) - Mature.esp
+          New Argonian Bodies (Silaria Textures) - Clean.esp
+          New Argonian Bodies (Slof Textures) - Mature.esp
+          New Argonian Bodies (Slof Textures) - Clean.esp]
+     [ANY New Khajiit Bodies - Mature.esp
+          New Khajiit Bodies - Clean.esp
+          New Khajiit Bodies (Slof Textures) - Mature.esp
+          New Khajiit Bodies (Slof Textures) - Clean.esp]]
+
+[Requires]
+ "DN_1st_Person_bodies-AS.esp" requires loading both Alienslof's "Better Beasts" and Darknut's "DN_1st_Person_Armor.esp"
+ (Ref: "DN_1st_Person_Enhanced 1.2.7z\DN_1st_Person_Enhanced\readme.txt")
+DN_1st_Person_bodies-AS.esp
+[ALL DN_1st_Person_Armor.esp
+     [ANY Slof's Better Beasts a.esp
+          Slof's Better Beasts b.esp
+          Slof's Civilised Beasts.esp]]
+
+;;Dragon32: Some BODY records in Darknut's plugin, look like they need to override the beast body
+[Order]
+New Argonian Bodies - Mature.esp
+New Argonian Bodies - Clean.esp
+New Argonian Bodies (Silaria Textures) - Mature.esp
+New Argonian Bodies (Silaria Textures) - Clean.esp
+New Argonian Bodies (Slof Textures) - Mature.esp
+New Argonian Bodies (Slof Textures) - Clean.esp
+DN_1st_Person_bodies.esp
+
+[Order]
+New Khajiit Bodies - Mature.esp
+New Khajiit Bodies - Clean.esp
+New Khajiit Bodies (Slof Textures) - Mature.esp
+New Khajiit Bodies (Slof Textures) - Clean.esp
+DN_1st_Person_bodies.esp
+
+[Order]
+Slof's Better Beasts a.esp
+Slof's Better Beasts b.esp
+Slof's Civilised Beasts.esp
+DN_1st_Person_bodies-AS.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12110,11 +12265,13 @@ Merged MCA Files.esp
 ; (Ref: "multimodreadme.txt")
 
 [Conflict]
- "Passive_Healthy_Wildlife.esp", "Rational Wildlife", "Passive Wildlife Vvardenfell" and "animalbehave.esp" from "Merkin's Multi-mod" have very similar function, you should probably choose only one or the other.
+ "animalbehave.esp" from "Merkin's Multi-mod" makes creatures less aggressive, as does another mod you have loaded.
 animalbehave.esp
 [ANY Passive_Healthy_Wildlife.esp
+     Passive Wildlife Vvardenfell.esp
      Rational Wildlife.esp
-     Passive Wildlife Vvardenfell.esp]
+     Animal Behaviour.esp
+     wildlife_behaviour.esp]
 
 ;;encumbrance.esp
 ;;magicbalance.esp
@@ -14176,6 +14333,9 @@ animalbehave.esp
 Passive_Healthy_Wildlife.esp
 Passive Wildlife Vvardenfell.esp
 Rational Wildlife.esp
+Cliffracer-FIX.esp
+Animal Behaviour.esp
+wildlife_behaviour.esp
 NoM_Creatures Loot PHW.esp
 
 [Patch]
@@ -15760,11 +15920,13 @@ Rage Indicator.esp
 ;; @Rational Wildlife [Max]
 
 [Conflict]
- "Rational Wildlife" by Max does a similar job to "Passive Healthy Wildlife", "Passive Wildlife Vvardenfell" and "animalbehave.esp" from "Merkin's Multi-mod", you should probably choose one of these and not all. "Rational Wildlife" covers Bloodmoon creatures too.
+ "Rational Wildlife" by Max makes creatures less aggressive, as does another mod you have loaded. Note that "Rational Wildlife" covers Bloodmoon creatures too.
 Rational Wildlife.esp
-[ANY animalbehave.esp
-     Passive_Healthy_Wildlife.esp
-     Passive Wildlife Vvardenfell.esp]
+[ANY Passive_Healthy_Wildlife.esp
+     Passive Wildlife Vvardenfell.esp
+     animalbehave.esp
+     Animal Behaviour.esp
+     wildlife_behaviour.esp]
 
 [Conflict]
  "Rational Wildlife" is not needed if you use Sabregirl's ecology, as they both do the same thing.
@@ -16706,15 +16868,13 @@ SG-MW-ecology-WW-plugin.esp
 SG-MW-ecology-carnivore-plugin.esp
 
 [Conflict]
- Passive Healthy Wildlife is not needed if you use Sabregirl's ecology, as they both do the same thing.
-Passive_Healthy_Wildlife.esp
-[ANY SG-MW-ecology-BM-plugin.esp
-     SG-MW-ecology-WW-plugin.esp
-     SG-MW-ecology-carnivore-plugin.esp]
-
-[Conflict]
- "animalbehave.esp" from "Merkin's Multi-mod" is not needed if you use Sabregirl's ecology, as they both do the same thing.
-animalbehave.esp
+ There is no need to load a mod to make creatures passive if you use Sabregirl's "Morrowind Ecology", as her mod does this too.
+[ANY Passive_Healthy_Wildlife.esp
+     Passive Wildlife Vvardenfell.esp
+     animalbehave.esp
+     Animal Behaviour.esp
+     wildlife_behaviour.esp
+     Rational Wildlife.esp]
 [ANY SG-MW-ecology-BM-plugin.esp
      SG-MW-ecology-WW-plugin.esp
      SG-MW-ecology-carnivore-plugin.esp]
@@ -17353,6 +17513,17 @@ Ships of the Imperial Navy (Bloodmoon and MQB version).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Signy Signposts(!): Tamriel Rebuilt [Earth Wyrm]
+
+[Note]
+ ! Version 1.1 of Earth Wyrm's "Signy Signposts(!): Tamriel Rebuilt" provides new meshes and high-resolution textures for the signposts across both Tamriel Rebuilt Maps 1 and 2.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6740
+[ALL WA_SignySigns(!)_TR_Map1.ESP
+     TR_Map1.esm
+     TR_Map2.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silgrad Tower [Various]
 
 [Note]
@@ -17432,6 +17603,23 @@ osiris' Skeleton Shield Replacer - ALL v1.0.esp
 osiris' Skeleton Shield Replacer - MW + BM v1.0.esp
 osiris' Skeleton Shield Replacer - MW + TRB v1.0.esp
 osiris' Skeleton Shield Replacer - MW v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Skulls Improved [razorfett147]
+
+[Conflict]
+ Use only one plugin:
+  CAB_SkullzImproved.esp - If you are using just Morrowind with no expansions
+  CAB_SkullzImproved_TRBM.esp - If you are using Tribunal and Bloodmoon
+ (Ref: "Skulls Improved_readme.txt")
+CAB_SkullzImproved.esp
+CAB_SkullzImproved_TRBM.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 14881 CAB_SkullzImproved.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19682,6 +19870,61 @@ Underground Manor 3.0.esp
 Undress For Me.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Finery Replacer 1.1 [Alaisiagae]
+
+[Conflict]
+ Do not run both plugins:
+  UniqueFinery.esp - If you WANT the changes to the robes
+  UniqueFinery_NoRobe.esp - If you DO NOT want the changes to the robes
+ (Ref: "readme_Unique Finery Replacer v1dot1.txt")
+UniqueFinery.esp
+UniqueFinery_NoRobe.esp
+
+[Note]
+ ! You do not need to run Alaisiagae's "Soldier Belts Fix" with her "Unique Finery Replacer"
+ ! (Ref: "readme_Unique Finery Replacer v1dot1.txt")
+[ALL SoldierBeltsFix.esp
+     [ANY UniqueFinery.esp
+          UniqueFinery_NoRobe.esp]]
+
+[Conflict]
+ Use "UniqueFinery_NoRobe.esp" from Alaisiagae's "Unique Finery Replacer" if you are using CanadianIce's Robe Replacer.
+ (Ref: "readme_Unique Finery Replacer v1dot1.txt")
+UniqueFinery.esp
+[ANY IceBradyHurdyRobeReplacerALL.esp
+     IceBradyHurdyRobeReplacerMW.esp
+     IceBradyHurdyRobeReplacerTB.esp
+     IceBradyHurdyRobeReplacerBM.esp
+     IceBradyHurdyRobeReplacerPLUS.esp
+     IceNioLivRobeReplacerALL.esp
+     IceNioLivRobeReplacerMW.esp
+     IceNioLivRobeReplacerTB.esp
+     IceNioLivRobeReplacerBM.esp
+     IceNioLivRobeReplacerPLUS.esp]
+
+[Conflict]
+ Alaisiagae's "Unique Finery Replacer" conflicts with Alphax's "Imperial, Indoril, Templar Belt Icons" as both mods edit the Indoril, Imperial and Templar belts.
+ (Ref: "readme_Unique Finery Replacer v1dot1.txt")
+[ANY UniqueFinery.esp
+     UniqueFinery_NoRobe.esp]
+lfx_faction_belts.esp
+
+;;Alaisiagae's Unique Finery - Female Hortator Robe Add-On by Plangkye
+[Requires]
+ "Unique Finery - Female Hortator Robe Add-On" by Plangkye requires Alaisiagae's "Unique Finery"
+ (Ref: "UF_HortRobeF.zip\Readme.txt")
+UF_HortRobeF001.esp
+[ANY UniqueFinery.esp
+     UniqueFinery_NoRobe.esp]
+
+; (Ref: "UF_HortRobeF.zip\Readme.txt")
+; "If you use UniqueFinery_NoRobe.esp, you do not need to worry about the load order."
+[Order]
+UniqueFinery.esp
+UF_HortRobeF001.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
