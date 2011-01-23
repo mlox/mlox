@@ -4292,7 +4292,7 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @BTB's Game Improvements 8.5 [BTB]
+;; @BTB's Game Improvements 8.6 [BTB]
 
 [Requires]
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -4313,26 +4313,50 @@ BTB - Equipment.esp
      [ANY EcoAdj(Sri+Ingredients).esp
           EcoAdj Ingredients.esp]]
 
-[Note]
- ! "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both mods.
- ! Note that it is possible for you to be running a combination of BTB's and Wakim's mods that renders this Note irrelevant, but my brain cannot work out the correct mlox rule structure
- ! (Ref: "morrowind_btb.zip\Readme.txt")
-[ALL [ANY BTB - Character.esp
-          BTB - Character (Alternate).esp
-          BTB - Equipment.esp
-          BTB - Settings.esp
-          BTB - Settings (Alternate).esp
-          BTB - Spells.esp]
-     [ANY Balance - Character.esp
-          Balance - Magic Effects.esp
-          Balance - NPC Spellcasting.esp
-          Balance - game settings.esp
-          Balance - items.esp
-          Balance - spells.esp
-          Gameplay - Dialogue.esp
-          Gameplay - Faction.esp
-          Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+;;Dragon32: Checked Wakim's and BTB's mods using TESPCD
+
+;;"BTB - Alchemy.esp" - no conflict with Wakim
+
+;;"BTB - Character.esp"
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter character settings.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY BTB - Character.esp
+     BTB - Character (Alternate).esp]
+[ANY Balance - Character.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+;;"BTB - Equipment.esp"
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter equipment settings.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Equipment.esp
+[ANY Balance - items.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+;;"BTB - Settings.esp"
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter settings.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+[ANY Balance - Character.esp
+     Balance - game settings.esp
+     Balance - items.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+;; "BTB - Spells.esp"
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter spell and magic settings.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Spells.esp
+[ANY Balance - Magic Effects.esp
+     Balance - spells.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
 
 ;; Ref: "morrowind_btb.zip\Readme.txt"
 [Order]
