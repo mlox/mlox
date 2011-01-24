@@ -5613,6 +5613,162 @@ DM_DB Armor Replacer-ExpDDBA.esp
 DM_DB Armor Replacer-ExpRanks.esp
 DM_DB Armor Replacer-ExpRanksDDBA.esp
 
+[Conflict]
+ Though Dimitri Mazieres' non-Delayed Dark Brotherhood Attack (DBBA) variant plugins do not include the DBBA scripting they do make changes to "dbattackscript" and will override the Dark Brotherhood delay mod if they load after the Dark Brotherhood delay mod. If you wish to use a Dark Brotherhood delay mod as well as one of Dimitri Mazieres' it is quite safe and compatible: just add an Order rule into your mlox_user.txt to make it so the delay mod loads later in your load order.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
+[ANY DM_DB Armor Replacer-Exp.esp]
+     DM_DB Armor Replacer-ExpRanks.esp
+[ANY DB_Attack_Mod.esp
+     DB_Attack_Mod3.esp
+     db_attack_fixed.esp
+     Murderous Dreams.esp
+     Murderous Dreams_Safe.esp
+     Increased DB Delayed Attacks Patch.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Brotherhood Assassins Fix [Fetus X]
+
+[Conflict]
+ Both "Dark Brotherhood Assassins Fix" by Fetux X and the various flavours of Dimitri Mazieres' "Dark  Brotherhood Armor Replacer" change the armor possessed by Dark Brotherhood assassins.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
+Dark Brotherhood Assassins Fix.esp
+[ANY DM_DB Armor Replacer.esp
+     DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp
+     DM_DB Armor Replacer-ExpRanks.esp
+     DM_DB Armor Replacer-ExpRanksDDBA.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Brotherhood Assassin Animation Replacer [Wildman & Trey Leavens]
+
+[Conflict]
+ Select only one of the ESP files:
+  db_anim.esp - Normal game
+  db_anim_AA.esp - If using "Assassins Armory.esm" alone
+  db_anim_DM.esp - If using Dimitri Mazieres' "DB Armor Replacer" with or without "Assassins Armory.esm"
+  db_anim_DM_exp.esp - If using Dimitri Mazieres' "DB Armor Replacer - Expanded" with or without "Assassins  Armory.esm"
+  db_anim_DM_exp_ranks.esp - If using Dimitri Mazieres' "Dark Brotherhood Armor Replacer - Expanded With  Ranks" with or without "Assassins Armory.esm"
+ (Ref: "DBAARReadme.txt")
+db_anim.esp
+db_anim_AA.esp
+db_anim_DM.esp
+db_anim_DM_exp.esp
+db_anim_DM_exp_ranks.esp
+
+[Conflict]
+ Use "db_anim_AA.esp" instead.
+ (Ref: "DBAARReadme.txt")
+db_anim.esp
+[ALL Assassins Armory.esm
+     [NOT [ANY DM_DB Armor Replacer.esp
+               DM_DB Armor Replacer-Exp.esp
+               DM_DB Armor Replacer-ExpDDBA.esp
+               DM_DB Armor Replacer-ExpRanks.esp
+               DM_DB Armor Replacer-ExpRanksDDBA.esp]]]
+
+[Conflict]
+ Use "db_anim_DM.esp" instead.
+ (Ref: "DBAARReadme.txt")
+db_anim_AA.esp
+[ALL Assassins Armory.esm
+     DM_DB Armor Replacer.esp]
+
+[Requires]
+ (Ref: "DBAARReadme.txt")
+db_anim_DM.esp
+DM_DB Armor Replacer.esp
+
+[Order]
+DM_DB Armor Replacer.esp
+db_anim_DM.esp
+
+[Conflict]
+ Use "db_anim_DM_exp.esp" instead.
+ (Ref: "DBAARReadme.txt")
+db_anim_AA.esp
+[ALL Assassins Armory.esm
+     [ANY DM_DB Armor Replacer-Exp.esp
+          DM_DB Armor Replacer-ExpDDBA.esp]]
+
+[Requires]
+ (Ref: "DBAARReadme.txt")
+db_anim_DM_exp.esp
+[ANY DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp]
+
+[Order]
+DM_DB Armor Replacer-Exp.esp
+db_anim_DM_exp.esp
+
+[Order]
+DM_DB Armor Replacer-ExpDDBA.esp
+db_anim_DM_exp.esp
+
+[Conflict]
+ Use "db_anim_DM_exp_ranks.esp" instead.
+ (Ref: "DBAARReadme.txt")
+db_anim_AA.esp
+[ALL Assassins Armory.esm
+     [ANY DM_DB Armor Replacer-ExpRanks.esp
+          DM_DB Armor Replacer-ExpRanksDDBA.esp]]
+
+[Requires]
+ (Ref: "DBAARReadme.txt")
+db_anim_DM_exp_ranks.esp
+[ANY DM_DB Armor Replacer-ExpRanks.esp
+     DM_DB Armor Replacer-ExpRanksDDBA.esp]
+
+[Order]
+DM_DB Armor Replacer-ExpRanks.esp
+db_anim_DM_exp_ranks.esp
+
+[Order]
+DM_DB Armor Replacer-ExpRanksDDBA.esp
+db_anim_DM_exp_ranks.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Brotherhood Attacks Fixed [Xiran]
+
+[Requires]
+ "Using this esp alone [i.e. without Xiran's "Dark Brotherhood Attacks Fixed"] is useless."
+ (Ref: "Readme DBA Fixed.txt")
+transportMH.esp
+db_attack_fixed.esp
+
+[Patch]
+ Xiran includes an optional compatibility plugin for mods, like Kateri's Julan, Ashlander Companion, which  require the player to travel to Mournhold before completing the main quest, that allows the player to  travel to Mournhold without triggering the Dark Brotherhood attacks.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
+transportMH.esp
+[ALL db_attack_fixed.esp
+     KS_Julan_Ashlander Companion_1.3.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Brotherhood delay mods [Various]
+
+[Conflict]
+ All these mods perform a similar function: delaying the Dark Brotherhood attacks:
+  DB_Attack_Mod.esp - Avenger's original "Delayed Dark Brotherhood Attack Add-On".
+  DB_Attack_Mod.esp - The same plugin name is used by Kir's update to version 2 of Avenger's plugin,  optimising its scripts.
+  DB_Attack_Mod3.esp - Hellwolve's update of version 3 of Avenger's plugin adding an additional condition.
+  db_attack_fixed.esp - Xiran's "Dark Brotherhood Attacks Fixed" changes the Dark Brotherhood attacks so  begin only when the Morrowind main quest is completed.
+  Murderous Dreams.esp & Murderous Dreams_Safe.esp - Avelon's "Murderous Dreams" delays the attacks based  on player level and reputation. It makes other changes too.
+  DM_DB Armor Replacer-ExpDDBA.esp & DM_DB Armor Replacer-ExpRanksDDBA.esp - Dimitri Mazieres' "Dark  Brotherhood Armor Replacer" includes DDBA variants that delay the Dark Brotherhood attacks.
+  Increased DB Delayed Attacks Patch.esp - Jac's "Increased Dark Brotherhood Attacks", based on Kir's  modification.
+ Refer to Gluby's guide, linked below and the plugin's readmes and decide which plugin you wish to use.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
+DB_Attack_Mod.esp
+DB_Attack_Mod3.esp
+db_attack_fixed.esp
+Murderous Dreams.esp
+Murderous Dreams_Safe.esp
+DM_DB Armor Replacer-ExpDDBA.esp
+DM_DB Armor Replacer-ExpRanksDDBA.esp
+Increased DB Delayed Attacks Patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dark Powers Mod  [Nik]
@@ -7599,15 +7755,6 @@ FollowMeMWOnly.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Forgotten Hall  [John W. aka (jondagamkd)]
-
-[Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 169808 The Forgotten Hall 2.0.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Forested Morrowind 1.0 [Max]
 
 ;; Dragon32: Original rule, believe this is inaccurate, see below.
@@ -7643,6 +7790,31 @@ Green Morrowind.esp
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 5193104 Leafy Morrowind.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Forgotten Hall  [John W. aka (jondagamkd)]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 169808 The Forgotten Hall 2.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Forgotten Halls [Midgetalien]
+
+[Requires]
+ (Ref: "ForgottenHalls Readme.txt")
+sm_ForgottenHalls.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     The Neverhalls.esp]
+
+;;Dragon32: a few records in both plugins so load the latest mod last
+[Order]
+The Neverhalls.esp
+sm_ForgottenHalls.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10109,6 +10281,18 @@ IT Beryl and Constance Fix.esp
 [Order]
 1gr_Comp_Beryl.esp
 IT Beryl and Constance Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Increased Dark Brotherhood Attacks [Jac]
+
+[Conflict]
+ "Only use one plugin!"
+   Increased DB Attacks.esp - Only increases the number of attacks.
+   Increased DB Delayed Attacks Patch.esp - Also delays the start of the Dark Brotherhood attacks.
+ (Ref: Increased DB attacks readme.txt)
+Increased DB Attacks.esp
+Increased DB Delayed Attacks Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14117,6 +14301,18 @@ Mundane Weaps-Both.esp
      Mundane Weaps-Both.esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Murderous Dreams [Avelon Hellfyre]
+
+[Conflict]
+ Use only one plugin:
+  Murderous Dreams.esp - A small chance that you will wake up dead or slightly damaged.
+  Murderous Dreams_Safe.esp - Removes the chance for hazardous/fatal outcomes.
+ (Ref: "MurderousDreams12.rar\readme.txt")
+Murderous Dreams.esp
+Murderous Dreams_Safe.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19507,6 +19703,17 @@ The Towers of Uvirith V1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @To Serve Sithis [Emyn]
+
+[Conflict]
+ "To Serve Sithis" by Emyn requires the player to assassinate a key NPC in one of the "LGNPC Tel Uvirith" quests.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
+Clean To Serve Sithis_.esp
+[ANY LGNPC_TelUvirith_v?_??.esp
+     LGNPC_TelUvirith_UI_v?_??.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Toys [Chu]
 
 [Requires]
@@ -21834,6 +22041,44 @@ Vertical limit climbing mod 1.02.esp
 ;;                         (requires Tribunal & Bloodmoon)
 ;; "VGreetings-Thief.esp" - changes affecting the Thief Voice
 ;;                          section (requires Tribunal)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vibrant Morrowind 4.0 [Skydye & HeadlessWonder]
+
+[Note]
+ The "Vibrant Morrowind" authors recommend using Vurt's tree and grass mods instead of Vibrant Trees.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8380 )
+Clean VIBRANT TREES 1.0.esp
+vibrant trees 2.0.esp
+
+[Conflict]
+ "You can pick either to use but not both." The readme implies that "Clean VIBRANT TREES 1.0.esp" may  conflict with fewer plugins. 
+ (Ref: "Vibrant Morrowind 3.0 READ-ME.txt")
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5607 )
+Clean VIBRANT TREES 1.0.esp
+vibrant trees 2.0.esp
+
+;;Dragon32: Plugin looks like it adds lights to exterior cells, so added conflicts for Modman's mod and  those derived from it.
+[Conflict]
+ "Do not use vibrant lights with any other Lighting plug in." 
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5607 )
+Vibrant lights 1.0.esp
+[ANY Illuminated Windows.esp
+     Illuminated Windows - Bloodmoon.esp
+     Modman_windowlights_Full_2.esp
+     Modman_windowlights_Purist_2.esp
+     SpzInteriorDaylight.esp
+     TLM - Ambient Light + Fog Update.esp
+     TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Natural Water).esp
+     TLM - Light Sources (Lanterns).esp
+     TLM - External Lights Ownership.esp
+     TLM - NPC Light Sources.esp
+     TLM - Sneak Modifiers (Code).esp
+     TLM - Sneak Modifiers (Locations).esp
+     TLM - Complete.esp
+     True_Lights_And_Darkness_0.5.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
