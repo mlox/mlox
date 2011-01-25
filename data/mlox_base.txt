@@ -1082,6 +1082,17 @@ Nevena's Assistants & Apprentices 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @All Destinations [Sandman101]
+
+[Conflict]
+ Reznod's "All Silt Strider Ports" and "All Boat Ports" are not compatible with "All Destinations" by Sandman101.
+ (Ref: All DestinationsV1.0 Readme.html)
+All Destinations.esp
+[ANY All Silt Strider Ports.esp
+     All Boat Ports.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @All Items In Balmora + Better Creeper  [STAT1STICK]
 
 [Note]
@@ -3262,6 +3273,17 @@ Better Clothes_v1.0.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
 [ALL BetterClothes_Patch.esp
      Merged_Objects.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Daedric Armor [Reavance]
+
+[Note]
+ ! "Better Bodies" is highly recommended for Reavance's "Better Daedric Armor".
+ ! (Ref: "GothShopIIReadme.txt")
+[ALL Clean Better Daedric.esp
+     [NOT Better Bodies.esp]]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Heads [Motoki, et.al.]
@@ -8763,6 +8785,23 @@ Golden Gold Patch v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Goth Shop in Cyrodiil [Gianluca]
+
+;;Dragon32: ESM dependency not in plugin header
+[Requires]
+ Gianluca's "Goth Shop in Cyrodiil" adds a version of AlienSlof's "Slof's Goth Shop I" to Cyrodiil from Gianluca's "GS_TAMRIEL Tribute to The Community" mod.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4703 )
+Goth Shop in Cyrodiil.esp
+GS_Tamriel Tribute to The Comunity.esm
+
+[Note]
+ Whilst AlienSlof's .esp files from "Slof's Goth Shop I" are not necessary to run Gianluca's "Goth Shop in Cyrodiil" you should ensure you have downloaded all the required resources listed here:
+  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4703
+[ALL Goth Shop in Cyrodiil.esp
+     [NOT Slof's Goth Shop 1.1.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Gothic Attire Complete v1-1 [Qarl]
 
 ;; expdep
@@ -9401,6 +9440,20 @@ Heaven's Lookout.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Heavy armor fix for Slof's Goth Shop I [Mungo]
+
+[Order]
+Slof's Goth Shop 1.1.esp
+slofheavyfix.esp
+
+[Requires]
+ Whilst Mungo's mod contains no readme the PES page refers to the "Black Guar" shop, that is the shop name from "Slof's Goth Shop I" by AlienSlof.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4033 )
+slofheavyfix.esp
+Slof's Goth Shop 1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism [balor]
 
 [Requires]
@@ -9698,6 +9751,19 @@ LGNPC_Indarys_Manor_v?_??.esp
 LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Holiday Mod 1.1 [Princess Stomper]
+
+;;Dragon32: The "a1jw_thm_mercantileboost" script checks the variable "RR_vmktModLoaded", variable set when Rougetet's mod is loaded. Variable defined in Holiday Mod but setting order so load this after Outdoor Mall.
+[Order]
+Vivec Outdoor Mall CoM_v2.esp
+The Holiday Mod.esp
+
+[Order]
+Vivec Outdoor Mall_v2.esp
+The Holiday Mod.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15741,6 +15807,19 @@ PSsorticon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Potion Upgrade [Schwaa]
+
+[Note]
+ !! "Potion Upgrade" by Schwaa conflicts with Erasmus' "Potions" and Srikandi's "Potion Sorter Mod", and any mod that includes them. To fix this you will need to run TESTool's Merge Objects function and enable the Merged_Objects.esp.
+ !! (Ref: "K_Potion_Upgrades.txt")
+[ALL K_Potion_Upgrade_1.2.esp
+     [ANY PotionSorter.esp
+          Potions.esp
+          PSsorticon.esp]
+     [NOT Merged_Objects.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Princess Lokken Post-Main Quest Improvements [Princess Stomper]
 
 [Requires]
@@ -17733,6 +17812,15 @@ Ships of the Imperial Navy (Bloodmoon and MQB version).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Shrine of Mephala [Westly]
+
+[Requires]
+ (Ref: "Shrine of Mephala README.txt")
+The Shrine of Mephala by Westly.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Signy Signposts(!): Tamriel Rebuilt [Earth Wyrm]
 
 [Note]
@@ -17906,13 +17994,71 @@ Black Panther.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Slof's Goth Shop For Men Add-On [AlienSlof]
 
-
 ;; expdep
 [Requires]
  This plugin uses Get/SetScale function which is only available in the expansions.
 Slof's Goth Shop 1.1.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ ! The latest version of Alienslof's "Slof's Goth Shop I", called "Add-on Pack 2", is available here:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7810
+[SIZE 290646 Slof's Goth Shop 1.1.esp]
+Slof's Goth Shop.esp
+
+[Note]
+ ! "Slof's Goth Shop I" works best with, and is designed for Better Bodies 2.2.
+ ! (Ref: "GothShopReadme.txt" and "GothShopAddonReadme.txt" and "GothShop3Readme.txt")
+[ALL [ANY Slof's Goth Shop.esp
+          Slof's Goth Shop 1.1.esp]
+     [NOT Better Bodies.esp]]
+
+;;Slof's Goth Shop For Men Add-Ons 1 and 2
+[Conflict]
+ "Make sure to uncheck Slof's Goth Shop.esp and check Slof's Goth Shop 1.1.esp - don't have both checked or the doubling will be horrendous!"
+ (Ref: "GothShopAddonReadme.txt" and "GothShop3Readme.txt")
+Slof's Goth Shop 1.1.esp
+Slof's Goth Shop.esp
+
+;;GothShop3Readme.txt: "ScentOfBlood must load after the Goth Shop, else SOB is broken"
+[Order]
+Slof's Goth Shop 1.1.esp
+ScentOfBlood.esp
+
+[Order]
+Slof's Goth Shop 1.1.esp
+ScentOfBlood_MCA.esp
+
+[Order]
+Slof's Goth Shop 1.1.esp
+ScentOfBlood_MCA_VR.esp
+
+[Order]
+Slof's Goth Shop 1.1.esp
+ScentOfBlood_MCA_VR_NoStake.esp
+
+[Order]
+Slof's Goth Shop 1.1.esp
+ScentOfBlood_VR.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Slof's Goth Shop II [AlienSlof]
+
+;;GothShopIIReadme.txt: "It is otherwise entirely stand-alone and doesn't require my other shop, though it's designed to compliment the stuff in the other one."
+
+[Note]
+ ! "Slof's Goth Shop II" works best with, and is designed for Better Bodies 2.2.
+ ! (Ref: "GothShopIIReadme.txt")
+[ALL Slof's Goth Shop II.esp
+     [NOT Better Bodies.esp]]
+
+[Requires]
+ (Ref: "GothShopIIKinkyReadme.txt")
+Slof's Goth Shop II - Kinky Add-On.esp
+Slof's Goth Shop II.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Smeradon [PCC aka Blockhead]
@@ -20614,7 +20760,7 @@ Uvirith's Legacy_Final_2.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Uvirith Unleashed [Grumblepunk]
 
-[Note]
+[Note]MPP (Morrowind Patch Project) [TES Morrowind Community, ThePal, Baldurdash, and quorn]
  If you are running ThaEgbird's "Uvirith's Vault" with Grumblepunk's "Uvirith Unleashed" you may need to delete the boulders in the basement, opposite the female Dunmer body, for access.
  (Ref: UU v1.2 ReadMe.txt)
 [ALL Uvirith Unleashed v1.2.esp
@@ -20622,7 +20768,7 @@ Uvirith's Legacy_Final_2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MPP (Morrowind Patch Project) [TES Morrowind Community, ThePal, Baldurdash, and quorn]
+;; @
 
 [Note]
  You have an older version of the MPP (Morrowind Patch Project) installed. The latest version is 1.6.4 (updated by quorn) and available from one of the following links:
@@ -20879,6 +21025,7 @@ heartwood.esp
 Master Trainer Fix v.01.esp
 Morrowind Patch v1.6.3.esm
 Nerevarine Greeting tweaks.esp
+Nolore_Fixes.esp
 NoLore Solstheim.esp
 Pelagiad Fix.esp
 Pieces of the Blade Fix.esp
@@ -21109,6 +21256,14 @@ word_use_fix.esp
 [ANY Morrowind Patch v1.6.4.esm
      Morrowind Patch v1.6.5-BETA.esm]
 Cjad's Templar Pauldron Fix.esp
+
+[Conflict]
+ The MPP obsoletes JOG's "Nolore_Fixes.esp".
+ The MPP adds NoLore to the same unfiltered "Almalexia", "Solstheim" and "Latest Rumors" topics.
+ (Ref: "Booty.txt")
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm]
+Nolore_Fixes.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; START MPP Conflicts reported by "abyssmal terror", Oct 2 2008, here:
