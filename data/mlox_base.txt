@@ -3460,6 +3460,26 @@ Amulets and Rings 2.1 Upgrade A.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Portable Containers [BungaDunga]
+
+[Requires]
+ You need to load BungaDunga's "Better Portable Containers" plugin with cdcooley's MWSE addon.
+ (Ref: "BPC_MWSE_1.2 Readme.txt")
+BPC_MWSE_1.2.esp
+Better Portable Containers v1.1.esp
+
+;; BPC_MWSE_1.2 Readme.txt - "This will need to load after/below the Better Portable Containers plugin since it needs to replace the scripts."
+[Order]
+Better Portable Containers v1.1.esp
+BPC_MWSE_1.2.esp
+
+[Note]
+ ! There is a newer version, 1.2, of "Better Portable Containers - Morrowind Script Extender Scripts"
+ ! http://web.archive.org/web/20080308192235/http://home1.gte.net/cdcooley/BPC_MWSE_1.2.zip
+BPC_MWSE_1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Skulls [tronvillain & nONatee]
 
 [Conflict]
@@ -4822,6 +4842,30 @@ BT_Lokken_child1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Chittaa-jiit [Westly]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 29326 Chittaa-Jiit.esp]
+
+;;From "Clean Chittaa' Add-on #1"
+;;Dragon32: Modifies RACE record
+[Order]
+Chittaa-Jiit.esp
+Clean Chitta-jiit_War Cry.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Chittaa'mer [Westly]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 14174 Chittaa'mer.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Christmas at Lokken [Princess Stomper]
 
 [Requires]
@@ -5129,6 +5173,16 @@ Complete Morrowind TB & BM - Replacer.esp
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
  !! and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
 Contact hits.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CorrectUV Diverse Ore Veins [Nich]
+
+[Conflict]
+ Nich's "correctUV Diverse Ore Veins" is based on Craigor's "Diverse Ore Veins" but uses meshes with better UV mapping, there is no need to run both mods.
+ (Ref: "correctUV Diverse Ore Veins.README.txt")
+CR Ore Replacer 1.0.esp
+correctUV Ore Replacer 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6278,6 +6332,20 @@ Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Diverse Ore Veins [Craigor]
+
+[Note]
+ ! "CR Ore Resource 1.0.esp" adds the "Diverse Ore Veins" meshes to the construction set, but doesn't replace anything in game.
+ ! (Ref: "CR Diverse Ore Veins ReadMe.txt")
+CR Ore Resource 1.0.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 15919 CR Ore Resource 1.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Divine Domina [Jeremy McGuinn]
 
 ; Dragon32: Examining plugins in TESPCD shows a conflict between these two plugins, DD part 5 was released after DD part 2 and has a later modified date in the archive, so I've set it to load last
@@ -6322,6 +6390,39 @@ DivDom_ImprovedAdamantium.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 14261 telfyrdock.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dodge mods [Various]
+
+;;Dragon32: Missing Horatio's original "Dodging mod 1.1", horatio_dodge11.zip, all the others are based on it
+
+;;Conflict message for all
+[Conflict]
+ Aragon's "Dodge Mod", LDones and WDog's "Dodge Mod 1.2-WD (Enhanced-LD)" and TunaandCheese's "Dodge Mod - Revamped" perform the same task, you should choose which mod to use.
+ (Ref: "DodgeReadme-v21.txt", "readme_DodgeModEnhanced-LD.txt" and "Dodge Mod Revamped Readme.txt")
+Dodge Mod 1.2-WD (Enhanced-LD) (Tribunal).esp
+[ANY Dodge-v21.esp
+     DodgeTribunal-v21.esp]
+Dodge Mod - Revamped V.1.1 .esp
+
+;;"Dodge Mod" by Aragon
+[Conflict]
+ Choose one plugin:
+  DodgeTribunal-v21.esp - If you have Tribunal
+  Dodge-v21.esp - If you do not.
+ (Ref: "DodgeReadme-v21.txt")
+Dodge-v21.esp
+DodgeTribunal-v21.esp
+
+;;"Dodge Mod - Revamped" by TunaandCheese
+;;Dragon32: Neither ESM in plugin header
+[Requires]
+ TunaandCheese's "Dodge Mod - Revamped" requires one of the expansions.
+ (Ref: "Dodge Mod Revamped Readme.txt")
+Dodge Mod - Revamped V.1.1 .esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9234,6 +9335,28 @@ STA_guides_replacer_NoScript.esp
 STA_guides_replacer.esp
 [ANY Book Rotate - Morrowind v1.1.esp
      Book Rotate.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Halflings [Westly]
+
+[Conflict]
+ Choose one or the other, but not both   
+ (Ref: "Westly Presents_Halflings README.txt")
+Westly Presents_Halflings (NUDE).esp
+Westly Presents_Halflings (UNDERWEAR).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Half Races of Tamriel [Westly]
+
+[Conflict]
+ Use only one plugin:
+  Westly Presents_Half Races of Tamriel.esp - If you only have Morrowind
+  Westly Presents_Half Races of Tamriel_X.esp - If you have Tribunal and Bloodmoon.
+ (Ref: "Westly Presents Half Races of Tamriel README.txt")
+Westly Presents_Half Races of Tamriel.esp
+Westly Presents_Half Races of Tamriel_X.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12966,6 +13089,16 @@ MW_Adv_PHW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Animation Replacer [Dirnae & Hrnchamd]
+
+[Note]
+ ! With version 0.1.7 of "Morrowind Animation Replacer" you do not need to use "Dirnae's Slower Walk.esp"
+ ! http://www.tesnexus.com/downloads/file.php?id=31635
+ ! (Ref: "readme_dirnae_anims.txt")
+Dirnae's Slower Walk.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCP (Morrowind Code Patch) [Hrnchamd]
 
 [Note]
@@ -14125,6 +14258,7 @@ ASH2.0.esp
 Better Telekinesis.esp
 bjam_Aragon_at_MWSEpatch_v1.0.esp
 bjam_at_MWSE_patch.esp
+BPC_MWSE_1.2.esp
 Controlled Jumps.esp
 Decorator+.esp
 Decorator+ (Balanced).esp
@@ -14157,6 +14291,7 @@ Keyring.esp
 LA_MWSE Addon.esp
 Merchant Investments.esp
 More Quick-Keys.esp
+Universal Companion Share.esp
 Useful Summoned Creatures.esp
 Visceral Discernment.esp
 
@@ -15252,6 +15387,21 @@ Ninja_Girl_JapHouse_teleport.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 24002 npcreplace3_0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @No Female Armor for The Ultimate Knight Shop [Letrune]
+
+[Requires]
+ "No Female Armor for The Ultimate Knight Shop" by Letrune rather logically requires that Orry's "The Ultimate Knight Shop" is loaded.
+ (Ref: "Readme for No Female Armor for The Ultimate Knight Shop.txt")
+Clean NofemKnights.esp
+The Ultimate Knight Shop.esp
+
+;;Readme for No Female Armor for The Ultimate Knight Shop.txt - "load it after "The Ultimate Knight Shop""
+[Order]
+The Ultimate Knight Shop.esp
+Clean NofemKnights.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16800,8 +16950,9 @@ Riptides Face & Clothing Replace Final.esp
 ;; @Rise of House Telvanni [Pozzo, Karpik777, bhl et al.]
 
 [Note]
- There is a newer version of "Rise of House Telvanni" available, you should upgrade.
+ ! There is a newer version of "Rise of House Telvanni" available, you should upgrade.
 [VER<1.5 Rise of House Telvanni.esm]
+[VER=1.41 Rise of House Telvanni.esm]
 
 [Requires]
  (Ref: "Rise of House Telvanni v1.5 Readme.txt")
@@ -20118,6 +20269,29 @@ Ultimate Galleon Purchase Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Ultimate Knight Shop [Orry, aka "The Hand Of God"]
+
+[Note]
+ ! Orry's "The Ultimate Knight Shop" already contains items from these mods, you should review if you want to load them as well:
+ !  Jeremy McGuinn's "Knights of Tamriel"
+ !  MikeMS' "Royal Golden Armor"
+ !  The_inwah and AnOldFriend's "Wooden Longbows"
+ ! (Ref: "The Ultimate Knight Shop Read Me.txt") 
+[ALL The Ultimate Knight Shop.esp
+     [ANY akatosh.esp
+          Arkay.esp
+          Arkay_non_Tribunal.esp
+          Clean Mara.esp
+          Dibella.esp
+          jet_gold_armor.esp
+          kynareth.esp          
+          Knights of Tamriel.esp
+          Royal Golden Armor v3.1.esp
+          Clean Wooden longbows V2.0.esp]]
+;;Dragon32: There are others in the readme but I can't identify what they are.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Underground [Qarl]
 
 [Note]
@@ -22315,6 +22489,22 @@ Vivec Outdoor Mall_v2.esp
 Vivec Outdoor Mall CoM_v2.esp
 [ANY Chateau Nerevarine Estate.esp
      Clean SECRET GARDEN V2.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vivec Voice Add-on [MrTS, Tyana Rie & Miltiades]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 56355 Vivec_Voice_addon MW ONLY.esp]
+
+[Conflict]
+ Use only one plugin:
+  Vivec_Voice_addon TRIBUNAL.esp - If you have Tribunal.
+  Vivec_Voice_addon MW ONLY.esp - If you only have Morrowind.
+Vivec_Voice_addon MW ONLY.esp
+Vivec_Voice_addon TRIBUNAL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
