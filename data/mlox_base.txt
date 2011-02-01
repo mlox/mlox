@@ -809,6 +809,23 @@ Aduls_Arsenal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alakazar's Lamp [Westly]
+
+[Conflict]
+ Choose only one plugin
+ (Ref: "Alakazar's Lamp by Westly README.txt")
+Alakazar's Lamp.esp
+Alakazar's Lamp_no_music.esp
+
+[Note]
+ ! "This is a Better Body mod (mostly), so other body mods are not supported in this archive (so clothing will clip with the original bodies and Smoother Bodies)."
+ ! (Ref: "Alakazar's Lamp by Westly README.txt")
+[ALL [ANY Alakazar's Lamp.esp
+          Alakazar's Lamp_no_music.esp]
+     [NOT Better Bodies.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alchemy Balance [Beancounter501]
 
 [Requires]
@@ -3445,7 +3462,98 @@ BL-Morrowind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Necomancer Amulet [Michael "HelioS" Bennett]
+;; @Better Music System 1.9 [Xiran]
+
+[Note]
+ ! There is a newer version of "Better Music System" by Xiran, you should upgrade.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7899
+[VER<1.9 BetterMusicSystem_<VER>.esp]
+[VER<1.9 BetterMusicSystem_<VER>_alt.esp]
+
+[Conflict]
+ Xiran's "Better Music System" was based on and inspired by EvilGreebo's "Music Mod", they both add scripted music to Morrowind's cells.
+ (Ref: "BMS_readme.txt")
+BetterMusicSystem_<VER>.esp
+[ANY EG Music Mod V1.1 MW+TB+BM.esp
+     EG Music Mod V1.1 MW+TB.esp
+     EG Music Mod V1.1 MW.esp]
+
+[Conflict]
+ Only use one plugin. Use the alternative version "only if you get an error concerning the XN_Check_Battle script upon loading [or] if you have any other problems with battle music."
+ (Ref: "BMS_1.9_Alternative_Version.txt")
+BetterMusicSystem_1.9.esp
+BetterMusicSystem_1.9_alt.esp
+
+[Conflict]
+ Only use one plugin. Use the alternative version "only if you get an error concerning the XN_Check_Battle script upon loading [or] if you have any other problems with battle music."
+ (Ref: "BMS_1.9_Alternative_Version.txt")
+BMS_UPDATE_from1.7(.x)to1.9.esp
+BMS_UPDATE_from1.7(.x)to1.9_alt.esp
+
+[Conflict]
+ Only use one plugin:
+  BetterMusicSystem_1.9.esp - "If this is the first time you use this mod, or you’ve never customized tracklists"
+  BMS_UPDATE_from1.7(.x)to1.9.esp - "If you were using version 1.7(.x) or 1.6/1.7(.x) and you have customized any tracklists"
+ (Ref: "BMS_readme.txt")
+[ANY BetterMusicSystem_1.9.esp
+     BetterMusicSystem_1.9_alt.esp]
+[ANY BMS_UPDATE_from1.7(.x)to1.9.esp
+     BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
+
+[Conflict]
+ "BetterMusicSystem_1.9.esp and its alt. esp have Timers’ Patch + GhostGate Fix included."
+ (Ref: "BMS_readme.txt")
+[ANY BetterMusicSystem_1.9.esp
+     BetterMusicSystem_1.9_alt.esp]
+[ANY BMS_Timers_Patch.esp
+     BMS_TowerOfDusk_Fix.esp
+     BMS_Ghostgate.ESP]
+
+[Conflict]
+ "BMS_UPDATE_from1.7(.x)to1.9.esp and its alt. esp have the GhostGate Fix included"
+ (Ref: "BMS_readme.txt")
+[ANY BMS_UPDATE_from1.7(.x)to1.9.esp
+     BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
+[ANY BMS_TowerOfDusk_Fix.esp
+     BMS_Ghostgate.ESP]
+
+[Note]
+ "BMS_UPDATE_from1.7(.x)to1.9.esp and its alt. esp [do not include] the Timers’ Patch (it would overwrite all playlist scripts). You need to have your own Timer’s Patch plugin with customized playlists."
+ (Ref: "BMS_readme.txt")
+[ALL [ANY BMS_UPDATE_from1.7(.x)to1.9.esp
+          BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
+     [SIZE 591786 BMS_Timers_Patch.esp]]
+
+[Conflict]
+ "If you were using another version, delete all plugins of that version"
+ (Ref: "BMS_readme.txt")
+[ANY BetterMusicSystem_1.9.esp
+     BetterMusicSystem_1.9_alt.esp]
+[ANY BetterMusicSystem_v1.1.1.esp
+     BetterMusicSystem_1.8*.esp]
+
+[Requires]
+ (Ref: "BMS_readme.txt")
+[ANY BMS_UPDATE_from1.7(.x)to1.9.esp
+     BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
+[ALL BetterMusicSystem_v1.1.1.esp
+     [ANY [ALL BMS_UPDATE_v1.6.esp
+               [ANY BMS_UPDATE_from1.6_to1.7.esp
+                    BMS_UPDATE_from1.6_to1.7.2.esp]]
+          [ANY BMS_UPDATE_v1.7.2.esp
+               BMS_UPDATE_v1.7.esp]]]
+
+;;Ref: "BMS_readme.txt"
+[Order]
+BetterMusicSystem_v1.1.1.esp
+BMS_UPDATE_v<VER>.esp
+BMS_UPDATE_from1.6_to<VER>.esp
+BMS_UPDATE_from1.7(.x)to1.9*.esp
+BMS_Timers_Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Necromancer Amulet [Michael "HelioS" Bennett]
 
 [Conflict]
  Daduke's "Amulets and Rings" already includes Michael "HelioS" Bennett's "Better Necromancers Amulet", there is no need to load both plugins.
@@ -6514,6 +6622,38 @@ Better Bodies.esp
  !! You could fix the mod by removing AutoCalculate using the Construction Set.
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=1049424 )
 DreamersAwakenedv1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dremora (Markynaz) Race and Companion [Westly & Princess Stomper]
+
+[Conflict]
+ Do not play both together
+ (Ref: "Westly Presents-Dremora(Markynaz) Race & Princess Presents Gatanas Companion README.txt")
+Gatanas Markynaz Dremora Companion - Female.esp
+Gatanas Markynaz Dremora Companion - Male.esp
+
+[Requires]
+ Princess Stomper's "Gatanas Dremora (Markynaz) Companion" requires the original "Dremora (Markynaz) Race" plugin.
+ (Ref: "Westly Presents-Dremora(Markynaz) Race & Princess Presents Gatanas Companion README.txt")
+[ANY Gatanas Markynaz Dremora Companion - Female.esp
+     Gatanas Markynaz Dremora Companion - Male.esp]
+Westly Presents-Dremora Markynaz.esp
+
+;;Dragon32: Not specified in readme but companion plugin alters CONT "WAR_DRM_ChestA", original filetimes have companion loading last
+[Order]
+Westly Presents-Dremora Markynaz.esp
+Gatanas Markynaz Dremora Companion - Male.esp
+
+[Order]
+Westly Presents-Dremora Markynaz.esp
+Gatanas Markynaz Dremora Companion - Female.esp
+
+[Note]
+ ! The Daedric Arcana armor set, included with "Dremora (Markynaz) Race", is a Better Body-style armor. As such it will clip with other body styles (original bodies, smoother bodies, and so on).
+ ! (Ref: "Westly Presents-Dremora(Markynaz) Race & Princess Presents Gatanas Companion README.txt")
+[ALL Westly Presents-Dremora Markynaz.esp
+     [NOT Better Bodies.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14140,6 +14280,10 @@ zooming bows (v2).esp
 The Gambler.esp
 ToggleSneak.esp
 
+[Note]
+ These mods require Morrowind Graphics Extender (MGE) v3.8 revision 107 or later, with MWSE enabled.
+Fliggerty's Almanac.esp
+
 ;Unknown versions required:
 ; Better Boots of Blinding Speed.esp
 ; Spell Timer.esp
@@ -14306,6 +14450,7 @@ Werewolf ReEquip.esp
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a, or MGE v3.5.6 or later.
 Advanced Alchemy.esp
+BetterMusicSystem_<VER>.esp
 Census and Excise Office.esp
 mel_teleportPlugin_1_3.esp
 UL_MWSE_patch.esp
@@ -14525,6 +14670,25 @@ Murderous Dreams_Safe.esp
 [ALL Museum of Artifacts Improved Expanded.esp
      [ANY ExpandedMoA.esp
           Clean Museum of Artifacts Improvements.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Music Mod [EvilGreebo]
+
+[Note]
+ ! There is an update to EvilGreebo's "Music Mod" available:
+ ! http://www.fileplanet.com/144267/140000/fileinfo/Music-Mod-v1.1
+EG Music Mod.esp
+
+[Conflict]
+ Choose one plugin:
+  EG Music Mod V1.1 MW+TB+BM.esp - If you have Tribunal and Bloodmoon.
+  EG Music Mod V1.1 MW+TB.esp - If you have Tribunal.
+  EG Music Mod V1.1 MW.esp - If you only have Morrowind.
+ (Ref: "EG music V1.1 readme.txt")
+EG Music Mod V1.1 MW+TB+BM.esp
+EG Music Mod V1.1 MW+TB.esp
+EG Music Mod V1.1 MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15665,6 +15829,17 @@ VA_OrdReplace_openhelm1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Oriental Weapons Pack [Khan raider]
+
+[Conflict]
+ "Oriental Weapons Pack" is better not used with similar mods, such as "Real Katana" by karstux.
+ (Ref: "OrientalTexturesReadme.txt")
+Oriental weapons pack.esp
+[ANY Real_Katana_Lite.esp
+     ktx_real_katana_1.2.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Palace of Varner Shuuor [Impaler]
 
 [Note]
@@ -15689,6 +15864,42 @@ Palladin47 - Creatures.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 23365 parasolhouse.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Particle Arrow Replacer 4.0 [Ghostnull]
+
+[Note]
+ ! There is a new version of Ghostnull's "Particle Arrow Replacer" available
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4926
+[ANY Particle Arrows.esp
+     Area Effect Arrows.esp]
+
+[Requires]
+ "If the Official Area Effect Arrows plugin is also being used, or another mod that uses or changes Area Effect Arrows (for example, Redesigned Vivec), load AEA-Compatibility.esp"
+ (Ref: "Particle Arrow Replaer ReadMe.txt")
+AEA-Compatibility.esp
+[ALL Particle Arrow Replacer.esp
+     [ANY AreaEffectArrows.esp
+          AreaEffectArrows XB Edition.esp
+          Area Effect Projectiles.esp]]
+
+;;Particle Arrow Replaer ReadMe.txt: "load AEA-Compatibility.esp after Particle Arrow Replacer.esp and Area Effect Arrows.esp"
+[Order]
+Particle Arrow Replacer.esp
+AEA-Compatibility.esp
+
+[Order]
+AreaEffectArrows.esp
+AEA-Compatibility.esp
+
+[Order]
+AreaEffectArrows XB Edition.esp
+AEA-Compatibility.esp
+
+[Order]
+Area Effect Projectiles.esp
+AEA-Compatibility.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
