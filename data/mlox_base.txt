@@ -1128,6 +1128,84 @@ All Destinations.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alternate Beginnings [evermoon]
+
+[Note]
+ ! In Pseron Wyrd's modified version of evermoon's "Alternate Beginnings" he notes "Not all the Alternate Beginnings work as intended in original".
+ ! It's probable that these are the "Teleported into the Caldera Mages Guild" and "Drinking at the tavern in Dagon Fel" choices. This is based on information in "Alternate Beginnings 2" by BlueBit and Narfblat, an update to evermoon's original "Alternate Beginnings".
+ ! (Ref: "Clean altbegin.txt" and "Alternate_Beginnings_2_v11.rar\README.txt")
+altbegin.esp
+Clean altbegin.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alternate Beginnings 2.1 [Lthemeow, Evermoon, BlueBit and Narfblat]
+
+[Conflict]
+ Lthemeow's edited "Alternate Beginnings" includes "Character Maker" by Zerocyde.
+ (Ref: "Alt Beginning 2.1 Readme.txt" and "Alt Beginning 2.2 Readme.txt")
+[ANY Character Maker.esp
+     Character Maker (qs).esp]
+[ANY altbegin 2.1(nioliv).esp
+     altbegin 2.1.esp
+     BC altbegin 2.1(nioliv).esp
+     BC altbegin 2.1.esp
+     altbegin 2.2(nioliv).esp
+     altbegin 2.2.esp
+     BC altbegin 2.2(nioliv).esp
+     BC altbegin 2.2.esp]
+
+[Requires]
+ These versions of Lthemeow's edited "Alternate Beginnings" require NioLiv's "House of Earthly Delights, Harem Style".
+ (Ref: "Alt Beginning 2.1 Readme.txt" and "Alt Beginning 2.2 Readme.txt")
+[ANY altbegin 2.1(nioliv).esp
+     BC altbegin 2.1(nioliv).esp
+     altbegin 2.2(nioliv).esp
+     BC altbegin 2.2(nioliv).esp]
+House of Earthly Delights, Harem Style.esp
+
+;;Dragon32: Probably best to load Lthemeow's after NioLiv's
+[Order]
+House of Earthly Delights, Harem Style.esp
+altbegin 2.1(nioliv).esp
+
+[Order]
+House of Earthly Delights, Harem Style.esp
+BC altbegin 2.1(nioliv).esp
+
+[Order]
+House of Earthly Delights, Harem Style.esp
+altbegin 2.2(nioliv).esp
+
+[Order]
+House of Earthly Delights, Harem Style.esp
+BC altbegin 2.2(nioliv).esp
+
+[Conflict]
+ Only use one of Lthemeow's edited "Alternate Beginnings" plugins.
+ (Ref: "Alt Beginning 2.1 Readme.txt" and "Alt Beginning 2.2 Readme.txt")
+altbegin 2.1(nioliv).esp
+altbegin 2.1.esp
+BC altbegin 2.1(nioliv).esp
+BC altbegin 2.1.esp
+altbegin 2.2(nioliv).esp
+altbegin 2.2.esp
+BC altbegin 2.2(nioliv).esp
+BC altbegin 2.2.esp
+
+[Note]
+ ! You should consider using one of Lthemeow's edited "Alternate Beginnings" plugins from "Alternate_Beginnings_22.zip"
+ ! Those versions are "[Necessities of Morrowind], and other start script mods, compatable. It delays the script by five seconds, causing it to be compatable with anything that uses start scripts without making the name/etc menues pop up at once and over one another."
+ ! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8816&comment_page=2 )
+[ALL [ANY altbegin 2.1(nioliv).esp
+          altbegin 2.1.esp
+          BC altbegin 2.1(nioliv).esp
+          BC altbegin 2.1.esp]
+     [ANY Galsiahs Character Development.esp
+          NoM 3.0.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alternate Leveling (Forgetfulness) [Balor]
 
 [Requires]
@@ -4850,20 +4928,6 @@ Castle Vianden V2.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Chapels of Vvardenfell v2 [Xanondorf/Zorrodorf]
-
-[Note]
- !! This plugin contains evil GMSTs. You could clean it yourself, or use "Clean chapelsv2.esp" instead!
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 351827 chapelsv2.esp]
-
-[Conflict]
- !! "chapelsv2.esp" contains dirty Tribunal GMSTs, use "Clean chapelsv2.esp" instead!
-Clean chapelsv2.esp
-chapelsv2.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Chalk 3.0 [ManaUser]
 
 ;; expdep
@@ -4878,6 +4942,69 @@ Chalk30-Base.esp
  There is a newer version of Chalk available (v3.0), you should upgrade!
  http://webpages.charter.net/manauser/morrowind/
 Chalk20.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Chapels of Vvardenfell v2 [Xanondorf/Zorrodorf]
+
+[Note]
+ !! This plugin contains evil GMSTs. You could clean it yourself, or use "Clean chapelsv2.esp" instead!
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 351827 chapelsv2.esp]
+
+[Conflict]
+ !! "chapelsv2.esp" contains dirty Tribunal GMSTs, use "Clean chapelsv2.esp" instead!
+Clean chapelsv2.esp
+chapelsv2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CharGen Diseases [Marbred]
+
+[Conflict]
+ "[CharGen Diseases] is an update/replacer for [Marbred's] old Chargen Vampire and Chargen Werewolf mods. This combines both those mod ideas into one mod."
+ (Ref: "Readme - Chargen Diseases.txt")
+[ANY CharGen Diseases.esp
+     CharGen Revamped wDiseases.esp]
+[ANY Chargen Werewolf.esp
+     Vampire Birthsigns.esp]
+
+[Conflict]
+ Only use one plugin:
+  CharGen Revamped wDiseases.esp - If you are using gman21's "CharGen Revamped" 1.4
+  CharGen Diseases.esp - If you are not
+ (Ref: "Readme - Chargen Diseases.txt")
+CharGen Diseases.esp
+CharGen Revamped wDiseases.esp
+
+[Requires]
+ Marbred's "CharGen Revamped wDiseases.esp" plugin requires gman21's "CharGen Revamped" 1.4
+ (Ref: "Readme - Chargen Diseases.txt")
+CharGen Revamped wDiseases.esp
+CharGen_Revamped_v14.esp
+
+;;Notes on Marbred's older CharGen mods
+[Conflict]
+ Do not use Marbred's "Chargen Werewolf" and "Chargen Vampire Birthsigns" at the same time
+ (Ref: "ChargenWereWolf ReadMe.txt")
+Chargen Werewolf.esp
+Vampire Birthsigns.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 2941 Vampire Birthsigns.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CharGen Revamped [gman21]
+
+[Conflict]
+ gman21's "CharGen Revamped" includes "Character Maker" by Zerocyde.
+ (Ref: "chargen_revamped_v14.zip\readme.txt")
+[ANY Character Maker.esp
+     Character Maker (qs).esp]
+CharGen_Revamped_v14.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4897,16 +5024,30 @@ Character Maker (qs).esp
 
 [Conflict]
  All of the following plugins affect the Chargen (Character Generation) process, and so they will conflict with each other. You should only use one Chargen mod.
+altbegin.esp
+altbegin 2.1(nioliv).esp
+altbegin 2.1.esp
+altbegin 2.2(nioliv).esp
+altbegin 2.2.esp
 Alternate Beginnings 2.esp
+Alternate_Beginnings__Simons_fix.esp
+BC altbegin 2.1(nioliv).esp
+BC altbegin 2.1.esp
+BC altbegin 2.2(nioliv).esp
+BC altbegin 2.2.esp
+bloodmoonchargen.ESP
 CharGen_Revamped_v14.esp
 Chargen_Revamped_v2_1.esp
+Chargen_Revamped_v2_3.esp
 Character Maker (qs).esp
 Character Maker.esp
+Clean altbegin.esp
 Clean Chargen_Revamped_v2_3.esp
 Clean Royal Chargen.esp
 ComprehensiveChargen.esp
 Immersive Chargen.esp
 Quick Char.esp
+ZAS1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5440,6 +5581,16 @@ Creatures 6th House Patch.esp
 ;[SIZE 813593 Creatures.esp] ; original Creatures X
 
 ;[SIZE !817192 Creatures.esp] ; Creatures X patch
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Creed of the Assassin [Westly]
+
+[Note]
+ ! The armour in Westly's "Creed of the Assassin" is designed for Psychodog Studio's "Better Bodies".
+ ! (Ref: "Westly Presents_Creed of the Assassin README.txt")
+[ALL Westly Presents_Creed of the Assassin.esp
+     [NOT Better Bodies.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7957,6 +8108,16 @@ Give your orders v13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fliggerty's Almanac [Fliggerty]
+
+[Conflict]
+ "Fliggerty's Almanac" incorporates a tweaked version of "Moonlight" by Jeoshua.
+ (Ref: "Fliggerty's Almanac.txt")
+Fliggerty's Almanac.esp
+Moonlight.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fliggerty's Armor Project 2 [Fliggerty]
 
 [Conflict]
@@ -10038,6 +10199,20 @@ The Holiday Mod.esp
  (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__16053177 )
 Horror Mod.esp
 AV2-moved_Addon2_Castle_Avalon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @House of Earthly Delights, Harem Style [NioLiv]
+
+[Note]
+ !! NioLiv's "House of Earthly Delights, Harem Style" needs Psychodog Studio's "Better Bodies" and either AlienSlof's "Better Beasts" or SabreGirl's "Better Bodies for Beasts" for the clothes to fit.
+ !! (Ref: "House of Earthly Delights, Harem Style readme.pdf")
+[ALL House of Earthly Delights, Harem Style.esp
+     [NOT [ALL Better Bodies.esp
+               [ANY Slof's Better Beasts a.esp
+                    Slof's Better Beasts b.esp
+                    Slof's Civilised Beasts.esp
+                    SG-BB-for-beasts.esp]]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18492,6 +18667,16 @@ CDR_SmootherBodies_M_OldUWear.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Solstheim Alternate Beginning [Midgetalien]
+
+[Note]
+ "[Galsiahs Character Development] - its been reported that GCD could conflict with this mod. However the two "work" together. The only problem is at the start of the game, instead of the menus poping up one by one, they pop up all at once. Not really a game breaking issuie, just annoying."
+ (Ref: "Bloodmoon Chargen v6 Readme.txt")
+[ALL Galsiahs Character Development.esp
+     bloodmoonchargen.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Souly Soulgems(!) [Earth Wyrm]
 
 [Note]
@@ -22726,6 +22911,15 @@ Vivec_Voice_addon TRIBUNAL.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 168736 Vivec Wilderness Cottage v1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vurt's Ascadian Isles Mod [Vurt]
+
+[Note]
+ !! Later versions of "Vurt's Ascadian Isles Mod" do not require a plugin and warn you: "DELETE the old .esp! The mod does no longer need it and errors will occur if you use it."
+ !! http://www.tesnexus.com/downloads/file.php?id=29341
+Vurt's AI Trees Replacer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
