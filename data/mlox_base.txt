@@ -1614,6 +1614,17 @@ Area Effect Projectiles.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Arkeylan Armor [Arkeyla]
+
+[Note]
+ ! "Arkeylan Armor" is designed for Psychodog Studios' "Better Bodies", without it "the armor and clothing will look somewhat silly, if they work at all."
+ ! (Ref: "AA Readme.txt" and "Arkeylan_Armor_2.7z\Readme.txt")
+[ALL [ANY Clean Arkeylan Armor.esp
+          Arkeylan Armor 2.esp]
+     [NOT Better Bodies.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Armor: Integrative Modifications - Morrowind and Tribunal and Bloodmoon 1.0 [Alaisiagae]
 
 [Conflict]
@@ -3368,6 +3379,19 @@ Better Clothes_v1.0.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
 [ALL BetterClothes_Patch.esp
      Merged_Objects.esp]
+
+[Note]
+ ! There is a newer version of "Better Clothes" available, you should upgrade.
+ ! Despite the version numbers "Better Clothes v1.1" was released after the beta "Better Clothes Beta_1.4.esp".
+ ! http://www.psychodogstudios.com/betterclothes/
+Better Clothes Beta_1.4.esp
+
+[Requires]
+ "Better Clothes" requires version 2.1 or 2.2 of Psychodog Studios' "Better Bodies"
+ (Ref: betterclothes.txt)
+[ANY Better Clothes_v1.1.esp
+     Better Clothes_v1.1_nac.esp]
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20778,7 +20802,7 @@ pcc_undead_vetooch_10.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Undeads: arise from death 2.0 [Arcimaestro Antares]
+;; @Undead: Arise From Death 2.0 [Arcimaestro Antares]
 
 [Note]
  A newer version of "Undeads: arise from death" is available:
@@ -20787,7 +20811,7 @@ Undeads arise from death 1.4*.esp
 Undeads arise from death 1.5.esp
 
 [Conflict]
- "Undeads arise from death" includes "Unique Ghosts")
+ "Undeads arise from death" includes "Unique Ghosts"
  (Ref: "Undead arise from death 2.0- README.txt")
 Undead arise from death 2.0.esp
 [ANY Unique Ghosts - M - T.esp
@@ -20797,7 +20821,27 @@ Undead arise from death 2.0.esp
  Arcimaestro Antares' "Undeads arise from death" is not compatible with Neoptolemus' "The Undead 3.0".
  (Ref: http://forums.bethsoft.com/index.php?/topic/847583-relz-the-undead-v30/page__st__60__p__15461806&#entry15461806 )
 Undead arise from death 2.0.esp
-The Undead.esm
+[ANY The Undead.esm
+     The Undead.esp]
+
+[Note]
+ Version 1.5 and above of "Undead: Arise From Death" by Arcimaestro Antares include his "Unique Ghosts" mod. According to the "Unique Ghosts" readme that mod uses some of the textures from "Better Clothes", so if you receive missing texture errors that could be the cause.
+ (Ref: "Unique Ghosts - README.txt")
+[ALL Undead arise from death 2.0.esp
+     [NOT [ANY Better Clothes_v1.1.esp
+               Better Clothes_v1.1_nac.esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Undeads - Skeletons Arise from Death [Arcimaestro Antares]
+
+;;Dragon32: ESM dependency not in plugin header
+[Requires]
+ "Undeads - Skeletons Arise from Death" requires one of the expansions for their script functionality.
+ (Ref: "Undeads Skeletons Arise from Death - README.txt")
+Undeads Skeletons Arise from Death.esp
+[ANY Bloodmoon.esm
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20890,6 +20934,14 @@ Unique Ghosts - M - T.esp
  (Ref: Unique Ghosts - README.txt)
 Unique Ghosts - M - T.esp
 Tribunal.esm
+
+[Note]
+ !! "[Unique Ghosts] REQUIRES the mod Better Clothes [...] You do not need to have its esp loaded, but you need some of the textures"
+ !! (Ref: "Unique Ghosts - README.txt")
+[ALL [ANY Unique Ghosts - M - T.esp
+          Unique Ghosts - M.esp]
+     [NOT [ANY Better Clothes_v1.1.esp
+               Better Clothes_v1.1_nac.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22932,6 +22984,15 @@ Vurt's AI Trees Replacer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vurt's Leafy West Gash [Vurt]
+
+[Note]
+ !! Version 2.0 and above of "Vurt's Leafy West Gash" is a pluginless replacer. You should check to see if you have the latest version and so need this plugin loaded.
+ !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8334
+Vurt's Leafy West Gash.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vvardenfell Druglord [Fliggerty]
 
 [Requires]
@@ -23776,6 +23837,77 @@ lfx_rare_ingredients-uniques.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 141009 Windmill.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Windows Glow Expansion [abot]
+
+;;Dragon32: ESM dependencies not in plugin header
+[Requires]
+ Tribunal or Bloodmoon are required for abot's "Windows Glow Expansion"
+ (Ref: "abotWindowsGlow.txt")
+abotWindowsGlow.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ abot's "Windows Glow Expansion" can be used alone, but it works better as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
+ (Ref: "abotWindowsGlow.txt")
+[ALL abotWindowsGlow.esp
+     [NOT Windows Glow.esp]]
+
+[Note]
+ abot's "Windows Glow Expansion" is compatible with Spuzzum's "Interior Daylight", though both mods will add lights to interiors.
+ (Ref: "abotWindowsGlow.txt")
+[ALL abotWindowsGlow.esp
+     SpzInteriorDaylight.esp]
+
+;;Dragon32: abot modifies the "max_win_dis_01" and "max_win_dis_02" scripts from "Windows Glow" to use NightTime global short. NightTime's set by "ab01SetNightTimeScript" and is apparently more efficient. May as well use it
+[Order]
+Windows Glow.esp
+abotWindowsGlow.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Windows Glow - Bloodmoon [Colt17]
+
+;;Dragon32: Changes to "max_win_dis_01" and "max_win_dis_02" scripts from "Windows Glow", so they only run once an hour.
+[Order]
+Windows Glow.esp
+Windows Glow - Bloodmoon Eng.esp
+
+[Note]
+ Colt17's "Windows Glow - Bloodmoon" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
+[ALL Windows Glow - Bloodmoon Eng.esp
+     [NOT Windows Glow.esp]]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Windows Glow - Raven Rock [Colt17]
+
+;;Dragon32: Changes to "max_win_dis_01" and "max_win_dis_02" scripts from "Windows Glow", so they only run once an hour.
+[Order]
+Windows Glow.esp
+Windows Glow - Raven Rock Eng.esp
+
+[Note]
+ Colt17's "Windows Glow - Bloodmoon" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
+[ALL Windows Glow - Raven Rock Eng.esp
+     [NOT Windows Glow.esp]]
+
+;;Dragon32: above Order rule still relevant here
+[Note]
+ ! abot has released a patched version of Colt17's "Windows Glow - Raven Rock". He "fixed some scripts, changed 2 lamps to english names and cleaned some things"
+ ! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8835 )
+[SIZE !361455 Windows Glow - Raven Rock Eng.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Windows Glow - Tribunal [Colt17]
+
+[Note]
+ Colt17's "Windows Glow - Bloodmoon" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
+[ALL Windows Glow - Tribunal Eng.esp
+     [NOT Windows Glow.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
