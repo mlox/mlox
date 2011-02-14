@@ -1606,11 +1606,40 @@ bjam_at_MWSE_patch.esp
  "AreaEffectArrows.esp" is the original plugin from Bethesda.
  "Area Effect Arrows.esp" from Particle_Arrow_Replacer_v30 adds particle effects.
  "AreaEffectArrows XB Edition.esp" by Xeth-Ban makes the plugin harder to abuse.
- "Area Effect Projectiles.esp" is BTB's edited version.
+ "Area Effect Projectiles.esp" & "Area Effect Projectiles (PAR Edit).esp" are BTB's edited versions.
 AreaEffectArrows.esp
 AreaEffectArrows XB Edition.esp
 Area Effect Arrows.esp
 Area Effect Projectiles.esp
+Area Effect Projectiles (PAR Edit).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Area Effect Projectiles [BTB]
+
+;;Dragon32: See also @Area Effect Arrows [Bethesda/etc] and @Particle Arrow Replacer 4.0 [Ghostnull]
+
+[Conflict]
+ Use only one plugin:
+  Area Effect Projectiles (PAR Edit).esp - Includes Ghostnull's "Particle Arrow Replacer"
+  Area Effect Projectiles.esp - Only includes BTB's edits to Bethesda's "Area Effect Arrows"
+ (Ref: "Readme - PAR Edit.txt")
+Area Effect Projectiles (PAR Edit).esp
+Area Effect Projectiles.esp
+
+[Conflict]
+ Use BTB's "Area Effect Projectiles (PAR Edit).esp" in place of both of the original "Particle Arrow Replacer" plugins.
+ (Ref: "Readme - PAR Edit.txt")
+Area Effect Projectiles (PAR Edit).esp
+[ANY Particle Arrow Replacer.esp
+     AEA-Compatibility.esp]
+
+[Conflict]
+ BTB has released an edited version of Ghostnull's "Particle Arrow Replacer". The edited version is compatible with the "BTB - Equipment.esp" plugin from "BTB's Game Improvements"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8919
+ (Ref: "Readme - PAR Edit.txt")
+Particle Arrow Replacer.esp
+BTB - Equipment.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2181,6 +2210,12 @@ Area Effect Projectiles.esp
 Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
 
+[Order]
+Assassins Armory - No Scripts.esp
+Area Effect Projectiles (PAR Edit).esp
+Assassins Armory - Arrows.esp
+Assassins Armory - Bolt Rifles.esp
+
 [Requires]
  "Assassins Armory - Arrows.esp" requires Bethesda's "Area Effect Arrows" plugin or a modified version of it.
  (Ref: "Assassin's Armory readme.doc")
@@ -2189,6 +2224,7 @@ Assassins Armory - Arrows.esp
      Area Effect Arrows.esp
      AreaEffectArrows XB Edition.esp
      Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp
      Clean Official Plugins v1.1.esp
      OfficialMods_v5.esp]
 
@@ -2415,6 +2451,16 @@ AV_female_armor.esp
  (Ref: Avenge Your Death!.esp)
 Avenge Your Death!.esp
 AYD Spells.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Azura's Coast & Sheogorath - Grass Mod [Muspila/Worsas]
+
+[Note]
+ Do not enable these ESPs if you are using MGE to render the grass.
+ (Ref: "Readme_muspila.txt")
+Grass_AC&S.esp
+Grass_TR_TI&M.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9686,6 +9732,16 @@ Westly Presents_Half Races of Tamriel_X.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Harlequin Sword and Bow Resource [Phijama]
+
+[Conflict]
+ "Only one of the esps should be used at a time as both esps share the same scripts."
+ (Ref: "Harlequin sword resource V1.1 READ ME.txt")
+Clean Harlequin sword resource.esp
+Clean Harlequin CHEAT!.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Haunted Tavern of the West Gash [Darkelfguy]
 
 [Conflict]
@@ -12039,7 +12095,7 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.10 LGNPC_GnaarMok_v<VER>.esp]
+[VER < 1.20 LGNPC_GnaarMok_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -12071,7 +12127,7 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.22 LGNPC_Pelagiad_v<VER>.esp]
+[VER < 1.30 LGNPC_Pelagiad_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -12081,7 +12137,7 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 2.10 LGNPC_Khuul_v<VER>.esp]
+[VER < 2.20 LGNPC_Khuul_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -14635,6 +14691,7 @@ Keyring.esp
 LA_MWSE Addon.esp
 Merchant Investments.esp
 More Quick-Keys.esp
+To The Death.esp
 Universal Companion Share.esp
 Useful Summoned Creatures.esp
 Visceral Discernment.esp
@@ -15988,6 +16045,7 @@ OfficialMods_v5.esp
      Area Effect Arrows.esp
      AreaEffectArrows XB Edition.esp
      Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp
      BCsounds.esp
      EBQ_Artifact.esp
      Entertainers.esp
@@ -16011,6 +16069,7 @@ Clean Official Plugins v1.1.esp
      Area Effect Arrows.esp
      AreaEffectArrows XB Edition.esp
      Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp
      BCsounds.esp
      EBQ_Artifact.esp
      Entertainers.esp
@@ -16081,8 +16140,7 @@ Palladin47 - Creatures.esp
 AEA-Compatibility.esp
 [ALL Particle Arrow Replacer.esp
      [ANY AreaEffectArrows.esp
-          AreaEffectArrows XB Edition.esp
-          Area Effect Projectiles.esp]]
+          AreaEffectArrows XB Edition.esp]]
 
 ;;Particle Arrow Replaer ReadMe.txt: "load AEA-Compatibility.esp after Particle Arrow Replacer.esp and Area Effect Arrows.esp"
 [Order]
@@ -16095,10 +16153,6 @@ AEA-Compatibility.esp
 
 [Order]
 AreaEffectArrows XB Edition.esp
-AEA-Compatibility.esp
-
-[Order]
-Area Effect Projectiles.esp
 AEA-Compatibility.esp
 
 
@@ -16292,6 +16346,16 @@ Clean_AK_PCClothier_patch_v1.67.esp
 Clean_AK_PCSmithy_v1.0.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Phijama's Bow Resource Merchant [Calislahn]
+
+[Conflict]
+ Do not use both "Phijama's Bow Resource" and "Phijama's Bow Resource Merchant" by Calislahn. You do, however, need the resources from "Phijama's Bow Resource".
+ (Ref: "Readme_PJM_Bows_Merchant.txt")
+Clean PJM Bows.esp
+PJM Bows Merchant.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17076,7 +17140,8 @@ House of Mannequins v1.0.esp
 [ANY AreaEffectArrows XB Edition.esp
      Area Effect Arrows.esp
      [SIZE !30094 AreaEffectArrows.esp]
-     Area Effect Projectiles.esp]
+     Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp]
 
 [Order]
 Redesigned Vivec.esp
@@ -19598,7 +19663,8 @@ Taddeus'BalancedObjects_Rotate.esp
 [ANY AreaEffectArrows.esp
      AreaEffectArrows XB Edition.esp
      Area Effect Arrows.esp
-     Area Effect Projectiles.esp]
+     Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp]
 
 [Note]
  Taddeus'BalancedWeapons is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedWeapons - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
@@ -19724,6 +19790,21 @@ Sorefoot Enterprises, Inc. v1.5a.esp
  http://www.bethsoft.com/bgsforums/index.php?showtopic=1057546&st=0&p=15350660&#entry15350660
 TR_Map1.esm
 The Zone (Tribunal).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tamriel Rebuilt: Census and Excise Links [The "Bloodthirsty" Crustacean]
+
+;Dragon32: See Ref in Note rule below - "This prevents an error message regarding TC_CEGate in TR_CensusAndExciseTravel.esp's TC_CEShipDockScript script when starting a new game."
+[Order]
+Siege at Firemoth.esp
+TR_CensusAndExciseTravel.esp
+
+[Note]
+ ! With both of these mods enabled, there will be two boat captains to talk to and two superimposed gate objects in Seyda Neen.
+ ! (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__17171911 )
+[ALL Siege at Firemoth.esp
+     TR_CensusAndExciseTravel.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22184,10 +22265,15 @@ Vality's Bitter Coast Addon.esp
  Do not enable these ESPs if you are using MGE to render the grass.
  (Ref: Morrowind Graphics Extender forum thread)
 Grass Beta_Ascadian Isles.esp
+Grass_Ascadian Isles.esp
 Grass Beta_Bitter Coast.esp
+Grass_Bitter Coast.esp
 Grass Beta_Grazelands.esp
+Grass_Grazelands.esp
 Grass Beta_West Gash.esp
+Grass_West Gash.esp
 Grass Beta_Tamriel rebuilt.esp
+Grass_Tamriel Rebuilt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22981,6 +23067,24 @@ Vurt's AI Trees Replacer.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 35214 Vurt's Ashlands Overhaul.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vurt's Groundcover [Vurt]
+
+[Note]
+ Do not enable these ESPs if you are using MGE to render the grass.
+ (Ref: "readme_vurt.txt")
+Vurt's Groundcover - BC, AI, WG, GL_TREdit.esp
+Vurt's Groundcover - Solstheim [Lush version].esp
+Vurt's Groundcover - Solstheim [Sparse version].esp
+Vurt's Groundcover - The Ashlands.esp
+
+[Conflict]
+ Choose only one plugin
+ (Ref: "readme_vurt.txt")
+Vurt's Groundcover - Solstheim [Lush version].esp
+Vurt's Groundcover - Solstheim [Sparse version].esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
