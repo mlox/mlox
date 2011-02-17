@@ -1,6 +1,6 @@
 Name: mlox
-Version: 0.55
-Copyright 2009 John Moonsugar <john.moonsugar@gmail.com>
+Version: 0.57
+Copyright 2011 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
         mlox - the elder scrolls Mod Load Order eXpert
@@ -60,19 +60,24 @@ oo Requirements
   http://www.python.org/ftp/python/2.5/python-2.5.msi
   http://downloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.7.1-py25.exe
 
+  (Please note that the version of wxWidgets necessary for mlox is slightly
+  newer than the one recommended for Mash, but will work for both
+  applications. mlox will not work with wxPython 2.8.0.1, which is the
+  version recommended by Mash!).
+
 - It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP
   ("Morrowind Code Patch"):
   http://www.tesnexus.com/downloads/file.php?id=19510
   The MCP makes it safer to change your load order in an existing
   savegame, amongst many other wonderful fixes it does.
   You are also encouraged to use Wrye Mash to manage your plugins:
-  http://wrye.ufrealms.net/Wrye%20Mash.html
+  http://wryemusings.com/Wrye%20Mash.html
 
 - mlox.py has 2 modes, GUI and command line. When executed with no
   command line switches it starts in GUI mode, when executed with
   the switch -h, it displays command line usage help.
 
-- Unpack the mlox application archive somewhere under your game
+- Unpack the mlox application archive somewhere under your Morrowind game
   directory. If you don't have a place decided, I suggest you unpack in
   the Morrowind directory. A new directory called "mlox" will be
   created containing all the files.
@@ -89,24 +94,31 @@ oo Requirements
   lofix - run mlox in command-line mode to update your load order.
   lo - (run this in "Data Files") just prints your current load order.
 
-- On Windows, run mlox.exe or mlox.bat. On Linux, run: mlox.py
-  On Windows, if you have set up files that end in ".py" to be executed
-  by Python, then just double-clicking on mlox.py would start the GUI.
+- On Windows, run mlox.exe. On Linux, run: mlox.py
+  On Windows, if you have set up files that end in ".py" to be executed by
+  Python, then just double-clicking on mlox.py would start the GUI.
 
-- mlox always assumes that the rule-base files (mlox_base.txt and
-  mlox_user.txt, if you have created one) are in the current working
-  directory (the directory where you run mlox) so you should run mlox in
-  the directory where those two files live.
+- Note: On Windows 7 (and maybe Vista), if you installed Morrowind in the
+  default location "C:\Program Files\...", you may need to turn off UAC to get
+  mlox to recognize your activated plugins in Morrowind.ini.
+
+- mlox always assumes that the rule-base files (mlox_base.txt and optionally:
+  mlox_user.txt) are in the current working directory (the directory where you
+  run mlox) so you should run mlox in the directory where those two files
+  live.
 
 ------------------------------------------------------------
 o Support
 
 If you run into a problem with mlox, the best thing to do to get help
-is to post on the BethSoft forums:
-http://www.bethsoft.com/bgsforums/index.php?showforum=12
+is to post on the BethSoft Morrowind Mods forums:
+http://forums.bethsoft.com/index.php?/forum/12-mods/
 You can search for the latest mlox thread by using the forum Search function.
 
 If you get a popup error window, please include the contents in your report.
+
+Please report all Windows usability problems to me. I'm not a Windows user, so
+as a programmer, I may make mistakes about how Windows is supposed to work.
 
 ------------------------------------------------------------
 o Introduction - Why mlox?
@@ -207,8 +219,8 @@ o Note to mod Authors
 
 It is my hope that the users of your mod will benefit from using mlox, and
 also that maybe mlox will help reduce mod conflicts, and support questions for
-your mod due to misconfiguration. It is a grand goal, and there are some
-things we can do together to see it happen.
+your mod due to misconfiguration. It is a grand goal (I hope), and there are
+some things we can do together to see it happen.
 
 The first thing is versioning of your mod. If mlox can tell what version of
 your mod the user is using, it can give more accurate advice. mlox can get the
@@ -218,7 +230,7 @@ plugin filename.
 So, if the filename stays the same from version to version, then if the
 description field of the plugin contains a version string:
 
-Version: 0.55
+Version: 0.57
 
 (on a line by itself) mlox will be able to use it. (Wrye Mash can report that
 version too, so it's just a generally useful thing to have in the description).
@@ -371,7 +383,7 @@ current load order, then leave off the --base-only switch.
 oo The mlox GUI
 
 The mlox GUI displays 4 text panes. The top text pane shows the rules files
-that have been loaded and their counts. The middle text pane shows messages
+that have been loaded and their stats. The middle text pane shows messages
 and warnings. And the 2 lower panes that are side by side show the original
 load order on the left, and the mlox sorted load order to the right. Plugins
 that have moved up due to sorting are highlighted in the mlox sorted order.
