@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- mode: python -*-
 # mlox - the elder scrolls Mod Load Order eXpert
-# Copyright 2009 by John Moonsugar
+# Copyright 2011 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
@@ -195,8 +195,10 @@ C = caseless_filenames()
 class caseless_dirlist:
 
     def __init__(self, dir=os.getcwd()):
-        self.dir = os.path.normpath(os.path.abspath(dir))
         self.files = {}
+        if dir == None:
+            return
+        self.dir = os.path.normpath(os.path.abspath(dir))
         for f in [p for p in os.listdir(dir)]:
             self.files[f.lower()] = f
 
@@ -249,9 +251,12 @@ def load_translations(lang):
 
 _ = load_translations(Lang)
 
+
 def unify(s):
     """For GUI text areas that may contain filenames, we guess at the encoding."""
-    return(s.decode("ascii", "replace").encode("ascii", "replace"))
+    #using melchor's workaround:
+    #return(s.decode("ascii", "replace").encode("ascii", "replace"))
+    return s
 
 def format_version(ver):
     """convert something we think is a version number into a canonical form that can be used for comparison"""
@@ -519,7 +524,7 @@ class rule_parser:
                 if Opt.ParseDBG: self.pdbg("parse_ver [VER] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
-            if self.datadir == None:
+            if Opt.FromFile:
                 # this case is reached when doing fromfile checks
                 # and we do not have the actual plugin to check, so
                 # we assume that the plugin matches the given version
@@ -584,7 +589,7 @@ class rule_parser:
                 if Opt.ParseDBG: self.pdbg("parse_desc [DESC] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
-            if self.datadir == None:
+            if Opt.FromFile:
                 # this case is reached when doing fromfile checks,
                 # which do not have access to the actual plugin, so we
                 # always assume the test is merely for file existence,
@@ -628,7 +633,7 @@ class rule_parser:
                 if Opt.ParseDBG: self.pdbg("parse_size [SIZE] \"%s\" not active" % match.group(3))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
-            if self.datadir == None:
+            if Opt.FromFile:
                 # this case is reached when doing fromfile checks,
                 # which do not have access to the actual plugin, so we
                 # always assume the test is merely for file existence,
@@ -1230,7 +1235,7 @@ class loadorder:
         """change the modification times of files to be in order of file list,
         oldest to newest"""
         if Opt._Game == "Morrowind":
-            mtime_first = 1026943162 # Morrowind.esm
+            mtime_first = 1024695106 # Morrowind.esm
         else: # Opt._Game == Oblivion
             mtime_first = 1165600070 # Oblivion.esm
         if len(files) > 1:
@@ -1260,6 +1265,7 @@ class loadorder:
         New.flush()
         Old.flush()
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
+        self.find_game_dirs()
         if Opt.FromFile:
             Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
             self.read_from_file(fromfile)
@@ -1267,7 +1273,6 @@ class loadorder:
                 Msg.add(_["No plugins detected. mlox.py understands lists of plugins in the format\nused by Morrowind.ini or Wrye Mash. Is that what you used for input?"])
                 return(self)
         else:
-            self.find_game_dirs()
             if Opt.GetAll:
                 self.get_data_files()
             else:
@@ -1281,7 +1286,7 @@ class loadorder:
             Dbg.add("initial load order")
             for p in self.order:
                 Dbg.add(p)
-        # read rules from 3 sources, and add orderings to graph
+        # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
         parser = rule_parser(self.active, self.graph, self.datadir)
@@ -1290,9 +1295,22 @@ class loadorder:
             progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
         parser.read_rules("mlox_user.txt", progress)
-        # secondary rules from mlox_base.txt
+
+        # for reading mod-specific rules from "Data Files/mlox/*.txt"
+        # possible problems:
+        # mod author includes rules about other mods for which they should not publish rules
+        # mod author gratuitously forces their mod to load last.
+#        mod_rules_dir = caseless_dirlist(self.datadir.find_path("mlox"))
+#        mod_rules_files = [f for f in mod_rules_dir.filelist()
+#                           if os.path.isfile(mod_rules_dir.find_path(f)) and
+#                           os.path.splitext(f)[1] == '.txt']
+#        for f in mod_rules_files:
+#            parser.read_rules(mod_rules_dir.find_path(f), progress)
+
+        # last rules from mlox_base.txt
         if not parser.read_rules("mlox_base.txt", progress):
             Msg.add(_["Error: unable to open mlox_base.txt database. You must run mlox in the directory where mlox_base.txt lives. If you have not already done so, please download it from http://code.google.com/p/mlox/downloads/list and install mlox_base.txt in your mlox directory."])
+            progress.Destroy()
             return(self)
         if progress != None:
             progress.Destroy()
