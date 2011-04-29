@@ -1867,6 +1867,122 @@ Ascadian_Rose_Cottage_ver1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Asgard [Grumpy & Emma]
+
+;;Dragon32: See also entry for "Mournhold Merc Transportation Fix" [Nick Cowan]
+
+[Conflict]
+ Use only one plugin.
+  Clean Asgard3.3.esp - If you have Tribunal
+  Asgard.esp - If you do not
+ (Ref: http://lovkullen.net/Emma/Asgard.htm )
+Clean Asgard3.3.esp
+Asgard.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Asgard - Balmora Expanded compatibility patch [TextureFreak]
+
+[Patch]
+ "This patch will sort out landscape issues when using Grumpy's Asgard and Balmora Expanded by Gorg, CanadianIce and Jeremy together."
+ http://lovkullen.net/Emma/Downloads/Asgard_BE_fix.zip
+ (Ref: "Asgard_BE_fix-Readme.txt")
+TF_Asgard_BE_fix01.esp
+[ALL Clean Asgard3.3.esp
+     [ANY Balmora Expansion v1.4.esp
+          Balmora Expansion v1.4+(1.4).esp
+          Balmora Expansion - LITE 1.0.esp
+          BE+(1.4) Better Looking Morrowind.esp]]
+
+;;Dragon32: Checked in TESPCD and TextureFreak's plugin edits LAND records in both BE and Asgard. BE rules already load Asgard before BE. Not included the Morrowind-only version of Asgard as BE needs Tribunal
+[Order]
+Clean Asgard3.3.esp
+TF_Asgard_BE_fix01.esp
+
+[Order]
+Balmora Expansion v1.4.esp
+TF_Asgard_BE_fix01.esp
+
+[Order]
+Balmora Expansion v1.4+(1.4).esp
+TF_Asgard_BE_fix01.esp
+
+[Order]
+Balmora Expansion - LITE 1.0.esp
+TF_Asgard_BE_fix01.esp
+
+[Order]
+BE+(1.4) Better Looking Morrowind.esp
+TF_Asgard_BE_fix01.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Asgard - Domehome - Balmora Expanded compatibility patch [TextureFreak]
+
+[Patch]
+ "This patch will sort out landscape issues when using Grumpy's Asgard and Domehome and Balmora Expanded together."
+ http://lovkullen.net/Emma/Downloads/Asgard_Domehome_BE_fix.zip
+ (Ref: "Asgard_Domehome_BEfix-Readme.txt")
+TF_Asgard_Domehome_Landscape_fix01.esp
+[ALL Clean Asgard3.3.esp
+     Domehome-BE_alt.esp]
+
+;;Dragon32: Checked in TESPCD and TextureFreak's plugin edits LAND records in both Domehome-BE and Asgard. Not included the Morrowind-only version of Asgard as BE needs Tribunal
+[Order]
+Clean Asgard3.3.esp
+TF_Asgard_Domehome_Landscape_fix01.esp
+
+[Order]
+Domehome-BE_alt.esp
+TF_Asgard_Domehome_Landscape_fix01.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Asgard - Domehome compatibility patch [TextureFreak]
+
+[Patch]
+ "This patch will sort out landscape issues when using Grumpy's Asgard and Domehome together."
+ http://lovkullen.net/Emma/Downloads/Asgard_Domehomefix.zip
+ (Ref: "Asgard_Domehomefix-Readme.txt")
+TF_Asgard_Domehome_landscapefix02.esp
+[ALL [ANY Clean Asgard3.3.esp
+          Asgard.esp]
+     [ANY MW_Domehome1.esp
+          Trib_Domehome1.esp]]
+
+;;Dragon32: Checked in TESPCD and TextureFreak's plugin edits LAND records in both Domehome and Asgard. 
+[Order]
+Asgard.esp
+TF_Asgard_Domehome_landscapefix02.esp
+
+[Order]
+MW_Domehome1.esp
+TF_Asgard_Domehome_landscapefix02.esp
+
+[Order]
+Clean Asgard3.3.esp
+TF_Asgard_Domehome_landscapefix02.esp
+
+[Order]
+Trib_Domehome1.esp
+TF_Asgard_Domehome_landscapefix02.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Asgard Teleport Ring [Rundwulf Wolf-Shield (aka Rundwulf Wulfsson)]
+
+[Requires]
+ "Asgard Teleport Ring" requires the Tribunal version of Grumpy & Emma's "Asgard"
+ (Ref: "Readme Asgard Teleport Ring.txt")
+Asgard Teleport Ring.esp
+Clean Asgard3.3.esp
+
+;;Dragon32: Not stated but might as well load after main Asgard plugin
+[Order]
+Clean Asgard3.3.esp
+Asgard Teleport Ring.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ash Pirates  [Athanos]
 
 [Note]
@@ -3396,6 +3512,20 @@ BB-argonian-sils-text.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Bodies for Dwemer [VPN]
+
+[Requires]
+ VPN's "Better Bodies for Dwemer" gives T-Bone's "Dwemer Race" Better Bodies meshes
+ (Ref: BB_for_Dwemer.rar\readme.txt)
+Dwemer Better Bodies.esp
+tbone_dwemerV1_1.esp
+
+[Order]
+tbone_dwemerV1_1.esp
+Dwemer Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Body Oblivion Style Dark Brotherhood Armor [Westly]
 
 [Requires]
@@ -3740,6 +3870,7 @@ BPC_MWSE_1.2.esp
 [Note]
  ! There is a newer version, 1.2, of "Better Portable Containers - Morrowind Script Extender Scripts"
  ! http://web.archive.org/web/20080308192235/http://home1.gte.net/cdcooley/BPC_MWSE_1.2.zip
+ ! http://modhistory.fliggerty.com/index.php?dlid=7999
 BPC_MWSE_1.1.esp
 
 
@@ -6763,6 +6894,53 @@ Dodge Mod - Revamped V.1.1 .esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Domehome [Grumpy & Emma]
+
+[Conflict]
+ Use only one plugin.
+  Trib_Domehome1.esp - If you have Tribunal
+  MW_Domehome1.esp - If you do not
+ (Ref: "Domehome.txt")
+MW_Domehome1.esp
+Trib_Domehome1.esp
+
+[Conflict]
+ "DomeHome will conflict with Balmora Expansion"
+ (Ref: "Domehome.txt")
+[ANY MW_Domehome1.esp
+     Trib_Domehome1.esp]
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Domehome - Balmora Expanded Compatability Plugin [Man In Zero G]
+
+[Conflict]
+ Man In Zero G's "Domehome - Balmora Expanded Compatability" is a replacement plugin for "Domehome" by Grumpy & Emma.
+ (Ref: "DomehomeBE-Readme.txt")
+Domehome-BE_alt.esp
+[ANY MW_Domehome1.esp
+     Trib_Domehome1.esp]
+
+[Conflict]
+ Man In Zero G's "Domehome - Balmora Expanded Compatability" is a replacement plugin for "Balmora Expansion" by Gorg et al.
+ (Ref: "DomehomeBE-Readme.txt")
+Domehome-BE_alt.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
+
+[Note]
+ "You WILL still need to download both mods ["Domehome" by Grumpy & Emma and "Balmora Expansion" by Gorg et al], as this is only an .esp and doesn't contain the meshes or textures from the mods."
+ (Ref: "DomehomeBE-Readme.txt")
+Domehome-BE_alt.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dongle Ranger Tent MWSE Patch [Bjam]
 
 ; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
@@ -9092,7 +9270,12 @@ Glenfinnan.esp
  The Glory Road conflicts with Ald Vendras, you should probably use only one or the other.
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
-Ald-Vendras_V3.esp
+[ANY Ald-Vendras_V3.esp
+     Ald-Vendras_V3-LoKKen.esp
+     Ald-Vendras_V3-LoKKen-SC.esp
+     Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
 
 [Conflict]
  The Glory Road conflicts with Frontier Trade Post, you should probably use only one or the other.
@@ -9119,6 +9302,14 @@ TheGloryRoad.esm
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
 _Legends_of_Ydumea_v2.esp
+
+;;Dragon32: Verified Silgrad Tower LAND conflict in TESPCD. Tamriel Rebuilt maps 1 & 2 _do not_ conflict with any Glory Road records
+[Conflict]
+ "Silgrad Tower" interferes with some of the Mag Mell cells from "Glory Road" 
+ (Ref: http://forums.bethsoft.com/index.php?/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__17414153 )
+TheGloryRoad.esm
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9243,11 +9434,12 @@ Go To Jail 3.5 - T B - MCA - NOM.esp
 Golden Gold.esp
 Shining Gold.esp
 
+;;Dragon32: Golden Gold from "Morrowind Overhaul - Sounds & Graphics" merges osiris' patch. Size is 2,537 bytes
 [Patch]
  "Golden Gold Patch v1.0.esp" adds the Golden Gold texture to two cursed Daedric coin types which were left out of the original.
  (Ref: "osiris' Golden Gold Patch v1.0 Readme.txt")
 Golden Gold Patch v1.0.esp
-Golden Gold.esp
+[SIZE !2537 Golden Gold.esp]
 
 ;; (Ref: "osiris' Golden Gold Patch v1.0 Readme.txt")
 [Order]
@@ -12322,7 +12514,7 @@ LGNPC_TelUvirith_v<VER>_UI.esp
 [Note]
  !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
  !! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
- !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0)
+ !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0 )
 [ALL Vampire_Embrace.esp
      [ANY LGNPC_Aldruhn_v?_??_suppl.esp
           LGNPC_IndarysManor_v?_??.esp
@@ -12396,6 +12588,21 @@ LGNPC_Secret_Masters_v?_??.esp
  ! You appear to have an older version Less Generic Tribunal, you can find the latest here: 
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7339
 [VER < 1.1 Less_Generic_Tribunal.esp]
+
+[Conflict]
+ "Join All Houses" by Heph will likely create odd results.
+ (Ref: "Less_Generic_Nerevarine_Readme.txt", "Less_Generic_Nerevarine_Readme.txt")
+[ANY Less_Generic_Nerevarine.esp
+     Less_Generic_Tribunal.esp]
+Join All Houses.esp
+
+[Note]
+ !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
+ !!  (Ref: "Less_Generic_Nerevarine_Readme.txt", "Less_Generic_Nerevarine_Readme.txt")
+ !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0 )
+[ALL Vampire_Embrace.esp
+     [ANY Less_Generic_Nerevarine.esp
+          Less_Generic_Tribunal.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16040,6 +16247,8 @@ Torgulf's NPC Soultrapping 1.21 B&G (Bloodmoon).esp
 Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
 Tribunal.esm
 
+;;Dragon32: See also Vampire Embrace 2.4 [Cortex], for a patch
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nude System-B Beta 1 [Manauser]
@@ -18580,11 +18789,32 @@ Silgrad_Tower_internal_build_1-4_3.esp
  "The original Silgrad Tower 1-4-3 esp is not needed and may be discarded."
  (Ref: "Readme - Texture Fix- Silgrad Tower.txt")
 Silgrad_Tower_internal_build_1-4_3.esp
-silgrad_tower_internal_release_1-4_6.6.esp
+Texture Fix - Silgrad Tower 1.0.esp
+
+[Conflict]
+ "Delete the Silgrad Tower 1-4-3 esp and use only the 1-4_6.6 esp."
+ (Ref: "Silgrad Tower 1-4_6 Repackaged.7z\readme.txt")
+Silgrad_Tower_internal_build_1-4_3.esp
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+
+[Requires]
+ You need the 1-4_6.6 version of Silgrad Tower to use Slartibartfast's "Texture Fix - Silgrad Tower"
+ http://www.fileplanet.com/167255/160000/fileinfo/Elder-Scrolls-III:-Morrowind---Silgrad-Tower-1-4_6-update
+ (Ref: "Readme - Texture Fix- Silgrad Tower.txt")
+Texture Fix - Silgrad Tower 1.0.esp
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
 
 ;; (Ref: "Readme - Texture Fix- Silgrad Tower.txt")
 [Order]
 silgrad_tower_internal_release_1-4_6.6.esp
+Texture Fix - Silgrad Tower 1.0.esp
+
+;;Dragon32: version repackaged by Slartibartfast
+;; (Ref: "Readme - Texture Fix- Silgrad Tower.txt")
+[Order]
+silgrad_tower_1-4_6.6.esp
 Texture Fix - Silgrad Tower 1.0.esp
 
 
@@ -19003,6 +19233,13 @@ SSlave_Comp_NOM_addon.esp
  Choose ONLY ONE of these plugins.
 SSlave_Companions.esp
 SSlave_Comp_censored_addon.esp
+
+[Conflict]
+ "The Glory Road" by Kathryn & Tommy Khajiit conflicts with Emperor's "Special Slave Companions". The -follow, -other, and -combat topics will be unavailable for lover/companion Taarna.
+ (Ref: http://forums.bethsoft.com/index.php?/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__17414153 )
+TheGloryRoad.esm
+[ANY SSlave_Companions.esp
+     SSlave_Comp_censored_addon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22449,13 +22686,15 @@ Vampire_Embrace_SaveGameUpdater.esp
 quarraclan.esp
 Vampire_Embrace.esp
 
-;;Dragon32: Couldn't find a compatibility patch in the version of Torgulf's I could download (1.2), from the mlox rules seems that there's a v1.21 (see entry) but no VE patch mentioned there
-[Conflict]
- Torgulf's "NPC Soultrapping" will not work with Cortex's "Vampire Embrace" without an, as yet unavailable, compatibility patch. 
- (Ref: Vampire_Embrace_Readme.TXT)
-Vampire_Embrace.esp
-[ANY Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
-     Torgulf's NPC Soultrapping 1.2 Bloodmoon.esp]
+[Patch]
+ Sir On The Edge's "Vampire Embrace and NPC Soultrapping fix" enables Torgulf's "NPC Soultrapping" and Cortex's "Vampire Embrace" to work together.
+ Note the author tested it with v2.2 of Vampire Embrace and v1.21 of NPC Soultrapping.
+ http://modhistory.fliggerty.com/index.php?dlid=7957
+ (Ref: Torgulf_VE&SoultrappingFix.zip\REEDME.txt)
+VE&SoultrappingFix.esp
+[ALL Vampire_Embrace.esp
+     [ANY Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
+          Torgulf's NPC Soultrapping 1.2 Bloodmoon.esp]]
 
 [Conflict]
  "Vampire Embrace" is not compatible with "Nox Vampire" by S. Patrick Gallaty
