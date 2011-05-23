@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37o";
+$::VERSION = "0.37p";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2010 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -10,6 +10,11 @@ $::VERSION = "0.37o";
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD:
+# - check that re-dating of cleaned (synched?) plugins works correctly on XP.
+# maybe --exterior/--interior should imply "--type cell"?
+# DEBUG should print an info banner (tes3cmd version, OS version, Data Files dir, etc).
+# --instance-match should presume "--type cell"
+# MVRF(NAM8???) is also the start of an object instance in savegames.
 # "recover" needs to detect overwritten length fields, perhaps by backing up 1 record to previous good record start, and scan from there
 # sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair (recapitate)
@@ -471,7 +476,7 @@ my %BYDT_PTYP = ('0' => "Skin", "1" => "Clothing", "2" => "Armor");
 my %BYDT_SKIN_TYPE = ('0' => "Normal", "1" => "Vampire");
 
 my %CELL_FLAGS = ("has_water" => 0x02,
-		  "illegal_to_sleep_here" => 0x041,
+		  "illegal_to_sleep_here" => 0x04,
 		  "behave_like_exterior" => 0x80);
 
 my %CONTAINER_FLAGS = ("Organic" => 0x0001,
@@ -3015,7 +3020,7 @@ my $lint_expansion_functions;
 
 ### MAIN COMMON COMMAND OPTIONS
 our @STDOPT = (qw(assert debug verbose));
-our @MODOPT = ("backup-dir", "hide-backups");
+our @MODOPT = ("backup-dir=s", "hide-backups");
 our $opt_backup_dir = "$TES3CMD_DIR/backups";
 our $opt_exterior;
 our $opt_hide_backups;
@@ -3346,7 +3351,7 @@ OPTIONS:
 	<id-regex>
 
  --instance-match <regex>
-	Only delete the object instances in the cell that match <regex>
+	Only delete the object instances that match <regex> in the matching cell
 
  --instance-no-match <regex>
 	Only delete object instances in the cell that do not match <regex>
