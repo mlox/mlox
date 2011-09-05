@@ -519,6 +519,15 @@ Acheron's Camping Gear 2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Add-On for Drow City Denizens [Westly]
+
+[Requires]
+ (Ref: Westly's Add-On for Drow City Denizens README.txt)
+DDD_Add_On_By_Westly.esp
+Drowcity Denizens.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adul's Leggings [Adul]
 
 [Requires]
@@ -858,6 +867,19 @@ CAB_AlchemyBoxes-MW.esp
 CAB_AlchemyBoxes-TB.esp
 CAB_AlchemyBoxes-BM.esp
 CAB_Alchemy Boxes-SrisAlchemy.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Lab for Bob's Armory [Horny Buddha]
+
+[Requires]
+ (Ref: HB_Bob's_Armory_Alchemy_Lab_readme.txt)
+HB_Bob's_Armory_Alchemy_Lab.esp
+Bob's Armory.esp
+
+[Order]
+Bob's Armory.esp
+HB_Bob's_Armory_Alchemy_Lab.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1296,6 +1318,20 @@ Animated Morrowind 1.0.esp
 [Order]
 Animated Morrowind 1.0.esp
 Animated_Morrowind - Expanded.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animated Practice Dummies [AcidBasick]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8555 ACD_PracticeDummy.esp]
+
+[Note]
+ ! Bud_Lyte_kNight's "Leveled Animated Practice Dummy" updates AcidBasick's mod with sharper textures and the practice dummies level with player. You may wish to replace Bud_Lyte_kNight's mod to with this updated one.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2213
+ACD_PracticeDummy.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3530,6 +3566,74 @@ Beryl's_Head_Replacer_v1.0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Armor (rev8 Imperial) [HedgeHog-12]
+
+[Conflict]
+ Use only one plugin:
+  Better armor (rev8_Imperial(AD-rome).esp - For Roman style, lamellar armor, light mail.
+  Better armor (rev8_Imperial(STANDART).esp - Original Morrowind style, heavy cuirasses and mails with breastplate
+ (Ref: Better armor (rev8_Imperials).7z\README\!README!.txt)
+Better armor (rev8_Imperial(AD-rome).esp
+Better armor (rev8_Imperial(STANDART).esp
+
+;;Dragon32: Checked in TESPCD, alters "@pilum" object
+[Order]
+Better armor (rev8_Imperial(AD-rome).esp
+Better armor (rev8_Imperial(AD-rome+1).esp
+
+[Note]
+ HedgeHog-12 recommends running "Better armor (rev8_Imperial(AD-rome).esp" and "Better armor (rev8_Imperial(AD-rome+1).esp" together.
+ (Ref: Better armor (rev8_Imperials).7z\README\!README!.txt)
+[ALL Better armor (rev8_Imperial(AD-rome+1).esp
+     [NOT Better armor (rev8_Imperial(AD-rome).esp]]
+
+[Note]
+ HedgeHog-12 recommends running "Better armor (rev8_Imperial(STANDART).esp" and "Better armor (rev8_Imperial(ST+1).esp" together.
+ (Ref: Better armor (rev8_Imperials).7z\README\!README!.txt)
+[ALL Better armor (rev8_Imperial(ST+1).esp
+     [NOT Better armor (rev8_Imperial(STANDART).esp]]
+
+;;Dragon32: Checked with TESPCD. Looks like the AD-rome plugin adds items unique to the plugin.
+;;Maybe change this to a Conflict if this seems the wrong thing to do
+[Order]
+Better armor (rev8_Imperial(ST+1).esp
+Better armor (rev8_Imperial(AD-rome).esp
+
+[Note]
+ "You must use bsa archive from my Better Templar Armor [when using Better Imperial Armor]. You only have to register "Better armor (rev7_Templar).bsa" in morrowind.ini; activating the plug-in is not necessary but recommended."
+ (Ref: Better armor (rev8_Imperials).7z\README\!README!.txt)
+[ALL [ANY Better armor (rev8_Imperial(AD-rome).esp
+          Better armor (rev8_Imperial(AD-rome+1).esp
+          Better armor (rev8_Imperial(ST+1).esp
+          Better armor (rev8_Imperial(STANDART).esp]
+     [NOT Better armor (rev7_Templar).esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Armor (rev11 Indoril) [HedgeHog-12]
+
+[Conflict]
+ Use only one plugin:
+  Better Armor (rev11_Indoril(ST).esp - The standard armour replacer.
+  Better armor (rev11_Indoril(AD).esp - Replaces the armour but also adds more content.
+ (Ref: Better armor (rev11_Indoril).7z\ReadMe.txt)
+Better armor (rev11_Indoril(AD).esp
+Better Armor (rev11_Indoril(ST).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Armor Tribunal Pack [HedgeHog-12]
+
+[Conflict]
+ Use only one plugin:
+  Better_Armor(Tb_pack_FULL).esp - All armours in one plug-in.
+  Better_Armor(Tb_pack_baseEN).esp - Without Dark Brotherhood armour.
+ (Ref: Tb_pack_readme.chm)
+Better_Armor(Tb_pack_baseEN).esp
+Better_Armor(Tb_pack_FULL).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Bodies for Beasts [Sabregirl]
 
 ;; If you want to use BB-argonian-sils-text.esp with better bodies for beasts
@@ -4551,6 +4655,53 @@ The Boatmaster.esp
      BE+(1.4) Better Looking Morrowind.esp]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bob's Armory [Mr. Dave]
+
+[Requires]
+ (Ref: "Bobs Armory ReadMe.txt")
+Bob's Armory.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bob's Armory 2 [Mr. Dave]
+
+[Requires]
+ (Ref: "Bobs Armory 2 ReadMe.txt")
+Bob's Armory 2.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bob's Armory Wardrobe [Bryss Phoenix & Fliggerty]
+
+[Requires]
+ Bryss Phoenix & Fliggerty's "Bob's Armory Wardrobe" is dependent on Bryss Phoenix's modified version of "Bob's Armory", "Icons for Bob's Armory". It will not work with Mr Dave's original version.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4154
+ (Ref: Bob's Armory Wardrobe.txt)
+BobsArmoryWardrobe.esp
+[SIZE 134091 Bob's Armory.esp]
+
+[Order]
+Bob's Armory.esp
+BobsArmoryWardrobe.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bob's Banners [Mr. Dave]
+
+[Requires]
+ Mr. Dave's "Bob's Banners" is an expansion pack for his "Bob's Armory 2"
+ (Ref: Bob's Banners ReadMe.txt)
+Bob's Banners.esp
+Bob's Armory 2.esp
+
+[Order]
+Bob's Armory 2.esp
+Bob's Banners.esp
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bones 1.1 [James Fraser]
 
@@ -4864,10 +5015,55 @@ BTB - Equipment.esp
       More Better Clothes.esp]
 
 [Conflict]
- BTB's "Alchemy" plugin has been merged with the "Heartwood" mod by Midgetalien.
+ "IceBradyHurdy_RobeReplacer" by CanadianIce conflicts with BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
  (Ref: "morrowind_btb.zip\Readme.txt")
-heartwood.esp
-BTB - Alchemy.esp
+BTB - Equipment.esp
+[ANY IceNioLivRobeReplacerALL.esp
+     IceNioLivRobeReplacerPLUS.esp]
+
+[Conflict]
+ "IceBradyHurdy_RobeReplacer" by CanadianIce conflicts with BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Equipment.esp
+[ANY IceBradyHurdyRobeReplacerALL.esp
+     IceBradyHurdyRobeReplacerPLUS.esp]
+
+[Conflict]
+ Do not run the original robe replacer plugins by CanadianIce with BTB's compatibility versions.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY IceBradyHurdyRobeReplacerALL (BTB Edit).esp
+     IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
+     IceNioLivRobeReplacerALL (BTB Edit).esp
+     IceNioLivRobeReplacerPLUS (BTB Edit).esp]
+[ANY IceBradyHurdyRobeReplacerALL.esp
+     IceBradyHurdyRobeReplacerPLUS.esp
+     IceNioLivRobeReplacerALL.esp
+     IceNioLivRobeReplacerPLUS.esp]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+  IceNioLivRobeReplacerALL (BTB Edit).esp - replaces the robes from Morrowind, Tribunal and Bloodmoon
+  IceNioLivRobeReplacerPLUS (BTB Edit).esp - replaces the robes from Morrowind, Tribunal and Bloodmoon and adds robes to the leveled lists.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+IceNioLivRobeReplacerALL (BTB Edit).esp
+IceNioLivRobeReplacerPLUS (BTB Edit).esp
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+  IceBradyHurdyRobeReplacerALL (BTB Edit).esp - replaces the robes from Morrowind, Tribunal and Bloodmoon
+  IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp - replaces the robes from Morrowind, Tribunal and Bloodmoon and adds robes to the leveled lists
+ (Ref: "morrowind_btb.zip\Readme.txt")
+IceBradyHurdyRobeReplacerALL (BTB Edit).esp
+IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
+
+;;Version 12.1 (July 22, 2011)
+;;"Removed edit to "random_belladonna_spriggan" leveled list, which made it possible to find Heartwood past level 3 - this fix already exists as part of the Morrowind Patch Project"
+;;
+;; [Conflict]
+;; BTB's "Alchemy" plugin has been merged with the "Heartwood" mod by Midgetalien.
+;;  (Ref: "morrowind_btb.zip\Readme.txt")
+;; heartwood.esp
+;; BTB - Alchemy.esp
 
 [Conflict]
  Only use ONE plugin, "BTB - Settings (Alternate).esp" omits the changes made by the original to the growth rates of major, minor, and, particularly, misc skills.
@@ -4923,34 +5119,40 @@ Sris_Alchemy_BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Building Up Uvirith's Legacy [Artimis Fowl the 3rd]
+;; @Building Up Uvirith's Legacy 1.1 [Artimis Fowl the 3rd]
 
 [Conflict]
  "Building Up Uvirith's Legacy" replaces Acheron's "Building Up Uvirith's Grave", you should not run both plugins.
  (Ref: Building Up Uvirith's Legacy Readme.txt)
 Building Up Uvirith's Grave 1.1.esp
-Building Up Uvirith's Legacy1.01.ESP
+Building Up Uvirith's Legacy1.1.ESP
 
+;;Ref: Building Up Uvirith's Legacy Readme.txt
 [Order]
-Building Up Uvirith's Legacy1.01.ESP
+Building Up Uvirith's Legacy1.1.ESP
 BUUG Alchemy- Bloodmoon.esp
 BUUG Alchemy- Tribunal.esp
-
-[Note]
- This plugin contains dirty references. It is recommended that you clean it with TESTool.
-[SIZE 915853 Building Up Uvirith's Legacy1.01.ESP]
 
 ;; Dragon32: Not checked to the same level as John.Moonsugar did with BuUG, quick scan and placeitem function *is*
 ;; used in one of the scripts. Still only dependent on Morrowind.esm
 [Requires]
  This plugin uses some Tribunal scripting functions.
-Building Up Uvirith's Legacy1.01.ESP
+Building Up Uvirith's Legacy1.1.ESP
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
 [Note]
- A new version of Building Up Uvirith's Legacy is available. You should upgrade. 
+ ! A new version of Building Up Uvirith's Legacy is available. You should upgrade.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7736
+Building Up Uvirith's Legacy .9.ESP
 Building Up Uvirith's Legacy1.0.ESP
+Building Up Uvirith's Legacy1.01.ESP
+
+[Conflict]
+ The "Fast Eddie Fix" plugin from Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" is incompatible with Stuporstar's "Uvirith's Legacy"
+ (Ref: Building Up Uvirith's Legacy Readme.txt)
+Fast Eddie Fix v.0001.esp
+Uvirith's Legacy_*.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5184,6 +5386,15 @@ Chalk30-Base.esp
  There is a newer version of Chalk available (v3.0), you should upgrade!
  http://webpages.charter.net/manauser/morrowind/
 Chalk20.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Changing Faces Replacer [Leeloo]
+
+[Note]
+ ! There is an update to Leeloo's "Changing Faces Replacer" available, the "Changing Faces NPC Replacer: Official Add-On":
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3035
+[SIZE 1360163 Changing Faces Replacer.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6357,8 +6568,9 @@ transportMH.esp
 
 [Conflict]
  All these mods perform a similar function: delaying the Dark Brotherhood attacks:
-  DB_Attack_Mod.esp - Avenger's original "Delayed Dark Brotherhood Attack Add-On".
+  DB_Attack_Mod.esp - AVENGER's original "Delayed Dark Brotherhood Attack Add-On".
   DB_Attack_Mod.esp - The same plugin name is used by Kir's update to version 2 of Avenger's plugin, optimising its scripts.
+  DB_Attack_Mod_Jeoshua.esp - Jeoshua's version of AVENGER'S postponed Dark Brotherhood attack
   DB_Attack_Mod3.esp - Hellwolve's update of version 3 of Avenger's plugin adding an additional condition.
   db_attack_fixed.esp - Xiran's "Dark Brotherhood Attacks Fixed" changes the Dark Brotherhood attacks to begin only when the Morrowind main quest is completed.
  ddb.esp - etmorrowindb's "Delayed Dark Brotherhood attacks" delays the attacks based on reputation. Can also damage the player before they wake up.
@@ -6368,6 +6580,7 @@ transportMH.esp
  Refer to Gluby's guide, linked below and the plugin's readmes and decide which plugin you wish to use.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
 DB_Attack_Mod.esp
+DB_Attack_Mod_Jeoshua.esp
 DB_Attack_Mod3.esp
 db_attack_fixed.esp
 ddb.esp
@@ -7151,6 +7364,15 @@ Drinking Water.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Drow City Denizens Head Pack One [Mr. Dave and Dimitri Mazieres]
+
+[Requires]
+ (Ref: ReadMe - Drow City Denizens Headpack 1.txt)
+DCD Headpack 1.esp
+Drowcity Denizens.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Drunken Moon [Leviathan]
 
 [Note]
@@ -7207,28 +7429,37 @@ pcc_dunzar_02.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Durzog Armor [Dracus Dragani]
 
+;;Dragon32: Added plugin names that spell Tribunal "Tribumal", matches names in the archive I have
 [Conflict]
  Use only one:
  "Dracus's Durzog Armor Tribunal V1.esp" if you have Tribunal
  "Dracus's Durzog Armor MW V1.esp" if you do not have Tribunal
  (Ref: "Readme - Dracus's Durzog Armor V1.txt"
-Dracus's Durzog Armor Tribunal V1.esp
+[ANY Dracus's Durzog Armor Tribunal V1.esp
+     Dracus's Durzog Armor Tribumal V1.esp]
 Dracus's Durzog Armor MW V1.esp
 
 [Requires]
-Dracus's Durzog Armor Tribunal V1.esp
+[ANY Dracus's Durzog Armor Tribunal V1.esp
+     Dracus's Durzog Armor Tribumal V1.esp]
 Tribunal.esm
 
 [Requires]
  (Ref: "Readme - Dracus's Durzog Armor V1.1 Update.txt")
-Dracus's Durzog Armor Tribunal Update V1.1.esp
-[ALL Dracus's Durzog Armor Tribunal V1.esp
+[ANY Dracus's Durzog Armor Tribunal Update V1.1.esp
+     Dracus's Durzog Armor Tribumal Update V1.1.esp]
+[ALL [ANY Dracus's Durzog Armor Tribunal V1.esp
+          Dracus's Durzog Armor Tribumal V1.esp]
      Tribunal.esm]
 
 ;; (Ref: "Readme - Dracus's Durzog Armor V1.1 Update.txt")
 [Order]
 Dracus's Durzog Armor Tribunal V1.esp
 Dracus's Durzog Armor Tribunal Update V1.1.esp
+
+[Order]
+Dracus's Durzog Armor Tribumal V1.esp
+Dracus's Durzog Armor Tribumal Update V1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7542,6 +7773,28 @@ Elders MCA Add-on.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 24231 Elias' Amulet of Charm V1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Elvenwear [Mr. Dave]
+
+[Conflict]
+ Only use one plugin:
+  Elvenwear.esp - An expansion pack for Mr. Dave's "Bob's Armory 2".
+  Elvenwear No Dependency.esp - If you do not use Mr. Dave's "Bob's Armory 2".
+ (Ref: Elvenwear ReadMe.txt)
+Elvenwear.esp
+Elvenwear No Dependency.esp
+
+[Requires]
+ Mr. Dave's "Elvenwear" is an expansion pack for his "Bob's Armory 2"
+ (Ref: Elvenwear ReadMe.txt)
+Elvenwear.esp
+Bob's Armory 2.esp
+
+[Order]
+Bob's Armory 2.esp
+Elvenwear.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9311,6 +9564,15 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Glass Claymore  [Jin Atsuko]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5564 Clean Glass_clymre.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Glenfinnan [Cuchulainn]
 
 [Note]
@@ -9855,6 +10117,17 @@ Graphic Herbalism TR Extra.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Grave Goods [ManaUser]
+
+[Conflict]
+ For compatibility with Zappara's "Disturb the Dead", you'll have to load both it and ManaUser's "Grave Goods" in the editor with ManaUser's active and re-attach the script _zap_disturb_dead to the container urn_ash00
+ (Ref: Grave Goods.txt)
+GraveGoods.esp
+[ANY Disturb_the_dead.esp
+     Disturb_the_dead_TB.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Great House Dagoth [The Mad God]
 
 [Patch]
@@ -10345,6 +10618,7 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
      Divine_domina_part_5.esp
      FEMALE_TEMPLAR_CUIRASS_V0.1.esp
      female_cuirasses_2.0.esp
+     Ice's BM Ice & NordicMail.esp
      Ice's Glass Cuirass.esp
      Ice_FemaleSteelCuirass.esp
      Ice_Wolf_Cuirass_Mod.esp]
@@ -10935,15 +11209,6 @@ IceNioLivRobeReplacerPLUS.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Glass Claymore  [Jin Atsuko]
-
-[Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 5564 Clean Glass_clymre.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ice's Glass Cuirass [CanadianIce]
 
 [Conflict]
@@ -10988,6 +11253,15 @@ Ice'sHideawayBBpatch.esp
 ; (Ref: "readme-IcesHideaway.doc")
 Ice's Hideaway.esp
 Ice's Hideaway Buster.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Icons for Bob's Armory [Bryss Phoenix]
+
+[Note]
+ ! Bryss Phoenix has created a version of Mr. Dave's "Bob's Armory" which gives each item its own icon.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4154
+[SIZE !134091 Bob's Armory.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11209,6 +11483,30 @@ Improved Inns MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Improved Morag Tong Grandmaster [PetrusOctavianus]
+
+;;Dragon32: MT-DB_fix.txt - "If using Threads of the Webspinner make sure my mod loads after, since there is a slight conflict (I've improved the Grandmaster's weapon)."
+[Order]
+WBSP_MAIN.esp
+MT-DB_fix.esp
+
+[Order]
+WBSP_NPC.ESP
+MT-DB_fix.esp
+
+;;latest version, see Note below, might as well have the Order rule in here.
+[Order]
+Webspinner_V2_1.esp
+MT-DB_fix.esp
+
+[Note]
+ The newest version of Curmudgeon's "Threads of the Webspinner" makes PetrusOctavianus' "Improved Morag Tong Grandmaster" redundant.
+ (Ref: http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=3573 )
+[ALL MT-DB_fix.esp
+     Webspinner_V2_1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved No Glow [Shadre]
 
 [Conflict]
@@ -11308,6 +11606,44 @@ Increased DB Delayed Attacks Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Index Fix [claudekennilol]
+
+;;Dragon32: Examined plugins in TESPCD
+[Order]
+master_index.esp
+Index fix.esp
+
+;;all the other mods with the Master Index plugin included
+[Order]
+Wilderness Sounds.esp
+Index fix.esp
+
+[Order]
+Wilderness Sounds Bloodmoon.esp
+Index fix.esp
+
+[Order]
+Wilderness Sounds Tribunal.esp
+Index fix.esp
+
+[Order]
+Wilderness Sounds T & B.esp
+Index fix.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Index fix.esp
+
+[Order]
+OfficialMods_v5.esp
+Index fix.esp
+
+[Order]
+propylons1.1.esp
+Index fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Indoril Greaves [Smite_Plight]
 
 [Conflict]
@@ -11342,6 +11678,27 @@ Infernal SummoningV1.1.esp
 Inferno's Island Revisited.esp
 [ANY InfernosIsland_0903.esp
      Inferno's Palace (Powergamers Version).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Inscription [Lap]
+
+;;Dragon32: No ref, info from Plain Paper Fix ckl by claudekennilol, q.v.
+[Conflict]
+ Lap's "Inscription" allows the player to create scrolls from blank pieces of paper scattered around the game world. dej's "Plain Paper Fix" alters the ID of these pieces of paper making them incompatible.
+Inscription.esp
+dej_plain_paper_fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Inscription v2.0 [The DopeHatMan]
+
+[Conflict]
+ The DopeHatMan's "Inscription v2.0" is a revamp and updating of Lap's original "Inscription", there is no need to run both mods.
+ (Ref: "Readme - Inscription v 2.0.txt")
+Clean Inscription 2.0.esp
+Inscription.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Iorya Dragon's Tel Uvirith Tower  [Iorya Dragon]
@@ -11849,14 +12206,16 @@ k_in_tent.esp
 
 [Conflict]
  Choose ONE plugin:
-  Arkay.esp - If you have the Tribunal expansion
+  Arkay.esp or Clean arkay.esp - If you have the Tribunal expansion
   Arkay_non_Tribunal.esp - If you do not have Tribunal
-Arkay.esp
+[ANY Arkay.esp
+     Clean Arkay.esp]
 Arkay_non_Tribunal.esp
 
 [Requires]
  (Ref: "Readme_arkay.txt")
-Arkay.esp
+[ANY Arkay.esp
+     Clean Arkay.esp]
 Tribunal.esm
 
 [Requires]
@@ -11906,6 +12265,7 @@ Tribunal.esm
 Knights of Tamriel.esp
 [ANY Akatosh.esp
      Arkay.esp
+     Clean Arkay.esp
      Arkay_non_Tribunal.esp
      Clean Mara.esp
      Dibella.esp
@@ -12466,6 +12826,24 @@ Tribunal.esm
 Less Annoying Guards - Tribunal and Bloodmoon.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Leveled Animated Practice Dummy [Bud_Lyte_kNight]
+
+[Conflict]
+ Use only one plugin:
+  Leveled Animated Practice Dummies {MR}_Clean.esp - A modder's resource, nothing is added to the game.
+  Leveled Animated Practice Dummies_Clean.esp - Adds the animated practice dummies to the game world.
+ (Ref: Bud_Lyte_kNight's - Leveled Animated Practice Dummy 1.0 Readme.txt)
+Leveled Animated Practice Dummies {MR}_Clean.esp
+Leveled Animated Practice Dummies_Clean.esp
+
+[Conflict]
+ Bud_Lyte_kNight's "Leveled Animated Practice Dummies" conflicts with AcidBasick's "Animated Practice Dummies".
+ (Ref: Bud_Lyte_kNight's - Leveled Animated Practice Dummy 1.0 Readme.txt)
+Leveled Animated Practice Dummies_Clean.esp
+ACD_PracticeDummy.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14008,6 +14386,40 @@ More Better Clothes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @More Detailed Places [Ragox & Zaldir]
+
+;;Dragon32: First released version of this mod only
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 18384 MDP - Maar Gan - 1.0.ESP]
+
+[Conflict]
+ Ragox & Zaldir's "More Detailed Places" is incompatible with The Wanderer's "Dock Clutter" due to clipping sacks in Ebonheart
+ (Ref: MDP - Ebonheart.rtf)
+[ANY MDP - Ebonheart.ESP
+     MDP - Ebonheart - 1.0.ESP
+     MDP Compilation.ESP]
+wl_dockclutter.esp
+
+[Conflict]
+ Ragox & Zaldir's "More Detailed Places Compilation" is a combination of all the other "More Detailed Places" mods, there is no need to run them and the compilation.
+ (Ref: MDP - Ebonheart.rtf)
+MDP Compilation.ESP
+[ANY MDP - Dagon Fel.ESP
+     MDP - Dagon Fel 1.0.ESP
+     MDP - Ebonheart.ESP
+     MDP - Ebonheart - 1.0.ESP
+     MDP - Fort Buckmoth.ESP
+     MDP - Gnaar Mok.ESP
+     MDP - Hla Oad.esp
+     MDP - Khuul.ESP
+     MDP - Maar Gan.ESP
+     MDP - Maar Gan - 1.0.ESP
+     MDP - Sadrith Mora.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More Gems [Gawain & Isabelle]
 
 [Conflict]
@@ -14966,18 +15378,19 @@ Morrowind Comes Alive.esm
 [ANY [SIZE 2707833 MCA.ESM]
      [SIZE 2519851 MCA.ESM]] ;The Undead-compatible version
 
-; Dragon32: MCA 5.2 includes all the resources from Jeremy McGuinn's "Knights of Tamriel" mods
+;;Dragon32: MCA 5.2 includes all the resources from Jeremy McGuinn's "Knights of Tamriel" mods
 [Note]
  Ensure you have installed the resources from Jeremy McGuinn's "Knights of Tamriel" mods so that "MCA Tamriel Knights Addon" functions correctly.
 [ALL [ANY [SIZE 56487 MCA Tamriel Knights Addon.esp]
           [SIZE 96642 MCA Tamriel Knights Addon.esp]]
      [NOT [ANY [ALL Akatosh.esp
-                   Arkay.esp
-                   Arkay_non_Tribunal.esp
-                   Clean Mara.esp
-                   Dibella.esp
-                   jet_gold_armor.esp
-                   kynareth.esp]
+                    [ANY Arkay.esp
+                         Clean Arkay.esp]
+                    Arkay_non_Tribunal.esp
+                    Clean Mara.esp
+                    Dibella.esp
+                    jet_gold_armor.esp
+                    kynareth.esp]
                Knights of Tamriel.esp]]] ;Tarnsman's merged version
 
 
@@ -15494,6 +15907,7 @@ npce_mwse_patch.esp
 Oblivion-Style Spellcasting.esp
 Protective Guards.esp
 Raven Wings.esp
+Real Time Updating.esp
 ScentOfBlood_MWSE_AddOn.esp
 VampiricIllusion_MWSE_AddOn.esp
 ve_comp_control.esp
@@ -16033,7 +16447,7 @@ wildlife_behaviour.esp
 NoM_Creatures Loot PHW.esp
 
 [Patch]
- "NoM_BF Compatibility Patch.esp" provides compatibility for NoM 3.0 and Barabus' Fireplaces 2.
+ "NoM_BF Compatibility Patch.esp" provides compatibility for Barabus' Fireplaces 2 and NoM 3.02 and subsequent versions.
  (Ref: "Readme NoM 3.0.html")
 NoM_BF Compatibility Patch.esp
 [ALL Barabus' fireplaces 2.esp
@@ -16046,14 +16460,14 @@ NoM 3.0.esp
 NoM_BF Compatibility Patch.esp
 
 [Patch]
- "NoM_CoM Compatibility Patch.esp" provides compatibility for NoM 3.0 and Children of Morrowind.
+ "NoM_CoM Compatibility Patch.esp" provides compatibility for Children of Morrowind and NoM 3.0 and subsequent versions.
  (Ref: "Readme NoM 3.0.html")
 NoM_CoM Compatibility Patch.esp
 [ALL NoM 3.0.esp
      MW_Children_1_0.esm]
 
 [Patch]
- "NoM_IO Compatibility Patch.esp" provides compatibility for NoM 3.0 and Illuminated Order.
+ "NoM_IO Compatibility Patch.esp" provides compatibility for Illuminated Order and NoM 3.0 and subsequent versions.
  (Ref: "Readme NoM 3.0.html")
 NoM_IO Compatibility Patch.esp
 [ALL NoM 3.0.esp
@@ -16070,7 +16484,7 @@ NoM 3.0.esp
 NoM_IO Compatibility Patch.esp
 
 [Patch]
- "NoM_LL Compatibility Patch.esp" provides compatibility for NoM 3.0 and Lothavor's Legacy.
+ "NoM_LL Compatibility Patch.esp" provides compatibility for Lothavor's Legacy and NoM 3.0 and subsequent versions.
  (Ref: "Readme NoM 3.0.html")
 NoM_LL Compatibility Patch.esp
 [ALL NoM 3.0.esp
@@ -16082,7 +16496,7 @@ Lothavor's Legacy.esp
 NoM_LL Compatibility Patch.esp
 
 [Patch]
- "NoM_MC Compatibility Patch.esp" provides compatibility for NoM 3.0 and Morrowind Crafting 2.1.
+ "NoM_MC Compatibility Patch.esp" provides compatibility for Morrowind Crafting 2.1 and NoM 3.0 and subsequent versions.
  (Ref: "Readme NoM 3.0.html")
 NoM_MC Compatibility Patch.esp
 [ALL NoM 3.0.esp
@@ -16100,7 +16514,7 @@ NoM_MC Compatibility Patch.esp
 NoM_MC Lists for Merging.esp
 
 [Conflict]
- NoM 3.0 comes with a compatibility version of Creatures.esp that should be used instead of the original.
+ NoM 3.02 and subsequent versions come with a compatibility version of "Creatures.esp" that should be used instead of PirateLord's original.
  (Ref: "Readme NoM 3.0.html")
 NoM 3.0.esp
 [SIZE !813641 Creatures.esp]
@@ -16110,7 +16524,7 @@ Creatures.esp
 NoM 3.0.esp
 
 [Conflict]
- NoM 3.0 comes with a compatibility version of "Real_wildlife_2b Complete.esp" that should be used instead of the original.
+ NoM 3.02 and subsequent versions come with a compatibility version of "Real_wildlife_2b Complete.esp" that should be used instead of Nedius' original.
  (Ref: "Readme NoM 3.0.html")
 NoM 3.0.esp
 [SIZE !739807 Real_wildlife_2b Complete.esp]
@@ -17380,6 +17794,40 @@ PTE - BC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Plain Paper Fix [dej]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 60707 dej_plain_paper_fix.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Plain Paper Fix ckl [claudekennilol]
+
+[Conflict]
+ Only use one plugin:
+  PlainPaperFix_ALL.esp - If you have Morrowind and both expansions
+  PlainPaperFix_MW+BM.esp - If you have Morrowind and just Bloodmoon
+  PlainPaperFix_MW+TRIB.esp - If you have Morrowind and just Tribunal
+  PlainPaperFix_MWonly.esp - If you just have Morrowind
+ (Ref: "Plain Paper Fix.txt")
+PlainPaperFix_ALL.esp
+PlainPaperFix_MW+BM.esp
+PlainPaperFix_MW+TRIB.esp
+PlainPaperFix_MWonly.esp
+
+[Conflict]
+ claudekennilol's "Plain Paper Fix ckl" is an alternative to dej's "Plain Paper Fix" because dej's alters the ID of the paper making it incompatible with mods that require the game's paper to make other items.
+ (Ref: "Plain Paper Fix.txt")
+[ANY PlainPaperFix_ALL.esp
+     PlainPaperFix_MW+BM.esp
+     PlainPaperFix_MW+TRIB.esp
+     PlainPaperFix_MWonly.esp]
+dej_plain_paper_fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Playable Children [Emma]
 
 [Note]
@@ -17941,6 +18389,20 @@ Textured_Signs.esp
 dxm_metallic_signs.esp
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Time Updating [Fliggerty and Yacoby]
+
+;;Dragon32: for MWSE version requirements see "@Morrowind Script Extender [Various]"
+
+[Note]
+ !! "Mods such as Necessities of Morrowind and Living Cities of Vvardenfel may not work, though this hasn't been tested."
+ !! (Ref: Real Time Updating Readme.txt)
+[ALL Real Time Updating.esp
+     [ANY NoM 3.0.esp
+          NOM 2.13.esp
+          NPC LCV Schedules 03.esp]]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Real Wildlife 2b [Nedius]
 
@@ -18241,6 +18703,17 @@ RKWerewolf-NoTrib.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 53226 The regulars - Sitting NPC's v2.02.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Reign of Fire [Razhkul, Gluby]
+
+[Conflict]
+ "If you have the original Reign of Fire plugin checked, uncheck it. They should not be run together."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8011 )
+Reign of Fire v1.92BETA [Razhkul, Rev. Gluby].esp
+[ANY ReignOfFire1.1.esp
+     Reign of Fire v1.1 [Razhkul].esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19355,6 +19828,19 @@ SkeldaleHouseMTM.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 16824 Shadow Argonians Final.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Shelves for Bob's Armory [theGreatNothing]
+
+[Requires]
+ (Ref: BobShelvesReadMe.rtf)
+ShelvesForBobsArmory.esp
+Bob's Armory.esp
+
+[Order]
+Bob's Armory.esp
+ShelvesForBobsArmory.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21252,6 +21738,23 @@ MW_Children_1_0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Threads of the Webspinner Completed [Curmudgeon]
+
+[Conflict]
+ You should not use Curmudgeon's "WBSP_LOOT.esp" plugin with either of his "WBSP_MAIN.esp" or "WBSP_NPC.ESP" plugins.
+ (Ref: WBSP_LOOT_ReadMe.rtf)
+WBSP_LOOT.esp
+[ANY WBSP_MAIN.esp
+     WBSP_NPC.ESP]
+
+[Note]
+ ! There is a newer version of "Threads of the Webspinner Completed" available, you should upgrade.
+ ! http://mw.modhistory.com/download--5667
+[ANY WBSP_MAIN.esp
+     WBSP_NPC.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tight Dresses [Calislahn]
 
 [Requires]
@@ -21839,6 +22342,7 @@ Ultimate Galleon Purchase Patch.esp
 [ALL The Ultimate Knight Shop.esp
      [ANY akatosh.esp
           Arkay.esp
+          Clean Arkay.esp
           Arkay_non_Tribunal.esp
           blademaster.esp
           Clean BB2_Falconer_Leather.esp
@@ -21915,6 +22419,23 @@ The Undead.esp
 [Order]
 MCA.esm
 The Undead.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Undead Creatures [elyvsoto]
+
+[Conflict]
+ "Choose either the regular or the overland versions at a time."
+ (Ref: Undead Creatures.txt)
+Undead_Creatures Overland.esp
+Undead_Creatures.esp
+
+
+[Conflict]
+ "Only Choose one of the 'Combat Skill Tweak' Mods"
+ (Ref: Undead Creatures.txt)
+CombatSkill_Tweak60.esp
+CombatSkill_Tweak80.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
