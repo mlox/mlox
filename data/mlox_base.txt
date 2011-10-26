@@ -3117,6 +3117,15 @@ Balmora Zoo.esp
      Balmora Expansion - LITE 1.0.esp]
 
 [Conflict]
+ Balmora Expansion by Gorg et al includes Balmora Museum by Starbuck
+ (Ref: Balmora_expansion v1.4\readme.txt)
+Museum.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Balmora Expansion - LITE 1.0.esp]
+
+[Conflict]
  Wizards Islands - Scourge of the Frost Bringer conflicts with Balmora Expansion. Threadwhisperer released a replacement ESM file for Wizards' Islands. It renames a few items so that it is compatible with Balmora Expansion.
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=283
  (Dragon32: Both the original and Threadwhisperer's ESM files are the same size. Mlox has no way of distinguishing which of the two you have loaded).
@@ -3150,8 +3159,6 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 ; Dragon32: Unable to work out *which* Balmora House this is. Options: Balmora House by eqaddikt1, Balmora House by Hanno, Balmora House by Blith Erring Idio.
 
 ;Dragon32: Gorg says in the readme that Balmora Expansion includes the healers mod. I assume this is Healers by Raejak. However, this mod adds healers to more than just Balmora.
-
-;Dragon32: Balmora Expansion includes Balmora Museum. I cannot find a download link for this mod.
 
 ;Dragon32: Balmora Expansion includes Lysandrus. I cannot find a download link for this mod.
 
@@ -3360,11 +3367,12 @@ Balmora University V.1.9..esp ; Stoned
 Balmora University V2.30.esp ; Crlsniper
 
 ; JMS - I assumed that all the various BE's would have a similar conflict.
+;;Dragon32: "balmorau.esp will work with Balmora Expansion" - latendresse76. So removed that from this Conflict rule
+;;ref: http://forums.bethsoft.com/index.php?/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__18931826
 [Conflict]
- Balmora University has a major conflict with Balmora Expansion. According a the comment by Crlsniper at PES, perhaps a future version of Balmora U. will be compatible BE.
+ Balmora University has a major conflict with Balmora Expansion. According to the comment by Crlsniper at PES a future version of his "Balmora University" may be compatible with "Balmora Expansion".
  (Ref: reported by Marcus La Tendresse)
-[ANY balmorau.esp
-     Balmora University V.1.9..esp
+[ANY Balmora University V.1.9..esp
      Balmora University V2.30.esp]
 [ANY Balmora Expansion v1.4.esp
      Balmora Expansion v1.4+(1.4).esp
@@ -3415,6 +3423,22 @@ CM_Partners_3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Basic Replace [Astarsis]
+
+[Note]
+ "AstarsisBR_Pageant.esp" is a demonstration plugin for Astarsis' "Basic Replace". Beyond reviewing the heads and hairs added by "Basic Replace" there is no need to run this plugin.
+ (Ref: "AstarsisPresent_BasicReplace_v1.txt")
+AstarsisBR_Pageant.esp
+
+;;Dragon32: 20113 is the full version and changes 8 NPCs, 14752 just replaces
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[ANY [SIZE 20113 Astarsis_BR.esm]
+     [SIZE 14752 Astarsis_BR.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bathhouse in Vivec [ayse]
 
 [Note]
@@ -3457,6 +3481,15 @@ Tribunal.esm
  Use only one of these two .esps
 BC_Palla_Quest_Lite-Tribunal.esp
 BC_Palla_Quest_Lite-Morrowind.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bearded Nords [Astarsis]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 2038 AstarsisBeardedNords_v1_0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4223,11 +4256,13 @@ Clean Black Queen Chronicles Ver 2.5.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Blasphemous Revenants [Fliggerty]
 
+;;Dragon32 - There's nothing in the Description field for this mod so no version numbers to check
+
 [Conflict]
- Do not use "BR Dead Heros.esp" since version 2 of Blasphemous Revenants.
+ There has not been a need to use "BR Dead Heros.esp" since version 2 of Blasphemous Revenants.
  (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=19&t=1498#p24284 )
 BR Dead Heros.esp
-[SIZE 1027569 Blasphemous Revenants.esp] ; version 2.2
+Blasphemous Revenants.esp
 
 [Requires]
  (Ref: Blasphemous Revenants Readme.txt)
@@ -4237,6 +4272,7 @@ Blasphemous Revenants.esp
 
 ;;Dragon32: Fliggerty's "Blasphemous Revenants" sets the DELE flag for the mudcrab creature. This can mess things up. Apparently loading another mod that affects mudcrabs after BR will fix things.
 ;;  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15673238
+;;Dragon32: Apparently fixed in v2.4 "Removed two dirty objects; a mudcrab and a "player" NPC." Left Order rules as they are, remove them if issues arise
 
 ;;Creatures X adds a scipt
 [Order]
@@ -5333,6 +5369,19 @@ New_Carnithus'_Armamentarium.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1574745 Castle of Balmora.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Dragonfall Pathgrids [Peter]
+
+[Requires]
+ (Ref: "Dragonfall_grid_Readme.txt")
+Dragonfall_grid.esp
+Castle_Dragonfall.esp
+
+[Order]
+Castle_Dragonfall.esp
+Dragonfall_grid.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6592,6 +6641,71 @@ Increased DB Delayed Attacks Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Elves Females [Astarsis]
+
+[Conflict]
+ Only use one plugin:
+  Astarsis_DEF_PlainReplace.esp - the regular version
+  Astarsis_DEF_FieryReplace.esp - a more tattooed version
+ (Ref: "AstarsisDEF_readme.txt")
+Astarsis_DEF_FieryReplace.esp
+Astarsis_DEF_PlainReplace.esp
+
+[Conflict]
+ "Astarsis_DEF_AddOnly.esp" only defines the new heads and hairs, so they can only be selected for use by the player. "Astarsis_DEF_FieryReplace.esp" and "Astarsis_DEF_PlainReplace.esp" both define the new heads and hairs and change NPCs to use the new heads and hairs.
+ There is no need to run "Astarsis_DEF_AddOnly.esp" when running the replacers
+ (Ref: "AstarsisDEF_readme.txt")
+[ANY Astarsis_DEF_FieryReplace.esp
+     Astarsis_DEF_PlainReplace.esp]
+Astarsis_DEF_AddOnly.esp
+
+[Conflict]
+ Only use "Astarsis_DEF_VampireOnly.esp" if you are not using either "Astarsis_DEF_FieryReplace.esp" or "Astarsis_DEF_PlainReplace.esp"
+ (Ref: "AstarsisDEF_readme.txt")
+[ANY Astarsis_DEF_FieryReplace.esp
+     Astarsis_DEF_PlainReplace.esp]
+Astarsis_DEF_VampireOnly.esp
+
+[Note]
+ "AstarsisBR_Pageant.esp" is a demonstration plugin for Astarsis' "Dark Elves Females". Beyond reviewing the heads and hairs added by "Dark Elves Females" there is no need to run this plugin.
+ (Ref: "AstarsisDEF_readme.txt")
+_Astarsis_DEF_BeautyPageant_Test_Beta.esp
+
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[ANY [SIZE 63085 _Astarsis_DEF_BeautyPageant_Test_Beta.esp]
+     [SIZE 5269 Astarsis_DEF_AddOld.esp]
+     [SIZE 5939 Astarsis_DEF_AddOnly.esp]
+     [SIZE 7708 Astarsis_DEF_FieryReplace.esp]
+     [SIZE 7707 Astarsis_DEF_PlainReplace.esp]
+     [SIZE 1401 Astarsis_DEF_VampireOnly.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Elves Heroes [Astarsis]
+
+[Order]
+Astarsis_DEM.esm
+Astarsis_DEM_Tribunal_NPCs.esm
+
+[Note]
+ "AstarsisDEM_Pageant.esp" is a demonstration plugin for Astarsis' "Dark Elves Heroes". Beyond reviewing the heads and hairs added by "Dark Elves Heroes" there is no need to run this plugin.
+ (Ref: "AstarsisPresent_DarkElvesHeroes_v1.txt")
+AstarsisDEM_Pageant.esp
+
+;;Dragon32: For Astarsis_DEM.esm 48764 is the standard version and 46018 is the Change_HairOnly one
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[ANY [SIZE 48764 Astarsis_DEM.esm]
+     [SIZE 46018 Astarsis_DEM.esm]
+     [SIZE 16490 Astarsis_DEM.esm]
+     [SIZE 100849 AstarsisDEM_Pageant.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dark Powers Mod  [Nik]
 
 [Note]
@@ -7227,6 +7341,32 @@ Domehome-BE_alt.esp
 [Requires]
 Bjam_DGL_rt_MWSEpatch_v1.0.esp
 Ranger Tent.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @DonSalus High Elves Heroes [Astarsis]
+
+[Conflict]
+ There is no need to load "Astarsis_HEM_DonSalus_ReplaceOnly.esp" whilst "Astarsis_HEM_DonSalus.esm" is also loaded.
+ (Ref: "readme_AstarsisPresent_DonSalus_HighElves_Heroes_v_1_0.txt")
+Astarsis_HEM_DonSalus_ReplaceOnly.esp
+Astarsis_HEM_DonSalus.esm
+
+[Note]
+ These are demonstartion plugins for Astarsis' "DonSalus High Elves Heroes". Beyond reviewing the heads and hairs added by "DonSalus High Elves Heroes" there is no need to run this plugin.
+ (Ref: "readme_AstarsisPresent_DonSalus_HighElves_Heroes_v_1_0.txt")
+[ANY _Astarsis_HE_realNPCs_BeautyPageant_test.esp
+     Astarsis_DonSalus_HEM_Pageant.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[ANY [SIZE 70605 _Astarsis_HE_realNPCs_BeautyPageant_test.esp]
+     [SIZE 67249 Astarsis_DonSalus_HEM_Pageant.esp]
+     [SIZE 47019 Astarsis_HEM_DonSalus.esm]
+     [SIZE 47051 Astarsis_HEM_DonSalus.esm]
+     [SIZE 5822 Astarsis_HEM_DonSalus.esm]
+     [SIZE 4893 Astarsis_HEM_DonSalus_ReplaceOnly.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10880,6 +11020,47 @@ Herbalism Redux ES Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @High Elves Females Beauty 2.0 [Astarsis]
+
+[Note]
+ !! Whilst ESP plugins are available in Astarsis' "High Elves Females Beauty", Astarsis advices that "you should not use them"
+ !! (Ref: "AstarsisHEF_readme_v2.txt")
+[ANY Astarsis_HEF_AddOld.esp
+     Astarsis_HEF_AddOnly.esp
+     Astarsis_HEF_LongReplace.esp
+     Astarsis_HEF_PlainReplace.esp]
+
+[Conflict]
+ You should only use one plugin; also, check whether you could use one of the ESM options Astarsis provides instead.
+ (Ref: "AstarsisHEF_readme_v2.txt")
+Astarsis_HEF_AddOld.esp
+Astarsis_HEF_AddOnly.esp
+Astarsis_HEF_LongReplace.esp
+Astarsis_HEF_PlainReplace.esp
+
+[Note]
+ These are demonstartion plugins for Astarsis' "High Elves Females Beauty". Beyond reviewing the heads and hairs added by "High Elves Females Beauty" there is no need to run this plugin.
+ (Ref: "AstarsisHEF_readme_v2.txt")
+[ANY _Astarsis_HE_realNPCs_BeautyPageant_test.esp
+     _Astarsis_HEF_BeautyPageant_test.esp
+     _Astarsis_HEF_realNPCs_BeautyPageant_test.esp
+     _Astarsis_HEF_updatedBeautyPageant_test.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[ANY [SIZE 70605 _Astarsis_HE_realNPCs_BeautyPageant_test.esp]
+     [SIZE 61493 _Astarsis_HEF_BeautyPageant_test.esp]
+     [SIZE 60498 _Astarsis_HEF_realNPCs_BeautyPageant_test.esp]
+     [SIZE 60664 _Astarsis_HEF_updatedBeautyPageant_test.esp]
+     [SIZE 2461 Astarsis_HEF_AddOld.esp]
+     [SIZE 6533 Astarsis_HEF_LongReplace.esp]
+     [SIZE 6541 Astarsis_HEF_PlainReplace.esp]
+     [SIZE 30779 Astarsis_HEF.esm]
+     [SIZE 6541 Astarsis_HEF.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @High Seas Trader [Max Yue]
 
 [Note]
@@ -12894,11 +13075,6 @@ LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
-; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=969677&view=findpost&p=14015832
-[Order]
-Less_Generic_Nerevarine.esp
-LGNPC_PaxRedoran_v?_??.esp
-
 ;Dragon32: Unsure if this works with v6.x of MCA
 [Patch]
  "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
@@ -12971,27 +13147,27 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_Aldruhn_v<VER>_suppl.esp]
+[VER < 1.22 LGNPC_Aldruhn_v<VER>_suppl.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.30 LGNPC_Pelagiad_v<VER>.esp]
+[VER < 1.31 LGNPC_Pelagiad_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_TelMora_v<VER>.esp]
+[VER < 1.30 LGNPC_TelMora_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 2.20 LGNPC_Khuul_v<VER>.esp]
+[VER < 2.21 LGNPC_Khuul_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 2.10 LGNPC_VivecFQ_v<VER>.esp]
+[VER < 2.20 LGNPC_VivecFQ_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -13023,7 +13199,7 @@ LGNPC_Pelagiad_v1_22.esp
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.50 LGNPC_VivecRedoran_v<VER>.esp]
+[VER < 1.61 LGNPC_VivecRedoran_v<VER>.esp]
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -13155,6 +13331,22 @@ Join All Houses.esp
 [ALL Vampire_Embrace.esp
      [ANY Less_Generic_Nerevarine.esp
           Less_Generic_Tribunal.esp]]
+
+;;Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=969677&view=findpost&p=14015832
+[Order]
+Less_Generic_Nerevarine.esp
+LGNPC_PaxRedoran_v?_??.esp
+
+;;Ref: http://escf.rethan-manor.net/index.php?topic=2023.msg23913#msg23913
+[Order]
+Less_Generic_Nerevarine.esp
+LGNPC_TelUvirith_v?_??.esp
+
+;;Ref: http://escf.rethan-manor.net/index.php?topic=2023.msg23913#msg23913
+;;Dragon32: Whilst above post isn't explicit I assume that the Uvirith Inside version of LGNPC Tel Uvirith would benefit from this load order as well
+[Order]
+Less_Generic_Nerevarine.esp
+LGNPC_TelUvirith_v?_??_UI.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13795,12 +13987,13 @@ newarrowsLITE.esp
 ;; @Master Index Journalfix [DeusXMachina]
 
 ;;Dragon32: Includes Beth's version and all the mods that include it
+;;Dragon32: Purpose of the "!/Official Plugin Fixes 1.0/" is to exclude the version in "Official Plugins Fixes 1.1" by michael163377
 [Note]
  ! Bethesda's "Master Index" plugin is a pre-Tribunal mod and so doesn't use Tribunal's upgraded journal. DeusXMachina's "Master Index Journalfix" adds the "Master Index" to the open and finished questlists in the upgraded journal.
  ! Download it from Morrowind Modding History: http://mw.modhistory.com/download--3648
  ! Or DeusXMachina's site: http://www.rihla.info/tes/01_mods/mi_journalfix/mi_journalfix.html
  ! (Ref: DXM_mi_journalfix_readme.txt)
-[ALL [ANY master_index.esp
+[ALL [ANY [DESC !/Official Plugin Fixes 1.0/ master_index.esp]
           Wilderness Sounds.esp
           Wilderness Sounds Bloodmoon.esp
           Wilderness Sounds Tribunal.esp
@@ -21191,6 +21384,18 @@ Taddeus'BalancedWeapons_Rotate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tale of the Devious Trader [Xeth-Ban]
+
+[Conflict]
+ There is no need to run both plugins:
+  Tale of the Devious Trader.esp - Adds the new book to the game world.
+  Resource Tale of the Devious Trader.esp - Contains the book in the CS, but places no copies ingame.
+ (Ref: "Tale of the Devious Trader.txt")
+Resource Tale of the Devious Trader.esp
+Tale of the Devious Trader.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tales of Tel Branora  [A.P. Hilliard]
 
 [Note]
@@ -25237,27 +25442,17 @@ Clean Welcome to the Arena! ( Hard ).esp
 Clean Welcome to the Arena! ( LoFi ).esp
 Clean Welcome to the Arena! (Hard LoFi).esp
 Clean Welcome to the Arena!.esp
-
-[Conflict]
- Use only one version of the plugin:
-  Welcome to the Arena! v5.0 (normal).esp - Standard version
-  Welcome to the Arena! v5.0 (hard).esp - More difficult
-  Welcome to the Arena! v5.0 (lofi).esp - Removes 20 of 43 fans from the pit
-  Welcome to the Arena! v5.0 (hard+lofi).esp - Combination of "hard" and "lo-fi"
- (Ref: "Welcome_to_the_Arena_V50.rar\Welcome to the Arena! V5.0\Readme.txt")
 Welcome to the Arena! v5.0 (hard).esp
 Welcome to the Arena! v5.0 (hard+lofi).esp
 Welcome to the Arena! v5.0 (lofi).esp
 Welcome to the Arena! v5.0 (normal).esp
 
 [Conflict]
- "This mod is Incompatible with Gladiator mod."
- (Ref: "Welcome_to_the_Arena_V50.rar\Welcome to the Arena! V5.0\Readme.txt")
-[ANY Welcome to the Arena! v5.0 (hard).esp
-     Welcome to the Arena! v5.0 (hard+lofi).esp
-     Welcome to the Arena! v5.0 (lofi).esp
-     Welcome to the Arena! v5.0 (normal).esp]
-Gladiator.esp
+ "This mod is incombatible with mods like: Gladiator and Morrowind Inhabitants, freeform, and any other mods that add similiar arena fights."
+ (Ref: "Welcome_to_the_Arena 5.5.7z\Welcome to the Arena!\Readme.txt")
+Welcome to the Arena! v5.5.esp
+[ANY Gladiator.esp
+     MWInhabitants Freeform (Vol 1).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
