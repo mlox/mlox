@@ -986,6 +986,8 @@ MW_Children_1_0.esm
 ;; (Ref: "Ald-Vendras_V3_readme.txt")
 [Order]
 Illuminated Order v1.0.esp
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Illuminated Order v1.0 (IndyBank Compatible).esp
 Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
 Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 Korobal v1.2.esp
@@ -1639,6 +1641,12 @@ bjam_at_MWSE_patch.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 475061 ArchmagetowerTwo.esp]
+
+[Conflict]
+ "If you are already using Chris Janosi's mannequin mod, please disable it, since it is included in [Archmage Tower of Pelagiad]."
+ (Ref: "AT2ReadMe.txt")
+ArchmagetowerTwo.esp
+Armor Mannequin.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3400,6 +3408,36 @@ BalrogRaceOnlyWingless.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bank Mod [Indestructible, Kir, Havokk and Shadow_unk]
+
+;:Dragon32: Walled City of Balmora and No Houses versions not updated to 2.4b, latest plugin name: "Indybank2.4b.ESP"
+[Note]
+ ! A newer version of Bank Mod is available, 2.4b, you should upgrade
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=619
+INDYBANK.ESP
+
+[Conflict]
+ Choose only one plugin:
+  indybank-NoHouses.esp - Does not add buyable houses to the game
+  indybankWC.esp - Compatible with Walled City of Balmora mod
+  INDYBANK.ESP - The standard Bank Mod plugin
+ (Ref: "readme-bank24.txt")
+indybank-NoHouses.esp
+INDYBANK.ESP
+indybankWC.esp
+
+[Conflict]
+ Charles J. DeVito/LDones's "Illuminated Order" is not compatible with "Bank Mod", even the No Houses version. There are compatibility versions of "Illuminated Order" available from Morrowind Modding History: http://mw.modhistory.com/download--1203
+ (Ref: "readme-bank24.txt")
+Illuminated Order v1.0.esp
+[ANY WalledCity_IndyBank.esp
+     IndybankWC.esp
+     Indybank.esp
+     Indybank2.4b.ESP
+     Indybank-NoHouses.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Banner House  [Len Alox]
 
 [Note]
@@ -3572,6 +3610,7 @@ NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
 NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
 NoM 2.12-03a with BEER!.esp
 Indybank.esp
+Indybank2.4b.ESP
 Indybank-NoHouses.esp
 IndybankWC.esp
 WalledCity_IndyBank.esp
@@ -3699,6 +3738,17 @@ Dwemer Better Bodies.esp
 BB Dark Brotherhood by Westly.esp
 Better Bodies.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Caldera [Loki the Grouch]
+
+[Conflict]
+ Loki the Grouch's "Better Caldera" conflicts with Jaap Kramer's "Caldera Expansion" and Indestructible, Kir, Havokk and Shadow_unk's "Indy Bank of Vvardenfell"
+ (Ref: "Better_Caldera_readme.txt")
+Clean Better Caldera.esp
+[ANY Caldera_expansion_3006.esp
+     Indybank2.4b.ESP
+     INDYBANK.ESP]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Clothes [Psychodog Studios]
@@ -4869,6 +4919,14 @@ Booty.esp
 
 [Order]
 Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Booty.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Booty.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
 Booty.esp
 
 
@@ -7450,6 +7508,15 @@ Better Bodies.esp
  !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=1049424 )
 DreamersAwakenedv1.0.esp
 
+[Conflict]
+ HotFusion4's "Dreamers Awakened" removes the NPC "dreamer_f_key". Running "Dreamers Awakened" with TheMadGod's "Great House Dagoth", Von Djangos's "The Tribe Unmourned" or Lady Galadriel's "Grandmaster of Hlaalu" will break these mods as they all rely on this NPC being present.
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__19352031 )
+DreamersAwakenedv1.0.esp
+[ANY Great House Dagoth.esp
+     The Tribe Unmourned (GHD).esp
+     The Tribe Unmourned.esp
+     Grandmaster of Hlaalu.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dremora (Markynaz) Race and Companion [Westly & Princess Stomper]
@@ -8482,6 +8549,54 @@ Adj_Magicka Regen (1.00%).esp
  This plugin uses Bloodmoon function placeatme.
 Farmer Mod v4.3.esp
 Bloodmoon.esm
+
+;;Dragon32: Only the conflict with 2.0 of Homes to Let reported. May also conflict with 1.1 "Homes To Let.esp" and Azrael's version "Homes To Let - Azrael.esp"
+[Conflict]
+ Landscape conflict in Ald'Ruhn. Fixing requires removing landscape entries and lowering a hut in "Farmer Mod".
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20121847 ) 
+Farmer Mod v4.3.esp
+Homes To Let v2pt0.esp
+
+[Conflict]
+ Both Josh aka Xeon's "Farmer Mod" and Fliggerty's "Fligg's Slave Mod" alter the Suran slave trader, Dranas Sarathram.
+ Dranas is the only person you can buy "Farmer Mod" slaves from but with "Fligg's Slave Mod" slaves can be bought from Molag Mar, Sadrith Mora, and Tel Aruhn.
+ If you run both mods then buy slaves for "Farmer Mod" from Dranas and slaves for "Fligg's Slave Mod" from the other traders.
+ (Ref: "Farmer Mod Readme.html" & "Fligg's Slave Mod Readme.txt")
+Farmer Mod v4.3.esp
+Fligg's Slave Mod.esp
+
+;;Dragon32: Hopefully this Order rule will make the above possible.
+[Order]
+Fligg's Slave Mod.esp
+Farmer Mod v4.3.esp
+
+[Conflict]
+ "Suran Archery Trade House [...] appears to be the culprit for some people not being able to enter the Guard Training facility"
+ (Ref: "Farmer Mod Readme.html")
+Farmer Mod v4.3.esp
+Suran Archery Store_v3.0.esp
+
+[Note]
+ !! "If [any NPC schedule mod] adds a script to the NPCs that sell you a plantation, it will probably mess up the script.  You can try to run the two together, but MAKE SURE that the Farmer Mod is below the schedule mod in the Data Files plug in list."
+ !! Load order has been adjusted to load "Farmer Mod" after Wrye's "Living Cities of Vvardenfell"
+ !! (Ref: "Farmer Mod Readme.html")
+[ALL Farmer Mod v4.3.esp
+     NPC LCV Schedules 03.esp]
+
+[Order]
+NPC LCV Schedules 03.esp
+Farmer Mod v4.3.esp
+
+[Conflict]
+ "Lots of weird things can happen if you use [Sniper Daria's "Japanese House"] with the Farmer Mod."
+ (Ref: "Farmer Mod Readme.html")
+Farmer Mod v4.3.esp
+Japanese_House.esp
+
+[Note]
+ Should only be used when upgrading to the newest version of "Farmer Mod" and should not be loaded during normal play.
+ (Ref: "SmartCleaning.html")
+Farmer Mod SmartCleaner 4.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9759,6 +9874,8 @@ Havish.esm
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
 [ANY Illuminated Order v1.0.esp
+     Illuminated Order v1.0 (IndyBank WC Compatible).esp
+     Illuminated Order v1.0 (IndyBank Compatible).esp
      Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
      Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
 
@@ -10291,6 +10408,16 @@ Great House Dagoth ( Master Index Compatibility ).esp
 
 [Order]
 ;(Ref: readme_Great House Dagoth.txt)
+Great House Dagoth.esp
+Great House Dagoth ( Master Index Compatibility ).esp
+
+[Order]
+;(Ref: readme_Great House Dagoth.txt)
+Great House Dagoth.esp
+Great House Dagoth ( dv Master Index Compatibility ).esp
+
+[Order]
+;(Ref: readme_Great House Dagoth.txt)
 master_index.esp
 Great House Dagoth ( Master Index Compatibility ).esp
 
@@ -10333,6 +10460,20 @@ Great House Dagoth ( Master Index Compatibility ).esp
 ;(Ref: readme_Great House Dagoth.txt)
 ;DarkValor's Master Index
 ;Great House Dagoth ( dv Master Index Compatibility ).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Great House Dagoth Instant Godking [The Mad God]
+
+[Order]
+;;Ref: readme_Great House Dagoth Instant Godking.txt
+Great House Dagoth.esp
+Great House Dagoth Instant Godking.esp
+
+[Requires]
+ (Ref: readme_Great House Dagoth Instant Godking.txt)
+Great House Dagoth Instant Godking.esp
+Great House Dagoth.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11246,6 +11387,40 @@ The Holiday Mod.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Homes to Let [Princess Stomper]
+
+;;Dragon32: believe "Xia's Imported Silk Dresses" mentioned in readme is "Silk Dragon Imports" by Xiamara
+[Conflict]
+ Princess Stomper's "Homes to Let" conflicts with V8 Man's "The Latest, Greatest Housing Mod", Xiamara's "Silk Dragon Imports" and Ravensong's "Archmage Tower of Pelagiad"
+ (Ref: "Homes To Let - readme.rtf")
+[ANY Homes To Let.esp
+     Homes To Let v2pt0.esp]
+[ANY ArchmagetowerTwo.esp
+     The Latest, Greatest Housing Mod_GOLD.esp
+     Clean_Xia_Silk_Dragon_Imports_1.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Homes to Let - Azrael [Azrael]
+
+;;Dragon32: believe "Xia's Imported Silk Dresses" mentioned in readme is "Silk Dragon Imports" by Xiamara
+[Conflict]
+ Azrael's "Homes to Let - Azrael" conflicts with V8 Man's "The Latest, Greatest Housing Mod", Xiamara's "Silk Dragon Imports" and Ravensong's "Archmage Tower of Pelagiad"
+ (Ref: "Homes To Let - Azrael readme.doc")
+Homes To Let - Azrael.esp
+[ANY ArchmagetowerTwo.esp
+     The Latest, Greatest Housing Mod_GOLD.esp
+     Clean_Xia_Silk_Dragon_Imports_1.0.esp]
+
+[Conflict]
+ Azrael's "Homes to Let - Azrael" is a modified version of Princess Stomper's original Homes to Let v1.1. You should not run Azrael's version with Princess Stomper's
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4688 )
+Homes To Let - Azrael.esp
+[ANY Homes To Let.esp
+     Homes To Let v2pt0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Horror Mod [MentalElf]
 
 [Conflict]
@@ -11476,14 +11651,65 @@ Altmer Town.esp
 [Requires]
  (Ref: IlluminatedOrder_readme.rtf)
 Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
-[ALL Illuminated Order v1.0.esp
+[ALL [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
      Bloodmoon.esm]
 
 [Conflict]
- These are alternate versions of "Illuminated Order", the latter two fix a conflict of overlapping houses when using Illuminated Order together with Balmora Expanded and Indybank. Only use one of the following alternatives.
+ These are alternate versions of "Illuminated Order", the latter four fix a conflict of overlapping houses when using Illuminated Order together with Indybank. Only use one of these mods.
 Illuminated Order v1.0.esp
 Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
 Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Illuminated Order v1.0 (IndyBank Compatible).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Illuminated Order/Indy Bank Mod Fix [HolyMcGibblets]
+
+[Conflict]
+ Choose only one plugin:
+ (Ref: "Illuminated Order - Indy Bank Fix.txt")
+Illuminated Order v1.0.esp
+Illuminated Order v1.0 (IndyBank Compatible).esp
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+
+[Requires]
+ (Ref: "Illuminated Order - Indy Bank Fix.txt")
+Illuminated Order v1.0 (IndyBank Compatible).esp
+[ANY Indybank.esp
+     Indybank2.4b.ESP
+     Indybank-NoHouses.esp]
+
+[Requires]
+ (Ref: "Illuminated Order - Indy Bank Fix.txt")
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+[ANY WalledCity_IndyBank.esp
+     IndybankWC.esp]
+
+;;Dragon32: Order rules make sense
+[Order]
+Indybank.esp
+Illuminated Order v1.0 (IndyBank Compatible).esp
+
+[Order]
+Indybank2.4b.ESP
+Illuminated Order v1.0 (IndyBank Compatible).esp
+
+[Order]
+Indybank-NoHouses.esp
+Illuminated Order v1.0 (IndyBank Compatible).esp
+
+[Order]
+WalledCity_IndyBank.esp
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+
+[Order]
+IndybankWC.esp
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11492,12 +11718,32 @@ Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 [Requires]
  (Ref: Illuminated_order_particle_lich_addon.rar\readme.txt)
 Boe_lich_particle.esp
-[ALL Illuminated Order v1.0.esp
+[ALL [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
      Tribunal.esm]
 
 ; Dragon 32: not mentioned in readme. My guess
 [Order]
 Illuminated Order v1.0.esp
+Boe_lich_particle.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Boe_lich_particle.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Boe_lich_particle.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Boe_lich_particle.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
 Boe_lich_particle.esp
 
 
@@ -11968,6 +12214,7 @@ tusar_v1.2.1.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13585779 )
 tusar_v1.2.1.esp
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @JamesWs Lockpicks, Probes, and Repair Retexes [JamesW]
 
@@ -11994,6 +12241,22 @@ Japanese_House.esp
 [ALL Clean Japanese_Armor.esp
      Japanese_House.esp]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Jasmine, a Morrowind Companion [Jac]
+
+[Note]
+ !! "Jasmine, a Morrowind Companion" by Jac "may not work properly with MCA's love making or with the Romance mod"
+ !! (Ref: "Jasmine readme.txt")
+[ALL JAC_Jasmine.esp
+     [ANY Romance_v37EV.esp
+          Morrowind Comes Alive.esm
+          MCA.esm]]
+
+;;ref: "Jasmine readme.txt"
+[Order]
+JAC_Jasmine.esp
+NoM 3.0.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Jeweler Plugin [Wyrenth]
@@ -12919,6 +13182,12 @@ LCV Wolverine Hall 01.esp
 NPC LCV Schedules 03.esp
 LCV Wolverine Hall 01.esp
 
+;; LCV moves the wall and the door, and replaces the vanilla bed with a shorter bunk bed. When loaded after, Barabus' mod restores the original bed, which clips with the door
+;; Ref: http://forums.bethsoft.com/topic/1336220-living-cities-of-vvardenfell-lcv-req/page__view__findpost__p__20123487
+[Order]
+Barabus' fireplaces 2.esp
+NPC LCV Schedules 03.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Leafy Trees [Irmekroache]
@@ -13768,6 +14037,8 @@ Madd Leveler - Assassin's Armory Fix.esp
 Madd Leveler - Illuminated Order Fix.esp
 [ALL Madd Leveler - Base.esp
      [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
 	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
 	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
@@ -13780,6 +14051,8 @@ Madd Leveler - Illuminated Order Fix.esp
 [ALL Madd Leveler - Illuminated Order Fix.esp
      Madd Leveler - Base.esp
      [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
 	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
 	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
@@ -14465,6 +14738,8 @@ Daedric Sorcery.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13558881 )
 Molag Mar Revisited - Illuminated Windows Enhancements.esp
 [ANY Illuminated Order v1.0.esp
+     Illuminated Order v1.0 (IndyBank WC Compatible).esp
+     Illuminated Order v1.0 (IndyBank Compatible).esp
      Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
      Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
 
@@ -14610,6 +14885,15 @@ MDP Compilation.ESP
      MDP - Maar Gan.ESP
      MDP - Maar Gan - 1.0.ESP
      MDP - Sadrith Mora.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MDP - Maar Gan (More Detailed Places) [ragox]
+
+[Note]
+ !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 18384 MDP - Maar Gan.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15646,15 +15930,6 @@ MCA - Zero Town Baddies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MDP - Maar Gan (More Detailed Places) [ragox]
-
-[Note]
- !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 18384 MDP - Maar Gan.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Crafting 2.1 [Drac & Toccatta]
 
 [Requires]
@@ -16036,6 +16311,36 @@ MWlib_NOM_patch_0.1.esp
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 2479377 MW_Public_Library.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Rebirth [Trancemaster_1988]
+
+;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
+[Order]
+Morrowind Rebirth <VER>.esp
+JAC_Jasmine.esp
+
+;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
+[Order]
+Morrowind Rebirth <VER>.esp
+The Apartment.esp
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes these mods:
+  Vurt's Ascadian Isles Tree Replacer II
+  Vurt's Bitter Coast Trees II
+ (Ref: "Morrowind_Rebirth_v_1.5.rar\Readme.doc")
+Morrowind Rebirth <VER>.esp
+[ANY Vurt's BC Tree Replacer II.ESP
+     Vurt's Leafy West Gash.esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes Loki the Grouch's "Better Caldera"
+ (Ref: "Morrowind_Rebirth_v_1.5.rar\Readme.doc")
+Morrowind Rebirth <VER>.esp
+Clean Better Caldera.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Relighted [PirateLord]
@@ -16665,14 +16970,34 @@ NoM_CoM Compatibility Patch.esp
 NoM_IO Compatibility Patch.esp
 [ALL NoM 3.0.esp
      [ANY Illuminated Order v1.0.esp
-          Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
-          Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
 ; (Ref: "Readme NoM 3.0.html")
 [Order]
 Illuminated Order v1.0.esp
+NoM 3.0.esp
+NoM_IO Compatibility Patch.esp
+
+[Order]
 Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+NoM 3.0.esp
+NoM_IO Compatibility Patch.esp
+
+[Order]
 Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+NoM 3.0.esp
+NoM_IO Compatibility Patch.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+NoM 3.0.esp
+NoM_IO Compatibility Patch.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
 NoM 3.0.esp
 NoM_IO Compatibility Patch.esp
 
@@ -18599,6 +18924,13 @@ dxm_metallic_signs.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Real Wildlife 2b [Nedius]
 
+[Note]
+ !! Nedius' "Real Wildlife" marks the dialogue topic "leaflet" as Deleted. This will break Morrowind's "An Apothecary Slandered" quest.
+ !! To fix this open the mod in TESAME, Enchanted Editor or a similar editor and remove the Dialogue entry "leaflet" from the "Real Wildlife" plugin.
+ !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=197600 )
+[ANY [SIZE 739677 Real_wildlife_2b Complete.esp]
+     [SIZE 547424 Real_wildlife_2b.esp]]
+
 [Conflict]
  Choose ONLY ONE of these plugins
  "Real_wildlife_2b.esp" - if you only have Morrowind.
@@ -19211,12 +19543,40 @@ Rise of House Telvanni.esm
  (Ref: Rise_of_the_Illuminated_Lich.rar\readme.txt)
 Rise of the Illuminated Lich.esp
 [ALL Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
-     Illuminated Order v1.0.esp
+     [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]
      Boe_lich_particle.esp]
 
 ; Dragon 32: not mentioned in readme. My guess
 [Order]
 Illuminated Order v1.0.esp
+Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
+Boe_lich_particle.esp
+Rise of the Illuminated Lich.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
+Boe_lich_particle.esp
+Rise of the Illuminated Lich.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
+Boe_lich_particle.esp
+Rise of the Illuminated Lich.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
+Boe_lich_particle.esp
+Rise of the Illuminated Lich.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
 Illuminated Order v1.0 - Bloodmoon Compatibility Extras.esp
 Boe_lich_particle.esp
 Rise of the Illuminated Lich.esp
@@ -22100,11 +22460,14 @@ TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
 TLM - AdjMod - Bank 2.2.esp
 [ALL TLM - Ambient Light + Fog Update.esp
      [ANY Indybank.esp
+	  Indybank2.4b.ESP
 	  Indybank-NoHouses.esp
-	  IndybankWC.esp]]
+	  IndybankWC.esp
+	  WalledCity_IndyBank.esp]]
 
 [Order]
 Indybank.esp
+Indybank2.4b.ESP
 Indybank-NoHouses.esp
 IndybankWC.esp
 WalledCity_IndyBank.esp
@@ -22379,6 +22742,35 @@ NOM Travel Tent Patch.esp
  This plugin needs to be cleaned, it has "mega dirty refs and many extra cells".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2317 )
 Treetop Village.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Tribe Unmourned [Von Djangos]
+
+[Note]
+ ! Von Djangos' "Dagoth's Cry" has been updated and incoporated into his "The Tribe Unmourned" mod.
+ ! (Ref: "The Tribe Unmourned.txt")
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7141
+Dagoth's Cry.esp
+
+[Conflict]
+ Only use one plugin:
+  The Tribe Unmourned (GHD).esp - If you use TheMadGod's "Great House Dagoth"
+  The Tribe Unmourned.esp - If you do not
+ (Ref: "The Tribe Unmourned.txt")
+The Tribe Unmourned (GHD).esp
+The Tribe Unmourned.esp
+
+[Requires]
+ Von Djangos' "The Tribe Unmourned (GHD).esp" is for people using TheMadGod's "Great House Dagoth" 
+ (Ref: "The Tribe Unmourned.txt")
+The Tribe Unmourned (GHD).esp
+Great House Dagoth.esp
+
+;;Dragon32: Checked plugins in TESPCD
+[Order]
+Great House Dagoth.esp
+The Tribe Unmourned (GHD).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24289,6 +24681,7 @@ Vampire Realism II.esp
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [Order]
 Indybank.esp
+Indybank2.4b.ESP
 Indybank-NoHouses.esp
 IndybankWC.esp
 WalledCity_IndyBank.esp
@@ -25026,11 +25419,16 @@ Vurt's Groundcover - Solstheim [Sparse version].esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Vurt's Leafy West Gash [Vurt]
+;; @Vurt's Leafy West Gash I & II [Vurt]
 
 [Note]
- !! Version 2.0 and above of "Vurt's Leafy West Gash" is a pluginless replacer. You should check to see if you have the latest version and so need this plugin loaded.
- !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8334
+ ! "Vurt's Leafy West Gash" is available in two versions, the original "Vurt's Leafy West Gash" and "Vurt's Leafy West Gash II". The latter has less colourful trees than the original mod.
+ ! Both mods use the same name for their plugin: Vurt's Leafy West Gash.esp.
+ ! The plugin is required for "Vurt's Leafy West Gash II" as it gives "better placement and less clipping, the .esp also enables some additional, rare trees."
+ ! Version 2.0 and above of "Vurt's Leafy West Gash" is pluginless and so the plugin is not needed.
+ ! You should check to see if you need this plugin loaded.
+ ! Vurt's Leafy West Gash - http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8334
+ ! Vurt's Leafy West Gash II - http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9037
 Vurt's Leafy West Gash.esp
 
 
@@ -25137,20 +25535,23 @@ Vampire_Embrace.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Walled City of Balmora [Hargreth]
-;; IndyBank [Indestructible]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- "Walled_City_v1.2.esp" is not compatible with "Indybank.esp", if you want to use both, use Hargreth's "WalledCity_IndyBank.esp".
+ "Walled_City_v1.2.esp" is not compatible with "Indybank.esp", if you want to use both, use Hargreth's "WalledCity_IndyBank.esp" or the Walled City version from the IndyBank archive.
 Walled_City_v1.2.esp
-WalledCity_IndyBank.esp
+[ANY WalledCity_IndyBank.esp
+     IndybankWC.esp]
 Indybank.esp
+Indybank2.4b.ESP
+Indybank-NoHouses.esp
 
 [Conflict]
  Balmora Expansion is not compatible with the Walled City of Balmora
  (Ref: Balmora_expansion v1.4\readme.txt)
 [ANY Walled_City_v1.2.esp
-     WalledCity_IndyBank.esp]
+     WalledCity_IndyBank.esp
+     IndybankWC.esp]
 [ANY Balmora Expansion v1.4.esp
      Balmora Expansion v1.4+(1.4).esp
      BE+(1.4) Better Looking Morrowind.esp
