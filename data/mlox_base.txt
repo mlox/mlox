@@ -171,14 +171,14 @@ Wrye Patches A.esp
 Wrye Patches A1.esp
 
 [Conflict]
- According to Wrye's documentation, you shoud not load Avenger's female armor plugins along with the A1 patch.
+ According to Wrye's documentation, you should not load Avenger's female armor plugins along with the A1 patch.
  (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches A1.esp
 [ANY AV_female_armor.esp
      AV_fem_armor_Trib.esp]
 
 [Conflict]
- According to Wrye's documentation, you shoud not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
+ According to Wrye's documentation, you should not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
  (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches C1.esp
 [ANY AV_fem_shirts.esp
@@ -188,7 +188,7 @@ Wrye Patches C1.esp
      Prosey female pants replace.esp]
 
 [Conflict]
- According to Wrye's documentation, you shoud not load Daduke's key replacer plugin along with the M1 patch.
+ According to Wrye's documentation, you should not load Daduke's key replacer plugin along with the M1 patch.
  (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches M1.esp
 Key Replacer Trib & BM.esp
@@ -3954,22 +3954,13 @@ BL-Morrowind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Looking Weapons Katanas Tantos Wakizashis [Kagemaru]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 7422 Better Looking Weapons Katanas Tantos Wakizashis.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Music System 1.9 [Xiran]
+;; @Better Music System 1.9.1 [Xiran]
 
 [Note]
  ! There is a newer version of "Better Music System" by Xiran, you should upgrade.
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7899
-[VER<1.9 BetterMusicSystem_<VER>.esp]
-[VER<1.9 BetterMusicSystem_<VER>_alt.esp]
+[VER<1.9.1 BetterMusicSystem_<VER>.esp]
+[VER<1.9.1 BetterMusicSystem_<VER>_alt.esp]
 
 [Conflict]
  Xiran's "Better Music System" was based on and inspired by EvilGreebo's "Music Mod", they both add scripted music to Morrowind's cells.
@@ -3982,31 +3973,39 @@ BL-Morrowind.esp
 
 [Conflict]
  Only use one plugin. Use the alternative version "only if you get an error concerning the XN_Check_Battle script upon loading [or] if you have any other problems with battle music."
- (Ref: "BMS_1.9_Alternative_Version.txt")
-BetterMusicSystem_1.9.esp
-BetterMusicSystem_1.9_alt.esp
+ (Ref: "BMS_readme.txt")
+BetterMusicSystem_1.9.1.esp
+BetterMusicSystem_1.9.1_alt.esp
 
 [Conflict]
  Only use one plugin. Use the alternative version "only if you get an error concerning the XN_Check_Battle script upon loading [or] if you have any other problems with battle music."
- (Ref: "BMS_1.9_Alternative_Version.txt")
-BMS_UPDATE_from1.7(.x)to1.9.esp
-BMS_UPDATE_from1.7(.x)to1.9_alt.esp
+ (Ref: "BMS_readme.txt")
+BMS_UPDATE_from1.7(.x)to1.9.1.esp
+BMS_UPDATE_from1.7(.x)to1.9.1_alt.esp
 
 [Conflict]
  Only use one plugin:
-  BetterMusicSystem_1.9.esp - "If this is the first time you use this mod, or you’ve never customized tracklists"
+  BetterMusicSystem_1.9.1.esp - "If this is the first time you use this mod, or you’ve never customized tracklists"
   BMS_UPDATE_from1.7(.x)to1.9.esp - "If you were using version 1.7(.x) or 1.6/1.7(.x) and you have customized any tracklists"
  (Ref: "BMS_readme.txt")
-[ANY BetterMusicSystem_1.9.esp
-     BetterMusicSystem_1.9_alt.esp]
+[ANY BetterMusicSystem_1.9.1.esp
+     BetterMusicSystem_1.9.1_alt.esp]
 [ANY BMS_UPDATE_from1.7(.x)to1.9.esp
      BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
 
-[Conflict]
- "BetterMusicSystem_1.9.esp and its alt. esp have Timers’ Patch + GhostGate Fix included."
+[Requires]
+ "NOTE: If you use(d) the BMS_UPDATE_from1.7_to1.9_alt esp you must now add the BMS_UPDATE_from_1.9_to_1.9.1 esp"
  (Ref: "BMS_readme.txt")
-[ANY BetterMusicSystem_1.9.esp
-     BetterMusicSystem_1.9_alt.esp]
+[ANY BMS_UPDATE_from1.7(.x)to1.9.esp
+     BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
+BMS_UPDATE_from_1.9_to_1.9.1.esp 
+
+
+[Conflict]
+ "BetterMusicSystem_1.9.1.esp and its alt. esp have Timers’ Patch + GhostGate Fix included."
+ (Ref: "BMS_readme.txt")
+[ANY BetterMusicSystem_1.9.1.esp
+     BetterMusicSystem_1.9.1_alt.esp]
 [ANY BMS_Timers_Patch.esp
      BMS_TowerOfDusk_Fix.esp
      BMS_Ghostgate.ESP]
@@ -4029,8 +4028,8 @@ BMS_UPDATE_from1.7(.x)to1.9_alt.esp
 [Conflict]
  "If you were using another version, delete all plugins of that version"
  (Ref: "BMS_readme.txt")
-[ANY BetterMusicSystem_1.9.esp
-     BetterMusicSystem_1.9_alt.esp]
+[ANY BetterMusicSystem_1.9.1.esp
+     BetterMusicSystem_1.9.1_alt.esp]
 [ANY BetterMusicSystem_v1.1.1.esp
      BetterMusicSystem_1.8*.esp]
 
@@ -4051,8 +4050,8 @@ BetterMusicSystem_v1.1.1.esp
 BMS_UPDATE_v<VER>.esp
 BMS_UPDATE_from1.6_to<VER>.esp
 BMS_UPDATE_from1.7(.x)to1.9*.esp
+BMS_UPDATE_from_1.9_to_1.9.1.esp
 BMS_Timers_Patch.esp
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Necromancer Amulet [Michael "HelioS" Bennett]
@@ -9289,6 +9288,7 @@ Vampiric Hunger Base.esp
 GCD_VH_patch2.esp
 
 ; Version 1.2 of Vampiric Hunger (size == 288521) no longer requires this patch
+; Readme_VH.htm: "Do not enable the Vampiric Hunger patch for Galsiah's Character Development. That was created for version 1.0 and it's no longer necessary."
 ;[Patch]
 ; (Ref: "GCD Readme first 107c.txt")
 ;GCD_VH_patch2.esp
@@ -9336,6 +9336,169 @@ GCD_WE_patch.esp
 GCD_BigMod2_patch.esp
 [ALL Galsiahs Character Development.esp
      BigMod2 v2.0 RELEASE.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Galsiah's Character Development Lean [Galsiah, Huskobar]
+
+[Order]
+GCDLean204STD.esp
+GCDLean204EASY.esp
+GCDLean204HARD.esp
+GCDBetterBalancedBirthsigns.esp
+GCDOver60LevelSpeedup.esp
+GCDRestorePotionsFix.esp
+GCDCultOfTheCloudsPatch.esp
+GCDHavishPatch.esp
+GCDSSPatch.esp
+GCDTEOCompatibilityPatch.esp
+GCDVHPatch.esp
+GCDCharGenRevampedDelay.esp
+GCDWEPatch.esp
+
+[Conflict]
+ Choose only one plugin:
+  GCDLean204STD.esp - Standard difficulty
+  GCDLean204EASY.esp - Easy difficulty
+  GCDLean204HARD.esp - Hard difficulty
+ (Ref: "2ReadMeGCDLean.txt")
+GCDLean204STD.esp
+GCDLean204EASY.esp
+GCDLean204HARD.esp
+
+;;Dragon32: Don't have the Azumite or Gluby versions in mlox yet.
+[Conflict]
+ "GCDLean is completely incompatible with the original Galsiah's Character Development and variants by other modders such as Azumite and Gluby"
+ (Ref: "2ReadMeGCDLean.txt")
+[ANY GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
+Galsiahs Character Development.esp
+
+[NOTE]
+ "[GCDBetterBalancedBirthsigns.esp] should therefore work well alongside most other birthsign mods [but] it is not well balanced for use without GCD."
+ (Ref: "3GCDReadmeFirst.txt")
+[ALL GCDBetterBalancedBirthsigns.esp
+     [NOT [ANY GCDLean204STD.esp
+               GCDLean204EASY.esp
+               GCDLean204HARD.esp]]]
+
+[Order]
+CharGen_Revamped_v14.esp
+GCDCharGenRevampedDelay.esp
+
+[Patch]
+ "[GCDCharGenRevampedDelay.esp is] for use only with gman21’s Chargen Revamped mod."
+ (Ref: "3GCDReadmeFirst.txt")
+GCDCharGenRevampedDelay.esp
+[ALL CharGen_Revamped_v14.esp
+     [ANY GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]]
+
+;; GCD - TEO compatibility patch
+;; TBD - This rule may need double-checking, since the modular version of TEO has more .esps, which may need to appear below
+[Order]
+Stealth Enhancements-LD 1.5b (Tribunal).esp
+GCDTEOCompatibilityPatch.esp
+
+[Order]
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+GCDTEOCompatibilityPatch.esp
+
+[Patch]
+ (Ref: "3GCDReadmeFirst.txt")
+GCDTEOCompatibilityPatch.esp
+[ALL [ANY GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
+     [ANY Stealth Enhancements-LD 1.5b (Tribunal).esp
+	  Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp]]
+
+;; GCD - Cult of the Clouds compatibility patch
+;; "Use only with CoC. Should be after CoC in the load order."
+[Order]
+MW_CultOfTheClouds_v10.esp
+GCDCultOfTheCloudsPatch.esp
+
+[Patch]
+ (Ref: "3GCDReadmeFirst.txt")
+GCDCultOfTheCloudsPatch.esp
+[ALL [ANY GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
+     MW_CultOfTheClouds_v10.esp]
+
+;; GCD - Scripted Spells compatibility patch
+;; "Only use with Scripted Spells (Cortex). Should be after Scripted Spells in the load order."
+[Order]
+Scripted_Spells.esp
+GCDSSPatch.esp
+
+[Patch]
+ (Ref: "3GCDReadmeFirst.txt")
+GCDSSPatch.esp
+[ALL [ANY GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
+     Scripted_Spells.esp]
+
+
+;; GCD - Werewolf Evolution compatibility patch
+;; "Load order shouldn't matter for this patch."
+;; (Ref: "3GCDReadmeFirst.txt")
+;; But, report from DWS: "GCDWEPatch.esp (part of GCDLean v2.04) should be placed after Werewolf_Evolution.esp"
+;; Ref: http://forums.bethsoft.com/index.php?app=forums&module=forums&section=findpost&pid=20169740
+[Order]
+Werewolf_Evolution.esp
+GCDWEPatch.esp
+
+[Patch]
+ (Ref: "3GCDReadmeFirst.txt")
+GCDWEPatch.esp
+[ALL [ANY GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
+     Werewolf_Evolution.esp]
+
+;;Dragon32: I'm assuming that the Havish patch is superceded by JOG's own Scimitar patch (see main GCD and Havish entries)
+;;
+;; GCD - Havish compatibility patch
+;;[Order]
+;;Bloodmoon.esm
+;;Havish.esm
+;;GCDHavishPatch.esp
+
+;;[Patch]
+;; (Ref: "3GCDReadmeFirst.txt")
+;;GCDHavishPatch.esp
+;;[ALL [ANY GCDLean204STD.esp
+;;          GCDLean204EASY.esp
+;;          GCDLean204HARD.esp]
+;;     Havish.esm]
+
+
+;;Dragon32: I'm assuming that the VH patch is superceded by v1.2 of Vampiric Hunger (see main GCD entry). Keeping the Order rule, just in case.
+;;
+;; GCD - Vampiric Hunger compatibility patch
+;; "Only use with Vampire HungerIII (zennorious). Should be after Vampire HungerIII in the load order."
+[Order]
+Vampiric Hunger Base.esp
+GCDVHPatch.esp
+
+;; Version 1.2 of Vampiric Hunger (size == 288521) no longer requires this patch
+;; Readme_VH.htm: "Do not enable the Vampiric Hunger patch for Galsiah's Character Development. That was created for version 1.0 and it's no longer necessary."
+;;[Patch]
+;; (Ref: "3GCDReadmeFirst.txt")
+;;GCDVHPatch.esp
+;;[ALL Galsiahs Character Development.esp
+;;     Vampiric Hunger Base.esp]
+
+;;[Requires]
+;; "Note that this is dependent upon the Vampire Embrace mod"
+;; (Ref: "3GCDReadmeFirst.txt")
+;;GCDVHPatch.esp
+;;Vampire_Embrace.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10146,6 +10309,59 @@ GOTYMinImpactSomeMPPv2.01.esm
      GOTYFullTidyZeroMPPv2.01.esm]
 LGNPC_PaxRedoran_v1_20.esp
 
+;;Dragon32: Following rules are for "LGNPC_PaxRedoran_v1_20_GOTYST.esp", duplicating the equivalents from the main LGNPC section
+
+[Order]
+Less Lore.esp
+LGNPC_NoLore_v?_??.esp
+Lgnpc_SN.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan_v?_??.esp
+LGNPC_HlaOad_v?_??.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_v?_??_suppl.esp
+LGNPC_Pelagiad_v?_??.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ_v?_??.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran_v?_??.esp
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Note]
+ !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
+ !! huskobar's edited version of "LGNPC Pax Redoran" could suffer from these problems too.
+ !! (Ref: LGNPC_PaxRedoran_Readme.txt)
+ !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0 )
+[ALL Vampire_Embrace.esp
+     LGNPC_PaxRedoran_v?_??_GOTYST.esp]
+
+[Conflict]
+ "Join All Houses" by Heph will break some Pax Redoran quests, and likely create other odd results.
+ huskobar's edited version of "LGNPC Pax Redoran" could suffer from these problems too.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
+Join All Houses.esp
+
+[Conflict]
+ "Marandus Abode" by Princess Stomper will break the 'Marandus' quests.
+ huskobar's edited version of "LGNPC Pax Redoran" could suffer from these problems too.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
+[ANY Marandus Abode.esp
+     Marandus Abode MCA Patch.esp]
+
+;;Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=969677&view=findpost&p=14015832
+[Order]
+Less_Generic_Nerevarine.esp
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
+
+;;Dragon32: rules for VGreetings replacements
 
 [Conflict]
  You should replace "VGreetings-Attack.esp" with "VGreetings-AttackGOTYSTSomeMPP.esp" to make VGreetings compatible with GOTY Script Tidy Full (with Some MPP).
@@ -10274,6 +10490,7 @@ Bloated Morrowind.esp
 ;;GH_ES1.2 - For Expanded Sounds v1.2
 [Patch]
  philologos' "GH_ES1.2 Patch.esp" patches "Expanded Sounds" 1.2 by PirateLord and "Graphic Herbalism" by ManaUser. Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
+ http://www.tesnexus.com/downloads/file.php?id=23108
  (Ref: Ref: GH_ES1.2 Patch.txt)
 GH_ES1.2 Patch.esp
 [ALL Graphic Herbalism.esp
@@ -10302,6 +10519,7 @@ Graphic Herbalism ES1.3 Extra.esp
 
 [Patch]
  philologos' "GH_ES1.3 Patch.esp" patches "Expanded Sounds" 1.3 by PirateLord and "Graphic Herbalism" by ManaUser. Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
+ http://www.tesnexus.com/downloads/file.php?id=23108
  (Ref: Ref: GH_ES1.3 Patch.txt)
 GH_ES1.3 Patch.esp
 [ALL Graphic Herbalism.esp
@@ -10633,6 +10851,15 @@ STA_guides_replacer_NoScript.esp
 STA_guides_replacer.esp
 [ANY Book Rotate - Morrowind v1.1.esp
      Book Rotate.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Haldenshore [JOG]
+
+[Conflict]
+ Landscape conflict. A longboat from Princess Stomper's "Princess Docks" straddles the bridge to Haldenshore. You can move the longboat using the Construction Set.
+Haldenshore_1.2.esp
+Princess Docks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12670,7 +12897,8 @@ Tribunal.esm
 [Requires]
  Whilst not mandated by the readme, Jeremy McGuinn's "The Armor of Jet and Gold" requires Tribunal.
  (Ref: "Readme_JetGold.txt")
-jet_gold_armor.esp
+[ANY jet_gold_armor.esp
+     Clean jet_gold_armor.esp]
 Tribunal.esm
 
 [Note]
@@ -12714,6 +12942,7 @@ Knights of Tamriel.esp
      Clean Mara.esp
      Dibella.esp
      jet_gold_armor.esp
+     Clean jet_gold_armor.esp
      kynareth.esp]
 
 
@@ -13465,10 +13694,28 @@ LGNPC_Pelagiad_v1_22.esp
  ! http://www.lgnpc.org/downloads
 [VER < 1.20 LGNPC_TelUvirith_v<VER>_UI.esp]
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Begin Vivec Redoran bodge
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Dragon32: Vivec Redoran 1.61 has "1.60" in the Description field, therefore this rule comes up even with latest version:
+
+;;[Note]
+;; ! A newer version is available, check the LGNPC download site:
+;; ! http://www.lgnpc.org/downloads
+;;[VER < 1.61 LGNPC_VivecRedoran_v<VER>.esp]
+
+;;Dragon32: Temporary solution. Until next version of Vivec Redoran. With, hopefully, an accurate version number in the Description
+
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.61 LGNPC_VivecRedoran_v<VER>.esp]
+[ALL LGNPC_VivecRedoran_v<VER>.esp
+     [NOT LGNPC_VivecRedoran_v1_61.esp]]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;/End Vivec Redoran bodge
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -13477,16 +13724,18 @@ LGNPC_Pelagiad_v1_22.esp
 
 [Conflict]
  Use only one plugin:
- "LGNPC_TelUvirith_*_UI.esp" for users of Uvirith Inside
+ "LGNPC_TelUvirith_*_UI.esp" for users of Uvirith Inside or Uvirith's Legacy
  "LGNPC_TelUvirith_*.esp" for everyone else
  (Ref: "LGNPC_TelUvirith_Readme.txt")
 LGNPC_TelUvirith_v<VER>_UI.esp
 LGNPC_TelUvirith_v<VER>.esp
 
 [Requires]
+ The UI version of LGNPC Tel Uvirith is for "users of Uvirith Inside or Uvirith's Legacy"
  (Ref: "LGNPC_TelUvirith_Readme.txt") 
 LGNPC_TelUvirith_v<VER>_UI.esp
-Uvirith Inside.esp
+[ANY Uvirith Inside.esp
+     Uvirith's Legacy_Final_2.0.esp]
 
 ;; Cyran0: "Since Stuporstar has made some accommodation for this, certainly Uvirith's Legacy should load after LGNPC Tel Uvirith".
 ;;Dragon32: Duplicated rest of load order, just in case.
@@ -15866,7 +16115,8 @@ Morrowind Comes Alive.esm
                     Arkay_non_Tribunal.esp
                     Clean Mara.esp
                     Dibella.esp
-                    jet_gold_armor.esp
+                    [ANY jet_gold_armor.esp
+                         Clean jet_gold_armor.esp]
                     kynareth.esp]
                Knights of Tamriel.esp]]] ;Tarnsman's merged version
 
@@ -16341,6 +16591,12 @@ Morrowind Rebirth <VER>.esp
 Morrowind Rebirth <VER>.esp
 Clean Better Caldera.esp
 
+[Conflict]
+ "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
+ (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
+Morrowind Rebirth <VER>.esp
+Poorly Placed Object Fix  ?.?.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Relighted [PirateLord]
@@ -16563,13 +16819,43 @@ MournholdTransport.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Mournhold Overhaul (New Textures) [Bob Smolders]
+;; @Mournhold Overhaul [Bob Smolders]
 
 [Conflict]
- Do not activate both ESPs.
- (Ref: Mournhold_Overhaul_New_Textures.rar\Readme.txt)
-Mournhold Overhaul - No NPC's.ESP
-Mournhold Overhaul - NPC's.ESP
+ Choose only one plugin:
+  Mournhold Overhaul v2.0 - NPC's.esp - Includes extra guards, beggars and 56 citizen NPC's.
+  Mournhold Overhaul v2.0 - WG + NPC's.esp - As above, but for users of Windows Glow
+  Mournhold Overhaul v2.0 - no NPC's.esp - Only a few extra guards and beggars and no extra citizens
+  Mournhold Overhaul v2.0 - WG + no NPC's.esp - As above, but for users of Windows Glow
+ (Ref: Mournhold_Overhaul_v21.rar\Data Files\Readme.txt)
+Mournhold Overhaul v2.0 - no NPC's.esp
+Mournhold Overhaul v2.0 - NPC's.esp
+Mournhold Overhaul v2.0 - WG + no NPC's.esp
+Mournhold Overhaul v2.0 - WG + NPC's.esp
+
+[Note]
+ ! Version 2.0 and above of "Mournhold Overhaul" by Bob Smolders move "Godsreach and Great Bazaar back to their exact original height, eliminating all conflicts this mod had with other mods such as Morrowind Comes Alive [and "Windows Glow - Tribunal"]"
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9418
+ ! (Ref: Mournhold_Overhaul_v21.rar\Data Files\Readme.txt)
+[ALL [ANY Mournhold Overhaul - No NPC's.ESP
+          Mournhold Overhaul - NPC's.ESP]
+     [ANY Windows Glow - Tribunal Eng.esp
+          MCA.esm]]
+
+[Requires]
+ (Ref: Mournhold_Overhaul_v21.rar\Data Files\Readme.txt)
+[ANY Mournhold Overhaul v2.0 - WG + no NPC's.esp
+     Mournhold Overhaul v2.0 - WG + NPC's.esp]
+Windows Glow.esp
+
+;;Dragon32: Order not specified, added by me.
+[Order]
+Mournhold Overhaul v2.0 - WG + no NPC's.esp
+Windows Glow - Tribunal Eng.esp
+
+[Order]
+Mournhold Overhaul v2.0 - WG + NPC's.esp
+Windows Glow - Tribunal Eng.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16794,7 +17080,8 @@ NX9_Guards_Complete.ESP
  NazoX9's "NX9_Guard_LGRedoran_Patch.ESP" fixes dialogue incompatibilities between LGNPC Pax Redoran and NazoX9's "Guards"
  http://tesnexus.com/downloads/file.php?id=27765
 NX9_Guard_LGRedoran_Patch.ESP
-[ALL LGNPC_PaxRedoran_v?_??.esp
+[ALL [ANY LGNPC_PaxRedoran_v?_??.esp
+          LGNPC_PaxRedoran_v?_??_GOTYST.esp]
      NX9_Guards_Complete.ESP]
 
 ;; Dragon32: Not specified (no readme) but a check in TESPCD shows the patch changing the 'lost sister' dialogue topic from LGNPC, hence this load order. No apparent change to the Guards mod
@@ -16802,6 +17089,7 @@ NX9_Guard_LGRedoran_Patch.ESP
 ;; Duplicated part of LGNPC load order here (soul sickness patch), just in case.
 [Order]
 LGNPC_PaxRedoran_v?_??.esp
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 NX9_Guard_LGRedoran_Patch.ESP
 
@@ -17142,6 +17430,16 @@ Tribunal.esm
 [Note]
  This plugin contains several empty cells and should be cleaned with TESTool.
 [SIZE 387343 St. Nerevar's Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nerevarine's Castle [Zappara]
+
+[Conflict]
+ "This plugin includes also Weapon Wielding Mannequins v1.0 By Stephen Kent (a.k.a. Riiak Shi Nal). If you have that plugin installed you'll probably have to un-check it when you start using [Nerevarine's Castle]."
+ (Ref: "readme - Nerevarine_castle.txt")
+Nerevarine_castle.esp
+Weapon Wielding Mannequins.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18088,6 +18386,32 @@ Jac_Passing time while reading -  BRBJ patch.esp
      Book Jackets - Tribunal - BookRotate.esp
      Book Jackets - Tribunal.esp]
 
+;;Dragon32 - Ref: Eluara "I thought this was already in the rule base, but Jac's passing time while reading basic esp has to load before all Bookjackets mods."
+;;http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20171121
+[Order]
+Jac_Passing time while reading.esp
+Book Jackets - Morrowind - BookRotate.esp
+
+[Order]
+Jac_Passing time while reading.esp
+Book Jackets - Morrowind.esp
+
+[Order]
+Jac_Passing time while reading.esp
+Book Jackets - Bloodmoon - BookRotate.esp
+
+[Order]
+Jac_Passing time while reading.esp
+Book Jackets - Bloodmoon.esp
+
+[Order]
+Jac_Passing time while reading.esp
+Book Jackets - Tribunal - BookRotate.esp
+
+[Order]
+Jac_Passing time while reading.esp
+Book Jackets - Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Passive Wildlife Vvardenfell 1.1 [Lucror]
@@ -18353,6 +18677,126 @@ dej_plain_paper_fix.esp
  ! (Ref: Playablechildren2_0_readme.txt)
 [ALL PlayableChildren2.0.esp
      [NOT MW_Children_1_0.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Poorly Placed Object Fix [Slartibartfast]
+
+;;Dragon32: Not mentioned but worth adding.
+[Order]
+Bloodmoon.esm
+Poorly Placed Object Fix  <VER>.esm
+
+[Conflict]
+ The "Poorly Placed Object Fix" esm file has all the individual fixes merged together.
+ (Ref: "Readme - Poorly placed object Fix.txt")
+Poorly Placed Object Fix  <VER>.esm
+[ANY AC 14,1 floating rock fix.esp
+     Addamasartus floating bellows fix.esp
+     Addamasartus floating goblets fix.esp
+     AI 1-12 floating rock fix.esp
+     AI 2-14 floating rock fix.esp
+     Ald Redaynia floor fix.esp
+     Ald Redaynia Rock fall fix.esp
+     Ald Velothi floating rock fix.esp
+     Andre Mauls tower fix.esp
+     Arilles floating spoon fix.esp
+     Ashalmawria -10 15 stair fix.esp
+     Ashinabi smugglers cave ladder fix.esp
+     Ashlands -1-1 floating rock fix.esp
+     Ashlands 0,2 floating rock fix.esp
+     Ashlands 1 13 floating rock fix.esp
+     Ashlands 2 0 Floating Ashtree Fix.esp
+     Ashlands 4,1 floating rock fix.esp
+     Ashlands 6 11 floating rock fix.esp
+     Ashlands 7 10 floating rock fix.esp
+     Ashlands 7 6 floating grass fix.esp
+     Ashlands 7 6 floating rocks fix .esp
+     Ashlands 7 7 floating trama root and rocks fix.esp
+     Assurdiripal floating rock fix.esp
+     Bal Fell 8-12 floating wall fix.esp
+     Bal Fell stair fix.esp
+     BC -11,5 floating rock fix.esp
+     BC -3-10 floating rock fix.esp
+     BC -4-10 floating kelp and rock  fix.esp
+     BC -8,2 floating rock and extra mesh fix.esp
+     Census and excise wall fix.esp
+     Door to Kushtashp  fix.esp
+     Ebernanit floor fix.esp
+     Eboneart bridge clipping fix.esp
+     Ebonheart bridge missing faces fix.esp
+     Ebonheart clipping chimney  fix.esp
+     Ebonheart company hall dagger fix.esp
+     Ebonheart foundation removal.esp
+     Ebonheart NE entrance  fix.esp
+     Ebonheart pillar fix.esp
+     Ebonheart wall alignment fix.esp
+     Fanar Fork-beard candle fix.esp
+     Felsaad Coast -21 25 floating snow fix.esp
+     Forgotten Vaults Mezzanine fix.esp
+     Gnisis cave home & door fixes.esp
+     Grazelands 10,6 floating rock fix.esp
+     Grazelands 10,9 floating rock fix.esp
+     Grazelands 9 9 submerged wickwheat fix.esp
+     Grazelands 9,14 floating rock fix.esp
+     Hloramaren Dome Floating Alembic Fix.esp
+     Hloramaren upper door marker lowered.esp
+     Indoranyon clipping rock-fort fix.esp
+     Kushtashpi floating brazier fix.esp
+     Kushtashpi Shrine rock and floor  fix.esp
+     Maar Gan  wall fix.esp
+     Maran Adon black mesh fix.esp
+     Mat bottle and floating pole fix.esp
+     Molag Amur 14,-3 floating log fix.esp
+     Odirniran Missing door fix.esp
+     Pelagiad Ahnassi's wall  fix.esp
+     Pond_scum_alignment_fix.esp
+     Raven Rock Factors Estate Tapestry Fix.esp
+     Sandas wall fix.esp
+     Saturan door fix.esp
+     Shushishi floating rock fix.esp
+     Solsrheim Isinfier Plains -18 21 floating rock fix..esp
+     Solstheim Hirstaang Forsest -25 20 sunken holly fix.esp
+     Suran floating rock fix.esp
+     Suran Lake Barnacle fixes.esp
+     Suran tower wall and door fix.esp
+     Suran-Desele's invisible wall fix.esp
+     West Gash -13,10 floating barnacles fix.esp
+     WG -10,16 floating rock fix.esp
+     WG -11 14 rock fix.esp
+     WG -13,11  rock fix.esp
+     WG -15,14 floating rock fix.esp
+     wolverine hall bridge stair hidden.esp
+     Wolverine hall extra static fix.esp
+     Zalit's yurt door marker fix.esp]
+
+;;Dragon32: Included all the Ebonheart-affecting individual fix mods from Poorly Placed Object Fix as conflicts. Not sure if that's correct.
+[Conflict]
+ "Poorly Placed Object Fix" by Slartibartfast "is incompatible with the 'Ebonheart Fix' mod by Kid 77 as both fix the same things but in different fashion."
+ (Ref: "Readme - Poorly placed object Fix.txt")
+[ANY Poorly Placed Object Fix  <VER>.esm
+     Eboneart bridge clipping fix.esp
+     Ebonheart bridge missing faces fix.esp
+     Ebonheart clipping chimney  fix.esp
+     Ebonheart company hall dagger fix.esp
+     Ebonheart foundation removal.esp
+     Ebonheart NE entrance  fix.esp
+     Ebonheart pillar fix.esp
+     Ebonheart wall alignment fix.esp]
+Ebonheart Fix.ESP
+
+[Conflict]
+ Early versions of Slartibartfast's "Texture Fix" included "Pond_scum_fix 1.0.esp", this mod is no longer needed when using Slartibartfast's "Poorly Placed Object Fix"
+ (Ref: "Readme - Poorly placed object Fix.txt")
+[ANY Poorly Placed Object Fix  <VER>.esm
+     Pond_scum_alignment_fix.esp]
+Pond_scum_fix 1.0.esp
+
+[Conflict]
+ Both "Suran tower wall and door fix.esp" from Slartibartfast's "Poorly Placed Object Fix" and "MCR_Suran Guard Tower Door Fix.esp" from Mr. C. Racer's "Little Details and Fixes" fix the same thing.
+[ANY Poorly Placed Object Fix  <VER>.esm
+     Suran tower wall and door fix.esp]
+MCR_Suran Guard Tower Door Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20324,9 +20768,16 @@ _seyda_neen_expanded_01.esp
      Seyda Neen Docks V7.0 Tribunal.esp]
 SNSkeldaleHouse_022403.esp
 
+[Conflict]
+ Lonnie has produced a merged version of his "Seyda Neen Docks" which includes JOG's "Haldenshore" mod, loading the two plugins separately causes conflicts.
+ Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=390
+[ANY Seyda Neen Docks V7.0 Bloodmoon.esp
+     Seyda Neen Docks V7.0 Tribunal.esp]
+Haldenshore_1.2.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Seyda Neen Docks and Haldershore [lonnie]
+;; @Seyda Neen Docks and Haldenshore [lonnie]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -22946,6 +23397,7 @@ Ultimate Galleon Purchase Patch.esp
           Clean Mara.esp
           Dibella.esp
           jet_gold_armor.esp
+          Clean jet_gold_armor.esp
           kynareth.esp          
           Knights of Tamriel.esp
           Royal Golden Armor v3.1.esp
