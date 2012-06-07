@@ -1123,14 +1123,26 @@ Nevena's Assistants & Apprentices 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @All Boats and Striders [Quatloos]
+
+[Conflict]
+ Quatloos' "All Boats and Striders" is a merged version of Reznod's "All Silt Strider Ports" and "All Boat Ports".
+ (Ref: Cragonmoor readme.txt)
+All Boats and Striders.esp
+[ANY All Silt Strider Ports.esp
+     All Boat Ports.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @All Destinations [Sandman101]
 
 [Conflict]
- Reznod's "All Silt Strider Ports" and "All Boat Ports" are not compatible with "All Destinations" by Sandman101.
+ Sandman101's "All Destinations" is not compatible with Reznod's "All Silt Strider Ports" and "All Boat Ports", nor is it compatible with Quatloos' merged version of Reznod's mods: "All Boats and Striders".
  (Ref: All DestinationsV1.0 Readme.html)
 All Destinations.esp
 [ANY All Silt Strider Ports.esp
-     All Boat Ports.esp]
+     All Boat Ports.esp
+     All Boats and Striders.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2350,6 +2362,40 @@ NOM 3.0.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2645 AssasinWeapons.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Assassination [DragoonWraith]
+
+;;Dragon32: v2.0 integrates Vampire Embrace stuff into main plugin. That version has text "Bite works only with Vampire Embrace 2.3+." in Description
+
+[Conflict]
+ Only use one plugin:
+  DW_assassination_VE.esp - If you have Cortex's "Vampire Embrace" v2.3 or higher
+  DW_assassination.esp - If you do not use Cortex's "Vampire Embrace"
+ (Ref: DW_assassination_README.txt)
+[DESC !/Bite works only with Vampire Embrace/ DW_assassination.esp]
+DW_assassination_VE.esp
+
+[Requires]
+ (Ref: DW_assassination_README.txt)
+DW_assassination_VE.esp
+[VER >2.3 Vampire_Embrace.esp]
+
+;;Dragon32: Neither the readme or a TESPCD check indicate any load order requirements for VH and Assassination
+
+[Note]
+ ! There is a new version, 2.0, of DragoonWraith's "Assassination" available
+ ! http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=2425
+[ANY [DESC !/Bite works only with Vampire Embrace/ DW_assassination.esp]
+     DW_assassination_VE.esp]
+
+[Note]
+ The crime detection scripts in Assassination 2.0 may not work for you. If this is a problem you can downgrade to 1.5:
+  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1802
+  http://www.elricm.com/nuke/html/modules.php?op=modload&name=Downloads&file=index&req=viewdownloaddetails&lid=197
+ (Ref: DW_assassination_README.txt)
+[DESC /Bite works only with Vampire Embrace/ DW_assassination.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8091,6 +8137,16 @@ ExoticsBoutiqueNoMusic.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Exotic Imports [Westly]
+
+[Note]
+ ! "This is a Better Body mod, so other body mods are not supported in this archive (so clothig will clip with the original bodies and Smoother Bodies)."
+ ! (Ref: "Exotic Imports by Westly README.txt")
+[ALL Exotic Imports by Westly.esp
+     [NOT Better Bodies.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Expanded Birthsigns for Purists [Tyrthyllanos]
 
 [Conflict]
@@ -9554,6 +9610,37 @@ Gartheka update.esp
 [Note]
  Please ensure that you have copied the contents of the Forest Elf Meshes and Textures folders into the respective Morrowind Folders.
 Frozen Forest Plug-in.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GCD v1.08 with Startscript, fixed [Gluby]
+
+;;Dragon32: Need to duplicate the standard rules, either here or by modifying the main GCD entry. Trouble is the PATCH rules doesn't seem to accept NOT so we can't suppress rules when "Galsiahs Character Development.esp" is present. Generally, replace so "Galsiahs Character Development.esp" --> "GCD v1.08 with Startscript, fixed [Galsiah].esp" At least we've got load order here
+
+;;Dragon 32: See also Magicka regeneration mods [Various]
+
+[Conflict]
+ Disable these mods when running Gluby's "GCD v1.08 with Startscript, fixed"
+[ALL GCD v1.08 with Startscript, fixed [Galsiah].esp
+     [ANY Galsiahs Character Development.esp
+          GCD StartScript for Trib or Bloodmoon.esp
+          GCD_107x_to_108_patch.esp]]
+
+[Order]
+GCD v1.08 with Startscript, fixed [Galsiah].esp
+GCD better balanced birthsigns.esp
+GCD Over 60 level speedup.esp
+GCD Restore Potions Fix.esp
+GCD settings fairly easy.esp
+GCD settings hard.esp
+GCD - Cult of the Clouds patch.esp
+GCD_Havish_patch.esp
+GCD_SS_patch.esp
+GCD TEO compatibility patch.esp
+GCD_VH_patch2.esp
+CharGen Revamped delay2.esp
+Brittlewind fix.esp
+GCD_WE_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14805,6 +14892,15 @@ MGE_Foggy_weather.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Miner's Pick Use [quorn]
+
+[Conflict]
+ Both quorn's "Miner's Pick Use" and The Lys' "Resources Enhanced" require the player to have a miner's pick in their possession while harvesting ebony, glass, diamond or adamantium.
+MinerPickUseGOTY.esp
+Resources Enhanced.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mini-Mods [ManaUser]
 
 [Requires]
@@ -17911,6 +18007,15 @@ Homes To Let.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nimawia Pearl Farm [Psycholex, the Architect]
+
+[Note]
+ !! Deletes topic "Proposition" which breaks the Nels Lendo miscellaneous quest.
+ [Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20205486 ]
+[SIZE 54955 Nimawia Pearl Farm.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ninja Girl Companion [Wildman]
 
 ;; expdep
@@ -20312,6 +20417,20 @@ SWP_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sanity Globe for The Underground 2 [Shasta Thorne]
+
+[Requires]
+ [Ref: SanityGlobeForTU2_Readme.txt]
+Sanity Globe for TU2_v1.esp
+THE_UNDERGROUND_2.esp
+
+;; Ref: SanityGlobeForTU2_Readme.txt
+[Order]
+THE_UNDERGROUND_2.esp
+Sanity Globe for TU2_v1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Saryon [Ciriuz]
 
 [Note]
@@ -20662,6 +20781,15 @@ Seasons.esm
  (Ref: FoliageSeason_ReadMe(E).txt)
 Seasons.esm
 Eldar Plug In.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Secret Bridge [Thondur]
+
+[Requires]
+ (Ref: Secret Bridge - Read Me.txt)
+Secret Bridge V-2.esp
+TR_Map1.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
