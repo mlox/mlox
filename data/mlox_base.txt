@@ -6172,49 +6172,78 @@ stuffed creature set1.0 .esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Creatures X [PirateLord]
+;; @Creatures XI [PirateLord]
 
-[Note]
- !! Important! Do not include Creatures if you are creating a "Merged_Objects.esp" file (in TESTOOL). For some reason, the scripts go really screwy, and a common side effect is massive herds of Guars.
- !! (Ref: "Creatures X Readme.txt")
-[ALL Creatures.esp
+[Conflict]
+ Only choose one plugin:
+  Creatures.esp - Full version, includes every creature/NPC/ingredient
+  Creatures (lore).esp - Lore friendly version, removes all items that are not lore friendly
+  Creatures (Semi).esp - Semi-lore friendly version, keeps all the items that feel like they are lore friendly, although there is no  lore for them
+ (Ref: "Creatures XI Readme.txt")
+Creatures (lore).esp
+Creatures (Semi).esp
+Creatures.esp
+
+[Patch]
+ "Creatures Merged Objects Fix.esp" allows Creatures to be used with a merged objects file (e.g. one created by TESTool). Without  the fix Creatures' scripts would go really screwy and a common side effect was massive herds of Guars.
+ (Ref: "Creatures XI Readme.txt")
+Creatures Merged Objects Fix.esp
+[ALL [ANY Creatures.esp
+          Creatures (lore).esp
+          Creatures (Semi).esp]
      Merged_Objects.esp]
+
+[Order]
+Merged_Objects.esp
+Creatures Merged Objects Fix.esp
+
+[Patch]
+ "Creatures Great House Dagoth Patch.esp" makes the new Sixth House creatures friendly to the player of The Mad God's "Great House  Dagoth"
+ (Ref: "Creatures XI Readme.txt")
+Creatures Great House Dagoth Patch.esp
+[ALL [ANY Creatures.esp
+          Creatures (lore).esp
+          Creatures (Semi).esp]
+     Great House Dagoth.esp]
 
 [Order]
 Creatures.esp
 Great House Dagoth.esp
 Creatures Great House Dagoth Patch.esp
-[Patch]
- "Compatability with Great House Dagoth Mod. Load Creatures, then Great
- House Dagoth Mod, and then the Patch esp. Only makes new Sixth House
- creatures passive to you."
- (Ref: "Creatures X Readme.txt")
+
+[Order]
+Creatures (lore).esp
+Great House Dagoth.esp
 Creatures Great House Dagoth Patch.esp
-[ALL Creatures.esp
-     Great House Dagoth.esp]
+
+[Order]
+Creatures (Semi).esp
+Great House Dagoth.esp
+Creatures Great House Dagoth Patch.esp
+
+[Patch]
+ "Creatures 6th House Patch.esp"  makes the new Sixth House creatures friendly to the player of Endrek's "Sixth House"
+ (Ref: "Creatures XI Readme.txt")
+Creatures 6th House Patch.esp
+[ALL Sixth House.esp
+     [ANY Creatures.esp
+          Creatures (lore).esp
+          Creatures (Semi).esp]]
 
 [Order]
 Creatures.esp
 Sixth House.esp
 Creatures 6th House Patch.esp
 
-[Patch]
- When using Creatures with Sixth House, you should use
- Creatures 6th House Patch.esp
+[Order]
+Creatures (lore).esp
+Sixth House.esp
 Creatures 6th House Patch.esp
-[ALL Sixth House.esp
-     Creatures.esp]
 
-; JMS - referenced post has expired.
-;[Note]
-; A drop-in replacement patch for Creatures X is available that:
-; "Fixes the scarabs so they do spawn in swarms Changes the reflect
-; abilities, reflect 60 is now reflect 30 absorb magicka 30,
-; slightly more mage friendly"
-; (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=836725 )
-;[SIZE 813593 Creatures.esp] ; original Creatures X
-
-;[SIZE !817192 Creatures.esp] ; Creatures X patch
+[Order]
+Creatures (Semi).esp
+Sixth House.esp
+Creatures 6th House Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
