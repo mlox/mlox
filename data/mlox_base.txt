@@ -1502,8 +1502,7 @@ Bloodmoon.esm
 Antares' Big Mod 4 - MCA 5.2 - patch.esp
 [ALL [ANY Antares' Big Mod 4.esp
 	  Antares' Big Mod 5.esp]
-     [ANY [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]]
+     [DESC /over 1200 friendly/ MCA.ESM]]
 
 ; Ref: "Antares' Big Mod 4 - MCA 5.2 - patch - README.txt"
 [Order]
@@ -1520,9 +1519,7 @@ Antares' Big Mod 4 - MCA 5.2 - patch.esp
 Antares' Big Mod 5 - MCA 6 - patch.esp
 [ALL [ANY Antares' Big Mod 4.esp
 	  Antares' Big Mod 5.esp]
-     [ANY [SIZE 2551516 MCA.ESM]
-          [SIZE 2559987 MCA.ESM]
-          [SIZE 2597537 MCA.ESM]]]
+     [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]]
 
 ; Ref: "Antares' Big Mod 5 - MCA 6 - patch - README.txt"
 [Order]
@@ -4259,7 +4256,7 @@ BirthsignsAMFun_MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @blacklight
+;; @Black Light [Rodan]
 
 [Note]
  !! This plugin contains evil GMSTs.
@@ -4269,9 +4266,9 @@ BirthsignsAMFun_MW.esp
 
 [Requires]
  (Ref: blacklightreadme.txt)
-[ANY blacklightv1.34.esp
-     BlackRose.esp]
-Silgrad_Tower_internal_build_1-4_3.esp
+blacklightv1.34.esp
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
 
 [Conflict]
  landmass conflict.
@@ -4311,7 +4308,8 @@ acsSunsiBBShirt.esp
  landmass conflict.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 TheBlackMill11.esp
-Silgrad_Tower_internal_build_1-4_3.esp
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
 
 [Conflict]
  These two mods conflict.
@@ -4331,7 +4329,7 @@ TheBlackMill11.esp
  http://abot.silgrad.com/guppy/download.php?lng=en&cat=Morrowind%20Mods.%3a%50atches&dn=1
  You must have the BlackMill already installed, then replace TheBlackMill11.esp with TheBlackMill11fixedtransposedNOMified.esp.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15063847 )
-TR_Map2.esm
+TR_Mainland.esm
 TheBlackMill11.esp
 
 
@@ -4784,6 +4782,12 @@ tusar_v1.2.1.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1488614 Bloody Oath_v1.0.esp]
+
+[Conflict]
+ "This mod is not compatible with any other mod that places a boat at the dock behind Ms. Farseer in Dagon Fel, (Black Light mod)"
+ (Ref: "Bloody Oath_v1.0_readme.txt")
+Bloody Oath_v1.0.esp
+blacklightv1.34.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7066,8 +7070,7 @@ FireHeaven Deora.esp
 Vampire Embrace MCA Patch.esp
 [ALL [DESC /Vampire Embrace 2.4/ Vampire_Embrace.esp]
      [ANY [SIZE 2458536 MCA.ESM]
-          [SIZE 2707833 MCA.esm]
-          [SIZE 2519851 MCA.esm]]]
+          [DESC /over 1200 friendly/ MCA.ESM]]]
 
 ;;Dragon32: Looks like scripts refer to some VE objects, also plugin date is in August 2017
 [Order]
@@ -7799,8 +7802,7 @@ Better Bodies.esp
  "Dwarves! MCA add-on" requires Morrowind, Bloodmoon, Tribunal and "Morrowind Comes Alive" v5.2 by Neoptolemus.
  (Ref: "Dwarves! MCA addon_readme.txt")
 Dwarves! MCA addon v2.1.esp
-[ALL [ANY [SIZE 2707833 MCA.esm]
-          [SIZE 2519851 MCA.esm]]
+[ALL [DESC /over 1200 friendly/ MCA.ESM]
      Morrowind.esm
      Tribunal.esm
      Bloodmoon.esm
@@ -8054,8 +8056,7 @@ Elders MCA Add-on.esp
           Elders of Vvardenfell.esp
           Elders 0 Count NPC add-on (Trib & BM).esp
           Elders 0 Count NPC add-on.esp]
-     [ANY [SIZE 2707833 MCA.esm]
-          [SIZE 2519851 MCA.esm]]] ;The Undead-compatible version
+     [DESC /over 1200 friendly/ MCA.ESM]]
 
 [Note]
  !! "Elders MCA Add-on" version 2.02 needs to be edited before it will work without errors with Neoptolemus' "Morrowind Comes Alive" v5.2.
@@ -8480,8 +8481,7 @@ THE Nord & Orc Facepack.esp
  Tarnsman's "MCA Goblin-Men Addon.esp" adds NPCs from the Goblin-Men race to the levelled lists of version 5.2 of Neoptolemus' "Morrowind Comes Alive".
  (Ref: THE N & O Facepack_readme.doc)
 MCA Goblin-Men Addon.esp
-[ALL [ANY [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]
+[ALL [DESC /over 1200 friendly/ MCA.ESM]
      THE Nord & Orc Face Collection.esm]
 
 ;;THE Facepack Compilation
@@ -10227,100 +10227,42 @@ Glow-Away.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Go To Jail [Arcimaestro Antares]
+;; @Go To Jail 3.7 [Arcimaestro Antares]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
- "Go To Jail 3.5 - T.esp" - If you only have Tribunal
- "Go To Jail 3.5 - B.esp" - If you only have Bloodmoon
- "Go To Jail 3.5 - T B.esp" - If you have Bloodmoon and Tribunal
- "Go To Jail 3.5 - T B - NOM.esp" - If you have Bloodmoon, Tribunal and Necessities of Morrowind
- "Go To Jail 3.5 - T B - MCA.esp" - If you have Bloodmoon, Tribunal and Morrowind Comes Alive v5.2
- "Go To Jail 3.5 - T B - MCA - NOM.esp" - If you have Bloodmoon, Tribunal, Necessities of Morrowind and Morrowind Comes Alive v5.2
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T.esp
-Go To Jail 3.5 - B.esp
-Go To Jail 3.5 - T B.esp
-Go To Jail 3.5 - T B - NOM.esp
-Go To Jail 3.5 - T B - MCA.esp
-Go To Jail 3.5 - T B - MCA - NOM.esp
-
-; TBD - JMS - "Go To Jail 3.5 - T.esp" uses Bloodmoon function PlaceAtMe
-;; expdep
-[Requires]
- Go To Jail 3.5 - T.esp should only be loaded when you have Tribunal, but not Bloodmoon
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T.esp
-[ALL Tribunal.esm
-     [NOT Bloodmoon.esm]]
+ "Go To Jail 3.7 - NOM.esp" - For users of Taddeus' "Necessities of Morrowind"
+ "Go To Jail 3.7.esp" - For people who do not use NoM
+ (Ref: "Go to Jail 3.7 README.txt")
+Go To Jail 3.7 - NOM.esp
+Go To Jail 3.7.esp
 
 [Requires]
- Go To Jail 3.5 - B.esp should only be loaded when you have Bloodmoon, but not Tribunal
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - B.esp
-[ALL Bloodmoon.esm
-     [NOT Tribunal.esm]]
+ (Ref: "Go to Jail 3.7 README.txt")
+Go To Jail 3.7 - NOM.esp
+NoM 3.0.esp
 
-[Requires]
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T B.esp
-[ALL Bloodmoon.esm
-     Tribunal.esm]
-
-[Requires]
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T B - NOM.esp
-[ALL Bloodmoon.esm
-     Tribunal.esm]
-
-[Note]
- "Go To Jail 3.5 - T B - NOM.esp" requires Necessities of Morrowind
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T B - NOM.esp
-
-[Requires]
- "Go To Jail 3.5 - T B - MCA.esp" requires Morrowind Comes Alive v5.2
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T B - MCA.esp
-[ALL Bloodmoon.esm
-     Tribunal.esm
-     [ANY [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]]
-
-[Requires]
- "Go To Jail 3.5 - T B - MCA - NOM.esp" requires Necessities of Morrowind and Morrowind Comes Alive v5.2
- (Ref: "Go to Jail 3.5 README.mht")
-Go To Jail 3.5 - T B - MCA - NOM.esp
-[ALL Bloodmoon.esm
-     Tribunal.esm
-     [ANY [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]]
-
+;;Dragon32: Order rules for 3.5, assume still relevant for 3.7
 ;;Ref: http://forums.bethsoft.com/index.php?/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load- order/page__view__findpost__p__18170102
 ;;Fixes a landscape (?) error
 [Order]
-Go To Jail 3.5 - T.esp
+Go To Jail 3.7 - NOM.esp
 Immersive Chargen.esp
 
 [Order]
-Go To Jail 3.5 - B.esp
+Go To Jail 3.7.esp
 Immersive Chargen.esp
 
-[Order]
-Go To Jail 3.5 - T B.esp
-Immersive Chargen.esp
-
-[Order]
-Go To Jail 3.5 - T B - NOM.esp
-Immersive Chargen.esp
-
-[Order]
-Go To Jail 3.5 - T B - MCA.esp
-Immersive Chargen.esp
-
-[Order]
-Go To Jail 3.5 - T B - MCA - NOM.esp
-Immersive Chargen.esp
+;;Dragon32: PES pages reports a conflict with Yacoby's Pursuit Enhanced (q.v.), the readme for that implies no conflict with its latest version.
+[Conflict]
+ Arcimaestro Antares's "Go To Jail" conflicts with Aerelorn's "Less Annoying Guards" and Gianluca Sabbatini's "GS_Tamriel: Tribute to the Community"
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5409 )
+[ANY Go To Jail 3.7 - NOM.esp
+     Go To Jail 3.7.esp]
+[ANY GS_Tamriel Tribute to The Comunity.esm
+     Less Annoying Guards - Tribunal.esp
+     Less Annoying Guards - Bloodmoon.esp
+     Less Annoying Guards - Tribunal and Bloodmoon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10960,6 +10902,26 @@ SnakeBitten Island - Alpha.esp
 GS_Tamriel Tribute to The Comunity.esm
 Wizards Islands - Scourge of the Frost Bringer.esm
 
+[Conflict]
+ Both Gianluca Sabbatini's "GS_Tamriel Part 1: Black Marsh" and "GS_Black Marsh_Companions" are included in his "GS_Tamriel: Tribute to the Community"
+ (Ref: "GS Tamriel Complete.doc")
+GS_Tamriel Tribute to The Comunity.esm
+[ANY GS_Tamriel Part1_Black Marsh.esp
+     Clean GS_Black Marsh_Companions.esp]
+
+;;Dragon32: See Tamriel Rebuilt section for Conflict information
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @GS_Tamriel: Tribute to the Community add-on - Cyrodiil Merchants [Gianluca Sabbatini]
+
+;;Dragon32: ESM dependency not in file header
+
+[Requires]
+ (Ref: "Cyrodiil Merchants read me.doc")
+Cyrodiil Merchants.esp
+GS_Tamriel Tribute to The Comunity.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Guar Followers Fix v1.10 [TheOne&Only]
@@ -11060,7 +11022,8 @@ Silgrad_Tower_internal_build_1-4_3.esp
  landmass conflict.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Havish.esm
-silgrad_tower_internal_release_1-4_6.6.esp
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
 
 [Conflict]
  morrowind4fish conflicts with Havish:
@@ -12689,15 +12652,37 @@ Sris_Alchemy.esp			; from Sri's Homeopathic Alchemy (not Sri's Alchemy, Bloodmoo
 
 [Requires]
  "Requires the Wilderness Mod to run."
+ To use the latest version of The Puma Man's "Wilderness Mod" see Tiaganna's update:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4765
  (Ref: "JOURNEY'S END_1.1_README.txt")
 Journey's End- Wilderness Mod add-on.esp
-The Wilderness Mod 2.0 T & B.esm
+Wilderness Mod.esm
 
 [Requires]
  "Requires House of Mannequins mod to run."
  (Ref: "JOURNEY'S END_1.1_README.txt")
 Journey's End- HOM add-on.esp
 House of Mannequins v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Updated Journey's End Wilderness Add-On [Lochnarus, Tiaganna]
+
+[Requires]
+ Tiaganna's "Updated Journey's End Wilderness Add-On" requires abot's "Water Life" and the latest version of The Puma Man's "Wilderness Mod"
+Journeys_End_Wilderness_Mod_addon_140.esp
+[ALL Journey's End 1.1.esp
+     The Wilderness Mod 2.0 T & B.esm
+     abotWaterLife.esm]
+
+[Conflict]
+ Tiaganna's "Updated Journey's End Wilderness Add-On" replaces Lochnarus' original add-on.
+Journeys_End_Wilderness_Mod_addon_140.esp
+Journey's End- Wilderness Mod add-on.esp
+
+[Order]
+Journey's End 1.1.esp
+Journeys_End_Wilderness_Mod_addon_140.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13709,16 +13694,14 @@ LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
-;Dragon32: Unsure if this works with v6.x of MCA
+;Dragon32: Unsure if this works with v6.x or v7.x of MCA
 [Patch]
  "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
  (Ref: "LGNPC_SecretMasters_Readme.txt")
 LGNPC_SecretMasters_MCA5.esp
 [ALL LGNPC_SecretMasters_v?_??.esp
-     [ANY [SIZE 2303212 MCA.ESM]
-          [SIZE 2458536 MCA.ESM]
-          [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]]
+     [ANY [DESC /over 1000 friendly/ MCA.ESM]
+          [DESC /over 1200 friendly/ MCA.ESM]]]
 
 ;; expdep
 [Requires]
@@ -14609,10 +14592,8 @@ Marandus Abode.esp
 [SIZE 101439 Marandus Abode MCA Patch.esp]
 [ALL [ANY Bloodmoon.esm
           Tribunal.esm]
-     [ANY [SIZE 2303212 MCA.ESM]
-          [SIZE 2458536 MCA.ESM]
-          [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]]
+     [ANY [DESC /over 1000 friendly/ MCA.ESM]
+          [DESC /over 1200 friendly/ MCA.ESM]]]
 
 [Conflict]
  Use only one plugin, "Marandus Abode MCA Patch.esp" is an alternative plugin for users of "Morrowind Comes Alive" by Neoptolemus.
@@ -19863,8 +19844,7 @@ Clean Redesigned Vivec - MCA patch.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
      Morrowind.esm
-     [ANY [SIZE 2707833 MCA.esm]
-          [SIZE 2519851 MCA.esm]]] ;The Undead-compatible version
+     [DESC /over 1200 friendly/ MCA.ESM]]
 
 [Requires]
  Jac's "Redesigned Vivec/Children of Morrowind Patch" requires both expansions and v2.0 of Emma's "Children of Morrowind"
@@ -19888,8 +19868,7 @@ Clean Redesigned Vivec - com_mca patch.esp
      Tribunal.esm
      Morrowind.esm
      [SIZE 1683326 MW_Children_1_0.esm]
-     [ANY [SIZE 2707833 MCA.esm]
-          [SIZE 2519851 MCA.esm]]] ;The Undead-compatible version]
+     [DESC /over 1200 friendly/ MCA.ESM]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21578,8 +21557,7 @@ WA_SoulGems(!).esp
  If you are using "Morrowind Comes Alive 5.2" by Neoptolemus then use the patch that rearranges MCA's additions to the South Wall Cornerclub
  (Ref: SWReadme.txt)
 SW_MCA5.2_Patch.esp
-[ALL [ANY [SIZE 2707833 MCA.ESM]
-          [SIZE 2519851 MCA.ESM]]
+[ALL [DESC /over 1200 friendly/ MCA.ESM]
      South Wall.ESP]
 
 ;; Dragon32: Whilst not specified in the readme it makes sense to load the patch after the main ESP
@@ -22538,67 +22516,102 @@ Tales of Tel Branora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @TR - Tamriel Rebuilt (Maps 1 and 2) [Tamriel Rebuilt team]
+;; @TR - Tamriel Rebuilt [Tamriel Rebuilt team]
 
 [Order]
 Bloodmoon.esm
 TR_Data.esm
-TR_Map1.esm
-TR_Map2.esm
+TR_Mainland.esm
+
 [Requires]
-TR_Map1.esm
+TR_Mainland.esm
 TR_Data.esm
 
-[Note]
- ! This is an older version of TR Map1. There is a newer version included in "Tamriel Rebuilt: Map 2 - Antediluvian Secrets", which fixes some bugs, including the dialog loop when joining the Thieves Guild via Sugar-Lips Habasi:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=276723&id=7040
-[SIZE 30000464 TR_Map1.esm]
-
-[Requires]
-TR_Map2.esm
-[ALL TR_Data.esm
+[Conflict]
+ Do not load Tamriel Rebuilt's old maps ("Map 1 - Telvannis" or "Map 2 - Antediluvian Secrets") with "TR_Mainland.esm", which contains all previously released Tamriel Rebuilt maps.
+TR_Mainland.esm
+[ANY TR_Map2.esm
      TR_Map1.esm]
 
 [Conflict]
  Landmass conflict.
- (Ref: TR_Map2_Readme.txt and
- http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg
- http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610
- http://forums.bethsoft.com/index.php?/topic/1098622-tamriel-rebuilt-script-error/ )
-TR_Map1.esm
-[ANY The Goblin Lab v1.1.esp
-     tusar_v1.2.1.esp
+ (Ref: "TR_SE_Readme.txt")
+TR_Mainland.esm
+[ANY Bloody Oath_v1.0.esp
+     Booty.esp				; Booty Island
+     BAR_DarkshroudKeep_v1.2.esp
      Clean hawkfir_island.esp
-     Korobal v1.2.esp
-     Tree_of_Life.esp
+     The Goblin Lab v1.1.esp
      Inferno's Island Revisited.esp
-     Wizards Islands - Scourge of the Frost Bringer.esm
-     Season of the Harvest v1.1.esp
-     N'Dib_5.esp]		; N'Dib's Twilight
+     Journey's End 1.1.esp
+     Korobal v1.2.esp
+     Moons_Spawn_V1.3.3_Non_Patched.esp
+     From Hell To Heaven.esm		; Morrowland
+     N'Dib_5.esp			; N'Dib's Twilight
+     SnakeBitten Island - Alpha.esp
+     Tree_of_Life.esp
+     tusar_v1.2.1.esp]			;Island of Tusar
+
+;; moved the TR/Blackmill conflict to the BlackMill section - JMS
+;;Dragon32: moved the TR/Wizards Islands conflict to the Wizards Island section
+
+;Dragon32: Verified in TESPCD
+[Conflict]
+ Gianluca Sabbatini's "GS_Tamriel Part 1: Black Marsh" mod has a landmass conflict with Tamriel Rebuilt.
+ http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg
+TR_Mainland.esm
+GS_Tamriel Part1_Black Marsh.esp
+
+;Dragon32: Verified in TESPCD
+[Conflict]
+ Gianluca Sabbatini's "GS_Tamriel: Tribute to the Community" includes his "GS_Tamriel Part 1: Black Marsh" mod, which has a landmass conflict with Tamriel Rebuilt.
+ http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg
+TR_Mainland.esm
+GS_Tamriel Tribute to The Comunity.esm
 
 [Conflict]
  Landmass conflict.
  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=925400&view=findpost&p=13558636
-TR_Map1.esm
+TR_Mainland.esm
 Beyond YsGramor v2.5.esm
 
 [Conflict]
- Landmass conflict.
- (Ref: TR_Map2_Readme.txt and
- http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg
- http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=875780&view=findpost&p=12892610 )
-TR_Map2.esm
-[ANY Moons_Spawn_V1.3.3_Non_Patched.esp
-     Booty.esp
-     From Hell To Heaven.esm		; Morrowland
-     Wizards Islands - Scourge of the Frost Bringer.esm]
-;; moved the TR/Blackmill conflict to the BlackMill section - JMS
+ Landmass conflict. Sorefoot Enterprises puts its "Sorefoot Basecamp" in the same cell as Firewatch.
+ http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=925400&view=findpost&p=13558636
+TR_Mainland.esm
+Sorefoot Enterprises, Inc. v1.5a.esp
 
 [Conflict]
- Landmass conflict. Sorefoot Enterprises puts it's "Sorefoot Basecamp" in the same cell as Firewatch.
- http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=925400&view=findpost&p=13558636
-TR_Map1.esm
-Sorefoot Enterprises, Inc. v1.5a.esp
+ Landmass conflict.
+ http://www.bethsoft.com/bgsforums/index.php?showtopic=1057546&st=0&p=15350660&#entry15350660
+TR_Mainland.esm
+The Zone (Tribunal).esp
+
+[Conflict]
+ Landmass conflict. MJY's "Roman City of Theopolis" uses the same cells as Tamriel Rebuilt's Tel Muthada.
+ http://forums.bethsoft.com/topic/1379566-relz-tamriel-rebuilt-sacred-east-10/page__view__findpost__p__20899639
+TR_Mainland.esm
+[ANY Clean Roman city v.4 expansion added #4.esp
+     Clean Roman city v.4 MORROWIND ONLY.esp]
+
+[Conflict]
+ Landmass conflict.
+ http://forums.bethsoft.com/topic/1379566-relz-tamriel-rebuilt-sacred-east-10/page__view__findpost__p__20903519
+TR_Mainland.esm
+Tel Scelestus.esp
+
+[Conflict]
+ Landmass conflict.
+ http://forums.bethsoft.com/topic/1098622-tamriel-rebuilt-script-error/page__view__findpost__p__16054878
+TR_Mainland.esm
+Private_Tower_Ordeal.esp
+
+[Conflict]
+ Landmass conflict. HonorableKoala's "Season of the Harvest" uses the same cells as Tamriel Rebuilt's Bal Oyra
+ http://forums.bethsoft.com/topic/1098622-tamriel-rebuilt-script-error/page__view__findpost__p__16055554
+TR_Mainland.esm
+Season of the Harvest v1.1.esp
+
 
 ;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
 ;[Conflict]
@@ -22606,12 +22619,6 @@ Sorefoot Enterprises, Inc. v1.5a.esp
 ; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1047679&view=findpost&p=15257619
 ;TR_Map1.esm
 ;Havish.esm
-
-[Conflict]
- Landmass conflict.
- http://www.bethsoft.com/bgsforums/index.php?showtopic=1057546&st=0&p=15350660&#entry15350660
-TR_Map1.esm
-The Zone (Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22834,8 +22841,7 @@ AEV_TCA.esp
 [ALL TR_Data.esm
      TR_Map1.esm
      TR_Map2.esm
-     [ANY [SIZE 2707833 MCA.esm]
-          [SIZE 2519851 MCA.esm]]] ; The Undead compatible version
+     [DESC /over 1200 friendly/ MCA.ESM]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22942,14 +22948,20 @@ BE-Callenwald.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Texture Fix - Tamriel Rebuilt [Slartibartfast]
 
-;;Dragon32: No dependencies in plugin header
-[Requires]
- "Texture Fix - Tamriel Rebuilt" requires "Tamriel Rebuilt" maps 1 and 2
- (Ref: Readme - Texture Fix- Tamriel Rebuilt.txt)
+[Note]
+ There is a new version of Slartibartfast's "Texture Fix - Tamriel Rebuilt" available for the Sacred East release of "Tamriel Rebuilt.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4728
 Texture Fix -TR -1.0.esp
+
+[Requires]
+ "Texture Fix - Tamriel Rebuilt" requires Tamriel Rebuilt's Sacred East release, which contains the first three maps
+Texture Fix -TR -2.0.esm
 [ALL TR_Data.esm
-     TR_Map1.esm
-     TR_Map2.esm]
+     TR_Mainland.esm]
+
+[Order]
+TR_Mainland.esm
+Texture Fix -TR -2.0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24048,8 +24060,7 @@ Unique Items.esp
  "Unofficial Morrowind Comes Alive - City Attack Patches" by businessman332211 requires "Morrowind Comes Alive" v5.2 by Neoptolemus.
 [ANY Unofficial Morrowind Comes Alive - City Attack Patch 1.ESP
      Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP]
-[ANY [SIZE 2707833 MCA.esm]
-     [SIZE 2519851 MCA.esm]]
+[DESC /over 1200 friendly/ MCA.ESM]
 
 [Conflict]
  Only use ONE plugin
@@ -27239,27 +27250,64 @@ Windows Glow - Raven Rock Eng.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Wizards Islands 1.05 - Scourge of the Frost Bringer [Various]
+;; @Wizards' Islands - Scourge of the Frost Bringer [Various]
 
-[Patch]
+;;Dragon32: Reporting Forum post has been purged. Verified with TESPCD.
+;;Dragon32: WI esm with SIZE of 14993627 is from "Wizards' Islands Super Patch v0.6" (q.v.)
+[Conflict]
+ Landmass conflict.
+ Danjb and others have created "Wizards' Islands Super Patch" which offers a version where "Both islands have been moved north to make the mod compatible with Tamriel Rebuilt."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9075
+TR_Mainland.esm
+[SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
+
+;;Dragon32: Version from Super Patch seems to work with Silgrad Tower too. At least no LAND conflicts in TESPCD.
+[Conflict]
+ Landmass conflict.
+ Danjb and others have created "Wizards' Islands Super Patch" which offers a version where "Both islands have been moved north to make the mod compatible with Tamriel Rebuilt." This appears to work with Silgrad Tower as well.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9075
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+Wizards Islands - Scourge of the Frost Bringer.esm
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+
+;;Dragon32: See Balmora Expanded section for conflict info.
+
+[Patch] 
+ Patch 1.05 for "Wizards Islands - Scourge of the Frost Bringer" is available.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2945
 Wizards_Islands_SotFB_Patch.esp
 Wizards Islands - Scourge of the Frost Bringer.esm
 
-[Conflict]
- (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
-Wizards Islands - Scourge of the Frost Bringer.esm
-Silgrad_Tower_internal_build_1-4_3.esp
+;;Dragon32: Some notes on addons for Wizards Islands:
 
-;Dragon32: Some notes on addons for Wizards Islands:
+;;Wizards’ Islands Walkthrough [Robin Irvin]
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 43206 WI Walkthru.esp]
 
+;;Unoffical Bloodmoon patch for Wizards' Islands - Scourge of the Frost Bringer [Zennorius]
 [Requires]
- No Bloodmoon dependency in plugin.
+ "Unoffical Bloodmoon patch for Wizards' Islands - Scourge of the Frost Bringer" by Zennorius requires that you have Bloodmoon.
+ (Ref: "Readme - WI_BM_Patch.htm")
 Wizards_Islands_BM_Patch.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wizards' Islands Super Patch v0.6 [Danjb and others]
+
+[Conflict]
+ "Wizards' Islands Super Patch v0.6" by Danjb and others includes:
+ - Wizards' Islands Patch by Wizards' Alliance
+ - Unoffical Bloodmoon patch for Wizards Islands by Zennorious
+ - Wizards Islands FPS fix by Gorkon
+Wizards' Islands Super Patch.esp
+[ANY Wizards_Islands_SotFB_Patch.esp
+     Wizards_Islands_BM_Patch.esp
+     Wizards_Islands_FPS_Fix.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @WizThis Face Pack version 1.3* (Final) [Wizthis]
