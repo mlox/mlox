@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 $::VERSION = "0.37p";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
-# Copyright 2010 by John Moonsugar
+# Copyright 2012 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
@@ -10,11 +10,24 @@ $::VERSION = "0.37p";
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
 # TBD:
+#% tes3cmd header --sync *.esp
+#Use of uninitialized value $plugin in lc at tes3cmd line 272.
+#Use of uninitialized value in -s at tes3cmd line 5302.
+#Use of uninitialized value $newlen in numeric ne (!=) at tes3cmd line 5302.
+#
+#research:
+#http://forums.bethsoft.com/topic/1184424-q-cleaning-mods-with-tespcd/page__hl__tes3cmd
+#
+#add ability to dump with things splitted out into individual files --output-folder
+#add: convertdeletedtodisabled command
+#add "report" function with csv/tab delimited output and format specifiers (plus --unused, etc)
+#dump needs to be able to show object type.
+#dump could highlight which skills a trainer trains in (top 3)
 # - check that re-dating of cleaned (synched?) plugins works correctly on XP.
 # maybe --exterior/--interior should imply "--type cell"?
 # DEBUG should print an info banner (tes3cmd version, OS version, Data Files dir, etc).
-# --instance-match should presume "--type cell"
-# MVRF(NAM8???) is also the start of an object instance in savegames.
+# --instance-match should presume "--type cell" (seems to work for delete but not dump, check all...)
+# MVRF(NAM8???) is also the start of an object instance in savegames.!!!
 # "recover" needs to detect overwritten length fields, perhaps by backing up 1 record to previous good record start, and scan from there
 # sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair (recapitate)
@@ -32,7 +45,11 @@ $::VERSION = "0.37p";
 # implement script compiler
 # # # # # # # # # # # # # # #
 # add new commands:
-# * "sos" (save our save) for doing a binary search for bad records/subrecords in a savegame
+# * "gen-res" (generate resources catalog cells) poop out an esp that displays matching objects in various cells:
+#      # put all mold cave static pieces in a test cell named "Mold Cave" and all guard NPCs in a cell named "Guards"
+#      # maybe also specify distance between objects in generated cell
+#      tes3cmd genres --resource "/Guards/npc_/class:guard/" --resource "/Mold Cave/stat/^in_mold/" --plugin my_resources.esp *.esm
+# * "sos" (save our save) or "bisect" for doing a binary search for bad records/subrecords in a savegame
 # * "buildcache" (build up all the cache files for cleaning, lookups, etc)
 # * "codec" (print text description of TES3 codec)
 # * "undo" (revert to last backups for modifying commands)
@@ -64,6 +81,7 @@ $::VERSION = "0.37p";
 # * check for use of position(cell) in INFO results!
 # * OVR-REC specials: PGRD.?
 # * check for use of == on floats in scripts! (gamehour)
+# * Check for accidental conversion of float to short (putting getsecondspassed into short truncates)
 # * duplicate records should also check for change in flags!
 
 BEGIN {
@@ -130,11 +148,7 @@ system less secure.
 END
 	}
     }
-    if (DBG) {
-	Carp::confess(qq{FATAL ERROR ($::CURRENT_PLUGIN): $msg$diagnosis\n"});
-    } else {
-	Carp::croak(qq{FATAL ERROR ($::CURRENT_PLUGIN): $msg$diagnosis\n"});
-    }
+    Carp::confess(qq{FATAL ERROR ($::CURRENT_PLUGIN): $msg$diagnosis\n"});
 }
 
 # return a dictionary of all the files found in the given directory.
@@ -302,337 +316,340 @@ sub load_order {
 
 ### END OF TES3::Util
 
-### CLASS: TES3::Record
+### CLASS: TES3
 
-package TES3::Record;
+package TES3;
 
-BEGIN {
-    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
-    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
-    use constant WRAP => grep(/^-?-wrap$/, @ARGV);
-    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
-    Util->import(qw(abort assert dbg err msg prn));
-}
-use Text::Wrap qw(wrap);
-use Data::Dumper;
-use strict;
-
-use constant { COPY_HEADER => 1 };
-
-our $CODEC_VERSION = "0.2";
 our $HDR_AUTH_LENGTH = 32;
 our $HDR_DESC_LENGTH = 256;
-our $MARGIN = "  ";
-our $GROUPMARGIN = " *";
-our $CURRENT_DIAL;
-our %FACTION_INDEX;
-our $FACT_I = 0;
-our %FACTION_RANK;
-our %RECTYPES;
 
 ### SYMBOLIC NAMES FOR FIELD VALUES
 
-my %AIDT_FLAGS = ("weapon" => 0x00001,
-		  "armor" => 0x00002,
-		  "clothing" => 0x00004,
-		  "books" => 0x00008,
-		  "ingredient" => 0x00010,
-		  "picks" => 0x00020,
-		  "probes" => 0x00040,
-		  "lights" => 0x00080,
-		  "apparatus" => 0x00100,
-		  "repair" => 0x00200,
-		  "misc" => 0x00400,
-		  "spells" => 0x00800,
-		  "magic_items" => 0x01000,
-		  "potions" => 0x02000,
-		  "training" => 0x04000,
-		  "spellmaking" => 0x08000,
-		  "enchanting" => 0x10000,
-		  "repair_item" => 0x20000);
+our %AIDT_FLAGS =
+    ("weapon" => 0x00001,
+     "armor" => 0x00002,
+     "clothing" => 0x00004,
+     "books" => 0x00008,
+     "ingredient" => 0x00010,
+     "picks" => 0x00020,
+     "probes" => 0x00040,
+     "lights" => 0x00080,
+     "apparatus" => 0x00100,
+     "repair" => 0x00200,
+     "misc" => 0x00400,
+     "spells" => 0x00800,
+     "magic_items" => 0x01000,
+     "potions" => 0x02000,
+     "training" => 0x04000,
+     "spellmaking" => 0x08000,
+     "enchanting" => 0x10000,
+     "repair_item" => 0x20000);
 
-my %APPARATUS_TYPE = (0 => "Mortar_and_Pestle",
-		      1 => "Alembic",
-		      2 => "Calcinator",
-		      3 => "Retort");
+our %APPARATUS_TYPE =
+    (0 => "Mortar_and_Pestle",
+     1 => "Alembic",
+     2 => "Calcinator",
+     3 => "Retort");
 
-my %ARMOR_INDEX = (0 => "Head",
-		   1 => "Hair",
-		   2 => "Neck",
-		   3 => "Cuirass",
-		   4 => "Groin",
-		   5 => "Skirt",
-		   6 => "Right_Hand",
-		   7 => "Left_Hand",
-		   8 => "Right_Wrist",
-		   9 => "Left_Wrist",
-		   10 => "Shield",
-		   11 => "Right_Forearm",
-		   12 => "Left_Forearm",
-		   13 => "Right_Upper_Arm",
-		   14 => "Left_Upper_Arm",
-		   15 => "Right_Foot",
-		   16 => "Left_Foot",
-		   17 => "Right_Ankle",
-		   18 => "Left_Ankle",
-		   19 => "Right_Knee",
-		   20 => "Left_Knee",
-		   21 => "Right_Upper_Leg",
-		   22 => "Left_Upper_Leg",
-		   23 => "Right_Pauldron",
-		   24 => "Left_Pauldron",
-		   25 => "Weapon",
-		   26 => "Tail");
+our %ARMOR_INDEX =
+    (0 => "Head",
+     1 => "Hair",
+     2 => "Neck",
+     3 => "Cuirass",
+     4 => "Groin",
+     5 => "Skirt",
+     6 => "Right_Hand",
+     7 => "Left_Hand",
+     8 => "Right_Wrist",
+     9 => "Left_Wrist",
+     10 => "Shield",
+     11 => "Right_Forearm",
+     12 => "Left_Forearm",
+     13 => "Right_Upper_Arm",
+     14 => "Left_Upper_Arm",
+     15 => "Right_Foot",
+     16 => "Left_Foot",
+     17 => "Right_Ankle",
+     18 => "Left_Ankle",
+     19 => "Right_Knee",
+     20 => "Left_Knee",
+     21 => "Right_Upper_Leg",
+     22 => "Left_Upper_Leg",
+     23 => "Right_Pauldron",
+     24 => "Left_Pauldron",
+     25 => "Weapon",
+     26 => "Tail");
 
-my %ARMOR_TYPE = (0 => "Helmet",
-		  1 => "Cuirass",
-		  2 => "Left_Pauldron",
-		  3 => "Right_Pauldron",
-		  4 => "Greaves",
-		  5 => "Boots",
-		  6 => "Left_Gauntlet",
-		  7 => "Right_Gauntlet",
-		  8 => "Shield",
-		  9 => "Left_Bracer",
-		  10 => "Right_Bracer");
+our %ARMOR_TYPE =
+    (0 => "Helmet",
+     1 => "Cuirass",
+     2 => "Left_Pauldron",
+     3 => "Right_Pauldron",
+     4 => "Greaves",
+     5 => "Boots",
+     6 => "Left_Gauntlet",
+     7 => "Right_Gauntlet",
+     8 => "Shield",
+     9 => "Left_Bracer",
+     10 => "Right_Bracer");
 
-my %ATTRIBUTE = (-1 => "None",
-		 0 => "Strength",
-		 1 => "Intelligence",
-		 2 => "Willpower",
-		 3 => "Agility",
-		 4 => "Speed",
-		 5 => "Endurance",
-		 6 => "Personality",
-		 7 => "Luck");
+our %ATTRIBUTE =
+    (-1 => "None",
+     0 => "Strength",
+     1 => "Intelligence",
+     2 => "Willpower",
+     3 => "Agility",
+     4 => "Speed",
+     5 => "Endurance",
+     6 => "Personality",
+     7 => "Luck");
 
-my %AUTOCALC_FLAGS = ("weapon" => 0x00001,
-		      "armor" => 0x00002,
-		      "clothing" => 0x00004,
-		      "books" => 0x00008,
-		      "ingredient" => 0x00010,
-		      "picks" => 0x00020,
-		      "probes" => 0x00040,
-		      "lights" => 0x00080,
-		      "apparatus" => 0x00100,
-		      "repair" => 0x00200,
-		      "misc" => 0x00400,
-		      "spells" => 0x00800,
-		      "magic_items" => 0x01000,
-		      "potions" => 0x02000,
-		      "training" => 0x04000,
-		      "spellmaking" => 0x08000,
-		      "enchanting" => 0x10000,
-		      "repair_item" => 0x20000);
+our %AUTOCALC_FLAGS =
+    ("weapon" => 0x00001,
+     "armor" => 0x00002,
+     "clothing" => 0x00004,
+     "books" => 0x00008,
+     "ingredient" => 0x00010,
+     "picks" => 0x00020,
+     "probes" => 0x00040,
+     "lights" => 0x00080,
+     "apparatus" => 0x00100,
+     "repair" => 0x00200,
+     "misc" => 0x00400,
+     "spells" => 0x00800,
+     "magic_items" => 0x01000,
+     "potions" => 0x02000,
+     "training" => 0x04000,
+     "spellmaking" => 0x08000,
+     "enchanting" => 0x10000,
+     "repair_item" => 0x20000);
 
-my %BIPED_OBJECT = (0 => "Head",
-		   1 => "Hair",
-		   2 => "Neck",
-		   3 => "Chest",
-		   4 => "Groin",
-		   5 => "Skirt",
-		   6 => "Right_Hand",
-		   7 => "Left_Hand",
-		   8 => "Right_Wrist",
-		   9 => "Left_Wrist",
-		   10 => "Shield",
-		   11 => "Right_Forearm",
-		   12 => "Left_Forearm",
-		   13 => "Right_Upper_Arm",
-		   14 => "Left_Upper_Arm",
-		   15 => "Right_Foot",
-		   16 => "Left_Foot",
-		   17 => "Right_Ankle",
-		   18 => "Left_Ankle",
-		   19 => "Right_Knee",
-		   20 => "Left_Knee",
-		   21 => "Right_Upper_Leg",
-		   22 => "Left_Upper_Leg",
-		   23 => "Right_Pauldron",
-		   24 => "Left_Pauldron",
-		   25 => "Weapon",
-		   26 => "Tail");
+our %BIPED_OBJECT =
+    (0 => "Head",
+     1 => "Hair",
+     2 => "Neck",
+     3 => "Chest",
+     4 => "Groin",
+     5 => "Skirt",
+     6 => "Right_Hand",
+     7 => "Left_Hand",
+     8 => "Right_Wrist",
+     9 => "Left_Wrist",
+     10 => "Shield",
+     11 => "Right_Forearm",
+     12 => "Left_Forearm",
+     13 => "Right_Upper_Arm",
+     14 => "Left_Upper_Arm",
+     15 => "Right_Foot",
+     16 => "Left_Foot",
+     17 => "Right_Ankle",
+     18 => "Left_Ankle",
+     19 => "Right_Knee",
+     20 => "Left_Knee",
+     21 => "Right_Upper_Leg",
+     22 => "Left_Upper_Leg",
+     23 => "Right_Pauldron",
+     24 => "Left_Pauldron",
+     25 => "Weapon",
+     26 => "Tail");
 
-my %BYDT_PART = ('0' => "Head",
-		 '1' => "Hair",
-		 '2' => "Neck",
-		 '3' => "Chest",
-		 '4' => "Groin",
-		 '5' => "Hand",
-		 '6' => "Wrist",
-		 '7' => "Forearm",
-		 '8' => "Upperarm",
-		 '9' => "Foot",
-		 '10' => "Ankle",
-		 '11' => "Knee",
-		 '12' => "Upperleg",
-		 '13' => "Clavicle",
-		 '14' => "Tail");
+our %BYDT_PART =
+    ('0' => "Head",
+     '1' => "Hair",
+     '2' => "Neck",
+     '3' => "Chest",
+     '4' => "Groin",
+     '5' => "Hand",
+     '6' => "Wrist",
+     '7' => "Forearm",
+     '8' => "Upperarm",
+     '9' => "Foot",
+     '10' => "Ankle",
+     '11' => "Knee",
+     '12' => "Upperleg",
+     '13' => "Clavicle",
+     '14' => "Tail");
 
-my %BYDT_FLAGS = (Playable => 0, Female => 1, Not_Playable => 2);
+our %BYDT_FLAGS = (Playable => 0, Female => 1, Not_Playable => 2);
 
-my %BYDT_PTYP = ('0' => "Skin", "1" => "Clothing", "2" => "Armor");
+our %BYDT_PTYP = ('0' => "Skin", "1" => "Clothing", "2" => "Armor");
 
-my %BYDT_SKIN_TYPE = ('0' => "Normal", "1" => "Vampire");
+our %BYDT_SKIN_TYPE = ('0' => "Normal", "1" => "Vampire");
 
-my %CELL_FLAGS = ("has_water" => 0x02,
-		  "illegal_to_sleep_here" => 0x04,
-		  "behave_like_exterior" => 0x80);
+our %CELL_FLAGS =
+    (# "interior" => 0x01, # JMS - we print interior/exterior elsewise
+     "has_water" => 0x02,
+     "illegal_to_sleep_here" => 0x04,
+     "behave_like_exterior" => 0x80);
 
-my %CONTAINER_FLAGS = ("Organic" => 0x0001,
-		       "Respawns" => 0x0002,
-		       "Default" => 0x0008);
+our %CONTAINER_FLAGS =
+    ("Organic" => 0x0001,
+     "Respawns" => 0x0002,
+     "Default" => 0x0008);
 
-my %CREATURE_MOVEMENT_FLAGS =
+our %CREATURE_MOVEMENT_FLAGS =
     ("biped" => 0x0001,
      "movement:none"  => 0x0008,
      "swims" => 0x0010,
      "flies" => 0x0020,
      "walks" => 0x0040);
 
-my %CREATURE_BLOOD_FLAGS =
+our %CREATURE_BLOOD_FLAGS =
     ("red_blood"         => 0x0000,
      "skeleton_blood"    => 0x0400,
      "metal_blood"       => 0x0800);
 
-my %CREATURE_FLAGS =
+our %CREATURE_FLAGS =
     ("respawn"           => 0x0002,
      "weapon_and_shield" => 0x0004,
      "essential"         => 0x0080);
 
-my %CREA_TYPE = ( 0 => 'Creature', 1 => 'Daedra', 2 => 'Undead', 3 => 'Humanoid' );
+our %CREA_TYPE =
+    ( 0 => 'Creature',
+      1 => 'Daedra',
+      2 => 'Undead',
+      3 => 'Humanoid' );
 
-my %CTDT_TYPE = (0 => "Pants",
-		 1 => "Shoes",
-		 2 => "Shirt",
-		 3 => "Belt",
-		 4 => "Robe",
-		 5 => "Right_Glove",
-		 6 => "Left_Glove",
-		 7 => "Skirt",
-		 8 => "Ring",
-		 9 => "Amulet");
+our %CTDT_TYPE =
+    (0 => "Pants",
+     1 => "Shoes",
+     2 => "Shirt",
+     3 => "Belt",
+     4 => "Robe",
+     5 => "Right_Glove",
+     6 => "Left_Glove",
+     7 => "Skirt",
+     8 => "Ring",
+     9 => "Amulet");
 
-my %DIAL_TYPE = (0 => "Topic",
-		 1 => "Voice",
-		 2 => "Greeting",
-		 3 => "Persuasion",
-		 4 => "Journal");
+our %DIAL_TYPE =
+    (0 => "Topic",
+     1 => "Voice",
+     2 => "Greeting",
+     3 => "Persuasion",
+     4 => "Journal");
 
-my %ENCHANT_TYPE = (0 => "Cast_Once",
-		    1 => "Cast_on_Strike",
-		    2 => "Cast_when_Used",
-		    3 => "Constant_Effect");
+our %ENCHANT_TYPE =
+    (0 => "Cast_Once",
+     1 => "Cast_on_Strike",
+     2 => "Cast_when_Used",
+     3 => "Constant_Effect");
 
 # Very odd, this, we do see all 4 values, but only the one bit is significant
-my %ENDT_AUTO = (-2 => "No",
-		 -1 => "Yes",
-		 0 => "No",
-		 1 => "Yes");
+our %ENDT_AUTO =
+    (-2 => "No",
+     -1 => "Yes",
+     0 => "No",
+     1 => "Yes");
 
-my %FACT_FLAGS = ("hidden_from_player" => 0x1);
+our %FACT_FLAGS =
+    ("hidden_from_player" => 0x1);
 
-my %GLOBAL_TYPE = (s => 'Short', f => 'Float', l => 'Long');
+our %GLOBAL_TYPE =
+    (s => 'Short',
+     f => 'Float',
+     l => 'Long');
 
-my %INFO_FUN = ('00' => "Reaction_Low",
-		'01' => "Reaction_High",
-		'02' => "Rank_Requirement",
-		'03' => "Reputation",
-		'04' => "Health_Percent",
-		'05' => "PC_Reputation",
-		'06' => "PC_Level",
-		'07' => "PC_Health_Percent",
-		'08' => "PC_Magicka",
-		'09' => "PC_Fatigue",
+our %INFO_FUN =
+    ('00' => "Reaction_Low",
+     '01' => "Reaction_High",
+     '02' => "Rank_Requirement",
+     '03' => "Reputation",
+     '04' => "Health_Percent",
+     '05' => "PC_Reputation",
+     '06' => "PC_Level",
+     '07' => "PC_Health_Percent",
+     '08' => "PC_Magicka",
+     '09' => "PC_Fatigue",
 
-		'10' => "PC_Strength",
-		'11' => "PC_Block",
-		'12' => "PC_Armorer",
-		'13' => "PC_Medium_Armor",
-		'14' => "PC_Heavy_Armor",
-		'15' => "PC_Blunt_Weapon",
-		'16' => "PC_Long_Blade",
-		'17' => "PC_Axe",
-		'18' => "PC_Spear",
-		'19' => "PC_Athletics",
+     '10' => "PC_Strength",
+     '11' => "PC_Block",
+     '12' => "PC_Armorer",
+     '13' => "PC_Medium_Armor",
+     '14' => "PC_Heavy_Armor",
+     '15' => "PC_Blunt_Weapon",
+     '16' => "PC_Long_Blade",
+     '17' => "PC_Axe",
+     '18' => "PC_Spear",
+     '19' => "PC_Athletics",
 
-		'20' => "PC_Enchant",
-		'21' => "PC_Destruction",
-		'22' => "PC_Alteration",
-		'23' => "PC_Illusion",
-		'24' => "PC_Conjuration",
-		'25' => "PC_Mysticism",
-		'26' => "PC_Restoration",
-		'27' => "PC_Alchemy",
-		'28' => "PC_Unarmored",
-		'29' => "PC_Security",
+     '20' => "PC_Enchant",
+     '21' => "PC_Destruction",
+     '22' => "PC_Alteration",
+     '23' => "PC_Illusion",
+     '24' => "PC_Conjuration",
+     '25' => "PC_Mysticism",
+     '26' => "PC_Restoration",
+     '27' => "PC_Alchemy",
+     '28' => "PC_Unarmored",
+     '29' => "PC_Security",
 
-		'30' => "PC_Sneak",
-		'31' => "PC_Acrobatics",
-		'32' => "PC_Light_Armor",
-		'33' => "PC_Short_Blade",
-		'34' => "PC_Marksman",
-		'35' => "PC_Mercantile",
-		'36' => "PC_Speechcraft",
-		'37' => "PC_Hand_To_Hand",
-		'38' => "PC_Sex",
-		'39' => "PC_Expelled",
+     '30' => "PC_Sneak",
+     '31' => "PC_Acrobatics",
+     '32' => "PC_Light_Armor",
+     '33' => "PC_Short_Blade",
+     '34' => "PC_Marksman",
+     '35' => "PC_Mercantile",
+     '36' => "PC_Speechcraft",
+     '37' => "PC_Hand_To_Hand",
+     '38' => "PC_Sex",
+     '39' => "PC_Expelled",
 
-		'40' => "PC_Common_Disease",
-		'41' => "PC_Blight_Disease",
-		'42' => "PC_Clothing_Modifier",
-		'43' => "PC_Crime_Level",
-		'44' => "Same_Sex",
-		'45' => "Same_Race",
-		'46' => "Same_Faction",
-		'47' => "Faction_Rank_Difference",
-		'48' => "Detected",
-		'49' => "Alarmed",
+     '40' => "PC_Common_Disease",
+     '41' => "PC_Blight_Disease",
+     '42' => "PC_Clothing_Modifier",
+     '43' => "PC_Crime_Level",
+     '44' => "Same_Sex",
+     '45' => "Same_Race",
+     '46' => "Same_Faction",
+     '47' => "Faction_Rank_Difference",
+     '48' => "Detected",
+     '49' => "Alarmed",
 
-		'50' => "Choice",
-		'51' => "PC_Intelligence",
-		'52' => "PC_Willpower",
-		'53' => "PC_Agility",
-		'54' => "PC_Speed",
-		'55' => "PC_Endurance",
-		'56' => "PC_Personality",
-		'57' => "PC_Luck",
-		'58' => "PC_Corprus",
-		'59' => "Weather",
+     '50' => "Choice",
+     '51' => "PC_Intelligence",
+     '52' => "PC_Willpower",
+     '53' => "PC_Agility",
+     '54' => "PC_Speed",
+     '55' => "PC_Endurance",
+     '56' => "PC_Personality",
+     '57' => "PC_Luck",
+     '58' => "PC_Corprus",
+     '59' => "Weather",
 
-		'60' => "PC_Vampire",
-		'61' => "Level",
-		'62' => "Attacked",
-		'63' => "Talked_To_PC",
-		'64' => "PC_Health",
-		'65' => "Creature_Target",
-		'66' => "Friend_Hit",
-		'67' => "Fight",
-		'68' => "Hello",
-		'69' => "Alarm",
+     '60' => "PC_Vampire",
+     '61' => "Level",
+     '62' => "Attacked",
+     '63' => "Talked_To_PC",
+     '64' => "PC_Health",
+     '65' => "Creature_Target",
+     '66' => "Friend_Hit",
+     '67' => "Fight",
+     '68' => "Hello",
+     '69' => "Alarm",
 
-		'70' => "Flee",
-		'71' => "Should_Attack",
-		'72' => "Werewolf",
-		'73' => "Werewolf_Kills",
+     '70' => "Flee",
+     '71' => "Should_Attack",
+     '72' => "Werewolf",
+     '73' => "Werewolf_Kills",
 
-		'CX' => "Not_Class",
-		'DX' => "Dead_Type",
-		'FX' => "Not_Faction",
-		'IX' => "Item_Type",
-		'JX' => "Journal_Type",
-		'LX' => "Not_Cell",
-		'RX' => "Not_Race",
-		'XX' => "Not_ID_Type",
-		'fX' => "Global",
-		'lX' => "PCGold",
-		'2X' => "Compare_Global",
-		'3X' => "Compare_Local",
-		'sX' => "Variable_Compare",
-		'  ' => "\n\tERROR: Corrupted INFO! - did you edit with MWEdit? Try resaving with the Construction Set\n\t",
-	       );
+     'CX' => "Not_Class",
+     'DX' => "Dead_Type",
+     'FX' => "Not_Faction",
+     'IX' => "Item_Type",
+     'JX' => "Journal_Type",
+     'LX' => "Not_Cell",
+     'RX' => "Not_Race",
+     'XX' => "Not_ID_Type",
+     'fX' => "Global",
+     'lX' => "PCGold",
+     '2X' => "Compare_Global",
+     '3X' => "Compare_Local",
+     'sX' => "Variable_Compare",
+     '  ' => "\n\tERROR: Corrupted INFO! - did you edit with MWEdit? Try resaving with the Construction Set\n\t",
+    );
 
-my %INFO_SCVR_CMP =
+our %INFO_SCVR_CMP =
     ('0' => '=',
      '1' => '!=',
      '2' => '>',
@@ -640,7 +657,7 @@ my %INFO_SCVR_CMP =
      '4' => '<',
      '5' => '<=');
 
-my %INFO_SCVR_TYPE =
+our %INFO_SCVR_TYPE =
     ('0' => "Nothing",
      '1' => "Function",
      '2' => "Global",
@@ -655,85 +672,104 @@ my %INFO_SCVR_TYPE =
      'B' => "Not_Cell",
      'C' => "Not_Local");
 
-my %LEVC_FLAGS = ("Calc_from_all_levels_<=_PC_level" => 1);
+our %LEVC_FLAGS =
+    ("Calc_from_all_levels_<=_PC_level" => 1);
 
-my %LEVI_FLAGS = ("Calc_from_all_levels_<=_PC_level" => 1,
-		  "Calc_for_each_item" => 2);
+our %LEVI_FLAGS =
+    ("Calc_from_all_levels_<=_PC_level" => 1,
+     "Calc_for_each_item" => 2);
 
-my %LHDT_FLAGS = ("dynamic" => 0x0001,
-		  "can_carry" => 0x0002,
-		  "negative" => 0x0004,
-		  "flicker" => 0x0008,
-		  "fire" => 0x0010,
-		  "off_default" => 0x0020,
-		  "flicker_slow" => 0x0040,
-		  "pulse" => 0x0080,
-		  "pulse_slow" => 0x0100);
+our %LHDT_FLAGS =
+    ("dynamic" => 0x0001,
+     "can_carry" => 0x0002,
+     "negative" => 0x0004,
+     "flicker" => 0x0008,
+     "fire" => 0x0010,
+     "off_default" => 0x0020,
+     "flicker_slow" => 0x0040,
+     "pulse" => 0x0080,
+     "pulse_slow" => 0x0100);
 
-my %MAGIC_SCHOOL = (0 => "Alteration",
-		    1 => "Conjuration",
-		    2 => "Destruction",
-		    3 => "Illusion",
-		    4 => "Mysticism",
-		    5 => "Restoration");
+our %MAGIC_SCHOOL =
+    (0 => "Alteration",
+     1 => "Conjuration",
+     2 => "Destruction",
+     3 => "Illusion",
+     4 => "Mysticism",
+     5 => "Restoration");
 
-my %MGEF_FLAGS = ("spellmaking" => 0x0200,
-		  "enchanting" => 0x0400,
-		  "negative" => 0x0800);
+our %MGEF_FLAGS =
+    ("spellmaking" => 0x0200,
+     "enchanting" => 0x0400,
+     "negative" => 0x0800);
 
-my %NPC_FLAGS = ("female" => 0x0001,
-		 "essential" => 0x0002,
-		 "respawn" => 0x0004,
-		 "autocalc" => 0x0010,
-		 "blood_skel" => 0x0400,
-		 "blood_metal" => 0x0800);
+our %NPC_FLAGS =
+    ("female" => 0x0001,
+     "essential" => 0x0002,
+     "respawn" => 0x0004,
+     #"FLAG-8" => 0x0008, #unused ???
+     "autocalc" => 0x0010,
+     "blood_skel" => 0x0400,
+     "blood_metal" => 0x0800);
 
-my %PLAYABLE = ( 0 => "Non-Playable", 1 => "Playable" );
+our %PLAYABLE =
+    ( 0 => "Non-Playable",
+      1 => "Playable" );
 
-my %RADT_FLAGS = ("playable" => 0x01,
-		  "beast_race" => 0x02);
+our %RADT_FLAGS =
+    ("playable" => 0x01,
+     "beast_race" => 0x02);
 
-my %RANGE_TYPE = (-1 => "None", 0 => "Self", 1 => "Touch", 2 => "Target");
+our %RANGE_TYPE =
+    (-1 => "None",
+     0 => "Self",
+     1 => "Touch",
+     2 => "Target");
 
-my %HDR_FLAGS = ("deleted"     => 0x0020,
-		 "persistent"  => 0x0400,
-		 "ignored"     => 0x1000,
-		 "blocked"     => 0x2000);
+our %HDR_FLAGS =
+    ("deleted"     => 0x0020,
+     "persistent"  => 0x0400,
+     "ignored"     => 0x1000,
+     "blocked"     => 0x2000);
 # for convenience, we alias each symbolic flag name to its first letter:
 $HDR_FLAGS{substr($_, 0, 1)} = $HDR_FLAGS{$_} foreach (keys %HDR_FLAGS);
 
-my %SEX = (-1 => "None", 0 => "Male", 1 => "Female");
+our %SEX =
+    (-1 => "None",
+     0 => "Male",
+     1 => "Female");
 
-my %SKILL = (-1 => "None",
-	     0 => "Block",
-	     1 => "Armorer",
-	     2 => "Medium_Armor",
-	     3 => "Heavy_Armor",
-	     4 => "Blunt_Weapon",
-	     5 => "Long_Blade",
-	     6 => "Axe",
-	     7 => "Spear",
-	     8 => "Athletics",
-	     9 => "Enchant",
-	     10 => "Destruction",
-	     11 => "Alteration",
-	     12 => "Illusion",
-	     13 => "Conjuration",
-	     14 => "Mysticism",
-	     15 => "Restoration",
-	     16 => "Alchemy",
-	     17 => "Unarmored",
-	     18 => "Security",
-	     19 => "Sneak",
-	     20 => "Acrobatics",
-	     21 => "Light_Armor",
-	     22 => "Short_Blade",
-	     23 => "Marksman",
-	     24 => "Mercantile",
-	     25 => "Speechcraft",
-	     26 => "Hand_To_Hand");
+our %SKILL =
+    (-1 => "None",
+     0 => "Block",
+     1 => "Armorer",
+     2 => "Medium_Armor",
+     3 => "Heavy_Armor",
+     4 => "Blunt_Weapon",
+     5 => "Long_Blade",
+     6 => "Axe",
+     7 => "Spear",
+     8 => "Athletics",
+     9 => "Enchant",
+     10 => "Destruction",
+     11 => "Alteration",
+     12 => "Illusion",
+     13 => "Conjuration",
+     14 => "Mysticism",
+     15 => "Restoration",
+     16 => "Alchemy",
+     17 => "Unarmored",
+     18 => "Security",
+     19 => "Sneak",
+     20 => "Acrobatics",
+     21 => "Light_Armor",
+     22 => "Short_Blade",
+     23 => "Marksman",
+     24 => "Mercantile",
+     25 => "Speechcraft",
+     26 => "Hand_To_Hand");
 
-my %SKILL_ACTIONS =
+our %SKILL_ACTIONS =
     (0 => [qw(Successful_Block)],		 # Block
      1 => [qw(Successful_Repair)],		 # Armorer
      2 => [qw(Hit_By_Opponent)],		 # Medium Armor
@@ -762,7 +798,7 @@ my %SKILL_ACTIONS =
      25 => [qw(Cuccessful_Persuasion Failed_Persuasion)], # Speechcraft
      26 => [qw(Successful_Attack)]);		 # Hand to Hand
 
-my %SNDG_DATA =
+our %SNDG_DATA =
     (0 => "Left_Foot",
      1 => "Right_Foot",
      2 => "Swim_Left",
@@ -772,186 +808,230 @@ my %SNDG_DATA =
      6 => "Scream",
      7 => "Land");
 
-my %SPECIALIZATION = (0 => "Combat", 1 => "Magic", 2 => "Stealth");
+our %SPECIALIZATION =
+    (0 => "Combat",
+     1 => "Magic",
+     2 => "Stealth");
 
-my %SPEL_FLAGS = ("autocalc" => 0x0001,
-		  "pc_start" => 0x0002,
-		  "always_succeeds" => 0x0004);
+our %SPEL_FLAGS =
+    ("autocalc" => 0x0001,
+     "pc_start" => 0x0002,
+     "always_succeeds" => 0x0004);
 
-my %SPEL_TYPE = (0 => "Spell",
-		 1 => "Ability",
-		 2 => "Blight",
-		 3 => "Disease",
-		 4 => "Curse",
-		 5 => "Power");
+our %SPEL_TYPE =
+    (0 => "Spell",
+     1 => "Ability",
+     2 => "Blight",
+     3 => "Disease",
+     4 => "Curse",
+     5 => "Power");
 
-my %SPELL_EFFECT = ('0' => "Water_Breathing",
-		    '1' => "Swift_Swim",
-		    '2' => "Water_Walking",
-		    '3' => "Shield",
-		    '4' => "Fire_Shield",
-		    '5' => "Lightning_Shield",
-		    '6' => "Frost_Shield",
-		    '7' => "Burden",
-		    '8' => "Feather",
-		    '9' => "Jump",
-		    '10' => "Levitate",
-		    '11' => "Slowfall",
-		    '12' => "Lock",
-		    '13' => "Open",
-		    '14' => "Fire_Damage",
-		    '15' => "Shock_Damage",
-		    '16' => "Frost_Damage",
-		    '17' => "Drain_Attribute",
-		    '18' => "Drain_Health",
-		    '19' => "Drain_Magicka",
-		    '20' => "Drain_Fatigue",
-		    '21' => "Drain_Skill",
-		    '22' => "Damage_Attribute",
-		    '23' => "Damage_Health",
-		    '24' => "Damage_Magicka",
-		    '25' => "Damage_Fatigue",
-		    '26' => "Damage_Skill",
-		    '27' => "Poison",
-		    '28' => "Weakness_to_Fire",
-		    '29' => "Weakness_to_Frost",
-		    '30' => "Weakness_to_Shock",
-		    '31' => "Weakness_to_Magicka",
-		    '32' => "Weakness_to_Common_Disease",
-		    '33' => "Weakness_to_Blight_Disease",
-		    '34' => "Weakness_to_Corprus_Disease",
-		    '35' => "Weakness_to_Poison",
-		    '36' => "Weakness_to_Normal_Weapons",
-		    '37' => "Disintegrate_Weapon",
-		    '38' => "Disintegrate_Armor",
-		    '39' => "Invisibility",
-		    '40' => "Chameleon",
-		    '41' => "Light",
-		    '42' => "Sanctuary",
-		    '43' => "Night_Eye",
-		    '44' => "Charm",
-		    '45' => "Paralyze",
-		    '46' => "Silence",
-		    '47' => "Blind",
-		    '48' => "Sound",
-		    '49' => "Calm_Humanoid",
-		    '50' => "Calm_Creature",
-		    '51' => "Frenzy_Humanoid",
-		    '52' => "Frenzy_Creature",
-		    '53' => "Demoralize_Humanoid",
-		    '54' => "Demoralize_Creature",
-		    '55' => "Rally_Humanoid",
-		    '56' => "Rally_Creature",
-		    '57' => "Dispel",
-		    '58' => "Soultrap",
-		    '59' => "Telekinesis",
-		    '60' => "Mark",
-		    '61' => "Recall",
-		    '62' => "Divine_Intervention",
-		    '63' => "Almsivi_Intervention",
-		    '64' => "Detect_Animal",
-		    '65' => "Detect_Enchantment",
-		    '66' => "Detect_Key",
-		    '67' => "Spell_Absorption",
-		    '68' => "Reflect",
-		    '69' => "Cure_Common_Disease",
-		    '70' => "Cure_Blight_Disease",
-		    '71' => "Cure_Corprus_Disease",
-		    '72' => "Cure_Poison",
-		    '73' => "Cure_Paralyzation",
-		    '74' => "Restore_Attribute",
-		    '75' => "Restore_Health",
-		    '76' => "Restore_Magicka",
-		    '77' => "Restore_Fatigue",
-		    '78' => "Restore_Skill",
-		    '79' => "Fortify_Attribute",
-		    '80' => "Fortify_Health",
-		    '81' => "Fortify_Magicka",
-		    '82' => "Fortify_Fatigue",
-		    '83' => "Fortify_Skill",
-		    '84' => "Fortify_Maximum_Magicka",
-		    '85' => "Absorb_Attribute",
-		    '86' => "Absorb_Health",
-		    '87' => "Absorb_Magicka",
-		    '88' => "Absorb_Fatigue",
-		    '89' => "Absorb_Skill",
-		    '90' => "Resist_Fire",
-		    '91' => "Resist_Frost",
-		    '92' => "Resist_Shock",
-		    '93' => "Resist_Magicka",
-		    '94' => "Resist_Common_Disease",
-		    '95' => "Resist_Blight_Disease",
-		    '96' => "Resist_Corprus_Disease",
-		    '97' => "Resist_Poison",
-		    '98' => "Resist_Normal_Weapons",
-		    '99' => "Resist_Paralysis",
-		    '100' => "Remove_Curse",
-		    '101' => "Turn_Undead",
-		    '102' => "Summon_Scamp",
-		    '103' => "Summon_Clannfear",
-		    '104' => "Summon_Daedroth",
-		    '105' => "Summon_Dremora",
-		    '106' => "Summon_Ancestral_Ghost",
-		    '107' => "Summon_Skeltal_Minion",
-		    '108' => "Summon_Bonewalker",
-		    '109' => "Summon_Greater_Bonewalker",
-		    '110' => "Summon_Bonelord",
-		    '111' => "Summon_Winged_Twilight",
-		    '112' => "Summon_Hunger",
-		    '113' => "Summon_Golden_Saint",
-		    '114' => "Summon_Flame_Atronach",
-		    '115' => "Summon_Frost_Atronach",
-		    '116' => "Summon_Storm_Atronach",
-		    '117' => "Fortify_Attack",
-		    '118' => "Command_Creature",
-		    '119' => "Command_Humanoid",
-		    '120' => "Bound_Dagger",
-		    '121' => "Bound_Longsword",
-		    '122' => "Bound_Mace",
-		    '123' => "Bound_Battle_Axe",
-		    '124' => "Bound_Spear",
-		    '125' => "Bound_Longbow",
-		    '126' => "EXTRA_SPELL",
-		    '127' => "Bound_Cuirass",
-		    '128' => "Bound_Helm",
-		    '129' => "Bound_Boots",
-		    '130' => "Bound_Shield",
-		    '131' => "Bound_Gloves",
-		    '132' => "Corprus",
-		    '133' => "Vampirism",
-		    '134' => "Summon_Centurion_Spider",
-		    '135' => "Sun_Damage",
-		    '136' => "Stunted_Magicka",
-		    '137' => "Summon_Fabricant",
-		    '138' => "Call_Wolf",
-		    '139' => "Call_Bear",
-		    '140' => "Summon_Bonewolf",
-		    '141' => "sEffectSummonCreature04",
-		    '142' => "sEffectSummonCreature05",
-		   );
+our %SPELL_EFFECT =
+    ('0' => "Water_Breathing",
+     '1' => "Swift_Swim",
+     '2' => "Water_Walking",
+     '3' => "Shield",
+     '4' => "Fire_Shield",
+     '5' => "Lightning_Shield",
+     '6' => "Frost_Shield",
+     '7' => "Burden",
+     '8' => "Feather",
+     '9' => "Jump",
+     '10' => "Levitate",
+     '11' => "Slowfall",
+     '12' => "Lock",
+     '13' => "Open",
+     '14' => "Fire_Damage",
+     '15' => "Shock_Damage",
+     '16' => "Frost_Damage",
+     '17' => "Drain_Attribute",
+     '18' => "Drain_Health",
+     '19' => "Drain_Magicka",
+     '20' => "Drain_Fatigue",
+     '21' => "Drain_Skill",
+     '22' => "Damage_Attribute",
+     '23' => "Damage_Health",
+     '24' => "Damage_Magicka",
+     '25' => "Damage_Fatigue",
+     '26' => "Damage_Skill",
+     '27' => "Poison",
+     '28' => "Weakness_to_Fire",
+     '29' => "Weakness_to_Frost",
+     '30' => "Weakness_to_Shock",
+     '31' => "Weakness_to_Magicka",
+     '32' => "Weakness_to_Common_Disease",
+     '33' => "Weakness_to_Blight_Disease",
+     '34' => "Weakness_to_Corprus_Disease",
+     '35' => "Weakness_to_Poison",
+     '36' => "Weakness_to_Normal_Weapons",
+     '37' => "Disintegrate_Weapon",
+     '38' => "Disintegrate_Armor",
+     '39' => "Invisibility",
+     '40' => "Chameleon",
+     '41' => "Light",
+     '42' => "Sanctuary",
+     '43' => "Night_Eye",
+     '44' => "Charm",
+     '45' => "Paralyze",
+     '46' => "Silence",
+     '47' => "Blind",
+     '48' => "Sound",
+     '49' => "Calm_Humanoid",
+     '50' => "Calm_Creature",
+     '51' => "Frenzy_Humanoid",
+     '52' => "Frenzy_Creature",
+     '53' => "Demoralize_Humanoid",
+     '54' => "Demoralize_Creature",
+     '55' => "Rally_Humanoid",
+     '56' => "Rally_Creature",
+     '57' => "Dispel",
+     '58' => "Soultrap",
+     '59' => "Telekinesis",
+     '60' => "Mark",
+     '61' => "Recall",
+     '62' => "Divine_Intervention",
+     '63' => "Almsivi_Intervention",
+     '64' => "Detect_Animal",
+     '65' => "Detect_Enchantment",
+     '66' => "Detect_Key",
+     '67' => "Spell_Absorption",
+     '68' => "Reflect",
+     '69' => "Cure_Common_Disease",
+     '70' => "Cure_Blight_Disease",
+     '71' => "Cure_Corprus_Disease",
+     '72' => "Cure_Poison",
+     '73' => "Cure_Paralyzation",
+     '74' => "Restore_Attribute",
+     '75' => "Restore_Health",
+     '76' => "Restore_Magicka",
+     '77' => "Restore_Fatigue",
+     '78' => "Restore_Skill",
+     '79' => "Fortify_Attribute",
+     '80' => "Fortify_Health",
+     '81' => "Fortify_Magicka",
+     '82' => "Fortify_Fatigue",
+     '83' => "Fortify_Skill",
+     '84' => "Fortify_Maximum_Magicka",
+     '85' => "Absorb_Attribute",
+     '86' => "Absorb_Health",
+     '87' => "Absorb_Magicka",
+     '88' => "Absorb_Fatigue",
+     '89' => "Absorb_Skill",
+     '90' => "Resist_Fire",
+     '91' => "Resist_Frost",
+     '92' => "Resist_Shock",
+     '93' => "Resist_Magicka",
+     '94' => "Resist_Common_Disease",
+     '95' => "Resist_Blight_Disease",
+     '96' => "Resist_Corprus_Disease",
+     '97' => "Resist_Poison",
+     '98' => "Resist_Normal_Weapons",
+     '99' => "Resist_Paralysis",
+     '100' => "Remove_Curse",
+     '101' => "Turn_Undead",
+     '102' => "Summon_Scamp",
+     '103' => "Summon_Clannfear",
+     '104' => "Summon_Daedroth",
+     '105' => "Summon_Dremora",
+     '106' => "Summon_Ancestral_Ghost",
+     '107' => "Summon_Skeltal_Minion",
+     '108' => "Summon_Bonewalker",
+     '109' => "Summon_Greater_Bonewalker",
+     '110' => "Summon_Bonelord",
+     '111' => "Summon_Winged_Twilight",
+     '112' => "Summon_Hunger",
+     '113' => "Summon_Golden_Saint",
+     '114' => "Summon_Flame_Atronach",
+     '115' => "Summon_Frost_Atronach",
+     '116' => "Summon_Storm_Atronach",
+     '117' => "Fortify_Attack",
+     '118' => "Command_Creature",
+     '119' => "Command_Humanoid",
+     '120' => "Bound_Dagger",
+     '121' => "Bound_Longsword",
+     '122' => "Bound_Mace",
+     '123' => "Bound_Battle_Axe",
+     '124' => "Bound_Spear",
+     '125' => "Bound_Longbow",
+     '126' => "EXTRA_SPELL",
+     '127' => "Bound_Cuirass",
+     '128' => "Bound_Helm",
+     '129' => "Bound_Boots",
+     '130' => "Bound_Shield",
+     '131' => "Bound_Gloves",
+     '132' => "Corprus",
+     '133' => "Vampirism",
+     '134' => "Summon_Centurion_Spider",
+     '135' => "Sun_Damage",
+     '136' => "Stunted_Magicka",
+     '137' => "Summon_Fabricant",
+     '138' => "Call_Wolf",
+     '139' => "Call_Bear",
+     '140' => "Summon_Bonewolf",
+     '141' => "sEffectSummonCreature04",
+     '142' => "sEffectSummonCreature05",
+    );
 
-my %SPLM_TYPE = (1 => "Spell", 2 => "Enchantment");
+our %SPLM_TYPE =
+    (1 => "Spell",
+     2 => "Enchantment");
 
-my %TRUTH = ( 0 => "False", 1 => "True");
+our %TRUTH =
+    ( 0 => "False",
+      1 => "True");
 
-my %WEAPON_FLAGS = ("[ignores_normal_weapon_resistance]" => 1);
+our %WEAPON_FLAGS =
+    ("[ignores_normal_weapon_resistance]" => 1);
 
-my %WEAPON_TYPE = (0 => "ShortBladeOneHand",
-		   1 => "LongBladeOneHand",
-		   2 => "LongBladeTwoClose",
-		   3 => "BluntOneHand",
-		   4 => "BluntTwoClose",
-		   5 => "BluntTwoWide",
-		   6 => "SpearTwoWide",
-		   7 => "AxeOneHand",
-		   8 => "AxeTwoHand",
-		   9 => "MarksmanBow",
-		   10 => "MarksmanCrossbow",
-		   11 => "MarksmanThrown",
-		   12 => "Arrow",
-		   13 => "Bolt");
+our %WEAPON_TYPE =
+    (0 => "ShortBladeOneHand",
+     1 => "LongBladeOneHand",
+     2 => "LongBladeTwoClose",
+     3 => "BluntOneHand",
+     4 => "BluntTwoClose",
+     5 => "BluntTwoWide",
+     6 => "SpearTwoWide",
+     7 => "AxeOneHand",
+     8 => "AxeTwoHand",
+     9 => "MarksmanBow",
+     10 => "MarksmanCrossbow",
+     11 => "MarksmanThrown",
+     12 => "Arrow",
+     13 => "Bolt");
 
-my %YESNO = ( 0 => "No", 1 => "Yes");
+our %YESNO =
+    ( 0 => "No",
+      1 => "Yes");
+
+### END OF TES3
+
+
+### CLASS: TES3::Record
+
+package TES3::Record;
+
+BEGIN {
+    use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
+    use constant ASSERT => grep(/^-?-assert$/, @ARGV);
+    use constant WRAP => grep(/^-?-wrap$/, @ARGV);
+    use constant VERBOSE => (DBG or grep(/^(?:-v|-?-verbose)$/, @ARGV)); # debug turns on verbosity
+    Util->import(qw(abort assert dbg err msg prn));
+}
+use Text::Wrap qw(wrap);
+use Data::Dumper;
+use strict;
+
+use constant { COPY_HEADER => 1 };
+
+our $CODEC_VERSION = "0.2";
+our $MARGIN = "  ";
+our $GROUPMARGIN = " *";
+our $CURRENT_DIAL;
+our $CURRENT_GROUP;
+our %FACTION_INDEX;
+our $FACT_I = 0;
+our %FACTION_RANK;
+our %RECTYPES;
 
 ### RECORD DEFINITIONS
 
@@ -961,9 +1041,10 @@ sub unknown_data {
     assert($len > 0, "Unknown buffer is NULL!") if (ASSERT);
     if ($len > 4) {
 	my $sep = ($len < 25) ? "  " : "\n\t";
+	(my $tmp = $buf) =~ tr/\000-\037\177-\377//d;
 	return(sprintf("[UNKNOWN_DATA: len:%d${sep}hex:%s${sep}str:%s]",
 		       $len, unpack("H*", $buf),
-		       substr((($_ = $buf) =~ tr/\000-\037\177-\377//d, $_), 0, 80)));
+		       substr($tmp, 0, 80)));
     } elsif ($len == 4) {
 	return(sprintf(qq{[UNKNOWN_WORD: 0x%s f:%0.2f  l:%d  (s:%d %d)  (c:%d %d %d %d)]},
 		       unpack("H8", $buf), unpack("f", $buf), unpack("l", $buf),
@@ -987,7 +1068,7 @@ my @RD_float_array_ess =
 	       return($self);
 	   },
 	   encode => sub {
-	       my $self = @_;
+	       my($self) = @_;
 	       $self->{_subbuf_} = pack("f*", map { $self->{$_} } (0..$self->{_last_idx}));
 	       return($self);
 	   },
@@ -1053,11 +1134,12 @@ my @RD_AI_Activate = ([["target_id", ["Z32", "a32"]], ["unknown_1", "C"]]);
 my @RD_AI_Travel = ([["x", "f"], ["y", "f"], ["z", "f"], ["unknown_1", "l"]]); # unknown is some sort of flags ???
 my @RD_AI_Escort = ([["x", "l"], ["y", "l"], ["z", "l"], ["duration", "S"], ["target_id", ["Z32", "a32"]], ["unknown_1", "S"]]);
 my @RD_AI_Follow = @RD_AI_Escort;
-my @RD_AI_Wander_CREA = ([["distance", "S"], ["duration", "C"], ["time_of_day", "C"],
-			  (["idle_1", "C"]) x 10,], { columns => 4 });
+my @RD_AI_Wander_CREA = ([["distance", "S"], ["duration", "C"], ["time_of_day", "C"], ["unknown_1", "C"], 
+			  ["idle_2", "C"], ["idle_3", "C"], ["idle_4", "C"], ["idle_5", "C"], ["idle_6", "C"], ["idle_7", "C"], ["idle_8", "C"], ["idle_9", "C"],
+			  ["unknown_1", "C"]], { columns => 4 });
 my @RD_AI_Wander_NPC = ([["distance", "S"], ["duration", "S"], ["time_of_day", "C"],
-			 (["idle_1", "C"]) x 8,
-			 ["unknown_1", "C"]], { columns => 5 });
+			 ["idle_2", "C"], ["idle_3", "C"], ["idle_4", "C"], ["idle_5", "C"], ["idle_6", "C"], ["idle_7", "C"], ["idle_8", "C"], ["idle_9", "C"],
+			 ["unknown_1", "C"]], { columns => 3 });
 
 my $RD_Actor_Data =
 #     Field                              Offset
@@ -1248,8 +1330,27 @@ my @RECDEFS =
 			  sprintf(" Fog_Density:%0.2f", $self->{fog_density});
 		  }}
 	       ],
-	       [FRMR => [["refidx", "S"], ["unknown", "C"], ["modidx", "C"]],
+	       [FRMR => [],
 		{
+		 decode => sub {
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
+		     $self->{_subbuf_} = $buff;
+		     my($idx) = unpack("L", $buff);
+		     $self->{objidx} = ($idx & 0xFFFFFF);
+		     $self->{mastidx} = ($idx >> 24);
+		     return($self);
+		 },
+		 encode => sub {
+		     my($self) = @_;
+		     assert($self->{objidx} < 0xFFFFFF, "ObjIdx Overflow") if (ASSERT);
+		     $self->{_subbuf_} = pack("L", ($self->{objidx} | ($self->{mastidx} << 24)));
+		     return($self);
+		 },
+		 tostr => sub {
+		     my($self) = @_;
+		     qq{ObjIdx:$self->{objidx}  MastIdx:$self->{mastidx}};
+		 },
 		 rdflags => [qw(startgroup)] }],
 	       [ANAM => [["owner_actor", "Z*"]]],
 	       [BNAM => [["global", "Z*"]]],
@@ -1317,14 +1418,60 @@ my @RECDEFS =
 	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
 	       [FLTV => [["lock_level", "L"]]],
 	       [INDX => @RD_Unknown],
-	       [INTV => [['water_height', 'l']]],
+
+	       # CELL.INTV: (this is a bit of hairy situation)
+	       # if in CELL Header, this is old way of specifying "Water_Height"
+	       # if in FRMR, it's an item's unsigned short "Health_Left"
+	       # or if item is LIGH, it's the float "Time_Left"
+	       [INTV => [],
+		{
+		 decode => sub {
+		     my($self, $buff, $parent) = @_;
+		     $self->{_id_} = $parent->{_id_};
+		     $self->{_subbuf_} = $buff;
+		     if ($CURRENT_GROUP) { # FRMR reference
+			 my $val = unpack("l", $buff);
+			 if ($val < 0 or $val > 65536) {
+			     $val = unpack("f", $buff);
+			     $self->{time_left} = $val;
+			 } else {
+			     $self->{health_left} = $val;
+			 }
+		     } else { 	# before any group, so in CELL header
+			 $self->{water_height} = unpack("l", $buff);
+		     }
+		     return($self);
+		 },
+		 encode => sub {
+		     my($self) = @_;
+		     if (exists $self->{health_left}) {
+			 $self->{_subbuf_} = pack("l", $self->{health_left});
+		     } elsif (exists $self->{time_left}) {
+			 $self->{_subbuf_} = pack("f", $self->{time_left});
+		     } else {
+			 $self->{_subbuf_} = pack("l", $self->{water_height});
+		     }
+		     return($self);
+		 },
+		 tostr => sub {
+		     my($self) = @_;
+		     if (exists $self->{health_left}) {
+			 sprintf("Health_Left:%d", $self->{health_left});
+		     } elsif (exists $self->{time_left}) {
+			 sprintf("Time_Left:%0.2f", $self->{time_left});
+		     } else {
+			 sprintf("Water_Height:%d", $self->{water_height});
+		     }
+		 },
+		}],
+
 	       [KNAM => [["key", "Z*"]]],
 	       [NAM0 => [["reference_count", "L"]], { rdflags => [qw(startgroup)] }],
 	       [NAM5 => [["color", "L"]]], # Map Color
 	       [NAME => [["name", "Z*"]]],
 	       [RGNN => [["region", "Z*"]]],
 	       [WHGT => [["water_height", "f"]]],
-	       [XCHG => [["enchant_charge", "L"]]],
+	       [XCHG => [["enchant_charge", "f"]]],
 	       [XSCL => [["scale", "f"]]],
 	       [XSOL => [["soul", "Z*"]]],
 	       # sort CELL stuff from .ess below this line:
@@ -1346,7 +1493,7 @@ my @RECDEFS =
 	       [MNAM => @RD_Unknown_ess],
 	       [MPCD => @RD_Unknown_ess],
 	       [MPNT => @RD_Unknown_ess],
-	       [MVRF => [["moved_ref", "L"]]], # .ess???
+	       [MVRF => [["moved_ref", "L"]]], # .ess (is start of group)
 	       [NAM8 => @RD_Unknown_ess],
 	       [NAM9 => [["owned", "L"]]],
 	       [ND3D => @RD_Unknown_ess],
@@ -1365,7 +1512,7 @@ my @RECDEFS =
 	       [WNAM => @RD_Unknown_ess],
 	       [XNAM => @RD_Unknown_ess],
 	       [YNAM => @RD_Unknown_ess],
-	       [ZNAM => @RD_Unknown_ess],
+	       [ZNAM => [["disabled", "C"]]], # object flagged as disabled (ess only???)
 	      ], { id => sub {	# CELL->id()
 		       my($self) = @_;
 		       return($self->{_id_}) if (defined $self->{_id_});
@@ -1419,7 +1566,7 @@ my @RECDEFS =
 	       [SLFD => @RD_float_array_ess],
 	       [SLLD => @RD_long_array_ess],
 	       [SLSD => @RD_short_array_ess],
-	       [XCHG => [["enchant_charge", "L"]]],
+	       [XCHG => [["enchant_charge", "f"]]],
 	       [XHLT => [["health", "L"]]],
 	       [XIDX => [["scripted_item_index", "L"]]],
 	       [XSOL => [["soul", "Z*"]]],
@@ -1482,7 +1629,7 @@ my @RECDEFS =
 	       [SCRI => [["script", "Z*"]]],
 	       [XSCL => [["scale", "f"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     [CREC => [
+     [CREC => [			# "Creature Container" in savedgames
 	       [NAME => [["id", "Z*"]]],
 	       [AI_A => @RD_AI_Activate],
 	       [AI_E => @RD_AI_Escort],
@@ -1497,7 +1644,7 @@ my @RECDEFS =
 	       [SLLD => @RD_long_array_ess],
 	       [SLSD => @RD_short_array_ess],
 	       [WIDX => @RD_widx],
-	       [XCHG => [["enchant_charge", "L"]]],
+	       [XCHG => [["enchant_charge", "f"]]],
 	       [XHLT => [["health", "L"]]],
 	       [XIDX => @RD_Unknown],
 	       [XSCL => [["scale", "f"]]],
@@ -1799,7 +1946,7 @@ my @RECDEFS =
 	       [MODL => [["model", "Z*"]]],
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     [NPCC => [
+     [NPCC => [			# "NPC Container" records in savedgames
 	       [NAME => [["id", "Z*"]]],
 	       [AI_E => @RD_AI_Escort],
 	       [AI_F => @RD_AI_Follow],
@@ -1813,7 +1960,7 @@ my @RECDEFS =
 	       [SLLD => @RD_long_array_ess],
 	       [SLSD => @RD_short_array_ess],
 	       [WIDX => @RD_widx],
-	       [XCHG => [["enchant_charge", "L"]]],
+	       [XCHG => [["enchant_charge", "f"]]],
 	       [XHLT => [["health", "L"]]],
 	       [XIDX => @RD_Unknown],
 	       [XSOL => [["soul", "Z*"]]],
@@ -1963,6 +2110,9 @@ my @RECDEFS =
 	       [PBDT => [["weight", "f"], ["value", "L"], ["quality", "f"], ["uses", "L"]], { rdflags => [qw(mergeable)] }],
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
+     [PROJ => [
+	       [PNAM => @RD_Unknown],
+	      ], { rdflags => [qw(ess)] } ],
      [QUES => [
 	       [NAME => [["id", "Z*"]]],
 	       [DATA => [["info_id", "Z*"]]],
@@ -2314,9 +2464,9 @@ sub new_from_tr {
 sub write_rec {
     my($self, $fh) = @_;
     if (DBG) {
-	abort("null rectype") if not defined $self->rectype;
-	abort("null reclen") if not defined $self->reclen;
-	abort("null hdrflags") if not defined $self->hdrflags;
+	abort("null rectype: self=".Dumper($self)) if not defined $self->rectype;
+	abort("null reclen: self=".Dumper($self)) if not defined $self->reclen;
+	abort("null hdrflags: self=".Dumper($self)) if not defined $self->hdrflags;
     }
     $self->encode() unless (defined $self->{_recbuf_});
     print $fh pack("a4LLLa*", $self->rectype, $self->reclen, (my $reclen2 = 0), $self->hdrflags, $self->recbuf);
@@ -2372,10 +2522,13 @@ sub decode {
 	    }
 	}
     }
+    $CURRENT_GROUP = undef;
     while (my($subtype, $subbuf) = splice(@parts, 0, 2)) {
 	my $tsr = {};
 	my $package = "${rectype}::${subtype}";
 	bless($tsr, $package);
+	$CURRENT_GROUP = $subtype
+	    if ($RDFLAGS{$package}->{startgroup});
 	eval { $tsr->decode($subbuf, $self); };
 	if ($@) {
 	    if ($@ =~ /Can't locate object method/) {
@@ -2418,7 +2571,7 @@ sub set {
     my($self, $opt, $newval) = @_; # opt is hashref with keys: "i", "t", "f"
     unless (defined $newval) {
 	abort(qq{Usage: set(\$option_hash, \$newvalue)
-option_hash can have the keys: "i"(indeces), "t"(subtypes), or "f"(fields)
+option_hash can have the keys: "i"(indices), "t"(subtypes), or "f"(fields)
 
 Example: set all fields named "count" to 0:
 set({f=>"count"}, 0)
@@ -2426,9 +2579,9 @@ set({f=>"count"}, 0)
 	return;
     }
     $self->{_modified_} = 0;
-    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$R->{SL}});
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
     foreach my $i (@indices) {	# narrow by indices
-	my $tsr = $R->{SL}->[$i];
+	my $tsr = $self->{SL}->[$i];
 	my $subtype = $tsr->subtype;
 	next if (defined($opt->{t}) and ($opt->{t} ne $subtype)); # narrow by type
 	if (defined($opt->{f})) {				  # narrow by field
@@ -2452,15 +2605,68 @@ set({f=>"count"}, 0)
 	}
     }
     return($self);
-}
+} # tr->set()
+
+# tr->delete()
+sub delete {
+    my($self, $opt, $match) = @_; # opt is hashref with keys: "i", "t", "f"
+    unless (defined $opt) {
+	abort(qq{Usage: delete(\$option_hash, \$match)
+option_hash can have the keys: "i"(indices), "t"(subtypes), or "f"(fields)
+
+match is a regular expression for matching values. If undef, then all values
+match.
+
+Example: delete all fields named "spell" with value matching: "fireball":
+delete({f=>"spell"}, 'fireball')
+});
+	return;
+    }
+    $match = '.' unless defined $match;
+    $self->{_modified_} = 0;
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
+    foreach my $i (@indices) {	# narrow by indices
+	my $tsr = $self->{SL}->[$i];
+	my $subtype = $tsr->subtype;
+	next if (defined($opt->{t}) and ($opt->{t} ne $subtype)); # narrow by type
+	if (defined($opt->{f})) {				  # narrow by field
+	    # delete selected fields with matching values
+	    my $key = lc($opt->{f});
+	    if (defined($tsr->{$key})) {
+		if ($tsr->{$key} =~ /$match/i) {
+		    $self->{SL}->[$i] = undef; # mark for deletion
+		    $self->{_modified_} = 1;
+		}
+	    } else {
+		next;
+	    }
+	} else {
+	    # delete all fields with matching values
+	    while (my($key, $val) = each %{$tsr}) {
+		if ($tsr->{$key} =~ /$match/i) {
+		    $self->{SL}->[$i] = undef; # mark for deletion
+		    $self->{_modified_} = 1;
+		}
+	    }
+	}
+    }
+    if ($self->{_modified_}) {
+	my @newSL;
+	foreach my $tsr (@{$self->{SL}}) {
+	    push(@newSL, $tsr) if (defined $tsr);
+	}
+	$self->{SL} = [@newSL];
+    }
+    return($self);
+} # tr->delete()
 
 # tr->dump()
 sub dump {
     my($self, $opt) = @_; # opt is hashref with keys: "i", "t", "f"
-    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$R->{SL}});
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
     my $banner = qq{Record: @{[$self->rectype]} "@{[$self->id]}" Flags:@{[$self->hdrflagstr]}\n};
     foreach my $i (@indices) {	# narrow by indices
-	my $tsr = $R->{SL}->[$i];
+	my $tsr = $self->{SL}->[$i];
 	my $subtype = $tsr->subtype;
 	next if (defined($opt->{t}) and ($opt->{t} ne $subtype)); # narrow by type
 	if (defined($opt->{f})) {				  # narrow by field
@@ -2475,6 +2681,24 @@ sub dump {
 	}
     }
     return('');			# passthrough
+}
+
+# tr->split_groups()
+sub split_groups {
+    my($self) = @_;
+    my @groups;
+    my @this_group;
+    foreach my $tsr ($self->subrecs()) {
+	my $package = ref($tsr);
+	dbg("split_groups: package is $package") if (DBG);
+	if ($RDFLAGS{$package}->{startgroup}) {
+	    push(@groups, [@this_group]);
+	    @this_group = ();
+	}
+	push(@this_group, $tsr);
+    }
+    push(@groups, [@this_group]); # collect last group
+    return(\@groups);
 }
 
 # decode flags of a record field
@@ -2568,7 +2792,7 @@ sub gen_subrec_methods {
 		$NAMED_TYPE{$rectype} = 1 if (($subtype eq 'NAME') and ($fieldname eq 'id'));
 		# make a unique numbered fieldname
 		while (exists $seen{$fieldname}) {
-		    $fieldname =~ s/_\d+$//;
+		    $fieldname =~ s/_\d+$//; # remove _(indexed) suffix
 		    $fieldname .= '_' . ++$seen{$fieldname};
 		}
 		$seen{$fieldname} ||= 1;
@@ -2908,7 +3132,9 @@ sub gen_class {
 	};
     }
 
-    # $tr->get() (actually "getfirst" might be more appropriate)
+    # $tr->get() (actually "getfirst" might be more appropriate) (maybe getfirstfield)
+    # TBD - the get() function should really be exactly like ->set(), except it returns
+    # current matching tsrs instead of setting it.
     $method = "${rectype}::get";
     *$method = sub {
 	use strict "refs";
@@ -2923,7 +3149,7 @@ sub gen_class {
 	}
     };
 
-    # $tr->getall()
+    # $tr->getall() (maybe getallfields)
     $method = "${rectype}::getall";
     *$method = sub {
 	use strict "refs";
@@ -3024,6 +3250,7 @@ our @MODOPT = ("backup-dir=s", "hide-backups");
 our $opt_backup_dir = "$TES3CMD_DIR/backups";
 our $opt_exterior;
 our $opt_hide_backups;
+our $opt_instance_type;		# show types for object instances
 our $opt_instance_match;
 our $opt_instance_no_match;
 our $opt_interior;
@@ -3053,7 +3280,6 @@ our $opt_clean_cell_params = 0;
 our $opt_clean_dups = 0;
 our $opt_clean_gmsts = 0;
 our $opt_clean_junk_cells = 0;
-our $opt_clean_replace = 0;
 
 our @opt_diff_ignore_types = ();
 our $opt_diff_1_not_2;
@@ -3159,7 +3385,8 @@ just prints current active load order.
 		   'junk-cells'    => \$opt_clean_junk_cells,
 		   'no-cache',
 		   'output-dir',
-		   'replace'       => \$opt_clean_replace],
+		   'replace'       => \$opt_overwrite, # alias for backwards compatibility
+		   'overwrite'],
 
        preprocess => sub {
 	   unless ($opt_clean_instances or $opt_clean_cell_params or $opt_clean_dups or $opt_clean_gmsts or $opt_clean_junk_cells) {
@@ -3207,8 +3434,8 @@ OPTIONS:
  --output-dir <dir>
 	set output directory to <dir> (default is where input plugin is)
 
- --replace
-	replace original plugin with clean version (original is backed up)
+ --overwrite
+	overwrite original plugin with clean version (original is backed up)
 
 DESCRIPTION:
 
@@ -3224,12 +3451,14 @@ operations are explained below:
 Object Instances (--instances)
 
   The clean command will clean objects in the plugin that match objects in any
-  of its masters. Object instances in cells are defined as byte sequences
-  starting in the subrecord following a FRMR subrecord, and match only if this
-  is the same byte sequence as in the master, along with the same Object-Index
-  from the FRMR. NAM0 subrecords are not part of object instances, and if
-  instances are deleted from a cell, the NAM0 subrecord for the cell is
-  updated to reflect any changing instance count.
+  of its masters. Object instances in cells (some people call these
+  "references", but "object instance" is a more accurate descriptive term) are
+  defined as byte sequences starting in the subrecord following a FRMR
+  subrecord, and match only if this is the same byte sequence as in the
+  master, along with the same Object-Index from the FRMR. NAM0 subrecords are
+  not part of object instances, and if instances are deleted from a cell, the
+  NAM0 subrecord for the cell is updated to reflect any changing instance
+  count.
 
 Cell Params (--cell-params)
 
@@ -3250,7 +3479,6 @@ Evil GMSTs (--gmsts)
   Bloodmoon GMSTs that are inadvertently introduced to a plugin by the
   Construction Set with specific values. Other GMSTs or GMSTs from those lists
   that do not have the specific Evil Values are NOT cleaned by this function.
-  For details on Evil GMSTs, see: http://www.wikihost.org/w/mlox/evil_gmsts/
 
   To clean GMSTs that are not Evil, you can use the command:
     "tes3cmd delete --type gmst"
@@ -3279,7 +3507,7 @@ tes3cmd clean --output-dir Clean "my plugin1.esp" "my plugin2.esp"
 
 # clean all plugins in the current directory, replacing the originals with
 # the cleaned versions and save the diagnostic output to a file (clean.txt):
-tes3cmd clean --replace *.esm *.esp > clean.txt
+tes3cmd clean --overwrite *.esm *.esp > clean.txt
 },
      },
 
@@ -3511,8 +3739,10 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 	postprocess => sub {
 	    if ($opt_dump_raw) {
 		close($DUMP_RAWOUT);
-		$opt_header_update_record_count = 1;
-		update_header($opt_dump_raw, [qw(QUIET NOBACKUP)]);
+		if ($opt_dump_raw_with_header) {
+		    $opt_header_update_record_count = 1;
+		    update_header($opt_dump_raw, [qw(QUIET NOBACKUP)]);
+		}
 		print "\nRaw records saved in $opt_dump_raw\n";
 	    }
 	},
@@ -3756,8 +3986,8 @@ new given value.
 If a given value contains the string "\\n", it will be replaced by a CRLF.
 
 Note:
- - the Author value should fit in $TES3::Record::HDR_AUTH_LENGTH bytes.
- - the Description value should fit in $TES3::Record::HDR_DESC_LENGTH bytes.
+ - the Author value should fit in $TES3::HDR_AUTH_LENGTH bytes.
+ - the Description value should fit in $TES3::HDR_DESC_LENGTH bytes.
 
 If the value supplied won't fit into the plugin header field, you will be
 warned.
@@ -4429,7 +4659,16 @@ tes3cmd resetdates
      { description => qq{run a TES3 REPL},
        options => [@STDOPT],
        preprocess => \&cmd_shell,
-       usage => qq{Usage: tes3cmd -shell\n},
+       usage => qq{Usage: tes3cmd -shell
+
+Example:
+
+# Run a shell, and create a new blank ESP file:
+% tes3cmd -shell
+> open(F,">blank.esp") && print F make_header({ author => 'john.moonsugar\@gmail.com', description => '' }) && close(F);
+
+==> 1
+\n},
      },
 
      '-testcodec' =>
@@ -4741,7 +4980,7 @@ sub make_temp {
     abort(qq{"$plugin" does not end in .esm/.esp/.ess})
 	if ($plugin !~ /\.(es[mps])$/i);
     my $plugtmp = "$plugin.tmp";
-    (-f $plugin) or abort(qq{Not a plain file});
+    (-f $plugin) or abort(qq{Invalid input file ($!)});
     my $inp = open_for_input($plugin);
     my $out = open_for_output($plugtmp);
     return($inp, $out);
@@ -5050,7 +5289,7 @@ sub diff_output {
 	if (open($fh, ">$diff_file")) {
 	    print $fh join("\n", @{$diff});
 	    close($fh);
-	    msg("Created diff file: $diff_file");
+	    prn("Created diff file: $diff_file");
 	} else {
 	    err("Opening $diff_file for output ($!)");
 	}
@@ -5060,11 +5299,11 @@ sub diff_output {
 sub make_header {
     my($opt) = @_;
     my $hedr = pack("a4L/a*", 'HEDR',
-		    pack("fLZ${TES3::Record::HDR_AUTH_LENGTH}Z${TES3::Record::HDR_DESC_LENGTH}L",
+		    pack("fLZ${HDR_AUTH_LENGTH}Z${HDR_DESC_LENGTH}L",
 			 ($opt->{version} || 1.3),
 			 ($opt->{is_master} || 0),
-			 ($opt->{author} || "tes3cmd"),
-			 ($opt->{description} || "(generated)"),
+			 (defined($opt->{author}) ? $opt->{author} : "tes3cmd"),
+			 (defined($opt->{description}) ? $opt->{description} : "(generated)"),
 			 ($opt->{n_records} || 0)));
     # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my $tes3 = pack("a4LLLa*", 'TES3', length($hedr), (my $reclen2 = 0), (my $flags = 0), $hedr);
@@ -5076,8 +5315,8 @@ sub make_header {
 sub update_header {
     my($plugin, $options) = @_;
     if (($opt_header_update_record_count or $opt_header_update_masters) and
-	($plugin =~ /~\D+\.es[mp]$/i)) {
-	msg("Skipping Backup: $plugin");
+	($plugin =~ /~\d+\.es[mp]$/i)) {
+	msg("tes3cmd header skipping Backup: $plugin");
 	return;
     }
     my $quiet = grep(/\bQUIET\b/, @$options);
@@ -5108,6 +5347,8 @@ sub update_header {
 	    }
 	    if ($opt_header_description) {
 		$modified++;
+		$opt_header_description =~ s/\\n/\n/g;
+		$opt_header_description =~ s/\\r/\r/g;
 		if ($opt_header_description =~ /^\+(.*)/) {
 		    $tsr->{description} .= $1;
 		} else {
@@ -5176,23 +5417,6 @@ sub update_header {
     utime($atime, $mtime, $plugin);
 }				# update_header
 
-sub split_groups {
-    my($tr) = @_;
-    my @groups;
-    my @this_group;
-    foreach my $tsr ($tr->subrecs()) {
-	my $package = ref($tsr);
-	dbg("split_groups: package is $package") if (DBG);
-	if ($RDFLAGS{$package}->{startgroup}) {
-	    push(@groups, [@this_group]);
-	    @this_group = ();
-	}
-	push(@this_group, $tsr);
-    }
-    push(@groups, [@this_group]); # collect last group
-    return(\@groups);
-}
-
 sub get_wanted {
     my @wanted_ids = @opt_id;
     push(@wanted_ids, map { '^'.quotemeta($_).'$' } @opt_exact_id) if (@opt_exact_id);
@@ -5206,6 +5430,10 @@ sub get_wanted {
 	}
     }
     my $wanted_types;
+    if ($opt_instance_match or $opt_instance_no_match) {
+	# if user selects an object instance matching situation, assume type == CELL
+	@opt_type = qw(cell);
+    }
     if (@opt_type) {
 	foreach my $option (@opt_type) {
 	    my($wrectype, $wsubtype) = split(/\./, uc($option));
@@ -5272,16 +5500,16 @@ sub get_record_count {
 sub dumpit {
     my($label, $it) = @_;
     $it =~ s/([[:cntrl:]])/"^".chr(ord($1)+64)/ge;
-    msg("$label: [$it]" . ((DBG) ? "\n".unpack("H*", $it) : ''));
+    prn("$label: [$it]" . ((DBG) ? "\n".unpack("H*", $it) : ''));
 }
 
-# turn a group (list) of CELL subrecs into [refidx and recbuf]
+# turn a group (list) of CELL subrecs into [objidx and recbuf]
 sub buffalize {
     my(@this_group) = @_;
-    my($refidx, $recbuf, $objname);
+    my($objidx, $recbuf, $objname);
     my $frmr_tsr = shift(@this_group);
     if ($frmr_tsr->subtype eq 'FRMR') {
-	$refidx = $frmr_tsr->{refidx};
+	$objidx = $frmr_tsr->{objidx};
     } else {
 	abort("Oops! Expected first subrec of group to be FRMR, instead got: ".$frmr_tsr->subtype);
     }
@@ -5290,7 +5518,7 @@ sub buffalize {
 	    if (not(defined $objname) and $tsr->subtype eq 'NAME');
 	$recbuf .= $tsr->subbuf;
     }
-    return($refidx, $recbuf, $objname);
+    return($objidx, $recbuf, $objname);
 }
 
 sub process_plugin_for_input {
@@ -5298,6 +5526,7 @@ sub process_plugin_for_input {
     my $inp = open_for_input($plugin);
     my $expected = "TES3";
     my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
+    # TBD - to support using instance types, will need to load masters
     # process each record in the plugin
     eval {
 	while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
@@ -5305,7 +5534,7 @@ sub process_plugin_for_input {
 	    $fun->($tr->rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
 	}
     };
-    err($@) if ($@);
+    abort($@) if ($@);
     close_input($inp);
 } # process_plugin_for_input
 
@@ -5315,6 +5544,7 @@ sub process_plugin_for_update {
     my $expected = "TES3";
     my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
     my $modified;
+    # TBD - to support using instance types, will need to load masters
     # process each record in the plugin
     eval {
 	while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
@@ -5331,14 +5561,16 @@ sub process_plugin_for_update {
 		    $tr->write_rec($out);
 		}
 	    } else {		# undefined return indicates rec to be deleted
-		dbg("process_plugin_for_update: record deleted") if (DBG);
+		my $rectype = $tr->rectype;
+		my $id = $tr->id;
+		msg("RECORD DELETED: $rectype $id");
 		$modified++;
 	    }
 	}
     };
     if ($@) {
 	$modified = 0;		# do not modify original plugin if errors occurred
-	err($@);
+	abort($@);
     }
     if ($prefix) {
 	my($file, $dir) = fileparse($plugin);
@@ -5402,7 +5634,7 @@ sub cmd_testcodec {
 		    dumpit('original', $oldrec);
 		    dumpit('re-coded', $newrec);
 		    my $print_rec = $tr->tostr;
-		    msg("Full Record:\n$print_rec");
+		    prn("Full Record:\n$print_rec");
 		    #dbg("trnew Dump=".Dumper($trnew)); exit;
 		}
 	    }
@@ -5423,8 +5655,8 @@ sub cmd_fixit {
     dbg("cmd_fixit") if (DBG);
     # reset dates on Bethesda data files
     cmd_resetdates();
-    # clean everything and replace originals
-    $opt_clean_replace = $opt_clean_instances = $opt_clean_cell_params =
+    # clean everything and overwrite originals
+    $opt_overwrite = $opt_clean_instances = $opt_clean_cell_params =
 	$opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
     cmd_clean($_) foreach ($T3->load_order());
     # generate all patches
@@ -5432,7 +5664,7 @@ sub cmd_fixit {
 	$opt_multipatch_summons_persist = 1;
     cmd_multipatch();
     # synchronize plugin headers to masters
-    msg("\n\nSynchronizing Plugin Headers...");
+    prn("\n\nSynchronizing Plugin Headers...");
     $opt_header_update_masters = $opt_header_update_record_count = 1;
     cmd_header($_) foreach ($T3->load_order());
 }
@@ -5603,7 +5835,7 @@ sub cmd_multipatch {
     my $merged_lists = multipatch_merge_leveled_lists() if ($opt_multipatch_merge_lists);
     foreach my $plugin ($T3->load_order()) {
 	if (my $reason = $NOPATCH_PLUGIN{lc($plugin)}) {
-	    msg("Skipping $plugin: ${reason}.");
+	    msg("tes3cmd multipatch skipping $plugin: ${reason}.");
 	    next;
 	}
 	print "Scanning plugin: $plugin\n";
@@ -5828,11 +6060,11 @@ sub cmd_diff {
 		my $tr1 = $obj1->{$id}->{$rectype};
 		my $print_rec1 = $tr1->tostr;
 		$print_rec1 =~ s/$ignore_subtypes_re}.*/$1 [IGNORED]/mg if (defined $ignore_subtypes_re);
-		$print_rec1 =~ s/^(\s*?\*?FRMR:.*?ModIdx:)\d+/$1 [IGNORED]/mi if ($rectype eq 'CELL');
+		$print_rec1 =~ s/^(\s*?\*?FRMR:.*?MastIdx:)\d+/$1 [IGNORED]/mi if ($rectype eq 'CELL');
 		my $tr2 = $obj2->{$id}->{$rectype};
 		my $print_rec2 = $tr2->tostr;
 		$print_rec2 =~ s/$ignore_subtypes_re}.*/$1 [IGNORED]/mg if (defined $ignore_subtypes_re);
-		$print_rec2 =~ s/^(\s*?\*?FRMR:.*?ModIdx:)\d+/$1 [IGNORED]/mi if ($rectype eq 'CELL');
+		$print_rec2 =~ s/^(\s*?\*?FRMR:.*?MastIdx:)\d+/$1 [IGNORED]/mi if ($rectype eq 'CELL');
 		if ($print_rec1 eq $print_rec2) {
 		    push(@p1_equal_p2, "$rectype: $id") if ($opt_diff_equal);
 		} elsif ($opt_diff_not_equal) {
@@ -5915,7 +6147,7 @@ sub cmd_delete {
 	    }
 	} elsif ($delete_instances) {
 	    if ($rectype eq 'CELL') {
-		my @groups = @{split_groups($tr)};
+		my @groups = @{$tr->split_groups()};
 		my @newcell = @{shift(@groups)}; # take header
 		my $deletions = 0;
 		my $nam0_tsr;
@@ -5925,17 +6157,17 @@ sub cmd_delete {
 		    if ($this_group[0]->subtype eq 'NAM0') {
 			push(@newcell, $nam0_tsr = $this_group[0]);
 		    } else {
-			my($gstring, $name, $refidx);
+			my($gstring, $name, $objidx);
 			foreach my $tsr (@this_group) {
 			    $gstring .= $tsr->tostr;
 			    $name = $tsr->{name}
 				if (not(defined($name)) and $tsr->subtype eq 'NAME');
-			    $refidx = $tsr->{refidx}
-				if (not(defined($refidx)) and $tsr->subtype eq 'FRMR');
+			    $objidx = $tsr->{objidx}
+				if (not(defined($objidx)) and $tsr->subtype eq 'FRMR');
 			}
 			if (((not $opt_instance_match) or ($gstring =~ /$opt_instance_match/i)) and
 			    ((not $opt_instance_no_match) or ($gstring !~ /$opt_instance_no_match/i))) {
-			    print "[CELL: $id] DELETED OBJECT INSTANCE: $name Refidx:$refidx\n";
+			    print "[CELL: $id] DELETED OBJECT INSTANCE: $name ObjIdx:$objidx\n";
 			    $deletions++;
 			} else {
 			    push(@newcell, @this_group);
@@ -5979,6 +6211,10 @@ sub cmd_modify {
 	$opt_modify_run = 'main($R);' unless ($opt_modify_run);
     }
     if ($opt_modify_replace) {
+	# make the replacer case-insensitive
+	$opt_modify_replace .= 'i';
+	# make the replacer global
+	$opt_modify_replace .= 'g';
 	# check that the replacer expression is valid
 	eval qq{(my \$foo = "HALCALI") =~ s$opt_modify_replace;};
 	if ($@) {
@@ -5999,6 +6235,7 @@ sub cmd_modify {
 		    next unless (((not $opt_sub_match) or ($subrec_str =~ /$opt_sub_match/i)) and
 				 ((not $opt_sub_no_match) or ($subrec_str !~ /$opt_sub_no_match/i)));
 		}
+		eval { my @keys = keys %$tsr } ; abort("BAD TR: ".Dumper($tr)) if ($@);
 		foreach my $key (keys %$tsr) {
 		    next if ($key =~ /^_/); # skip keys that are not fieldnames
 		    $modified = 1 if (eval qq{\$tsr->{$key} =~ s$opt_modify_replace;});
@@ -6035,7 +6272,7 @@ sub cmd_modify {
 	}
 	if ($modified) {
 	    if ($tr->encode()->recbuf ne $oldrec) {
-		msg("MODIFIED RECORD:\n" . $tr->tostr);
+		prn("MODIFIED RECORD:\n" . $tr->tostr);
 		return($tr);
 	    }
 	}
@@ -6099,7 +6336,7 @@ sub esp_esm_convert {
     }
     my($atime, $mtime) = (stat($input))[8,9];
     utime($atime, $mtime, $output);
-    msg(qq{"$input" copied to "$output"});
+    prn(qq{"$input" copied to "$output"});
 } # esp_esm_convert
 
 # convert a master to a plugin
@@ -6125,15 +6362,15 @@ sub cmd_clean {
     my($plugin) = @_;
     dbg("cmd_clean($plugin)") if (DBG);
     if ($plugin =~ /\.ess$/) {
-	msg("Skipping $plugin: don't know how to clean savegames ... yet.");
+	msg("tes3cmd clean skipping $plugin: don't know how to clean savegames ... yet.");
 	return;
     }
     if ($plugin =~ /~\d+\.es[mps]$/i) {
-	msg("Skipping $plugin: because it's a backup.");
+	msg("tes3cmd clean skipping $plugin: because it's a backup.");
 	return;
     }
     if (my $reason = $CLEAN_PLUGIN{lc($plugin)}) {
-	msg("Skipping $plugin: ${reason}.");
+	msg("tes3cmd clean skipping $plugin: ${reason}.");
 	return;
     }
     print qq{\nCLEANING: "$plugin" ...\n};
@@ -6175,10 +6412,10 @@ sub cmd_clean {
 	    if ($opt_clean_instances) {
 		# CLEAN OBJECT INSTANCES FROM CELLS
 		# clean a FRMR group in plugin cell if its following subrecs exactly match
-		# a FRMR group with the same Refidx from one of the masters
+		# a FRMR group with the same ObjIdx from one of the masters
 		my $id = $plug_tr->decode()->id;
-		my @plug_groups = @{split_groups($plug_tr)};
-		my @newcell = @{shift(@plug_groups)}; # take header
+		my @plug_groups = @{$plug_tr->split_groups()};
+		my @newcell = @{shift(@plug_groups)}; # take header to start new cell def
 		# find cells plugin has in common with masters.
 		my $nam0_tsr;
 		my $n = 0;
@@ -6189,7 +6426,7 @@ sub cmd_clean {
 		    if ($this_group[0]->subtype eq 'NAM0') {
 			push(@newcell, $nam0_tsr = $this_group[0]);
 		    } else {
-			my($plug_refidx, $plug_buf, $plug_objname) = buffalize(@this_group);
+			my($plug_objidx, $plug_buf, $plug_objname) = buffalize(@this_group);
 		      CHECK_MASTER_INSTANCES:
 			foreach my $master (keys %{my_master}) {
 			    next unless (defined $MASTER_ID->{$master}->{$id}->{$rectype});
@@ -6198,13 +6435,13 @@ sub cmd_clean {
 			    dbg("hdrflags=$hdrflags  recbuf=$recbuf") if (DBG);
 			    if (my $mast_tr = TES3::Record->new_from_recbuf('CELL', $recbuf, $hdrflags)->decode()) {
 				dbg("master=$master mast_tr==".Dumper($mast_tr)) if (DBG);
-				my @master_groups = @{split_groups($mast_tr)};
+				my @master_groups = @{$mast_tr->split_groups()};
 				shift(@master_groups);  # skip header group
 				foreach my $mgref (@master_groups) {
 				    next if ($mgref->[0]->subtype eq 'NAM0');
 				    dbg("mgref=$mgref  DUMP=".Dumper($mgref)) if (DBG);
-				    my($mast_refidx, $mast_buf) = buffalize(@$mgref);
-				    if (defined($mast_refidx) and ($plug_refidx == $mast_refidx)) {
+				    my($mast_objidx, $mast_buf) = buffalize(@$mgref);
+				    if (defined($mast_objidx) and ($plug_objidx == $mast_objidx)) {
 					if ($plug_buf eq $mast_buf) {
 					    $cleaned++;
 					    $cell_modified++;
@@ -6218,7 +6455,7 @@ sub cmd_clean {
 			if ($cleaned) {
 			    my $what = "duplicate object instance";
 			    $stats{$what}++;
-			    print " Cleaned $what ($plug_objname FRMR: $plug_refidx) from CELL: $id\n";
+			    print " Cleaned $what ($plug_objname FRMR: $plug_objidx) from CELL: $id\n";
 			} else {
 			    push(@newcell, @this_group); # no clean
 			    $n++ if (defined $nam0_tsr); # count objects after NAM0 marker
@@ -6341,7 +6578,7 @@ sub cmd_clean {
 	    return('');		# passthrough
 	}
     };
-    if ($opt_clean_replace) {
+    if ($opt_overwrite) {
 	process_plugin_for_update($plugin, $fun);
     } else {
 	process_plugin_for_update($plugin, $fun, "Clean_");
@@ -6382,7 +6619,7 @@ sub cmd_dump {
 	if ($opt_list) {
 	    $list_record->();
 	} elsif ($opt_instance_match and ($rectype eq 'CELL')) {
-	    my @groups = @{split_groups($tr)};
+	    my @groups = @{$tr->split_groups()};
 	    my @newcell = @{shift(@groups)}; # take header
 	    my $selected = 0;
 	    my $nam0_tsr;
@@ -6561,7 +6798,7 @@ sub cmd_active {
 			my $lc_plugin = lc($plugin);
 			dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
 			if (defined $off{$lc_plugin}) {
-			    msg("DEACTIVATED: $plugin");
+			    prn("DEACTIVATED: $plugin");
 			} else {
 			    $active{$lc_plugin} = $plugin;
 			}
@@ -6587,7 +6824,7 @@ sub cmd_active {
 			my $lc_plugin = lc($plugin);
 			dbg(qq{Found Gamefile: "$plugin"}) if (DBG);
 			unless (defined $active{$lc_plugin}) {
-			    msg("ACTIVATED: $plugin");
+			    prn("ACTIVATED: $plugin");
 			    $active{$plugin} = $plugin;
 			}
 		    } else {
@@ -6614,7 +6851,7 @@ sub cmd_resetdates {
 	my($atime, $mtime) = (stat($file_path))[8,9];
 	my $origtime = $ORIGINAL_DATE{$file_name};
 	if ($mtime != $origtime) {
-	    msg("Reset Date of: $file_name to: ".scalar(localtime($origtime)));
+	    prn("Reset Date of: $file_name to: ".scalar(localtime($origtime)));
 	    utime($origtime, $origtime, $file_path);
 	}
     }
