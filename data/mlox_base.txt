@@ -975,6 +975,16 @@ MW_Children_1_0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ald-Ruhn Temple Expansion [Xeth-Ban]
+
+[Conflict]
+ "Abu Manor will most likely be incompatible."
+ (Ref: AldRuhn_Temple_Expansion_1_2_Clean.rar\Readme.txt)
+Abu Manor v.2.esp
+Clean Ald-Ruhn Temple Expansion <VER>.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ald Vendras v31 [Centurion]
 
 ;; Recommended load order for Ald Vendras with popular mods:
@@ -1333,15 +1343,18 @@ Animated Morrowind 1.0.esp
 Animated Morrowind 1.0.esp
 Animated_Morrowind - Expanded.esp
 
-[Patch]
- "MCA__Animated_Morrowind__Expanded.esp" is "a patch if you use also MCA 7"
+[Conflict]
+ "MCA__Animated_Morrowind__Expanded.esp" should be used "if you use also MCA 7"
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8896 )
-MCA__Animated_Morrowind__Expanded.esp
-[ALL [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
-     Animated_Morrowind - Expanded.esp]
+[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+Animated_Morrowind - Expanded.esp
 
-;;Dragon32: Ordering assumed.
-[Order]
+[Conflict]
+ Only use one plugin.
+  MCA__Animated_Morrowind__Expanded.esp - If you use MCA 7.0
+  Animated_Morrowind - Expanded.esp - If you do not
+ "MCA - Animated_Morrowind - Expanded.esp should be used in place of original Animated_Morrowind - Expanded.esp."
+ (Ref: http://forums.bethsoft.com/topic/1376740-relz-morrowind-comes-alive-70/page__view__findpost__p__20881423 )
 Animated_Morrowind - Expanded.esp
 MCA__Animated_Morrowind__Expanded.esp
 
@@ -4808,6 +4821,29 @@ The Boatmaster.esp
      Balmora Expansion v1.4+(1.4).esp
      Balmora Expansion - LITE 1.0.esp
      BE+(1.4) Better Looking Morrowind.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Boats [abot & Arcimaestro Antares]
+
+[Conflict]
+ Only use one plugin:
+  abotBoatsTR.esp - If you have Tamriel Rebuilt installed
+  abotBoats.esp - If you do not
+ (Ref: "abotBoats.txt")
+abotBoats.esp
+abotBoatsTR.esp
+
+[Requires]
+ "abotRiverStridersTR.esp NEEDS abotBoatsTR.esp"
+ (Ref: "abotBoats.txt")
+abotRiverStridersTR.esp
+abotBoatsTR.esp
+
+;; Ref: "abotBoats.txt"
+[Order]
+abotBoatsTR.esp
+abotRiverStridersTR.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10306,6 +10342,41 @@ Golden Gold Patch v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gondoliers [abot]
+
+[Conflict]
+ Only use one plugin:
+  abotGondoliersRV.esp - If you use PirateLord's "Redesigned Vivec", or mods based on it.
+  abotGondoliers.esp - If you do not.
+ (Ref: "abotGondoliers.txt")
+abotGondoliers.esp
+abotGondoliersRV.esp
+
+[Requires]
+ "If you are using Redesigned Vivec.esp or PW_Redesigned Vivec-Vivec_Expansion.esp load abotGondoliersRV.esp"
+ (Ref: "abotGondoliers.txt")
+abotGondoliersRV.esp
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp]
+
+[Conflict]
+ "If you are using Redesigned Vivec.esp or PW_Redesigned Vivec-Vivec_Expansion.esp load abotGondoliersRV.esp"
+ (Ref: "abotGondoliers.txt")
+abotGondoliers.esp
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp]
+
+;;Dragon32: Neither plugin has an expansion dependency in the header
+[Requires]
+ "Tribunal or Bloodmoon scripting engine required"
+ (Ref: "abotGondoliers.txt")
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp]
+[ANY Bloodmoon.esm
+     Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Goth Shop in Cyrodiil [Gianluca]
 
 ;;Dragon32: ESM dependency not in plugin header
@@ -13493,7 +13564,7 @@ Lazarus_Manor-TB_sorter.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @LCV (Living Cities of Vvardenfell [Wrye]
+;; @LCV (Living Cities of Vvardenfell) [Wrye]
 
 ;; LCV Schedule Markers
 ;; Note: This esp must load BEFORE LCV Schedules.esp!
@@ -13537,6 +13608,17 @@ LCV Wolverine Hall 01.esp
 [Order]
 Barabus' fireplaces 2.esp
 NPC LCV Schedules 03.esp
+
+[Note]
+ !! "There is probably a typo in the scheduling of the Khuul caravaner Seldus Nerendus that makes him disappear for half a day."
+ !! (Ref: "abotSiltStriders.txt")
+ !! abot's "Silt Striders" mod includes a fix plugin in the Extras folder: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9122
+[ALL NPC LCV Schedules 03.esp
+     [NOT ab01NPCLCVSchedulesFix.esp]]
+
+[Order]
+NPC LCV Schedules 03.esp
+ab01NPCLCVSchedulesFix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16841,13 +16923,64 @@ Morrowind Rebirth <VER>.esp
  Trancemaster_1988's "Morrowind Rebirth" includes Loki the Grouch's "Better Caldera"
  (Ref: "Morrowind_Rebirth_v_1.5.rar\Readme.doc")
 Morrowind Rebirth <VER>.esp
-Clean Better Caldera.esp
+[ANY Clean Better Caldera.esp
+     New Better Caldera (Trancemaster Edit).esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes Xeth-Ban's "Ald-Ruhn Temple Expansion"
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+Morrowind Rebirth <VER>.esp
+Clean Ald-Ruhn Temple Expansion <VER>.ESP
 
 [Conflict]
  "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
  (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
 Morrowind Rebirth <VER>.esp
 Poorly Placed Object Fix  ?.?.esm
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+[ANY Clean_Foeburner_Fix.esp
+     lfx_foeburner.esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" changes Redoran guards in a similar way to Xeth-Ban's "Redoran Guards - Katanas and Shields"
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+Morrowind Rebirth <VER>.esp
+[ANY Redoran Guards with Katanas and Shields.esp
+     Redoran Guards with Katanas.esp
+     Redoran Guards with Shields.esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes his Gnisis and Seyda Neen expansion mods.
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+Morrowind Rebirth <VER>.esp
+[ANY New Gnisis 1.2.ESP
+     New Seyda Neen 1.6.esp]
+
+[Conflict]
+ Trancemaster_1988's "New Seyda Neen", which is included in his "Morrowind Rebirth", conflicts with Emma's "Children of Morrowind" and lonnie's "Seyda Neen Docks"
+ (Ref: New_Seyda_Neen_1.6.rar\Readme.doc)
+Morrowind Rebirth <VER>.esp
+[ANY Seyda Neen Docks V7.0 Bloodmoon.esp
+     Seyda Neen Docks V7.0 Tribunal.esp
+     MW_Children_1_0.esm]
+
+[Conflict]
+ All of Arcimaestro Antares' creatures are included in Trancemaster_1988's "Morrowind Rebirth"
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+Morrowind Rebirth <VER>.esp
+[ANY Antares' Creatures - Beholder.esp
+     Antares' Creatures -  Cecaelia.esp
+     Antares' Creatures - Frost Giant.esp
+     Antares' Creatures - Frost Monarch.esp
+     Antares' Creatures - Gargoyles.esp
+     Antares' Creatures - Green Slime.esp
+     Antares' Creatures - Hill Giant.esp
+     Antares' Creatures - Medusa.esp
+     Antares' Creatures - Treant.esp
+     Antares' Creatures - Trolls!.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17781,6 +17914,15 @@ New Khajiit Bodies (Slof Textures) - Clean.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Better Caldera [Loki & Trancemaster]
+
+[Conflict]
+ Trancemaster's "New Better Caldera" is based on Loki the Grouch's "Better Caldera"
+ (Ref: "New_Caldera_Trancemaster_Edit.rar\Readme.doc")
+New Better Caldera (Trancemaster Edit).esp
+Clean Better Caldera.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Blood mod [razorfett147]
 
 [Conflict]
@@ -17938,12 +18080,26 @@ New Netch-Adamantium Icons 1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @New Seyda Neen 1.4 [Trancemaster]
+;; @New Seyda Neen [Trancemaster]
 
+;;Dragon32: Unclear if this was fixed in later versions
 [Note]
  "New Seyda Neen FINAL_CLEANED seems to break Fargoth 2nd Quest. He cannot find his way towards Lighthouse."
  (Ref http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13492454 )
 New Seyda Neen v 1.4.esp
+
+[Conflict]
+ "It doesn't work well with Seyda Neen Docks v7.0"
+ (Ref: New_Seyda_Neen_1.6.rar\Readme.doc)
+New Seyda Neen 1.6.esp
+[ANY Seyda Neen Docks V7.0 Bloodmoon.esp
+     Seyda Neen Docks V7.0 Tribunal.esp]
+
+[Conflict]
+ "It doesn't work well with [...] Children Of Morrowind."
+ (Ref: New_Seyda_Neen_1.6.rar\Readme.doc)
+New Seyda Neen 1.6.esp
+MW_Children_1_0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19877,6 +20033,20 @@ Clean Redesigned Vivec - com_mca patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Redoran Guards - Katanas and Shields [Xeth-Ban]
+
+[Conflict]
+ Only use one plugin:
+  Redoran Guards with Katanas.esp - Gives the Redoran Guards katanas
+  Redoran Guards with Shields.esp - Gives the Redoran Guards the Redoran Guard shields
+  Redoran Guards with Katanas and Shields.esp - Gives Redoran Guards both katanas and shields
+ (Ref: Redoran Guards-Katanas and Shields readme.txt)
+Redoran Guards with Katanas and Shields.esp
+Redoran Guards with Katanas.esp
+Redoran Guards with Shields.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Regionally Known Criminals [Zennorious]
 
 [Conflict]
@@ -21270,6 +21440,24 @@ Texture Fix - Silgrad Tower 1.0.esp
  (Ref: "README_Xia_Silk_Dragon_Imports_1.0.txt")
 Clean_Xia_Silk_Dragon_Imports_1.0.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Silt Striders [abot]
+
+[Conflict]
+ Only use one plugin:
+  abotSiltStridersTR.esp - If you use Tamriel Rebuilt
+  abotSiltStriders.esp  - If you do not.
+ (Ref: "abotSiltStriders.txt")
+abotSiltStriders.esp
+abotSiltStridersTR.esp
+
+[Conflict]
+ "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
+ (Ref: "abotSiltStriders.txt")
+abotSiltStriders.esp
+TR_Mainland.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23830,35 +24018,56 @@ pcc_undead_vetooch_10.esp
      The  Undead Dungeons.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Undead: Arise From Death 2.0 [Arcimaestro Antares]
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Undead: Arise From Death 3.5 [Arcimaestro Antares]
 
 [Note]
- A newer version of "Undeads: arise from death" is available:
+ A newer version of "Undead: Arise From Death" is available:
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6777
 Undeads arise from death 1.4*.esp
 Undeads arise from death 1.5.esp
 Undeads arise from death 1.8.esp
 Undead arise from death 1.8.esp
+Undead arise from death 2.0.esp
+Undead arise from death 3.0.esp
 
 [Conflict]
- "Undeads arise from death" includes "Unique Ghosts"
- (Ref: "Undead arise from death 2.0- README.txt")
-Undead arise from death 2.0.esp
+ Arcimaestro Antares' "Undead: Arise From Death" version 1.5 and above includes his "Unique Ghosts"
+ (Ref: "Undead arise from death 3.5- README.txt")
+Undead arise from death <VER>.esp
 [ANY Unique Ghosts - M - T.esp
      Unique Ghosts - M.esp]
 
 [Conflict]
- Arcimaestro Antares' "Undeads arise from death" is not compatible with Neoptolemus' "The Undead 3.0".
+ Arcimaestro Antares' "Undead: Arise From Death" version 3.0 and above includes his "Undead - Mummies Arise from Death"
+ (Ref: "Undead arise from death 3.5- README.txt")
+Undead arise from death <VER>.esp
+Undead - Mummies Arise from Death.esp
+
+[Conflict]
+ Arcimaestro Antares' "Undead: Arise From Death" version 3.0 and above includes his "Undead - Skeletons Arise from Death I and II"
+ (Ref: "Undead arise from death 3.5- README.txt")
+Undead arise from death <VER>.esp
+[ANY Undeads Skeletons Arise from Death.esp
+     Undeads - Skeletons Arise from Death II.esp]
+
+[Conflict]
+ Arcimaestro Antares' "Undead: Arise From Death" version 3.5 and above includes his "Draugr Deathlord"
+ (Ref: "Undead arise from death 3.5- README.txt")
+Undead arise from death <VER>.esp
+Draugr Deathlord.esp
+
+[Conflict]
+ Arcimaestro Antares' "Undead: Arise From Death" is not compatible with Neoptolemus' "The Undead 3.0".
  (Ref: http://forums.bethsoft.com/index.php?/topic/847583-relz-the-undead-v30/page__st__60__p__15461806&#entry15461806 )
-Undead arise from death 2.0.esp
+Undead arise from death <VER>.esp
 [ANY The Undead.esm
      The Undead.esp]
 
 [Note]
  Version 1.5 and above of "Undead: Arise From Death" by Arcimaestro Antares include his "Unique Ghosts" mod. According to the "Unique Ghosts" readme that mod uses some of the textures from "Better Clothes", so if you receive missing texture errors that could be the cause.
- (Ref: "Unique Ghosts - README.txt")
-[ALL Undead arise from death 2.0.esp
+ (Ref: "Undead arise from death 3.5- README.txt")
+[ALL Undead arise from death <VER>.esp
      [NOT [ANY Better Clothes_v1.1.esp
                Better Clothes_v1.1_nac.esp]]]
 
@@ -26402,12 +26611,12 @@ Water Level Fix - Full.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Life 1.19 [abot]
+;; @Water Life 1.20 [abot]
 
 [Note]
  ! A new version of "Water Life" is available, you should upgrade.
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=258
-[VER < 1.19 abotWaterLife.esm]
+[VER < 1.20 abotWaterLife.esm]
 
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
@@ -26433,6 +26642,12 @@ NOM 2.13.esp
  (Ref: abotWaterLife.txt)
 [VER > 1.12 abotWaterLife.esm]
 Gondoliers.esp
+
+[Conflict]
+ Version 1.17 and above of abot's "Water Life" includes Arcimaestro Antares' "Cecaelia"
+ (Ref: abotWaterLife.txt)
+[VER > 1.16 abotWaterLife.esm]
+Antares' Creatures -  Cecaelia.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26822,12 +27037,12 @@ Seyda Neen Floating Home.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Where Are All Birds Going? 1.15 [abot]
+;; @Where Are All Birds Going? 1.16 [abot]
 
 [Note]
  ! A new version of "Where Are All Birds Going?" is available, you should upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2786
-[VER < 1.15 abotWhereAreAllBirdsGoing.esp]
+[VER < 1.16 abotWhereAreAllBirdsGoing.esp]
 
 [Requires]
  Tribunal/Bloodmoon engine required.
@@ -27197,10 +27412,14 @@ abotWindowsGlow.esp
 [ALL abotWindowsGlow.esp
      SpzInteriorDaylight.esp]
 
-;;Dragon32: abot modifies the "max_win_dis_01" and "max_win_dis_02" scripts from "Windows Glow" to use NightTime global short. NightTime's set by "ab01SetNightTimeScript" and is apparently more efficient. May as well use it
+;;Ref: "abotWindowsGlow.txt"
 [Order]
 Windows Glow.esp
+Windows Glow - Tribunal Eng.esp
+Windows Glow - Bloodmoon Eng.esp
+Windows Glow - Raven Rock Eng.esp
 abotWindowsGlow.esp
+abotWindowsGlowTR.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27215,6 +27434,7 @@ Windows Glow - Bloodmoon Eng.esp
  Colt17's "Windows Glow - Bloodmoon" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
 [ALL Windows Glow - Bloodmoon Eng.esp
      [NOT Windows Glow.esp]]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Windows Glow - Raven Rock [Colt17]
@@ -27233,7 +27453,7 @@ Windows Glow - Raven Rock Eng.esp
 [Note]
  ! abot has released a patched version of Colt17's "Windows Glow - Raven Rock". He "fixed some scripts, changed 2 lamps to english names and cleaned some things"
  ! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8835 )
-[SIZE !361455 Windows Glow - Raven Rock Eng.esp]
+[DESC !/abot/ Windows Glow - Raven Rock Eng.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
