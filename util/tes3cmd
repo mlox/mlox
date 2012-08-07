@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.37p";
+$::VERSION = "0.38";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2012 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -9,24 +9,15 @@ $::VERSION = "0.37p";
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
-# TBD:
-#% tes3cmd header --sync *.esp
-#Use of uninitialized value $plugin in lc at tes3cmd line 272.
-#Use of uninitialized value in -s at tes3cmd line 5302.
-#Use of uninitialized value $newlen in numeric ne (!=) at tes3cmd line 5302.
-#
-#research:
-#http://forums.bethsoft.com/topic/1184424-q-cleaning-mods-with-tespcd/page__hl__tes3cmd
+# delete should support sub-record groups.
 #
 #add ability to dump with things splitted out into individual files --output-folder
 #add: convertdeletedtodisabled command
 #add "report" function with csv/tab delimited output and format specifiers (plus --unused, etc)
 #dump needs to be able to show object type.
 #dump could highlight which skills a trainer trains in (top 3)
-# - check that re-dating of cleaned (synched?) plugins works correctly on XP.
-# maybe --exterior/--interior should imply "--type cell"?
+# - check that re-dating of cleaned (synced?) plugins works correctly on XP.
 # DEBUG should print an info banner (tes3cmd version, OS version, Data Files dir, etc).
-# --instance-match should presume "--type cell" (seems to work for delete but not dump, check all...)
 # MVRF(NAM8???) is also the start of an object instance in savegames.!!!
 # "recover" needs to detect overwritten length fields, perhaps by backing up 1 record to previous good record start, and scan from there
 # sprinkle in a bunch of assertions
@@ -83,6 +74,7 @@ $::VERSION = "0.37p";
 # * check for use of == on floats in scripts! (gamehour)
 # * Check for accidental conversion of float to short (putting getsecondspassed into short truncates)
 # * duplicate records should also check for change in flags!
+# * Check for scripts that are saved but not compiled.
 
 BEGIN {
     use constant DBG => grep(/^(?:-d|-?-debug)$/, @ARGV);
@@ -107,7 +99,7 @@ use warnings;
 
 my $R;				# current record for modify command
 
-BEGIN { our $CURRENT_PLUGIN = ''; }
+our $CURRENT_PLUGIN;
 
 ### CLASS: Util
 
@@ -129,8 +121,8 @@ BEGIN {
 
 use constant RELOAD => 1;	# tell methods not to use cached data
 
-sub err { warn "[ERROR ($::CURRENT_PLUGIN): @_]\n"; }
-sub dbg { warn "[DEBUG ($::CURRENT_PLUGIN): @_]\n"; }
+sub err { warn "[ERROR ($CURRENT_PLUGIN): @_]\n"; }
+sub dbg { warn "[DEBUG ($CURRENT_PLUGIN): @_]\n"; }
 sub msg { warn "@_\n"; }
 sub prn { print "@_\n"; }
 sub assert { my($bool, $msg) = @_; Carp::confess("Assertion Failed: $msg") unless ($bool); }
@@ -148,7 +140,12 @@ system less secure.
 END
 	}
     }
-    Carp::confess(qq{FATAL ERROR ($::CURRENT_PLUGIN): $msg$diagnosis\n"});
+    $msg = qq{FATAL ERROR ($CURRENT_PLUGIN): $msg$diagnosis};
+    if (DBG) {
+	Carp::confess($msg);
+    } else {
+	Carp::croak($msg);
+    }
 }
 
 # return a dictionary of all the files found in the given directory.
@@ -392,6 +389,20 @@ our %ARMOR_TYPE =
      8 => "Shield",
      9 => "Left_Bracer",
      10 => "Right_Bracer");
+
+# max weight for each armor piece/class
+our %ARMOR_CLASS =
+    (0 => { "light" =>  3.0, "medium" =>  4.5 }, # Helmet
+     1 => { "light" => 18.0, "medium" => 27.0 }, # Cuirass
+     2 => { "light" =>  6.0, "medium" =>  9.0 }, # Left_Pauldron
+     3 => { "light" =>  6.0, "medium" =>  9.0 }, # Right_Pauldron
+     4 => { "light" =>  9.0, "medium" => 13.5 }, # Greaves
+     5 => { "light" => 12.0, "medium" => 18.0 }, # Boots
+     6 => { "light" =>  3.0, "medium" =>  4.5 }, # Left_Gauntlet
+     7 => { "light" =>  3.0, "medium" =>  4.5 }, # Right_Gauntlet
+     8 => { "light" =>  9.0, "medium" => 13.5 }, # Shield
+     9 => { "light" =>  3.0, "medium" =>  4.5 }, # Left_Bracer
+     10 => { "light" => 3.0, "medium" =>  4.5 }); # Right_Bracer
 
 our %ATTRIBUTE =
     (-1 => "None",
@@ -1279,7 +1290,18 @@ my @RECDEFS =
      [ARMO => [
 	       [NAME => [["id", "Z*"]]],
 	       [AODT => [["type", "L", { lookup => \%ARMOR_TYPE }], ["weight", "f"], ["value", "L"], ["health", "L"],
-			 ["enchantment", "L"], ["ar", "L"]], { rdflags => [qw(mergeable)] }],
+			 ["enchantment", "L"], ["ar", "L"]],
+		{ tostr => sub {
+		      my($self) = @_;
+		      my $weight_class =
+			  ($self->{weight} > $ARMOR_CLASS{$self->{type}}->{medium}) ? "Heavy" :
+			      ($self->{weight} > $ARMOR_CLASS{$self->{type}}->{light}) ? "Medium" :
+				  "Light";
+		      sprintf("Type:(%s)  Weight:%0.2f ($weight_class)  Value:%d  Health:%d  Enchantment:%d  AR:%d",
+			      $ARMOR_TYPE{$self->{type}}, $self->{weight}, $self->{value},
+			      $self->{health}, $self->{enchantment}, $self->{ar});
+		  },
+		  rdflags => [qw(mergeable)] }],
 	       [BNAM => [["male_body_id", ["Z*", "a*"]]]],
 	       [CNAM => [["female_body_id", "a*"]]],
 	       [ENAM => [["enchanting", "Z*"]]],
@@ -1330,7 +1352,7 @@ my @RECDEFS =
 			  sprintf(" Fog_Density:%0.2f", $self->{fog_density});
 		  }}
 	       ],
-	       [FRMR => [],
+	       [FRMR => [],	# "form reference"?
 		{
 		 decode => sub {
 		     my($self, $buff, $parent) = @_;
@@ -1417,12 +1439,13 @@ my @RECDEFS =
 	       [DNAM => [["door_destination", "Z*"]]],
 	       [DODT => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"]]],
 	       [FLTV => [["lock_level", "L"]]],
-	       [INDX => @RD_Unknown],
+	       [INDX => @RD_Unknown], # seems to only coincide with CNAM(Owner_Faction) subrecords
 
 	       # CELL.INTV: (this is a bit of hairy situation)
 	       # if in CELL Header, this is old way of specifying "Water_Height"
 	       # if in FRMR, it's an item's unsigned short "Health_Left"
 	       # or if item is LIGH, it's the float "Time_Left"
+	       # it may be other things too ... 
 	       [INTV => [],
 		{
 		 decode => sub {
@@ -1629,7 +1652,7 @@ my @RECDEFS =
 	       [SCRI => [["script", "Z*"]]],
 	       [XSCL => [["scale", "f"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     [CREC => [			# "Creature Container" in savedgames
+     [CREC => [			# "Creature Changes?" in savedgames
 	       [NAME => [["id", "Z*"]]],
 	       [AI_A => @RD_AI_Activate],
 	       [AI_E => @RD_AI_Escort],
@@ -1946,7 +1969,7 @@ my @RECDEFS =
 	       [MODL => [["model", "Z*"]]],
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     [NPCC => [			# "NPC Container" records in savedgames
+     [NPCC => [			# "NPC Changes?" records in savedgames
 	       [NAME => [["id", "Z*"]]],
 	       [AI_E => @RD_AI_Escort],
 	       [AI_F => @RD_AI_Follow],
@@ -2110,7 +2133,7 @@ my @RECDEFS =
 	       [PBDT => [["weight", "f"], ["value", "L"], ["quality", "f"], ["uses", "L"]], { rdflags => [qw(mergeable)] }],
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     [PROJ => [
+     [PROJ => [			# projectiles (at least those in-flight at time of save)
 	       [PNAM => @RD_Unknown],
 	      ], { rdflags => [qw(ess)] } ],
      [QUES => [
@@ -3563,7 +3586,7 @@ OPTIONS:
 	only delete records whose ids exactly match given <id-string>
 
  --exterior
-	if record is CELL, only delete if it is an Exterior
+	only delete if record is an Exterior CELL
 
  --flag* <flag>
 	only delete records with given flag. Flags may be given symbolically
@@ -3585,7 +3608,7 @@ OPTIONS:
 	Only delete object instances in the cell that do not match <regex>
 
  --interior
-	if record is CELL, only delete if it is an Interior
+	only delete if record is an Interior CELL
 
  --match <regex>
 	only delete records that match given regular expression <regex>
@@ -3764,7 +3787,7 @@ OPTIONS:
 	 only dump records whose ids exactly match given <id-string>
 
  --exterior
-	 if record is CELL, only match if it is an Exterior
+	 only match if record is an Exterior CELL
 
  --flag* <flag>
 	 only dump records with given flag. Flags may be given symbolically
@@ -3776,7 +3799,7 @@ OPTIONS:
 	 <id-regex>
 
  --interior
-	 if record is CELL, only match if it is an Interior
+	 only match if record is an Interior CELL
 
  --list
 	 only list the ids of the records to be dumped, instead of the entire record
@@ -3923,7 +3946,7 @@ The fixit command does the following operations:
 - Cleans all your plugins ("tes3cmd clean")
 - Synchronizes plugin headers to your masters ("tes3cmd header --synchronize")
 - Generates a patch for merged leveled lists and more ("tes3cmd multipatch")
-- Resets Dates on Bethesda data files
+- Resets Dates on Bethesda data files ("tes3cmd resetdates")
 },
      },
 
@@ -4362,7 +4385,7 @@ OPTIONS:
 	only modify records whose ids exactly match given <id-string>
 
  --exterior
-	if record is CELL, only match if it is an Exterior
+	only match if record is an Exterior CELL
 
  --flag* <flag>
 	only modify records with given flag. Flags may be given symbolically
@@ -4378,7 +4401,7 @@ OPTIONS:
 	<id-regex>
 
  --interior
-	if record is CELL, only match if it is an Interior
+	only match if record is an Interior CELL
 
  --match <regex>
 	only modify records that match given regular expression <regex>
@@ -4944,7 +4967,6 @@ sub read_quick_parse {
 sub open_for_input {
     my($plugin) = @_;
     defined($plugin) or abort("no plugin(s) specified!");
-    $::CURRENT_PLUGIN = $plugin;
     (-d $plugin) and abort(qq{Input is a directory});
     my $fh = IO::Handle->new;
     open($fh, "<", $plugin) or abort(qq{opening "$plugin" for input ($!)});
@@ -4954,7 +4976,6 @@ sub open_for_input {
 
 sub close_input {
     my($inp) = @_;
-    $::CURRENT_PLUGIN = '';
     close($inp);
 }
 
@@ -4968,7 +4989,6 @@ sub open_for_output {
 
 sub open_for_update {
     my($plugin) = @_;
-    $::CURRENT_PLUGIN = $plugin;
     my $fh = IO::Handle->new;
     open($fh, "+<", $plugin) or abort(qq{opening "$plugin" for read/write ($!)});
     binmode($fh, ':raw') or abort(qq{setting binmode on "$plugin" ($!)});
@@ -5053,13 +5073,11 @@ sub fix_output {
     } else {
 	abort(qq{"$plugin" name does not end in .esm/.esp/.ess});
     }
-    $::CURRENT_PLUGIN = '';
 } # fix_output
 
 sub cleanup_temp {
     my($inp, $plugin) = @_;
     close($inp);
-    $::CURRENT_PLUGIN = '';
     my $plugtmp = "$plugin.tmp";
     unlink($plugtmp);
 }
@@ -5369,10 +5387,14 @@ sub update_header {
 		$master = $tsr->{master};
 	    } elsif ($subtype eq 'DATA') {
 		my $length = $tsr->{length};
-		if ((my $newlen = -s ($T3->datapath($master))) != $length) {
-		    $modified++;
-		    $update_msg .= qq{  $plugin: Synchronized master "$master" length: $length --> $newlen\n};
-		    $tsr->{length} = $newlen;
+		if (defined($master)) {
+		    if ((my $newlen = -s ($T3->datapath($master))) != $length) {
+			$modified++;
+			$update_msg .= qq{  $plugin: Synchronized master "$master" length: $length --> $newlen\n};
+			$tsr->{length} = $newlen;
+		    }
+		} else {
+		    err("Found DATA (size of master) but no corresponding MAST (name of master)");
 		}
 	    }
 	}
@@ -5430,8 +5452,16 @@ sub get_wanted {
 	}
     }
     my $wanted_types;
-    if ($opt_instance_match or $opt_instance_no_match) {
-	# if user selects an object instance matching situation, assume type == CELL
+    if ($opt_instance_match or $opt_instance_no_match or $opt_exterior or $opt_interior) {
+	# assume type == CELL if user selects object instance matching or interior/exterior
+	if (@opt_type and ((uc "@opt_type") ne "CELL")) {
+	    if ($opt_exterior or $opt_interior) {
+		msg("Specifying --interior/--exterior assumes --type CELL");
+	    }
+	    if ($opt_instance_match or $opt_instance_no_match) {
+		msg("Specifying --instance-match/--instance-no-match assumes --type CELL");
+	    }
+	}
 	@opt_type = qw(cell);
     }
     if (@opt_type) {
@@ -6596,6 +6626,7 @@ sub cmd_dump {
     dbg("cmd_dump($plugin)") if (DBG);
     my $dump_banner;
     $dump_banner = "\nPlugin: $plugin\n" unless ($opt_no_banner);
+    my $match_instances = ($opt_instance_match or $opt_instance_no_match);
     my $fun = sub {
 	my($rec_match, $rectype, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode
 	return unless ($rec_match);
@@ -6618,7 +6649,7 @@ sub cmd_dump {
 	$print_rec ||= $tr->tostr;
 	if ($opt_list) {
 	    $list_record->();
-	} elsif ($opt_instance_match and ($rectype eq 'CELL')) {
+	} elsif ($match_instances) {
 	    my @groups = @{$tr->split_groups()};
 	    my @newcell = @{shift(@groups)}; # take header
 	    my $selected = 0;
@@ -6884,6 +6915,7 @@ sub main {
 	$COMMAND{help}->{preprocess}() if (scalar(@plugins) == 0);
 	dbg("$cmd_name: Executing Process function") if (DBG);
 	foreach my $plugin (@plugins) {
+	    $CURRENT_PLUGIN = $plugin;
 	    $CURRENT_DIAL = undef;
 	    $process->($plugin);
 	}
