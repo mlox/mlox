@@ -9,6 +9,10 @@ $::VERSION = "0.38";
 # Documentation:
 #   http://code.google.com/p/mlox/wiki/Tes3cmd
 
+# lint should report on:
+#   references with extremely high coordinates.
+#   and pathgrid points at x=0,y=0,z=0
+
 # delete should support sub-record groups.
 #
 #add ability to dump with things splitted out into individual files --output-folder
@@ -1069,6 +1073,27 @@ sub unknown_data {
     }
 }
 
+my @RD_reference =
+    ( decode => sub {
+	  my($self, $buff, $parent) = @_;
+	  $self->{_id_} = $parent->{_id_};
+	  $self->{_subbuf_} = $buff;
+	  my($idx) = unpack("L", $buff);
+	  $self->{objidx} = ($idx & 0xFFFFFF);
+	  $self->{mastidx} = ($idx >> 24);
+	  return($self);
+      },
+      encode => sub {
+	  my($self) = @_;
+	  $self->{_subbuf_} = pack("L", ($self->{objidx} | ($self->{mastidx} << 24)));
+	  return($self);
+      },
+      tostr => sub {
+	  my($self) = @_;
+	  qq{ObjIdx:$self->{objidx}  MastIdx:$self->{mastidx}};
+      }
+    );
+
 my @RD_float_array_ess =
     ([], { decode => sub {
 	       my($self, $buff) = @_;
@@ -1353,31 +1378,56 @@ my @RECDEFS =
 		  }}
 	       ],
 	       [FRMR => [],	# "form reference"?
+		{ @RD_reference,
+		  rdflags => [qw(startgroup)] }],
+	       [ANAM => [["owner_actor", "Z*"]]],
+	       [BNAM => [["global", "Z*"]]],
+
+	       # CELL.CNAM
+	       # - in FRMR group: is Owner Faction of object
+	       # - (ess) in MVRF group: is Internal CELL Destination
+	       [CNAM => [],
 		{
 		 decode => sub {
 		     my($self, $buff, $parent) = @_;
 		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
-		     my($idx) = unpack("L", $buff);
-		     $self->{objidx} = ($idx & 0xFFFFFF);
-		     $self->{mastidx} = ($idx >> 24);
+		     if ($CURRENT_GROUP eq 'FRMR') {
+			 $self->{owner_faction} = unpack("Z*", $buff);
+		     } elsif ($CURRENT_GROUP eq 'MVRF') {
+			 $self->{cell_destination} = unpack("Z*", $buff);
+		     } else {
+			 $self->{"unknown_1"} = unpack("H*", $buff);
+		     }
 		     return($self);
 		 },
 		 encode => sub {
 		     my($self) = @_;
-		     assert($self->{objidx} < 0xFFFFFF, "ObjIdx Overflow") if (ASSERT);
-		     $self->{_subbuf_} = pack("L", ($self->{objidx} | ($self->{mastidx} << 24)));
+		     if (exists $self->{owner_faction}) {
+			 $self->{_subbuf_} = pack("Z*", $self->{owner_faction});
+		     } elsif (exists $self->{cell_destination}) {
+			 $self->{_subbuf_} = pack("Z*", $self->{cell_destination});
+		     } else {
+			 $self->{_subbuf_} = pack("H*", $self->{unknown_1});
+		     }
 		     return($self);
 		 },
 		 tostr => sub {
 		     my($self) = @_;
-		     qq{ObjIdx:$self->{objidx}  MastIdx:$self->{mastidx}};
+		     if (exists $self->{owner_faction}) {
+			 sprintf("Owner_Faction:%s", $self->{owner_faction});
+		     } elsif (exists $self->{cell_destination}) {
+			 sprintf("Cell_Destination:%s (Internal)", $self->{cell_destination});
+		     } else {
+			 unknown_data($self->{_subbuf_})
+		     }
 		 },
-		 rdflags => [qw(startgroup)] }],
-	       [ANAM => [["owner_actor", "Z*"]]],
-	       [BNAM => [["global", "Z*"]]],
-	       [CNAM => [["owner_faction", "Z*"]]],
-	       [CNDT => @RD_Unknown],
+		 rdflags => [qw(ess)],
+		}],
+
+	       [CNDT => [["x", "l"], ["y", "l"]],
+		{ tostr => sub { sprintf ("X:$_[0]->{x}  Y:$_[0]->{y} (External Cell Destination)"); },
+		  rdflags => [qw(ess)] }], # With MVRF is External CELL Destination (ess)
 	       [DATA => [],
 		{
 		 decode => sub {
@@ -1445,7 +1495,7 @@ my @RECDEFS =
 	       # if in CELL Header, this is old way of specifying "Water_Height"
 	       # if in FRMR, it's an item's unsigned short "Health_Left"
 	       # or if item is LIGH, it's the float "Time_Left"
-	       # it may be other things too ... 
+	       # it is other things too, such as some value for NPCS
 	       [INTV => [],
 		{
 		 decode => sub {
@@ -1516,7 +1566,10 @@ my @RECDEFS =
 	       [MNAM => @RD_Unknown_ess],
 	       [MPCD => @RD_Unknown_ess],
 	       [MPNT => @RD_Unknown_ess],
-	       [MVRF => [["moved_ref", "L"]]], # .ess (is start of group)
+	       # (MVRF is encode/decoded just like the FRMR subrecord)
+	       [MVRF => [],	# "moved reference"?
+		{ @RD_reference,
+		  rdflags => [qw(startgroup ess)] }],
 	       [NAM8 => @RD_Unknown_ess],
 	       [NAM9 => [["owned", "L"]]],
 	       [ND3D => @RD_Unknown_ess],
