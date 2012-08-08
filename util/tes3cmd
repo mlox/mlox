@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$::VERSION = "0.38";
+$::VERSION = "0.37r";
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2012 by John Moonsugar
 # Distributed as part of the mlox project:
@@ -22,9 +22,7 @@ $::VERSION = "0.38";
 #dump could highlight which skills a trainer trains in (top 3)
 # - check that re-dating of cleaned (synced?) plugins works correctly on XP.
 # DEBUG should print an info banner (tes3cmd version, OS version, Data Files dir, etc).
-# MVRF(NAM8???) is also the start of an object instance in savegames.!!!
 # "recover" needs to detect overwritten length fields, perhaps by backing up 1 record to previous good record start, and scan from there
-# sprinkle in a bunch of assertions
 # savegame cleaner: reset NPC heads/hair (recapitate)
 # improve corrupted INFO (mwedit) detection, and possibly clean them
 # when dumping NPC_, read FACT to set up FACTION data hashes (need to read all plugins and cache this data) (Check CS)
@@ -1571,6 +1569,7 @@ my @RECDEFS =
 		{ @RD_reference,
 		  rdflags => [qw(startgroup ess)] }],
 	       [NAM8 => @RD_Unknown_ess],
+	       #[NAM8 => @RD_short_array_ess], # TBD looks like it might be an array of shorts
 	       [NAM9 => [["owned", "L"]]],
 	       [ND3D => @RD_Unknown_ess],
 	       [PRDT => @RD_Unknown_ess],
