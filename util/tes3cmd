@@ -46,6 +46,7 @@ BEGIN {
 #      # put all mold cave static pieces in a test cell named "Mold Cave" and all guard NPCs in a cell named "Guards"
 #      # maybe also specify distance between objects in generated cell
 #      tes3cmd genres --resource "/Guards/npc_/class:guard/" --resource "/Mold Cave/stat/^in_mold/" --plugin my_resources.esp *.esm
+# * bsa: --add/--remove/--list
 # * "sos" (save our save) or "bisect" for doing a binary search for bad records/subrecords in a savegame
 # * "buildcache" (build up all the cache files for cleaning, lookups, etc)
 # * "codec" (print text description of TES3 codec)
@@ -5791,7 +5792,7 @@ sub multipatch_check_fogbug {
     my $tsr_ambi = $tr->get('AMBI');
     my $fog_den_data = $tsr_data->{fog_density};
     my $fog_den_ambi = $tsr_ambi->{fog_density};
-    return unless (defined($fog_den_ambi) and defined($fog_den_data));
+    return unless (defined($fog_den_ambi) and defined($fog_den_data)); # TBD should we continue if one is defined?
     if ($fog_den_ambi != $fog_den_data) {
 	print "$plugin: [CELL $name] Warning, Fog Density in DATA ($fog_den_data) != AMBI ($fog_den_ambi)\n";
     }
@@ -6309,8 +6310,19 @@ sub cmd_modify {
     my $modify_subrecords = ($opt_sub_match or $opt_sub_no_match);
     # load Perl program if specified with --program-file
     if ($opt_modify_program_file) {
-	unless (do $opt_modify_program_file) {	# execute perl file
+	dbg("loading program-file: $opt_modify_program_file") if (DBG);
+# JMS - "do" seems to behave differently under Windows now, so this code is busted
+#	unless (do $opt_modify_program_file) {	# load perl file
+#	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
+#	}
+	if (open(PROG, "<", $opt_modify_program_file)) {
+	    local $/ = undef;
+	    my $prog = join("", <PROG>);
+	    close(PROG);
+	    eval($prog);
 	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
+	} else {
+	    abort(qq{Error opening "$opt_modify_program_file" ($!)});
 	}
 	$opt_modify_run = 'main($R);' unless ($opt_modify_run);
     }
@@ -6963,7 +6975,7 @@ sub cmd_resetdates {
     }
 }
 
-sub main {
+sub tes3cmd_main {
     msg("ASSERTIONS ON!") if (ASSERT);
     my $cmd_name = (not defined($ARGV[0]) or $ARGV[0] =~ /^--/) ? '' : shift(@ARGV);
     $COMMAND{help}->{preprocess}()
@@ -7000,6 +7012,6 @@ sub main {
 	dbg("$cmd_name: Executing Post-Process function") if (DBG);
 	$post->(@plugins);
     }
-} # main
+} # tes3cmd_main
 
-main();
+tes3cmd_main();
