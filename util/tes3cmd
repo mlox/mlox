@@ -2436,8 +2436,10 @@ my @RECDEFS =
 	       [ONAM => [["owner_actor", "Z*"]]],
 	      ], { rdflags => [qw(ess)] }],
      [TES3 => [
-	       [HEDR => [["version", "f"], ["is_master", "L"], ["author", ["Z32", "a32"]],
-			 ["description", ["Z256", "a256"]], ["n_records", "L"]],
+#	       [HEDR => [["version", "f"], ["is_master", "L"], ["author", ["Z32", "a32"]],
+#			 ["description", ["Z256", "a256"]], ["n_records", "L"]],
+	       [HEDR => [["version", "f"], ["is_master", "L"], ["author", "a32"],
+			 ["description", "a256"], ["n_records", "L"]],
 		{
 		 tostr => sub { my($self) = @_;
 				my $ver = sprintf("%0.2f", $self->{version});
@@ -5494,7 +5496,7 @@ sub update_header {
     my($plugin, $options) = @_;
     if (($opt_header_update_record_count or $opt_header_update_masters) and
 	($plugin =~ /~\d+\.es[mp]$/i)) {
-	msg("tes3cmd header skipping Backup: $plugin");
+	prn("tes3cmd header skipping Backup: $plugin");
 	return;
     }
     my $quiet = grep(/\bQUIET\b/, @$options);
@@ -5517,6 +5519,7 @@ sub update_header {
 	    $hedr_tsr = $tsr;
 	    if ($opt_header_author) {
 		$modified++;
+		dbg("HEDR modified: author") if (DBG);
 		if ($opt_header_author =~ /^\+(.*)/) {
 		    $tsr->{author} .= $1;
 		} else {
@@ -5525,6 +5528,7 @@ sub update_header {
 	    }
 	    if ($opt_header_description) {
 		$modified++;
+		dbg("HEDR modified: description: $opt_header_description") if (DBG);
 		$opt_header_description =~ s/\\n/\n/g;
 		$opt_header_description =~ s/\\r/\r/g;
 		if ($opt_header_description =~ /^\+(.*)/) {
@@ -5537,6 +5541,7 @@ sub update_header {
 		my $count = get_record_count($plugin);
 		if ($tsr->{n_records} != $count) {
 		    $modified++;
+		    dbg("HEDR modified: record count") if (DBG);
 		    $update_msg .= qq{  $plugin: Updated Record Count: $tsr->{n_records} --> $count\n};
 		    $tsr->{n_records} = $count;
 		}
@@ -5550,6 +5555,7 @@ sub update_header {
 		if (defined($master)) {
 		    if ((my $newlen = -s ($T3->datapath($master))) != $length) {
 			$modified++;
+			dbg("HEDR modified: synced masters") if (DBG);
 			$update_msg .= qq{  $plugin: Synchronized master "$master" length: $length --> $newlen\n};
 			$tsr->{length} = $newlen;
 		    }
@@ -5566,10 +5572,14 @@ sub update_header {
 	    if (not($opt_header_author or $opt_header_description or $opt_header_update_record_count or
 		    $opt_header_update_masters or $opt_header_update_record_count) or
 		$opt_header_author or $opt_header_description) {
+		my $auth = $hedr_tsr->{author};
+		$auth =~ s!\000+$!!;
+		my $desc = $hedr_tsr->{description};
+		$desc =~ s!\000+$!!;
 		if ($opt_header_multiline) {
-		    print qq{$plugin:\n  AUTH=$hedr_tsr->{author}\n  DESC=$hedr_tsr->{description}\n};
+		    print qq{$plugin:\n  AUTH=$auth\n  DESC=$desc\n};
 		} else {
-		    my $msg = qq{$plugin: AUTH=$hedr_tsr->{author}  DESC=$hedr_tsr->{description}};
+		    my $msg = qq{$plugin: AUTH=$auth  DESC=$desc};
 		    $msg =~ s/(\r)?\n/\\r\\n/gm;
 		    print "$msg\n";
 		}
@@ -5745,15 +5755,24 @@ sub process_plugin_for_update {
 		if ($trnew) {	   # rec was changed
 		    $trnew->write_rec($out);
 		    dbg("process_plugin_for_update: record modified") if (DBG);
+		    if (VERBOSE) {
+			my $rectype = $tr->rectype;
+			my $id = $tr->id;
+			prn("UPDATED PLUGIN: $plugin") if (not $modified);
+			prn("RECORD MODIFIED: $rectype $id");
+		    }
 		    $modified++;
 		} else {	# null return record, so pass original rec through unchanged
 		    dbg("process_plugin_for_update: record PASSED THROUGH unmodified") if (DBG);
 		    $tr->write_rec($out);
 		}
 	    } else {		# undefined return indicates rec to be deleted
-		my $rectype = $tr->rectype;
-		my $id = $tr->id;
-		msg("RECORD DELETED: $rectype $id");
+		if (VERBOSE) {
+		    my $rectype = $tr->rectype;
+		    my $id = $tr->id;
+		    prn("UPDATED PLUGIN: $plugin") if (not $modified);
+		    prn("RECORD DELETED: $rectype $id");
+		}
 		$modified++;
 	    }
 	}
@@ -5848,7 +5867,9 @@ sub cmd_fixit {
     # clean everything and overwrite originals
     $opt_overwrite = $opt_clean_instances = $opt_clean_cell_params =
 	$opt_clean_dups = $opt_clean_gmsts = $opt_clean_junk_cells = 1;
-    cmd_clean($_) foreach ($T3->load_order());
+    foreach my $plugin ($T3->load_order()) {
+	cmd_clean($CURRENT_PLUGIN = $plugin)
+    }
     # generate all patches
     $opt_multipatch_cellnames = $opt_multipatch_fogbug = $opt_multipatch_merge_lists =
 	$opt_multipatch_summons_persist = 1;
@@ -5856,7 +5877,9 @@ sub cmd_fixit {
     # synchronize plugin headers to masters
     prn("\n\nSynchronizing Plugin Headers...");
     $opt_header_update_masters = $opt_header_update_record_count = 1;
-    cmd_header($_) foreach ($T3->load_order());
+    foreach my $plugin ($T3->load_order()) {
+	cmd_header($CURRENT_PLUGIN = $plugin)
+    }
 }
 
 sub cmd_wikiout {
@@ -6024,8 +6047,9 @@ sub cmd_multipatch {
     my %sumcrea;		# critters needing persistent flag
     my $merged_lists = multipatch_merge_leveled_lists() if ($opt_multipatch_merge_lists);
     foreach my $plugin ($T3->load_order()) {
+	$CURRENT_PLUGIN = $plugin;
 	if (my $reason = $NOPATCH_PLUGIN{lc($plugin)}) {
-	    msg("tes3cmd multipatch skipping $plugin: ${reason}.");
+	    prn("tes3cmd multipatch skipping $plugin: ${reason}.");
 	    next;
 	}
 	print "Scanning plugin: $plugin\n";
@@ -6132,9 +6156,11 @@ sub cmd_multipatch {
 	push(@options, 'fogbug') if $opt_multipatch_fogbug;
 	push(@options, 'merge_lists') if $opt_multipatch_merge_lists;
 	push(@options, 'summons_persist') if $opt_multipatch_summons_persist;
+	# TBD check these global assignments
 	$opt_header_update_record_count = 1;
 	$opt_header_description = "+ \r\nOPT: ".join(",", @options);
 	update_header($patch_path, [qw(QUIET NOBACKUP)]);
+	undef $opt_header_description;
 	unless ($opt_multipatch_no_activate) {
 	    print "\n";
 	    # we need to reload our datafiles_map, because patch_file was just created
@@ -6393,27 +6419,6 @@ sub cmd_modify {
     my($plugin) = @_;
     dbg("cmd_modify($plugin)") if (DBG);
     my $modify_subrecords = ($opt_sub_match or $opt_sub_no_match);
-    if (0) {
-	# MOVED to preprocessor!!!
-	# load Perl program if specified with --program-file
-	if ($opt_modify_program_file) {
-	    dbg("loading program-file: $opt_modify_program_file") if (DBG);
-	    # JMS - "do" seems to behave differently under Windows now, so this code is busted
-	    #	unless (do $opt_modify_program_file) {	# load perl file
-	    #	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
-	    #	}
-	    if (open(PROG, "<", $opt_modify_program_file)) {
-		local $/ = undef;
-		my $prog = join("", <PROG>);
-		close(PROG);
-		eval($prog);
-		abort("Error processing $opt_modify_program_file ($@)") if ($@);
-	    } else {
-		abort(qq{Error opening "$opt_modify_program_file" ($!)});
-	    }
-	    $opt_modify_run = 'main($R);' unless ($opt_modify_run);
-	}
-    }
     if ($opt_modify_replace) {
 	# make the replacer case-insensitive
 	$opt_modify_replace .= 'i';
@@ -6566,15 +6571,15 @@ sub cmd_clean {
     my($plugin) = @_;
     dbg("cmd_clean($plugin)") if (DBG);
     if ($plugin =~ /\.ess$/) {
-	msg("tes3cmd clean skipping $plugin: don't know how to clean savegames ... yet.");
+	prn("tes3cmd clean skipping $plugin: don't know how to clean savegames ... yet.");
 	return;
     }
     if ($plugin =~ /~\d+\.es[mps]$/i) {
-	msg("tes3cmd clean skipping $plugin: because it's a backup.");
+	prn("tes3cmd clean skipping $plugin: because it's a backup.");
 	return;
     }
     if (my $reason = $CLEAN_PLUGIN{lc($plugin)}) {
-	msg("tes3cmd clean skipping $plugin: ${reason}.");
+	prn("tes3cmd clean skipping $plugin: ${reason}.");
 	return;
     }
     print qq{\nCLEANING: "$plugin" ...\n};
