@@ -17,7 +17,7 @@ BEGIN {
 #   references with extremely high coordinates.
 #   and pathgrid points at x=0,y=0,z=0
 
-# delete should support sub-record groups.
+# delete should support sub-record groups. (what do with MVRF???)
 #
 #add ability to dump with things splitted out into individual files --output-folder
 #add: convertdeletedtodisabled command
@@ -1407,7 +1407,7 @@ my @RECDEFS =
 
 	       # CELL.CNAM
 	       # - in FRMR group: is Owner Faction of object
-	       # - (ess) in MVRF group: is Internal CELL Destination
+	       # - in MVRF group: is Internal CELL Destination
 	       [CNAM => [],
 		{
 		 decode => sub {
@@ -1444,12 +1444,11 @@ my @RECDEFS =
 			 unknown_data($self->{_subbuf_})
 		     }
 		 },
-		 rdflags => [qw(ess)],
 		}],
 
 	       [CNDT => [["x", "l"], ["y", "l"]],
 		{ tostr => sub { sprintf ("X:$_[0]->{x}  Y:$_[0]->{y} (External Cell Destination)"); },
-		  rdflags => [qw(ess)] }], # With MVRF is External CELL Destination (ess)
+		}], # With MVRF is External CELL Destination
 	       [DATA => [],
 		{
 		 decode => sub {
@@ -1591,7 +1590,7 @@ my @RECDEFS =
 	       # (MVRF is encode/decoded just like the FRMR subrecord)
 	       [MVRF => [],	# "moved reference"?
 		{ @RD_reference,
-		  rdflags => [qw(startgroup ess)] }],
+		  rdflags => [qw(startgroup)] }],
 	       [NAM8 => @RD_Unknown_ess],
 	       #[NAM8 => @RD_short_array_ess], # TBD looks like it might be an array of shorts
 	       [NAM9 => [["owned", "L"]]],
@@ -2269,7 +2268,7 @@ my @RECDEFS =
 	       [CSTN => @RD_Unknown],
 	       [DATA => @RD_Unknown],
 	       [FGTN => [["following_target_name", "Z*"]]],
-	       [FRMR => [["form_ref", "L"]]], # TBD FIXTHIS!!!
+	       [FRMR => [], { @RD_reference }], # is startgroup??? seems like we get only one
 	       [ND3D => [["unknown_1", "C"]]],
 	       [STPR => @RD_Unknown],
 	       [TGTN => [["target", "a*"]]],
@@ -3720,6 +3719,13 @@ DESCRIPTION:
 
 Deletes entire records, or subrecords from records, or object instances from
 cell records. You can really damage things with this command, so be careful!
+
+One thing you should be extra careful with is deleting objects from cells.
+When objects from a master are "moved" by a plugin, a MVRF group appears
+before the object instance that starts with a FRMR sub-record. If you really
+want to delete that object, you probably want to delete both the FRMR object
+instance and the preceeding MVRF group. A future version of tes3cmd may handle
+this situation more elegantly.
 
 Note: documentation for regular expressions:
   http://www.perl.com/doc/manual/html/pod/perlre.html
@@ -5692,7 +5698,7 @@ sub buffalize {
     my(@this_group) = @_;
     my($objidx, $recbuf, $objname);
     my $frmr_tsr = shift(@this_group);
-    if ($frmr_tsr->subtype eq 'FRMR') { # TBD FIX FOR MVRF!!!
+    if ($frmr_tsr->subtype eq 'FRMR') {
 	$objidx = $frmr_tsr->{objidx};
     } else {
 	abort("Oops! Expected first subrec of group to be FRMR, instead got: ".$frmr_tsr->subtype);
@@ -6618,11 +6624,30 @@ sub cmd_clean {
 		my $nam0_tsr;
 		my $n = 0;
 		my $cell_modified = 0;
+		my $skip_moved_object = 0;
 		foreach my $pgref (@plug_groups) {
 		    my $cleaned = 0;
-		    my @this_group = @$pgref; # all the subrecs in a FRMR (object instance) group
+		    my @this_group = @$pgref; # all the subrecs in a subrecord (like FRMR, object instance) group
 		    if ($this_group[0]->subtype eq 'NAM0') {
 			push(@newcell, $nam0_tsr = $this_group[0]);
+		    } elsif ($skip_moved_object) {
+			# don't clean moved objects (FRMR group after MVRF)
+			push(@newcell, @this_group);
+			$skip_moved_object = 0;
+			if (DBG) {
+			    my $name;
+			    foreach my $tsr (@this_group) {
+				if ($tsr->subtype eq 'NAME') {
+				    $name = $tsr->{name};
+				    last;
+				}
+			    }
+			    dbg("Not cleaning Moved Object: $name");
+			}
+		    } elsif ($this_group[0]->subtype eq 'MVRF') {
+			# don't clean moved objects (MVRF group)
+			push(@newcell, @this_group);
+			$skip_moved_object = 1;
 		    } else {
 			my($plug_objidx, $plug_buf, $plug_objname) = buffalize(@this_group);
 		      CHECK_MASTER_INSTANCES:
@@ -7072,7 +7097,7 @@ sub tes3cmd_main {
     my %ignored_plugin = map { lc($_), 1 } (@opt_ignore_plugin);
     foreach my $plugin (map { (/[$GLOBCHARS]/) ? glob($_) : $_ } @ARGV) {
 	if ($ignored_plugin{lc($plugin)}) {
-	    msg("Ignoring Plugin: $plugin");
+	    prn("Ignoring Plugin: $plugin");
 	} else {
 	    push(@plugins, $plugin);
 	}
@@ -7093,7 +7118,6 @@ sub tes3cmd_main {
 	    if (scalar(@plugins) == 0);
 	dbg("$cmd_name: Executing Process function") if (DBG);
 	foreach my $plugin (@plugins) {
-	    # TBD allow ignore_plugin
 	    $CURRENT_PLUGIN = $plugin;
 	    $CURRENT_DIAL = undef;
 	    $process->($plugin);
