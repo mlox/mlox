@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 BEGIN {
-    $::VERSION = "0.37r";
+    $::VERSION = "0.37s";
 }
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2012 by John Moonsugar
@@ -42,6 +42,7 @@ BEGIN {
 # implement script compiler
 # # # # # # # # # # # # # # #
 # add new commands:
+# * extract - dump subset of records by following dependencies
 # * "gen-res" (generate resources catalog cells) poop out an esp that displays matching objects in various cells:
 #      # put all mold cave static pieces in a test cell named "Mold Cave" and all guard NPCs in a cell named "Guards"
 #      # maybe also specify distance between objects in generated cell
@@ -2268,7 +2269,7 @@ my @RECDEFS =
 	       [CSTN => @RD_Unknown],
 	       [DATA => @RD_Unknown],
 	       [FGTN => [["following_target_name", "Z*"]]],
-	       [FRMR => [["form_ref", "L"]]],
+	       [FRMR => [["form_ref", "L"]]], # TBD FIXTHIS!!!
 	       [ND3D => [["unknown_1", "C"]]],
 	       [STPR => @RD_Unknown],
 	       [TGTN => [["target", "a*"]]],
@@ -3366,6 +3367,7 @@ our $opt_sub_no_match;
 our @opt_exact_id = ();
 our @opt_flag;
 our @opt_id = ();
+our @opt_ignore_plugin = ();
 our @opt_type = ();
 
 ### MAIN COMMAND OPTIONS
@@ -3476,6 +3478,7 @@ just prints current active load order.
        options => [@STDOPT,
 		   @MODOPT,
 		   'all'           => \$opt_clean_all,
+		   'ignore-plugin=s@',
 		   'instances'     => \$opt_clean_instances,
 		   'cell-params'   => \$opt_clean_cell_params,
 		   'dups'          => \$opt_clean_dups,
@@ -3519,6 +3522,10 @@ OPTIONS:
  --hide-backups
 	any created backup files will get stashed in the backup directory
 	(--backup-dir)
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --instances
 	clean object instances from cells when duped from masters
@@ -3634,6 +3641,7 @@ tes3cmd common "my plugin.esp" "Morrowind.esm"
      { description => qq{Delete records/subrecords/object instances from plugin},
        options => [@STDOPT,
 		   @MODOPT,
+		   'ignore-plugin=s@',
 		   'instance-match=s',
 		   'instance-no-match=s',
 		   'exact-id=s@',
@@ -3675,6 +3683,10 @@ OPTIONS:
  --id* <id-regex>
 	only delete records whose ids match regular expression pattern
 	<id-regex>
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --instance-match <regex>
 	Only delete the object instances that match <regex> in the matching cell
@@ -3809,6 +3821,7 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 		    'exterior',
 		    'flag=s@',
 		    'id=s@',
+		    'ignore-plugin=s@',
 		    'instance-match=s',
 		    'instance-no-match=s',
 		    'interior',
@@ -3849,6 +3862,10 @@ tes3cmd diff --not-equal "my plugin1.esp" plugin2.esp
 OPTIONS:
  --debug
 	 turn on debug messages
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --instance-match <regex>
 	 when printing cells, only print the matching object instances in the
@@ -3947,6 +3964,7 @@ tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
      esm =>
      { description => qq{Convert plugin (esp) to master (esm)},
        options => [@STDOPT,
+		   'ignore-plugin=s@',
 		   'overwrite'],
        process => \&cmd_esm,
        usage => qq{Usage: tes3cmd esm OPTIONS plugin...
@@ -3954,6 +3972,10 @@ tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
 OPTIONS:
  --debug
 	turn on debug messages
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --overwrite
 	overwrite output if it exists
@@ -3973,6 +3995,7 @@ tes3cmd esm "my plugin.esp"
      esp =>
      { description => qq{Convert master (esm) to plugin (esp)},
        options => [@STDOPT,
+		   'ignore-plugin=s@',
 		   'overwrite'],
        process => \&cmd_esp,
        usage => qq{Usage: tes3cmd esp OPTIONS master...
@@ -3980,6 +4003,10 @@ tes3cmd esm "my plugin.esp"
 OPTIONS:
  --debug
 	turn on debug messages
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --overwrite
 	overwrite output if it exists
@@ -3999,7 +4026,8 @@ tes3cmd esp "my plugin.esm"
      fixit =>
      { description => qq{tes3cmd fixes everything it knows how to fix},
        options => [@STDOPT,
-		   @MODOPT],
+		   @MODOPT,
+		   'ignore-plugin=s@'],
        preprocess => \&cmd_fixit,
        usage => qq{Usage: tes3cmd fixit
 
@@ -4014,6 +4042,10 @@ OPTIONS:
  --hide-backups
 	any created backup files will get stashed in the backup directory
 	(--backup-dir)
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
 DESCRIPTION:
 
@@ -4031,6 +4063,7 @@ The fixit command does the following operations:
 		   @MODOPT,
 		   'author=s'              => \$opt_header_author,
 		   'description=s'         => \$opt_header_description,
+		   'ignore-plugin=s@',
 		   'multiline'             => \$opt_header_multiline,
 		   'synchronize'           => \$opt_header_synchronize,
 		   'update-masters'        => \$opt_header_update_masters,
@@ -4060,6 +4093,10 @@ OPTIONS:
  --hide-backups
 	any created backup files will get stashed in the backup directory
 	(--backup-dir)
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --multiline
 	multi-line output for listing field contents
@@ -4179,6 +4216,7 @@ EOF
 		   'fogbug'		    => \$opt_lint_fogbug,
 		   'fogsync'		    => \$opt_lint_fogsync,
 		   'getsoundplaying'	    => \$opt_lint_getsoundplaying,
+		   'ignore-plugin=s@',
 		   'junk-cells'		    => \$opt_lint_junk_cells,
 		   'master-sync'	    => \$opt_lint_master_sync,
 		   'menumode'		    => \$opt_lint_menumode,
@@ -4334,6 +4372,10 @@ OPTIONS:
 	more about the GetSoundPlaying problem see:
 	http://sites.google.com/site/johnmoonsugar/Home/morrowind-scripting-tips
 
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
+
  --junk-cells
 	These are bogus external CELL records that crop up in many plugins,
 	due to a Construction Set bug. They contain only NAME, DATA and
@@ -4434,6 +4476,7 @@ more detail about the flagged items.
 		  'exterior',
 		  'flag=s@',
 		  'id=s@',
+		  'ignore-plugin=s@',
 		  'interior',
 		  'match=s',
 		  'no-match|M=s',
@@ -4443,6 +4486,27 @@ more detail about the flagged items.
 		  'sub-match=s',
 		  'sub-no-match|M=s',
 		  'type=s@'],
+
+      preprocess => sub {
+	  # load Perl program if specified with --program-file
+	  if ($opt_modify_program_file) {
+	      dbg("loading program-file: $opt_modify_program_file") if (DBG);
+	      # JMS - "do" seems to behave differently under Windows now, so this code is busted
+	      #	unless (do $opt_modify_program_file) {	# load perl file
+	      #	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
+	      #	}
+	      if (open(PROG, "<", $opt_modify_program_file)) {
+		  local $/ = undef;
+		  my $prog = join("", <PROG>);
+		  close(PROG);
+		  eval($prog);
+		  abort("Error processing $opt_modify_program_file ($@)") if ($@);
+	      } else {
+		  abort(qq{Error opening "$opt_modify_program_file" ($!)});
+	      }
+	      $opt_modify_run = 'main($R);' unless ($opt_modify_run);
+	  }
+      },
 
       process => \&cmd_modify,
 
@@ -4474,6 +4538,10 @@ OPTIONS:
  --id* <id-regex>
 	only modify records whose ids match regular expression pattern
 	<id-regex>
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --interior
 	only match if record is an Interior CELL
@@ -4646,13 +4714,19 @@ tes3cmd multipatch
 
      overdial =>
      { description => qq{Identify overlapping dialog (a source of missing topic bugs)},
-       options => [@STDOPT, 'single' => \$opt_overdial_single],
+       options => [@STDOPT,
+		   'ignore-plugin=s@',
+		   'single' => \$opt_overdial_single],
        preprocess => \&cmd_overdial,
        usage => qq{Usage: tes3cmd overdial OPTIONS plugin...
 
 OPTIONS:
  --debug
 	turn on debug messages
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
  --single
 	only test to see if dialog in the first plugin is overlapped. (by
@@ -4683,6 +4757,7 @@ tes3cmd overdial "BT_Whitewolf_2_0.esm" "Suran_Underworld_2.5.esp"
      recover =>
      { description => qq{Recover usable records from plugin with 'bad form' errors},
        options => [@STDOPT,
+		   'ignore-plugin=s@',
 		   @MODOPT],
        process => \&cmd_recover,
        usage => qq{Usage: tes3cmd recover OPTIONS plugin...
@@ -4698,6 +4773,10 @@ OPTIONS:
  --hide-backups
 	any created backup files will get stashed in the backup directory
 	(--backup-dir)
+
+ --ignore-plugin* <plugin-name>
+        skips specified plugin if it appears on command line. plugin name is
+        matched by exact, but caseless, string comparison.
 
 DESCRIPTION:
 
@@ -5613,7 +5692,7 @@ sub buffalize {
     my(@this_group) = @_;
     my($objidx, $recbuf, $objname);
     my $frmr_tsr = shift(@this_group);
-    if ($frmr_tsr->subtype eq 'FRMR') {
+    if ($frmr_tsr->subtype eq 'FRMR') { # TBD FIX FOR MVRF!!!
 	$objidx = $frmr_tsr->{objidx};
     } else {
 	abort("Oops! Expected first subrec of group to be FRMR, instead got: ".$frmr_tsr->subtype);
@@ -6308,23 +6387,26 @@ sub cmd_modify {
     my($plugin) = @_;
     dbg("cmd_modify($plugin)") if (DBG);
     my $modify_subrecords = ($opt_sub_match or $opt_sub_no_match);
-    # load Perl program if specified with --program-file
-    if ($opt_modify_program_file) {
-	dbg("loading program-file: $opt_modify_program_file") if (DBG);
-# JMS - "do" seems to behave differently under Windows now, so this code is busted
-#	unless (do $opt_modify_program_file) {	# load perl file
-#	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
-#	}
-	if (open(PROG, "<", $opt_modify_program_file)) {
-	    local $/ = undef;
-	    my $prog = join("", <PROG>);
-	    close(PROG);
-	    eval($prog);
-	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
-	} else {
-	    abort(qq{Error opening "$opt_modify_program_file" ($!)});
+    if (0) {
+	# MOVED to preprocessor!!!
+	# load Perl program if specified with --program-file
+	if ($opt_modify_program_file) {
+	    dbg("loading program-file: $opt_modify_program_file") if (DBG);
+	    # JMS - "do" seems to behave differently under Windows now, so this code is busted
+	    #	unless (do $opt_modify_program_file) {	# load perl file
+	    #	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
+	    #	}
+	    if (open(PROG, "<", $opt_modify_program_file)) {
+		local $/ = undef;
+		my $prog = join("", <PROG>);
+		close(PROG);
+		eval($prog);
+		abort("Error processing $opt_modify_program_file ($@)") if ($@);
+	    } else {
+		abort(qq{Error opening "$opt_modify_program_file" ($!)});
+	    }
+	    $opt_modify_run = 'main($R);' unless ($opt_modify_run);
 	}
-	$opt_modify_run = 'main($R);' unless ($opt_modify_run);
     }
     if ($opt_modify_replace) {
 	# make the replacer case-insensitive
@@ -6985,8 +7067,16 @@ sub tes3cmd_main {
     $COMMAND{help}->{preprocess}()
 	unless ($cmd_ref = $COMMAND{$cmd_name});
     GetOptions(@{$cmd_ref->{options}}) or die($cmd_ref->{usage}."\n");
-    # glob plugin names containing glob chars
-    my @plugins = map { (/[$GLOBCHARS]/) ? glob($_) : $_ } @ARGV;
+    # glob plugin names containing glob chars and remove ignored plugins
+    my @plugins;
+    my %ignored_plugin = map { lc($_), 1 } (@opt_ignore_plugin);
+    foreach my $plugin (map { (/[$GLOBCHARS]/) ? glob($_) : $_ } @ARGV) {
+	if ($ignored_plugin{lc($plugin)}) {
+	    msg("Ignoring Plugin: $plugin");
+	} else {
+	    push(@plugins, $plugin);
+	}
+    }
     # if standard option --output-dir was used, ensure destination exists
     if ($opt_output_dir and not -d $opt_output_dir) {
 	eval { mkdir($opt_output_dir, 0755); };
@@ -6999,9 +7089,11 @@ sub tes3cmd_main {
     }
     if (defined(my $process = $cmd_ref->{process})) {
 	# process individual plugins
-	$COMMAND{help}->{preprocess}() if (scalar(@plugins) == 0);
+	die("No plugins to process!\n\n" . $cmd_ref->{usage} . "\n")
+	    if (scalar(@plugins) == 0);
 	dbg("$cmd_name: Executing Process function") if (DBG);
 	foreach my $plugin (@plugins) {
+	    # TBD allow ignore_plugin
 	    $CURRENT_PLUGIN = $plugin;
 	    $CURRENT_DIAL = undef;
 	    $process->($plugin);
