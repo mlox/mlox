@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 BEGIN {
-    $::VERSION = "0.37s";
+    $::VERSION = "0.37t";
 }
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2012 by John Moonsugar
@@ -16,8 +16,11 @@ BEGIN {
 # lint should report on:
 #   references with extremely high coordinates.
 #   and pathgrid points at x=0,y=0,z=0
+#   MVRFs in .esm files
 
-# delete should support sub-record groups. (what do with MVRF???)
+# modify --replace needs a way to specify first replacement only (override default global replace)
+
+# delete should support sub-record groups. (what do with MVRF ???)
 #
 #add ability to dump with things splitted out into individual files --output-folder
 #add: convertdeletedtodisabled command
@@ -107,10 +110,109 @@ use warnings;
 
 my $R;				# current record for modify command
 
-our $CURRENT_PLUGIN;
-BEGIN {
-    $CURRENT_PLUGIN = '';
-}
+our $CURRENT_PLUGIN = '';
+our $DATADIR;;	       # where "Data Files" lives.
+our $TES3CMD_DIR;;     # tes3cmd directory under "Data Files" (for cache, ...)
+
+### MAIN COMMON COMMAND OPTIONS
+our @STDOPT = (qw(assert debug verbose));
+our @MODOPT = ("backup-dir=s", "hide-backups");
+our $opt_backup_dir;		# default value gets set in find_datadir()
+our $opt_exterior;
+our $opt_hide_backups;
+our $opt_instance_type;		# show types for object instances
+our $opt_instance_match;
+our $opt_instance_no_match;
+our $opt_interior;
+our $opt_list;
+our $opt_match;
+our $opt_no_banner;
+our $opt_no_cache;
+our $opt_no_match;
+our $opt_output_dir;
+our $opt_overwrite;
+our $opt_report_only;
+our $opt_separator;
+our $opt_sub_match;
+our $opt_sub_no_match;
+our @opt_exact_id = ();
+our @opt_flag;
+our @opt_id = ();
+our @opt_ignore_plugin = ();
+our @opt_type = ();
+
+### MAIN COMMAND OPTIONS
+our $opt_active_off;
+our $opt_active_on;
+
+our $opt_clean_all = 0;
+our $opt_clean_instances = 0;
+our $opt_clean_cell_params = 0;
+our $opt_clean_dups = 0;
+our $opt_clean_gmsts = 0;
+our $opt_clean_junk_cells = 0;
+
+our @opt_diff_ignore_types = ();
+our $opt_diff_1_not_2;
+our $opt_diff_2_not_1;
+our $opt_diff_equal;
+our $opt_diff_not_equal;
+our $opt_diff_types;
+
+our $opt_dump_wrap;
+our $opt_dump_raw;
+our $opt_dump_raw_with_header;
+
+our $opt_header_author = '';
+our $opt_header_description = '';
+our $opt_header_multiline = 0;
+our $opt_header_synchronize;
+our $opt_header_update_masters;
+our $opt_header_update_record_count = 0;
+
+our $opt_lint_all;
+our $opt_lint_recommended;
+our $opt_lint_autocalc_spells;
+our $opt_lint_bloodmoon_dependency;
+our $opt_lint_cell_00;
+our $opt_lint_clean;
+our $opt_lint_deprecated_lists;
+our $opt_lint_duplicate_info;
+our $opt_lint_duplicate_records;
+our $opt_lint_expansion_dependency;
+our $opt_lint_evil_gmsts;
+our $opt_lint_fogbug;
+our $opt_lint_fogsync;
+our $opt_lint_getsoundplaying;
+our $opt_lint_junk_cells;
+our $opt_lint_master_sync;
+our $opt_lint_menumode;
+our $opt_lint_missing_author;
+our $opt_lint_missing_description;
+our $opt_lint_missing_version;
+our $opt_lint_modified_info;
+our $opt_lint_modified_info_id;
+our $opt_lint_record_count;
+our $opt_lint_overrides;
+our $opt_lint_no_bloodmoon_functions;
+our $opt_lint_no_tribunal_functions;
+our $opt_lint_scripted_doors;
+
+our $opt_modify_program_file = '';
+our $opt_modify_replace = '';
+our $opt_modify_run = '';
+
+our $opt_multipatch_cellnames;
+our $opt_multipatch_fogbug;
+our $opt_multipatch_merge_lists;
+our $opt_multipatch_no_activate;
+our $opt_multipatch_summons_persist;
+
+our $opt_overdial_single;
+
+our $opt_testcodec_continue;
+our $opt_testcodec_ignore_cruft;
+our @opt_testcodec_exclude_type = ();
 
 ### CLASS: Util
 
@@ -180,6 +282,7 @@ sub list_files {
 
 sub mkpath {
     my($path, $perms_in) = @_;
+    dbg(qq{Creating Path: "$path" with permissions: $perms_in}) if (DBG);
     my $perms = $perms_in || 0755;
     my $dir = ($path =~ m!^/!) ? "" : ".";
     foreach my $name (split(m!/!, $path)) {
@@ -217,12 +320,10 @@ BEGIN {
 
 ### CLASS: TES3::Util
 
-our $DATADIR;	       # where "Data Files" lives.
-our $TES3CMD_DIR;      # tes3cmd directory under "Data Files" (for cache, ...)
-
 # assuming the program is run somewhere under the Morrowind game directory, find the
 # location of the "Data Files" directory by walking up the hierarchy. Then create
 # TES3CMD_DIR if it does not already exist.
+# since find_datadir() sets some global option ($opt_) defaults, run it before GetOptions()
 sub find_datadir {
     return($DATADIR) if (defined($DATADIR));
     my $dir = Cwd::getcwd;
@@ -232,7 +333,6 @@ sub find_datadir {
 	dbg(qq{Checking for MWHOME in: "$dir"}) if (DBG);
 	my $datadir = list_files($dir)->{"data files"};
 	my $mwini = list_files($dir)->{"morrowind.ini"};
-	# ??? - add a check for "data files/morrowind.esm"
 	if ($datadir and $mwini) {
 	    $DATADIR = "$dir/$datadir";
 	    msg(qq{DATADIR = "$DATADIR"}) if (VERBOSE);
@@ -243,11 +343,14 @@ sub find_datadir {
 	$dir = join("/", @parts);
 	dbg(qq{Checking for "Data Files" in: "$dir"}) if (DBG);
     }
-    unless (defined $DATADIR) {
-	err(qq{Can't find "Data Files" directory, functionality reduced. You should first\ncd (change directory) to somewhere under where Morrowind is installed.});
+    if (defined $DATADIR) {
+	$TES3CMD_DIR = "$DATADIR/tes3cmd";
+    } else {
+	msg(qq{WARNING: Can't find "Data Files" directory, functionality reduced. You should first cd (change directory) to somewhere under where Morrowind is installed.});
 	$DATADIR = '.';		# not running under morrowind directory
+	$TES3CMD_DIR = '.';
+	$opt_no_cache = 1;	# don't know where MW stuff is, turn off caching
     }
-    $TES3CMD_DIR = "$DATADIR/tes3cmd";
     unless (-d $TES3CMD_DIR) {
 	if (-e $TES3CMD_DIR) {
 	    abort(qq{"$TES3CMD_DIR" exists, but is not a directory, please remove or rename it.});
@@ -255,6 +358,7 @@ sub find_datadir {
 	mkdir($TES3CMD_DIR, 0755) or
 	    abort(qq{Unable to make directory: "$TES3CMD_DIR" ($!)});
     }
+    $opt_backup_dir = "$TES3CMD_DIR/backups";
     return($DATADIR);
 } # find_datadir
 
@@ -265,7 +369,6 @@ DEBUG ON
 tes3cmd Version: $::VERSION
 Platform: $^O
 EOF
-    find_datadir();
 }
 
 ### TES3::Util methods
@@ -1592,7 +1695,7 @@ my @RECDEFS =
 		{ @RD_reference,
 		  rdflags => [qw(startgroup)] }],
 	       [NAM8 => @RD_Unknown_ess],
-	       #[NAM8 => @RD_short_array_ess], # TBD looks like it might be an array of shorts
+	       #[NAM8 => @RD_short_array_ess], # looks like it might be an array of shorts ???
 	       [NAM9 => [["owned", "L"]]],
 	       [ND3D => @RD_Unknown_ess],
 	       [PRDT => @RD_Unknown_ess],
@@ -1610,7 +1713,7 @@ my @RECDEFS =
 	       [WNAM => @RD_Unknown_ess],
 	       [XNAM => @RD_Unknown_ess],
 	       [YNAM => @RD_Unknown_ess],
-	       [ZNAM => [["disabled", "C"]]], # object flagged as disabled (ess only???)
+	       [ZNAM => [["disabled", "C"]]], # object flagged as disabled (ess only ???)
 	      ], { id => sub {	# CELL->id()
 		       my($self) = @_;
 		       return($self->{_id_}) if (defined $self->{_id_});
@@ -1679,7 +1782,7 @@ my @RECDEFS =
 	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]],
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     # TBD: CHECK CS (Animations? Unknowns?)
+     # CHECK CS ??? (Animations? Unknowns?)
      [CREA => [
 	       [NAME => [["id", "Z*"]]],
 	       [AIDT => [["hello", "C"], ["unknown_1", "C"], ["fight", "C"], ["flee", "C"],
@@ -1780,7 +1883,7 @@ my @RECDEFS =
 			 ["Unused", "s"]],
 		{
 		 rdflags => [qw(mergeable)] }]]],
-     # TBD: CHECK CS (what is stuff in CS dialog box in lower right?)
+     # CHECK CS ??? (what is stuff in CS dialog box in lower right?)
      [FACT => [
 	       [NAME => [["id", "Z*"]],
 		{ tostr => sub {
@@ -1855,7 +1958,7 @@ my @RECDEFS =
 		  },
 		}],
 	      ]],
-     # TBD: CHECK CS (unknowns?)
+     # CHECK CS ??? (unknowns?)
      [INFO => [
 	       [INAM => [["id", "Z*"]]],
 	       [ACDT => [["actor_data", "Z*"]], { rdflags => [qw(ess)] }],
@@ -2013,7 +2116,7 @@ my @RECDEFS =
 	       [MODL => [["model", "Z*"]]],
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
-     # TBD: CHECK CS
+     # CHECK CS ???
      [LTEX => [
 	       [NAME => [["id", "Z*"]]],
 	       [DATA => [["texture_path", "Z*"]]],
@@ -2063,7 +2166,7 @@ my @RECDEFS =
 	       [XIDX => @RD_Unknown],
 	       [XSOL => [["soul", "Z*"]]],
 	      ], { rdflags => [qw(ess)] }],
-     # TBD: CHECK CS
+     # CHECK CS ???
      [NPC_ => [
 	       [NAME => [["id", "Z*"]]],
 	       [FNAM => [["name", "Z*"]]],
@@ -2260,7 +2363,7 @@ my @RECDEFS =
 	       [ACDT => $RD_Actor_Data],
 	       [ACSC => @RD_Unknown],
 	       [ACSL => @RD_Unknown],
-	       [ACTN => [["unknown_1", "L"]]], # Actor Number???
+	       [ACTN => [["unknown_1", "L"]]], # Actor Number ???
 	       [ANIS => [["unknown_1", "H*"]]],
 	       [APUD => @RD_Unknown],
 	       [CHRD => @RD_long_array_ess],
@@ -2268,7 +2371,7 @@ my @RECDEFS =
 	       [CSTN => @RD_Unknown],
 	       [DATA => @RD_Unknown],
 	       [FGTN => [["following_target_name", "Z*"]]],
-	       [FRMR => [], { @RD_reference }], # is startgroup??? seems like we get only one
+	       [FRMR => [], { @RD_reference }], # is startgroup (seems like we get only one) ???
 	       [ND3D => [["unknown_1", "C"]]],
 	       [STPR => @RD_Unknown],
 	       [TGTN => [["target", "a*"]]],
@@ -2345,7 +2448,7 @@ my @RECDEFS =
      [SCPT => [
 	       [SCHD => [["id", ["Z32", "a32"]], ["num_shorts", "L"], ["num_longs", "L"], ["num_floats", "L"],
 			 ["data_size", "L"], ["local_var_size", "L"]]],
-	       [RNAM => @RD_Unknown_ess], # ??? something to do with whether the script is running globally?
+	       [RNAM => @RD_Unknown_ess], # something to do with whether the script is running globally ???
 	       [SCDT => [["bytecode", "H*:(compiled script code)"]]],
 	       [SCTX => [["script_text", "a*"]],
 		{ tostr => sub {
@@ -2436,8 +2539,6 @@ my @RECDEFS =
 	       [ONAM => [["owner_actor", "Z*"]]],
 	      ], { rdflags => [qw(ess)] }],
      [TES3 => [
-#	       [HEDR => [["version", "f"], ["is_master", "L"], ["author", ["Z32", "a32"]],
-#			 ["description", ["Z256", "a256"]], ["n_records", "L"]],
 	       [HEDR => [["version", "f"], ["is_master", "L"], ["author", "a32"],
 			 ["description", "a256"], ["n_records", "L"]],
 		{
@@ -2446,7 +2547,11 @@ my @RECDEFS =
 				$ver =~ s/0+$//;
 				my $description = $self->{description};
 				$description =~ tr/\r//d if ($^O eq 'linux');
-				sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"%s"\n${MARGIN}Description:"%s"\n${MARGIN}N_Records:%d}, ($self->{is_master}) ? "True" : "False", $self->{author}, $description, $self->{n_records}); },
+				my $author = $self->{author};
+				# only chop off terminating nulls
+				$description =~ s!\000+$!!;
+				$author =~ s!\000+$!!;
+				sprintf(qq{${MARGIN}Version:$ver  Is_Master:%s  Author:"%s"\n${MARGIN}Description:"%s"\n${MARGIN}N_Records:%d}, ($self->{is_master}) ? "True" : "False", $author, $description, $self->{n_records}); },
 		}],
 	       [MAST => [["master", "Z*"]], { rdflags => [qw(startgroup)] }],
 	       [DATA => [],
@@ -2482,7 +2587,7 @@ my @RECDEFS =
 	      ], {
 		  id => sub { '()' },
 		 }],
-     [VFXM => [			# Visual FX??? (ess, single record, no id)
+     [VFXM => [			# Visual FX (ess, single record, no id) ???
 	       [VNAM => [(["unknown_1", "L"]) x 6,
 			 ["short", "S"], ["unknown_1", "H44"],
 			 ["name_1", ["Z36", "a36"]], ["name_1", ["Z68", "a68"]]]],
@@ -2582,10 +2687,14 @@ sub bad_length {
 }
 
 # tr->delete_subrec
+# delete sub-records of given type and sets _modified_ flag
 sub delete_subtype {
     my($self, $subtype) = @_;
-    delete $self->{SH}->{$subtype};
-    $self->{SL} = [grep { $_->subtype ne $subtype } @{$self->{SL}}];
+    $subtype = uc($subtype);
+    if (delete $self->{SH}->{$subtype}) {
+	$self->{SL} = [grep { $_->subtype ne $subtype } @{$self->{SL}}];
+	$self->{_modified_} = 1;
+    }
     return($self);
 }
 
@@ -2678,7 +2787,6 @@ set({f=>"count"}, 0)
 });
 	return;
     }
-    $self->{_modified_} = 0;
     my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
     foreach my $i (@indices) {	# narrow by indices
 	my $tsr = $self->{SL}->[$i];
@@ -2723,7 +2831,6 @@ delete({f=>"spell"}, 'fireball')
 	return;
     }
     $match = '.' unless defined $match;
-    $self->{_modified_} = 0;
     my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
     foreach my $i (@indices) {	# narrow by indices
 	my $tsr = $self->{SL}->[$i];
@@ -3156,14 +3263,18 @@ sub gen_class {
     };
 
     # $tr->append()
+    # appends given sub-records and sets _modified_ flag
     $method = "${rectype}::append";
     *$method = sub {
 	use strict "refs";
 	my($self, @subrecs) = @_;
-	push(@{$self->{SL}}, @subrecs);
-	foreach my $tsr (@subrecs) {
-	    $tsr->{_id_} = $self->{_id_};
-	    push(@{$self->{SH}->{$tsr->subtype()}}, $tsr);
+	if (@subrecs) {
+	    push(@{$self->{SL}}, @subrecs);
+	    foreach my $tsr (@subrecs) {
+		$tsr->{_id_} = $self->{_id_};
+		push(@{$self->{SH}->{$tsr->subtype()}}, $tsr);
+	    }
+	    $self->{_modified_} = 1;
 	}
 	$self;
     };
@@ -3344,106 +3455,6 @@ my $lint_header_fields;
 my $lint_modified_info;
 my $lint_expansion_functions;
 
-### MAIN COMMON COMMAND OPTIONS
-our @STDOPT = (qw(assert debug verbose));
-our @MODOPT = ("backup-dir=s", "hide-backups");
-our $opt_backup_dir = "$TES3CMD_DIR/backups";
-our $opt_exterior;
-our $opt_hide_backups;
-our $opt_instance_type;		# show types for object instances
-our $opt_instance_match;
-our $opt_instance_no_match;
-our $opt_interior;
-our $opt_list;
-our $opt_match;
-our $opt_no_banner;
-our $opt_no_cache;
-our $opt_no_match;
-our $opt_output_dir;
-our $opt_overwrite;
-our $opt_report_only;
-our $opt_separator;
-our $opt_sub_match;
-our $opt_sub_no_match;
-our @opt_exact_id = ();
-our @opt_flag;
-our @opt_id = ();
-our @opt_ignore_plugin = ();
-our @opt_type = ();
-
-### MAIN COMMAND OPTIONS
-our $opt_active_off;
-our $opt_active_on;
-
-our $opt_clean_all = 0;
-our $opt_clean_instances = 0;
-our $opt_clean_cell_params = 0;
-our $opt_clean_dups = 0;
-our $opt_clean_gmsts = 0;
-our $opt_clean_junk_cells = 0;
-
-our @opt_diff_ignore_types = ();
-our $opt_diff_1_not_2;
-our $opt_diff_2_not_1;
-our $opt_diff_equal;
-our $opt_diff_not_equal;
-our $opt_diff_types;
-
-our $opt_dump_wrap;
-our $opt_dump_raw;
-our $opt_dump_raw_with_header;
-
-our $opt_header_author = '';
-our $opt_header_description = '';
-our $opt_header_multiline = 0;
-our $opt_header_synchronize;
-our $opt_header_update_masters;
-our $opt_header_update_record_count = 0;
-
-our $opt_lint_all;
-our $opt_lint_recommended;
-our $opt_lint_autocalc_spells;
-our $opt_lint_bloodmoon_dependency;
-our $opt_lint_cell_00;
-our $opt_lint_clean;
-our $opt_lint_deprecated_lists;
-our $opt_lint_duplicate_info;
-our $opt_lint_duplicate_records;
-our $opt_lint_expansion_dependency;
-our $opt_lint_evil_gmsts;
-our $opt_lint_fogbug;
-our $opt_lint_fogsync;
-our $opt_lint_getsoundplaying;
-our $opt_lint_junk_cells;
-our $opt_lint_master_sync;
-our $opt_lint_menumode;
-our $opt_lint_missing_author;
-our $opt_lint_missing_description;
-our $opt_lint_missing_version;
-our $opt_lint_modified_info;
-our $opt_lint_modified_info_id;
-our $opt_lint_record_count;
-our $opt_lint_overrides;
-our $opt_lint_no_bloodmoon_functions;
-our $opt_lint_no_tribunal_functions;
-our $opt_lint_scripted_doors;
-
-our $opt_modify_program_file = '';
-our $opt_modify_replace = '';
-our $opt_modify_run = '';
-
-our $opt_multipatch_cellnames;
-our $opt_multipatch_fogbug;
-our $opt_multipatch_merge_lists;
-our $opt_multipatch_no_activate;
-our $opt_multipatch_summons_persist;
-
-our $opt_overdial_single;
-
-our $opt_testcodec_continue;
-our $opt_testcodec_ignore_cruft;
-our @opt_testcodec_exclude_type = ();
-
 ### MAIN COMMAND DISPATCH TABLE
 my %COMMAND;
 %COMMAND =
@@ -3509,7 +3520,7 @@ OPTIONS:
 
  --backup-dir
 	where backup files get stored. The default is:
-	$opt_backup_dir
+	"Data Files/tes3cmd/backups"
 
  --cell-params
 	clean cell subrecords AMBI,WHGT duped from masters
@@ -3664,7 +3675,7 @@ OPTIONS:
 
  --backup-dir
 	where backup files get stored. The default is:
-	$opt_backup_dir
+	"Data Files/tes3cmd/backups"
 
  --exact-id* <id-string>
 	only delete records whose ids exactly match given <id-string>
@@ -3799,9 +3810,9 @@ that gives an overview of differences, as lists of record IDs.
 
 When records in plugin1 are different in plugin2, each of these records is
 printed in detail to a file "plugin1-diff.txt" and "plugin2-diff.txt", which
-can then be compared textually using a tool such as WinMerge or Emacs' ediff
-function. Note that the output records will be sorted alphabetically by record
-type to make the comparison using these tools easier.
+can then be compared textually using a tool such as WinMerge or the ediff
+function of Emacs. Note that the output records will be sorted alphabetically
+by record type to make the comparison using these tools easier.
 
 To reduce a great deal of "uninteresting" differences when diffing savegames,
 the the ModIndex field of CELL.FRMR records are automatically ignored. (Note
@@ -4045,7 +4056,7 @@ OPTIONS:
 
  --backup-dir
 	where backup files get stored. The default is:
-	$opt_backup_dir
+	"Data Files/tes3cmd/backups"
 
  --hide-backups
 	any created backup files will get stashed in the backup directory
@@ -4093,7 +4104,7 @@ OPTIONS:
 
  --backup-dir
 	where backup files get stored. The default is:
-	$opt_backup_dir
+	"Data Files/tes3cmd/backups"
 
  --description <desc>
 	set the Description field to <desc>
@@ -4132,7 +4143,7 @@ Note:
  - the Author value should fit in $TES3::HDR_AUTH_LENGTH bytes.
  - the Description value should fit in $TES3::HDR_DESC_LENGTH bytes.
 
-If the value supplied won't fit into the plugin header field, you will be
+If the value supplied will not fit into the plugin header field, you will be
 warned.
 
 The --update-masters (or --synchronize) option will clear any warnings
@@ -4526,7 +4537,7 @@ OPTIONS:
 
  --backup-dir
 	where backup files get stored. The default is:
-	$opt_backup_dir
+	"Data Files/tes3cmd/backups"
 
  --exact-id* <id-string>
 	only modify records whose ids exactly match given <id-string>
@@ -4577,8 +4588,8 @@ OPTIONS:
  --sub-match <regex>
 	only modify the subrecords that match <regex>. When this option (or
 	--sub-no-match) are used, mofification only applies to matching
-	subrecords. Without either of these options modifications are peformed
-	on whole records.
+	subrecords. Without either of these options modifications are
+	performed on whole records.
 
  --sub-no-match <regex> only modify the subrecords that do not match <regex>.
 	(see also --sub-match above).
@@ -4687,7 +4698,7 @@ Cell Name Patch (--cellnames)
   * Master A names external CELL (1, 1) as: "".
   * Plugin B renames CELL (1, 1) to: "My City".
   * Plugin C modifies CELL (1, 1), using the original name "", reverting
-    plugin B's renaming.
+    renaming done by plugin B.
   * References in plugin B (such as in scripts) that refer to "My City" break.
 
   This option works by scanning your currently active plugin load order for
@@ -4706,7 +4717,7 @@ Fog Bug Patch (--fogbug)
 
 Summoned creatures persists (--summons-persist)
 
-  There's a bug in Morrowind that can cause the game to crash if you leave a
+  There is a bug in Morrowind that can cause the game to crash if you leave a
   cell where an NPC has summoned a creature. The simple workaround is to flag
   summoned creatures as persistent. The Morrowind Patch Project implements
   this fix, however other mods coming later in the load order often revert it.
@@ -4749,7 +4760,7 @@ An overlap is defined as a dialog (DIAL) Topic from one plugin that entirely
 contains a dialog Topic from another plugin as a substring. For example, the
 mod "White Wolf of Lokken" has a dialog topic "to rescue me" which overlaps
 with the dialog topic "rescue me" from "Suran Underworld", which causes the
-"Special Guest" quest from SU to get stuck because Ylarra won't offer the
+"Special Guest" quest from SU to get stuck because Ylarra will not offer the
 topic "rescue me" when you find her in her cell.
 
 Note that overlap is only a potential problem if the plugins are loaded in the
@@ -4776,7 +4787,7 @@ OPTIONS:
 
  --backup-dir
 	where backup files get stored. The default is:
-	$opt_backup_dir
+	"Data Files/tes3cmd/backups"
 
  --hide-backups
 	any created backup files will get stashed in the backup directory
@@ -5172,7 +5183,7 @@ sub unique_backup_name {
     my($plugbak) = @_;
     if (defined $opt_hide_backups) {
 	unless (-d $opt_backup_dir) {
-	    mkdir($opt_backup_dir, 0755) or
+	    mkpath($opt_backup_dir, 0755) or
 		abort(qq{Unable to make directory: "$opt_backup_dir" ($!)});
 	}
 	my($file, $dir) = fileparse($plugbak);
@@ -5888,7 +5899,7 @@ sub cmd_wikiout {
 	next if (($cmd eq 'help') or ($cmd =~ /^-/));
 	my $usage = $COMMAND{$cmd}->{usage};
 	my $desc = $COMMAND{$cmd}->{description};
-	$usage =~ s/'/''/g;
+	#$usage =~ s/'/''/g; # apparently no longer needed!
 	print "==$cmd - _${desc}_==\n{{{\n$usage\n}}}\n\n";
     }
 }
@@ -6156,7 +6167,6 @@ sub cmd_multipatch {
 	push(@options, 'fogbug') if $opt_multipatch_fogbug;
 	push(@options, 'merge_lists') if $opt_multipatch_merge_lists;
 	push(@options, 'summons_persist') if $opt_multipatch_summons_persist;
-	# TBD check these global assignments
 	$opt_header_update_record_count = 1;
 	$opt_header_description = "+ \r\nOPT: ".join(",", @options);
 	update_header($patch_path, [qw(QUIET NOBACKUP)]);
@@ -7088,6 +7098,7 @@ sub cmd_resetdates {
 }
 
 sub tes3cmd_main {
+    TES3::Util::find_datadir();
     msg("ASSERTIONS ON!") if (ASSERT);
     my $cmd_name = (not defined($ARGV[0]) or $ARGV[0] =~ /^--/) ? '' : shift(@ARGV);
     $COMMAND{help}->{preprocess}()
@@ -7109,8 +7120,7 @@ sub tes3cmd_main {
     }
     # if standard option --output-dir was used, ensure destination exists
     if ($opt_output_dir and not -d $opt_output_dir) {
-	eval { mkdir($opt_output_dir, 0755); };
-	abort($@) if ($@);
+	mkpath($opt_output_dir, 0755) or abort("Unable to create directory: $opt_output_dir");
     }
     if (defined(my $pre = $cmd_ref->{preprocess})) {
 	# run the pre-process function
