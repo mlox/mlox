@@ -13,11 +13,6 @@ BEGIN {
 # to build on Windows with Par::Packer
 # pp -o tes3cmd.exe tes3cmd
 
-# lint should report on:
-#   references with extremely high coordinates.
-#   and pathgrid points at x=0,y=0,z=0
-#   MVRFs in .esm files
-
 # modify --replace needs a way to specify first replacement only (override default global replace)
 
 # delete should support sub-record groups. (what do with MVRF ???)
@@ -75,12 +70,14 @@ BEGIN {
 # **** handle patch plugins that are *supposed* to only override the patchee (auto-detect?)
 # # # # # # # # # # # # # # #
 # lint:
+# * check references with extremely high coordinates
+# * pathgrid points at x=0,y=0,z=0
+# * MVRFs in .esm files
 # * check for dialog edits that lose part of the filter.
 # * add note about creating a shortcut on Windows
 # * check for addtopic of non-existant dialog topics?
 # * add a check for missing icons, etc.?
 # * add a check for signrotate contamination (difficult to impossible)
-# * check for use of position(cell) in INFO results!
 # * OVR-REC specials: PGRD.?
 # * check for use of == on floats in scripts! (gamehour)
 # * Check for accidental conversion of float to short (putting getsecondspassed into short truncates)
@@ -177,6 +174,7 @@ our $opt_lint_bloodmoon_dependency;
 our $opt_lint_cell_00;
 our $opt_lint_clean;
 our $opt_lint_deprecated_lists;
+our $opt_lint_dialogue_teleports;
 our $opt_lint_duplicate_info;
 our $opt_lint_duplicate_records;
 our $opt_lint_expansion_dependency;
@@ -3455,6 +3453,766 @@ my $lint_header_fields;
 my $lint_modified_info;
 my $lint_expansion_functions;
 
+my @lint_tribunal_functions =
+    (qw(AddToLevCreature
+	AddToLevItem
+	ClearForceJump
+	ClearForceMoveJump
+	ClearForceRun
+	DisableLevitation
+	EnableLevitation
+	ExplodeSpell
+	ForceJump
+	ForceMoveJump
+	ForceRun
+	GetCollidingActor
+	GetCollidingPC
+	GetForceJump
+	GetForceMoveJump
+	GetForceRun
+	GetPCJumping
+	GetPCRunning
+	GetPCSneaking
+	GetScale
+	GetSpellReadied
+	GetSquareRoot
+	GetWaterLevel
+	GetWeaponDrawn
+	GetWeaponType
+	HasItemEquipped
+	ModScale
+	ModWaterLevel
+	PlaceItem
+	PlaceItemCell
+	RemoveFromLevCreature
+	RemoveFromLevItem
+	SetDelete
+	SetScale
+	SetWaterLevel
+      ));
+
+my @lint_bloodmoon_functions =
+    (qw(BecomeWerewolf
+	GetPCInJail
+	GetPCTraveling
+	GetWerewolfKills
+	IsWerewolf
+	PlaceAtMe
+	SetWerewolfAcrobatics
+	TurnMoonRed
+	TurnMoonWhite
+	UndoWerewolf
+      ));
+
+my @lint_bethesda_leveled_lists =
+    ('BM_Imperial Guard Random Weapon',
+     'Imperial Guard Random Helmet',
+     'Imperial Guard Random LPauldron',
+     'Imperial Guard Random RPauldron',
+     'Imperial Guard Random Shield',
+     'Imperial Guard Random Skirt',
+     'Imperial Guard Random Weapon',
+     'bm_ex_berserkers',
+     'bm_ex_felcoast',
+     'bm_ex_felcoast_40',
+     'bm_ex_felcoast_60',
+     'bm_ex_felcoast_sleep',
+     'bm_ex_hirforest',
+     'bm_ex_hirforest_40',
+     'bm_ex_hirforest_60',
+     'bm_ex_hirforest_sleep',
+     'bm_ex_horker_h20',
+     'bm_ex_horker_lake',
+     'bm_ex_isinplains',
+     'bm_ex_isinplains_40',
+     'bm_ex_isinplains_60',
+     'bm_ex_isinplains_sleep',
+     'bm_ex_moemountains',
+     'bm_ex_moemountains_40',
+     'bm_ex_moemountains_60',
+     'bm_ex_moemountains_sleep',
+     'bm_ex_reaver_archers',
+     'bm_ex_reavers',
+     'bm_ex_rieklingpatrols',
+     'bm_ex_rieklingpatrols_20',
+     'bm_ex_rieklingpatrols_40',
+     'bm_ex_rieklingpatrols_60',
+     'bm_ex_smugglers',
+     'bm_ex_wolfpack',
+     'bm_ex_wolfpack_20',
+     'bm_ex_wolfpack_40',
+     'bm_ex_wolfpack_60',
+     'bm_frysehag_all',
+     'bm_in_berserker_20',
+     'bm_in_berserker_40',
+     'bm_in_berserker_60',
+     'bm_in_frysehag_20',
+     'bm_in_frysehag_40',
+     'bm_in_frysehag_8',
+     'bm_in_icecaves',
+     'bm_in_icecaves_40',
+     'bm_in_icecaves_60',
+     'bm_in_nordburial',
+     'bm_in_nordburial_40',
+     'bm_in_nordburial_60',
+     'bm_random_nordictomb',
+     'bm_random_nordsilver',
+     'bm_random_riekling_loot',
+     'bm_randomboots_smugglers',
+     'bm_randomcuirass_smugglers',
+     'bm_randomgreaves_smugglers',
+     'bm_randomhealth_smugglers',
+     'bm_randomhelmet_smugglers',
+     'bm_randomleft_smugglers',
+     'bm_randomloot_smugglers',
+     'bm_randomright_smugglers',
+     'bm_randomshield_smugglers',
+     'bm_randomweapon_berserker',
+     'bm_randomwpn_smugglers',
+     'bm_werewolf_Connor',
+     'bm_werewolf_wilderness01',
+     'bm_werewolf_wilderness02',
+     'bm_werewolf_wilderness03',
+     'bm_werewolf_wilderness04',
+     'bm_werewolf_wilderness05',
+     'bm_werewolf_wilderness06',
+     'bm_werewolf_wilderness07',
+     'bm_werewolf_wilderness08',
+     'bm_werewolf_wilderness09',
+     'db_assassins',
+     'ex_RedMtn_all_lev[+]0',
+     'ex_RedMtn_all_lev[+]2',
+     'ex_RedMtn_all_lev-2',
+     'ex_RedMtn_all_sleep',
+     'ex_ascadianisles_lev[+]0',
+     'ex_ascadianisles_lev[+]2',
+     'ex_ascadianisles_lev-1',
+     'ex_ascadianisles_sleep',
+     'ex_azurascoast_lev[+]0',
+     'ex_azurascoast_lev[+]2',
+     'ex_azurascoast_lev-1',
+     'ex_azurascoast_sleep',
+     'ex_bittercoast_lev[+]0',
+     'ex_bittercoast_lev[+]2',
+     'ex_bittercoast_lev-1',
+     'ex_bittercoast_sleep',
+     'ex_grazelands_lev[+]0',
+     'ex_grazelands_lev[+]2',
+     'ex_grazelands_lev-1',
+     'ex_grazelands_sleep',
+     'ex_molagmar_lev[+]0',
+     'ex_molagmar_lev[+]2',
+     'ex_molagmar_lev-1',
+     'ex_molagmar_sleep',
+     'ex_sheogorad_lev[+]0',
+     'ex_sheogorad_lev[+]2',
+     'ex_sheogorad_lev-1',
+     'ex_sheogorad_sleep',
+     'ex_shore_all_lev[+]0',
+     'ex_shore_all_lev[+]2',
+     'ex_shore_all_lev-2',
+     'ex_shore_cliffracer_lev[+]0',
+     'ex_shore_cliffracer_lev[+]2',
+     'ex_shore_cliffracer_lev-2',
+     'ex_shore_mudcrab',
+     'ex_westgash_lev[+]0',
+     'ex_westgash_lev[+]2',
+     'ex_westgash_lev-1',
+     'ex_westgash_sleep',
+     'ex_wild_all_lev[+]0',
+     'ex_wild_all_lev[+]2',
+     'ex_wild_all_lev-1',
+     'ex_wild_all_sleep',
+     'ex_wild_netch_lev[+]0',
+     'ex_wild_netch_lev[+]2',
+     'ex_wild_netch_lev-1',
+     'ex_wild_rat_lev[+]0',
+     'ex_wild_rat_lev[+]2',
+     'ex_wild_rat_lev-2',
+     'goblin_health',
+     'goblin_weapons_random',
+     'h2o_all_lev[+]0',
+     'h2o_all_lev[+]2',
+     'h2o_all_lev-2',
+     'h2o_slaughterfish',
+     'in_6th_all_lev[+]0',
+     'in_6th_all_lev[+]2',
+     'in_6th_all_lev-2',
+     'in_6th_ash_lev[+]0',
+     'in_6th_ash_lev[+]2',
+     'in_6th_ash_lev-2',
+     'in_cave_alit_lev[+]0',
+     'in_cave_alit_lev[+]2',
+     'in_cave_alit_lev-1',
+     'in_cave_all_lev[+]0',
+     'in_cave_all_lev[+]2',
+     'in_cave_all_lev-1',
+     'in_cave_kagouti_lev[+]0',
+     'in_cave_kagouti_lev[+]2',
+     'in_cave_kagouti_lev-1',
+     'in_cave_nix_lev[+]0',
+     'in_cave_nix_lev[+]2',
+     'in_cave_nix_lev-1',
+     'in_dae_all_lev[+]0',
+     'in_dae_all_lev[+]2',
+     'in_dae_all_lev-2',
+     'in_dae_atronach_lev[+]0',
+     'in_dae_atronach_lev[+]2',
+     'in_dae_atronach_lev-2',
+     'in_dae_clanfear_lev[+]0',
+     'in_dae_clanfear_lev[+]2',
+     'in_dae_clanfear_lev-2',
+     'in_dae_dremora_lev[+]0',
+     'in_dae_dremora_lev[+]2',
+     'in_dae_dremora_lev-2',
+     'in_durzogs',
+     'in_dwe_all_lev[+]0',
+     'in_dwe_all_lev[+]2',
+     'in_dwe_all_lev-2',
+     'in_dwe_all_tribunal',
+     'in_dwe_cent_lev[+]0',
+     'in_dwe_cent_lev[+]2',
+     'in_dwe_cent_lev-2',
+     'in_egg_all_lev[+]0',
+     'in_egg_all_lev[+]2',
+     'in_egg_all_lev-1',
+     'in_egg_kwama_blight_lev[+]0',
+     'in_egg_kwama_blight_lev[+]2',
+     'in_egg_kwama_blight_lev-1',
+     'in_egg_kwama_lev[+]0',
+     'in_egg_kwama_lev[+]2',
+     'in_egg_kwama_lev-1',
+     'in_egg_kwama_mined',
+     'in_egg_scrib_lev[+]0',
+     'in_egg_scrib_lev[+]2',
+     'in_egg_scrib_lev-1',
+     'in_goblins',
+     'in_tomb_all_lev[+]0',
+     'in_tomb_all_lev[+]2',
+     'in_tomb_all_lev-2',
+     'in_tomb_all_lev_trib',
+     'in_tomb_bone_lev[+]0',
+     'in_tomb_bone_lev[+]2',
+     'in_tomb_bone_lev-2',
+     'in_tomb_skele_lev[+]0',
+     'in_tomb_skele_lev[+]2',
+     'in_tomb_skele_lev-2',
+     'in_vamp_cattle',
+     'in_vamp_cattle_aun',
+     'in_vamp_cattle_ber',
+     'in_vamp_cattle_qua',
+     'l_b_Bandit_goods',
+     'l_b_amulets',
+     'l_b_loot_tomb',
+     'l_b_loot_tomb01',
+     'l_b_loot_tomb02',
+     'l_b_loot_tomb03',
+     'l_b_rings',
+     'l_m_amulets',
+     'l_m_armor',
+     'l_m_armor_boots',
+     'l_m_armor_bracers',
+     'l_m_armor_cuirass',
+     'l_m_armor_gauntlet',
+     'l_m_armor_helmet',
+     'l_m_armor_shields',
+     'l_m_belts',
+     'l_m_enchantitem_hlaalu_rank0',
+     'l_m_enchantitem_hlaalu_rank4',
+     'l_m_enchantitem_hlaalu_rank6',
+     'l_m_enchantitem_imperial_rank0',
+     'l_m_enchantitem_redoran_rank2',
+     'l_m_enchantitem_redoran_rank4',
+     'l_m_enchantitem_redoran_rank6',
+     'l_m_enchantitem_redoran_rank8',
+     'l_m_enchantitem_telvanni_rank01',
+     'l_m_enchantitem_telvanni_rank6',
+     'l_m_enchantitem_telvanni_rank8',
+     'l_m_enchantitem_temple_rank0_1',
+     'l_m_enchantitem_temple_rank0_2',
+     'l_m_enchantitem_temple_rank4',
+     'l_m_enchantitem_temple_rank6',
+     'l_m_enchantitem_temple_rank8_1',
+     'l_m_enchantitem_temple_rank8_2',
+     'l_m_potion',
+     'l_m_potion_h',
+     'l_m_rings',
+     'l_m_wpn_melee',
+     'l_m_wpn_melee_axe',
+     'l_m_wpn_melee_blunt',
+     'l_m_wpn_melee_long blade',
+     'l_m_wpn_melee_short blade',
+     'l_m_wpn_melee_spear',
+     'l_m_wpn_missle',
+     'l_m_wpn_missle_arrow',
+     'l_m_wpn_missle_bolt',
+     'l_n_amulet',
+     'l_n_apparatus',
+     'l_n_armor',
+     'l_n_armor_boots',
+     'l_n_armor_bracers',
+     'l_n_armor_cuirass',
+     'l_n_armor_gauntlet',
+     'l_n_armor_greaves',
+     'l_n_armor_helmet',
+     'l_n_armor_pauldron',
+     'l_n_armor_shields',
+     'l_n_lockpicks',
+     'l_n_probe',
+     'l_n_repair item',
+     'l_n_rings',
+     'l_n_smuggled_goods',
+     'l_n_soul gem',
+     'l_n_wpn_melee',
+     'l_n_wpn_melee_axe',
+     'l_n_wpn_melee_blunt',
+     'l_n_wpn_melee_long blade',
+     'l_n_wpn_melee_short blade',
+     'l_n_wpn_melee_spear',
+     'l_n_wpn_melee_tomb',
+     'l_n_wpn_missle',
+     'l_n_wpn_missle_arrow',
+     'l_n_wpn_missle_bolt',
+     'l_n_wpn_missle_bow',
+     'l_n_wpn_missle_thrown',
+     'l_n_wpn_missle_xbow',
+     'l_vamp_cattle',
+     'misc_com_redware_bowl',
+     'random ashlander weapon',
+     'random ebony weapon',
+     'random excellent melee weapon',
+     'random gold',
+     'random gold_lev_05',
+     'random gold_lev_10',
+     'random gold_lev_15',
+     'random gold_lev_20',
+     'random orcish armor',
+     'random_Golden_saint_shield',
+     'random_Golden_saint_weapon',
+     'random_adamantium',
+     'random_alchemy_diff',
+     'random_alit_hide',
+     'random_ampoule_pod',
+     'random_armor_bonemold',
+     'random_armor_chitin',
+     'random_armor_fur',
+     'random_armor_glass',
+     'random_armor_iron',
+     'random_armor_netch_leather',
+     'random_armor_steel',
+     'random_ash_salts',
+     'random_ash_yam',
+     'random_bear_pelt',
+     'random_belladonna_plant',
+     'random_belladonna_spriggan',
+     'random_bittergreen_petals',
+     'random_black_anther',
+     'random_black_lichen',
+     'random_boar_leather',
+     'random_bonemeal',
+     'random_book_dunmer',
+     'random_book_imperial_dunmer',
+     'random_book_imperial_hlaalu',
+     'random_book_skill',
+     'random_book_wizard_all',
+     'random_book_wizard_evil',
+     'random_bulbs',
+     'random_bunglers_bane',
+     'random_cabbage',
+     'random_chokeweed',
+     'random_coda_flower',
+     'random_com_kitchenware',
+     'random_comberry',
+     'random_common_de_fclothes_01',
+     'random_common_de_mclothes_01',
+     'random_coprinus',
+     'random_corkbulb_root',
+     'random_cornberry',
+     'random_corprus_weepings',
+     'random_crab_meat',
+     'random_daedra_heart',
+     'random_daedra_skin',
+     'random_daedric_weapon',
+     'random_de_blueware_01',
+     'random_de_cheapfood_01_nc',
+     'random_de_cheapfood_01_ne',
+     'random_de_pants',
+     'random_de_pos_01',
+     'random_de_pos_01_nc',
+     'random_de_robe',
+     'random_de_shirt',
+     'random_de_shoes_common',
+     'random_de_weapon',
+     'random_diamond',
+     'random_dreugh_wax',
+     'random_drinks_01',
+     'random_drinks_nord',
+     'random_drinksndrugs_imp',
+     'random_dwarven_all',
+     'random_dwarven_ingredients',
+     'random_dwarven_misc',
+     'random_dwemer_armor',
+     'random_dwemer_coins',
+     'random_dwemer_weapon',
+     'random_ebony',
+     'random_ectoplasm',
+     'random_expensive_de_fclothes_02',
+     'random_expensive_de_mclothes_02',
+     'random_exquisite_de_fclothes1',
+     'random_exquisite_de_mclothes1',
+     'random_extravagant_de_fclothes1',
+     'random_extravagant_de_mclothes1',
+     'random_fire_petal',
+     'random_fire_salts',
+     'random_food',
+     'random_frost_salts',
+     'random_gem',
+     'random_ghoul_heart',
+     'random_glass_weapon',
+     'random_gold_kanet',
+     'random_golden_sedge',
+     'random_gravetar',
+     'random_green_lichen',
+     'random_guar_hide',
+     'random_hackle-lo_leaf',
+     'random_heartwood',
+     'random_heather',
+     'random_holly',
+     'random_horker_tusk',
+     'random_hound_meat',
+     'random_hypha_facia',
+     'random_imp_armor',
+     'random_imp_silverware',
+     'random_imp_weapon',
+     'random_ingredient',
+     'random_ingredient_diff',
+     'random_iron_fur_armor',
+     'random_iron_weapon',
+     'random_kagouti_hide',
+     'random_kresh_fiber',
+     'random_kwama egg',
+     'random_kwama_cuttle',
+     'random_loot_bonewalker',
+     'random_loot_bonewalker_greater',
+     'random_loot_special',
+     'random_marshmerrow',
+     'random_moon_sugar',
+     'random_muck',
+     'random_netch_leather',
+     'random_noble_sedge',
+     'random_nordic_weapons',
+     'random_nordictomb_rare',
+     'random_orcish_weapons',
+     'random_pearl',
+     'random_pos',
+     'random_potion_bad',
+     'random_racer_plumes',
+     'random_rat_meat',
+     'random_rawglass',
+     'random_red_guard_cloth_01',
+     'random_red_lichen',
+     'random_riekling_loot',
+     'random_roobrush',
+     'random_russula',
+     'random_rye',
+     'random_saltrice',
+     'random_scales',
+     'random_scamp_skin',
+     'random_scathecraw',
+     'random_scrap_metal',
+     'random_scrib_jelly',
+     'random_scroll_all',
+     'random_shalk_resin',
+     'random_silver_weapon',
+     'random_skooma',
+     'random_smuggler_1-5',
+     'random_smuggler_11[+]',
+     'random_smuggler_6-10',
+     'random_snowbear_pelt',
+     'random_snowwolf_pelt',
+     'random_spines',
+     'random_stalks',
+     'random_steel_weapon',
+     'random_stoneflower_petals',
+     'random_sweetpulp',
+     'random_timsa',
+     'random_trama_root',
+     'random_vampire_dust',
+     'random_void_salts',
+     'random_weapon_melee_basic',
+     'random_wickwheat',
+     'random_willow_anther',
+     'random_wolf_pelt');
+
+my @lint_bethesda_doors =
+    ('BM_IC_door_01',
+     'BM_IC_door_pelt',
+     'BM_IC_door_pelt_dark',
+     'BM_IC_door_pelt_wolf',
+     'BM_KA_door',
+     'BM_KA_door_dark',
+     'BM_KA_door_dark_02',
+     'BM_KA_door_dark_SG',
+     'BM_KA_door_dark_udyr',
+     'BM_KarstCav_Door',
+     'BM_kartaag_Door',
+     'BM_mazegate_01',
+     'BM_mazegate_02',
+     'BM_mazegate_03',
+     'CharGen Exit Door',
+     'CharGen_cabindoor',
+     'CharGen_ship_trapdoor',
+     'EX_MH_door_02',
+     'EX_MH_door_02_ignatius',
+     'EX_MH_door_02_sadri',
+     'EX_MH_door_02_velas',
+     'EX_MH_temple_door_01',
+     'EX_MH_temple_door_01_ch',
+     'Ex_BM_tomb_door_01',
+     'Ex_BM_tomb_door_02',
+     'Ex_BM_tomb_door_03',
+     'Ex_BM_tomb_door_skaalara',
+     'Ex_Cave_Door_01_Koal',
+     'Ex_DE_ship_cabindoor',
+     'Ex_Dae_door_static',
+     'Ex_De_SN_Gate',
+     'Ex_De_Shack_Door',
+     'Ex_MH_Door_01',
+     'Ex_MH_Palace_gate',
+     'Ex_MH_Pav_Gate_Door',
+     'Ex_MH_Pav_Ladder_01',
+     'Ex_MH_sewer_trapdoor_01',
+     'Ex_MH_sewer_trapdoor_sadri',
+     'Ex_MH_swr_trapdr_blkd',
+     'Ex_S_door',
+     'Ex_S_door_double',
+     'Ex_S_door_double_GH',
+     'Ex_S_door_double_fixed',
+     'Ex_S_door_double_fixing',
+     'Ex_S_door_rigmor',
+     'Ex_S_door_rigmor2',
+     'Ex_V_cantondoor_01',
+     'Ex_V_palace_grate_02',
+     'Ex_co_ship_cabindoor',
+     'Ex_colony_bardoor',
+     'Ex_colony_door01.NIF',
+     'Ex_colony_door01_1B.NIF',
+     'Ex_colony_door02',
+     'Ex_colony_door02_1',
+     'Ex_colony_door02_2',
+     'Ex_colony_door02b_2',
+     'Ex_colony_door03',
+     'Ex_colony_door03 int',
+     'Ex_colony_door03_1',
+     'Ex_colony_door03_1_uryn',
+     'Ex_colony_door03_2',
+     'Ex_colony_door03_4',
+     'Ex_colony_door03_4a',
+     'Ex_colony_door03_int',
+     'Ex_colony_door04',
+     'Ex_colony_door04_1',
+     'Ex_colony_door04_2',
+     'Ex_colony_door04_2b',
+     'Ex_colony_door04_3',
+     'Ex_colony_door04b_3',
+     'Ex_colony_door04c_3',
+     'Ex_colony_door05',
+     'Ex_colony_door05_2',
+     'Ex_colony_door05_3',
+     'Ex_colony_door05_int',
+     'Ex_colony_door05_int_a',
+     'Ex_colony_door05_int_b',
+     'Ex_colony_door05_int_c',
+     'Ex_colony_door05a_4',
+     'Ex_colony_door05b_4',
+     'Ex_colony_door05c_4',
+     'Ex_colony_door06',
+     'Ex_colony_door07',
+     'Ex_colony_door08',
+     'Ex_colony_minedoor',
+     'Ex_imp_loaddoor_02',
+     'Ex_redoran_hut_01_a',
+     'In_DB_door01',
+     'In_DB_door_oval',
+     'In_DB_door_oval_02',
+     'In_DB_door_oval_relvel',
+     'In_DE_LLshipdoor_Large',
+     'In_De_Shack_Trapdoor',
+     'In_De_Shack_Trapdoor_01',
+     'In_Hlaalu_Door_01',
+     'In_MH_Pav_Ladder',
+     'In_MH_door_01',
+     'In_MH_door_01_velas',
+     'In_MH_door_02',
+     'In_MH_door_02_bar1_uni',
+     'In_MH_door_02_bar2_uni',
+     'In_MH_door_02_bar3_uni',
+     'In_MH_door_02_bar4_uni',
+     'In_MH_door_02_chapel',
+     'In_MH_door_02_hels_uni',
+     'In_MH_door_02_play',
+     'In_MH_door_02_throne1',
+     'In_MH_door_02_throne2',
+     'In_MH_jaildoor_01',
+     'In_MH_trapdoor_01',
+     'In_M_sewer_door_01',
+     'In_OM_door_round',
+     'In_S_door',
+     'In_impsmall_d_hidden_01',
+     'In_thirsk_door',
+     'In_thirsk_door_main_1',
+     'In_thirsk_door_main_1_b',
+     'In_thirsk_door_main_2',
+     'In_thirsk_door_main_2_b',
+     'Indalen_closet_door',
+     'PrisonMarker',
+     'Rent_Ghost_Dusk_Door',
+     'Rent_MH_Guar_Door',
+     'Rent_colony_door',
+     'Velothi_Sewer_Door',
+     'chargen customs door',
+     'chargen door captain',
+     'chargen door exit',
+     'chargen door hall',
+     'chargen_shipdoor',
+     'chargendoorjournal',
+     'clutter_whouse_door_01',
+     'clutter_whouse_door_02',
+     'door_cavern_doors00',
+     'door_cavern_doors00_velas',
+     'door_cavern_doors10',
+     'door_cavern_doors20',
+     'door_cavern_vassir_un',
+     'door_dwe_00_exp',
+     'door_dwrv_double00',
+     'door_dwrv_double01',
+     'door_dwrv_inner00',
+     'door_dwrv_load00',
+     'door_dwrv_loaddown00',
+     'door_dwrv_loadup00',
+     'door_dwrv_main00',
+     'door_load_darkness00',
+     'door_ravenrock_mine',
+     'door_sotha_imp_door',
+     'door_sotha_load',
+     'door_sotha_mach_door',
+     'door_sotha_mach_door2',
+     'door_sotha_pre_load',
+     'ex_BM_ringdoor',
+     'ex_S_door_rounded',
+     'ex_S_fence_gate',
+     'ex_S_fence_gate_uni',
+     'ex_ashl_door_01',
+     'ex_ashl_door_02',
+     'ex_cave_door_01',
+     'ex_co_ship_trapdoor',
+     'ex_common_door_01',
+     'ex_common_door_balcony',
+     'ex_dae_door_load_oval',
+     'ex_de_ship_trapdoor',
+     'ex_emp_tower_01_a',
+     'ex_emp_tower_01_b',
+     'ex_h_pcfort_exdoor_ 01',
+     'ex_h_pcfort_exdoor_ 02',
+     'ex_h_pcfort_exdoor_ 03',
+     'ex_h_pcfort_exdoor_ 03-3',
+     'ex_h_pcfort_trapdoor_01-2',
+     'ex_h_trapdoor_01',
+     'ex_imp_loaddoor_01',
+     'ex_imp_loaddoor_03',
+     'ex_nord_door_01',
+     'ex_nord_door_01-back',
+     'ex_nord_door_01_ignatius',
+     'ex_nord_door_01_ignatius1',
+     'ex_nord_door_02',
+     'ex_nord_door_gyldenhul',
+     'ex_nord_door_lair',
+     'ex_nord_door_wolf',
+     'ex_r_pcfort_d_01',
+     'ex_r_pcfort_d_01-2',
+     'ex_r_pcfort_d_01-3',
+     'ex_r_pcfort_d_02',
+     'ex_r_trapdoor_01',
+     'ex_redoran_barracks_door',
+     'ex_t_door_01',
+     'ex_t_door_01_pc_hold_a',
+     'ex_t_door_01_pc_hold_b',
+     'ex_t_door_02',
+     'ex_t_door_02_pc_hold_a',
+     'ex_t_door_02_pc_hold_b',
+     'ex_t_door_slavepod_01',
+     'ex_t_door_sphere_01',
+     'ex_t_door_stone_large',
+     'ex_v_palace_grate_01',
+     'ex_velothi_loaddoor_01',
+     'ex_velothi_loaddoor_02',
+     'ex_velothicave_door_01',
+     'ex_velothicave_door_03',
+     'ex_vivec_grate_01',
+     'hlaal_loaddoor_01',
+     'hlaalu_loaddoor_ 02',
+     'hlaalu_loaddoor_ 02_balyn',
+     'in_ar_door_01',
+     'in_ashl_door_01',
+     'in_ashl_door_02',
+     'in_ashl_door_02_sha',
+     'in_c_door_arched',
+     'in_c_door_wood_square',
+     'in_ci_door_01',
+     'in_ci_door_01_indoor',
+     'in_com_trapbottom_01',
+     'in_com_traptop_01',
+     'in_dae_door_01',
+     'in_de_shack_door',
+     'in_de_ship_cabindoor',
+     'in_de_shipdoor_toplevel',
+     'in_h_trapdoor_01',
+     'in_hlaalu_door',
+     'in_hlaalu_door_uni',
+     'in_hlaalu_loaddoor_01',
+     'in_hlaalu_loaddoor_02',
+     'in_impsmall_d_cave_01',
+     'in_impsmall_door_01',
+     'in_impsmall_door_01_shrine',
+     'in_impsmall_door_jail_01',
+     'in_impsmall_loaddoor_01',
+     'in_impsmall_trapdoor_01a',
+     'in_m_sewer_trapdoor_01',
+     'in_m_sewer_trapdoor_01_blkd',
+     'in_r_s_door_01',
+     'in_r_trapdoor_01',
+     'in_redoran_barrack_door',
+     'in_redoran_hut_door_01',
+     'in_redoran_ladder_01',
+     'in_strong_vaultdoor00',
+     'in_strong_vaultdoor_tela_UNIQUE',
+     'in_t_door_small',
+     'in_t_door_small_load',
+     'in_t_housepod_door_exit',
+     'in_t_l_door_01',
+     'in_t_s_plain_door',
+     'in_v_s_jaildoor_01',
+     'in_v_s_jaildoor_frelene',
+     'in_v_s_trapdoor_01',
+     'in_v_s_trapdoor_02',
+     'in_velothismall_ndoor_01',
+     'in_velothismall_ndoor_01_jeanne',
+     'in_velothismall_ndoor_agrippina',
+     'in_vivec_grate_door_01',
+     'pelagiad_halfway_room',
+     'rent_balmora_council_door',
+     'rent_balmora_eight_door',
+     'rent_balmora_lucky_door',
+     'rent_balmora_south_door',
+     'rent_caldera_shenk_door',
+     'rent_ebon_six_door',
+     'rent_maargan_andus_door',
+     'rent_vivec_black_door',
+     'rent_vivec_flower_door',
+     'rent_vivec_lizard_door',
+     'smora_fara_door',
+     'vivec_grate_door_02');
+
 ### MAIN COMMAND DISPATCH TABLE
 my %COMMAND;
 %COMMAND =
@@ -3975,8 +4733,8 @@ tes3cmd dump --flag persistent --flag 0x2000 "Suran_Underworld_2.5.esp"
 
 # Dump all object instances in cells that match "galbedir":
 # (this will just show you the cell header, and subrecords just for Galbedir
-# and her chest in the cell: "Balmora, Guild of Mages"):
-tes3cmd dump --type cell --instance-match galbedir Morrowind.esm
+# and her desk and chest in the cell: "Balmora, Guild of Mages"):
+tes3cmd dump --instance-match "name:.*galbedir" Morrowind.esm
 },
      },
 
@@ -4048,7 +4806,7 @@ tes3cmd esp "my plugin.esm"
 		   @MODOPT,
 		   'ignore-plugin=s@'],
        preprocess => \&cmd_fixit,
-       usage => qq{Usage: tes3cmd fixit
+       usage => qq{Usage: tes3cmd fixit OPTIONS
 
 OPTIONS:
  --debug
@@ -4228,6 +4986,7 @@ EOF
 		   'cell-00'		    => \$opt_lint_cell_00,
 		   'clean'		    => \$opt_lint_clean,
 		   'deprecated-lists'	    => \$opt_lint_deprecated_lists,
+		   'dialogue-teleports'     => \$opt_lint_dialogue_teleports,
 		   'duplicate-info'	    => \$opt_lint_duplicate_info,
 		   'duplicate-records'	    => \$opt_lint_duplicate_records,
 		   'expansion-dependency'   => \$opt_lint_expansion_dependency,
@@ -4255,6 +5014,7 @@ EOF
 	       $opt_lint_bloodmoon_dependency = 1;
 	       $opt_lint_clean = 1;
 	       $opt_lint_deprecated_lists = 1;
+	       $opt_lint_dialogue_teleports = 1;
 	       $opt_lint_duplicate_records = 1;
 	       $opt_lint_evil_gmsts = 1;
 	       $opt_lint_expansion_dependency = 1;
@@ -4268,6 +5028,7 @@ EOF
 	       $opt_lint_cell_00 = 1;
 	       $opt_lint_clean = 1;
 	       $opt_lint_deprecated_lists = 1;
+	       $opt_lint_dialogue_teleports = 1;
 	       $opt_lint_duplicate_info = 1;
 	       $opt_lint_duplicate_records = 1;
 	       $opt_lint_expansion_dependency = 1;
@@ -4339,6 +5100,12 @@ OPTIONS:
 	flagged. For more about the problem of using scripting functions to
 	modify Bethesda lists see:
 	http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+
+ --dialogue-teleports
+	Crashes can happen when the functions Position/PositionCell are called
+	in dialogue results. It is recommended that you do these kinds of
+	teleports via a script and start the script in the dialogue results
+	instead.
 
  --duplicate-info
 	indicates the exact INFO dialog with the same ID, text and filter
@@ -4514,15 +5281,16 @@ more detail about the flagged items.
 	      #	unless (do $opt_modify_program_file) {	# load perl file
 	      #	    abort("Error processing $opt_modify_program_file ($@)") if ($@);
 	      #	}
+	      my $prog;
 	      if (open(PROG, "<", $opt_modify_program_file)) {
 		  local $/ = undef;
-		  my $prog = join("", <PROG>);
+		  $prog = join("", <PROG>);
 		  close(PROG);
-		  eval($prog);
-		  abort("Error processing $opt_modify_program_file ($@)") if ($@);
 	      } else {
 		  abort(qq{Error opening "$opt_modify_program_file" ($!)});
 	      }
+	      eval($prog);
+	      abort("Error processing $opt_modify_program_file ($@)") if ($@);
 	      $opt_modify_run = 'main($R);' unless ($opt_modify_run);
 	  }
       },
@@ -4587,7 +5355,7 @@ OPTIONS:
 
  --sub-match <regex>
 	only modify the subrecords that match <regex>. When this option (or
-	--sub-no-match) are used, mofification only applies to matching
+	--sub-no-match) are used, modification only applies to matching
 	subrecords. Without either of these options modifications are
 	performed on whole records.
 
@@ -4665,7 +5433,9 @@ OPTIONS:
 	fix interior cells with the fog bug
 
  --merge-lists
-	merges leveled lists used in your active plugins
+	merges leveled lists used in your active plugins. Note that when you
+	use this feature, you do NOT also need other merged lists plugins like
+	"Mashed Lists.esp"
 
  --no-activate
 	do not automatically activate multipatch.esp
@@ -4683,7 +5453,7 @@ various problems. You should regenerate your multipatch whenever you change
 your load order. The goal of the "multipatch" command is that it should always
 be safe to use it with no options to get the default patching behavior (if you
 do find any problems, please report them and they will be fixed ASAP). When no
-options are specified, the following options are assumed:
+options are specified, the following default options are assumed:
 
   --cellnames --fogbug --merge-lists --summons-persist
 
@@ -4715,6 +5485,11 @@ Fog Bug Patch (--fogbug)
   This option creates a patch that fixes all fogbugged cells in your active
   plugins by setting the fog density of those cells to a non-zero value.
 
+Merge Leveled Lists (--merge-lists)
+
+  This feature is similar to what you get with Wrye Mash's "Mashed Lists.esp".
+  However, you should not more than one plugin to merge leveled lists.
+
 Summoned creatures persists (--summons-persist)
 
   There is a bug in Morrowind that can cause the game to crash if you leave a
@@ -4726,7 +5501,7 @@ Summoned creatures persists (--summons-persist)
 
 EXAMPLES:
 
-# Create the patch plugin "multipatch.esp"
+# Create the patch plugin "multipatch.esp" with all default patch options on:
 tes3cmd multipatch
 },
      },
@@ -4809,7 +5584,7 @@ corrupted, where records have been overwritten with random binary junk, or
 if the file has been truncated, or otherwise damaged.
 
 This is not for fixing what is commonly referred to as "savegame corruption",
-which is not actually corruption but bad data.
+which is almost always not actual corruption but bad data.
 
 In any case, you will get detailed output on what tes3cmd finds damaged.
 
@@ -5409,8 +6184,16 @@ sub load_leveled_lists {
 	my $lc_plugin = lc($plugin);
 	# skip known merged leveled lists plugins
 	next if ($lc_plugin eq "multipatch.esp");
-	next if ($lc_plugin eq "mashed lists.esp");
-	next if ($lc_plugin eq "merged_leveled_lists.esp");
+	if ($lc_plugin eq "mashed lists.esp") {
+	    msg(qq{WARNING! "Mashed Lists.esp" is not needed when using multipatch})
+		if ($opt_multipatch_merge_lists);
+	    next;
+	}
+	if ($lc_plugin eq "merged_leveled_lists.esp") {
+	    msg(qq{WARNING! "Merged_Leveled_Lists.esp" is not needed when using multipatch})
+		if ($opt_multipatch_merge_lists);
+	    next;
+	}
 	my $curr_size = -s $T3->datapath($plugin);
 	my $invalid = 0;
 	if (defined($levdat->{$lc_plugin})) {
@@ -5620,6 +6403,7 @@ sub update_header {
     utime($atime, $mtime, $plugin);
 }				# update_header
 
+# TBD - should get_wanted be moved to pre-process?
 sub get_wanted {
     my @wanted_ids = @opt_id;
     push(@wanted_ids, map { '^'.quotemeta($_).'$' } @opt_exact_id) if (@opt_exact_id);
@@ -5803,6 +6587,17 @@ sub process_plugin_for_update {
 } # process_plugin_for_update
 
 ### MAIN COMMANDS
+
+sub cmd_lint {
+    my($plugin) = @_;
+    dbg("cmd_lint") if (DBG);
+    my $fun = sub {
+	my($rec_match, $rectype, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode
+	return unless ($rec_match);
+	
+    };
+    process_plugin_for_input($plugin, $fun);
+}
 
 sub cmd_testcodec {
     my($plugin) = @_;
