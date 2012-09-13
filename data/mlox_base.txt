@@ -2545,6 +2545,14 @@ Atmospheric Balmora for VBAnIW.ESP
 [ALL Vality's Balmora Addon.esp
      Illuminated Windows.esp]
 
+[Order]
+Vality's Balmora Addon.esp
+Atmospheric Balmora for VBA.ESP
+
+[Order]
+Vality's Balmora Addon.esp
+Atmospheric Balmora for VBAnIW.ESP
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Atmospheric Sound Effects (ASE 3.0) [Duncan]
@@ -3686,6 +3694,21 @@ Balmora Expansion V1.4.esp
 Balmora Expansion v1.4+(1.4).esp
 Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Berne Centurion Fix [Rellac]
+
+[Conflict]
+ "Vampire Realism makes this mod obsolete, as it does the exact same thing"
+ (Ref: "Berne Centurion Fix Readme.txt")
+Berne Centurion Fix.ESP
+Vampire Realism II.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6719 Berne Centurion Fix.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4845,6 +4868,18 @@ abotBoatsTR.esp
 abotBoatsTR.esp
 abotRiverStridersTR.esp
 
+;;Dragon32 - Ref: http://forums.bethsoft.com/topic/1397841-relz-boats/page__view__findpost__p__21521014
+;;BTB Settings overwrites the cell name for Ayemar from Tamriel Rebuilt
+[Order]
+BTB - Settings (Alternate).esp
+abotBoatsTR.esp
+
+;;Dragon32 - BTB Settings overwrites the cell name for Ayemar from Tamriel Rebuilt
+;;Ref: http://forums.bethsoft.com/topic/1397841-relz-boats/page__view__findpost__p__21521014
+[Order]
+BTB - Settings.esp
+abotBoatsTR.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bob's Armory [Mr. Dave]
@@ -5275,6 +5310,73 @@ BTB - Settings.esp
  (Ref: Readme - Character (Alternate).txt)
 BTB - Character (Alternate).esp
 BTB - Character.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BTB's Sorted New Alchemy Potions [Revan]
+
+[Conflict]
+ "If you use BTB's alchemy plugin, deactivate it, you only need" [BTB - Sorted Alchemy.esp]
+BTB - Alchemy.esp
+BTB - Sorted Alchemy.esp
+
+;;Dragon32 - Duplicated Conflict warnings from BTB's Alchemy plugin. See "@BTB's Game Improvements 8.6 [BTB]"
+[Note]
+ !! This modified version of "BTB - Alchemy.esp" is derived from HotFusion's "Economy Adjuster" mod, there is no point in running both mods.
+ !! (Ref: "morrowind_btb.zip\Readme.txt")
+[ALL BTB - Sorted Alchemy.esp
+     [ANY EcoAdj(Sri+Ingredients).esp
+          EcoAdj Ingredients.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BTB's Unique Finery Equipment 1.5 [Revan]
+
+[Conflict]
+ [BTB's Unique Finery Equipment] "merges BTB's Equipment plugin with Alaisiagae's Unique Finery Replacer." You do not need the two merged plugins running.
+ (Ref: "BTB__Unique_Finery_Equipment.zip\readme.txt")
+BTB - Unique Finery Equipment.esp
+[ALL BTB - Equipment.esp
+     UFR_v3dot2_noRobe.esp]
+
+;;Dragon32 - Duplicated Conflict warnings from BTB's Equipment plugin. See "@BTB's Game Improvements 8.6 [BTB]"
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running a modifed version of BTB's and Wakim's mods that alter equipment settings.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Unique Finery Equipment.esp
+[ANY Balance - items.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+[Conflict]
+ "Dark Brotherhood Armor Replacer - Expanded" by Dimitri Mazieres conflicts with this modified version of BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Unique Finery Equipment.esp
+[ANY DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp]
+
+[Conflict]
+ "Better Clothes" by Psychodog Studios and "More Better Clothes!" by Plangkye conflict with this modified version of BTB's Equipment plugin. You should use BTB's "Better Clothes Complete (BTB Edit).esp" in the Extras folder.
+ Note that you will need the resources from *both* Psychodog Studios' and Plangkye's mods to use "Better Clothes Complete (BTB Edit).esp"
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Unique Finery Equipment.esp
+[ANY [ANY Better Clothes_v1.1.esp
+          Better Clothes_v1.1_Nac.esp]
+      More Better Clothes.esp]
+
+[Conflict]
+ "IceBradyHurdy_RobeReplacer" by CanadianIce conflicts with this modified version of BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Unique Finery Equipment.esp
+[ANY IceNioLivRobeReplacerALL.esp
+     IceNioLivRobeReplacerPLUS.esp]
+
+[Conflict]
+ "IceBradyHurdy_RobeReplacer" by CanadianIce conflicts with this modified version of BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Unique Finery Equipment.esp
+[ANY IceBradyHurdyRobeReplacerALL.esp
+     IceBradyHurdyRobeReplacerPLUS.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6916,6 +7018,22 @@ AstarsisDEM_Pageant.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Town of Uvirith [Anonytroll]
+
+[Order]
+town_of_uvirith.esp
+Dark Town of Uvirith.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Town of Uvirith (Thorn's Lament Version) [Anonytroll]
+
+[Order]
+town_of_uvirith.esp
+Dark Town of Uvirith (TL).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dark Uvirith Exterior for BuUG [Stuporstar]
 
 [Requires]
@@ -7926,6 +8044,18 @@ Dave's FrozenDwemerGunV3.1.esp
  (Ref: "Scripted Patch for Tempered's Spore Gun.txt")
 Temp_Dwmr_gun Scripted Patch.esp
 Temp_Dwmr_gun.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Sentinel [DoubleBrewski]
+
+[Conflict]
+ Only use one version of the plugin:
+  Dwemer Sentinel.esp - If you have Morrowind and Tribunal
+  Dwemer_Sentinel__Morrowind_Only.esp - If you only have Morrowind
+ (Ref: "Dwemer Sentinel - Read Me.txt")
+Dwemer Sentinel.esp
+Dwemer_Sentinel__Morrowind_Only.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18463,6 +18593,37 @@ No-Glo_Revisited.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NoM_BTB Compatibility Plugins [Stilleas]
+
+[Patch]
+ Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
+NoM_BTB-Alchemy Compatibility Plugin.esp
+[ALL BTB - Alchemy.esp
+     NoM 3.0.esp]
+
+[Patch]
+ Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
+NoM_BTB-Settings Compatibility Plugin.esp
+[ALL [ANY BTB - Settings (Alternate).esp
+          BTB - Settings.esp]
+     NoM 3.0.esp]
+
+[Order]
+NoM 3.0.esp
+NoM_BTB-Alchemy Compatibility Plugin.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+NoM_BTB-Settings Compatibility Plugin.esp
+
+[Order]
+BTB - Settings.esp
+NoM_BTB-Settings Compatibility Plugin.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NoShieldEffect [Daniel Wessl]
 
 ;; NoShieldEffect modifies one MGEF, and it needs to come after No Glow type mods.
@@ -19097,6 +19258,24 @@ dej_plain_paper_fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Playable Dwemer Golem [SpiritofPower]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8366 Clean Playable Golem.esp]
+
+[Requires]
+Clean Playable Golem.esp
+Dwemer golem.esp
+
+;;Dragon32 - Checked using TESPCD
+[Order]
+Dwemer golem.esp
+Clean Playable Golem.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Poorly Placed Object Fix [Slartibartfast]
 
 [Note]
@@ -19243,6 +19422,29 @@ PSsorticon.esp
           Potions.esp
           PSsorticon.esp]
      [NOT Merged_Objects.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Prancing Ash Inn [Chaka ZG]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 88668 Prancing Ash Inn.ESP]
+
+[Patch]
+ "CH_PAI_V7BC_patch.ESP" is "a small patch for the Prancing Ash Inn and Vality7's Bitter COast addon"
+ (Ref: "CH_PAI_V7BC_patch-41220-1-0.rar\Readme.txt")
+ http://morrowind.nexusmods.com/mods/41220
+CH_PAI_V7BC_patch.ESP
+[ALL Prancing Ash Inn.ESP
+     Vality's Bitter Coast Addon.esp]
+
+;;Dragon32: Order assumed through TESPCD and original load order, patch readme is... sparse. LAND conflict between Prancing Ash Inn and Vality's mod.
+[Order]
+Vality's Bitter Coast Addon.esp
+Prancing Ash Inn.ESP
+CH_PAI_V7BC_patch.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21716,6 +21918,78 @@ CDR_SmootherBodies_M_OldUWear.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sobitur Facility 5.2.1 [Dagoth Agahnim]
+
+;;Dragon32 - can't find a download link for Curry Monkey's "Underwater Dwemer Ruins"
+[Note]
+ "If you are using ANY version of "Underwater Dwemer Ruins", "Re-coloured Ebony and Dwemer", "Dwemer Cyborgs", "Dwemer_Bow_and_Helmet", "Dwemer Golem", or "Dwemer Sentinels" you may, -MAY-, need to disable them, I'm honestly not sure, because I have fully incorporated these mods and all of their files into my mod for ease of download and use.  If you use my mod AND these mods, you may encounter errors or 'doubling.' It should not effect your save games if you have been using these mods, just enable mine and disable the old mods."
+ (Ref: "DA_Sobitur Readme.txt")
+[ALL DA_Sobitur_Facility_Clean.ESP
+     [ANY Re-coloured Ebony and Dwarven.esp
+          Dwemer_Cyborgs.esp
+          DwemerBowAndHelmet.esp
+          Dwemer golem.esp
+          Clean Playable Golem.esp
+          Dwemer Sentinel.esp
+          Dwemer_Sentinel__Morrowind_Only.esp]]
+
+[Requires]
+ "[DA_Sobitur_Quest_Part_1 Clean.esp] is an expansion to my Sobitur Facility mod [DA_Sobitur_Facility_Clean.ESP]"
+ (Ref: "DA_Sobitur_QuestP1_Readme.txt")
+DA_Sobitur_Quest_Part_1 Clean.esp
+DA_Sobitur_Facility_Clean.ESP
+
+;;Dragon32: Not explicit that Part 2 needs Part 1 loaded.
+[Requires]
+ [DA_Sobitur_Quest_Part_2 Clean.esp] is "the final part of the main quest chain for Sobitur" [DA_Sobitur_Facility_Clean.ESP]
+ (Ref: "DA_Sobitur_QuestP2_Readme.txt")
+DA_Sobitur_Quest_Part_2 Clean.esp
+DA_Sobitur_Facility_Clean.ESP
+
+[Requires]
+ (Ref: "Sobitur Repurposed Readme.txt")
+DA_Sobitur_Repurposed_1.ESP
+[ALL DA_Sobitur_Facility_Clean.ESP
+     DA_Sobitur_Quest_Part_1 Clean.esp
+     DA_Sobitur_Quest_Part_2 Clean.esp]
+
+;;Dragon32 - Checked with TESPCD, Quest plugins overwrite some things n the basic Facility mod. Also Part 2 overwrites some entries, including Dialogue, of Part 1. So... gone with logical order, and it follows original mod's timestamps
+[Order]
+DA_Sobitur_Facility_Clean.ESP
+DA_Sobitur_Quest_Part_1 Clean.esp
+DA_Sobitur_Quest_Part_2 Clean.esp
+DA_Sobitur_Repurposed_1.ESP
+
+;;Tamriel Rebuilt ingredient sorter addon
+
+;;Dragon32: Dependent on TR_Data.esm
+[Requires]
+DA_Sobitur_TRIngred_Compat.ESP
+DA_Sobitur_Facility_Clean.ESP
+
+[Order]
+DA_Sobitur_Repurposed_1.ESP
+DA_Sobitur_TRIngred_Compat.ESP
+
+;;Yagram Advanced compatibility plugin
+
+[Patch]
+ [DA_Sobitur_YA_Compatibility.ESP] "adds Sobitur as a destination for the Dwemer Airship in the Yagrum Advanced plugin"
+ (Ref: "DA_Sobitur Readme.txt")
+DA_Sobitur_YA_Compatibility.ESP
+[ALL Yagrum Advanced 2.0.esp
+     DA_Sobitur_Facility_Clean.ESP]
+
+[Order]
+DA_Sobitur_Repurposed_1.ESP
+DA_Sobitur_YA_Compatibility.ESP
+
+[Order]
+Yagrum Advanced 2.0.esp
+DA_Sobitur_YA_Compatibility.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Soldier Belts Fix [Alaisiagae]
 
 [Note]
@@ -24105,6 +24379,37 @@ Undress For Me.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Balmora [basswalker]
+
+[Patch]
+ [The_Doors__Unique_Balmora_addon.esp] is an "addon-esp for use with "unique Balmora" and Arcimaestro Antares´ "The Doors - Balmora, Suran"."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9345
+ (Ref: "The_Doors__Unique_Balmora_addon.txt")
+The_Doors__Unique_Balmora_addon.esp
+[ALL unique Balmora.esp
+     The Doors - Balmora, Suran <VER>.esp]
+
+;;Ref: The_Doors__Unique_Balmora_addon.txt
+[Order]
+unique Balmora.esp
+The Doors - Balmora, Suran <VER>.esp
+The_Doors__Unique_Balmora_addon.esp
+
+[Patch]
+ "addon for use with "Balmora University 2.0"."
+  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9345
+Balmora University 2.0 - unique Balmora addon.esp
+[ALL unique Balmora.esp
+     balmorauversion2.0.ESP]
+
+;;Dragon32 - load order not mentioned. Assumed
+[Order]
+unique Balmora.esp
+balmorauversion2.0.ESP
+Balmora University 2.0 - unique Balmora addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Unique Dagon Fel [basswalker]
 
 ;;Dagon Fel Mill
@@ -24168,27 +24473,27 @@ Psy_UniqueDremora_T.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Unique Finery Replacer 1.1 [Alaisiagae]
+;; @Unique Finery Replacer 3.2 [Alaisiagae]
 
 [Conflict]
  Do not run both plugins:
-  UniqueFinery.esp - If you WANT the changes to the robes
-  UniqueFinery_NoRobe.esp - If you DO NOT want the changes to the robes
- (Ref: "readme_Unique Finery Replacer v1dot1.txt")
-UniqueFinery.esp
-UniqueFinery_NoRobe.esp
-
-[Note]
- ! You do not need to run Alaisiagae's "Soldier Belts Fix" with her "Unique Finery Replacer"
- ! (Ref: "readme_Unique Finery Replacer v1dot1.txt")
-[ALL SoldierBeltsFix.esp
-     [ANY UniqueFinery.esp
-          UniqueFinery_NoRobe.esp]]
+  UFR_v3dot2.esp - If you WANT the changes to the robes
+  UFR_v3dot2_noRobe.esp - If you DO NOT want the changes to the robes
+ (Ref: "readme_Unique Finery Replacer v3dot2.txt")
+UFR_v3dot2.esp
+UFR_v3dot2_noRobe.esp
 
 [Conflict]
- Use "UniqueFinery_NoRobe.esp" from Alaisiagae's "Unique Finery Replacer" if you are using CanadianIce's Robe Replacer.
- (Ref: "readme_Unique Finery Replacer v1dot1.txt")
-UniqueFinery.esp
+ You do not need to run Alaisiagae's "Soldier Belts Fix" with her "Unique Finery Replacer"
+ (Ref: "readme_Unique Finery Replacer v3dot2.txt")
+[ANY UFR_v3dot2.esp
+     UFR_v3dot2_noRobe.esp]
+SoldierBeltsFix.esp
+
+[Conflict]
+ Use "UFR_v3dot2_noRobe.esp" from Alaisiagae's "Unique Finery Replacer" if you are using CanadianIce's Robe Replacer.
+ (Ref: "readme_Unique Finery Replacer v3dot2.txt")
+UFR_v3dot2.esp
 [ANY IceBradyHurdyRobeReplacerALL.esp
      IceBradyHurdyRobeReplacerMW.esp
      IceBradyHurdyRobeReplacerTB.esp
@@ -24202,9 +24507,9 @@ UniqueFinery.esp
 
 [Conflict]
  Alaisiagae's "Unique Finery Replacer" conflicts with Alphax's "Imperial, Indoril, Templar Belt Icons" as both mods edit the Indoril, Imperial and Templar belts.
- (Ref: "readme_Unique Finery Replacer v1dot1.txt")
-[ANY UniqueFinery.esp
-     UniqueFinery_NoRobe.esp]
+ (Ref: "readme_Unique Finery Replacer v3dot2.txt")
+[ANY UFR_v3dot2.esp
+     UFR_v3dot2_noRobe.esp]
 lfx_faction_belts.esp
 
 ;;Alaisiagae's Unique Finery - Female Hortator Robe Add-On by Plangkye
@@ -24212,13 +24517,13 @@ lfx_faction_belts.esp
  "Unique Finery - Female Hortator Robe Add-On" by Plangkye requires Alaisiagae's "Unique Finery"
  (Ref: "UF_HortRobeF.zip\Readme.txt")
 UF_HortRobeF001.esp
-[ANY UniqueFinery.esp
-     UniqueFinery_NoRobe.esp]
+[ANY UFR_v3dot2.esp
+     UFR_v3dot2_noRobe.esp]
 
 ; (Ref: "UF_HortRobeF.zip\Readme.txt")
 ; "If you use UniqueFinery_NoRobe.esp, you do not need to worry about the load order."
 [Order]
-UniqueFinery.esp
+UFR_v3dot2.esp
 UF_HortRobeF001.esp
 
 
@@ -25487,6 +25792,15 @@ Vader.esp
  (Ref: "Vality's Balmora Mod.txt")
 Vality's Balmora Addon.esp
 Vality's Bitter Coast Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vality's Bitter Coast Mod [Vality7]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1170034 Vality's Bitter Coast Addon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
