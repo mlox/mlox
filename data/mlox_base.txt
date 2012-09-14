@@ -7653,6 +7653,26 @@ Domehome-BE_alt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Domehome Improved Balmora 0.20 Fixed [Kiteflyer61]
+
+[Conflict]
+ Kiteflyer61 has made a version of TBS' "Improved Balmora" compatible with Grumpy & Emma's "Domehome"
+ http://mw.modhistory.com/download-87-5625
+Improved Balmora 0.20.esp
+[ANY MW_Domehome1.esp
+     Trib_Domehome1.esp]
+
+;;Dragon32: LAND conflicts shown in TESPCD
+[Order]
+MW_Domehome1.esp
+Improved Balmora 0.20f.esp
+
+[Order]
+Trib_Domehome1.esp
+Improved Balmora 0.20f.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dongle Ranger Tent MWSE Patch [Bjam]
 
 ; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
@@ -8308,6 +8328,27 @@ Encumbrance Bar.esp
 [Note]
  There is a newer version of Yacoby's "Encumbrance Bar" available, you should upgrade.
 [VER<0.4 Encumbrance Bar.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Entertainers-NoM Fix [Zobator]
+
+;;Dragon32: Plugin written for Nom 2.12, according to TESPCD it won't work with NoM 3
+[Patch]
+ [Entertainers-NoM Fix] makes "it possible to use the official mod entertainers and Necessities of Morrowind (By Thaddeus & Nymeria) together at the same time."
+ (Ref: "entertainers-NoM fix Readme.txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6032
+entertainers-NoM fix.esp
+[ALL entertainers.esp
+     NOM 2.13.esp]
+
+[Order]
+entertainers.esp
+entertainers-NoM fix.esp
+
+[Order]
+NOM 2.13.esp
+entertainers-NoM fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9060,6 +9101,26 @@ Fire_Hurt_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Firemoth Moved [Anubis]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 842930 FireMoth Moved.ESP]
+
+[Conflict]
+ "OfficialMods_v5.esp" and Murlocke's "Official Plugins v1.0" are compilations of all the official Bethesda mods.
+FireMoth Moved.ESP
+[ANY OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
+
+;:Dragon32 - This may work...
+[Order]
+FireMoth Moved.ESP
+TLM - AdjMod - Siege At Firemoth.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fireworks  [Gabrielle Grupp]
 
 [Note]
@@ -9235,6 +9296,20 @@ FAP Low Chance.esp
 Crystal_Forge.esp
 [ANY Fliggerty's Armor Project 2.esp
      FAP Low Chance.esp] ;I am assuming that FAP Low Chance uses the same Body Part IDs as Fliggerty's Armor Project 2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fliggerty's Armor Project Rebalanced [jeclxohko]
+
+[Conflict]
+ Use only one plugin
+  Fliggerty's Armor Project 2.esp - Fliggerty's original plugin
+  Fliggerty's Armor Project (Rebalanced by jeclxohko).esp - Fliggerty's original plugin repriced and adjusted by jeclxohko
+  FAP Low Chance.esp - Fliggery's low chance version, no rebalanced version available
+ (Ref:"Morrowind - Fliggerty's Armor Project (Rebalanced by jeclxohko).txt")
+Fliggerty's Armor Project (Rebalanced by jeclxohko).esp
+[ANY Fliggerty's Armor Project 2.esp
+     FAP Low Chance.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9646,14 +9721,15 @@ GCDLean204STD.esp
 GCDLean204EASY.esp
 GCDLean204HARD.esp
 
-;;Dragon32: Don't have the Azumite or Gluby versions in mlox yet.
+;;Dragon32: Don't have the Azumite version in mlox yet.
 [Conflict]
  "GCDLean is completely incompatible with the original Galsiah's Character Development and variants by other modders such as Azumite and Gluby"
  (Ref: "2ReadMeGCDLean.txt")
 [ANY GCDLean204STD.esp
      GCDLean204EASY.esp
      GCDLean204HARD.esp]
-Galsiahs Character Development.esp
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp]
 
 [NOTE]
  "[GCDBetterBalancedBirthsigns.esp] should therefore work well alongside most other birthsign mods [but] it is not well balanced for use without GCD."
@@ -10966,6 +11042,53 @@ Great House Dagoth ( Master Index Compatibility ).esp
 ;(Ref: readme_Great House Dagoth.txt)
 ;DarkValor's Master Index
 ;Great House Dagoth ( dv Master Index Compatibility ).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Great House Dagoth/Darknut's Greater Dwemer Ruins Compatibility Patch [MoonAndStar]
+
+[Patch]
+ MoonAndStar's "Great House Dagoth/Darknut's Greater Dwemer Ruins Compatibility Patch" allows The Mad God's "Great House Dagoth" and Darknut's "Greater Dwemer Ruins" to be played together.
+ http://mw.modhistory.com/download--7195
+ (Ref: "Readme GHD-DNGDR Patch.txt")
+[ANY DNGDR-GHD Patch.esp
+     DNGDR-GHD Patch OV.esp]
+[ALL [ANY DN-GDRv1_NOM.esp
+          DN-GDRv1.esp]
+     Great House Dagoth.esp]
+
+[Conflict]
+ Only use one plugin:
+  DNGDR-GHD Patch.esp - Uses the Dagoth Ur sounds and voices from Darknut's "Greater Dwemer Ruins Vol. 1"
+  DNGDR-GHD Patch OV.esp - Uses the stock Dagoth Ur sounds and voices from Morrowind
+ (Ref: "Readme GHD-DNGDR Patch.txt")
+DNGDR-GHD Patch.esp
+DNGDR-GHD Patch OV.esp
+
+;;Dragon32: Load order assumed and checked in TESPCD
+[Order]
+Great House Dagoth.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+Great House Dagoth.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv1.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+DNGDR-GHD Patch OV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14739,6 +14862,8 @@ CastReduce-v30.esp
      Adj_Magicka Regen (0.25%).esp
      Adj_Magicka Regen (0.50%).esp
      Adj_Magicka Regen (1.00%).esp]
+;;Fair Magicka Regen v2.0b [Smoke]
+Fair Magicka Regen 2.0b.esp
 ;;Magick Oblivion Regeneration [kiasyd]
 kiasyd_magick_regenerator_1.4.esp
 ;;Magicka Regeneration [Aragon]
@@ -14753,7 +14878,11 @@ Mana_Regen_v13.esp
 [Note]
  !! "Mods which [...] allow Magicka regeneration will work fine with GCD, provided you switch GCD’s Magicka system off (easily done in the editor)."
  !! (Ref: "GCD Readme first 107c.txt")
-[ALL Galsiahs Character Development.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp
+          GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
      [ANY DynamicMagickaRegeneration-2.0.esp
           DynamicMagickaRegeneration-2.0-Tribunal.esp
           DynamicMagickaRegeneration-2.1.esp
@@ -14762,6 +14891,7 @@ Mana_Regen_v13.esp
           Adj_Magicka Regen (0.25%).esp
           Adj_Magicka Regen (0.50%).esp
           Adj_Magicka Regen (1.00%).esp
+          Fair Magicka Regen 2.0b.esp
           kiasyd_magick_regenerator_1.4.esp
           MagickaRegen-v20.esp
           Mana_Regen_v13.esp
@@ -19097,14 +19227,14 @@ BB2_Peasant_Gowns.esp
 [Conflict]
  Choose ONLY ONE of these plugins.
  (Ref: "Pegas Horse Ranch Readme.txt")
-Pegas Horse Ranch v3.1.esm
-Pegas Horse Ranch v3.1.esp
+Pegas Horse Ranch v<VER>.esm
+Pegas Horse Ranch v<VER>.esp
 
 ;; expdep
 [Requires]
  Uses Tribunal functions: (forcejump, getsquareroot, disablelevitation, setdelete, enablelevitation), so one of the expansions is required.
-[ALL Pegas Horse Ranch v3.1.esm
-     Pegas Horse Ranch v3.1.esp]
+[ALL Pegas Horse Ranch v<VER>.esm
+     Pegas Horse Ranch v<VER>.esp]
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
@@ -21248,6 +21378,8 @@ Tribunal.esm
 [Conflict]
  If you are using the official Siege at Firemoth plugin, disable it before you use Sea of Destiny.
  (Ref: \Sea of Destiny Manual\Manual.htm)
+ Alternatively, Anubis has created a moved version of the Siege at Firemoth plugin, specifically for Sea of Destiny users:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2237
 Siege at Firemoth.esp
 Sea-of-Destiny.esm
 
