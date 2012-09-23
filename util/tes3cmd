@@ -40,6 +40,7 @@ BEGIN {
 # implement script compiler
 # # # # # # # # # # # # # # #
 # add new commands:
+# * quest - dump INFO/SCPT records relevent to a quest, in quest order, pretty-printed
 # * extract - dump subset of records by following dependencies
 # * "gen-res" (generate resources catalog cells) poop out an esp that displays matching objects in various cells:
 #      # put all mold cave static pieces in a test cell named "Mold Cave" and all guard NPCs in a cell named "Guards"
@@ -70,8 +71,9 @@ BEGIN {
 # **** handle patch plugins that are *supposed* to only override the patchee (auto-detect?)
 # # # # # # # # # # # # # # #
 # lint:
+# * check for possible doubling: objects with nearly the same coordinates/angles
 # * check references with extremely high coordinates
-# * pathgrid points at x=0,y=0,z=0
+# * pathgrid points at x=0,y=0,z=0 (nconn==0 is better)
 # * MVRFs in .esm files
 # * check for dialog edits that lose part of the filter.
 # * add note about creating a shortcut on Windows
@@ -299,7 +301,7 @@ sub mkpath {
 sub sort_by_date {
     my($dir, @files) = @_;
     my $dirlist = list_files($dir);
-    my @sorted = sort { (-M "$dir/$dirlist->{lc $b}") <=> (-M "$dir/$dirlist->{lc $a}") } @files;
+    my @sorted = sort { (-M "$dir/$dirlist->{lc($b)}") <=> (-M "$dir/$dirlist->{lc($a)}") } @files;
     dbg(qq{sorted files:} . join("\n", @sorted)) if (DBG);
     return(@sorted);
 }
@@ -357,7 +359,6 @@ sub find_datadir {
 	    abort(qq{Unable to make directory: "$TES3CMD_DIR" ($!)});
     }
     $opt_backup_dir = "$TES3CMD_DIR/backups";
-    return($DATADIR);
 } # find_datadir
 
 BEGIN {
@@ -854,6 +855,10 @@ our %PLAYABLE =
     ( 0 => "Non-Playable",
       1 => "Playable" );
 
+our %PGCOLOR =
+    ( 0 => 'red',
+      1 => 'blue' );
+
 our %RADT_FLAGS =
     ("playable" => 0x01,
      "beast_race" => 0x02);
@@ -965,7 +970,8 @@ our %SPEL_TYPE =
      5 => "Power");
 
 our %SPELL_EFFECT =
-    ('0' => "Water_Breathing",
+    ('-1' => 'NONE',
+     '0' => "Water_Breathing",
      '1' => "Swift_Swim",
      '2' => "Water_Walking",
      '3' => "Shield",
@@ -1159,8 +1165,6 @@ use Text::Wrap qw(wrap);
 use Data::Dumper;
 use strict;
 
-use constant { COPY_HEADER => 1 };
-
 our $CODEC_VERSION = "0.2";
 our $MARGIN = "  ";
 our $GROUPMARGIN = " *";
@@ -1302,16 +1306,16 @@ my @RD_AI_Wander_NPC = ([["distance", "S"], ["duration", "S"], ["time_of_day", "
 
 my $RD_Actor_Data =
 #     Field                              Offset
-    [(["unknown_1", "L"],	       #   0
-      ["unknown_1", "L"],	       #   4
-      ["unknown_1", "L"],	       #   8
-      ["unknown_1", "L"],	       #  12
-      ["unknown_1", "L:%d\n\t"],       #  16
-      ["unknown_1", "L"],	       #  20
-      ["unknown_1", "L"],	       #  24
-      ["unknown_1", "L"],	       #  28
-      ["unknown_1", "L"],	       #  32
-      ["unknown_1", "L:%d\n\t"],       #  36
+    [(["unknown_1", "l"],	       #   0
+      ["unknown_1", "l"],	       #   4
+      ["unknown_1", "l"],	       #   8
+      ["unknown_1", "l"],	       #  12
+      ["unknown_1", "f:%f\n\t"],       #  16
+      ["x?", "f"],	       #  20
+      ["y?", "f"],	       #  24
+      ["z?", "f"],	       #  28
+      ["unknown_1", "l"],	       #  32
+      ["unknown_1", "l:%d\n\t"],       #  36
       ["health", "f"],		       #  40
       ["max_health", "f"],	       #  44
       ["fatigue", "f"],		       #  48
@@ -1374,10 +1378,13 @@ my $RD_Actor_Data =
       ["unknown_1", "L"])];
 
 my @RD_Enchantment =
-    ([["spell_effect", "S"], ["skill", "c"], ["attribute", "c"], ["range", "c"], ["Unused", "H6"],
+    ([["spell_effect", "s"], ["skill", "c"], ["attribute", "c"], ["range", "c"], ["Unused", "H6"],
       ["area", "L"], ["duration", "L"], ["mag_min", "L"], ["mag_max", "L"]],
      { tostr => sub {
 	   my($self) = @_;
+	   if (DBG and (not defined $SPELL_EFFECT{$self->{spell_effect}})) {
+	       err(qq{unknown spell effect: "$self->{spell_effect}"});
+	   }
 	   my $spell = $SPELL_EFFECT{$self->{spell_effect}};
 	   if ($spell =~ /_attribute$/i) {
 	       $spell .= "/$ATTRIBUTE{$self->{attribute}}";
@@ -1493,6 +1500,7 @@ my @RECDEFS =
 	       [TNAM => [["image", "Z*"]]]
 	      ], { rdflags => [qw(mergeable)] }],
      [CELL => [
+	       [AADT => @RD_Unknown_ess],
 	       [AMBI => [["ambient", "L"], ["sunlight", "L"], ["fog", "L"], ["fog_density", "f"]],
 		{ tostr => sub {
 		      my($self) = @_;
@@ -1556,10 +1564,11 @@ my @RECDEFS =
 		     my($self, $buff, $parent) = @_;
 		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
-		     if (length($buff) == 24) {
+		     my $blen = length($buff);
+		     if ($blen == 24) {
 			 ($self->{x}, $self->{y}, $self->{z},
 			  $self->{x_angle}, $self->{y_angle}, $self->{z_angle}) = unpack("f6", $buff);
-		     } elsif (length($buff) == 12) {
+		     } elsif ($blen == 12) {
 			 my($flags, $unk, $fogden) = unpack("LLf", $buff);
 			 if ($flags & 0x01) { # Interior
 			     $parent->{_is_interior_} = 1;
@@ -1572,7 +1581,7 @@ my @RECDEFS =
 			     ($self->{x}, $self->{y}) = unpack("x[L]ll", $buff);
 			 }
 		     } else {
-			 $self->bad_length(length($buff));
+			 err("DECODER barfed on CELL.DATA, Invalid length: $blen, expected 24 or 12!");
 		     }
 		     return($self);
 		 },
@@ -1673,18 +1682,18 @@ my @RECDEFS =
 	       [ACDT => $RD_Actor_Data, { rdflags => [qw(ess)] }],
 	       [ACSC => @RD_Unknown_ess],
 	       [ACSL => @RD_Unknown_ess],
-	       [ACTN => @RD_Unknown_ess],
+	       [ACTN => @RD_Unknown_ess], # looks like Actor Flags.
 	       [ANIS => @RD_Unknown_ess],
 	       [APUD => @RD_Unknown_ess],
-	       [CHRD => @RD_long_array_ess, { rdflags => [qw(ess)] }],
+	       [CHRD => @RD_long_array_ess],
 	       [CRED => @RD_Unknown_ess],
-	       [CSHN => @RD_Unknown_ess],
-	       [CSSN => [["name", "Z*"]], { rdflags => [qw(ess)] }],
-	       [CSTN => [["target", "Z*"]], { rdflags => [qw(ess)] }], # guessing this is: "Cast/Current Spell Target Name"
-	       [FGTN => [["following_target_name", "Z*"]], { rdflags => [qw(ess)] }],
-	       [LSHN => @RD_Unknown_ess],
-	       [LSTN => @RD_Unknown_ess],
-	       [LVCR => @RD_Unknown_ess],
+	       [CSHN => [["currentstate_hit_target", "Z*"]], { rdflags => [qw(ess)] }],
+	       [CSSN => [["currentstate_stolen_target", "Z*"]], { rdflags => [qw(ess)] }],
+	       [CSTN => [["currentstate_target", "Z*"]], { rdflags => [qw(ess)] }],
+	       [FGTN => [["friend_group_member", "Z*"]], { rdflags => [qw(ess)] }],
+	       [LSHN => [["laststate_hit_target", "Z*"]], { rdflags => [qw(ess)] }],
+	       [LSTN => [["laststate_target", "Z*"]], { rdflags => [qw(ess)] }],
+	       [LVCR => @RD_Unknown_ess], # leveled creature???
 	       [MNAM => @RD_Unknown_ess],
 	       [MPCD => @RD_Unknown_ess],
 	       [MPNT => @RD_Unknown_ess],
@@ -1696,16 +1705,16 @@ my @RECDEFS =
 	       #[NAM8 => @RD_short_array_ess], # looks like it might be an array of shorts ???
 	       [NAM9 => [["owned", "L"]]],
 	       [ND3D => @RD_Unknown_ess],
-	       [PRDT => @RD_Unknown_ess],
-	       [PWPC => @RD_Unknown_ess],
-	       [PWPS => @RD_Unknown_ess],
+	       [PRDT => @RD_Unknown_ess], # "pursuit data"???
+	       [PWPC => @RD_Unknown_ess], # "powers used"???
+	       [PWPS => @RD_Unknown_ess], # "powers used"???
 	       [SCRI => [["script", "Z*"]], { rdflags => [qw(ess)] }],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]], { rdflags => [qw(ess)] }],
-	       [SLFD => @RD_float_array_ess],
-	       [SLLD => @RD_long_array_ess],
-	       [SLSD => @RD_short_array_ess],
-	       [STPR => @RD_Unknown_ess],
-	       [TGTN => @RD_Unknown_ess],
+	       [SLFD => @RD_float_array_ess], # "Script Localvar Float Data
+	       [SLLD => @RD_long_array_ess], # "Script Localvar Long Data
+	       [SLSD => @RD_short_array_ess], # "Script Localvar Short Data
+	       [STPR => [["x", "f"], ["y", "f"], ["z", "f"], ["x_angle", "f"], ["y_angle", "f"], ["z_angle", "f"], ]], # "Setting To Position" or "Starting Position"???
+	       [TGTN => [["target_group_member", "Z*"]]],
 	       [TNAM => [["trap_spell", "Z*"]]],
 	       [UNAM => @RD_Unknown],
 	       [WNAM => @RD_Unknown_ess],
@@ -1716,7 +1725,7 @@ my @RECDEFS =
 		       my($self) = @_;
 		       return($self->{_id_}) if (defined $self->{_id_});
 		       my $name = $self->get('NAME', 'name');
-		       return(lc($name)) if ($self->is_interior());
+		       return($self->{_id_} = lc($name)) if ($self->is_interior());
 		       $name = $self->get('RGNN', 'region') unless ($name);
 		       $name ||= 'wilderness';
 		       my $x = $self->get('DATA', 'x');
@@ -1762,9 +1771,9 @@ my @RECDEFS =
 	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]],
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
-	       [SLFD => @RD_float_array_ess],
-	       [SLLD => @RD_long_array_ess],
-	       [SLSD => @RD_short_array_ess],
+	       [SLFD => @RD_float_array_ess], # Script Localvar Float Data
+	       [SLLD => @RD_long_array_ess], # Script Localvar Long Data
+	       [SLSD => @RD_short_array_ess], # Script Localvar Short Data
 	       [XCHG => [["enchant_charge", "f"]]],
 	       [XHLT => [["health", "L"]]],
 	       [XIDX => [["scripted_item_index", "L"]]],
@@ -1835,17 +1844,17 @@ my @RECDEFS =
 	       [AI_F => @RD_AI_Follow],
 	       [AI_T => @RD_AI_Travel],
 	       [AI_W => @RD_AI_Wander_CREA],
-	       [INDX => @RD_Unknown],
+	       [INDX => [["instance", "L"]]],
 	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }],
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
-	       [SLFD => @RD_float_array_ess],
-	       [SLLD => @RD_long_array_ess],
-	       [SLSD => @RD_short_array_ess],
+	       [SLFD => @RD_float_array_ess], # Script Localvar Float Data
+	       [SLLD => @RD_long_array_ess], # Script Localvar Long Data
+	       [SLSD => @RD_short_array_ess], # Script Localvar Short Data
 	       [WIDX => @RD_widx],
 	       [XCHG => [["enchant_charge", "f"]]],
 	       [XHLT => [["health", "L"]]],
-	       [XIDX => @RD_Unknown],
+	       [XIDX => [["index", "L"]]], # ???
 	       [XSCL => [["scale", "f"]]],
 	       [XSOL => [["soul", "Z*"]]],
 	      ], { rdflags => [qw(ess)] }],
@@ -2121,7 +2130,7 @@ my @RECDEFS =
 	       [INTV => [["unknown_1", "L"]]],
 	      ]],
      [MGEF => [
-	       [INDX => [["id", "L", { lookup => \%SPELL_EFFECT }]]],
+	       [INDX => [["id", "l", { lookup => \%SPELL_EFFECT }]]],
 	       [ASND => [["area_sound", "Z*"]]],
 	       [AVFX => [["area_vfx", "Z*"]]],
 	       [BSND => [["bolt_sound", "Z*"]]],
@@ -2155,13 +2164,13 @@ my @RECDEFS =
 	       [NPDT => @RD_Unknown],
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
-	       [SLFD => @RD_float_array_ess],
-	       [SLLD => @RD_long_array_ess],
-	       [SLSD => @RD_short_array_ess],
+	       [SLFD => @RD_float_array_ess], # Script Localvar Float Data
+	       [SLLD => @RD_long_array_ess], # Script Localvar Long Data
+	       [SLSD => @RD_short_array_ess], # Script Localvar Short Data
 	       [WIDX => @RD_widx],
 	       [XCHG => [["enchant_charge", "f"]]],
 	       [XHLT => [["health", "L"]]],
-	       [XIDX => @RD_Unknown],
+	       [XIDX => [["index", "L"]]], # ???
 	       [XSOL => [["soul", "Z*"]]],
 	      ], { rdflags => [qw(ess)] }],
      # CHECK CS ???
@@ -2192,11 +2201,12 @@ my @RECDEFS =
 		     my($self, $buff, $parent) = @_;
 		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
-		     if (length($buff) == 12) {
+		     my $blen = length($buff);
+		     if ($blen == 12) {
 			 ($self->{level}, $self->{disposition}, $self->{faction}, $self->{rank},
 			  $self->{unk1}, $self->{unk2}, $self->{unk3}, $self->{gold}) =
 			      unpack("SC6L", $buff);
-		     } elsif (length($buff) == 52) {
+		     } elsif ($blen == 52) {
 			 my $i = 0;
 			 foreach my $skill_level (unpack("x[SC8]C27", $buff)) {
 			     $self->{lc($SKILL{$i++})} = $skill_level;
@@ -2206,7 +2216,7 @@ my @RECDEFS =
 			  $self->{magicka}, $self->{fatigue}, $self->{disposition}, $self->{faction},
 			  $self->{rank}, $self->{gold}) = unpack("SC8x[C27]CSSSCCCxL", $buff);
 		     } else {
-			 $self->bad_length(length($buff));
+			 err("DECODER barfed on NPC_.NPDT, Invalid length: $blen, expected 52 or 12!");
 		     }
 		     return($self);
 		 },
@@ -2296,10 +2306,108 @@ my @RECDEFS =
 	      ], { id => sub {'()'},
 		   rdflags => [qw(ess)] }],
      [PGRD => [
+		# { id => sub {
+		#       my($self) = @_;
+		#       return($self->{_id_}) if (defined $self->{_id_});
+		#       my $name = $self->get('NAME', 'name');
+		#       my $x = $self->get('DATA', 'x');
+		#       my $y = $self->get('DATA', 'y');
+		#       return($self->{_id_} = "$name ($x, $y)");
+		#   }}
 	       [NAME => [["id", "Z*"]]],
-	       [DATA => @RD_Unknown],
-	       [PGRC => @RD_Unknown],
-	       [PGRP => @RD_Unknown],
+	       [DATA => [["x", "l"], ["y", "l"], ["granularity", "S"], ["pointcount", "S"]]],
+	       [PGRP => [],
+		{ decode => sub {
+		      my($self, $buff, $parent) = @_;
+		      $self->{_id_} = $parent->{_id_};
+		      $self->{_subbuf_} = $buff;
+		      my $blen = length($buff);
+		      my @points;
+		      while ($buff) {
+			  if (length($buff) < 16) {
+			      err("DECODER barfed on PGRD.PGRP, Invalid length: $blen, should be multiple of 16!");
+			      last;
+			  }
+			  my($x,$y,$z,$color,$nconn,$unk,$rest) = unpack("l3C2H4a*", $buff);
+			  push(@points, {x=>$x, y=>$y, z=>$z, color=>$color, nconn=>$nconn, unk=>$unk});
+			  $buff = $rest;
+		      }
+		      $self->{points} = \@points;
+		      my $dpc = $parent->{SH}->{DATA}->[0]->{pointcount};
+		      my $pc = scalar(@points);
+		      if ($pc != $dpc) {
+			  err("DECODER barfed on PGRD.PGRP, DATA->pointcount ($dpc) != number of points in PGRP ($pc)!");
+		      }
+		      return($self);
+		  },
+		  encode => sub {
+		      my($self) = @_;
+		      my $buff;
+		      foreach my $p (@{$self->{points}}) {
+			  my $color = $p->{color};
+			  if (lc($p->{color}) eq 'red') {
+			      $color = 0;
+			  } elsif (lc($p->{color}) eq 'blue') {
+			      $color = 1;
+			  }
+			  $buff += pack("l3C2H4", $p->{x}, $p->{y}, $p->{z}, $color, $p->{nconn}, $p->{unk});
+		      }
+		      $self->{_subbuf_} = $buff;
+		      return($self);
+		  },
+		  tostr => sub {
+		      my($self) = @_;
+		      my $idx = 0;
+		      my @str = ("Points:");
+		      foreach my $p (@{$self->{points}}) {
+			  my $color = $p->{color};
+			  if ($color =~ /^[01]$/) {
+			      $color = $PGCOLOR{$color};
+			  }
+			  push(@str, sprintf("[%3d]  x:%5d  y:%5d  z:%5d  color:%s  nconn:%d  unknown:%s",
+					     $idx, $p->{x}, $p->{y}, $p->{z}, $color, $p->{nconn}, $p->{unk}));
+			  $idx++;
+		      }
+		      return(join("\n\t", @str));
+		  },
+		}],
+	       [PGRC => [],
+	       	{ decode => sub {
+	       	      my($self, $buff, $parent) = @_;
+	       	      $self->{_id_} = $parent->{_id_};
+	       	      $self->{_parent_} = $parent;
+	       	      $self->{_subbuf_} = $buff;
+	       	      my $blen = length($buff);
+	       	      @{$self->{connections}} = unpack("L*", $buff);
+	       	      return($self);
+	       	  },
+	       	  encode => sub {
+	       	     my($self) = @_;
+	       	     $self->{_subbuf_} = pack("L*", @{$self->{connections}});
+	       	     return($self);
+	       	  },
+	       	  tostr => sub {
+	       	     my($self) = @_;
+	       	     my $str;
+		     my @points = @{$self->{_parent_}->{SH}->{PGRP}->[0]->{points}};
+		     my $pointcount = $self->{_parent_}->{SH}->{DATA}->[0]->{pointcount};
+		     err("PGRD.PGRC ($self->{_id_}) (N points=@{[scalar(@points)]} != pointcount($pointcount)")
+			 if (scalar(@points) != $pointcount);
+	       	     my @conn = @{$self->{connections}};
+	       	     my @str = ("Connections:");
+	       	     #my @str = ("Connections:" . " " . join(" ", @conn));
+		     my $ci = 0;
+		     for (my $p1=0; $p1<$pointcount; $p1++) {
+			 my $nconn = $points[$p1]->{nconn};
+			 my @ps;
+			 for (my $j=0; $j<$nconn; $j++) {
+			     push(@ps, $conn[$ci++]);
+			 }
+			 push(@str, sprintf("%3d -> %s", $p1, join(", ", @ps))) if (@ps);
+		     }
+	       	     return(join("\n\t", @str));
+	       	  },
+	       	}]
 	      ]],
      [PROB => [
 	       [NAME => [["id", "Z*"]]],
@@ -2310,8 +2418,27 @@ my @RECDEFS =
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      [PROJ => [			# projectiles (at least those in-flight at time of save)
-	       [PNAM => @RD_Unknown],
-	      ], { rdflags => [qw(ess)] } ],
+	       [PNAM => [
+			 ["unknown_1", "H8"],
+			 ["speed", "f"],
+			 ["unknown_1", "H8"],
+			 ["unknown_1", "H8"],
+			 ["flight_time", "f"],
+			 ["unknown_1", "H8"],
+			 ["unknown_1", "H8"],
+			 ["speed_x", "f"],
+			 ["speed_y", "f"],
+			 ["speed_z", "f"],
+			 ["x", "f"],
+			 ["y", "f"],
+			 ["z", "f"],
+			 ["unknown_1", "H72"],
+			 ["shooter", "Z32"],
+			 ["ammo", "Z32"],
+			 ["weapon", "Z32"],
+			]],
+	      ], { id => sub {'()'},
+		   rdflags => [qw(ess)] } ],
      [QUES => [
 	       [NAME => [["id", "Z*"]]],
 	       [DATA => [["info_id", "Z*"]]],
@@ -2352,7 +2479,7 @@ my @RECDEFS =
 			 $i++;
 		     }
 		     $radt;
-		 }
+		 },
 		}],
 	      ]],
      [REFR => [
@@ -2361,18 +2488,18 @@ my @RECDEFS =
 	       [ACDT => $RD_Actor_Data],
 	       [ACSC => @RD_Unknown],
 	       [ACSL => @RD_Unknown],
-	       [ACTN => [["unknown_1", "L"]]], # Actor Number ???
+	       [ACTN => [["unknown_1", "L"]]], # Actor Flags ???
 	       [ANIS => [["unknown_1", "H*"]]],
 	       [APUD => @RD_Unknown],
 	       [CHRD => @RD_long_array_ess],
-	       [CSHN => @RD_Unknown],
-	       [CSTN => @RD_Unknown],
+	       [CSHN => [["currentstate_hit_target", "Z*"]], { rdflags => [qw(ess)] }],
+	       [CSTN => [["currentstate_target", "Z*"]], { rdflags => [qw(ess)] }],
 	       [DATA => @RD_Unknown],
-	       [FGTN => [["following_target_name", "Z*"]]],
+	       [FGTN => [["friend_group_member", "Z*"]]],
 	       [FRMR => [], { @RD_reference }], # is startgroup (seems like we get only one) ???
 	       [ND3D => [["unknown_1", "C"]]],
 	       [STPR => @RD_Unknown],
-	       [TGTN => [["target", "a*"]]],
+	       [TGTN => [["target_group_member", "Z*"]]],
 	       [WNAM => [["readied_spell", "Z*"]]],
 	       [XNAM => [["enchanted_item", "Z*"]]],
 	       [YNAM => @RD_Unknown],
@@ -2390,16 +2517,17 @@ my @RECDEFS =
 		     my($self, $buff, $parent) = @_;
 		     $self->{_id_} = $parent->{_id_};
 		     $self->{_subbuf_} = $buff;
-		     if (length($buff) == 10) {
+		     my $blen = length($buff);
+		     if ($blen == 10) {
 			 ($self->{clear}, $self->{cloudy}, $self->{foggy}, $self->{overcast},
 			  $self->{rain}, $self->{thunder}, $self->{ash}, $self->{blight},
 			  $self->{snow}, $self->{blizzard}) = unpack("C10", $buff);
-		     } elsif (length($buff) == 8) {
+		     } elsif ($blen == 8) {
 			 ($self->{clear}, $self->{cloudy}, $self->{foggy},
 			  $self->{overcast}, $self->{rain}, $self->{thunder},
 			  $self->{ash}, $self->{blight}) = unpack("C8", $buff);
 		     } else {
-			 $self->bad_length(length($buff));
+			 err("DECODER barfed on REGN.WEAT, Invalid length: $blen, expected 10 or 8!");
 		     }
 		     return($self);
 		 },
@@ -2446,7 +2574,7 @@ my @RECDEFS =
      [SCPT => [
 	       [SCHD => [["id", ["Z32", "a32"]], ["num_shorts", "L"], ["num_longs", "L"], ["num_floats", "L"],
 			 ["data_size", "L"], ["local_var_size", "L"]]],
-	       [RNAM => @RD_Unknown_ess], # something to do with whether the script is running globally ???
+	       [RNAM => [["runflags", "H*"]], { rdflags => [qw(ess)] }],
 	       [SCDT => [["bytecode", "H*:(compiled script code)"]]],
 	       [SCTX => [["script_text", "a*"]],
 		{ tostr => sub {
@@ -2460,9 +2588,9 @@ my @RECDEFS =
 		 tostr => sub { "Script_Variables: " . join(',', split(/\000/, $_[0]->{variables})) },
 		}],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]], { rdflags => [qw(ess)] }],
-	       [SLFD => @RD_float_array_ess],
-	       [SLLD => @RD_long_array_ess],
-	       [SLSD => @RD_short_array_ess],
+	       [SLFD => @RD_float_array_ess], # Script Localvar Float Data
+	       [SLLD => @RD_long_array_ess], # Script Localvar Long Data
+	       [SLSD => @RD_short_array_ess], # Script Localvar Short Data
 	      ]],
      [SKIL => [
 	       [INDX => [["id", "l", { lookup => \%SKILL }]]],
@@ -2635,20 +2763,24 @@ sub new_from_input {
 	}
     }
     if ($n_read != $hdr_size) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read;
 	abort(qq{new_from_input(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
     }
     # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
     return(undef) unless defined $rectype;
+    if (not $TES3::Record::RECTYPES{$rectype}) {
+	my $inp_offset = tell($fh) - $n_read;
+	abort(qq{new_from_input(): Error ($plugin at byte: $inp_offset): Invalid Record Type: "$rectype"});
+    }
     if (defined($expected_type) and $expected_type ne $rectype) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
-	abort(qq{new_from_input(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
+	my $inp_offset = tell($fh) - $n_read;
+	abort(qq{new_from_input(): Error ($plugin at byte: $inp_offset): Expected: "$expected_type", got: "$rectype"});
     }
     my $recbuf = "";
     $n_read = read($fh, $recbuf, $reclen);
     if ($n_read != $reclen) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read;
 	abort(qq{new_from_input(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $reclen bytes, got $n_read});
     }
     return(bless({ _rectype_ => $rectype,
@@ -2656,14 +2788,7 @@ sub new_from_input {
 		   _recbuf_ => $recbuf }, $rectype)); # return a TES3 object
 } # new_from_input
 
-# tr->new_from_tr - create a new blank tr record object with same type as parameter
-sub new_from_tr {
-    my($self, $copyhdr) = @_;
-    bless({ _rectype_ => $self->rectype,
-	    _hdrflags_ => ($copyhdr) ? $self->hdrflags : 0,
-	    _recbuf_ => ''}, $self->rectype);
-}
-
+# tr->write_rec()
 sub write_rec {
     my($self, $fh) = @_;
     if (DBG) {
@@ -2671,21 +2796,15 @@ sub write_rec {
 	abort("null reclen: self=".Dumper($self)) if not defined $self->reclen;
 	abort("null hdrflags: self=".Dumper($self)) if not defined $self->hdrflags;
     }
-    $self->encode() unless (defined $self->{_recbuf_});
+    $self->encode() unless (defined $self->{_recbuf_}); # TBD - should re-encode if modified! (but then new() should set modified flag???)
     print $fh pack("a4LLLa*", $self->rectype, $self->reclen, (my $reclen2 = 0), $self->hdrflags, $self->recbuf);
 }
 
 # tr->recbuf
 sub recbuf { $_[0]->{_recbuf_} }
 
-# tr->bad_length
-sub bad_length {
-    my($self, $len) = @_;
-    err("DECODER barfed on @{[ref($self)]}, Invalid length: $len");
-}
-
-# tr->delete_subrec
-# delete sub-records of given type and sets _modified_ flag
+# tr->delete_subtype
+# delete all sub-records of given type and sets _modified_ flag
 sub delete_subtype {
     my($self, $subtype) = @_;
     $subtype = uc($subtype);
@@ -2742,7 +2861,7 @@ sub decode {
 		# magically create subrecord class for unknown subtypes
 		dbg("Encountered unknown subtype: ${rectype}::${subtype}");
 		no strict "refs";
-		# tsr->decode
+		# tsr->tostr
 		my $method = "${package}::tostr";
 		*$method = sub {
 		    use strict "refs";
@@ -2755,6 +2874,8 @@ sub decode {
 		die $@;
 	    }
 	}
+	# When we encounter a sub-record (tsr) with fieldname "id" we use that as the official ID for the record
+	# a few record types need custom methods to derive their unique record ID.
 	$self->{_id_} = lc($tsr->{id}) if (defined $tsr->{id}); # Note! record IDs are lowercased for easy comparison!
 	# inline $tr->append()
 	push(@{$self->{SL}}, $tsr);
@@ -2766,19 +2887,21 @@ sub decode {
 # tr->encode()
 sub encode {
     my($self) = @_;
-    $self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype, $_->encode()->subbuf) } $self->subrecs);
+    $self->{_recbuf_} = join("", map { pack("a4L/a*", $_->subtype, $_->encode()->subbuf) } $self->subrecs());
     return($self);
 }
 
 # tr->modified()
-sub modified { $_[0]->{_modified_} }
+sub modified {
+    ($_[1]) ? $_[0]->{_modified_} = 1 : $_[0]->{_modified_};
+}
 
 # tr->set()
 sub set {
     my($self, $opt, $newval) = @_; # opt is hashref with keys: "i", "t", "f"
     unless (defined $newval) {
 	abort(qq{Usage: set(\$option_hash, \$newvalue)
-option_hash can have the keys: "i"(indices), "t"(subtypes), or "f"(fields)
+option_hash can have the keys: "i"(indices), "t"(subtype), or "f"(fields)
 
 Example: set all fields named "count" to 0:
 set({f=>"count"}, 0)
@@ -2786,19 +2909,18 @@ set({f=>"count"}, 0)
 	return;
     }
     my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
+    my $wanted_type = defined($opt->{t}) ? uc($opt->{t}) : "";
     foreach my $i (@indices) {	# narrow by indices
 	my $tsr = $self->{SL}->[$i];
 	my $subtype = $tsr->subtype;
-	next if (defined($opt->{t}) and ($opt->{t} ne $subtype)); # narrow by type
-	if (defined($opt->{f})) {				  # narrow by field
+	next if ($wanted_type and ($wanted_type ne $subtype)); # narrow by type
+	if (defined($opt->{f})) { # narrow by field
 	    my $key = lc($opt->{f});
 	    if (defined($tsr->{$key})) {
 		if ($tsr->{$key} ne $newval) {
 		    $tsr->{$key} = $newval;
 		    $self->{_modified_} = 1;
 		}
-	    } else {
-		next;
 	    }
 	} else {
 	    # set all fields
@@ -2813,54 +2935,55 @@ set({f=>"count"}, 0)
     return($self);
 } # tr->set()
 
-# tr->delete()
+# tr->delete()  - delete matching sub-records
 sub delete {
     my($self, $opt, $match) = @_; # opt is hashref with keys: "i", "t", "f"
     unless (defined $opt) {
 	abort(qq{Usage: delete(\$option_hash, \$match)
-option_hash can have the keys: "i"(indices), "t"(subtypes), or "f"(fields)
+option_hash can have the keys: "i"(indices), "t"(subtype), or "f"(fields)
 
 match is a regular expression for matching values. If undef, then all values
 match.
 
-Example: delete all fields named "spell" with value matching: "fireball":
-delete({f=>"spell"}, 'fireball')
+Example:
+# delete sub-records with type WHGT
+\$tr->delete({t=>'whgt'});
+# delete sub-records with indices 2 and 3:
+\$tr->delete({i=>[2,3]});
+# delete all sub-records with fields named "spell" with value matching: "fireball":
+\$tr->delete({f=>"spell"}, 'fireball');
 });
 	return;
     }
     $match = '.' unless defined $match;
     my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
+    my $wanted_type = defined($opt->{t}) ? uc($opt->{t}) : "";
     foreach my $i (@indices) {	# narrow by indices
 	my $tsr = $self->{SL}->[$i];
 	my $subtype = $tsr->subtype;
-	next if (defined($opt->{t}) and ($opt->{t} ne $subtype)); # narrow by type
-	if (defined($opt->{f})) {				  # narrow by field
-	    # delete selected fields with matching values
+	next if ($wanted_type and ($wanted_type ne $subtype)); # narrow by type
+	if (defined($opt->{f})) { # narrow by field
+	    # delete sub-records with fields that have matching values
 	    my $key = lc($opt->{f});
 	    if (defined($tsr->{$key})) {
 		if ($tsr->{$key} =~ /$match/i) {
-		    $self->{SL}->[$i] = undef; # mark for deletion
+		    $tsr->{DELETED}++;
 		    $self->{_modified_} = 1;
 		}
-	    } else {
-		next;
 	    }
 	} else {
-	    # delete all fields with matching values
-	    while (my($key, $val) = each %{$tsr}) {
-		if ($tsr->{$key} =~ /$match/i) {
-		    $self->{SL}->[$i] = undef; # mark for deletion
-		    $self->{_modified_} = 1;
-		}
-	    }
+	    # delete sub-records that matched specified type
+	    $tsr->{DELETED}++;
+	    $self->{_modified_} = 1;
 	}
     }
     if ($self->{_modified_}) {
-	my @newSL;
-	foreach my $tsr (@{$self->{SL}}) {
-	    push(@newSL, $tsr) if (defined $tsr);
+	my @subrecs = @{$self->{SL}};
+	delete $self->{SL};
+	delete $self->{SH};
+	foreach my $tsr (@subrecs) {
+	    $self->append($tsr) unless ($tsr->{DELETED});
 	}
-	$self->{SL} = [@newSL];
     }
     return($self);
 } # tr->delete()
@@ -2868,13 +2991,14 @@ delete({f=>"spell"}, 'fireball')
 # tr->dump()
 sub dump {
     my($self, $opt) = @_; # opt is hashref with keys: "i", "t", "f"
-    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
     my $banner = qq{Record: @{[$self->rectype]} "@{[$self->id]}" Flags:@{[$self->hdrflagstr]}\n};
+    my @indices = defined($opt->{i}) ? @{$opt->{i}} : (0 .. $#{$self->{SL}});
+    my $wanted_type = defined($opt->{t}) ? uc($opt->{t}) : "";
     foreach my $i (@indices) {	# narrow by indices
 	my $tsr = $self->{SL}->[$i];
 	my $subtype = $tsr->subtype;
-	next if (defined($opt->{t}) and ($opt->{t} ne $subtype)); # narrow by type
-	if (defined($opt->{f})) {				  # narrow by field
+	next if ($wanted_type and ($wanted_type ne $subtype)); # narrow by type
+	if (defined($opt->{f})) { # narrow by field
 	    my $key = lc($opt->{f});
 	    if (defined($tsr->{$key})) {
 		if ($banner) { print $banner; undef $banner; }
@@ -2975,7 +3099,7 @@ sub pretty_columns {
 
 sub gen_subrec_methods {
     my($rectype, $subtype, $subdefref, $suboptref) = @_;
-    $RECTYPES{$rectype}->{$subtype}++;
+    $TES3::Record::RECTYPES{$rectype}->{$subtype}++;
     my $decode_pack_format;
     my $encode_pack_format;
     my $method;
@@ -3167,7 +3291,7 @@ sub gen_subrec_methods {
 
     no strict "refs";
 
-    # tsr->new()
+    # tsr->new(Hashinit, Parent)
     $method = "${package}::new";
     *$method = sub {
 	use strict "refs";
@@ -3220,12 +3344,13 @@ sub gen_class {
 	    gen_subrec_methods($rectype, @{$defref});
 	}
     }
-    gen_subrec_methods($rectype, DELE => [["DELETED", "L"]]);
+    gen_subrec_methods($rectype, DELE => [["DELETED", "L"]]); # TBD is this a reference number?
 
     no strict "refs";
     # definitions of methods for record classes
 
     # (RECTYPE)->new()
+    # sets _modified_ flag (via append)
     $method = "${rectype}::new";
     *$method = sub {
 	use strict "refs";
@@ -3260,7 +3385,7 @@ sub gen_class {
 	delete $self->{SH};
     };
 
-    # $tr->append()
+    # $tr->append(@SUBRECS)
     # appends given sub-records and sets _modified_ flag
     $method = "${rectype}::append";
     *$method = sub {
@@ -3308,24 +3433,23 @@ sub gen_class {
 	*$method = sub { $_[0]->{_recbuf_}; };
     }
 
-#    # tr->delbuf()  NOTYET (unnecessary)
-#    unless ($rectype->can('delbuf')) {
-#	$method = "${rectype}::delbuf";
-#	*$method = sub { delete($_[0]->{_recbuf_}); };
-#    }
-
     # tr->reclen()
     unless ($rectype->can('reclen')) {
 	$method = "${rectype}::reclen";
 	*$method = sub { length($_[0]->{_recbuf_}); };
     }
 
-    # tr->subrecs()
+    # tr->subrecs([WANTED_SUBTYPE])
     unless ($rectype->can('subrecs')) {
 	$method = "${rectype}::subrecs";
 	*$method = sub {
-	    abort("undefined SL") if (DBG and not defined $_[0]->{SL});
-	    @{$_[0]->{SL}};
+	    assert(defined $_[0]->{SL}, "undefined SL") if (ASSERT);
+	    if ($_[1]) {
+		my $subtype = uc($_[1]);
+		return(grep { $_->subtype eq $subtype } @{$_[0]->{SL}});
+	    } else {
+		return(@{$_[0]->{SL}});
+	    }
 	};
     }
 
@@ -3447,11 +3571,12 @@ my %ORIGINAL_DATE =
      'bloodmoon.esm' => 1051807050,  # Thu May  1 12:37:30 2003
     );
 
-my $lint_fog_density;
 my $lint_no_expansion_funs;
 my $lint_header_fields;
 my $lint_modified_info;
 my $lint_expansion_functions;
+
+my %GMST_TYPE = ('i' => [INTV => 'integer'], 'f' => [FLTV => 'float'], 's' => [STRV => 'string']);
 
 my @lint_tribunal_functions =
     (qw(AddToLevCreature
@@ -5051,7 +5176,6 @@ EOF
 	       $opt_lint_scripted_doors = 1;
 	   }
 
-	   $lint_fog_density = 1	  if ($opt_lint_fogbug or $opt_lint_fogsync);
 	   $lint_no_expansion_funs = 1    if ($opt_lint_no_tribunal_functions or $opt_lint_no_bloodmoon_functions);
 	   $lint_header_fields = 1	  if ($opt_lint_missing_author or $opt_lint_missing_description or
 					      $opt_lint_missing_version or $opt_lint_record_count);
@@ -5794,19 +5918,23 @@ sub read_rec {
 	}
     }
     if ($n_read != $hdr_size) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read;
 	abort(qq{read_rec(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
     }
     # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
+    if (not $TES3::Record::RECTYPES{$rectype}) {
+	my $inp_offset = tell($fh) - $n_read;
+	abort(qq{read_rec(): Error ($plugin at byte: $inp_offset): Invalid Record Type: "$rectype"});
+    }
     if (defined($expected_type) and $expected_type ne $rectype) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
-	abort(qq{read_rec(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
+	my $inp_offset = tell($fh) - $n_read;
+	abort(qq{read_rec(): Error ($plugin at byte: $inp_offset): Expected: "$expected_type", got: "$rectype"});
     }
     my $recbuf = "";
     $n_read = read($fh, $recbuf, $reclen);
     if ($n_read != $reclen) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read;
 	abort(qq{read_rec(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $reclen bytes, got $n_read});
     }
     return($rectype, $recbuf, $hdrflags);
@@ -5825,19 +5953,23 @@ sub read_quick_parse {
 	}
     }
     if ($n_read != $hdr_size) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read;
 	abort(qq{read_quick_parse(): Read Error ($plugin header at byte: $inp_offset): asked for $hdr_size bytes, got $n_read});
     }
     # I suspect $reclen2 is the high word of a 64-bit double long, it is effectively unused.
     my($rectype, $reclen, $reclen2, $hdrflags) = unpack("a4LLL", $rec_hdr);
+    if (not $TES3::Record::RECTYPES{$rectype}) {
+	my $inp_offset = tell($fh) - $n_read;
+	abort(qq{new_from_input(): Error ($plugin at byte: $inp_offset): Invalid Record Type: "$rectype"});
+    }
     if (defined($expected_type) and $expected_type ne $rectype) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
-	abort(qq{read_quick_parse(): Error ($plugin at byte: $inp_offset): Expected: $expected_type, got: $rectype});
+	my $inp_offset = tell($fh) - $n_read;
+	abort(qq{read_quick_parse(): Error ($plugin at byte: $inp_offset): Expected: "$expected_type", got: "$rectype"});
     }
     my $recbuf = "";
     $n_read = read($fh, $recbuf, $reclen);
     if ($n_read != $reclen) {
-	my $inp_offset = tell($fh) - $n_read - $hdr_size;
+	my $inp_offset = tell($fh) - $n_read;
 	abort(qq{read_quick_parse(): Read Error ($plugin record at byte: $inp_offset, rec_type="$rectype"): asked for $reclen bytes, got $n_read});
     }
     # parse record into a subrecs hash
@@ -6085,7 +6217,7 @@ sub read_dialogs {
 
 sub master_cache_path {
     my($esm) = @_;
-    my $cname = "$TES3::Util::TES3CMD_DIR/${esm}.cache";
+    my $cname = "$TES3CMD_DIR/${esm}.cache";
     dbg("master_cache_path($esm) -> $cname") if (DBG);
     return($cname);
 }
@@ -6157,7 +6289,7 @@ sub load_master {
 
 sub load_leveled_lists {
     my $levdat = {};
-    my $leveled_list_cache_file = "$TES3::Util::TES3CMD_DIR/leveled_lists_data.cache";
+    my $leveled_list_cache_file = "$TES3CMD_DIR/leveled_lists_data.cache";
     # load cache
     if ($opt_no_cache) {
 	unlink($leveled_list_cache_file)
@@ -6303,7 +6435,7 @@ sub update_header {
 	err("Error reading TES3 header from $plugin");
 	return;
     }
-    my $tes3len = length($tr->decode()->recbuf);
+    my $tes3len = $tr->decode()->reclen();
     my $update_msg = '';
     my $modified = 0;
     my $hedr_tsr;
@@ -6419,7 +6551,7 @@ sub get_wanted {
     my $wanted_types;
     if ($opt_instance_match or $opt_instance_no_match or $opt_exterior or $opt_interior) {
 	# assume type == CELL if user selects object instance matching or interior/exterior
-	if (@opt_type and ((uc "@opt_type") ne "CELL")) {
+	if (@opt_type and (uc("@opt_type") ne "CELL")) {
 	    if ($opt_exterior or $opt_interior) {
 		msg("Specifying --interior/--exterior assumes --type CELL");
 	    }
@@ -6518,30 +6650,40 @@ sub buffalize {
 
 sub process_plugin_for_input {
     my($plugin, $fun) = @_;
-    my $inp = open_for_input($plugin);
     my $expected = "TES3";
     my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
     # TBD - to support using instance types, will need to load masters
     # process each record in the plugin
     eval {
+	my $inp = open_for_input($plugin);
 	while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
 	    $expected = undef;
 	    $fun->($tr->rectype, $tr, $wanted_ids, $wanted_types, $wanted_flags);
 	}
+	close_input($inp);
     };
-    abort($@) if ($@);
-    close_input($inp);
+    if ($@) {
+	if ($@ =~ /^Can't locate object method/) {
+	    warn qq{FATAL ERROR ($plugin): $@};
+	} else {
+	    warn($@);
+	}
+	return(0);
+    } else {
+	return(1);
+    }
 } # process_plugin_for_input
 
 sub process_plugin_for_update {
     my($plugin, $fun, $prefix) = @_;
-    my($inp, $out) = make_temp($plugin);
     my $expected = "TES3";
     my($wanted_ids, $wanted_types, $wanted_flags) = get_wanted();
     my $modified;
+    my($inp, $out);
     # TBD - to support using instance types, will need to load masters
     # process each record in the plugin
     eval {
+	($inp, $out) = make_temp($plugin);
 	while (my $tr = TES3::Record->new_from_input($inp, $expected, $plugin)) {
 	    $expected = undef;
 	    # function can delete, modify, or pass rec thru
@@ -6573,8 +6715,13 @@ sub process_plugin_for_update {
 	}
     };
     if ($@) {
-	$modified = 0;		# do not modify original plugin if errors occurred
-	abort($@);
+	$modified = 0;	    # do not modify original plugin if errors occurred
+	if ($@ =~ /^Can't locate object method/) {
+	    warn qq{FATAL ERROR ($plugin): $@};
+	} else {
+	    warn($@);
+	}
+	return(0);	    # TBD double check if need to cleanup tmp (output)
     }
     if ($prefix) {
 	my($file, $dir) = fileparse($plugin);
@@ -6584,19 +6731,192 @@ sub process_plugin_for_update {
 	dbg("modified = $modified") if (DBG);
 	fix_output($inp, $out, $plugin, $modified);
     }
+    return(1);
 } # process_plugin_for_update
 
 ### MAIN COMMANDS
 
+# format a simple report for the given items
+sub lint_report {
+    my($items, $label) = @_;
+    my @itemlist = sort keys %$items;
+    if (@itemlist) {
+	my $format = "\t%-35s  %s\n";
+	print "    $label:\n";
+	foreach (@itemlist) {
+	    my($name, $val) = split(/\t/, $_, 2);
+	    if ($val) {
+		printf $format, $name, $val;
+	    } else {
+		print "\t$name\n";
+	    }
+	}
+    }
+}
+
 sub cmd_lint {
     my($plugin) = @_;
     dbg("cmd_lint") if (DBG);
+    my %tbfun;
+    my %bmfun;
+    my %deplst;
+    my %getsound;
+    my %menumode;
+    my %my_master;
+    my %evil;
+    my $evil_tb = 0;
+    my $evil_bm = 0;
+    my @fogsync = ();
+    my @autospl = ();
+    my %fogbug = ();
+    my %myinf = ();
+    my %myinftxt = ();
+    my %myrec = ();
+    my %myid = ();
+    my %door = ();
+    my %myjunk = ();
+    my @master_sizes = ();
+    my $missauth = 0;
+    my $missdesc = 0;
+    my $missver = 0;
+    my @sscr = ();
+    my $mastbm = 0;
+    my $masttb = 0;
+    my $cell00 = undef;
+    my $expected = "TES3";
+    my $cur_dial;
+    my $read_info; # = ($CHK_CHANGED_INFO_IDS or $CHK_DUPLICATE_INFO or $CHK_MODIFIED_INFO);
+    my $read_scpt; # = ($CHK_EXPANSION_FUNCTIONS or $CHK_NO_EXPANSION_FUNS or $CHK_DEPRECATED_LISTFUN or $CHK_GETSOUNDPLAYING or $OPTFLAG{MENUMOD});
+    my $read_gmsts = ($opt_lint_evil_gmsts or $opt_lint_duplicate_records or $opt_lint_overrides);
+    my $read_cell = ($opt_lint_junk_cells or $opt_lint_fogbug or $opt_lint_fogsync or $opt_lint_duplicate_records);
+    my %dial_info = ();
+    my %info_dial = ();
     my $fun = sub {
-	my($rec_match, $rectype, $tr, $print_rec) = rec_match($plugin, @_); # calls tr->decode
-	return unless ($rec_match);
-	
+	my($rectype, $tr) = @_;
+	if ($read_gmsts and ($rectype eq 'GMST')) {
+	    $tr->decode;
+	    my $id = $tr->id;
+	    my($type, $field) = @{$GMST_TYPE{substr($id, 0, 1)}};
+	    my $val = $tr->get($type)->subbuf;
+	    my $hexval = unpack("H*", "$type $val");
+	    if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
+		$evil{"BM $id"}++;
+		$evil_bm++;
+	    } elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
+		$evil{"TB $id"}++;
+		$evil_tb++;
+	    }
+	} elsif ($rectype eq 'SPEL') {
+	} elsif ($rectype eq 'TES3') {
+	    $tr->decode;
+	    foreach my $master ($tr->getall('MAST', 'master')) {
+		$my_master{lc($master)}++;
+		load_master($master);
+	    }
+	}
     };
-    process_plugin_for_input($plugin, $fun);
+    process_plugin_for_input($plugin, $fun) or return(0);
+    my $found = "";
+    # $found .= " AUTOSPL" if (@autospl);
+    # $found .= " CELL00"  if ($cell00);
+    # $found .= " BM-DEP"  if ((not $mastbm) and %bmfun);
+    # $found .= " DEP-LST" if (%deplst);
+    # $found .= " DUP-INF" if ($dup_inf);
+    # $found .= " DUP-REC" if (%dup_recs);
+    # $found .= " EXP-DEP" if (not $masttb and not $mastbm and (@sscr or %tbfun));
+    # $found .= " FOGBUG"  if ($OPTFLAG{FOGBUG} and %fogbug);
+    # $found .= " FOGSYNC" if ($OPTFLAG{FOGSYNC} and @fogsync);
+    # $found .= " GETSND"  if (%getsound);
+    $found .= " EVLGMST" if (%evil);
+    # $found .= " JUNKCEL" if (%junkcell);
+    # $found .= " MASTERS" if ($master_sync);
+    # $found .= " MENUMOD" if (%menumode);
+    # $found .= " MISSAUT" if ($OPTFLAG{MISSAUT} and $missauth);
+    # $found .= " MISSDSC" if ($OPTFLAG{MISSDSC} and $missdesc);
+    # $found .= " MISSVER" if ($OPTFLAG{MISSVER} and $missver);
+    # $found .= " MOD-INF" if ($mod_inf and $OPTFLAG{'MOD-INF'});
+    # $found .= " MOD-IID" if ($mod_iid);
+    # $found .= " NUMRECS" if ($OPTFLAG{NUMRECS} and $rec_count != $hdr_nrec);
+    # $found .= " OVR-REC" if (%ovr_recs);
+    # $found .= " SCRDOOR" if (%door);
+    # if ($CHK_NO_EXPANSION_FUNS) {
+    # 	$found .= " !BM-FUN" if ($OPTFLAG{'!BM-FUN'} and $mastbm and not(%bmfun or @sscr));
+    # 	$found .= " !TB-FUN" if ($OPTFLAG{'!TB-FUN'} and $masttb and not(%tbfun or %bmfun or @sscr));
+    # }
+    if ($found) {
+     	print "$plugin:$found\n";
+    } else {
+     	print "$plugin: CLEAN\n" if ($opt_lint_clean);
+     	return;
+    }
+    # ##################################################
+    # # now print out verbose detail, if applicable
+    # ##################################################
+    # print $master_sync if ($master_sync);
+    # if (@autospl) {
+    # 	print "    [AUTOSPL] Auto-calced Spells:\n";
+    # 	foreach my $spell (@autospl) {
+    # 	    print "\t$spell\n";
+    # 	}
+    # }
+    # if ($OPTFLAG{NUMRECS} and $rec_count != $hdr_nrec) {
+    # 	print "    [NUMRECS]: number of records in TES3.HEDR ($hdr_nrec) != Actual count ($rec_count)\n";
+    # }
+    # if ($cell00) {
+    # 	print "    [CELL00]: $cell00\n";
+    # }
+    # if (@sscr and not $masttb and not $mastbm) {
+    # 	my $pl = (scalar(@sscr) > 1) ? "s" : "";
+    # 	print "    [EXP-DEP] Expansion Dependency: Startup Script$pl: ", join(", ", @sscr), "\n";
+    # }
+    # lint_report(\%tbfun, "[EXP-DEP] Expansion Dependency: Tribunal Functions") if (not $masttb and not $mastbm);
+    # lint_report(\%bmfun, "[BM-DEP] Bloodmoon Dependency: Bloodmoon Functions") if ($OPTFLAG{'BM-DEP'} and not $mastbm);
+    # lint_report(\%deplst, "[DEP-LST] Deprecated use of Leveled List functions on Bethesda Lists");
+    lint_report(\%evil, "[EVLGMST]" . (($evil_tb > 0)? " Tribunal($evil_tb)" : "") . (($evil_bm > 0)? " Bloodmoon($evil_bm)" : ""));
+    # if (%fogbug) {
+    # 	print "    [FOGBUG]: Cells with zero fog density setting:\n";
+    # 	print "\t$_\n" foreach (sort keys %fogbug);
+    # }
+    # if (@fogsync) {
+    # 	print "    [FOGSYNC]: Fog density settings unsynced:\n";
+    # 	foreach my $cell (@fogsync) {
+    # 	    print "\t$cell\n";
+    # 	}
+    # }
+    # report(\%getsound, "[GETSND] GetSoundPlaying possibly used to detect events");
+    # report(\%menumode, "[MENUMOD] Scripts not checking menumode");
+    # report(\%door, "[SCRDOOR] Bethesda doors that have had scripts attached to them");
+    # if (%junkcell) {
+    # 	if ($::opt_v) {
+    # 	    print "    [JUNKCEL] Junk Cells:                        Flags\n";
+    # 	} else {
+    # 	    print "    [JUNKCEL] Junk Cells:\n";
+    # 	}
+    # 	my $format = "\t%-36s     0x%02x\n";
+    # 	foreach my $name (sort keys %junkcell) {
+    # 	    if ($::opt_v) {
+    # 		my $flags = $junkcell{$name};
+    # 		printf $format, $name, $flags;
+    # 	    } else {
+    # 		printf "\t$name\n";
+    # 	    }
+    # 	}
+    # }
+    # report_recs(\%dup_dial, "[DUP-DIAL] Duplicate Dialog Records");
+    # report_recs(\%dup_recs, "[DUP-REC] Duplicate Records");
+    # report_recs(\%ovr_recs, "[OVR-REC] Overridden Records");
+    # $| = 1;			# flush STDOUT
+    # print $inf_out;
+    # if (open(STAT, "/proc/$$/status")) {
+    # 	while (<STAT>) {
+    # 	    if (/^VmRSS:\s*(\d+)/) {
+    # 		my $vmsize = $1 / 1024;
+    # 		warn "### tes3lint($plugin) Memory Usage: $vmsize (MB)\n" if ($::opt_v);
+    # 	    }
+    # 	}
+    # 	close(STAT);
+    # }
+    # $| = 0;
 }
 
 sub cmd_testcodec {
@@ -6615,7 +6935,7 @@ sub cmd_testcodec {
     my $fun = sub {
 	my($rectype, $tr) = @_;
 	my $id = $tr->decode()->id;
-	my $trnew = $tr->new_from_tr(TES3::Record::COPY_HEADER);
+	my $trnew = TES3::Record->new_from_recbuf($rectype, '', $tr->hdrflags);
 	foreach my $tsr ($tr->subrecs()) {
 	    my $oldsubrec = $tsr->subbuf;
 	    die "no buf: " . Dumper($tsr). "\n" if (not defined $oldsubrec);
@@ -6656,7 +6976,7 @@ sub cmd_testcodec {
 	}
 	return($trnew);
     };
-    process_plugin_for_update($plugin, $fun, "test_");
+    process_plugin_for_update($plugin, $fun, "test_") or return(0);
     my(@crufty_types) = sort keys %crufty;
     if (scalar(@crufty_types) > 0) {
 	print "\nThe following types in the original plugins contain cruft:\n";
@@ -7217,7 +7537,7 @@ sub cmd_delete {
 	    return(undef);
 	}
     };
-    process_plugin_for_update($plugin, $fun);
+    process_plugin_for_update($plugin, $fun) or return(0);
 } # cmd_delete
 
 sub cmd_modify {
@@ -7267,7 +7587,7 @@ sub cmd_modify {
 		    }
 		    $R = $tr;
 		    eval($opt_modify_run);
-		    $modified = 1 if ($R->modified);
+		    $modified = 1 if ($R->{_modified_});
 		    if ($@) {
 			msg(qq{Error running "$opt_modify_run" on: $rectype ($@)});
 			$modified = 0;
@@ -7277,7 +7597,7 @@ sub cmd_modify {
 		# run modifying code on entire subrec
 		$R = $tr;
 		eval($opt_modify_run);
-		$modified = 1 if ($R->modified);
+		$modified = 1 if ($R->{_modified_});
 		if ($@) {
 		    msg(qq{Error running "$opt_modify_run" on: $rectype ($@)});
 		    $modified = 0;
@@ -7292,7 +7612,7 @@ sub cmd_modify {
 	}
 	return('');		# passthrough unchanged
     };
-    process_plugin_for_update($plugin, $fun);
+    process_plugin_for_update($plugin, $fun) or return(0);
 } # cmd_modify
 
 sub cmd_header {
@@ -7371,7 +7691,6 @@ sub cmd_esm {
     esp_esm_convert($plugin);
 }
 
-my %gmst_type = ('i' => [INTV => 'integer'], 'f' => [FLTV => 'float'], 's' => [STRV => 'string']);
 sub cmd_clean {
     my($plugin) = @_;
     dbg("cmd_clean($plugin)") if (DBG);
@@ -7398,7 +7717,7 @@ sub cmd_clean {
 	    if ($opt_clean_gmsts) {
 		# CLEAN EVIL GMSTS
 		my $id = $plug_tr->decode()->id;
-		my($type, $field) = @{$gmst_type{substr($id, 0, 1)}};
+		my($type, $field) = @{$GMST_TYPE{substr($id, 0, 1)}};
 		my $val = $plug_tr->get($type)->subbuf;
 		dbg("examining GMST  ID=$id  TYPE=$type  FIELD=$field") if (DBG);
 		unless (defined $val) {
@@ -7521,21 +7840,18 @@ sub cmd_clean {
 					$cleaned_ambi++;
 				    }
 				}
-				# CLEAN WHGT
-				# (some plugins, like Morrowind.esm, use an INTV subrecord instead of WHGT)
+				# CLEAN WHGT (water height)
+				# Some plugins (Morrowind.esm) use an INTV subrecord in CELL header instead of WHGT
+				# But we do not clean INTV water heights as INTV has multiple uses in a CELL record
 				unless ($cleaned_whgt) {
 				    my $plugin_whgt = $plug_tr->get('WHGT', 'water_height');
-				    my $whgt_type = 'WHGT';
-				    unless (defined $plugin_whgt) {
-					$plugin_whgt = $plug_tr->get('INTV', 'water_height');
-					$whgt_type = 'INTV';
-				    }
 				    my $master_whgt = $mast_tr->get('WHGT', 'water_height');
 				    unless (defined $master_whgt) {
+					# Do check Masters for INTV water heights.
 					$master_whgt = $mast_tr->get('INTV', 'water_height'); # want first INTV before any FRMR
 				    }
 				    if (defined($plugin_whgt) and defined($master_whgt) and ($plugin_whgt == $master_whgt)) {
-					$plug_tr->delete_subtype($whgt_type, 1);
+					$plug_tr->delete_subtype('WHGT');
 					$cleaned_whgt++;
 				    }
 				}
@@ -7612,9 +7928,9 @@ sub cmd_clean {
 	}
     };
     if ($opt_overwrite) {
-	process_plugin_for_update($plugin, $fun);
+	process_plugin_for_update($plugin, $fun) or return(0);
     } else {
-	process_plugin_for_update($plugin, $fun, "Clean_");
+	process_plugin_for_update($plugin, $fun, "Clean_") or return(0);
     }
     if (scalar keys %stats > 0) {
 	print qq{\nCleaning Stats for "$plugin":\n};
@@ -7691,7 +8007,7 @@ sub cmd_dump {
 	    }
 	}
     };
-    process_plugin_for_input($plugin, $fun);
+    process_plugin_for_input($plugin, $fun) or return(0);
 } # cmd_dump
 
 sub cmd_recover {
@@ -7928,6 +8244,7 @@ sub tes3cmd_main {
 	    if (scalar(@plugins) == 0);
 	dbg("$cmd_name: Executing Process function") if (DBG);
 	foreach my $plugin (@plugins) {
+	    print "Processing: $plugin\n" if (VERBOSE);
 	    $CURRENT_PLUGIN = $plugin;
 	    $CURRENT_DIAL = undef;
 	    $process->($plugin);
