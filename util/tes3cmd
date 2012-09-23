@@ -2306,15 +2306,7 @@ my @RECDEFS =
 	      ], { id => sub {'()'},
 		   rdflags => [qw(ess)] }],
      [PGRD => [
-		# { id => sub {
-		#       my($self) = @_;
-		#       return($self->{_id_}) if (defined $self->{_id_});
-		#       my $name = $self->get('NAME', 'name');
-		#       my $x = $self->get('DATA', 'x');
-		#       my $y = $self->get('DATA', 'y');
-		#       return($self->{_id_} = "$name ($x, $y)");
-		#   }}
-	       [NAME => [["id", "Z*"]]],
+	       [NAME => [["name", "Z*"]]],
 	       [DATA => [["x", "l"], ["y", "l"], ["granularity", "S"], ["pointcount", "S"]]],
 	       [PGRP => [],
 		{ decode => sub {
@@ -2408,7 +2400,15 @@ my @RECDEFS =
 	       	     return(join("\n\t", @str));
 	       	  },
 	       	}]
-	      ]],
+	      ],
+      { id => sub {
+	    my($self) = @_;
+	    return($self->{_id_}) if (defined $self->{_id_});
+	    my $name = $self->get('NAME', 'name');
+	    my $x = $self->get('DATA', 'x');
+	    my $y = $self->get('DATA', 'y');
+	    return($self->{_id_} = (($x == 0 and $y == 0) ? $name : "$name ($x, $y)"));
+	}}],
      [PROB => [
 	       [NAME => [["id", "Z*"]]],
 	       [FNAM => [["name", "Z*"]]],
