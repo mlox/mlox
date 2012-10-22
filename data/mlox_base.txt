@@ -664,6 +664,8 @@ GUARD-Remover.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Advanced Herbalism [andoreth]
 
+;;Dragon32: See also - @Herbalism mods [Various]
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  "Advanced Herbalism - MO.esp" if you have Morrowind only
@@ -676,6 +678,124 @@ Advanced Herbalism - TR & BM.esp
 Advanced Herbalism - TR.esp
 Advanced Herbalism - BM.esp
 
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+DN-GDRv1.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+DN-GDRv1.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+DN-GDRv1.esp
+Advanced Herbalism - BM.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Advanced Herbalism - BM.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+Sri Alchemy BM List Patch.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+Sri Alchemy BM List Patch.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+Sri Alchemy BM List Patch.esp
+Advanced Herbalism - BM.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+Creatures.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+Creatures.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+Creatures.esp
+Advanced Herbalism - BM.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Advanced Herbalism - MO.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Advanced Herbalism - TR.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Advanced Herbalism - BM.esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+Expanded Sounds.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+Expanded Sounds.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+Expanded Sounds.esp
+Advanced Herbalism - BM.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+[ANY Advanced Herbalism - MO.esp
+     Advanced Herbalism - TR & BM.esp
+     Advanced Herbalism - TR.esp
+     Advanced Herbalism - BM.esp]
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurer Clothing [kalikut]
@@ -685,6 +805,20 @@ Advanced Herbalism - BM.esp
  (Ref: "kalikut's adventurer clothing readme.txt")
 kalikut's adventurer clothing.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adventurers [Adam]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1932105 adventurers302.esp]
+
+;;Dragon32: checked with TESPCD
+[Order]
+adventurers302.esp
+adventurers_tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1326,6 +1460,19 @@ Bloodmoon.esm
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 529684 Andarysv1.esp]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animal Loot Mod [Sendai45]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 9036 MorrowindAnimalLootMod.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 4228 TribunalAnimalLootMod.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Animated Morrowind - Expanded [Wikart]
@@ -8430,6 +8577,23 @@ GCD better balanced birthsigns.esp
  ! http://z13.invisionfree.com/Pirate_Lords_Mods/index.php?showtopic=35
 [SIZE !439651 Expanded Sounds.esp]
 
+;;Dragon32: Expanded Sounds makes some small changes to weather settings (a few % points according to readme). If player's loaded a weather-changing mod then they'll really want those changes loaded instead.
+[Order]
+Expanded Sounds.esp
+NiceWeather_0617.esp
+
+[Order]
+Expanded Sounds.esp
+Realistic Weather v2.0.esp
+
+[Order]
+Expanded Sounds.esp
+Isirion_RealisticWeather.esp
+
+[Order]
+Expanded Sounds.esp
+Sol-Weather Tweak.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Explorers 2.5 [Lord Lionmane]
@@ -8460,21 +8624,51 @@ Explorers25Full.esp
 Disturb_the_dead.esp
 
 [Conflict]
- "Herbalism Ultralight" is not compatible with Lord Lionmane's "Explorers".
+ These Herbalism mods are not compatible with Lord Lionmane's "Explorers". Whilst the "Explorers" readme only mentions "Herbalism Ultralight" all herbalism mods not patched to work with "Explorers" are also not compatible.
  (Ref: ExplorersV25ReadMe.txt)
 [ANY Explorers25Full.esp
      Explorers25NoTombs.esp
      Explorers25TombCompatibility.esp]
-Ultra Light Herbalism.esp
+[ANY Graphic Herbalism.esp
+     Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+     Herbalism_Lite_v1.0.esp
+     Herbalismv1.3(Tribunal).esp
+     Herbalismv1.1.esp
+     Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp
+     Ultra Light Herbalism.esp]
 
 [Conflict]
- Mode_Locrian's "Herbalism Redux" is not compatible with these versions of Lord Lionmane's "Explorers"; use   'Explorers25Full.esp' and one of zappara's "Explorers Addons".
+ Mode_Locrian's "Herbalism Redux" is not compatible with these versions of Lord Lionmane's "Explorers"; use "Explorers25Full.esp" and one of zappara's "Explorers Addons".
  zappara's addons are available from Morrowind Modding History: http://mw.modhistory.com/download--2859
  (Ref: ExplorersV25ReadMe.txt)
 [ANY Explorers25NoTombs.esp
      Explorers25TombCompatibility.esp]
 [ANY Herbalism Redux 1.12a - Bloated MW.esp
      Herbalism Redux 1.12a.esp]
+
+;;Dragon32: Explorers needs Tribunal and Bloodmoon, so no point in checking other Advanced Herbalism options
+[Conflict]
+ andoreth's "Advanced Herbalism" is not compatible with these versions of Lord Lionmane's "Explorers"; use "Explorers25Full.esp" and one of zappara's "Explorers Addons".
+ zappara's addons are available from Morrowind Modding History: http://mw.modhistory.com/download--2859
+ (Ref: ExplorersV25ReadMe.txt)
+[ANY Explorers25NoTombs.esp
+     Explorers25TombCompatibility.esp]
+[ANY Advanced Herbalism - TR & BM.esp]
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Explorers25Full.esp
+
+[Order]
+Expanded Sounds.esp
+Explorers25NoTombs.esp
+
+[Order]
+Expanded Sounds.esp
+Explorers25TombCompatibility.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10811,6 +11005,8 @@ Grandmaster of Hlaalu.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism [ManaUser]
 
+;;Dragon32: See also - @Herbalism mods [Various]
+
 ;; (Ref: "Graphic Herbalism Readme.txt")
 [Order]
 Bloated Caves.esp
@@ -10823,20 +11019,6 @@ Graphic Herbalism Extra.esp
 Graphic Herbalism.esp
 
 [Conflict]
- These Herbalism mods do very similar things and so they will conflict, you probably should only be using one at a time.
-Graphic Herbalism.esp
-Herbalism Redux 1.12a.esp
-Syc_HerbalismforPurists.esp
-Syc_HerbalismforPurists_TB_ONLY.esp
-Herbalism_Lite_v1.0.esp
-Herbalismv1.3(Tribunal).esp
-Ultra Light Herbalism.esp ; by Rogue_Shadow?
-Advanced Herbalism - MO.esp
-Advanced Herbalism - TR & BM.esp
-Advanced Herbalism - TR.esp
-Advanced Herbalism - BM.esp
-
-[Conflict]
  These plugins conflict because they modify some of the same objects (e.g.: kollops).
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
 Graphic Herbalism.esp
@@ -10847,6 +11029,44 @@ Resources Enhanced.esp
 Bloated Caves.esp
 Bloated Morrowind.esp
 
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Graphic Herbalism.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Graphic Herbalism.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Graphic Herbalism.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Graphic Herbalism.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Graphic Herbalism.esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Graphic Herbalism.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+Graphic Herbalism.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism / Expanded Sounds Patch [philologos]
@@ -11684,19 +11904,118 @@ H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism [balor]
 
+;;Dragon32: See also - @Herbalism mods [Various]
+
 [Requires]
  (Ref: "Herbalism readme.txt")
 Herbalismv1.3(Bloodmoon addon).esp
 Herbalismv1.3(Tribunal).esp
 
+;;Dragon32: Not actually needed, makes the other Order rules here easier though
+[Order]
+Herbalismv1.3(Tribunal).esp
+Herbalismv1.3(Bloodmoon addon).esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Herbalismv1.3(Tribunal).esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Herbalismv1.3(Tribunal).esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Herbalismv1.3(Tribunal).esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Herbalismv1.3(Tribunal).esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Herbalismv1.3(Tribunal).esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Herbalismv1.3(Tribunal).esp
+
+;;Dragon32: See also - Morrowind Inhabitants [scruggs]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism [balor, modified by Shanjaq]
+
+;;Dragon32: Shanjaq's modified v1.1 of Balor's mod, not the latest, 1.3
+
+;;Dragon32: See also - @Herbalism mods [Various]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 209269 Herbalismv1.1.esp]
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Herbalismv1.1.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Herbalismv1.1.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Herbalismv1.1.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Herbalismv1.1.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Herbalismv1.1.esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Herbalismv1.1.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+Herbalismv1.1.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism for Purists [Syclonix]
+
+;;Dragon32: See also - @Herbalism mods [Various]
 
 ; JMS - to ensure that HFP flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08)
 [Order]
 DN-GDRv1.esp
 Syc_HerbalismforPurists.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
 
 ; JMS - to ensure that HFP flora container behavior isn't overridden by Sris Alchemy.
 [Order]
@@ -11776,9 +12095,26 @@ Flora Glow 1.0.esp
  !! http://btb2.free.fr/morrowind.html
 [SIZE 77593 Syc_HerbalismforPurists.esp]
 
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+[ANY Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp]
+
+[Conflict]
+ These plugins conflict because they modify some of the same objects (kollops and Kwama eggs).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
+[ANY Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp]
+Resources Enhanced.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism Lite v1.0 [Shakeidas]
+
+;;Dragon32: See also - @Herbalism mods [Various]
 
 ;;Herbalism_Lite_+Bloodmoon_v1.0.esp
 ;;Herbalism_Lite_+Tribunal_v1.0.esp
@@ -11787,18 +12123,184 @@ Flora Glow 1.0.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 105359 Herbalism_Lite_v1.0.esp]
 
+;;Dragon32: Not actually needed, makes the other Order rules here easier though
+[Order]
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+Herbalism_Lite_v1.0.esp
+
+[Conflict]
+ These plugins conflict because they modify some of the same objects (kollops and Kwama eggs).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
+Herbalism_Lite_v1.0.esp
+Resources Enhanced.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism Lite for Tamriel Rebuilt [Tealpanda]
+
+;;Dragon32: See also - @Herbalism mods [Various]
+
+[Conflict]
+ "[Herbalism Lite for Tamriel Rebuilt] is an update for Shakeidas' Herbalism Lite so that it includes the plants from Tamriel Rebuilt." There is no need to run Shakeidas' original mod with Tealpanda's update.
+ (Ref: "Readme - Hebalism Lite for Tamriel Rebuilt.txt")
+[ANY Herbalism_Lite_v1.0.esp
+     Herbalism_Lite_+Tribunal_v1.0.esp
+     Herbalism_Lite_+Bloodmoon_v1.0.esp]
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+[Note]
+ ! There is an update to Tealpanda's "Herbalism Lite for Tamriel Rebuilt" available
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7623
+Herbalism_Lite_for_Tamriel_Rebuilt.esp
+Herbalism_Lite_for_Tamriel_Rebuilt 1 and 2.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+[Conflict]
+ These plugins conflict because they modify some of the same objects (kollops and Kwama eggs).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+Resources Enhanced.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism mods [Various]
+
+[Conflict]
+ These Herbalism mods do very similar things and so they will conflict, you probably should only be using one at a time.
+;;Advanced Herbalism [andoreth]
+[ANY Advanced Herbalism - MO.esp
+     Advanced Herbalism - TR & BM.esp
+     Advanced Herbalism - TR.esp
+     Advanced Herbalism - BM.esp]
+;;Graphic Herbalism [ManaUser]
+Graphic Herbalism.esp
+;;Herbalism [balor]
+Herbalismv1.3(Tribunal).esp
+;;Herbalism [balor, modified by Shanjaq]
+Herbalismv1.1.esp
+;;Herbalism for Purists [Syclonix]
+[ANY Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp]
+;;Herbalism Lite [Shakeidas]
+Herbalism_Lite_v1.0.esp
+;;Herbalism Lite for Tamriel Rebuilt [Tealpanda]
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+;;Herbalism Redux [Mode_Locrian]
+[ANY Herbalism Redux 1.12a.esp
+     Herbalism Redux 1.12a - Bloated MW.esp
+     HR 1.12a + EW 1.5.esp
+     HR 1.12a BMW + EW 1.5.esp]
+;;Ultra Light Herbalism [Qwert]
+Ultra Light Herbalism.esp
+;;missing Korath's "Herbalism Minimal"
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism Redux 1.12a [Mode_Locrian]
 
-[Order]
-Expanded Sounds.esp
-Herbalism Redux 1.12a - Bloated MW.esp
-Herbalism Redux 1.12a.esp
-Herbalism Redux ES Patch.esp
+;;Dragon32: See also - @Herbalism mods [Various]
+
+[Note]
+ ! There is an update to Mode_Locrian's "Herbalism Redux" available
+ ! http://www.freewebs.com/mode_locrian/herbalismredux.htm
+ ! http://mw.modhistory.com/download-90-11745
+Herbalism Redux 1.12 - Bloated Morrowind.esp
+Herbalism Redux 1.12.esp
 
 [Conflict]
  Choose ONLY ONE of these Herbalism Redux plugins.
+  "Herbalism Redux 1.12a - Bloated MW.esp" - If you're using MagicNakor's "Bloated Morrowind" mod
+  "Herbalism Redux 1.12a.esp" - If you're not.
  (Ref: "Herbalism Redux 1.12a readme.txt")
 Herbalism Redux 1.12a - Bloated MW.esp
 Herbalism Redux 1.12a.esp
@@ -11810,13 +12312,196 @@ Herbalism Redux 1.12a.esp
      [NOT Herbalism Redux 1.12a - Bloated MW.esp]]
 Bloated Morrowind.esp
 
+;;Dragon32: Checked with TESPCD
+[Order]
+Bloated Morrowind.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
 [Patch]
- "Herbalism Redux ES Patch.esp" is required for using Herbalism Redux with Expanded Sounds.
+ "Herbalism Redux ES Patch.esp" is required for using Mode_Locrian's "Herbalism Redux" with PirateLord's "Expanded Sounds".
  (Ref: HerbReduxES.zip/"Readme.txt")
+ http://www.pirates.retreat.btinternet.co.uk/Sounds.htm
 Herbalism Redux ES Patch.esp
 [ALL [ANY Herbalism Redux 1.12a.esp
 	  Herbalism Redux 1.12a - Bloated MW.esp]
      Expanded Sounds.esp]
+
+[Order]
+Expanded Sounds.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+Herbalism Redux 1.12a.esp
+Herbalism Redux ES Patch.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+DN-GDRv1.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+Sri Alchemy BM List Patch.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+Creatures.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+[ANY Herbalism Redux 1.12a.esp
+     Herbalism Redux 1.12a - Bloated MW.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism Redux + Explorers Wilderness Compatibility [Mode_Locrian]
+
+;;Dragon32: See also - @Herbalism mods [Various]
+
+[Conflict]
+ To play Mode_Locrian's "Herbalism Redux 1.12a" and Lionmane's "Explorers 1.5" together you need to use "Herbalism Redux + Explorers Wilderness Compatibility" by Mode_Locrian.
+ (Ref: "HR 1.12a + EW 1.5 Readme.txt")
+ http://mw.modhistory.com/download--537
+[ANY Herbalism Redux 1.12a.esp
+     Herbalism Redux 1.12a - Bloated MW.esp]
+[ANY ExplorersFull15.esp
+     ExplorersWilderness15.esp]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+  "HR 1.12a BMW + EW 1.5.esp" - If you're using MagicNakor's "Bloated Morrowind" mod
+  "HR 1.12a + EW 1.5.esp" - If you're not.
+ (Ref: "HR 1.12a + EW 1.5 Readme.txt")
+HR 1.12a + EW 1.5.esp
+HR 1.12a BMW + EW 1.5.esp
+
+[Conflict]
+ When using "Bloated Morrowind.esp", you should use "HR 1.12a BMW + EW 1.5.esp" instead.
+ (Ref: "Herbalism Redux 1.12a readme.txt")
+[ALL HR 1.12a + EW 1.5.esp
+     [NOT Herbalism Redux 1.12a - Bloated MW.esp]]
+Bloated Morrowind.esp
+
+;;Dragon32: Assumed it's the same as for the standard Herbalism Redux mod
+[Order]
+Bloated Morrowind.esp
+HR 1.12a BMW + EW 1.5.esp
+
+[Conflict]
+ "RUNNING THIS COMPATIBILITY MOD AND NORMAL HERBALISM REDUX AT THE SAME WILL WILL MESS UP YOUR SAVED GAME, SO DON'T DO IT."
+ (Ref: "HR 1.12a + EW 1.5 Readme.txt")
+[ANY HR 1.12a + EW 1.5.esp
+     HR 1.12a BMW + EW 1.5.esp]
+[ANY Herbalism Redux 1.12a.esp
+     Herbalism Redux 1.12a - Bloated MW.esp]
+
+[Conflict]
+ "[If you are running] Explorers Wilderness or Explorers Full make sure to uncheck these in your data files list as well."
+ (Ref: "HR 1.12a + EW 1.5 Readme.txt")
+[ANY HR 1.12a + EW 1.5.esp
+     HR 1.12a BMW + EW 1.5.esp]
+[ANY ExplorersFull15.esp
+     ExplorersWilderness15.esp]
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+Expanded Sounds.esp
+HR 1.12a BMW + EW 1.5.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+DN-GDRv1.esp
+HR 1.12a BMW + EW 1.5.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+HR 1.12a BMW + EW 1.5.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+Sri Alchemy BM List Patch.esp
+HR 1.12a BMW + EW 1.5.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+Creatures.esp
+HR 1.12a BMW + EW 1.5.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+HR 1.12a BMW + EW 1.5.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+[ANY HR 1.12a + EW 1.5.esp
+     HR 1.12a BMW + EW 1.5.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13294,6 +13979,7 @@ k_weather (louder sounds).esp
 ;;          Syc_HerbalismforPurists_TB.esp
 ;;          Syc_HerbalismforPurists_TB-ONLY.esp]]
 
+;;Dragon32: Added similar rules to the below to all the Herbalism mods, duplicated the below in the Herbalism for Purists entry. This Order rule kept for reference
 ;; (Ref: "k_weather.txt")
 [Order]
 k_weather.esp
@@ -15263,13 +15949,42 @@ MGE_Foggy_weather.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Minerals  [evelas]
+;; @Minerals [evelas]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+  "Minerals (Tribunal&Bloodmoon).esp" - If you have both Tribunal and Bloodmoon
+  "Minerals.esp" - If you only have Morrowind
+ (Ref. "minerals.txt")
+Minerals (Tribunal&Bloodmoon).esp
+Minerals.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 10107 Minerals (Tribunal&Bloodmoon).esp]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 6526 Minerals.esp]
-[SIZE 10107 Minerals (Tribunal&Bloodmoon).esp]
+
+;;Dragon32: Checked in TESPCD
+[Conflict]
+ Both quorn's "Miner's Pick Use" and evelas' "Minerals" edit the game's ore rocks, these two plugins cannot be used together.
+MinerPickUseGOTY.esp
+[ANY Minerals (Tribunal&Bloodmoon).esp
+     Minerals.esp]
+
+;;Dragon32: Minerals and Resources Enhanced conflict, Resources Enhanced requires a pick to mine ore and ore respawns after 30 days. Minerals just does the respawn. Load Resources Enhanced after Minerals to get presumably the desired effect. "Minerals (Tribunal&Bloodmoon).esp" sets Stalhrim to respawn, which Resources Enhanced doesn't
+[Order]
+Minerals (Tribunal&Bloodmoon).esp
+Resources Enhanced.esp
+
+[Conflict]
+ Both evelas' "Minerals" and The Lys' "Resources Enhanced" edit the game's ore rocks, both plugins set ore rocks to respawn after 30 days. As The Lys' "Resources Enhanced" makes further changes to other resources you should remove evelas' "Minerals."
+Minerals.esp
+Resources Enhanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15861,11 +16576,16 @@ Cali_MormegilManor.esp
 ;; @Morrowind Advanced [Gary Noonan/WormGod]
 
 [Note]
+ !! There is a suggested update for Morrowind Advanced: Morrowind Advanced 1.82
+ !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4967 )
+ !! This older version of the plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 687982 MW_A01.esp]
+
+[Note]
  ! There is a suggested update for Morrowind Advanced: Morrowind Advanced 1.82
  ! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4967 )
- ! Also, the original version of this plugin contains evil GMSTs.
- ! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 687982 MW_A01.esp]
+[SIZE !687982 MW_A01.esp]
 
 ;; If you are running Thepal's Unofficial Morrowind Patch you should load
 ;; "Morrowind Advanced.esm" *after* Unofficial Morrowind Patch.
@@ -15907,6 +16627,22 @@ Morrowind Advanced.esp
 MW_Adv_PHW.esp
 [ALL MW_Adv_Required.esp
      Passive_Healthy_Wildlife.esp]
+
+[Order]
+Passive_Healthy_Wildlife.esp
+MW_Adv_PHW.esp
+
+;;BTB's edited version
+[Order]
+Morrowind Advanced.esm
+Morrowind Advanced.esp
+MW_Adv_Required (BTB Edit).esp
+
+[Requires]
+ (Ref: "readme_mw_advanced.txt" and "Readme - MW_Adv_Required (BTB Edit).txt")
+MW_Adv_Required (BTB Edit).esp
+[ANY Morrowind Advanced.esm
+     Morrowind Advanced.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17125,7 +17861,8 @@ MWInhabitants Freeform PATCH.01.esp
 	  Wakim's Game Improvements with No-glo v9.esp
           Balance - game settings.esp]]
 
-; Dragon32: Only Herbalism mentioned in readme. Perhaps other herbalism mods are affected too.
+; Dragon32: Only Herbalism mentioned in readme.
+;;Dragon32: Added similar rules to the below to all the Herbalism mods, duplicated the below in the Herbalism entry. This Conflict rule kept for reference
 [Conflict]
  There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
  (Ref: MWInhabitants PATCH.01 README.txt)
@@ -23245,6 +23982,25 @@ TR_CensusAndExciseTravel.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @TR1_Herbalism (Tamriel Rebuilt/Herbalism) [tek_604]
+
+;;Dragon32: Assorted rules added to other Herbalism mods not added here as they'll be picked up by balor's Herbalism
+
+;;Dragon32: TR Data and TR Map 1 dependencies in plugin header
+[Requires]
+ "In order for this mod to run, you *MUST* download and run [balor's] Herbalism v1.3 (Tribunal) mod"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1974
+ (Ref: "TR1_Herbalism_Readme.txt")
+TR1_Herbalism.esp
+Herbalismv1.3(Tribunal).esp
+
+;;Dragon32: based on the above
+[Order]
+Herbalismv1.3(Tribunal).esp
+TR1_Herbalism.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TarMar [Ravensong]
 
 [Conflict]
@@ -24325,6 +25081,51 @@ Ultimate Galleon Purchase Patch.esp
           Knights of Tamriel.esp
           Royal Golden Armor v3.1.esp
           Clean Wooden longbows V2.0.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultra Light Herbalism [Qwert]
+
+;;Dragon32: See also - @Herbalism mods [Various]
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
+[Order]
+DN-GDRv1.esp
+Ultra Light Herbalism.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Ultra Light Herbalism.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Sris Alchemy, from Herbalism for Purists' rules
+[Order]
+Sri Alchemy BM List Patch.esp
+Ultra Light Herbalism.esp
+
+; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
+[Order]
+Creatures.esp
+Ultra Light Herbalism.esp
+
+;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;; (Ref: "k_weather.txt")
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Ultra Light Herbalism.esp
+
+;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
+;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
+[Order]
+Expanded Sounds.esp
+Ultra Light Herbalism.esp
+
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+Ultra Light Herbalism.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
