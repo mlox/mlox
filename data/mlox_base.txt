@@ -1711,6 +1711,22 @@ AOF Potions Recolored T+B.esp
 Appropriate Greetings M - 1.5.2.esp
 Appropriate Greetings M - T - 1.5.2.esp
 
+[Conflict]
+ "It is better not to use [Appropriate Greetings] with any mod that fix the greeting for the Nereverine"
+ (Ref: "Appropriate Greetings 1.5.2  - README.txt")
+[ANY Appropriate Greetings M - 1.5.2.esp
+     Appropriate Greetings M - T - 1.5.2.esp]
+[ANY lfx_nerevarine_greetings.esp
+     Nerevarine Greeting tweaks.esp
+     ExcuseMe.esp]
+
+[Conflict]
+ "It is better not to use this mod with [...] "VGreetings.esp" of the mod "Voice Greetings plugin""
+ (Ref: "Appropriate Greetings 1.5.2  - README.txt")
+[ANY Appropriate Greetings M - 1.5.2.esp
+     Appropriate Greetings M - T - 1.5.2.esp]
+VGreetings.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @APime's House Project  [APime11987]
@@ -2883,6 +2899,31 @@ Grass_TR_TI&M.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balanced Scales [IXth Crusade]
+
+[Note]
+ !! This plugin suffers from "SignRotate Contamination". It includes three "dirty" scripts (DagothUrCreature1, EndGame and LorkhanHeart). The ESP needs cleaning to remove these "dirty" scripts.
+ !! Ref: http://wryemusings.com/GMST%20Vaccine.html
+[SIZE 2048163 BS_1.0.1.esp]
+
+[Note]
+ !! "This mod WILL break the Twin Lamps questline. Be sure that you have either completed this questline or that you do not wish to complete it before beginning this quest!"
+ !! (Ref: "Balanced_Scales_Grandmaster_Quests-42246-1-0.zip\Data Files\README.txt")
+Clean BS_GM_1.esp
+
+[Requires]
+ "[Balanced Scales Grandmaster Quests] REQUIRES the original Balanced Scales mod to be installed and for the player to be the Grandmaster Hunter!"
+ (Ref: "Balanced_Scales_Grandmaster_Quests-42246-1-0.zip\Data Files\README.txt")
+Clean BS_GM_1.esp
+BS_1.0.1.esp
+
+;;Dragon32: Checked with TESPCD
+[Order]
+BS_1.0.1.esp
+Clean BS_GM_1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balcony House Edited [Geotangy]
 
 [Note]
@@ -3400,7 +3441,7 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 ;; @Balmora Expanded and Forested MW compatibility [Sintek]
 
 [Conflict]
- "Balmora Expanded and Forested MW compatibility" is a fix for the problems of running Max's "Forested Morrowind" with "Balmora Expanded", such as trees blocking paths and draping over NPCs so you are unable to converse with them.
+ "Balmora Expanded and Forested MW compatibility" is a fix for the problems of running Max's "Forested Morrowind" with Gorg, CanadianIce and Jeremy's "Balmora Expansion", such as trees blocking paths and draping over NPCs so you are unable to converse with them.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=587 )
 [ANY Balmora Expansion v1.4.esp
      Balmora Expansion v1.4+(1.4).esp
@@ -3413,6 +3454,25 @@ Forested Morrowind.esp
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=587 )
 Forested Morrowind.esp
 BEx-FM.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Expansion - No Ambient and Corpus Spells Addon [Unknown]
+
+[Order]
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+Balmora Expansion - No Ambient and Corpus Spells.esp
+
+[Requires]
+ (Ref: "Balmora Expansion - No Ambient and Corpus Spells Addon.rar\Readme.txt"
+Balmora Expansion - No Ambient and Corpus Spells.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7330,6 +7390,93 @@ Decorator+.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Definitive Birthsigns Redux Patch [Pluto]
+
+[Requires]
+ "The original version of The Definitive Birthsigns Pack must be installed"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=150
+ (Ref: "Definitive Birthsign Redux.txt")
+Definitive Birthsigns Redux Patch.esp
+Birthsigns.esp
+
+;;Dragon32: checked Order rules here with TESPCD
+[Order]
+Birthsigns.esp
+Definitive Birthsigns Redux Patch.esp
+
+;;Dragon32: Not sure if this works with "Galsiah's Character Development Lean [Galsiah, Huskobar]" or "GCD v1.08 with Startscript, fixed [Gluby]"
+[Note]
+ "If you use GCD, be sure to also use the DBirth-Redux GCD Patch.esp found in the GCD patch folder."
+ (Ref: "Definitive Birthsign Redux.txt")
+[ALL Definitive Birthsigns Redux Patch.esp
+     Galsiahs Character Development.esp
+     [NOT [ANY BirthsignsAMFun_BM.esp
+               BirthsignsAMFun_MW.esp]
+          DBirth-Redux GCD Patch.esp]]
+
+;;Dragon32: checked with TESPCD
+[Order]
+Definitive Birthsigns Redux Patch.esp
+DBirth-Redux GCD Patch.esp
+
+[Note]
+ "If you use Birthsign Are More Fun (BAMF), be sure to use the DBirth-Redux BAMF Patch.esp found in the BAMF patch folder."
+ (Ref: "Definitive Birthsign Redux.txt")
+[ALL Definitive Birthsigns Redux Patch.esp
+     [ANY BirthsignsAMFun_BM.esp
+          BirthsignsAMFun_MW.esp]
+     [NOT Galsiahs Character Development.esp]
+     [NOT DBirth-Redux BAMF Patch.ESP]]
+
+[Order]
+Definitive Birthsigns Redux Patch.esp
+DBirth-Redux BAMF Patch.ESP
+
+[Note]
+ "If you use GCD and BAMF, be sure to use the DBirth-Redux GCDxBAMF Patch.esp found in the GCD/BAMF patch folder."
+ (Ref: "Definitive Birthsign Redux.txt")
+[ALL Definitive Birthsigns Redux Patch.esp
+     [ANY BirthsignsAMFun_BM.esp
+          BirthsignsAMFun_MW.esp]
+     Galsiahs Character Development.esp
+     [NOT DBirth-Redux GCDxBAMF Patch.ESP]]
+
+[Order]
+Definitive Birthsigns Redux Patch.esp
+DBirth-Redux GCDxBAMF Patch.ESP
+
+[Conflict]
+ "Do NOT use the "Definitive Birthsign Patch" (by Eisenfaust) alongside [Pluto's Definitive Birthsigns Redux Patch]"
+ (Ref: "Definitive Birthsign Redux.txt")
+Definitive Birthsigns Redux Patch.esp
+Definitive Birthsigns Unofficial Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Definitive Birthsigns Unofficial Patch [Eisenfaust]
+
+[Requires]
+ "Required files: [...] "The Definitive Birthsigns Pack" by Doy and IceNine0"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=150
+ (Ref: "Definitive Birthsigns Unoffical Patch README.txt")
+Definitive Birthsigns Unofficial Patch.esp
+Birthsigns.esp
+
+;;Dragon32: checked Order rules here with TESPCD
+[Order]
+Birthsigns.esp
+Definitive Birthsigns Unofficial Patch.esp
+
+;;Dragon32: Not sure if this works with "Galsiah's Character Development Lean [Galsiah, Huskobar]" or "GCD v1.08 with Startscript, fixed [Gluby]"
+[Patch]
+ "GCD Compatibility via the "DB-UP GCD Patch.esp" file"
+ (Ref: "Definitive Birthsigns Unoffical Patch README.txt")
+DB-UP GCD Patch.esp
+[ALL Definitive Birthsigns Unofficial Patch.esp
+     Galsiahs Character Development.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Deora Mansion:  Version 4.0 [FireHeaven]
 
 [Note]
@@ -8501,9 +8648,14 @@ entertainers-NoM fix.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Erengard Mines-MC Compatible [Graphite and Denina]
 
+[Note]
+ ! A new version of "Erengard Mines-Morrowind Crafting Compatible" is available, you should upgrade!
+ ! http://download.fliggerty.com/download-53-704
+Erengard Mines-MC-compatible.esp
+
 [Requires]
  (Ref: Erengard Mines-MC Compatible Read Me.txt)
-Erengard Mines-MC-compatible.esp
+Erengard Mines-MC-Compatible 2.1.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
      Morrowind Crafting 2-1.esp]
@@ -8512,22 +8664,17 @@ Erengard Mines-MC-compatible.esp
  Do not use both mods at once.
  (Ref: Erengard Mines-MC Compatible Read Me.txt)
 Erengard Mines.esp
-Erengard Mines-MC-compatible.esp
+Erengard Mines-MC-Compatible 2.1.esp
 
 [Note]
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with  TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 136195 Erengard Mines.esp]
 
-[Note]
- This plugin contains dirty references. It is recommended that you clean it with TESTool.
-[SIZE 144259 Erengard Mines-MC-compatible.esp]
-
 ;:Dragon32: scripts in Erengard Mines use MC objects etc.
 [Order]
 Morrowind Crafting 2-1.esp
-Erengard Mines-MC-compatible.esp
-
+Erengard Mines-MC-Compatible 2.1.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Exotics Boutique 1.1 [TommyKhajiit]
@@ -11783,7 +11930,6 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
      Ice_FemaleSteelCuirass.esp
      Ice_Wolf_Cuirass_Mod.esp]
 
-;;Dragon32: Unable to find plugin name for "Left wraithguard by Smite Plight", its resources're used so should be included in this Note
 [Note]
  Sandman101's "H.E.L.L.U.V.A. Armor Completion" uses the resources from the following mods to complete the armor sets. Whilst "H.E.L.L.U.V.A. Armor Completion" does not duplicate these mods completely you may want to consider disabling them as "H.E.L.L.U.V.A. Armor Completion" already adds their armor to the game world.
 [ALL H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
@@ -11803,7 +11949,8 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
           TemplarSheild.esp
           studded_armor_set.esp
           Helseth_Shield.esp
-          Helseth_Shield_notAdded.esp]]
+          Helseth_Shield_notAdded.esp
+          Left Wraithguard.esp]]
 
 ;;Dragon32 - See "H.E.L.L.U.V.A. Armor Completion read me.rtf"
 [Order]
@@ -11817,6 +11964,245 @@ Museum of Artifacts Improved Expanded.esp
 ;; Dragon32: TheOtherFelix's "Expanded Museum of Artifacts" not mentioned in readme but as P_S's mod ("Museum of Artifacts Improved Expanded") that includes it is mentioned I've added a similar Order rule
 [Order]
 H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+ExpandedMoA.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @HELLUVA Balanced 2.3 [Spiffyman]
+
+[Conflict]
+ Choose ONLY ONE esp to use:
+  HELLUVA Balanced BTB.esp - Also changes Vanilla and HELLUVA equipment. Replaces BTB's equipment esp.
+  HELLLUVA Balanced BTB CS.esp - Same as above, but only includes HELLUVA Completion Set armors and HELLUVA weapons.
+  HELLUVA Balanced Complete.ESP - Contains all weapons/armors.
+  HELLUVA Balanced Armor.esp - Only contains armors, for those not wanting the weapons portion.
+  HELLUVA Balanced Weapons.esp - Only contains weapons, for those not wanting the armor portion.
+  HELLLUVA Balanced CompletionSet.esp - Contains only the armor sets that complete vanilla armors. Includes the Vanilla armors as well.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLLUVA Balanced BTB CS.esp
+HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced Armor.esp
+HELLUVA Balanced BTB.esp
+HELLUVA Balanced Complete.ESP
+HELLUVA Balanced Weapons.esp
+
+[Conflict]
+ "HELLUVA Balanced BTB [...] Replaces BTB's equipment esp"
+ (Ref: "Helluva Balanced Readme.txt")
+[ANY HELLUVA Balanced BTB.esp
+     HELLLUVA Balanced BTB CS.esp]
+BTB - Equipment.esp
+
+[Conflict]
+ "[HELLUVA Balanced's Vanilla Addon and BTB versions include] Alaisagae's Left Gloves addon (which includes Lurlock's Left Gloves)."
+ (Ref: "Helluva Balanced Readme.txt")
+[ANY HELLUVA Balanced Vanilla Addon.esp
+     HELLUVA Balanced BTB.esp
+     HELLLUVA Balanced BTB CS.esp]
+[ANY LeftGloves_Addon_v2.esp
+     LeftGloves.esp]
+
+[Conflict]
+ "The BTB version[s of HELLUVA Balanced] include Alisiagae's Unique Finery mod."
+ (Ref: "Helluva Balanced Readme.txt")
+[ANY HELLUVA Balanced BTB.esp
+     HELLLUVA Balanced BTB CS.esp]
+[ANY UFR_v3dot2.esp
+     UFR_v3dot2_noRobe.esp]
+
+;;Ref: "Helluva Balanced Readme.txt" - "This addon [...] should be used after Creatures XI"
+[Order]
+Creatures.esp
+HELLUVA Balanced Creatures Addon.esp
+
+[Order]
+Creatures (lore).esp
+HELLUVA Balanced Creatures Addon.esp
+
+[Order]
+Creatures (Semi).esp
+HELLUVA Balanced Creatures Addon.esp
+
+[Note]
+ !! Despite the readme saying "2.5 If either Creatures is chosen, turn off/delete the original Creatures esp." in its install instructions the plugin provided in HELLUVA Balanced Armor is a patch for Creatures and not a replacement for PirateLord's original mod (see the readme's version history). You need to enable one of the Creatures plugins
+[ALL HELLUVA Balanced Creatures Addon.esp
+     [NOT [ANY Creatures.esp
+               Creatures (lore).esp
+               Creatures (Semi).esp]]]
+
+[Conflict]
+ "HELLUVA Balanced BTB.esp" includes HELLUVA Awesome Armor and HELLUVA Wicked Weapons. There is no need to run Sandman101's original plugins.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLUVA Balanced BTB.esp
+[ANY H.E.L.L.U.V.A._A.A._Heavy 1.0.esp
+     H.E.L.L.U.V.A._A.A._LIGHT 1.0.esp
+     H.E.L.L.U.V.A._A.A._MEDIUM 1.0.esp
+     H.E.L.L.U.V.A._A.A._Recolors_1.0.esp
+     H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+     H.E.L.L.U.V.A. Helms.esp
+     H.E.L.L.U.V.A. Shields.esp
+     H.E.L.L.U.V.A. Axes.esp
+     H.E.L.L.U.V.A. Blunt.esp
+     H.E.L.L.U.V.A. Bows.esp
+     H.E.L.L.U.V.A. Complete Weapons.esp
+     H.E.L.L.U.V.A. Longblades_1H(1).esp
+     H.E.L.L.U.V.A. Longblades_1H(2).esp
+     H.E.L.L.U.V.A. Longblades_2H.esp
+     H.E.L.L.U.V.A. Marksman.esp
+     H.E.L.L.U.V.A. Shortblades.esp
+     H.E.L.L.U.V.A. Spears.esp]
+
+[Conflict]
+ "HELLLUVA Balanced BTB CS.esp" includes HELLUVA Awesome Armor's Completion Set and HELLUVA Wicked Weapons. There is no need to run Sandman101's original plugins.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLLUVA Balanced BTB CS.esp
+[ANY H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+     H.E.L.L.U.V.A. Axes.esp
+     H.E.L.L.U.V.A. Blunt.esp
+     H.E.L.L.U.V.A. Bows.esp
+     H.E.L.L.U.V.A. Complete Weapons.esp
+     H.E.L.L.U.V.A. Longblades_1H(1).esp
+     H.E.L.L.U.V.A. Longblades_1H(2).esp
+     H.E.L.L.U.V.A. Longblades_2H.esp
+     H.E.L.L.U.V.A. Marksman.esp
+     H.E.L.L.U.V.A. Shortblades.esp
+     H.E.L.L.U.V.A. Spears.esp]
+
+[Conflict]
+ "HELLUVA Balanced Complete.ESP" includes HELLUVA Awesome Armor and HELLUVA Wicked Weapons. There is no need to run Sandman101's original plugins.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLUVA Balanced Complete.ESP
+[ANY H.E.L.L.U.V.A._A.A._Heavy 1.0.esp
+     H.E.L.L.U.V.A._A.A._LIGHT 1.0.esp
+     H.E.L.L.U.V.A._A.A._MEDIUM 1.0.esp
+     H.E.L.L.U.V.A._A.A._Recolors_1.0.esp
+     H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+     H.E.L.L.U.V.A. Helms.esp
+     H.E.L.L.U.V.A. Shields.esp
+     H.E.L.L.U.V.A. Axes.esp
+     H.E.L.L.U.V.A. Blunt.esp
+     H.E.L.L.U.V.A. Bows.esp
+     H.E.L.L.U.V.A. Complete Weapons.esp
+     H.E.L.L.U.V.A. Longblades_1H(1).esp
+     H.E.L.L.U.V.A. Longblades_1H(2).esp
+     H.E.L.L.U.V.A. Longblades_2H.esp
+     H.E.L.L.U.V.A. Marksman.esp
+     H.E.L.L.U.V.A. Shortblades.esp
+     H.E.L.L.U.V.A. Spears.esp]
+
+[Conflict]
+ "HELLUVA Balanced Armor.esp" includes HELLUVA Awesome Armor. There is no need to run Sandman101's original plugins.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLUVA Balanced Armor.esp
+[ANY H.E.L.L.U.V.A._A.A._Heavy 1.0.esp
+     H.E.L.L.U.V.A._A.A._LIGHT 1.0.esp
+     H.E.L.L.U.V.A._A.A._MEDIUM 1.0.esp
+     H.E.L.L.U.V.A._A.A._Recolors_1.0.esp
+     H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+     H.E.L.L.U.V.A. Helms.esp
+     H.E.L.L.U.V.A. Shields.esp]
+
+[Conflict]
+ "HELLUVA Balanced Weapons.esp" includes HELLUVA Wicked Weapons. There is no need to run Sandman101's original plugins.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLUVA Balanced Weapons.esp
+[ANY H.E.L.L.U.V.A. Axes.esp
+     H.E.L.L.U.V.A. Blunt.esp
+     H.E.L.L.U.V.A. Bows.esp
+     H.E.L.L.U.V.A. Complete Weapons.esp
+     H.E.L.L.U.V.A. Longblades_1H(1).esp
+     H.E.L.L.U.V.A. Longblades_1H(2).esp
+     H.E.L.L.U.V.A. Longblades_2H.esp
+     H.E.L.L.U.V.A. Marksman.esp
+     H.E.L.L.U.V.A. Shortblades.esp
+     H.E.L.L.U.V.A. Spears.esp]
+
+[Conflict]
+ "HELLLUVA Balanced CompletionSet.esp" includes HELLUVA Awesome Armor's Completion Set. There is no need to run Sandman101's original plugin.
+ (Ref: "Helluva Balanced Readme.txt")
+HELLLUVA Balanced CompletionSet.esp
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+
+[Conflict]
+ "BTB version includes [HELLUVA Balanced Vanilla Addon.esp] so don't activate with that one"
+ (Ref: "Helluva Balanced Readme.txt")
+HELLUVA Balanced Vanilla Addon.esp
+[ANY HELLUVA Balanced BTB.esp
+     HELLLUVA Balanced BTB CS.esp]
+
+;;Dragon32: Modified rules from @HELLUVA Awesome Armor [Sandman101 and friends]
+
+[Conflict]
+ Sandman101's H.E.L.L.U.V.A. Armor Completion provides female versions of all of Morrowind's (including expansions) armors. H.E.L.L.U.V.A. Armor Completion also adds many other armor items to complete the armor sets. There is no need to run any of the other plugins that add female versions.
+[ANY HELLLUVA Balanced CompletionSet.esp
+     HELLUVA Balanced Armor.esp
+     HELLUVA Balanced Complete.ESP
+     HELLLUVA Balanced BTB CS.esp
+     HELLUVA Balanced BTB.esp]
+[ANY AV_fem_armor_Trib.esp
+     AV_female_armor.esp
+     Divine_domina_part_1.esp
+     Divine_domina_part_2.esp
+     Divine_domina_part_3_Tribunal.esp
+     Divine_domina_part_4.esp
+     Divine_domina_part_5.esp
+     FEMALE_TEMPLAR_CUIRASS_V0.1.esp
+     female_cuirasses_2.0.esp
+     Ice's BM Ice & NordicMail.esp
+     Ice's Glass Cuirass.esp
+     Ice_FemaleSteelCuirass.esp
+     Ice_Wolf_Cuirass_Mod.esp]
+
+[Note]
+ Sandman101's "H.E.L.L.U.V.A. Armor Completion" uses the resources from the following mods to complete the armor sets. Whilst "H.E.L.L.U.V.A. Armor Completion" does not duplicate these mods completely you may want to consider disabling them as "H.E.L.L.U.V.A. Armor Completion" already adds their armor to the game world.
+[ALL [ANY HELLLUVA Balanced CompletionSet.esp
+          HELLUVA Balanced Armor.esp
+          HELLUVA Balanced Complete.ESP
+          HELLLUVA Balanced BTB CS.esp
+          HELLUVA Balanced BTB.esp]
+     [ANY Dragonscale.esp
+          chain_armor_set.esp
+          Adamantium Roundshield.esp
+          Adamantium Towershield.esp
+          Dragonbone Armor [v.1.2].esp
+          dreugh_armor_set.esp
+          tenpace_remix.esp
+          newtscale_armor_set.esp
+          Dragonbone_Pauldrons.esp
+          acsSaviorArmor.esp
+          Aduls_Leggings.esp
+          Aduls_Leggings_Tribunal.esp
+          Aduls_Leggings_Bloodmoon.esp
+          TemplarSheild.esp
+          studded_armor_set.esp
+          Helseth_Shield.esp
+          Helseth_Shield_notAdded.esp
+          Left Wraithguard.esp]]
+
+;;Dragon32 - See "H.E.L.L.U.V.A. Armor Completion read me.rtf": load Museum of Artifacts-altering plugins after the Completion Set plugin. Set these load orders for all of Spiffyman's mods which include the Completion Set. Note that people should only be using one of Spiffyman's Balanced mods so the load order for those is only for ease of writing the rules.
+[Order]
+HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced Armor.esp
+HELLUVA Balanced Complete.ESP
+HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB.esp
+Clean Museum of Artifacts Improvements.esp
+
+[Order]
+HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced Armor.esp
+HELLUVA Balanced Complete.ESP
+HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB.esp
+Museum of Artifacts Improved Expanded.esp
+
+;; Dragon32: TheOtherFelix's "Expanded Museum of Artifacts" not mentioned in readme but as P_S's mod ("Museum of Artifacts Improved Expanded") that includes it is mentioned I've added a similar Order rule
+[Order]
+HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced Armor.esp
+HELLUVA Balanced Complete.ESP
+HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB.esp
 ExpandedMoA.esp
 
 
@@ -11853,7 +12239,13 @@ H.E.L.L.U.V.A. Guards.esp
      H.E.L.L.U.V.A._A.A._Recolors_1.0.esp
      H.E.L.L.U.V.A._A.A._LIGHT 1.0.esp
      H.E.L.L.U.V.A._A.A._MEDIUM 1.0.esp
-     H.E.L.L.U.V.A._A.A._Heavy 1.0.esp]
+     H.E.L.L.U.V.A._A.A._Heavy 1.0.esp
+     HELLLUVA Balanced BTB CS.esp
+     HELLLUVA Balanced CompletionSet.esp
+     HELLUVA Balanced Armor.esp
+     HELLUVA Balanced BTB.esp
+     HELLUVA Balanced Complete.ESP
+     HELLUVA Balanced Weapons.esp]
 H.E.L.L.U.V.A._Merchant_Containers.esm
 
 [Requires]
@@ -12585,12 +12977,12 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Hold It 1.7 [Danae]
+;; @Hold It 1.9 [Danae]
 
 ;;main mod
 [Conflict]
  With 'Hold it - replacer.esp' enabled the "Hold It" items are for sale at the Tel Aruhn trader, there is no need to enable 'Hold it - resource.esp' as well.
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - resource.esp
 Hold it - replacer.esp
 
@@ -12599,7 +12991,7 @@ Hold it - replacer.esp
 ;;MCA addon
 [Requires]
  "Hold it - MCA addon.esp" requires version 6.1 of Neoptolemus' "Morrowind Comes Alive".
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - MCA addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -12614,7 +13006,7 @@ Hold it - MCA addon.esp
 ;;NoM addon
 [Requires]
  "Hold it - NOM addon.esp" requires version 3.0 or greater of Taddeus' "Necessities of Morrowind".
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - NOM addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -12626,33 +13018,33 @@ Hold it - resource.esp
 Hold it - replacer.esp
 Hold it - NOM addon.esp
 
-;; Dragon 32: 'Hold it - NOM addon.esp' makes changes to the NOM NPCs, for changes to work it needs to load after NOM
+;; Dragon 32: 'Hold it - NOM addon.esp' makes changes to the NoM NPCs, for changes to work it needs to load after NoM
 [Order]
 NoM 3.0.esp
 Hold it - NOM addon.esp
 
 ;;Starfires NPCs addon
 [Requires]
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - SF npc addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
      Starfires NPC Additions ver-1.11.esp]
 
-;; Dragon 32: 'Hold it - SF npc addon.esp' uses items from the main "Hold It" mod (resource or replacer) so  those should load first.
+;; Dragon 32: 'Hold it - SF npc addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
 [Order]
 Hold it - resource.esp
 Hold it - replacer.esp
 Hold it - SF npc addon.esp
 
-;; Dragon 32: 'Hold it - SF npc addon.esp' makes changes to Starfire's NPCs, for changes to work it needs to  load after Starfire's mod
+;; Dragon 32: 'Hold it - SF npc addon.esp' makes changes to Starfire's NPCs, for changes to work it needs to load after Starfire's mod
 [Order]
 Starfires NPC Additions ver-1.11.esp
 Hold it - SF npc addon.esp
 
 ;;Children of Morrowind addon
 [Requires]
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - COM addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -12666,7 +13058,7 @@ Hold it - COM addon.esp
 
 ;;Tamriel Rebuilt addon
 [Requires]
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - TR addon.ESP
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -12682,14 +13074,14 @@ Hold it - TR addon.ESP
 
 ;;combined Children of Morrowind and Tamriel Rebuilt addon
 [Conflict]
- "Hold it - TR&CoM addon.ESP" combines "Hold it - COM addon" and "Hold it - TR addon" (so these 2 esp shouldn't be activated.
- (Ref: Hold it 1pt7 read me.txt)
+ "Hold it - TR&CoM addon.ESP" combines "Hold it - COM addon" and "Hold it - TR addon" (so these 2 esp shouldn't be activated together)."
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - TR&CoM addon.ESP
 [ANY Hold it - TR addon.ESP
      Hold it - COM addon.esp]
 
 [Requires]
- (Ref: Hold it 1pt7 read me.txt)
+ (Ref: Hold it 1pt9 read me.txt)
 Hold it - TR&CoM addon.ESP
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -12703,6 +13095,20 @@ Hold it - TR&CoM addon.ESP
 Hold it - resource.esp
 Hold it - replacer.esp
 Hold it - TR&CoM addon.ESP
+
+;;HELLUVA addon
+[Requires]
+ (Ref: Hold it 1pt9 read me.txt)
+H.E.L.L.U.V.A. Handy Holdables.esp
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
+     H.E.L.L.U.V.A._Merchant_Containers.esm]
+
+;; Dragon 32: 'H.E.L.L.U.V.A. Handy Holdables.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+[Order]
+Hold it - resource.esp
+Hold it - replacer.esp
+H.E.L.L.U.V.A. Handy Holdables.esp
 
 ;;conflicts identified and reported elsewhere
 
@@ -13636,6 +14042,32 @@ Wyr Jeweler v1.01 c.250.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 26623 Jin's_weapon_mod1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @JMK's Gems Addition [JMK22]
+
+[Conflict]
+ Only use one plugin:
+  JMK's Gems Addition.esp - JMK22's first version of the mod.
+  JMK's Gems Addition - 1-5.esp - Makes the gems more affordable and alters their attributes to remove effects already available in vanilla Morrowind.
+ (Ref: "JMKs_Gems_Addition.rar\Read Me.txt")
+JMK's Gems Addition - 1-5.esp
+JMK's Gems Addition.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @JMK Gems Leveled [Crankgorilla]
+
+;;Dragon32: Crankgorilla's adds the gems with v1 effects, so if someone's using 1.5 load that after to get the new effects
+[Order]
+JMK Gem Additions Leveled.esp
+JMK's Gems Addition - 1-5.esp
+
+[Note]
+ Crankgorilla's "JMK Gems Leveled" doesn't actually need JMK22's original "JMK's Gems Addition" mod loaded. If you don't need the gem chest "JMK's Gems Addition" adds to Valenvaryon then you can disable "JMK's Gems Addition.esp"
+[ALL JMK's Gems Addition.esp
+     JMK Gem Additions Leveled.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17543,10 +17975,13 @@ Morrowind Crafting Equipment.esp
 Morrowind Crafting 2-1.esp
 
 [Conflict]
- Morrowind Crafting and Resources enhanced modify various rocks with different scripts, and are not compatible.
+ Drac & Toccatta's "Morrowind Crafting" adds scripts to the various ore rocks, other mods which also add scripts include evelas' "Minerals", quorn's "Miner's Pick Use" and TheLys' "Resources Enhanced". Such mods are not compatible with "Morrowind Crafting".
  (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__15859457 )
 Morrowind Crafting 2-1.esp
-Resources Enhanced.esp
+[ANY Resources Enhanced.esp
+     Minerals.esp
+     Minerals (Tribunal&Bloodmoon).esp
+     MinerPickUseGOTY.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17923,9 +18358,25 @@ MWlib_NOM_patch_0.1.esp
 ;; @Morrowind Rebirth [Trancemaster_1988]
 
 ;; Order suggested by Hordane: ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21761617
+;;Dragon32: Hordane only suggested Graphic Herbalism, added in the other herbalism mods. People should only be running one of these so this mega-Order rule should be OK
 [Order]
 Morrowind Rebirth <VER>.esp
+Advanced Herbalism - MO.esp
+Advanced Herbalism - TR & BM.esp
+Advanced Herbalism - TR.esp
+Advanced Herbalism - BM.esp
 Graphic Herbalism.esp
+Herbalismv1.3(Tribunal).esp
+Herbalismv1.1.esp
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+Herbalism Redux 1.12a.esp
+HR 1.12a + EW 1.5.esp
+HR 1.12a BMW + EW 1.5.esp
+Ultra Light Herbalism.esp
 
 ;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
 [Order]
@@ -18166,6 +18617,15 @@ MTC-CoMaddon.esp
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7696
 MTC-LGNPC Pelagiad.ESP
 MTC-LGNPC SN.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Un-mod [scifiguy52]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 43163 Morrowind_Cities_Unmod.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18842,6 +19302,15 @@ Tribunal.esm
 [Note]
  This plugin contains several empty cells and should be cleaned with TESTool.
 [SIZE 387343 St. Nerevar's Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nerevarine Greetings Tweaks [Glassboy]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6850 Nerevarine Greeting tweaks.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20179,6 +20648,7 @@ Clean Playable Golem.esp
  ! There is a new version of Slartibartfast's "Poorly Placed Object Fix" available, you should upgrade!
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9197
 [VER <1.2 Poorly Placed Object Fix  <VER>.esm]
+Poorly Placed Object Fix.esm
 
 ;;Dragon32: Not mentioned but worth adding.
 [Order]
@@ -24105,37 +24575,62 @@ Teleportation Spells.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Teleport Ring [Tealpanda, Eidolon, Dubious]
+;; @Teleport Ring 3.3.5 [Tealpanda, Eidolon, Dubious]
+
+[Conflict]
+ Choose only one plugin:
+  ring_teleport cost_Tealpanda.esp - Requires 15 magicka per teleportation.
+  ring_teleport v3_Tealpanda.esp - No magicka requirement.
+ (Ref: "Readme teleport ring V3 - updated by tealpanda.txt")
+ring_teleport cost_Tealpanda.esp
+ring_teleport v3_Tealpanda.esp
+
+[Conflict]
+ Tealpanda's "Teleport Ring" is derived from Dubious' "Teleport Ring" which was in turn based on eidolon's "Teleport Ring". There is no need to run either Dubious' or eidolon's mods as well.
+[ANY ring_teleport cost_Tealpanda.esp
+     ring_teleport v3_Tealpanda.esp]
+[ANY ring_teleport v2.2_Dubious.esp
+     ring_teleport.esp]
+
+
+;;Dragon32: following Order rules have both Tealpanda's plugins included, players should only be using one
 
 ;; Ref: 'Readme teleport ring V3 - updated by tealpanda.txt'
 [Order]
 master_index.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 ;; Dragon32: Master Index plugin included in Wilderness mod, OfficialMods_v5 and Official Plugins v1.0
 [Order]
 Wilderness Sounds.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 [Order]
 Wilderness Sounds Bloodmoon.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 [Order]
 Wilderness Sounds Tribunal.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 [Order]
 Wilderness Sounds T & B.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 [Order]
 Clean Official Plugins v1.1.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 [Order]
 OfficialMods_v5.esp
 ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
