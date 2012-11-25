@@ -7391,6 +7391,24 @@ Decorator+.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Definitive Birthsigns Pack 1.1 [Doy and IceNine0]
+
+;;Dragon32: Dirty edits to vanilla birthsign abilities (Lady's Grace and Lady's Favor) in "Birthsigns.esp", will be cleaned by tes3cmd / TESTool
+[Order]
+Birthsigns.esp
+GCD better balanced birthsigns.esp
+
+;;Dragon32: Alaisiagae's Birthsigns Are More Fun mod also includes Fay, Warwyrd, Charioteer, Trollkin and Hara birthsigns.
+[Order]
+Birthsigns.esp
+BirthsignsAMFun_BM.esp
+
+[Order]
+Birthsigns.esp
+BirthsignsAMFun_MW.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Definitive Birthsigns Redux Patch [Pluto]
 
 [Requires]
@@ -7432,6 +7450,15 @@ DBirth-Redux GCD Patch.esp
 [Order]
 Definitive Birthsigns Redux Patch.esp
 DBirth-Redux BAMF Patch.ESP
+
+;;Dragon32: Alaisiagae's Birthsigns Are More Fun mod also includes Fay, Warwyrd, Charioteer, Trollkin and Hara birthsigns.
+[Order]
+BirthsignsAMFun_BM.esp
+Definitive Birthsigns Redux Patch.esp
+
+[Order]
+BirthsignsAMFun_MW.esp
+Definitive Birthsigns Redux Patch.esp
 
 [Note]
  "If you use GCD and BAMF, be sure to use the DBirth-Redux GCDxBAMF Patch.esp found in the GCD/BAMF patch folder."
@@ -7475,6 +7502,10 @@ Definitive Birthsigns Unofficial Patch.esp
 DB-UP GCD Patch.esp
 [ALL Definitive Birthsigns Unofficial Patch.esp
      Galsiahs Character Development.esp]
+
+[Order]
+Definitive Birthsigns Unofficial Patch.esp
+DB-UP GCD Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11153,6 +11184,26 @@ Grandmaster of Hlaalu.esp
      Clean Suran Extended.esp
      Suran Extended Family.esp]
 Grandmaster of Hlaalu.esp
+
+[Conflict]
+ "[Lady Galadriel's] Grandmaster [of Hlaalu] is incompatible with any mods altering the [Hlaalu] stronghold."
+ (Ref: http://forums.bethsoft.com/topic/1410482-house-hlaalu-mods/page__p__21530992#entry21530992 )
+Grandmaster of Hlaalu.esp
+Hlaalu Stronghold Enhanced.esm ;;Misty Moon's Hlaalu Stronghold Enhanced
+
+;;Dragon32: Not sure if this works with NoM 3.0
+[Conflict]
+ A NoM-compatible version of Lady Galadriel's "" is available:
+  http://www.freewebs.com/lady_galadriel68/GrandmasterHlaalu.htm
+Grandmaster of Hlaalu.esp
+NOM 2.13.esp
+
+[Conflict]
+ Only use one plugin:
+  Grandmaster of Hlaalu11NOMpatch.esp - If you use Taddeus' "Necessities of Morrowind"
+  Grandmaster of Hlaalu.esp - If you do not.
+Grandmaster of Hlaalu.esp
+Grandmaster of Hlaalu11NOMpatch.esp
 
 ;;Dragon32
 ;Apparently also conflicts with "Sailable Rivers (or whatever the name is - landscape)" and "Rethan Manor Enhanched", according to the readme. No idea what the plugin names are for those.
@@ -21709,6 +21760,7 @@ Real_wildlife_2b Complete.esp
      Real_wildlife_2b.esp]
 LN_silt_striders.esp
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Real Wildlife 2B - No Town Creatures [Aeven]
 
@@ -23357,6 +23409,13 @@ TR_Mainland.esm
  (Ref: "Silt_Striders Are_In_Vvardenfell_README.txt")
 Silt_Striders_Are_In_Vvardenfell.esp
 LN_silt_striders.esp
+
+[Conflict]
+ Both lochnarus' "Silt Striders Are In Vvardenfell" and Nedius' "Real Wildlife" add Lingarn's "Silt Striders" to creature levelled lists.
+ (Ref: "Silt_Striders Are_In_Vvardenfell_README.txt" and "readme real wildlife 2.txt")
+Silt_Striders_Are_In_Vvardenfell.esp
+[ANY Real_wildlife_2b Complete.esp
+     Real_wildlife_2b.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28478,6 +28537,15 @@ Vurt's AI Trees Replacer.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 35214 Vurt's Ashlands Overhaul.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vurt's Corals [Vurt]
+
+[Note]
+ ".esp must be ticked in MGE, but not in the Morrowind launcher."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8378 )
+Vurt's Corals.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
