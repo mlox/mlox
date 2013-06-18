@@ -6987,8 +6987,10 @@ DM_DB Armor Replacer-ExpRanksDDBA.esp
 [ANY DM_DB Armor Replacer-Exp.esp]
      DM_DB Armor Replacer-ExpRanks.esp
 [ANY DB_Attack_Mod.esp
+     DB_Attack_Mod_Jeoshua.esp
      DB_Attack_Mod3.esp
      db_attack_fixed.esp
+     ddb.esp
      Murderous Dreams.esp
      Murderous Dreams_Safe.esp
      Increased DB Delayed Attacks Patch.esp]
@@ -7124,7 +7126,7 @@ transportMH.esp
   DB_Attack_Mod_Jeoshua.esp - Jeoshua's version of AVENGER'S postponed Dark Brotherhood attack
   DB_Attack_Mod3.esp - Hellwolve's update of version 3 of Avenger's plugin adding an additional condition.
   db_attack_fixed.esp - Xiran's "Dark Brotherhood Attacks Fixed" changes the Dark Brotherhood attacks to begin only when the Morrowind main quest is completed.
- ddb.esp - etmorrowindb's "Delayed Dark Brotherhood attacks" delays the attacks based on reputation. Can also damage the player before they wake up.
+  ddb.esp - etmorrowindb's "Delayed Dark Brotherhood attacks" delays the attacks based on reputation. Can also damage the player before they wake up.
   Murderous Dreams.esp & Murderous Dreams_Safe.esp - Avelon's "Murderous Dreams" delays the attacks based on player level and reputation. It makes other changes too.
   DM_DB Armor Replacer-ExpDDBA.esp & DM_DB Armor Replacer-ExpRanksDDBA.esp - Dimitri Mazieres' "Dark Brotherhood Armor Replacer" includes DDBA variants that delay the Dark Brotherhood attacks.
   Increased DB Delayed Attacks Patch.esp - Jac's "Increased Dark Brotherhood Attacks", based on Kir's modification.
@@ -14448,6 +14450,18 @@ Clean Key Replacer MW Renamer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Khajiit Diversity Revamped [Westly]
+
+[Conflict]
+ "check off ONLY ONE of the .esps"
+ (Ref: "Khajiit Diversity Revamped README.txt")
+New Khajiit Diversity(BEAST).esp
+New Khajiit Diversity(BEAST)X.esp
+New Khajiit Diversity(CIV).esp
+New Khajiit Diversity(CIV)X.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Kimonos [Opethgirlie]
 
 [Note]
@@ -15057,8 +15071,11 @@ LCV Wolverine Hall 01.esp
 [VER>03-12 NPC LCV Schedules 03.esp]
 
 ;;Ref: LCV Wolverine Hall.html
+;;Dragon32: Previously didn't have "NPC LCV Locks.esp" in this Order rule. Apparently that"moves at least one door (the one nearest to the Divine Intervention marker) halfway down into the floor."
+;; Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=22762410
 [Order]
 NPC LCV Schedules 03.esp
+NPC LCV Locks.esp
 LCV Wolverine Hall 01.esp
 
 ;; LCV moves the wall and the door, and replaces the vanilla bed with a shorter bunk bed. When loaded after, Barabus' mod restores the original bed, which clips with the door
@@ -16093,6 +16110,44 @@ Mana_Regen_v13.esp
           Mana_Regen_v13.esp
           TyrMagickaRegen.ESP
           TyrMagickaRegenSlower.ESP]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Main Quest Enhancers 1.1 [Trainwiz]
+
+[Conflict]
+ "MQE_MainQuestEnhancers.ESP" combines all the other plugins into one, there is no need to run the constituent plugins.
+ (Ref: "MainQuestEnhancers11.rar\MainQuestEnhancers\Readme.txt")
+MQE_MainQuestEnhancers.ESP
+[ANY MQE_BlightedBeasties.ESP
+     MQE_CrowdControl.ESP
+     MQE_GarrisonedGhostgate.ESP
+     MQE_ImperialIntolerance.ESP
+     MQE_SixthHouseShrines.ESP]
+
+[Conflict]
+ "Known Incompatibilities include:
+  Morrowind Rebirth: With Garrisoned Ghostgate and Crowd Control
+  Mountainous Morrowind: With Garrisoned Ghostgate"
+ (Ref: "MainQuestEnhancers11.rar\MainQuestEnhancers\Readme.txt")
+[ANY MQE_GarrisonedGhostgate.ESP
+     MQE_MainQuestEnhancers.ESP
+     MQE_CrowdControl.ESP]
+Morrowind Rebirth <VER>.esp
+
+[Conflict]
+ "Known Incompatibilities include:
+  Mountainous Morrowind: With Garrisoned Ghostgate"
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9407 )
+[ANY MQE_GarrisonedGhostgate.ESP
+     MQE_MainQuestEnhancers.ESP]
+MRM.esm
+
+[Note]
+ !! "MQE_BlightedBeasties.ESP" (and so the merged "MQE_MainQuestEnhancers.ESP") uses AddToLev*/RemoveFromLev* functions to modify Bethsoft leveled lists. Using either of these plugins will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one.
+ !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+[ANY MQE_BlightedBeasties.ESP
+     MQE_MainQuestEnhancers.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17220,6 +17275,7 @@ Unarmored_Corrector_V01_TRIB.esp
 ;;[SIZE 2559987 MCA.ESM] = MCA 6.0 from "MCA Fix.zip"
 ;;[SIZE 2597537 MCA.ESM] = MCA 6.1
 ;;[SIZE 2831631 MCA.ESM] = MCA 7.0
+;;[SIZE 2838068 MCA.ESM] = MCA 7.1
 
 ;;Dragon32: MCA Description tests. 5.0 and 5.1 same text; 5.2 basic and The Undead-compatible same text; both versions of 6.0 and 6.1 same text
 ;;[DESC /over 1000 friendly/ MCA.ESM] = MCA 5.0
@@ -17230,6 +17286,7 @@ Unarmored_Corrector_V01_TRIB.esp
 ;;[DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM] = MCA 6.0 from "MCA Fix.zip"
 ;;[DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM] = MCA 6.1
 ;;[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM] = MCA 7.0
+;;[DESC /v7.1/ MCA.ESM] = MCA 7.1
 
 
 ;;**********
@@ -17237,9 +17294,9 @@ Unarmored_Corrector_V01_TRIB.esp
 ;;**********
 
 [Note]
- ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 7.0, you should upgrade!
+ ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 7.1, you should upgrade!
  ! http://morrowind.nexusmods.com/mods/6006
-[DESC !/Adds 1100 types of NPCs to over 550/ MCA.ESM]
+[DESC !/v7.1/ MCA.ESM]
 
 [Note]
  !! Version 6.0 and above of Neoptolemus' "Morrowind Comes Alive" use the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have it installed.
@@ -17318,16 +17375,33 @@ The Undead.esm
           Divine_domina_part_4.esp
           Divine_domina_part_5.esp]]
 
-;;Dragon32: Not yet updated to the new TR_Mainland.esm version.
+[Note]
+ !! "You do not have to have Divine Domina activated to use this add on, but it must be installed."
+ !!  (Ref: "MCA - Readme.txt")
+[ALL MCA - Divine Domina Addon.ESP
+     [NOT [ANY Divine_domina_part_1.esp
+               Divine_domina_part_2.esp
+               Divine_domina_part_3_Tribunal.esp
+               Divine_domina_part_4.esp
+               Divine_domina_part_5.esp]]]
+
 [Requires]
- "[MCA - TR Addon.ESP] adds MCA NPCs and creatures to Tamriel Rebuilt Maps 1 and 2. Also adds some of the new TR items to the MCA leveled lists. Requires Tamriel Rebuilt Maps 1 and 2, obviously."
+ "[MCA - TR Addon.ESP] adds MCA NPCs and creatures to Tamriel Rebuilt Sacred East. Also adds some of the new TR items to the MCA leveled lists. Requires Tamriel Rebuilt."
  (Ref: MCA - Readme.txt)
 MCA - TR Addon.ESP
 [ALL TR_Data.esm
-     TR_Map1.esm
-     TR_Map2.esm
-     [ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
-          [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]]
+     TR_Mainland.esm
+     [DESC /v7.1/ MCA.ESM]]
+
+[Patch]
+ "[MCA - Khajiit Diversity Revamped Addon.esp] changes some of the MCA khajiit NPCs into Dagi-Raht, Ohmes-Raht, Cathay-Raht and Senche-Raht. Requires Westly's Khajiit Diversity Revamped mod, and will work with any of the 4 esps."
+ (Ref: MCA - Readme.txt)
+MCA - Khajiit Diversity Revamped Addon.esp
+[ALL [DESC /v7.1/ MCA.ESM]
+     [ANY New Khajiit Diversity(BEAST).esp
+          New Khajiit Diversity(BEAST)X.esp
+          New Khajiit Diversity(CIV).esp
+          New Khajiit Diversity(CIV)X.esp]]
 
 
 ;;**********
@@ -18989,6 +19063,35 @@ MTT IV Master.esp
  It is suggested that you get a replacement patch, such as MTT_IV_Master-jms_patch-0.2.7z from
  http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods
 MTT IV Master.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mountainous Red Mountain [PirateLord]
+
+;; "Activate the MRM.esm file, ensuring it loads last after your other esms."
+;; (Ref: "MRM Readme.txt")
+
+;;Dragon32: Added in a few ESMs I think that MRM should load after
+
+[Order]
+Morrowind.esm
+MRM.esm
+
+[Order]
+Texture Fix.esm
+MRM.esm
+
+[Order]
+Morrowind Patch v1.6.4.esm
+MRM.esm
+
+[Order]
+Morrowind Patch v1.6.5-BETA.esm
+MRM.esm
+
+[Order]
+Morrowind Advanced.esm
+MRM.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22355,6 +22458,18 @@ RoHT Taddeus Balancing.esp
 Grandmaster of Hlaalu.esp
 Rise of House Telvanni.esm
 
+[Note]
+ "Magical Missions" by Von Djangos "adds five new duties for members of the Mages Guild to Master Wizard Folms Mirel, in Caldera". "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
+ (Ref: "Rise of House Telvanni v1.5 Readme.txt"; "Magical Missions.txt" and http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=21698623 )
+[ALL Magical Missions.ESP
+     Rise of House Telvanni.esm]
+
+[Note]
+ ! Cyrano's "Trigger Dark Brotherhood Attack" requires that the player talk to Duke Dren which will become impossible during the questline of "Rise of House Telvanni".
+ ! (Ref: "Rise of House Telvanni v1.5 Readme.txt" and http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=21698623 )
+[ALL TriggerDBAttack_v1_00.esp
+     Rise of House Telvanni.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rise of the Illuminated Lich 1.1 [Psycholex, the Architect]
@@ -24493,14 +24608,86 @@ Suran-Waterfront-v-4.4.esp
 [SIZE 2086615 Suran_Underworld_2.5.esp]
 Suran Archery Store_v3.0.esp
 
+;;No conflict with v3.0 as Wollibeebee made the Bloodfang Tong armor use Andragorn and Bahamut's Sotonhorian armour.
+[Conflict]
+ Dimitri Mazieres's "Dark Brotherhood Armor Replacer" changes the Body Part for the Dark Brotherhood Helmet (ID: A_DarkBrotherhood_Helmet) from "Head" to "Hair". So when both "Dark Brotherhood Armor Replacer" and "Dark Brotherhood Armor Replacer" are active Suran Underworld is left without a Body Part for the BloodFang Helm (ID: a_bloodfang_helm), and so any NPC wearing a Bloodfang Helm will have no head. To use both mods in conjunction, you'd need to change the Armor part "a_bloodfang_helm" to
+  Biped Object: Hair
+  Male Armor: A_DarkBrotherhood_Helmet
+ (Ref: http://forums.bethsoft.com/topic/1058604-conflicting-mods-suran-underworld-25-dark-brotherhood-armor-replacer/?p=16333098 )
+Suran_Underworld_2.5.esp
+[ANY DM_DB Armor Replacer.esp
+     DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp
+     DM_DB Armor Replacer-ExpRanks.esp
+     DM_DB Armor Replacer-ExpRanksDDBA.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Suran Underworld 3.0 [Wollibeebee and Matthew]
+
+;;Dragon32: See also "@Suran Underworld 2.5 [Matthew]"
+
+[Conflict]
+ The docks at Fort Frostmoth were modified to accommodate a ship in the original version of "Suran Underworld", this has caused problems with some mods.
+ Korana has released a patch ("SU_Dock_Fix") for Suran Underworld 2.5: http://www.tesnexus.com/downloads/file.php?id=27167
+ However there is no patch available for Suran Underworld 3.0
+ (Ref: SU_Dock_Fix-27167.rar\IMPORTANT INFORMATION.txt)
+Suran_Underworld_v3.ESP
+[ANY Clean Solstheim_Castle_v1.1.esp
+     BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+     BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+     BEER! Combo v1.12-03a.esp
+     BEER! Combo.esp
+     NoM 2.1 with BEER!.esp
+     NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
+     NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
+     NoM 2.12-03a with BEER!.esp
+     NOM 2.13.esp
+     BT_Whitewolf_2_0.esp
+     BT_Whitewolf_2_0.esm
+     BM_S_Inn.esp]
+
+;;Dragon32: Assume this is still relevant
+[Conflict]
+ Suran Underworld places its Abandoned House in the same spot as Suran Archery Store.
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+ "New Suran Extended" by Nicolithian contains an alternate Suran Archery Store plugin which "provides compatability for New Suran Extended, Suran Underworld & Suran Archery Tradehouse. Places the trade house beside the silt strider port."
+ (Ref: "New Suran Extended - readme.txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5244
+Suran_Underworld_v3.ESP
+Suran Archery Store_v3.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Suran_Underworld_2.5-jms_patch [john.moonsugar]
+
 [Patch]
  You should use the compatiblity patch as you are running both "White Wolf of Lokken" and "Suran Underworld." These mods conflict through the dialog topics "to rescue me" and "rescue me".
+ Whilst the patch was created for v2.5 of "Suran Underworld", it should still work with v3.0
  (Ref: Suran_underworld_2.5-jms_patch.txt)
  ( http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods )
+ ( http://forums.bethsoft.com/topic/1208216-relz-suran-underworld-3/?p=18065553 )
 Suran_Underworld_2.5-jms_patch.esp
-[ALL Suran_Underworld_2.5.esp
+[ALL [ANY Suran_Underworld_v3.ESP
+          Suran_Underworld_2.5.esp]
      [ANY BT_Whitewolf_2_0.esp
           BT_Whitewolf_2_0.esm]]
+
+[Order]
+Suran_Underworld_2.5.esp
+Suran_Underworld_2.5-jms_patch.esp
+
+[Order]
+BT_Whitewolf_2_0.esp
+Suran_Underworld_2.5-jms_patch.esp
+
+[Order]
+Suran_Underworld_v3.ESP
+Suran_Underworld_2.5-jms_patch.esp
+
+[Order]
+BT_Whitewolf_2_0.esp
+Suran_Underworld_2.5-jms_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25157,12 +25344,16 @@ Tenience's Rare Items.esp
 [Note]
  ! There is a newer version of Texture Fix by Slartibartfast, you should upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3843
-[VER < 1.9 Texture Fix <VER>.esm]
+[VER < 2.0 Texture Fix <VER>.esm]
 
 [Conflict]
  You probably should not be trying to use two versions of "Texture Fix" at the same time. You should only need the latest version.
-Texture Fix 1.9.esm
-[VER < 1.9 Texture Fix <VER>.esm]
+Texture Fix 2.0.esm
+[VER < 2.0 Texture Fix <VER>.esm]
+
+[Order]
+Morrowind.esm
+Texture Fix.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25815,6 +26006,27 @@ The Tribe Unmourned (GHD).esp
  Do not enable both plugins, only enable the version with the fixed levelled lists: "TribIntegrationFixedLL.esp"
 TribIntegration.esp
 TribIntegrationFixedLL.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Trigger Dark Brotherhood Attack [Cyrano]
+
+[Conflict]
+ "This plug-in will conflict with other mods that make changes to the trigger for the Tribunal main quest. Specifically those plug-ins that depend upon or alter Bethesda's DBAttackScript or the leveled list db_assassins."
+ (Ref: "TriggerDBAttack_Readme.txt")
+TriggerDBAttack_v1_00.esp
+[ANY DB_Attack_Mod.esp
+     DB_Attack_Mod_Jeoshua.esp
+     DB_Attack_Mod3.esp
+     db_attack_fixed.esp
+     ddb.esp
+     Murderous Dreams.esp
+     Murderous Dreams_Safe.esp
+     DM_DB Armor Replacer-ExpDDBA.esp
+     DM_DB Armor Replacer-ExpRanksDDBA.esp
+     DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpRanks.esp
+     Increased DB Delayed Attacks Patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29221,6 +29433,129 @@ abotWhereAreAllBirdsGoing.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @White Suran [Basswalker]
+
+;;Suran Archery Tradehouse
+[Patch]
+ (Ref: WhiteSuran-ArcheryStoreADDON.rar\readme.txt)
+WhiteSuran-ArcheryStoreADDON.esp
+[ALL WhiteSuran2.esp
+     Suran Archery Store_v3.0.esp]
+
+;;Dragon32: ordering assumed
+[Order]
+WhiteSuran2.esp
+WhiteSuran-ArcheryStoreADDON.esp
+
+;;Ref: WhiteSuran-ArcheryStoreADDON.rar\readme.txt
+[Order]
+Suran Archery Store_v3.0.esp
+WhiteSuran-ArcheryStoreADDON.esp
+
+;;Suran Riverview Home
+[Patch]
+ (Ref: WhiteSuran-RiverviewHomeADDON.rar\readme.txt)
+WhiteSuran-RiverviewHomeADDON.esp
+[ALL WhiteSuran2.esp
+     BAR_SuranRiverviewHome_v1.0.esp]
+
+;;Dragon32: ordering assumed
+[Order]
+WhiteSuran2.esp
+WhiteSuran-RiverviewHomeADDON.esp
+
+;;Ref: WhiteSuran-RiverviewHomeADDON.rar\readme.txt
+[Order]
+BAR_SuranRiverviewHome_v1.0.esp
+WhiteSuran-RiverviewHomeADDON.esp
+
+;;Suran Waterfront
+[Patch]
+ (Ref: WhiteSuranWaterfrontADDON.rar\readme.txt)
+WhiteSuranWaterfrontADDON.esp
+[ALL WhiteSuran2.esp
+     [ANY Suran Waterfront V-5.1.esp
+          Suran Waterfront 5.0.esp]]
+
+;;Dragon32: ordering assumed
+[Order]
+WhiteSuran2.esp
+WhiteSuranWaterfrontADDON.esp
+
+;;Ref: WhiteSuranWaterfrontADDON.rar\readme.txt
+[Order]
+Suran Waterfront V-5.1.esp
+WhiteSuranWaterfrontADDON.esp
+
+;;Ref: WhiteSuranWaterfrontADDON.rar\readme.txt
+[Order]
+Suran Waterfront 5.0.esp
+WhiteSuranWaterfrontADDON.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @White Suran 2 - MD Edition [Melchior Dahrk]
+
+[Conflict]
+ Do not use Melchior Dahrk's "WhiteSuran2_MD_Edition.esp" with Basswalker's "WhiteSuran2.esp"
+ (Ref: "WhiteSuran_2 MD Edition.txt")
+WhiteSuran2.esp
+WhiteSuran2_MD_Edition.esp
+
+[Requires]
+ "WhiteSuran2_fix_wall.esp only fixes the unreplaced wall (requires WhiteSuran2.esp)"
+ (Ref: "WhiteSuran_2 MD Edition.txt")
+WhiteSuran2_fix_wall.esp
+WhiteSuran2.esp
+
+[Order]
+WhiteSuran2.esp
+WhiteSuran2_fix_wall.esp
+
+[Requires]
+ "WhiteSuran2_Interiors.esp only adds matching white interiors to Suran (requires WhiteSuran2.esp)"
+ (Ref: "WhiteSuran_2 MD Edition.txt")
+WhiteSuran2_Interiors.esp
+WhiteSuran2.esp
+
+[Order]
+WhiteSuran2.esp
+WhiteSuran2_Interiors.esp
+
+[Conflict]
+ "WhiteSuran2_fix_wall.esp" and "WhiteSuran2_Interiors.esp" should only be used with Basswalker's original "White Suran" mod.
+ (Ref: "WhiteSuran_2 MD Edition.txt")
+WhiteSuran2_MD_Edition.esp
+[ANY WhiteSuran2_Interiors.esp
+     WhiteSuran2_fix_wall.esp]
+
+[Patch]
+ "If you use Suran Underworld, activate WhiteSuran2_Suran Underworld Addon.esp [from Melchior Dahrk's "White Suran 2 - MD Edition"] to make the abandoned house in Suran use the unique textures"
+ (Ref: "WhiteSuran_2 MD Edition.txt")  
+WhiteSuran2_Suran Underworld Addon.esp
+[ALL Suran_Underworld_2.5.esp
+     [ANY WhiteSuran2_MD_Edition.esp
+          WhiteSuran2.esp]]
+
+[Order]
+Suran_Underworld_2.5.esp
+WhiteSuran2_Suran Underworld Addon.esp
+
+[Note]
+ "If you have Vurt's Ascadian Isles II installed, consider using WhiteSuran2_patch_vurt.esp to alleviate some bleeding present otherwise"
+ (Ref: "WhiteSuran_2 MD Edition.txt")
+WhiteSuran2_patch_vurt.esp
+
+[Order]
+WhiteSuran2_MD_Edition.esp
+WhiteSuran2_patch_vurt.esp
+
+[Order]
+WhiteSuran2.esp
+WhiteSuran2_patch_vurt.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @White Wolf of Lokken [Emma]
 
 ;; For the older 2.0 Version:
@@ -29282,67 +29617,6 @@ SolstheimTransport_LokkenComp.esp
 SolstheimTransport.esp
 [ANY BT_Whitewolf_2_0.esm
      BT_Whitewolf_2_0.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @White Suran [Basswalker]
-
-;;Suran Archery Tradehouse
-[Patch]
- (Ref: WhiteSuran-ArcheryStoreADDON.rar\readme.txt)
-WhiteSuran-ArcheryStoreADDON.esp
-[ALL WhiteSuran2.esp
-     Suran Archery Store_v3.0.esp]
-
-;;Dragon32: ordering assumed
-[Order]
-WhiteSuran2.esp
-WhiteSuran-ArcheryStoreADDON.esp
-
-;;Ref: WhiteSuran-ArcheryStoreADDON.rar\readme.txt
-[Order]
-Suran Archery Store_v3.0.esp
-WhiteSuran-ArcheryStoreADDON.esp
-
-;;Suran Riverview Home
-[Patch]
- (Ref: WhiteSuran-RiverviewHomeADDON.rar\readme.txt)
-WhiteSuran-RiverviewHomeADDON.esp
-[ALL WhiteSuran2.esp
-     BAR_SuranRiverviewHome_v1.0.esp]
-
-;;Dragon32: ordering assumed
-[Order]
-WhiteSuran2.esp
-WhiteSuran-RiverviewHomeADDON.esp
-
-;;Ref: WhiteSuran-RiverviewHomeADDON.rar\readme.txt
-[Order]
-BAR_SuranRiverviewHome_v1.0.esp
-WhiteSuran-RiverviewHomeADDON.esp
-
-;;Suran Waterfront
-[Patch]
- (Ref: WhiteSuranWaterfrontADDON.rar\readme.txt)
-WhiteSuranWaterfrontADDON.esp
-[ALL WhiteSuran2.esp
-     [ANY Suran Waterfront V-5.1.esp
-          Suran Waterfront 5.0.esp]]
-
-;;Dragon32: ordering assumed
-[Order]
-WhiteSuran2.esp
-WhiteSuranWaterfrontADDON.esp
-
-;;Ref: WhiteSuranWaterfrontADDON.rar\readme.txt
-[Order]
-Suran Waterfront V-5.1.esp
-WhiteSuranWaterfrontADDON.esp
-
-;;Ref: WhiteSuranWaterfrontADDON.rar\readme.txt
-[Order]
-Suran Waterfront 5.0.esp
-WhiteSuranWaterfrontADDON.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
