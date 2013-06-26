@@ -1701,6 +1701,32 @@ AOF Potions Recolored T+B.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Appoldro's Weaponstore [TommyKhaajit, Dragon32]
+
+[Conflict]
+ Use only one plugin:
+  acsAppoldroFixedLL.esp - If you have Morrowind and Tribunal.
+  acsAppoldroMW.esp - If you have Morrowind and no expansions.
+ (Ref: "Readme Appoldro V2.txt" and "Readme Appoldro v2.04b.txt")
+acsAppoldroFixedLL.esp     
+acsAppoldroMW.esp
+
+[Conflict]
+ !! "acsAppoldroMW.esp" should only be used by those with just Morrowind and neither Bloodmoon or Tribunal.
+ !! (Ref: "Readme Appoldro V2.txt" and "Readme Appoldro v2.04b.txt")
+acsAppoldroMW.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Note]
+ !! TommyKhaajit's "Julius and Celine Appoldro's Weaponstore" uses deprecated AddToLev* functions to modify Bethsoft leveled lists. Using this plugin will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one. If you have used one of these plugins, you can clean modified leveled lists from your savegame using the "Repair All" feature of "Wrye Mash". For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see:
+ !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ !! A patched version, by Dragon32, is available here:
+ !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5066
+acsAppoldro.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Appropriate Greetings 1.5.2 [Arcimaestro Antares]
 
 [Conflict]
@@ -3702,13 +3728,19 @@ INDYBANK.ESP
 
 [Conflict]
  Choose only one plugin:
-  indybank-NoHouses.esp - Does not add buyable houses to the game
-  indybankWC.esp - Compatible with Walled City of Balmora mod
-  INDYBANK.ESP - The standard Bank Mod plugin
+  "INDYBANK.ESP" - Version 2.4 of the "Bank Mod" plugin.
+  "Indybank2.4b.ESP" - Version 2.4b of the "Bank Mod" plugin.
+  "indybank-NoHouses.esp" - Does not add buyable houses to the game.
+  "indybankWC.esp" - Compatible with Hargreth's "Walled City of Balmora" mod.
+  "Indy Bank (SW Comp. Patch).ESP" - An version of "Bank Mod" 2.4 edited for compatability with Thondur's "Suran Waterfront"
+  "WalledCity_IndyBank.esp" -  A combined version of "Bank Mod" 2.0 and Hargreth's "Walled City of Balmora" mods
  (Ref: "readme-bank24.txt")
-indybank-NoHouses.esp
 INDYBANK.ESP
+Indybank2.4b.ESP
+indybank-NoHouses.esp
 indybankWC.esp
+Indy Bank (SW Comp. Patch).ESP
+WalledCity_IndyBank.esp
 
 [Conflict]
  Charles J. DeVito/LDones's "Illuminated Order" is not compatible with "Bank Mod", even the No Houses version. There are compatibility versions of "Illuminated Order" available from Morrowind Modding History: http://mw.modhistory.com/download--1203
@@ -3897,6 +3929,7 @@ Indybank.esp
 Indybank2.4b.ESP
 Indybank-NoHouses.esp
 IndybankWC.esp
+Indy Bank (SW Comp. Patch).ESP
 WalledCity_IndyBank.esp
 Balmora Expansion V1.4.esp
 Balmora Expansion v1.4+(1.4).esp
@@ -4046,8 +4079,12 @@ Better Bodies.esp
  (Ref: "Better_Caldera_readme.txt")
 Clean Better Caldera.esp
 [ANY Caldera_expansion_3006.esp
+     Indybank.esp
      Indybank2.4b.ESP
-     INDYBANK.ESP]
+     Indybank-NoHouses.esp
+     IndybankWC.esp
+     Indy Bank (SW Comp. Patch).ESP
+     WalledCity_IndyBank.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Clothes [Psychodog Studios]
@@ -6250,6 +6287,53 @@ Cloth Additions.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Combat Experience - Depth Perception [emptythe]
+
+[Conflict]
+ Use only one plugin:
+  CE-DepthPerception##.esp - Increases combatants' hit chances by ##%.
+  CE-DepthPerception##+BTB's Character.ESP - Increases combatants' hit chances by ##%, and incorporates BTB's Character changes to races, birthsigns, etc..
+ (Ref: "CombatExperience-DepthPerception_Readme.txt")
+CE-DepthPerception25+BTB's Character.ESP
+CE-DepthPerception25.esp
+CE-DepthPerception50+BTB's Character.ESP
+CE-DepthPerception50.esp
+CE-DepthPerception75+BTB's Character.ESP
+CE-DepthPerception75.esp
+CE-DepthPerception100+BTB's Character.ESP
+CE-DepthPerception100.esp
+
+[Conflict]
+ These versions of emptythe's "Combat Experience - Depth Perception" contain BTB's Character plugin. There is no need to run BTB's plugin as well.
+ (Ref: "CombatExperience-DepthPerception_Readme.txt")
+[ANY CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP]
+BTB - Character.esp
+
+[Conflict]
+ emptythe's "Combat Experience - Depth Perception" contain BTB's Character plugin, but not the Alternate version you are using. Using emptythe's mod means that the Khajiit Eye of Night spell is turned into a permanent ability.
+ (Ref:"CombatExperience-DepthPerception_Readme.txt")
+[ANY CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP]
+BTB - Character (Alternate).esp
+
+[Conflict]
+ emptythe's "Combat Experience - Depth Perception" contain BTB's Character plugin from his "BTB's Game Improvements". "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter character settings.
+ (Ref: "CombatExperience-DepthPerception_Readme.txt" and "morrowind_btb.zip\Readme.txt")
+[ANY CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP]
+[ANY Balance - Character.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Combat Moves [GhanBuriGhan]
 
 [Requires]
@@ -6519,6 +6603,35 @@ Suran Hillside Manor.esp
 stuffed creature set1.0 .esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Creatures X Reflect Changes [Vharlak]
+
+[Requires]
+ "Creatures X Reflect Changes" by Vharlak should be used with Piratelord's "Creatures"
+CreaturesXreflectchanges.esp
+[ANY Creatures (lore).esp
+     Creatures (Semi).esp
+     Creatures.esp]
+
+[Conflict]
+ "Creatures X Reflect Changes" by Vharlak includes all the changes in Eisenfaust's "PCL Mage Friendly Creatures.esp" plugin.
+ (Ref: Dragon32: checked using TESPCD and Enchanted Editor)
+PCL Mage Friendly Creatures.esp
+CreaturesXreflectchanges.esp
+
+[Order]
+Creatures (lore).esp
+CreaturesXreflectchanges.esp
+
+[Order]
+Creatures (Semi).esp
+CreaturesXreflectchanges.esp
+
+[Order]
+Creatures.esp
+CreaturesXreflectchanges.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7000,7 +7113,7 @@ DM_DB Armor Replacer-ExpRanksDDBA.esp
 ;; @Dark Brotherhood Assassins Fix [Fetus X]
 
 [Conflict]
- Both "Dark Brotherhood Assassins Fix" by Fetux X and the various flavours of Dimitri Mazieres' "Dark  Brotherhood Armor Replacer" change the armor possessed by Dark Brotherhood assassins.
+ "Dark Brotherhood Assassins Fix" by Fetux X, the various flavours of Dimitri Mazieres' "Dark Brotherhood Armor Replacer" and hollaajith's "DBAttack Tweaked" change the armor possessed by Dark Brotherhood assassins.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
 Dark Brotherhood Assassins Fix.esp
 [ANY DM_DB Armor Replacer.esp
@@ -7008,6 +7121,7 @@ Dark Brotherhood Assassins Fix.esp
      DM_DB Armor Replacer-ExpDDBA.esp
      DM_DB Armor Replacer-ExpRanks.esp
      DM_DB Armor Replacer-ExpRanksDDBA.esp]
+DBAttack Tweaked.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7126,6 +7240,7 @@ transportMH.esp
   DB_Attack_Mod_Jeoshua.esp - Jeoshua's version of AVENGER'S postponed Dark Brotherhood attack
   DB_Attack_Mod3.esp - Hellwolve's update of version 3 of Avenger's plugin adding an additional condition.
   db_attack_fixed.esp - Xiran's "Dark Brotherhood Attacks Fixed" changes the Dark Brotherhood attacks to begin only when the Morrowind main quest is completed.
+  DBAttack Tweaked.esp - hollaajith's "DBAttack Tweaked" changes the Dark Brotherhood attacks to occur based on guild standings, reputation and level. Also replaces lower level assassins armor.
   ddb.esp - etmorrowindb's "Delayed Dark Brotherhood attacks" delays the attacks based on reputation. Can also damage the player before they wake up.
   Murderous Dreams.esp & Murderous Dreams_Safe.esp - Avelon's "Murderous Dreams" delays the attacks based on player level and reputation. It makes other changes too.
   DM_DB Armor Replacer-ExpDDBA.esp & DM_DB Armor Replacer-ExpRanksDDBA.esp - Dimitri Mazieres' "Dark Brotherhood Armor Replacer" includes DDBA variants that delay the Dark Brotherhood attacks.
@@ -7136,6 +7251,7 @@ DB_Attack_Mod.esp
 DB_Attack_Mod_Jeoshua.esp
 DB_Attack_Mod3.esp
 db_attack_fixed.esp
+DBAttack Tweaked.esp
 ddb.esp
 Murderous Dreams.esp
 Murderous Dreams_Safe.esp
@@ -7313,6 +7429,12 @@ dh_furn_stores.esp
      [ANY Balmora Expansion v1.4+(1.4).esp
           BE+(1.4) Better Looking Morrowind.esp
           Balmora Expansion - LITE 1.0.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @DBAttack Tweaked [hollaajith]
+
+;; See "@Dark Brotherhood Assassins Fix [Fetus X]" and "@Dark Brotherhood delay mods [Various]" for conflict information
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7659,6 +7781,20 @@ Diablerie.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 5270 dinkymonsta.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Display Case Fix [Cantorsdust]
+
+[Patch]
+ Display Case Fix by Cantorsdust "fixes the display cases' scripts" in "Uvirith's Legacy" by StuporStar, without this patch "they would open properly, stay open, but when you tried to close them, the doors would close, then pop open, and close, etc."
+ http://morrowind.nexusmods.com/mods/42320
+display case fix 1.1.ESP
+Uvirith's Legacy_Final_2.0.esp
+
+[Order]
+Uvirith's Legacy_Final_2.0.esp
+display case fix 1.1.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8785,6 +8921,67 @@ Sol-Weather Tweak.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Expansion Integration [Dragon32]
+
+[Conflict]
+ Only use one plugin:
+  ExpansionIntegration_1.1.esp - Raw Stalhrim is added to levelled lists.
+  ExpansionIntegration_NoStalhrim_1.1.esp - No Raw Stalhrim is added to levelled lists, Raw Stalhrim is only in its original locations on Solstheim.
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+ExpansionIntegration_1.1.esp
+ExpansionIntegration_NoStalhrim_1.1.esp
+
+[Conflict]
+ "Expansion Integration" is built on TheOtherFelix's "Bloodmoon Extras" mod (and Dragon32's version edited to remove deprecated AddToLev* functions). There is no need to run both mods.
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+[ANY ExpansionIntegration_1.1.esp
+     ExpansionIntegration_NoStalhrim_1.1.esp]
+[ANY BMExtras.esp
+     BMExtrasFixedLL.esp]
+
+[Conflict]
+ "Expansion Integration" is built on TheOtherFelix's "Tribunal Integration" mod (and Dragon32's version edited to remove deprecated AddToLev* functions). There is no need to run both mods.
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+[ANY ExpansionIntegration_1.1.esp
+     ExpansionIntegration_NoStalhrim_1.1.esp]
+[ANY TribIntegration.esp
+     TribIntegrationFixedLL.esp]
+
+[Conflict]
+ "Expansion Integration" is built on PCC aka Blockhead's "Tribunal Bloodmoon Ingredients" mod. There is no need to run both mods.
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+[ANY ExpansionIntegration_1.1.esp
+     ExpansionIntegration_NoStalhrim_1.1.esp]
+pcc_tr_bm_ingredients_01.esp
+
+[Conflict]
+ "Expansion Integration" is built on RR_Raptor65's "Wild Durzogs" mod. There is no need to run both mods.
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+[ANY ExpansionIntegration_1.1.esp
+     ExpansionIntegration_NoStalhrim_1.1.esp]
+[ANY WildDurzogs_easy.esp
+     WildDurzogs_hard.esp]
+
+[Conflict]
+ "["Expansion Integration" by Dragon32] will conflict with other mods that make changes to the Dark Brotherhood NPCs like Dark Brotherhood Replacer by Dimitri Mazieres."
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+[ANY ExpansionIntegration_1.1.esp
+     ExpansionIntegration_NoStalhrim_1.1.esp]
+[ANY DM_DB Armor Replacer.esp
+     DM_DB Armor Replacer-Exp.esp
+     DM_DB Armor Replacer-ExpDDBA.esp
+     DM_DB Armor Replacer-ExpRanks.esp
+     DM_DB Armor Replacer-ExpRanksDDBA.esp]
+
+[Conflict]
+ "The addition of the Stalhrim Shortsword means that ["Expansion Integration" by Dragon32] is incompatible with Gogetto's Stalhrim Weapons by J.C. Spencer."
+ (Ref: "Expansion Integration 1.1 Readme.txt")
+[ANY ExpansionIntegration_1.1.esp
+     ExpansionIntegration_NoStalhrim_1.1.esp]
+JCS - Gogetto's Stalhrim Weapons.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Explorers 2.5 [Lord Lionmane]
 
 [Requires]
@@ -9776,6 +9973,15 @@ Green Morrowind.esp
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 5193104 Leafy Morrowind.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Forest of Life [Sharp]
+
+[Conflict]
+ Only use one plugin. "ForestOfLife.esp" is Sharp's original, "ForestOfLife_D32Edit.esp" is modified by Dragon32 to fix the bugs Sharp listed in his readme.
+ForestOfLife.esp
+ForestOfLife_D32Edit.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10992,7 +11198,32 @@ GS_Tamriel Tribute to The Comunity.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Gothic Attire Complete v1-1 [Qarl]
+;; @Gothic Attire Alternate ESP [Qarl and Cenobite, Spoon Thief]
+
+[Conflict]
+ Spoon Thief's "GAC__replacer.esp" is an edit of the original Gothic Attire Complete plugin and should be used instead of Qarl and Cenobite's original plugin.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9378 )
+Gothic Attire Complete v1-1.esp
+GAC__replacer.esp
+
+[Conflict]
+ The original "Gothic Attire Complete" readme warns: "If you are using an item of clothing or armor from ANY of the original 4 mods in your saved game, then installing GAC might cause conflicts and crashes."
+ (Ref: "GAC-readme.txt")
+GAC__replacer.esp
+[ANY Qarls_Gothic_Attire.esp
+     Qarls_Gothic_AttireII.esp
+     THE_UNDERGROUND.esp
+     THE_UNDERGROUND_2.esp]
+
+[Requires]
+ "[Gothic Attire Complete] requires Better Bodies."
+ (Ref: "GAC-readme.txt")
+GAC__replacer.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gothic Attire Complete v1-1 [Qarl and Cenobite]
 
 ;; expdep
 [Requires]
@@ -11009,6 +11240,52 @@ Gothic Attire Complete v1-1.esp
      Qarls_Gothic_AttireII.esp
      THE_UNDERGROUND.esp
      THE_UNDERGROUND_2.esp]
+
+[Requires]
+ "[Gothic Attire Complete] requires Better Bodies."
+ (Ref: "GAC-readme.txt")
+Gothic Attire Complete v1-1.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gothic Attire Complete Leveled [Crankgorilla]
+
+;;Dragon32: This ordering preserves the levelled list changes of "Gothic Attire Complete Leveled" and the modified armour etc. values of "Gothic Attire Alternate ESP"
+[Order]
+Gothic Attire Complete Leveled.esp
+GAC__replacer.esp
+
+[Note]
+ !! "Gothic Attire Complete Leveled" by Crankgorilla "is dependant on the files from Gothic Attire Complete". Whilst you do not need to have the plugin from Qarl and Cenobite's "Gothic Attire Complete" loaded you need to have the meshes and textures installed.
+ !! (Ref: "Gothic Attire Complete Readme.txt")
+[ALL Gothic Attire Complete Leveled.esp
+     [NOT Gothic Attire Complete v1-1.esp]]
+
+[Requires]
+ "[Gothic Attire Complete] requires Better Bodies."
+ (Ref: "GAC-readme.txt")
+Gothic Attire Complete Leveled.esp
+[ALL Better Bodies.esp
+     [NOT Gothic Attire Complete v1-1.esp]
+     [NOT GAC__replacer.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gothic attire in ravenloft closet [matoraan]
+
+[Requires]
+ "Requires Qarl's Gothic Attire I ( http://planetelderscrolls.gamespy.com/View.php?view=mods.Detail&id=2364 ) and II ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2375 ) and Bantari's Ravenloft mod ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4482 )."
+ (Ref: http://morrowind.nexusmods.com/mods/26014/ )
+qarls gothic atire in ravenloft  mod.ESP
+[ALL Qarls_Gothic_Attire.esp
+     Qarls_Gothic_AttireII.esp
+     Ravenloft_v0502d.esp]
+
+;;Dragon32: checked with TESPCD
+[Order]
+Ravenloft_v0502d.esp
+qarls gothic atire in ravenloft  mod.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13510,7 +13787,8 @@ Illuminated Order v1.0 (IndyBank WC Compatible).esp
 Illuminated Order v1.0 (IndyBank Compatible).esp
 [ANY Indybank.esp
      Indybank2.4b.ESP
-     Indybank-NoHouses.esp]
+     Indybank-NoHouses.esp
+     Indy Bank (SW Comp. Patch).ESP]
 
 [Requires]
  (Ref: "Illuminated Order - Indy Bank Fix.txt")
@@ -13538,6 +13816,10 @@ Illuminated Order v1.0 (IndyBank WC Compatible).esp
 [Order]
 IndybankWC.esp
 Illuminated Order v1.0 (IndyBank WC Compatible).esp
+
+[Order]
+Indy Bank (SW Comp. Patch).ESP
+Illuminated Order v1.0 (IndyBank Compatible).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13906,6 +14188,35 @@ Index fix.esp
 [ANY Indoril Greaves.esp
      Indoril Greaves w_Better Bodies.esp]
 H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Indy Bank/Suran Waterfront Compatibility Patch [bryman1970]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 740570 Indy Bank (SW Comp. Patch).ESP]
+
+[Conflict]
+ "The Indy Bank mod has houses for sale and one of them just so happens to be right on the shores of Suran. The only problem with this is the Suran Waterfront mod basically sits right on top of that house, making the two mods incompatible with each other."
+ A modified version of "The Bank Mod" 2.4 is available from this Planet Elder Scrolls link:
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8716 )
+[ANY Suran Waterfront V-5.1.esp
+     Suran Waterfront 5.0.esp]
+[ANY WalledCity_IndyBank.esp
+     IndybankWC.esp
+     Indybank.esp
+     Indybank2.4b.ESP]
+
+;;Dragon32: Landscape conflicts shown in TESPCD, assume this is the correct order.
+[Order]
+Suran Waterfront 5.0.esp
+Indy Bank (SW Comp. Patch).ESP
+
+[Order]
+Suran Waterfront V-5.1.esp
+Indy Bank (SW Comp. Patch).ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16016,6 +16327,95 @@ MWE_Blocking.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @mage friendly daedra [Nightblade_Y]
+
+;;Dragon32: Checked validity of following Order rules using TESPCD
+[Order]
+Creatures (lore).esp
+mage friendly daedra.esp
+
+[Order]
+Creatures (Semi).esp
+mage friendly daedra.esp
+
+[Order]
+Creatures.esp
+mage friendly daedra.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mage Friendly Plugin Series [Eisenfaust]
+
+[Conflict]
+ Eisenfaust's "Mage Friendly Bloodmoon.esp" contains all the changes made in Nightblade_Y's "mage friendly daedra" plugin, as well as making Bloodmoon-specific changes. There is no need to run Nightblade_Y's mod as well.
+ (Ref: Dragon32: checked using TESPCD and Enchanted Editor)
+Mage Friendly Bloodmoon.esp
+mage friendly daedra.esp
+
+[Requires]
+ "Morrowind Enhanced and NPC Enhanced [are required] for NPCE Mage Friendly NPCs"
+ (Ref: "MFPS Readme.txt")
+NPCE Mage Friendly NPCs.esp
+[ANY HoratioNPCEnhanced12-Trib.esp
+     HoratioNPCEnhanced12-BM.esp
+     HoratioNPCEnhanced12-VE.esp]
+
+[Order]
+HoratioNPCEnhanced12-Trib.esp
+NPCE Mage Friendly NPCs.esp
+
+[Order]
+HoratioNPCEnhanced12-BM.esp
+NPCE Mage Friendly NPCs.esp
+
+[Order]
+HoratioNPCEnhanced12-VE.esp
+NPCE Mage Friendly NPCs.esp
+
+[Requires]
+ "PirateLord's Creatures [mod is required] for PCL Mage Friendly Creatures"
+ (Ref: "MFPS Readme.txt")
+PCL Mage Friendly Creatures.esp
+[ANY Creatures (lore).esp
+     Creatures (Semi).esp
+     Creatures.esp]
+
+[Note]
+ ! Eisenfaust's plugin "PCL Mage Friendly Creatures.esp" doesn't change all the spells in PirateLord's "Creatures". Vharlak made ["CreaturesXreflectchanges.esp"] which includes Eisenfaust's plugin and also changes a series of powerful Dremora reflect abilities for Creatures-specific Dremora.
+ ! http://mw.modhistory.com/download-26-11913
+[ALL PCL Mage Friendly Creatures.esp
+     [ANY Creatures (lore).esp
+          Creatures (Semi).esp
+          Creatures.esp]
+     [NOT CreaturesXreflectchanges.esp]]
+
+[Order]
+Creatures (lore).esp
+PCL Mage Friendly Creatures.esp
+
+[Order]
+Creatures (Semi).esp
+PCL Mage Friendly Creatures.esp
+
+[Order]
+Creatures.esp
+PCL Mage Friendly Creatures.esp
+
+;;Dragon32: Checked validity of following Order rules using TESPCD
+[Order]
+Creatures (lore).esp
+Mage Friendly Bloodmoon.esp
+
+[Order]
+Creatures (Semi).esp
+Mage Friendly Bloodmoon.esp
+
+[Order]
+Creatures.esp
+Mage Friendly Bloodmoon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Magic Alembic v1.1 [Crystaltips]
 
 [Note]
@@ -16326,6 +16726,8 @@ The Meadow Fae.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Melee Missiles v1.2 [scruggs]
+
+;; Dragon32 - Information about scruggs' "Melee Missiles" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Requires]
  This plugin uses a Startup script so it requires at least one of the expansions.
@@ -17299,7 +17701,7 @@ Unarmored_Corrector_V01_TRIB.esp
 [DESC !/v7.1/ MCA.ESM]
 
 [Note]
- !! Version 6.0 and above of Neoptolemus' "Morrowind Comes Alive" use the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have it installed.
+ !! Version 6.0 and above of Neoptolemus' "Morrowind Comes Alive" use the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have its meshes and textures installed.
  !! (Ref: MCA - Readme.txt)
 [ALL [ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
           [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
@@ -17411,6 +17813,7 @@ MCA - Khajiit Diversity Revamped Addon.esp
 
 ;;Dragon32: Applies to 5.x and 6.x
 [Requires]
+ "MCA - Guards Patch.esp" is for versions 5.x and 6.x of Neoptolemus' "Morrowind Comes Alive".
  (Ref: "MCA - Readme.txt")
 MCA - Guards Patch.esp
 [ANY [DESC /over 1000 friendly/ MCA.ESM]
@@ -17474,6 +17877,7 @@ Morrowind Comes Alive.esm
 
 ;;Dragon32: All the 5.x versions
 [Requires]
+ "MCA - NOM Patch.esp" is for versions 5.x of Neoptolemus' "Morrowind Comes Alive" and version 2.13 of Taddeus' "Necessities of Morrowind".
  (Ref: "MCA - Readme.txt")
 MCA - NOM Patch.esp
 [ALL [ANY [DESC /over 1000 friendly/ MCA.ESM]
@@ -18423,6 +18827,8 @@ Fliggerty's Almanac.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Inhabitants [scruggs]
 
+;; Dragon32 - Information about scruggs' "Morrowind Inhabitants" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+
 [Note]
  Do not try to start a new game while "Morrowind Inhabitants" is enabled. Wait until you have finished character creation before using MWInhabitants.
  (Ref: MWInhabitants PATCH.01 README.txt)
@@ -19039,30 +19445,58 @@ From Hell To Heaven.esm
 Wakim's Game Improvement 9.esp
 Wakim's Game Improvements with No-glo v9.esp
 MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
 MTT IV Master.esp
 
 [Order]
 Balance - Magic Effects.esp
 MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
 MTT IV Master.esp
 
 ;;Also load after BTB's settings plugin, changes same MGEF
 [Order]
 BTB - Spells.esp
 MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
 MTT IV Master.esp
 
 [Conflict]
- "MTT_IV_Master.esp" is a replacement for "MTT IV Master.esp",
- so you should remove the latter.
+ "MTT_IV_Master.esp" is a replacement for "MTT IV Master.esp", so you should remove the latter.
 MTT_IV_Master.esp
 MTT IV Master.esp
 
 [Note]
- MTT IV Master.esp contains deprecated use of the function AddToLev*. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
- It is suggested that you get a replacement patch, such as MTT_IV_Master-jms_patch-0.2.7z from
- http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods
-MTT IV Master.esp
+ !! Magical Trinkets of Tamriel IV (both Chris Woods' original, "MTT IV Master.esp", and the modified version by habile, "MTT IV Updated v0.79.esp") contains deprecated use of the function AddToLev*. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ !! It is suggested that you get a replacement patch, such as MTT_IV_Master-jms_patch-0.2.7z (from http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods ) or Magical Trinkets of Tamriel IV beta - Dragon32 patch (from http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9392 )
+[ANY [ALL [MTT IV Master.esp
+          [SIZE !1629334 MTT IV Master.esp]] ;;Dragon32's edited version
+     MTT IV Updated v0.79.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MTT4 Necromantic Tweaks [Sandman]
+
+[Requires]
+ (Ref: "MTT4 Necro Tweak.txt")
+MTT4 Necro Tweaks.esp
+[ANY MTT IV Master.esp
+     MTT_IV_Master.esp
+     MTT IV Updated v0.79.esp
+     MTT IV v0.79 (LL fixed)_DWS version.esp]
+
+[Conflict]
+ Dragon32's edited version of "Magical Trinkets of Tamriel IV" adjusts the resistances of skeleton and phantom minions just as Sandman's "MTT4 Necromantic Tweaks" does.
+ (Ref: "MTT IV Master_D32Edit.txt")
+[SIZE 1629334 MTT IV Master.esp]
+MTT4 Necro Tweaks.esp
+
+[Order]
+MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
+MTT IV Updated v0.79.esp		; habile's version
+MTT IV Master.esp			; Chris Woods' original
+MTT4 Necro Tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19082,6 +19516,10 @@ Texture Fix.esm
 MRM.esm
 
 [Order]
+Texture Fix <VER>.esm
+MRM.esm
+
+[Order]
 Morrowind Patch v1.6.4.esm
 MRM.esm
 
@@ -19090,7 +19528,15 @@ Morrowind Patch v1.6.5-BETA.esm
 MRM.esm
 
 [Order]
+Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+MRM.esm
+
+[Order]
 Morrowind Advanced.esm
+MRM.esm
+
+[Order]
+Poorly Placed Object Fix  <VER>.esm
 MRM.esm
 
 
@@ -20302,7 +20748,9 @@ Ninja_Girl_JapHouse_teleport.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @NPC Enhanced MWSE add-on by Charles Cooley
+;; @NPC Enhanced MWSE add-on [Charles Cooley]
+
+;;Dragon32: See "@Morrowind Enhanced [Aerelorn]" section.
 
 ; This needs further investigation. http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13747955
 ;[Note]
@@ -21560,6 +22008,29 @@ Pursuit Enhanced -Go To Jail Patch.esp
 PW_Redesigned Vivec-Vivec_Expansion.esp
 [ANY Redesigned Vivec.esp
      Vivec Expansion 2.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Qarl's Gothic Attire II [Qarl]
+
+[Requires]
+ "[Qarl's Gothic Attire II] requires my first Qarl's Gothic Attire mod."
+ (Ref: "qarls_gothic_attire_II_readme.txt")
+ http://mw.modhistory.com/download-8-5659
+Qarls_Gothic_AttireII.esp
+Qarls_Gothic_Attire.esp
+
+[Requires]
+ The clothes in "Qarl's Gothic Attire II" are for Better Bodies.
+ (Ref: "qarls_gothic_attire_II_readme.txt")
+Qarls_Gothic_AttireII.esp
+Better Bodies.esp
+
+;;Dragon32: checked with TESPCD and the two mods conflict, as I has to be loaded with II makes sense for II to load after I
+[Order]
+Qarls_Gothic_Attire.esp
+Qarls_Gothic_AttireII.esp
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22933,6 +23404,8 @@ ScentOfBlood_MWSE_AddOn.esp
 ;;Duplicate that list's load order for the other "Scent of Blood" plugins
 [Order]
 Suran_Underworld_2.5.esp
+SU_SW Comp. Patch.esp
+Suran_Underworld_v3.ESP
 Scripted_Spells.esp
 Vampire_Embrace.esp
 Blood Lines I_BloodMoon.esp
@@ -22957,6 +23430,8 @@ vampiric_mist.esp
 
 [Order]
 Suran_Underworld_2.5.esp
+SU_SW Comp. Patch.esp
+Suran_Underworld_v3.ESP
 Scripted_Spells.esp
 Vampire_Embrace.esp
 Blood Lines I_BloodMoon.esp
@@ -22981,6 +23456,8 @@ vampiric_mist.esp
 
 [Order]
 Suran_Underworld_2.5.esp
+SU_SW Comp. Patch.esp
+Suran_Underworld_v3.ESP
 Scripted_Spells.esp
 Vampire_Embrace.esp
 Blood Lines I_BloodMoon.esp
@@ -23002,6 +23479,7 @@ Diablerie_MWSE_AddOn.esp
 ve_comp_control.esp
 vampiric_regeneration.esp
 vampiric_mist.esp
+
 
 ;;MWSE add-on ordering rules
 [Order]
@@ -24108,6 +24586,8 @@ Illuminated Windows.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sri's Alchemy [Srikandi]
 
+;; Dragon32 - Information about Srikandi's "Sris_Alchemy_Trib.esp" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+
 [Order]
 Sris_Alchemy_BM.esp
 Sri Alchemy BM List Patch.esp
@@ -24585,7 +25065,8 @@ Suran-Waterfront-v-4.4.esp
  The docks at Fort Frostmoth were modified to accommodate a ship in the original version of "Suran Underworld", this has caused problems with some mods.
  Korana has released a patch ("SU_Dock_Fix"): http://www.tesnexus.com/downloads/file.php?id=27167
  (Ref: SU_Dock_Fix-27167.rar\IMPORTANT INFORMATION.txt)
-[SIZE 2086615 Suran_Underworld_2.5.esp]
+[ANY [SIZE 2086615 Suran_Underworld_2.5.esp]
+     SU_SW Comp. Patch.esp]
 [ANY Clean Solstheim_Castle_v1.1.esp
      BEER! Combo v1.12-03a (PR esm v2.4fix).esp
      BEER! Combo v1.12-03a (PR esp v2.4fix).esp
@@ -24603,9 +25084,13 @@ Suran-Waterfront-v-4.4.esp
 [Conflict]
  Suran Underworld places its Abandoned House in the same spot as Suran Archery Store.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
- Pseron Wyrd has created an alternative version of Suran Underworld that resolves this conflict by moving the Abandoned House outside the gates of Suran.
- ( http://mw.modhistory.com/download-13-11921 ).
-[SIZE 2086615 Suran_Underworld_2.5.esp]
+ Pseron Wyrd has created an alternative version of Suran Underworld that resolves this conflict by moving the Abandoned House outside the gates of Suran:
+ http://mw.modhistory.com/download-13-11921
+ "New Suran Extended" by Nicolithian contains an alternate Suran Archery Store plugin which "provides compatability for New Suran Extended, Suran Underworld & Suran Archery Tradehouse. Places the trade house beside the silt strider port."
+ (Ref: "New Suran Extended - readme.txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5244
+[ANY [SIZE 2086615 Suran_Underworld_2.5.esp]
+     SU_SW Comp. Patch.esp]
 Suran Archery Store_v3.0.esp
 
 ;;No conflict with v3.0 as Wollibeebee made the Bloodfang Tong armor use Andragorn and Bahamut's Sotonhorian armour.
@@ -24614,7 +25099,8 @@ Suran Archery Store_v3.0.esp
   Biped Object: Hair
   Male Armor: A_DarkBrotherhood_Helmet
  (Ref: http://forums.bethsoft.com/topic/1058604-conflicting-mods-suran-underworld-25-dark-brotherhood-armor-replacer/?p=16333098 )
-Suran_Underworld_2.5.esp
+[ANY Suran_Underworld_2.5.esp
+     SU_SW Comp. Patch.esp]
 [ANY DM_DB Armor Replacer.esp
      DM_DB Armor Replacer-Exp.esp
      DM_DB Armor Replacer-ExpDDBA.esp
@@ -24669,7 +25155,8 @@ Suran Archery Store_v3.0.esp
  ( http://forums.bethsoft.com/topic/1208216-relz-suran-underworld-3/?p=18065553 )
 Suran_Underworld_2.5-jms_patch.esp
 [ALL [ANY Suran_Underworld_v3.ESP
-          Suran_Underworld_2.5.esp]
+          Suran_Underworld_2.5.esp
+          SU_SW Comp. Patch.esp]
      [ANY BT_Whitewolf_2_0.esp
           BT_Whitewolf_2_0.esm]]
 
@@ -24686,8 +25173,36 @@ Suran_Underworld_v3.ESP
 Suran_Underworld_2.5-jms_patch.esp
 
 [Order]
-BT_Whitewolf_2_0.esp
+SU_SW Comp. Patch.esp
 Suran_Underworld_2.5-jms_patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Suran Underworld/Suran Waterfront Compatibility Patch [bryman1970]
+
+[Conflict]
+ "Suran Underworld" by Matthew and "Suran Waterfront" by Thondur conflict, an edited version of "Sunran Underworld" by bryman1970 is available which "removes a stray dock and a lone suspended light left by the Suran Underworld mod."
+ A modified version of "Suran Underworld" is available from this Planet Elder Scrolls link:
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8719 )
+[ANY Suran Waterfront V-5.1.esp
+     Suran Waterfront 5.0.esp]
+Suran_Underworld_2.5.esp
+
+
+;;Dragon32: No conflicts shown in TESPCD, assume this is the correct order.
+[Order]
+Suran Waterfront 5.0.esp
+SU_SW Comp. Patch.esp
+
+[Order]
+Suran Waterfront V-5.1.esp
+SU_SW Comp. Patch.esp
+
+[Conflict]
+ "SU_SW Comp. Patch.esp" is an edited version of "Suran Underworld" by Matthew, you should not run Matthew's original with it.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8719 )
+SU_SW Comp. Patch.esp
+Suran_Underworld_2.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24700,7 +25215,6 @@ Suran_Underworld_2.5-jms_patch.esp
  (Ref: "Change log Suran Waterfront.txt")
 Suran Waterfront V-5.1.esp
 Suran Waterfront 5.0.esp
-BPC_MWSE_1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25355,6 +25869,9 @@ Texture Fix 2.0.esm
 Morrowind.esm
 Texture Fix.esm
 
+[Order]
+Morrowind.esm
+Texture Fix <VER>.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Texture Fix - Balmora Expansion [Slartibartfast]
@@ -25687,6 +26204,7 @@ TLM - AdjMod - Bank 2.2.esp
 	  Indybank2.4b.ESP
 	  Indybank-NoHouses.esp
 	  IndybankWC.esp
+          Indy Bank (SW Comp. Patch).ESP
 	  WalledCity_IndyBank.esp]]
 
 [Order]
@@ -25694,6 +26212,7 @@ Indybank.esp
 Indybank2.4b.ESP
 Indybank-NoHouses.esp
 IndybankWC.esp
+Indy Bank (SW Comp. Patch).ESP
 WalledCity_IndyBank.esp
 TLM - AdjMod - Bank 2.2.esp
 
@@ -26351,6 +26870,8 @@ pcc_undead_vetooch_10.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Undead: Arise From Death 3.5 [Arcimaestro Antares]
+
+;; Dragon32 - Information about Arcimaestro Antares' "Undead arise from death 2.0.esp" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Note]
  A newer version of "Undead: Arise From Death" is available:
@@ -28025,6 +28546,8 @@ Grass_Tamriel Rebuilt.esp
 
 [Order]
 Suran_Underworld_2.5.esp
+SU_SW Comp. Patch.esp
+Suran_Underworld_v3.ESP
 Scripted_Spells.esp
 Vampire_Embrace.esp
 Blood Lines I_BloodMoon.esp
@@ -28046,7 +28569,6 @@ Diablerie_MWSE_AddOn.esp
 ve_comp_control.esp
 vampiric_regeneration.esp
 vampiric_mist.esp
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28173,6 +28695,7 @@ Indybank.esp
 Indybank2.4b.ESP
 Indybank-NoHouses.esp
 IndybankWC.esp
+Indy Bank (SW Comp. Patch).ESP
 WalledCity_IndyBank.esp
 Vampire Realism II.esp
 
@@ -28353,12 +28876,15 @@ Vampiric Hunger Extended.esp
 Vampiric Hunger - SU.esp
 Vampiric Hunger MGE Addon for MGE 1.11+.esp
 
+;;Dragon32: Not sure if patch will work with wollibeebee's v3 of Suran Underworld. He only changed meshes and textures though really.
 [Patch]
  Patch required by Vampiric Hunger III for Suran Underworld
  (Ref: VampiricHunger3v12.zip/"Readme_VH.htm")
 Vampiric Hunger - SU.esp
 [ALL Vampiric Hunger Base.esp
-     Suran_Underworld_2.5.esp]
+     [ANY Suran_Underworld_2.5.esp
+          SU_SW Comp. Patch.esp
+          Suran_Underworld_v3.ESP]]
 
 [Patch]
  Patch required by Vampiric Hunger III for "Blood Lines"
@@ -29043,6 +29569,7 @@ Walled_City_v1.2.esp
 Indybank.esp
 Indybank2.4b.ESP
 Indybank-NoHouses.esp
+Indy Bank (SW Comp. Patch).ESP
 
 [Conflict]
  Balmora Expansion is not compatible with the Walled City of Balmora
@@ -29486,6 +30013,8 @@ Werewolf ReEquip.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Werewolves [McAsmod team]
 
+;; Dragon32 - Information about McAsmod team's "Werewolves" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
@@ -29667,16 +30196,22 @@ WhiteSuran2_MD_Edition.esp
 [ANY WhiteSuran2_Interiors.esp
      WhiteSuran2_fix_wall.esp]
 
+;;Dragon32: Not sure if patch will work with wollibeebee's v3 of Suran Underworld. He only changed meshes and textures though really.
 [Patch]
  "If you use Suran Underworld, activate WhiteSuran2_Suran Underworld Addon.esp [from Melchior Dahrk's "White Suran 2 - MD Edition"] to make the abandoned house in Suran use the unique textures"
  (Ref: "WhiteSuran_2 MD Edition.txt")  
 WhiteSuran2_Suran Underworld Addon.esp
-[ALL Suran_Underworld_2.5.esp
+[ALL [ANY Suran_Underworld_2.5.esp
+          Suran_Underworld_v3.ESP]
      [ANY WhiteSuran2_MD_Edition.esp
           WhiteSuran2.esp]]
 
 [Order]
 Suran_Underworld_2.5.esp
+WhiteSuran2_Suran Underworld Addon.esp
+
+[Order]
+Suran_Underworld_v3.ESP
 WhiteSuran2_Suran Underworld Addon.esp
 
 [Note]
@@ -29755,6 +30290,18 @@ SolstheimTransport_LokkenComp.esp
 SolstheimTransport.esp
 [ANY BT_Whitewolf_2_0.esm
      BT_Whitewolf_2_0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wild Durzogs [RR_Raptor65]
+
+[Conflict]
+ Only install one plugin:
+  WildDurzogs_easy.esp - Durzogs appear when the PC reaches level 4.
+  WildDurzogs_hard.esp - Durzogs appear from level 1.
+ (Ref: "readme_wilddurzogs.doc")
+WildDurzogs_easy.esp
+WildDurzogs_hard.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
