@@ -8802,15 +8802,36 @@ Encumbrance Bar.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Entertainers Expanded [adul]
+
+[Conflict]
+ "Please make sure [Bethesda Softworks "Entertainers Plugin"] (the original plugin) is NOT activated."
+ (Ref: "Readme_Entertainers_Expanded.txt")
+Entertainers_Expanded.esp
+[ANY entertainers.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
+
+[Conflict]
+ All these mods make a similar change: increase the inns and taverns where the PC can "entertain the patrons". You do not need to run all of them.
+Entertainers_Expanded.esp
+RAH Expanded Entertainers.esp
+Josie's Entertainers.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Entertainers-NoM Fix [Zobator]
 
-;;Dragon32: Plugin written for Nom 2.12, according to TESPCD it won't work with NoM 3
+;;Dragon32: Plugin written for NoM 2.12, according to TESPCD it won't work with NoM 3.0
 [Patch]
- [Entertainers-NoM Fix] makes "it possible to use the official mod entertainers and Necessities of Morrowind (By Thaddeus & Nymeria) together at the same time."
+ [Entertainers-NoM Fix] makes "it possible to use the official mod Entertainers [, adul's "Entertainers Expanded"] and Necessities of Morrowind (By Thaddeus & Nymeria) together at the same time."
  (Ref: "entertainers-NoM fix Readme.txt")
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6032
 entertainers-NoM fix.esp
-[ALL entertainers.esp
+[ALL [ANY entertainers.esp
+          Entertainers_Expanded.esp
+          OfficialMods_v5.esp
+          Clean Official Plugins v1.1.esp] ;;adul's Entertainers Expanded
      NOM 2.13.esp]
 
 [Order]
@@ -8819,6 +8840,20 @@ entertainers-NoM fix.esp
 
 [Order]
 NOM 2.13.esp
+entertainers-NoM fix.esp
+
+;;Dragon32: And the combined official mods too
+[Order]
+OfficialMods_v5.esp
+entertainers-NoM fix.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+entertainers-NoM fix.esp
+
+;;Dragon32: I think this should work - @Entertainers Expanded [adul]
+[Order]
+Entertainers_Expanded.esp
 entertainers-NoM fix.esp
 
 
@@ -8892,6 +8927,50 @@ ExoticsBoutiqueNoMusic.esp
  (Ref: "ExpandedBirthsigns4Purists-Readme.txt")
 ExpandedBirthsigns4Purists.esp
 GCD better balanced birthsigns.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Expanded Entertainers 0.5 [Rahul]
+
+;;Dragon32: See also: @Entertainers Expanded [adul]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with  TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 200800 RAH Expanded Entertainers.esp]
+
+[Conflict]
+ Rahul's "Expanded Entertainers" is based on Bethesda Softworks "Entertainers Plugin", there is no need to run both.
+ (Ref: "Readme Expanded Entertainers.txt")
+RAH Expanded Entertainers.esp
+[ANY entertainers.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
+
+[Note]
+ Rahul's "Expanded Entertainers" allows the PC to "entertain the patrons" across Vvardenfell and Mournhold. It does not cover Solstheim. If you wish to entertain there consider:
+ "Entertainers Expanded" by adul - http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7705
+ "Josie's Entertainers" by Eisoj5 - http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5594
+[ALL RAH Expanded Entertainers.esp
+     Bloodmoon.esm]
+
+;;Dragon32: confirmed with TESPCD
+[Conflict]
+ Both Rahul's "Expanded Entertainers" and taddeus' "Improved Inns" alter the scripts for publicans.
+ (Ref: Dragon32: confirmed with TESPCD)
+RAH Expanded Entertainers.esp
+[ANY Improved Inns BM.esp
+     Improved Inns MW.esp
+     Improved Inns TB.esp
+     Improved Inns.esp]
+
+;;Dragon32: confirmed with TESPCD
+[Conflict]
+ Both Rahul's "Expanded Entertainers" and taddeus' "Necessities of Morrowind" alter the scripts for publicans.
+ (Ref: Dragon32: confirmed with TESPCD)
+RAH Expanded Entertainers.esp
+[ANY NOM 2.13.esp
+     NoM 3.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14018,6 +14097,56 @@ Improved Inns MW.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;;Dragon32: need to load modified "Pub_Balmora_Eight" script after Beth's Entertainers plugin
+[Order]
+entertainers.esp
+Improved Inns.esp
+
+[Order]
+entertainers.esp
+Improved Inns TB.esp
+
+[Order]
+entertainers.esp
+Improved Inns BM.esp
+
+[Order]
+entertainers.esp
+Improved Inns MW.esp
+
+;;Dragon32: merged Official mods
+[Order]
+OfficialMods_v5.esp
+Improved Inns.esp
+
+[Order]
+OfficialMods_v5.esp
+Improved Inns TB.esp
+
+[Order]
+OfficialMods_v5.esp
+Improved Inns BM.esp
+
+[Order]
+OfficialMods_v5.esp
+Improved Inns MW.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Improved Inns.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Improved Inns TB.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Improved Inns BM.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Improved Inns MW.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Morag Tong Grandmaster [PetrusOctavianus]
@@ -14463,6 +14592,47 @@ J-ninja_v.1.0_m_NoQuest.esp
  (Ref: Join All Houses.txt)
 Join All Houses.esp
 AllHousesMod.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Josie's Entertainers [Eisoj5]
+
+;;Dragon32: See also: @Entertainers Expanded [adul]
+
+[Conflict]
+ Eisoj5's "Josie's Entertainers" is based on Bethesda Softworks "Entertainers Plugin", there is no need to run both.
+ (Ref: "josie_entertainers_readme.txt")
+Josie's Entertainers.esp
+[ANY entertainers.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
+
+[Conflict]
+ "Conflicts with several of the LGNPC mods, particularly those for Ald-ruhn, Pelagiad, and Tel Mora, and possibly Maar Gan as well."
+ (Ref: "josie_entertainers_readme.txt")
+Josie's Entertainers.esp
+[ANY LGNPC_Aldruhn_v<VER>.esp
+     LGNPC_MaarGan_v<VER>.esp
+     LGNPC_Pelagiad_v<VER>.esp
+     LGNPC_TelMora_v<VER>.esp]
+
+;;Dragon32: confirmed with TESPCD
+[Conflict]
+ "Any other mods that alter the scripts for Publicans will conflict [with Eisoj5's "Josie's Entertainers"]"
+ (Ref: "josie_entertainers_readme.txt")
+Josie's Entertainers.esp
+[ANY Improved Inns BM.esp
+     Improved Inns MW.esp
+     Improved Inns TB.esp
+     Improved Inns.esp]
+
+;;Dragon32: confirmed with TESPCD
+[Conflict]
+ "Any other mods that alter the scripts for Publicans will conflict [with Eisoj5's "Josie's Entertainers"]"
+ (Ref: "josie_entertainers_readme.txt")
+Josie's Entertainers.esp
+[ANY NOM 2.13.esp
+     NoM 3.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20133,10 +20303,14 @@ NoM 3.0.esp
 ;---------------------------------------------------
 
 [Conflict]
- NOM 2.13 conflicts with the Bethesda plugin "entertainers.esp". If you load NOM after entertainers, then Dulnea Ralaal in the Eight Plates no longer has the topic "entertain the guests". If you load entertainers after NOM, then you will lose some NOM functionality in the Eight Plates.
+ NOM 2.13 conflicts with the Bethesda plugin "entertainers.esp" [,and adul's "Entertainers Expanded"]. If you load NOM after entertainers, then Dulnea Ralaal in the Eight Plates no longer has the topic "entertain the guests". If you load entertainers after NOM, then you will lose some NOM functionality in the Eight Plates.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13546227 )
+ Zobator has released "Entertainers-NoM Fix": http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6032
 NOM 2.13.esp
-entertainers.esp
+[ANY entertainers.esp
+     Entertainers_Expanded.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29397,6 +29571,31 @@ Vivec_Voice_addon TRIBUNAL.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 168736 Vivec Wilderness Cottage v1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Void Gear [Kieve]
+
+[Conflict]
+ "The "Chancellor's Chalice" is located in the Great Bazaar sewers, perilously close to the entrance to the Ald Indoril sewers. Conflicts unknown- use caution and backup your saved games before enabling."
+ (Ref: "README_KRS_VG2.1.TXT")
+KRS_VG2.1.esp
+VOORHEES_AldIndoril2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Voidsicle [Kieve]
+
+[Requires]
+ "[KRS_VM_Sickle.esp] is dependant on Void Gear 2.1, however the mod itself [can] be used independantly, if the player is willing to place the items in-game elsewhere. Without VG2.1, the retail chest will be without an owner, and the player will have no way to access the items in-game, other than the console."
+ (Ref: "README_KRS_Sickle.TXT")
+KRS_VM_Sickle.esp
+KRS_VG2.1.esp
+
+;;Dragon32: logical ordering rule
+[Order]
+KRS_VG2.1.esp
+KRS_VM_Sickle.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
