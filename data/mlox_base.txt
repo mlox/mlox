@@ -9521,6 +9521,18 @@ Adj_Magicka Regen (1.00%).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Falling Down 2.01 [Duncan]
+
+[Conflict]
+ Only use one plugin:
+  "FallingDown-Tribunal.esp" - If you have Tribunal.
+  "FallingDown.esp" - If you do not.
+ (Ref: "readme_fd20.htm")
+FallingDown-Tribunal.esp
+FallingDown.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Farmer Mod [Josh aka Xeon]
 
 ;; expdep
@@ -17077,6 +17089,45 @@ MGE_Foggy_weather.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mildlife [The Vagrant Wolf]
+
+[Patch]
+ "Mildlife - Creatures X.esp"is a compatibility patch for PirateLord's "Creatures" mod and The Vagrant Wolf's "Mildlife"
+ (Ref: "Mildlife - Information and Assorted Curios.txt"
+Mildlife - Creatures X.esp
+[ALL [ANY Creatures (lore).esp
+          Creatures (Semi).esp
+          Creatures.esp]
+     Mildlife.esp]
+
+;;Dragon32: "ensure that Mildlife is loaded after Creatures X in your load order"
+[Order]
+Creatures (lore).esp
+Mildlife.esp
+
+[Order]
+Creatures (Semi).esp
+Mildlife.esp
+
+[Order]
+Creatures.esp
+Mildlife.esp
+
+[Order]
+Mildlife.esp
+Mildlife - Creatures X.esp
+
+;;Dragon32 - Real Wildlife ESPs have some dirty entries
+[Order]
+Real_wildlife_2b.esp
+Mildlife.esp
+
+[Order]
+Real_Wildlife_2b_Bloodmoon.esp
+Mildlife.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Minas Ithil Keep  [Miguel Felix]
 
 [Note]
@@ -18965,16 +19016,16 @@ Improved Skilled Magicka.esp
 
 [Note]
  These mods require Morrowind Graphics Extender (MGE) v3.0.3 or later, with MWSE enabled.
-Close Inspection.esp
-Companion Health Bars.esp
+[DESC !/updated by Hrnchamd/ Close Inspection.esp]
+[DESC !/updated by Hrnchamd/ Companion Health Bars.esp]
 DN_1st_Person_Helm1.1.esp
 Encumbrance Bar.esp
 Fatigued Bar.esp
 LOCH_Brass_Telescope_(1.1).esp
-Ownership Indicator.esp
+[DESC !/or MGE XE/ Ownership Indicator.esp]
 Rage Indicator.esp
 Short Ranged Teleport.esp
-Time Display.esp
+[DESC !/updated by Hrnchamd/ Time Display.esp]
 Timeslip's trinkets.esp
 TS_BetterBooze.esp
 zooming bows (v2).esp
@@ -18987,6 +19038,23 @@ ToggleSneak.esp
 [Note]
  These mods require Morrowind Graphics Extender (MGE) v3.8 revision 107 or later, with MWSE enabled.
 Fliggerty's Almanac.esp
+Third_Person_Crosshair.esp
+Third_Person_Crosshair_constant.esp
+Third_Person_Crosshair_spell.esp
+
+
+[Note]
+ These mods require Morrowind Graphics Extender (MGE) v3.8.0 or later or MGE XE v0.9.0 or later, with MWSE enabled
+[DESC /updated by Hrnchamd/ Close Inspection.esp]
+[DESC /updated by Hrnchamd/ Companion Health Bars.esp]
+[DESC /or MGE XE/ Ownership Indicator.esp]
+Third Person Crosshair.esp
+[DESC /updated by Hrnchamd/ Time Display.esp]
+
+[Note]
+ These mods require Morrowind Graphics Extender XE (MGE XE) v0.9.0 or later, with MWSE enabled
+Vampiric Hunger UI (MGE XE).esp
+
 
 ;Unknown versions required:
 ; Better Boots of Blinding Speed.esp
@@ -20075,6 +20143,154 @@ N'dib_Treehouse_add_on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Necessities for Purists 1.01 [maura amalia]
+
+[Conflict]
+ Use only one plugin:
+  Necessities for Purists 2x.esp - Makes game time pass twice as slow
+  Necessities for Purists.esp - No change to game time
+ (Ref: "Necessities for Purists 1.01 ReadMe.txt")
+Necessities for Purists 2x.esp
+Necessities for Purists.esp
+
+[Note]
+ ! This is a template  for adding food items from other mods, it does nothing on its own.
+ ! (Ref: "Necessities for Purists 1.01 ReadMe.txt")
+NfP add-on template.esp
+
+[Conflict]
+ "[Necessities for Purists] is made to replace any other necessity package (NOM, Primary Needs...) and would likely cause redundancy and overwriting."
+ (Ref: "Necessities for Purists 1.01 ReadMe.txt")
+[ANY Necessities for Purists 2x.esp
+     Necessities for Purists.esp]
+[ANY NoM 3.0.esp
+     NOM 2.13.esp
+     Primary Needs 2.7.esp
+     Primary Needs 2.8.esp]
+
+[Conflict]
+ "DON'T run [Necessities for Purists] mod with Duncan's Sleep or Suffer"
+ (Ref: "Necessities for Purists 1.01 ReadMe.txt")
+[ANY Necessities for Purists 2x.esp
+     Necessities for Purists.esp]
+[ANY SleepOrSuffer-Tribunal.esp
+     SleepOrSuffer.esp]
+
+[Conflict]
+ "DON'T run [Necessities for Purists] mod with Duncan's [...] Falling Down"
+ (Ref: "Necessities for Purists 1.01 ReadMe.txt")
+[ANY Necessities for Purists 2x.esp
+     Necessities for Purists.esp]
+[ANY FallingDown-Tribunal.esp
+     FallingDown.esp]
+
+[Conflict]
+ "DON'T run [Necessities for Purists] mod with [...] ModMan's Hunger Mod"
+ (Ref: "Necessities for Purists 1.01 ReadMe.txt")
+[ANY Necessities for Purists 2x.esp
+     Necessities for Purists.esp]
+ModMan_Hungermod.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Necessities for Purists script add-ons [maura amalia]
+
+;;Dragon32 For "Necessities_for_Purists__Real_Wildlife.esp" see "@Necessities for Purists & Real Wildlife Compatibility Patch [The Vagrant Wolf]"
+[Conflict]
+ "ONLY one add-on script.esp can be checked"
+ (Ref: "NfP script addons ReadMe.txt)
+NfP COM addon.esp
+NfP CreaturesX addon.esp
+NfP NOM foods addon.esp
+NfP The Wilderness Mod addon.esp
+Necessities_for_Purists__Real_Wildlife.esp
+
+[Patch]
+ [NfP COM addon.esp] offers "COM food compatibility for Children of Morrowind 1.0."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ (Ref: "NfP script addons ReadMe.txt)
+NfP COM addon.esp
+[ALL [ANY Necessities for Purists 2x.esp
+          Necessities for Purists.esp]
+     MW_Children_1_0.esm]
+
+[Order]
+Necessities for Purists.esp
+Necessities for Purists 2x.esp
+NfP COM addon.esp
+
+[Patch]
+ [NfP CreaturesX addon.esp] offers "Creatures X (Piratelord) food compatibility."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ (Ref: "NfP script addons ReadMe.txt)
+NfP CreaturesX addon.esp
+[ALL [ANY Necessities for Purists 2x.esp
+          Necessities for Purists.esp]
+     [ANY Creatures (lore).esp
+          Creatures (Semi).esp
+          Creatures.esp]]
+
+[Order]
+Necessities for Purists.esp
+Necessities for Purists 2x.esp
+NfP CreaturesX addon.esp
+
+[Patch]
+ [NfP NOM foods addon.esp] offers "NOM food compatibility for NOM 2.13-02 [...] requires a mod that supports all NOM edibles."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ (Ref: "NfP script addons ReadMe.txt)
+NfP NOM foods addon.esp
+[ALL [ANY Necessities for Purists 2x.esp
+          Necessities for Purists.esp]
+     [ANY NOM 2.13.esp
+          Ald Redaynia Extended COM.esp
+          Ald Redaynia Extended.esp
+          Vivec Outdoor Mall CoM_v2.esp
+          Vivec Outdoor Mall_v2.esp]]
+
+[Order]
+Necessities for Purists.esp
+Necessities for Purists 2x.esp
+NfP NOM foods addon.esp
+
+[Patch]
+ [NfP The Wilderness Mod addon.esp] offers "The Wilderness Mod (The Puma Man) food compatibility."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ (Ref: "NfP script addons ReadMe.txt)
+NfP The Wilderness Mod addon.esp
+[ALL [ANY Necessities for Purists 2x.esp
+          Necessities for Purists.esp]
+     [ANY The Wilderness Mod 2.0.esm
+          The Wilderness Mod 2.0 T & B.esm]]
+
+[Order]
+Necessities for Purists.esp
+Necessities for Purists 2x.esp
+NfP The Wilderness Mod addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Necessities for Purists & Real Wildlife Compatibility Patch [The Vagrant Wolf]
+
+;;Dragon32: See also "@Necessities for Purists script add-ons [maura amalia]"
+
+[Patch]
+ [Necessities for Purists & Real Wildlife Compatibility Patch] "adds the food items of Real Wildlife to Necessities for Purists"
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9209 )
+Necessities_for_Purists__Real_Wildlife.esp
+[ALL [ANY Necessities for Purists 2x.esp
+          Necessities for Purists.esp]
+     [ANY Real_wildlife_2b Complete.esp
+          Real_wildlife_2b.esp]]
+
+;;Dragon32: Despite what the readme says there's no need to load this after Real Wildlife. ESP only alters a script defined by NfP and defines a global variable
+[Order]
+Necessities for Purists.esp
+Necessities for Purists 2x.esp
+Necessities_for_Purists__Real_Wildlife.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities of Morrowind 3.0 (NOM) [Taddeus]
 
 [Note]
@@ -20361,6 +20577,11 @@ MCA_NSN_Patch.esp
 [ALL Clean Nerevar Say Nerevar Again_v1.01.esp
      Morrowind Comes Alive.esm]
 
+;;Dragon32: Checked with TESPCD
+[Order]
+Clean Nerevar Say Nerevar Again_v1.01.esp
+MCA_NSN_Patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NerevarArmor  [armor by Enlightened_Daedroth and Soulshade, quests either by Aragon or by Greevar]
@@ -20480,7 +20701,7 @@ New Khajiit Bodies (Slof Textures) - Mature.esp
 New Khajiit Bodies (Slof Textures) - Clean.esp
 
 [Conflict]
- To use this mod, you must have both Slof's Better Beasts (reptile version) and New Beast Bodies mod installed, however New Beast Bodies no longer reqires that Slof's Better Beasts plugins be active.
+ To use this mod, you must have both Slof's "Better Beasts (reptile version)" and "New Beast Bodies" installed, however "New Beast Bodies" no longer reqires that Slof's "Better Beasts" plugins be active.
  (Ref: "new_beast_bodies-slof-tex-readme.txt")
 [ANY New Khajiit Bodies (Slof Textures) - Mature.esp
      New Khajiit Bodies (Slof Textures) - Clean.esp
@@ -20489,6 +20710,13 @@ New Khajiit Bodies (Slof Textures) - Clean.esp
 [ANY Slof's Better Beasts a.esp
      Slof's Better Beasts b.esp
      Slof's Civilised Beasts.esp]
+
+[Conflict]
+ To use this mod, you must have both Sabregirl's "Better Bodies for Argonians" (which uses Silaria's textures) and "New Beast Bodies" installed, however "New Beast Bodies" no longer reqires that Sabregirl's "Better Bodies for Argonians" be active.
+ (Ref: "new_beast_bodies-silaria-tex-readme.txt")
+[ANY New Argonian Bodies (Silaria Textures) - Mature.esp
+     New Argonian Bodies (Silaria Textures) - Clean.esp]
+BB-argonian-sils-text.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21898,6 +22126,32 @@ CH_PAI_V7BC_patch.ESP
 Vality's Bitter Coast Addon.esp
 Prancing Ash Inn.ESP
 CH_PAI_V7BC_patch.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Primary Needs 2.8 [Balor, Elthar]
+
+[Note]
+ ! There is a new version of "Primary Needs" available, 2.8, with errors fixed by Elthar. You should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6985
+Primary Needs 2.7.esp
+
+[Conflict]
+ "Do NOT use with Primary Needs 2.7 installed the same time"
+ (Ref: "Ver 2.8 readme first! .txt")
+Primary Needs 2.7.esp
+Primary Needs 2.8.esp
+
+[Requires]
+ "If you have [Bloodmoon], only use [Primary Needs 2.7 (Bloodmoon addon).esp] with the main Primary needs pluging."
+ (Ref: "Readme Primary_needs.txt")
+Primary Needs 2.7 (Bloodmoon addon).esp
+Primary Needs 2.8.esp
+
+[Conflict]
+ Balor's "Primary Needs" adds bloodlust for vampires which will conflict with zennorious' "Vampiric Hunger"
+Primary Needs 2.8.esp
+Vampiric Hunger Base.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23576,104 +23830,6 @@ ScentOfBlood_MWSE_AddOn.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-;;Dragon32: Only 'ScentOfBlood_MCA_VR.esp' included in "@Vampire Load Order - based on Yacoby's web page"
-;;Duplicate that list's load order for the other "Scent of Blood" plugins
-[Order]
-Suran_Underworld_2.5.esp
-SU_SW Comp. Patch.esp
-Suran_Underworld_v3.ESP
-Scripted_Spells.esp
-Vampire_Embrace.esp
-Blood Lines I_BloodMoon.esp
-Blood Lines I_Tribunal.esp
-Vampire Realism II.esp
-Vampire Realism II - TB Add-On.esp
-Vampire Realism II - BM Add-On.esp
-Vampire Realism II - BL Patch.esp
-Vampire Realism II - VE Patch.esp
-Vampiric Hunger Base.esp
-Vampiric Hunger Extended.esp
-Vampiric Hunger - SU.esp
-Vampiric Hunger MGE Addon for MGE 1.11+.esp
-VampiricIllusion.esp
-VampiricIllusion_MWSE_AddOn.esp
-ScentOfBlood.esp
-Diablerie.esp
-Diablerie_MWSE_AddOn.esp
-ve_comp_control.esp
-vampiric_regeneration.esp
-vampiric_mist.esp
-
-[Order]
-Suran_Underworld_2.5.esp
-SU_SW Comp. Patch.esp
-Suran_Underworld_v3.ESP
-Scripted_Spells.esp
-Vampire_Embrace.esp
-Blood Lines I_BloodMoon.esp
-Blood Lines I_Tribunal.esp
-Vampire Realism II.esp
-Vampire Realism II - TB Add-On.esp
-Vampire Realism II - BM Add-On.esp
-Vampire Realism II - BL Patch.esp
-Vampire Realism II - VE Patch.esp
-Vampiric Hunger Base.esp
-Vampiric Hunger Extended.esp
-Vampiric Hunger - SU.esp
-Vampiric Hunger MGE Addon for MGE 1.11+.esp
-VampiricIllusion.esp
-VampiricIllusion_MWSE_AddOn.esp
-ScentOfBlood_MCA.esp
-Diablerie.esp
-Diablerie_MWSE_AddOn.esp
-ve_comp_control.esp
-vampiric_regeneration.esp
-vampiric_mist.esp
-
-[Order]
-Suran_Underworld_2.5.esp
-SU_SW Comp. Patch.esp
-Suran_Underworld_v3.ESP
-Scripted_Spells.esp
-Vampire_Embrace.esp
-Blood Lines I_BloodMoon.esp
-Blood Lines I_Tribunal.esp
-Vampire Realism II.esp
-Vampire Realism II - TB Add-On.esp
-Vampire Realism II - BM Add-On.esp
-Vampire Realism II - BL Patch.esp
-Vampire Realism II - VE Patch.esp
-Vampiric Hunger Base.esp
-Vampiric Hunger Extended.esp
-Vampiric Hunger - SU.esp
-Vampiric Hunger MGE Addon for MGE 1.11+.esp
-VampiricIllusion.esp
-VampiricIllusion_MWSE_AddOn.esp
-ScentOfBlood_VR.esp
-Diablerie.esp
-Diablerie_MWSE_AddOn.esp
-ve_comp_control.esp
-vampiric_regeneration.esp
-vampiric_mist.esp
-
-
-;;MWSE add-on ordering rules
-[Order]
-ScentOfBlood.esp
-ScentOfBlood_MWSE_AddOn.esp
-
-[Order]
-ScentOfBlood_MCA.esp
-ScentOfBlood_MWSE_AddOn.esp
-
-[Order]
-ScentOfBlood_MCA_VR.esp
-ScentOfBlood_MWSE_AddOn.esp
-
-[Order]
-ScentOfBlood_VR.esp
-ScentOfBlood_MWSE_AddOn.esp
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scissors & Thimbles [Keazen]
@@ -24262,6 +24418,18 @@ CAB_SkullzImproved_TRBM.esp
 Slavers By Ghostwalker71.esm
 [ANY Lich Father Act I.esp
      Lich Father Act II.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sleep or Suffer 1.1 [Duncan]
+
+[Conflict]
+ Only use one plugin:
+  "SleepOrSuffer-Tribunal.esp" - If you have Tribunal.
+  "SleepOrSuffer.esp" - If you do not.
+ (Ref: "readme_sos11.htm")
+SleepOrSuffer-Tribunal.esp
+SleepOrSuffer.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26201,6 +26369,33 @@ Constance1_0.esp
  (Ref: "Readme - Thigh High Boots 2.0.txt")
 Thigh High Boots 2.0.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Third Person Crosshair [adul]
+
+;;Dragon32: Seel also "@Morrowind Graphics Extender [Various]"
+
+[Conflict]
+ "ONLY ENABLE ONE.
+  - Third_Person_Crosshair.esp (crosshair is visible when using ranged weapons only)
+  - Third_Person_Crosshair_spell.esp (crosshair is visible when using ranged weapons or spells)
+  - Third_Person_Crosshair_constant.esp (crosshair is always visible)"
+  - Third Person Crosshair.esp (Hrnchamd's modified version for MGE XE)
+ (Ref: "Readme_Third_Person_Crosshair.txt")
+Third_Person_Crosshair.esp
+Third_Person_Crosshair_constant.esp
+Third_Person_Crosshair_spell.esp
+Third Person Crosshair.esp
+
+[Note]
+ ! "It is also recommended that you download the Morrowind Code Patch (MCP) and apply the over-the-shoulder third person camera tweak."
+ ! (Ref: "Readme_Third_Person_Crosshair.txt")
+ ! Morrowind Code Patch: http://morrowind.nexusmods.com/mods/19510 
+[ANY Third_Person_Crosshair.esp
+     Third_Person_Crosshair_constant.esp
+     Third_Person_Crosshair_spell.esp
+     Third Person Crosshair.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28719,6 +28914,8 @@ Grass_Tamriel Rebuilt.esp
 
 ;;Dragon32: changed order so Diablerie loads after Scent of Blood
 ;;Ref: Diablerie_Readme.txt
+;;Dragon32: Added "Vampiric Hunger UI (MGE XE).esp".
+;;Dragon32: Added other "Scent of Blood" plugins as only "ScentOfBlood_MCA_VR.esp" previously included. Also "ScentOfBlood_MWSE_AddOn.esp"
 
 [Order]
 Suran_Underworld_2.5.esp
@@ -28737,9 +28934,14 @@ Vampiric Hunger Base.esp
 Vampiric Hunger Extended.esp
 Vampiric Hunger - SU.esp
 Vampiric Hunger MGE Addon for MGE 1.11+.esp
+Vampiric Hunger UI (MGE XE).esp
 VampiricIllusion.esp
 VampiricIllusion_MWSE_AddOn.esp
+ScentOfBlood.esp
+ScentOfBlood_MCA.esp
 ScentOfBlood_MCA_VR.esp
+ScentOfBlood_VR.esp
+ScentOfBlood_MWSE_AddOn.esp
 Diablerie.esp
 Diablerie_MWSE_AddOn.esp
 ve_comp_control.esp
@@ -29005,13 +29207,15 @@ Vampiric Hunger - BL.esp
 
 [Conflict]
  Choose only one plugin:
-  Vampiric Hunger MGE Addon for MGE 1.11+.esp - If you have MGE v1.11 or a later version.
-  Vampiric Hunger MGE Addon for MGE 1.10f-.esp - If you have MGE v1.10f or a previous version.
+  Vampiric Hunger MGE Addon for MGE 1.11+.esp - If you have Morrowind Graphics Extender (MGE) v1.11 or a later version.
+  Vampiric Hunger MGE Addon for MGE 1.10f-.esp - If you have Morrowind Graphics Extender (MGE) v1.10f or a previous version.
   Vampiric Hunger Bloodlust Effect.esp - This is an old version and should not be used.
+  Vampiric Hunger UI (MGE XE).esp - If you have Morrowind Graphics Extender XE (MGE XE) v0.9.0 or later
  (Ref: Readme_VH.htm)
 Vampiric Hunger MGE Addon for MGE 1.11+.esp
 Vampiric Hunger MGE Addon for MGE 1.10f-.esp
 Vampiric Hunger Bloodlust Effect.esp
+Vampiric Hunger UI (MGE XE).esp
 
 [Note]
  !! To make Zennorious' "Vampiric Hunger" compatible with Jaxalot's "Vampire Realism" you must disable one of the mods' hunger and scripted sun damage feature with their configuration menu.
@@ -29051,6 +29255,7 @@ Vampiric Hunger Base.esp
 Vampiric Hunger Extended.esp
 Vampiric Hunger - SU.esp
 Vampiric Hunger MGE Addon for MGE 1.11+.esp
+Vampiric Hunger UI (MGE XE).esp
 
 ;;Dragon32: Not sure if patch will work with wollibeebee's v3 of Suran Underworld. He only changed meshes and textures though really.
 [Patch]
@@ -29857,18 +30062,20 @@ Water Level Fix - Full.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Life 1.20 [abot]
+;; @Water Life 1.21 [abot]
 
 [Note]
  ! A new version of "Water Life" is available, you should upgrade.
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=258
-[VER < 1.20 abotWaterLife.esm]
+ ! http://morrowind.nexusmods.com/mods/42417
+[VER < 1.21 abotWaterLife.esm]
 
 [Requires]
  (Ref: "abotWaterLifeTRaddon.txt")
 abotWaterLifeTRaddon.esp
 [ALL abotWaterLife.esm
-     TR_Data.esm]
+     TR_Data.esm
+     Tribunal.esm
+     Bloodmoon.esm]
 
 ;; expdep
 [Requires]
@@ -30718,7 +30925,7 @@ lfx_rare_ingredients-uniques.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Windows Glow Expansion [abot]
+;; @Windows Glow Expansion 1.9 [abot]
 
 ;;Dragon32: ESM dependencies not in plugin header
 [Requires]
@@ -30739,6 +30946,13 @@ abotWindowsGlow.esp
  (Ref: "abotWindowsGlow.txt")
 [ALL abotWindowsGlow.esp
      SpzInteriorDaylight.esp]
+
+[Requires]
+ "From version 1.7b abotWindowsGlowTR.esp does not include abotWindowsGlow.esp anymore, you have to load both."
+ (Ref: "abotWindowsGlow.txt")
+abotWindowsGlowTR.esp
+abotWindowsGlow.esp
+
 
 ;;Ref: "abotWindowsGlow.txt"
 [Order]
