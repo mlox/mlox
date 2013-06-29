@@ -112,21 +112,19 @@ Bloodmoon.esm
 [Note]
  !! Uses deprecated AddToLev* function to modify Bethsoft leveled lists. Using any of these plugins will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one. If you have used one of these plugins, you can clean modified leveled lists from your savegame using the "Repair All" feature of "Wrye Mash". For an explanation of why the functions AddToLev*/RemoveFromLev* are  deprecated, please see (Some patches may be available at that link):
  !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
-Undead arise from death 2.0.esp
-MWInhabitants Freeform (Vol 1).esp
+;;acsAppoldro.esp ;patched by acsAppoldroFixedLL.esp (see below)
+BEER! Combo v1.12-03a (PR esm v2.4fix).esp
+BEER! Combo v1.12-03a (PR esp v2.4fix).esp
+BEER! Combo v1.12-03a.esp
+BEER! Combo.esp
 BMExtras.esp
 Clean Black Queen Chronicles Ver 2.5.esp
 ;;EcoAdj(Sri+Ingredients).esp ;can be patched by "Sri Alchemy BM List Patch.esp", see Economy Adjuster [HotFusion] below.
 ;;GIANTS.esm ; patched by Z4K_Giants_AddToLev_Patch.esp (see below)
 MTT Vol III.esp
+;;MTT IV Master.esp ;patched by a number of ESPs, see "@MTT (Magical Trinkets of Tamriel) [Chris Woods]"
 Melee Missiles v1.2.esp
-TribIntegration.esp
-Werewolves BM add-on.esp
-Werewolves.esp
-BEER! Combo v1.12-03a (PR esm v2.4fix).esp
-BEER! Combo v1.12-03a (PR esp v2.4fix).esp
-BEER! Combo v1.12-03a.esp
-BEER! Combo.esp
+MWInhabitants Freeform (Vol 1).esp
 NoM 2.1 with BEER!.esp
 NoM 2.12-03a with BEER! (PR esm v2.4 fix).esp
 NoM 2.12-03a with BEER! (PR esp v2.4 fix).esp
@@ -135,6 +133,10 @@ Sris_Alchemy_Trib.esp
 ;;Stinkers.esp ; patched by Gaius Atrius' "Stinkers and Bathers v2.0" (see below)
 ;;The Wilderness Mod 2.0.esm  ; patched by ab01Wilderness2.1patch.esp (see below)
 ;;The Wilderness Mod 2.0 T & B.esm ; patched by ab01Wilderness2.1patch.esp (see below)
+TribIntegration.esp
+Undead arise from death 2.0.esp
+Werewolves BM add-on.esp
+Werewolves.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15780,7 +15782,7 @@ LGNPC_Pelagiad_v1_22.esp
 [Conflict]
  LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
-[SIZE 178346 Lgnpc_SN.esp]
+[VER < 0.32 Lgnpc_SN.esp]
 [ANY Alternate Beginnings 2.esp
      CharGen_Revamped_v14.esp]
 
@@ -19070,11 +19072,21 @@ Vampiric Hunger UI (MGE XE).esp
 ;; Dragon32 - Information about scruggs' "Morrowind Inhabitants" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Note]
+ ! There is a new version of "Morrowind Inhabitants" available you should upgrade!
+ ! http://morrowind.nexusmods.com/mods/1570
+ ! Patch for latest version:
+ ! http://morrowind.nexusmods.com/mods/1613
+ ! Pickpockets have been separated from the main plugin into "MWInhabitants: Pickpockets!"
+ ! http://morrowind.nexusmods.com/mods/1612
+Morrowind_Inhabitants.esp
+
+[Note]
  Do not try to start a new game while "Morrowind Inhabitants" is enabled. Wait until you have finished character creation before using MWInhabitants.
  (Ref: MWInhabitants PATCH.01 README.txt)
 MWInhabitants Freeform (Vol 1).esp
 
 [Patch]
+ http://morrowind.nexusmods.com/mods/1613
  (Ref: MWInhabitants PATCH.01 README.txt)
 MWInhabitants Freeform PATCH.01.esp
 MWInhabitants Freeform (Vol 1).esp
@@ -19090,14 +19102,6 @@ MWInhabitants Freeform (Vol 1).esp
 MWInhabitants Freeform (Vol 1).esp
 MWInhabitants Freeform PATCH.01.esp
 
-[Note]
- The optional "Flee AI Patch" from "Morrowind Inhabitants: Pickpocket!" by scruggs changes flee AI settings, Wakim's Game Improvements also changes AI flee settings.
-  (Ref: MWInhabitants - Pickpockets README!.doc)
-[ALL MWInhabitants Flee AI Patch.esp
-     [ANY Wakim's Game Improvement 9.esp
-	  Wakim's Game Improvements with No-glo v9.esp
-          Balance - game settings.esp]]
-
 ; Dragon32: Only Herbalism mentioned in readme.
 ;;Dragon32: Added similar rules to the below to all the Herbalism mods, duplicated the below in the Herbalism entry. This Conflict rule kept for reference
 [Conflict]
@@ -19106,6 +19110,53 @@ MWInhabitants Freeform PATCH.01.esp
 MWInhabitants Freeform (Vol 1).esp
 [ANY Herbalismv1.3(Bloodmoon addon).esp
      Herbalismv1.3(Tribunal).esp]
+
+;;MWInhabitants: Pickpockets!
+[Note]
+ The optional "Flee AI Patch" from "Morrowind Inhabitants: Pickpocket!" by scruggs changes flee AI settings, Wakim's Game Improvements also changes AI flee settings.
+  (Ref: MWInhabitants - Pickpockets README!.doc)
+[ALL MWInhabitants Flee AI Patch.esp
+     [ANY Wakim's Game Improvement 9.esp
+	  Wakim's Game Improvements with No-glo v9.esp
+          Balance - game settings.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Inhabitants patches [Gato]
+
+;;Dragon32: Looks like this is for the beta of Morrowind Inhabitants based on plugin dates and TESPCD
+
+[Conflict]
+ Choose only one plugin
+ (Ref: "Inhabitants Thief patch READ ME.txt")
+morrowind inhabitant thief patch- 30 speed.esp
+morrowind inhabitant thief patch- no thieves.esp
+morrowind inhabitant thief patch- reduced spawn chance.esp
+morrowind inhabitants thief path- slower thieves.esp
+
+[Order]
+Morrowind_Inhabitants.esp
+morrowind inhabitant thief patch- 30 speed.esp
+
+[Order]
+Morrowind_Inhabitants.esp
+morrowind inhabitants thief path- slower thieves.esp
+
+[Order]
+Morrowind_Inhabitants.esp
+morrowind inhabitant thief patch- no thieves.esp
+
+[Order]
+Morrowind_Inhabitants.esp
+morrowind inhabitant thief patch- reduced spawn chance.esp
+
+[Requires]
+ "Morrowind Inhabitants patches" by Gato is for Scruggs' "Morrowind Inhabitants" Beta rather than the later "Morrowind Inhabitants: Freeform! (Volume 1)"
+Morrowind_Inhabitants.esp
+[ANY morrowind inhabitant thief patch- 30 speed.esp
+     morrowind inhabitant thief patch- no thieves.esp
+     morrowind inhabitant thief patch- reduced spawn chance.esp
+     morrowind inhabitants thief path- slower thieves.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19529,12 +19580,24 @@ MWSE_v094_Demo.esp
 
 ;;Dragon32: Suggest that this section is just used for MWSE versioning Notes. Specific plugin rules should go in their own section
 
+;;Dragon32. Release dates for MWSE versions. If no version is specified compare plugin's release date and assume the current MWSE version is required:
+;; 0.9.1	????-??-??
+;; 0.9.2	2005-08-03
+;; 0.9.2a	2006-06-19
+;; 0.9.3	????-??-??
+;; 0.9.4	2007-02-03
+;; 0.9.4a	2007-03-01
+
+;;Dragon32: MGE change log showing *some* of the MWSE implementations:
+;; http://sourceforge.net/apps/mediawiki/morrgraphext/index.php?title=Change_Log
+
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.1 or later, or MGE v3.0.3 or later.
 ImprovedTeleportation2.0.esp
 
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.2 or later, or MGE v3.0.3 or later.
+Alchemist's Arsenal v1.0.esp
 ASH2.0.esp
 Better Telekinesis.esp
 bjam_Aragon_at_MWSEpatch_v1.0.esp
@@ -19551,6 +19614,8 @@ Health Indicators MWSE.esp
 Improved Bartering.esp
 Improved Hand to Hand.esp
 Inventory Helpers.esp
+Loot Sack.esp
+Melee Missiles v1.2.esp
 Morrowind Battle Cry.esp
 Morrowind Narcissism.esp
 MWInhabitants Freeform (Vol 1).esp
@@ -19578,7 +19643,7 @@ Universal Companion Share.esp
 Useful Summoned Creatures.esp
 Visceral Discernment.esp
 
-;Dragon32: I couldn't find when MGE introduced v0.9.3 of MWSE. MGE v3.5.6 adds MWSE v0.9.4 script functions
+;;Dragon32: I couldn't find when MGE introduced v0.9.3 of MWSE. MGE v3.5.6 adds MWSE v0.9.4 script functions
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
 Avenge Your Death!.esp
@@ -19591,7 +19656,19 @@ Werewolf ReEquip.esp
 Advanced Alchemy.esp
 BetterMusicSystem_<VER>.esp
 Census and Excise Office.esp
+CE-DepthPerception25+BTB's Character.ESP
+CE-DepthPerception25.esp
+CE-DepthPerception50+BTB's Character.ESP
+CE-DepthPerception50.esp
+CE-DepthPerception75+BTB's Character.ESP
+CE-DepthPerception75.esp
+CE-DepthPerception100+BTB's Character.ESP
+CE-DepthPerception100.esp
+Detect Owner.esp
+Gravedigger.esp
+Inventory Search.esp
 mel_teleportPlugin_1_3.esp
+Shut_Up.esp
 UL_MWSE_patch.esp
 UL_Primus_MWSE.esp
 
@@ -19600,13 +19677,6 @@ UL_Primus_MWSE.esp
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a and will not run with MGE's inbuilt version of MWSE.
 MCA_Companions_Enhanced.esp
-
-;Dragon32: Unknown MWSE versions required:
-; Loot Sack.esp
-; Alchemist's Arsenal v1.0.esp
-; Detect Owner.esp
-; Gravedigger.esp
-; Melee Missiles v1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21492,6 +21562,19 @@ Oblivion-Style Spellcasting.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Oblivion Style Vampires [DoctorEss]
+
+;;Dragon32: Ran this in TESPCD against Vampire Realism, Vampire Embrace, Vampiric Hunger and Vampiric Illusions. VR was the only one which came up with a definitive error. Others are likely to conflict too though I reckon
+[Conflict]
+ "Q: Is your mod compatible with (insert other vampire mod here)? A:  Probably not.  I haven't tested it, feel free to, at your own risk."
+ (Ref: "Oblivion Style Vampires readme.txt")
+ Both DoctorEss' "Oblivion Style Vampires" and Jaxalot's "Vampire Realism II" alter the vampire clan (Vampire_Aundae_PC, Vampire_Berne_PC and Vampire_Quarra_PC) and vampire cure scripts (Vampire_Cure_PC).
+ (Ref: TESPCD check by Dragon32)
+Oblivion Style Vampires.esp
+Vampire Realism II.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @OfficialMods_v5
 
 [Conflict]
@@ -22367,6 +22450,47 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Proper Ladies for Starfires NPC Additions 1.1 [froucria]
+
+[Note]
+ ! There is a new version of froucria's "Proper Ladies for Starfires NPC Additions" available, you should upgrade.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8561
+[ANY ProperLadies  Alchemists-n-Tailors.esp
+     ProperLadies Commoners-n-etc.esp
+     ProperLadies Nobles.esp
+     ProperLadies Nobles HTC alpha.esp]
+
+[Conflict]
+ Use only one plugin:
+  "ProperLadies_1.1_HoldItCompat.esp" - Is compatible with Danae's "Hold It" mod.
+  "ProperLadies_1.1.esp" - Is not compatible with Danae's "Hold It" mod.
+ (Ref: "ProperLadies_1.1 Readme.txt")
+ProperLadies_1.1.esp
+ProperLadies_1.1_HoldItCompat.esp
+
+[Requires]
+ "In order to use [froucria's "Proper Ladies for Starfires NPC Additions"] , you MUST have Starfires NPC Additions ver-1.11 installed!"
+ (Ref: "ProperLadies_1.1 Readme.txt")
+ProperLadies_1.1.esp
+Starfires NPC Additions ver-1.11.esp
+
+[Requires]
+ "In order to use [froucria's "Proper Ladies for Starfires NPC Additions"] , you MUST have Starfires NPC Additions ver-1.11 installed! [and] you MUST have Hold it installed."
+ (Ref: "ProperLadies_1.1 Readme.txt")
+ProperLadies_1.1_HoldItCompat.esp
+[ALL Starfires NPC Additions ver-1.11.esp
+     Hold it - replacer.esp]
+
+;;Dragon32: Ref: "ProperLadies_1.1 Readme.txt"
+[Order]
+Starfires NPC Additions ver-1.11.esp
+Hold it - replacer.esp
+Hold it - SF npc addon.esp
+ProperLadies_1.1.esp
+ProperLadies_1.1_HoldItCompat.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Propylons 1.1 [Charles Cooley]
 
 [Note]
@@ -22828,14 +22952,14 @@ ReBirthGrass.esp
 ;; @Redaynia Village  [Darkelfguy]
 ; already covered under: Ald Redaynia Extended [Princess Stomper], expanded for cleaned and uncleaned sizes.
 
+;;Dragon32: SIZE checks here are checking it's not the compatible version as distributed and after cleaning with TESTool
 [Conflict]
- You should use the version of Darkelfguy's "Redaynia Village" that is compatible with Princess Stomper's "Ald Redaynia Extended"
- Redaynia_Village_v11.rar:  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6638
- (Ref: See Planet Elder Scrolls download page.
+ There is a version of Darkelfguy's "Redaynia Village" which is compatible with Princess Stomper's "Ald Redaynia Extended", ensure you are using it.
+ http://morrowind.nexusmods.com/mods/17935
+[ANY [SIZE !238938 Redaynia Village.esp]
+     [SIZE !238710 Redaynia Village.esp]]
 [ANY Ald Redaynia Extended COM.esp
      Ald Redaynia Extended.esp]
-[ANY [SIZE 304650 Redaynia Village.esp]	;uncleaned
-     [SIZE 302981 Redaynia Village.esp]]	;cleaned
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24981,6 +25105,151 @@ Standard_Uniforms_MW.esp
 Standard_Uniforms.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Starfire Compatibility ESPs [Spiffyman]
+
+[Conflict]
+ "[Spiffyman's "Starfire Compatibility ESPs"] takes Starfire's NPC mod, Hold it!, ProperLadies, and PeasantGowns and merges them into a single plugin."
+ (Ref: "Starfire Compatiblity plugins.txt")
+SF Gowns.esp
+[ANY ProperLadies_1.1.esp
+     ProperLadies_1.1_HoldItCompat.esp
+     Starfires NPC Additions ver-1.11.esp
+     Hold it - replacer.esp
+     Hold it - SF npc addon.esp
+     PeasantGownsReplacer.esp
+     PeasantGownsReplacerTRIB.esp]
+
+[Requires]
+ (Ref: "Starfire Compatiblity plugins.txt")
+SF Gowns NoM addon.esp
+[ALL SF Gowns.esp
+     NoM 3.0.esp]
+
+;; Starfire Compatiblity plugins.txt: "SF Gowns NoM addon -- placed after NoM to avoid conflicts"
+[Order]
+NoM 3.0.esp
+SF Gowns NoM addon.esp
+
+[Conflict]
+ "[Spiffyman's "Starfire Compatibility ESPs"] takes Starfire's NPC mod, Hold it!, ProperLadies, and PeasantGowns and merges them into a single plugin. [...] SF Elaura Gowns -- includes the TR,NoM, and CoM addons from Hold it! as well"
+ (Ref: "Starfire Compatiblity plugins.txt")
+SF Elaura Gowns.esp
+[ANY ProperLadies_1.1.esp
+     ProperLadies_1.1_HoldItCompat.esp
+     Starfires NPC Additions ver-1.11.esp
+     Hold it - replacer.esp
+     Hold it - SF npc addon.esp
+     Hold it - NOM addon.esp
+     Hold it - COM addon.esp
+     Hold it - TR addon.ESP
+     PeasantGownsReplacer.esp
+     PeasantGownsReplacerTRIB.esp]
+
+;;Dragon32: Duplicated from Hold It!
+[Requires]
+ "SF Elaura Gowns includes the TR,NoM, and CoM addons from Hold it! as well"
+ (Ref: "Starfire Compatiblity plugins.txt")
+SF Elaura Gowns.esp
+[ALL NoM 3.0.esp
+     MW_Children_1_0.esm
+     TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm]
+
+[Requires]
+ (Ref: "Starfire Compatiblity plugins.txt")
+SF Elaura Gowns NoM addon.esp
+[ALL SF Elaura Gowns.esp
+     NoM 3.0.esp]
+
+;; Starfire Compatiblity plugins.txt: "SF Elaura Gowns NoM addon -- does the same [placed after NoM to avoid conflicts] for the Elaura version"
+[Order]
+NoM 3.0.esp
+SF Elaura Gowns NoM addon.esp
+
+[Conflict]
+  "[Spiffyman's "LGNPC Gowns.esp"] takes Starfire's NPC mod, Hold it!, ProperLadies, and PeasantGowns and merges them into a single plugin" it "includes the TR,NoM, and CoM addons from Hold it! as well" and also "merged with the LGNPC mods as well, since they conflict."
+ (Ref: "Starfire Compatiblity plugins.txt")
+LGNPC Gowns.esp
+[ANY ProperLadies_1.1.esp
+     ProperLadies_1.1_HoldItCompat.esp
+     Starfires NPC Additions ver-1.11.esp
+     Hold it - replacer.esp
+     Hold it - SF npc addon.esp
+     Hold it - NOM addon.esp
+     Hold it - COM addon.esp
+     Hold it - TR addon.ESP
+     PeasantGownsReplacer.esp
+     PeasantGownsReplacerTRIB.esp
+     SF Elaura Gowns.esp
+     Less Lore.esp
+     LGNPC_NoLore_v?_??.esp
+     Lgnpc_SN.esp
+     LGNPC_GnaarMok_v?_??.esp
+     LGNPC_AldVelothi_v?_??.esp
+     LGNPC_MaarGan_v?_??.esp
+     LGNPC_HlaOad_v?_??.esp
+     LGNPC_Aldruhn_v?_??.esp
+     LGNPC_Aldruhn_v?_??_suppl.esp
+     LGNPC_Pelagiad_v?_??.esp
+     LGNPC_TelMora_v?_??.esp
+     LGNPC_Khuul_v?_??.esp
+     LGNPC_VivecFQ_v?_??.esp
+     LGNPC_TelUvirith_v?_??.esp
+     LGNPC_TelUvirith_v?_??_UI.esp
+     LGNPC_SecretMasters_v?_??.esp
+     LGNPC_IndarysManor_v?_??.esp
+     LGNPC_VivecRedoran_v?_??.esp
+     LGNPC_PaxRedoran_v?_??.esp
+     LGNPC_SoulSicknessPatch_v?_??.esp]
+
+;;Order rules from LGNPC
+[Order]
+LGNPC Gowns.esp
+Uvirith's Legacy_Final_2.0.esp
+
+[Order]
+DreamersAwakenedv1.0.esp
+LGNPC Gowns.esp
+
+[Order]
+Elders 0 Count NPC add-on (Trib & BM).esp
+Elders 0 Count NPC add-on.esp
+LGNPC Gowns.esp
+
+[Order]
+Less_Generic_Nerevarine.esp
+LGNPC Gowns.esp
+
+;;Conflict rules from LGNPC
+[Conflict]
+ "Join All Houses" by Heph will break some Pax Redoran quests, and likely create other odd results.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC Gowns.esp
+Join All Houses.esp
+
+[Conflict]
+ "Marandus Abode" by Princess Stomper will break the 'Marandus' quests.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC Gowns.esp
+[ANY Marandus Abode.esp
+     Marandus Abode MCA Patch.esp]
+
+;;Note rules from LGNPC
+[Note]
+ !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
+ !! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
+ !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0 )
+[ALL Vampire_Embrace.esp
+     LGNPC Gowns.esp]
+
+;;Dragon32: Duplicated from Hold It! but removed here because of "SF Elaura Gowns NoM addon.esp"
+;;[Order]
+;;NoM 3.0.esp
+;;SF Elaura Gowns.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28916,6 +29185,7 @@ Grass_Tamriel Rebuilt.esp
 ;;Ref: Diablerie_Readme.txt
 ;;Dragon32: Added "Vampiric Hunger UI (MGE XE).esp".
 ;;Dragon32: Added other "Scent of Blood" plugins as only "ScentOfBlood_MCA_VR.esp" previously included. Also "ScentOfBlood_MWSE_AddOn.esp"
+;;Dragon32: Added Pwin's "Vampire Realism II - VH Patch.esp"
 
 [Order]
 Suran_Underworld_2.5.esp
@@ -28930,6 +29200,7 @@ Vampire Realism II - TB Add-On.esp
 Vampire Realism II - BM Add-On.esp
 Vampire Realism II - BL Patch.esp
 Vampire Realism II - VE Patch.esp
+Vampire Realism II - VH Patch.esp
 Vampiric Hunger Base.esp
 Vampiric Hunger Extended.esp
 Vampiric Hunger - SU.esp
@@ -28947,7 +29218,6 @@ Diablerie_MWSE_AddOn.esp
 ve_comp_control.esp
 vampiric_regeneration.esp
 vampiric_mist.esp
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Auto-Blood injector [Sladle]
@@ -29113,17 +29383,13 @@ Vampire Realism II - VE Patch.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Realism II - VH Patch [Pwin]
 
-[Requires]
- (Ref: Readme Vampire Realism II - VH Patch.txt)
+[Patch]
+ "[Vampire Realism II - VH Patch] makes the crypt rats added by ["Vampire Realism"] use the same script the rats in ["Vampiric Hunger"] use. Now you can feed off the rats in the crypts as well!"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7222
+ (Ref: "Readme Vampire Realism II - VH Patch.txt")
 Vampire Realism II - VH Patch.esp
 [ALL Vampire Realism II.esp
      Vampiric Hunger Base.esp]
-
-;;Dragon32: VR and VH order from "Vampire Load Order"
-[Order]
-Vampire Realism II.esp
-Vampiric Hunger Base.esp
-Vampire Realism II - VH Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29153,6 +29419,13 @@ Vamp_Upgrade.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 6249 Vamp_Upgrade_No_feeding.esp]
+
+[Conflict]
+ Both John W. Martin's "Vampire Upgrade 1.2" and Jaxalot's "Vampire Realism II" alter the vampire clan (Vampire_Aundae_PC, Vampire_Berne_PC and Vampire_Quarra_PC) scripts. Both John W. Martin's "Vampire Upgrade 1.2" and zennorious' "Vampiric Hunger" alter the "vampire aundae specials" spell.
+[ANY Vamp_Upgrade.esp
+     Vamp_Upgrade_No_feeding.esp]
+[ANY Vampire Realism II.esp
+     Vampiric Hunger Base.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
