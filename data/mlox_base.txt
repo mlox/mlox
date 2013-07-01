@@ -2134,6 +2134,26 @@ Ascadian_Rose_Cottage_ver1.0.esp
      [ANY Forested Morrowind.esp
           Leafy Morrowind.esp]]
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ascadian Rose Cottage DX [Gaius Atrius]
+
+[Conflict]
+ "[Ascadian Rose Cottage DX] completely replaces the original Ascadian Rose Cottage's plugin, and is NOT to be used with it."
+ (Ref: "Ascadian Rose Cottage DX - Readme.txt")
+Ascadian Rose Cottage DX.esm
+Ascadian_Rose_Cottage_ver1.0.esp
+
+[Patch]
+ "[ARCDX - NOMv3 Compatible.esp] makes the house's kitchen, and a few other things, work properly with NOMv3."
+ (Ref: "Ascadian Rose Cottage DX - Readme.txt")
+ARCDX - NOMv3 Compatible.esp
+[ALL Ascadian Rose Cottage DX.esm
+     NoM 3.0.esp]
+
+[Order]
+ARCDX - NOMv3 Compatible.esp
+NoM 3.0.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Asgard [Grumpy & Emma]
@@ -6948,16 +6968,34 @@ Daggerfall Collection Ver 1.1.esp
  Use only one plugin
   DagonFel Mill V-1.7 esp..esp - If you do not have Emma's "The White Wolf of the Lokken Mountain"
   DagonFel Mill V-1.8 esp..esp - Allows travel to Emma's "The White Wolf of the Lokken Mountain"
- (Ref: Dagon Fell Mill - Read me.txt)
+ (Ref: "Dagon Fell Mill - Read me.txt")
 DagonFel Mill V-1.7 esp..esp
 DagonFel Mill V-1.8 esp..esp
 
 [Requires]
- v1.8 of Thondur's "Dagon Fel Mill" adds a fast travel option to Emma's "The White Wolf of the Lokken Mountain", there is little point in using this version without Emma's mod. Use v1.7 instead.
- (Ref: Dagon Fell Mill - Read me.txt)
+ v1.8 of Thondur's "Dagon Fel Mill" adds a fast travel option for Emma's "The White Wolf of the Lokken Mountain", there is little point in using this version without Emma's mod. Use v1.7 instead.
+ (Ref: "Dagon Fell Mill - Read me.txt")
 DagonFel Mill V-1.8 esp..esp
 [ANY BT_Whitewolf_2_0.esp
      BT_Whitewolf_2_0.esm]
+
+[Conflict]
+ "V 1.8 which has the Travel Addon included"
+ (Ref: "Dagon Fell Mill - Read me.txt")
+Travel Addon-DagonFelMill-V1.esp
+DagonFel Mill V-1.8 esp..esp
+
+[Requires]
+ This is an add-on to Thondur's "Dagon Fel Mill" and not a standalone plugin, it adds a fast travel option for Emma's "The White Wolf of the Lokken Mountain".
+ (Ref: "Travel Addon-DagonFelMill-V1 Read Me.rtf")
+Travel Addon-DagonFelMill-V1.esp
+[ALL DagonFel Mill V-1.7 esp..esp
+     [ANY BT_Whitewolf_2_0.esp
+          BT_Whitewolf_2_0.esm]]
+
+[Order]
+DagonFel Mill V-1.7 esp..esp
+Travel Addon-DagonFelMill-V1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7087,6 +7125,8 @@ DNGDR-GHD Patch.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dark Brotherhood Armor Replacer v1.1 [Dimitri Mazieres]
 
+;;DRagon32: See "@Dark Brotherhood Assassins Fix [Fetus X]" for more conflict information
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  The plugins named "DDBA" delay the Dark Brotherhood attacks.
@@ -7123,7 +7163,10 @@ Dark Brotherhood Assassins Fix.esp
      DM_DB Armor Replacer-ExpDDBA.esp
      DM_DB Armor Replacer-ExpRanks.esp
      DM_DB Armor Replacer-ExpRanksDDBA.esp]
-DBAttack Tweaked.esp
+[ANY DBAttack Tweaked 1.1-Easy.esp
+     DBAttack Tweaked 1.1.esp
+     DBAttack Tweaked 1.3-Easy.esp
+     DBAttack Tweaked 1.3.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7242,7 +7285,7 @@ transportMH.esp
   DB_Attack_Mod_Jeoshua.esp - Jeoshua's version of AVENGER'S postponed Dark Brotherhood attack
   DB_Attack_Mod3.esp - Hellwolve's update of version 3 of Avenger's plugin adding an additional condition.
   db_attack_fixed.esp - Xiran's "Dark Brotherhood Attacks Fixed" changes the Dark Brotherhood attacks to begin only when the Morrowind main quest is completed.
-  DBAttack Tweaked.esp - hollaajith's "DBAttack Tweaked" changes the Dark Brotherhood attacks to occur based on guild standings, reputation and level. Also replaces lower level assassins armor.
+  DBAttack Tweaked*.esp - hollaajith's "DBAttack Tweaked" changes the Dark Brotherhood attacks to occur based on guild standings, reputation and level; optionally allows safe places to sleep. Also replaces lower level assassins armor.
   ddb.esp - etmorrowindb's "Delayed Dark Brotherhood attacks" delays the attacks based on reputation. Can also damage the player before they wake up.
   Murderous Dreams.esp & Murderous Dreams_Safe.esp - Avelon's "Murderous Dreams" delays the attacks based on player level and reputation. It makes other changes too.
   DM_DB Armor Replacer-ExpDDBA.esp & DM_DB Armor Replacer-ExpRanksDDBA.esp - Dimitri Mazieres' "Dark Brotherhood Armor Replacer" includes DDBA variants that delay the Dark Brotherhood attacks.
@@ -7253,7 +7296,10 @@ DB_Attack_Mod.esp
 DB_Attack_Mod_Jeoshua.esp
 DB_Attack_Mod3.esp
 db_attack_fixed.esp
-DBAttack Tweaked.esp
+DBAttack Tweaked 1.1-Easy.esp
+DBAttack Tweaked 1.1.esp
+DBAttack Tweaked 1.3-Easy.esp
+DBAttack Tweaked 1.3.esp
 ddb.esp
 Murderous Dreams.esp
 Murderous Dreams_Safe.esp
@@ -7407,6 +7453,13 @@ dh_furn.esp
 Vality's Ascadian Isles Addon.esp
 dh_homes.esp
 
+[Patch]
+ "[dh_furn-jms_patch.esp] is an attempt to fix the bug in dhfurn 2.01 (Dave Humphrey's furniture mod) where returning to a furniture merchant to purchase items previously purchased from them causes an immediate CTD (crash to desktop)."
+ (Ref: "dh_furn-jms_patch.txt")
+ https://sites.google.com/site/johnmoonsugar/Home/morrowind-mods
+dh_furn-jms_patch.esp
+dh_furn.esp
+
 ; Bizarrely added by Dragon32 :-)
 ; (Ref: dh_furn-jms_patch.txt)
 [Order]
@@ -7434,9 +7487,40 @@ dh_furn_stores.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @David Humphreys Furniture mod - 6th House Addon [Markelius]
+
+[Requires]
+ "[David Humphreys Furniture mod- 6th House Addon by Markelius] requires "dh_furn.esp" to run."
+ (Ref: "dh_furn_6th_house_addon-42334-1-1.zip\readme.txt")
+dh_furn_6th_house_addon.esp
+dh_furn.esp
+
+[Order]
+dh_furn.esp
+dh_furn_6th_house_addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @DBAttack Tweaked [hollaajith]
 
 ;; See "@Dark Brotherhood Assassins Fix [Fetus X]" and "@Dark Brotherhood delay mods [Various]" for conflict information
+
+[Note]
+ ! You are using an old version of hollaajith's "DBAttack Tweaked", you should upgrade!
+ ! http://morrowind.nexusmods.com/mods/42299
+DBAttack Tweaked.esp
+
+[Conflict]
+ Only use one plugin:
+  "DBAttack Tweaked 1.1-Easy.esp" - If you don't like the idea of safe places. Attacks begin and progress at a slower pace.
+  "DBAttack Tweaked 1.1.esp" - If you don't like the idea of safe places.
+  "DBAttack Tweaked 1.3-Easy.esp" - For safe place advantage. Attacks begin and progress at a slower pace.
+  "DBAttack Tweaked 1.3.esp" - For safe place advantage.
+ (Ref: "DBAttack Tweaked Readme.txt")
+DBAttack Tweaked 1.1-Easy.esp
+DBAttack Tweaked 1.1.esp
+DBAttack Tweaked 1.3-Easy.esp
+DBAttack Tweaked 1.3.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24281,6 +24365,63 @@ SkeldaleHouseMTM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sgaileach Estate 2.0 [Phinix]
+
+[Conflict]
+ Only load one plugin:
+  "sg1-sgaileach_estate-NOM.esp" - If you are using taddeus' "Necessities of Morrowind"
+  "sg1-sgaileach_estate.esp" - If you are not
+ (Ref: "sgaileach_estate_2.01.rar\readme.txt")
+sg1-sgaileach_estate-NOM.esp
+sg1-sgaileach_estate.esp
+
+;;Dragon32: version of NoM not specified but release date of "Sgaileach Estate 2.0" implies NoM 3.0
+[Requires]
+ (Ref: "sgaileach_estate_2.01.rar\readme.txt")
+sg1-sgaileach_estate-NOM.esp
+NoM 3.0.esp
+
+[Order]
+sg1-sgaileach_estate-NOM.esp
+NoM 3.0.esp
+
+[Conflict]
+ "Just uncheck ["Waterfall" by Heremod Production] from the list when running Sgaileach Estate.
+ (Ref: "sgaileach_estate_2.01.rar\readme.txt")
+Waterfall v1.0.esp
+[ANY sg1-sgaileach_estate.esp
+     sg1-sgaileach_estate-NOM.esp]
+
+[Note]
+ You are not running the latest version of "Sgaileach Estate". Check the Planet Elder Scrolls page for "update01.rar", or "bathing_mod_2_compatibility.rar" if you are using Gaius Atrius' "The Bathing Mod 2.0"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9163
+[ANY [DESC !/Version 2.01/ sg1-sgaileach_estate.esp]
+     [DESC !/Version 2.01/ sg1-sgaileach_estate-NOM.esp]]
+
+[Note]
+ Ensure you are running the version of "Sgaileach Estate" which is compatible with Gaius Atrius' "The Bathing Mod 2.0". It can be downloaded in the archive "bathing_mod_2_compatibility.rar"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9163
+[ALL [ANY [VER >1.71 Stinkers.esp]
+          StinkersBE.esp
+          Stinkers.esm
+          StinkersBE.esm]
+     [ANY [DESC /Version 2.01/ sg1-sgaileach_estate.esp]
+          [DESC /Version 2.01/ sg1-sgaileach_estate-NOM.esp]]]
+
+;;Dragon32: Stinkers v2 - Mod Compatibility Readme.txt:
+;; "This plugin is to be used with mods designed to be compatible with The Bathing Mod v2.
+;; It resets the scripts for activators from the Modder's Resource, to insure that they work as intended.
+;; It is to be loaded AFTER any such compatible mods."
+[Order]
+sg1-sgaileach_estate.esp
+Stinkers v2 - Mod Compatibility.esp
+
+[Order]
+sg1-sgaileach_estate-NOM.esp
+Stinkers v2 - Mod Compatibility.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Shadow Argonians  [Ghoul]
 
 [Note]
@@ -25467,16 +25608,48 @@ BE_Bathing_Patch.esp
  !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
 [VER <2 Stinkers.esp]
 
+[Note]
+ grVulture has released a patch to his bathing mod which fixes an issue of soap sellers only restocking soaps every four months (the default spawning cycle for Morrowind). If this is too long for you, you can load this patch. Be warned that this will give to a soap seller the same kind of soaps every time you barter with him/her though.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3932 )
+[ALL [VER <2 Stinkers.esp]
+     [NOT Stinkers_Patch.esp]]
+
+[Order]
+Stinkers.esp
+Stinkers_Patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Stinkers 2.0 (a/k/a The Bathing Mod v2) [Gaius Atrius]
 
 [Conflict]
- The new Provincial Bath Shoppe plugin is meant as a replacement for the original Provincial Bath Shoppe plugin
+ Use only one plugin:
+  StinkersBE.esp - If you have Balmora Expansion
+  Stinkers.esp - If you do not have Balmora Expansion
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
-[ANY [ANY [VER >1.71 Stinkers.esp]
-          StinkersBE.esp]
-     Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp]
+Stinkers.esp
+StinkersBE.esp
+
+[Conflict]
+ Use only one plugin:
+  StinkersBE.esm - If you have Balmora Expansion
+  Stinkers.esm - If you do not have Balmora Expansion
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+Stinkers.esm
+StinkersBE.esm
+
+[Conflict]
+ You should use the alternate version ("Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp") of Korana's "Provincial Bath Shoppe"
+[ANY [VER >1.71 Stinkers.esp]
+     StinkersBE.esp
+     Stinkers.esm
+     StinkersBE.esm]
+Provincial_Bath _Shoppe_v1.esp
+
+[Conflict]
+ "Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp" is a replacement for Korana's "Provincial Bath Shoppe" and should not be used with Korana's original.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp
 Provincial_Bath _Shoppe_v1.esp
 
 [Conflict]
@@ -25489,7 +25662,9 @@ Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
 [ALL [ANY [VER >1.71 Stinkers.esp]
-          StinkersBE.esp]
+          StinkersBE.esp
+          Stinkers.esm
+          StinkersBE.esm]
      Ascadian_Rose_Cottage_ver1.0.esp]
 
 [Conflict]
@@ -25501,10 +25676,12 @@ Stinkers v2 - Ascadian Rose Cottage Patch.esp
 [Order]
 Ascadian_Rose_Cottage_ver1.0.esp
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
+
 [Order]
 Stinkers.esp
 StinkersBE.esp
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
+
 
 [Conflict]
  When using Stinkers/The Bathing Mod V2 with Balmora Expansion, use "StinkersBE.esp" INSTEAD of "Stinkers.esp".
@@ -25517,22 +25694,27 @@ Stinkers v2 - Ascadian Rose Cottage Patch.esp
      StinkersBE.esp]
 
 [Conflict]
- Use only one plugin:
-  StinkersBE.esp - If you have Balmora Expansion
-  Stinkers.esp - If you do not have Balmora Expansion
+ When using Stinkers/The Bathing Mod V2 with Balmora Expansion, use "StinkersBE.esm" INSTEAD of "Stinkers.esm".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
-Stinkers.esp
-StinkersBE.esp
+Stinkers.esm
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
 
-;; (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
-;; No mention of 'StinkersBE - Fylberding Patch.esp' but as it modifies a BE NPC it needs to load after whichever BE mod someone's using
-[Order]
-StinkersBE.esp
-Balmora Expansion v1.4.esp
-Balmora Expansion v1.4+(1.4).esp
-Balmora Expansion - LITE 1.0.esp
-BE+(1.4) Better Looking Morrowind.esp
-StinkersBE - Fylberding Patch.esp
+[Conflict]
+ You should use the version of "Balmora Expansion" which came with Stinkers 2.0.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+StinkersBE.esm
+[ANY Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
+
+[Note]
+ Ensure you are using the version of "Balmora Expansion" which came with Stinkers 2.0.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+[ALL StinkersBE.esm
+     Balmora Expansion v1.4.esp]
 
 [Patch]
  When using the Bathing Mod V2 with Balmora Expansion, there is a small problem with Fylberding not selling his soaps, which is corrected by using "StinkersBE - Fylberding Patch.esp".
@@ -25544,6 +25726,23 @@ StinkersBE - Fylberding Patch.esp
 	  Balmora Expansion - LITE 1.0.esp
 	  BE+(1.4) Better Looking Morrowind.esp]]
 
+[Patch]
+ When using the Bathing Mod V2 with Balmora Expansion, there is a small problem with Fylberding not selling his soaps, which is corrected by using "StinkersBE - Fylberding Patch.esp".
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+StinkersBE - Fylberding Patch.esp
+[ALL StinkersBE.esm
+     Balmora Expansion v1.4.esp]
+
+;; (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
+;; No mention of 'StinkersBE - Fylberding Patch.esp' but as it modifies a BE NPC it needs to load after whichever BE mod someone's using
+[Order]
+StinkersBE.esp
+Balmora Expansion v1.4.esp
+Balmora Expansion v1.4+(1.4).esp
+Balmora Expansion - LITE 1.0.esp
+BE+(1.4) Better Looking Morrowind.esp
+StinkersBE - Fylberding Patch.esp
+
 [Note]
  'Stinkers v2 - Modder's Resource.esp' should not be added into your game, it is for modders to add objects from "Stinkers and Bathers v2.0" to their mods and of itself adds nothing to the game world.
 Stinkers v2 - Modder's Resource.esp
@@ -25554,6 +25753,134 @@ Stinkers v2 - Modder's Resource.esp
 LGNPC_Aldruhn_v?_??.esp
 Stinkers.esp
 StinkersBE.esp
+
+;;Ref: "Stinkers v2 - Mod Compatibility Readme.txt"
+[Order]
+Uvirith's Legacy_Final_2.0.esp
+Stinkers v2 - Mod Compatibility.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Stinkers 3.0 [kid1293]
+
+[Note]
+ "Stinkers 3.0 - Modders Resource.esp" should NOT be checked, it is for modders to add objects from "Stinkers 3.0" to their mods and of itself adds nothing to the game world.
+Stinkers 3.0 - Modders Resource.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Stinkers v3 Addons [RaveBlack]
+
+[Patch]
+ "The Ascadian Rose Cottage DX compatibility patch [...] REQUIRES both Stinkers v3 AND Ascadian Rose Cottage DX."
+ (Ref: "v3 Addons Readme.rtf")
+ http://morrowind.nexusmods.com/mods/42294
+Stinkers ARC for v3.esp
+[ALL Stinkers 3.0.esp
+     Ascadian Rose Cottage DX.esm]
+
+[Order]
+Stinkers 3.0.esp
+Stinkers ARC for v3.esp
+
+[Conflict]
+ You should use Raveblack's alternative version of Korana's "Provincial Bath Shoppe"
+ (Ref: "v3 Addons Readme.rtf")
+ http://morrowind.nexusmods.com/mods/42294
+Stinkers 3.0.esp
+Provincial_Bath _Shoppe_v1.esp
+
+[Conflict]
+ Raveblack's "Stinkers PBS for v3.esp" is a replacement for Korana's "Provincial Bath Shoppe" and should not be used with Korana's original.
+ (Ref: "v3 Addons Readme.rtf")
+Provincial_Bath _Shoppe_v1.esp
+Stinkers PBS for v3.esp
+
+[Requires]
+ [Stinkers PBS for v3.esp] "REQUIRES [...] Stinkers v3"
+ (Ref: "v3 Addons Readme.rtf")
+Stinkers PBS for v3.esp
+Stinkers 3.0.esp
+
+[Order]
+Stinkers 3.0.esp
+Stinkers PBS for v3.esp
+
+[Patch]
+ "Stinkers BGMM/BGMF for v3.esp [...] REQUIRES both Stinkers v3 AND Buyable Ghorak Manor v3"
+ http://morrowind.nexusmods.com/mods/42294
+ (Ref: "v3 Addons Readme.rtf")
+Stinkers BGMM for v3.esp
+[ALL Stinkers 3.0.esp
+     BuyableGhorakManorM.esp]
+
+[Patch]
+ "Stinkers BGMM/BGMF for v3.esp [...] REQUIRES both Stinkers v3 AND Buyable Ghorak Manor v3"
+ http://morrowind.nexusmods.com/mods/42294
+ (Ref: "v3 Addons Readme.rtf")
+Stinkers BGMF for v3.esp
+[ALL Stinkers 3.0.esp
+     BuyableGhorakManorF.esp]
+
+[Conflict]
+ "Please only use the patch tailored to the version [of Monica21's "Buyable Ghorak Manor"] you're running (BGMM for male, BGMF for female)."
+ (Ref: "v3 Addons Readme.rtf")
+Stinkers BGMM for v3.esp
+Stinkers BGMF for v3.esp
+
+[Order]
+BuyableGhorakManorM.esp
+Stinkers BGMM for v3.esp
+
+[Order]
+Stinkers 3.0.esp
+Stinkers BGMM for v3.esp
+
+[Order]
+BuyableGhorakManorF.esp
+Stinkers BGMF for v3.esp
+
+[Order]
+Stinkers 3.0.esp
+Stinkers BGMF for v3.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Stinkers and LGNPC Aldruhn Compatibility Patch [aralin]
+
+;;Dragon32: For v2 of Stinkers (ESM version). http://morrowind.nexusmods.com/mods/42536
+
+[Conflict]
+ Only use one plugin:
+  "Stinkers BE + LGNPC Ald Ruhn Patch.ESP" - If you use the "Balmora Expansion"-compatible version of Gaius Atrius' "Stinkers".
+  "Stinkers + LGNPC Ald Ruhn Patch.ES" - If you use the standard version.
+ (Ref: http://morrowind.nexusmods.com/mods/42536 )
+Stinkers BE + LGNPC Ald Ruhn Patch.ESP
+Stinkers + LGNPC Ald Ruhn Patch.ESP
+
+[Patch]
+ "Bathing Mod Stinkers and LGNPC Aldruhn Compatibility Patch" by aralin fixes the missing door to the public bathhouse in Ald'ruhn.
+ http://morrowind.nexusmods.com/mods/42536
+Stinkers + LGNPC Ald Ruhn Patch.ESP
+[ALL Stinkers.esm
+     LGNPC_Aldruhn_v?_??.esp]
+
+;;Ref: http://morrowind.nexusmods.com/mods/42536
+[Order]
+LGNPC_Aldruhn_v?_??.esp
+Stinkers + LGNPC Ald Ruhn Patch.ESP
+
+[Patch]
+ "Bathing Mod Stinkers and LGNPC Aldruhn Compatibility Patch" by aralin fixes the missing door to the public bathhouse in Ald'ruhn.
+ http://morrowind.nexusmods.com/mods/42536
+Stinkers BE + LGNPC Ald Ruhn Patch.ESP
+[ALL StinkersBE.esm
+     LGNPC_Aldruhn_v?_??.esp]
+
+;;Ref: http://morrowind.nexusmods.com/mods/42536
+[Order]
+LGNPC_Aldruhn_v?_??.esp
+Stinkers BE + LGNPC Ald Ruhn Patch.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26212,6 +26539,32 @@ TarMar.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
 TarMar.esp
 Oluhan v1.13.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Tea Mod 1.1 [Stuporstar]
+
+[Patch] 
+ "[The Tea Mod] includes a NoM compatibility patch."
+ (Ref: "TeaMod_1.1_ReadMe.txt")
+TeaMod_NoM_Patch.esp
+[ALL TeaMod_1.1.esp
+     NoM 3.0.esp]
+
+;;Ref: "TeaMod_1.1_ReadMe.txt"
+[Order]
+TeaMod_1.1.esp
+NoM 3.0.esp
+
+[Order]
+NoM 3.0.esp
+TeaMod_NoM_Patch.esp
+
+[Requires]
+ "Tea Giving Add-on" is an add-on to Stuporstar's "The Tea Mod" and not a stand-alone mod.
+ (Ref: "TeaMod_1.1_ReadMe.txt")
+TeaMod_TeaGiving.esp
+TeaMod_1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31186,6 +31539,121 @@ Ash Ghoul Hearts.esp
  (Ref: "lfx_rare_ingredients.txt")
 lfx_rare_ingredients.esp
 lfx_rare_ingredients-uniques.esp
+
+;;Dragon32: Checked all these herbalism mod conflicts with TESPCD
+[Conflict]
+ "[lfx_rare_holly.esp] will most probably have been rendered redundant by your favourite herbalism mod."
+ (Ref: "lfx_rare_ingredients.txt")
+lfx_rare_holly.esp
+[ANY Advanced Herbalism - BM.esp
+     Advanced Herbalism - TR & BM.esp
+     Graphic Herbalism.esp
+     Herbalism Redux 1.12a - Bloated MW.esp
+     Herbalism Redux 1.12a.esp
+     Herbalism_Lite_+Bloodmoon_v1.0.esp]
+
+[Conflict]
+ "[lfx_rare_hornlily.esp] will most probably have been rendered redundant by your favourite herbalism mod."
+ (Ref: "lfx_rare_ingredients.txt")
+lfx_rare_hornlily.esp
+[ANY Advanced Herbalism - TR & BM.esp
+     Advanced Herbalism - TR.esp
+     Graphic Herbalism.esp
+     Herbalism Redux 1.12a - Bloated MW.esp
+     Herbalism Redux 1.12a.esp
+     Herbalism_Lite_+Tribunal_v1.0.esp
+     Herbalismv1.3(Tribunal).esp
+     Syc_HerbalismforPurists_TB_ONLY.esp
+     Ultra Light Herbalism.esp]
+
+;;Dragon32; load Alphax's merged versions before Herbalism mods
+[Order]
+lfx_rare_merged.esp
+Advanced Herbalism - BM.esp
+
+[Order]
+lfx_rare_merged.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+lfx_rare_merged.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+lfx_rare_merged.esp
+Graphic Herbalism.esp
+
+[Order]
+lfx_rare_merged.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+[Order]
+lfx_rare_merged.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+lfx_rare_merged.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+[Order]
+lfx_rare_merged.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+
+[Order]
+lfx_rare_merged.esp
+Herbalismv1.3(Tribunal).esp
+
+[Order]
+lfx_rare_merged.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
+
+[Order]
+lfx_rare_merged.esp
+Ultra Light Herbalism.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Advanced Herbalism - BM.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Graphic Herbalism.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Herbalismv1.3(Tribunal).esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
+
+[Order]
+lfx_rare_merged-uniques.esp
+Ultra Light Herbalism.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
