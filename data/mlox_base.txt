@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2013-06-28 14:34:46 (UTC)]
+[Version 2013-07-08 22:36:46 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -1006,6 +1006,47 @@ CAB_Alchemy Boxes-SrisAlchemy.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Essentials [Tealpanda]
+
+[Conflict]
+ "Alchemy Essentials contains five small alchemy mods. You can use them individually OR use the merged esp file."
+ (Ref: "Readme - Tealpanda's Alchemy Essentials.txt")
+Tealpanda's Alchemy Essentials.esp
+[ANY TAE - apparatus retexture.esp
+     TAE - essence potions.esp
+     TAE - ingredient trader.esp
+     TAE - TR essences and effects.esp]
+
+[Note]
+ ! "If you do not have Tribunal, Bloodmoon, and Tamriel Rebuilt installed you will NEED to use the folder "Optional - Ingredient Retexture" to use most of these mods."
+ ! (Ref: "Readme - Tealpanda's Alchemy Essentials.txt")
+[ALL [ANY Tealpanda's Alchemy Essentials.esp
+          TAE - essence potions.esp
+          TAE - ingredient trader.esp
+          TAE - TR essences and effects.esp]
+     [NOT [ANY Tribunal.esm
+               Bloodmoon.esm
+               TR_Data.esm]]]
+
+;;Dragon32: Checked Wakim's and it doesn't conflict
+[Note]
+ ! "Things that change ingredient effects (like Sri's Alchemy or BTB's Alchemy mod) might make the ingredient lists make less sense, but [Essence Potions] will still work."
+ ! (Ref: "Readme - Tealpanda's Alchemy Essentials.txt")
+[ALL [ANY TAE - essence potions.esp
+          Tealpanda's Alchemy Essentials.esp]
+     [ANY Sris_Alchemy_BM.esp
+          BTB - Alchemy.esp
+          BTB - Sorted Alchemy.esp]]
+
+[Conflict]
+ "TR Essences and Effects - Might overwrite other things that change the weights or ingredient effects on expansion ingredients."
+ (Ref: "Readme - Tealpanda's Alchemy Essentials.txt")
+[ANY TAE - TR essences and effects.esp
+     Tealpanda's Alchemy Essentials.esp]
+Tribunal - Realistic Ingredient Weights.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alchemy Lab for Bob's Armory [Horny Buddha]
 
 [Requires]
@@ -1046,7 +1087,9 @@ AlchemyStorageHelper10.esp
     Unable to find script 'ASH_Zombie_S' on object 'ASH_Dead'
  The non-existent script "ASH_Zombie_S" is assigned to "ASH_Dead", a leftover NPC not used by the mod. You can delete the "ASH_Dead" NPC from the mod using the Construction Set. The mod works fine without it.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?act=findpost&hl=ASH_Zombie_S&pid=13726158 )
-ASH2.0.esp
+ Leonardo has released a patched version of "Alchemy Storage Helper" fixing this error:
+ http://mw.modhistory.com/download-1-11736
+[SIZE !11054 ASH2.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3144,6 +3187,7 @@ BE+(1.4) Better Looking Morrowind.esp
 ; (Ref: "http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13485819 )
 [Order]
 Vality's Balmora Addon.esp
+Vality's Balmora for Vurt's BC.esp ;Knots' modified version
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
 BE+(1.4) Better Looking Morrowind.esp
@@ -3151,6 +3195,7 @@ BE+(1.4) Better Looking Morrowind.esp
 ; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=978167&view=findpost&p=14137890 )
 [Order]
 Vality's Bitter Coast Addon.esp
+Vality's BC for Vurt's BC.esp ;Knots' modified version
 Balmora Expansion v1.4.esp
 Balmora Expansion v1.4+(1.4).esp
 Balmora Expansion - LITE 1.0.esp
@@ -5953,21 +5998,31 @@ Castle Vianden V2.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Chalk 3.0 [ManaUser]
+;; @Chalk 3.1.0 [ManaUser]
+
+[Note]
+ ! There is a newer version of Chalk available (v3.1.0), you should upgrade!
+ ! http://webpages.charter.net/manauser/morrowind/
+Chalk20.esp
 
 ;; expdep
 [Requires]
  "Chalk30-Base.esp" requires Tribunal or Bloodmoon for scripting functions.
- (Ref: "Chalk30-Base - Readme.txt")
+ (Ref: "Chalk30 - Readme.txt")
 Chalk30-Base.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-[Note]
- There is a newer version of Chalk available (v3.0), you should upgrade!
- http://webpages.charter.net/manauser/morrowind/
-Chalk20.esp
+[Requires]
+ "If you want to add glowing chalk, put a check by Chalk30-Glow.esp as well [as Chalk30-Base.esp]"
+ (Ref: "Chalk30 - Readme.txt")
+Chalk30-Glow.esp
+Chalk30-Base.esp
 
+;;Dragon32: TESPCD shows SCPT conflict between these two
+[Order]
+Chalk30-Base.esp
+Chalk30-Glow.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Changing Faces Replacer [Leeloo]
@@ -5990,6 +6045,18 @@ Chalk20.esp
  !! "chapelsv2.esp" contains dirty Tribunal GMSTs, use "Clean chapelsv2.esp" instead!
 Clean chapelsv2.esp
 chapelsv2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Character Maker [Zerocyde]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ Character Maker.esp is for starting normally.
+ Character Maker (qs).esp is for a quick start.
+ (Ref: character_maker_v1.1.zip/"ReadMe.txt")
+Character Maker.esp
+Character Maker (qs).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6031,29 +6098,6 @@ Vampire Birthsigns.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @CharGen Revamped [gman21]
-
-[Conflict]
- gman21's "CharGen Revamped" includes "Character Maker" by Zerocyde.
- (Ref: "chargen_revamped_v14.zip\readme.txt")
-[ANY Character Maker.esp
-     Character Maker (qs).esp]
-CharGen_Revamped_v14.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Character Maker [Zerocyde]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- Character Maker.esp is for starting normally.
- Character Maker (qs).esp is for a quick start.
- (Ref: character_maker_v1.1.zip/"ReadMe.txt")
-Character Maker.esp
-Character Maker (qs).esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Chargen mods [Various]
 
 [Conflict]
@@ -6085,10 +6129,22 @@ ZAS1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @CharGen Revamped [gman21]
+
+[Conflict]
+ gman21's "CharGen Revamped" includes "Character Maker" by Zerocyde.
+ (Ref: "chargen_revamped_v14.zip\readme.txt")
+[ANY Character Maker.esp
+     Character Maker (qs).esp]
+CharGen_Revamped_v14.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Chargen Revamped v2.3 [Pwin/Eisenfaust]
 
 [Note]
- A new version of "Chargen Revamped", version 2.3, is available. You should upgrade.
+ ! A new version of "Chargen Revamped", version 2.3, is available. You should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6845
 Chargen_Revamped_v2_1.esp
 
 [Conflict]
@@ -6103,6 +6159,13 @@ Clean Chargen_Revamped_v2_3.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=874116&st=0&start=0 )
 Chargen_Revamped_v2_3.esp
 CharGen Revamped delay2.esp
+
+[Conflict]
+ "I'd been having trouble with this mod [Chargen_Revamped_v2.3], and finally found the conflict. If you ALSO have The Goblin Lab (v1.1 at least) installed, [The Goblin Lab]'s menu messes up [Chargen Revamped] 2.3's menu. It still pops, but none of the choices DO anything, leaving you stuck in that little room...forever.
+ Un-marking [The Goblin Lab] to get through chargen seems to fix the issue cleanly."
+ (Ref: http://forums.bethsoft.com/topic/874116-relzchargen-revamped-v2/?p=15485709 )
+The Goblin Lab v1.1.esp
+Clean Chargen_Revamped_v2_3.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8820,6 +8883,26 @@ Elders MCA Add-on.esp
 [ALL [SIZE 123422 Elders MCA Add-on v2.0.esp]
      [VER = 2.02 Elders MCA Add-on v2.0.esp]]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Elemental Magicka II [NMZmaster]
+
+[Requires]
+ "[Elemental Magicka II.ESP] is the master that contains all of my scripts and methods."
+ (Ref: "Elemental Magicka II.txt")
+[ANY Elemental Magicka II - Of Fire and Frost.ESP
+     Elemental Magicka II - Of Earth and Air.ESP
+     Elemental Magicka II - MWSE Addon.ESP]
+Elemental Magicka II.ESP
+
+;;Ref: Elemental Magicka II.txt
+[Order]
+Elemental Magicka II.ESP
+Elemental Magicka II - Of Fire and Frost.ESP
+Elemental Magicka II - Of Earth and Air.ESP
+Elemental Magicka II - MWSE Addon.ESP
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Elias' Amulet of Charm  [Tenaka]
 
@@ -8868,6 +8951,18 @@ Enchantable Gloves of the Bal Molagmer (uber).esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 10311 Enchanted Weapons.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Enchanting Realism [DesT]
+
+[Conflict]
+ Only use one plugin;
+  "Enchanting_Realism_eng_all.esp" - Contains additional magical effects available for enchantment.
+  "Enchanting_Realism_eng.esp" - Contains only the effects that the player can buy individually or receive as a reward for a quest.
+ (Ref: "Enchanting realism ReadmeEng.txt")
+Enchanting_Realism_eng.esp
+Enchanting_Realism_eng_all.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11244,43 +11339,20 @@ Glow-Away.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Go To Jail 3.7 [Arcimaestro Antares]
+;; @The Goblin Lab 1.1 [Timpy & The_Conjurer]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! The readme says "There has been a new hard-coded magic effect called "Uncover" added to the game." This GMST (sEffectExtraSpell) is preserved after cleaning the mod with both TESTool and tes3cmd.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 7776035 The Goblin Lab v1.1.esp]
 
 [Conflict]
- Choose ONLY ONE of these plugins.
- "Go To Jail 3.7 - NOM.esp" - For users of Taddeus' "Necessities of Morrowind"
- "Go To Jail 3.7.esp" - For people who do not use NoM
- (Ref: "Go to Jail 3.7 README.txt")
-Go To Jail 3.7 - NOM.esp
-Go To Jail 3.7.esp
-
-[Requires]
- (Ref: "Go to Jail 3.7 README.txt")
-Go To Jail 3.7 - NOM.esp
-NoM 3.0.esp
-
-;;Dragon32: Order rules for 3.5, assume still relevant for 3.7
-;;Ref: http://forums.bethsoft.com/index.php?/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load- order/page__view__findpost__p__18170102
-;;Fixes a landscape (?) error
-[Order]
-Go To Jail 3.7 - NOM.esp
-Immersive Chargen.esp
-
-[Order]
-Go To Jail 3.7.esp
-Immersive Chargen.esp
-
-;;Dragon32: PES pages reports a conflict with Yacoby's Pursuit Enhanced (q.v.), the readme for that implies no conflict with its latest version.
-[Conflict]
- Arcimaestro Antares's "Go To Jail" conflicts with Aerelorn's "Less Annoying Guards" and Gianluca Sabbatini's "GS_Tamriel: Tribute to the Community"
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5409 )
-[ANY Go To Jail 3.7 - NOM.esp
-     Go To Jail 3.7.esp]
-[ANY GS_Tamriel Tribute to The Comunity.esm
-     Less Annoying Guards - Tribunal.esp
-     Less Annoying Guards - Bloodmoon.esp
-     Less Annoying Guards - Tribunal and Bloodmoon.esp]
-
+ Landmass conflict.
+ http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg
+The Goblin Lab v1.1.esp
+[ANY N'Dib_5.esp
+     Korobal v1.2.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Gold Adamantium Armor Set  [Elric_Melnibone]
@@ -11463,6 +11535,45 @@ qarls gothic atire in ravenloft  mod.ESP
 [Order]
 Ravenloft_v0502d.esp
 qarls gothic atire in ravenloft  mod.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Go To Jail 3.7 [Arcimaestro Antares]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Go To Jail 3.7 - NOM.esp" - For users of Taddeus' "Necessities of Morrowind"
+ "Go To Jail 3.7.esp" - For people who do not use NoM
+ (Ref: "Go to Jail 3.7 README.txt")
+Go To Jail 3.7 - NOM.esp
+Go To Jail 3.7.esp
+
+[Requires]
+ (Ref: "Go to Jail 3.7 README.txt")
+Go To Jail 3.7 - NOM.esp
+NoM 3.0.esp
+
+;;Dragon32: Order rules for 3.5, assume still relevant for 3.7
+;;Ref: http://forums.bethsoft.com/index.php?/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load- order/page__view__findpost__p__18170102
+;;Fixes a landscape (?) error
+[Order]
+Go To Jail 3.7 - NOM.esp
+Immersive Chargen.esp
+
+[Order]
+Go To Jail 3.7.esp
+Immersive Chargen.esp
+
+;;Dragon32: PES pages reports a conflict with Yacoby's Pursuit Enhanced (q.v.), the readme for that implies no conflict with its latest version.
+[Conflict]
+ Arcimaestro Antares's "Go To Jail" conflicts with Aerelorn's "Less Annoying Guards" and Gianluca Sabbatini's "GS_Tamriel: Tribute to the Community"
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5409 )
+[ANY Go To Jail 3.7 - NOM.esp
+     Go To Jail 3.7.esp]
+[ANY GS_Tamriel Tribute to The Comunity.esm
+     Less Annoying Guards - Tribunal.esp
+     Less Annoying Guards - Bloodmoon.esp
+     Less Annoying Guards - Tribunal and Bloodmoon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16457,6 +16568,15 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Maar Gan Extended 1.01 [ManualIntelligence]
+
+[Note]
+ ! A new version of ManualIntelligence's "Maar Gan Extended" is available, 1.01. You should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5758
+Maar Gan Extended.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Madd Leveler [Madd Mugsy/Sederien]
 
 ;; ALL PLUGINS REQUIRE THE MADD LEVELER - BASE.ESP TO BE INSTALLED AND LOADED FIRST!
@@ -16732,6 +16852,8 @@ CastReduce-v30.esp
 
 [Conflict]
  All of these plugins allow the player to regenerate lost magicka, you only need one of these plugins running.
+;;Morrowind Better Gameplay [LegoManIAm94]
+Better Gameplay.esp
 ;;Dynamic Magicka Regeneration 2.0 [Duncan]
 [ANY DynamicMagickaRegeneration-2.0.esp
      DynamicMagickaRegeneration-2.0-Tribunal.esp]
@@ -16764,7 +16886,8 @@ Mana_Regen_v13.esp
           GCDLean204STD.esp
           GCDLean204EASY.esp
           GCDLean204HARD.esp]
-     [ANY DynamicMagickaRegeneration-2.0.esp
+     [ANY Better Gameplay.esp
+          DynamicMagickaRegeneration-2.0.esp
           DynamicMagickaRegeneration-2.0-Tribunal.esp
           DynamicMagickaRegeneration-2.1.esp
           DynamicMagickaRegeneration-2.1-Tribunal.esp
@@ -16778,6 +16901,47 @@ Mana_Regen_v13.esp
           Mana_Regen_v13.esp
           TyrMagickaRegen.ESP
           TyrMagickaRegenSlower.ESP]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magicka Regen for NPCs 2.5 [Kalamestari_69]
+
+[Note]
+ ! There is a new version of Kalamestari_69's "Magicka Regen for NPCs", 2.5. You should upgrade!
+ ! http://morrowind.nexusmods.com/mods/26466
+[ANY Clean K_69's Regen.esp
+     Clean Normal Regen.esp
+     Clean Wakim's Regen.esp
+     Clean K_69's Immersive Regen.esp
+     Clean Normal immersive  Regen.esp
+     Clean Wakim's Immersive Regen.esp
+     Clean NPC Unlimited Magicka.esp]
+
+;;Dragon32: Expansion dependency not in plugin headers
+[Requires]
+ "REQUIRES: TRIBUNAL OR BLOODMOON"
+ (Ref: "Magicka Regen for NPC's.txt")
+[ANY NPC Magicka Regen (K_69).esp
+     NPC Magicka Regen (Normal).esp
+     NPC Magicka Regen (Wakim).esp]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Only use one plugin:
+  "NPC Magicka Regen (K_69).esp" - Oblivion style abilities and magicka regen added to all races.
+  "NPC Magicka Regen (Normal).esp" - Just magicka regen ability added to all the races.
+  "NPC Magicka Regen (Wakim).esp" - "Wakim's Game Improvement's Balance - Character mod" effects and magicka regen added to all races.
+ (Ref: "Magicka Regen for NPC's.txt")
+NPC Magicka Regen (K_69).esp
+NPC Magicka Regen (Normal).esp
+NPC Magicka Regen (Wakim).esp
+
+[Conflict]
+ Kalamestari_69's "Clean Wakim's Regen.esp" adds "Wakim's Game Improvement's Balance - Character mod" effects and magicka regen added to all races.
+ (Ref: "Magicka Regen for NPC's.txt")
+NPC Magicka Regen (Wakim).esp
+Balance - Character.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16890,6 +17054,63 @@ newarrows - crossbow realism.esp
  (Ref: "Marksmanmod README.doc")
 newarrows.esp
 newarrowsLITE.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Marriage of Vality's Ascadian Isles mod with Vurt's trees [Macready]
+
+[Conflict]
+ "If you are currently using Vality's Ascadian Isles mod [with Macready's "Marriage of Vality's Ascadian Isles mod with Vurt's trees"], uninstall [Vality's "Ascadian Isles"]."
+ (Ref: "ValityAIMod_VurtTrees.7z\readme.txt")
+Vality's Ascadian Isles Addon.esp
+ValityAIMod_VurtTrees.esp
+
+;; Ref: "ValityAIMod_VurtTrees.7z\readme.txt"
+;;  This mod coexists peacefully with the following Ascadian Isles mods (so long as my .esp is dated EARLIER):
+;;  - Unused well of Pelagiad (jman0war)
+[Order]
+ValityAIMod_VurtTrees.esp
+Well.esp
+
+;;  - Suran Extended (Princess Stomper)
+[Order]
+ValityAIMod_VurtTrees.esp
+Clean Suran Extended.esp
+Suran Extended Family.esp
+
+;;  - Suran Archery Tradehouse (WizBang)
+[Order]
+ValityAIMod_VurtTrees.esp
+Suran Archery Store_v3.0.esp
+Suran Archery Store_v3.0 NSE.esp ;;version from Nicholiathan's New Suran Extended
+
+;;  - Ascadian Rose Cottage (Korana)
+[Order]
+ValityAIMod_VurtTrees.esp
+Ascadian_Rose_Cottage_ver1.0.esp
+
+;;  - Provincial Bath Shoppe (Korana)
+[Order]
+ValityAIMod_VurtTrees.esp
+Provincial_Bath _Shoppe_v1.esp
+Provincial_Bath _Shoppe_for_Stinkers.esp ;;Stinkers 1.71
+Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp ;;Stinkers 2.0
+Stinkers PBS for v3.esp ;;Stinkers v3
+
+;;  - LGNPC Pelagiad (LGNPC team)
+[Order]
+ValityAIMod_VurtTrees.esp
+LGNPC_Pelagiad_v?_??.esp
+LGNPC Gowns.esp ;;Starfire Compatibility ESPs [Spiffyman]
+
+;;Dragon32: New Suran Extended by Nicholiathan includes Princess Stomper's Suran Extended.
+[Order]
+ValityAIMod_VurtTrees.esp
+New Suran Extended 1.5.esp
+Balanced NSE 1.5.esp
+New Suran Extended CoM 1.5.esp
+Balanced NSE CoM 1.5.esp
+Suran Archery Store_v3.0 NSE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17931,6 +18152,29 @@ MW_Adv_Required (BTB Edit).esp
  ! http://morrowind.nexusmods.com/mods/31635
  ! (Ref: "readme_dirnae_anims.txt")
 Dirnae's Slower Walk.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Better Gameplay [LegoManIAm94]
+
+;; See also "@Magicka regeneration mods [Various]"
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 138260 Better Gameplay.esp]
+
+[Requires]
+ "Requires Better Gameplay"
+ (Ref: "Better Gameplay (Bloodmoon).ESP" mod Description)
+Better Gameplay (Bloodmoon).ESP
+Better Gameplay.esp
+
+[Requires]
+ "Requires Better Gameplay"
+ (Ref: "Better Gameplay (Tribunal).ESP" mod Description)
+Better Gameplay (Tribunal).ESP
+Better Gameplay.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19749,6 +19993,7 @@ CE-DepthPerception75.esp
 CE-DepthPerception100+BTB's Character.ESP
 CE-DepthPerception100.esp
 Detect Owner.esp
+Elemental Magicka II - MWSE Addon.ESP
 Gravedigger.esp
 Inventory Search.esp
 mel_teleportPlugin_1_3.esp
@@ -23775,12 +24020,12 @@ SG_Ryukaissen-M.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Sable Dragon [Pluto]
+;; @The Sable Dragon 1.6 [Pluto]
 ; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15129126
 
 [Note]
- There is a newer version of The Sable Dragon available:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7817
+ ! There is a newer version of The Sable Dragon available, 1.6. You should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7817
 The Sable Dragon.esp
 The Sable Dragon 1.5.esp
 
@@ -24412,6 +24657,18 @@ Waterfall v1.0.esp
 ;; "This plugin is to be used with mods designed to be compatible with The Bathing Mod v2.
 ;; It resets the scripts for activators from the Modder's Resource, to insure that they work as intended.
 ;; It is to be loaded AFTER any such compatible mods."
+[Patch]
+ "[Stinkers v2 - Mod Compatibility.esp] is to be used with mods designed to be compatible with The Bathing Mod v2. It resets the scripts for activators from the Modder's Resource, to insure that they work as intended."
+ If you are running the version of "Sgaileach Estate" which is compatible with Gaius Atrius' "The Bathing Mod 2.0" download "Stinkersv2__Mod_Compatibility.7z" from Planet Elder Scrolls: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
+ (Ref: "Stinkers v2 - Mod Compatibility Readme.txt")
+Stinkers v2 - Mod Compatibility.esp
+[ALL [ANY [DESC /Version 2.01/ sg1-sgaileach_estate.esp]
+          [DESC /Version 2.01/ sg1-sgaileach_estate-NOM.esp]]
+     [ANY [VER >1.71 Stinkers.esp]
+          StinkersBE.esp
+          Stinkers.esm
+          StinkersBE.esm]]
+
 [Order]
 sg1-sgaileach_estate.esp
 Stinkers v2 - Mod Compatibility.esp
@@ -25215,6 +25472,81 @@ Sri Alchemy BM List Patch.esp
 [ALL Sris_Alchemy_Trib.esp
      Bloodmoon.esm]
 
+;;Ref: "README_Sris_Alchemy_Remixed.txt" - "Srikandi's alchemy included container references for Slough Ferns and one out of six variations of Belladona plants.  These just adjusted the quantity of ingredients provided by the plants, but would override attached scripts used in herbalism mods if Sri's Alchemy was loaded later in the load order."
+[Order]
+Sris_Alchemy_BM.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Advanced Herbalism - BM.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Graphic Herbalism.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Herbalismv1.3(Tribunal).esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Herbalismv1.1.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Syc_HerbalismforPurists.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Herbalism_Lite_v1.0.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Herbalism Redux 1.12a.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+HR 1.12a BMW + EW 1.5.esp
+
+[Order]
+Sris_Alchemy_BM.esp
+Ultra Light Herbalism.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sri's Alchemy (Bloodmoon Edition) Remixed! [Adeliedreams]
+
+[Conflict]
+ "If you are using Wrye's "Sri Alchemy BM List Patch.esp" - disable the patch in your mod list."
+ (Ref: "README_Sris_Alchemy_Remixed.txt")
+[DESC /Adelie/ Sris_Alchemy_BM.esp]
+Sri Alchemy BM List Patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @ss_DBNRDZ [Silver Sorrow]
@@ -25658,14 +25990,16 @@ Provincial_Bath _Shoppe_for_Stinkers.esp
 Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp
 
 [Patch]
- The Ascadian Rose Cottage patch is to be used with BOTH the Ascadian Rose Cottage mod, and Stinkers v2
+ The Ascadian Rose Cottage patch is to be used with BOTH the Ascadian Rose Cottage mod (both Korana's original and Gaius Atrius' "Ascadian Rose Cottage DX"), and Stinkers v2
+ Download "Stinkers_v2__Compatibility_Plugins.7z" from Planet Elder Scrolls.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304 )
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
 [ALL [ANY [VER >1.71 Stinkers.esp]
           StinkersBE.esp
           Stinkers.esm
           StinkersBE.esm]
-     Ascadian_Rose_Cottage_ver1.0.esp]
+     [ANY Ascadian_Rose_Cottage_ver1.0.esp
+          Ascadian Rose Cottage DX.esm]]
 
 [Conflict]
  These two plugins are from two different versions of The Bathing Mod, and should not be used together. If you want to use version 2.0 of the mod by Gaius Atrius, you should remove the old "Ascadian_Rose_Cottage_ver1.0.esp" by grVulture.
@@ -25681,7 +26015,6 @@ Stinkers v2 - Ascadian Rose Cottage Patch.esp
 Stinkers.esp
 StinkersBE.esp
 Stinkers v2 - Ascadian Rose Cottage Patch.esp
-
 
 [Conflict]
  When using Stinkers/The Bathing Mod V2 with Balmora Expansion, use "StinkersBE.esp" INSTEAD of "Stinkers.esp".
@@ -25753,6 +26086,18 @@ Stinkers v2 - Modder's Resource.esp
 LGNPC_Aldruhn_v?_??.esp
 Stinkers.esp
 StinkersBE.esp
+
+[Patch]
+ "[Stinkers v2 - Mod Compatibility.esp] is to be used with mods designed to be compatible with The Bathing Mod v2. It resets the scripts for activators from the Modder's Resource, to insure that they work as intended."
+ Download "Stinkersv2__Mod_Compatibility.7z" from Planet Elder Scrolls:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
+ (Ref: "Stinkers v2 - Mod Compatibility Readme.txt")
+Stinkers v2 - Mod Compatibility.esp
+[ALL Uvirith's Legacy_Final_2.0.esp
+     [ANY [VER >1.71 Stinkers.esp]
+          StinkersBE.esp
+          Stinkers.esm
+          StinkersBE.esm]]
 
 ;;Ref: "Stinkers v2 - Mod Compatibility Readme.txt"
 [Order]
@@ -26476,6 +26821,11 @@ Private_Tower_Ordeal.esp
 TR_Mainland.esm
 Season of the Harvest v1.1.esp
 
+[Conflict]
+ Landmass conflict.
+ http://forums.nexusmods.com/index.php?/topic/152538-tel-nechim/?p=7720962
+TR_Mainland.esm
+Tel Nechim.esp
 
 ;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
 ;[Conflict]
@@ -27711,6 +28061,25 @@ Ultimate Galleon Purchase Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Knight Shop Leveled [Crankgorilla]
+
+[Note]
+ "Requires Ultimate Knight Shop by Orry, aka "The Hand of God" . You don't nessesarily need to run the mod itself, but you will need the files."
+ (Ref: "Ultimate Knightshop Leveled README.txt")
+[ALL Ultimate Knight Shop Leveled.esp
+     [NOT The Ultimate Knight Shop.esp]]
+
+;;Dragon32: "Ultimate Knight Shop Leveled.esp" includes ARMO records which conflict with some other Ultimate Knight Shop mods, load them after. Might help.
+[Order]
+Ultimate Knight Shop Leveled.esp
+Clean NofemKnights.esp
+
+[Order]
+Ultimate Knight Shop Leveled.esp
+Leggings for Ultimate Knight Shop.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ultra Light Herbalism [Qwert]
 
 ;;Dragon32: See also - @Herbalism mods [Various]
@@ -28046,6 +28415,19 @@ Psy_UniqueDremora_T.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Unique Finery Replacer 3.2 [Alaisiagae]
 
+[Note]
+ ! You have an old version of Alaisiagae's "Unique Finery Replacer". A new version, 3.2, is available. you should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7673
+[ANY UniqueFinery.esp
+     UniqueFinery_NoRobe.esp
+     UFR_v2_base.esp
+     UFR_v2_ADDON-Rings.esp
+     UFR_v2_ADDON-Robes.esp
+     UFR_v3.esp
+     UFR_v3_noRobe.esp
+     UFR_v3dot1.esp
+     UFR_v3dot1_noRobe.esp]
+
 [Conflict]
  Do not run both plugins:
   UFR_v3dot2.esp - If you WANT the changes to the robes
@@ -28124,13 +28506,47 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Unique Jewelry and Accessories [Tealpanda]
+;; @Unique Jewelry and Accessories 2.71 [Tealpanda]
 
 [Conflict]
  Unique Jewelry and Accessories contains the changes made by Ring Texture Fix by Random Name.
- (Ref: Readme - Unique Jewelry and Accessories by tealpanda)
+ (Ref: "Readme - Unique Jewelry and Accessories by tealpanda.txt")
 Unique Jewelry and Accessories.esp
 Ring Texture Fix.esp
+
+[Conflict]
+ "Don't use both the regular version and the "_no ench" version. The "_no ench" version does not have quests or BB clothing."
+ (Ref: "Readme - Unique Jewelry and Accessories by tealpanda.txt")
+Unique Jewelry and Accessories.esp
+Unique Jewelry and Accessories_no ench.esp
+
+;;Dragon32: Ran a TESPCD check against all the BTB and Wakim mods I have. Added in rules for mods which merge those plugins too.
+[Note]
+ "[Unique Jewelry and Accessories_no ench.esp from "Unique Jewelry and Accessories" by Tealpanda] is recommended if you use BTB Game Improvements, Wakin's Game Improvements, or other things that mess with the strength of enchantments, value of loot, etc."
+ (Ref: "Readme - Unique Jewelry and Accessories by tealpanda.txt")
+[ALL Unique Jewelry and Accessories.esp
+     [ANY Balance - items.esp
+          BTB - Equipment.esp
+          BTB - Settings.esp
+          BTB - Settings (Alternate).esp
+          BTB - Unique Finery Equipment.esp
+          HELLUVA Balanced BTB.esp
+          HELLLUVA Balanced BTB CS.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+;; "Compatible with Unique Finery Replacer (UFR) by Alaisiagae, just load her mod after this one."
+;; Ref: "Readme - Unique Jewelry and Accessories by tealpanda.txt"
+[Order]
+Unique Jewelry and Accessories.esp
+Unique Jewelry and Accessories_no ench.esp
+UFR_v3dot2.esp
+UFR_v3dot2_noRobe.esp
+
+[Order]
+Unique Jewelry and Accessories.esp
+Unique Jewelry and Accessories_no ench.esp
+BTB - Unique Finery Equipment.esp		;BTB's Unique Finery Equipment 1.5 [Revan]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28141,6 +28557,26 @@ Ring Texture Fix.esp
  (Ref: "Unique Items.txt")
 Unique Items - Monster Specific.esp
 Unique Items.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Maar Gan [basswalker]
+
+[Patch]
+ "["unique Maar Gan - extended addon.esp" is an] addon for use with "Maar Gan Extended"." Download it from Planet Elder Scrolls:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8853
+unique Maar Gan - extended addon.esp
+[ALL unique Maar Gan.esp
+     Maar_Gan_Extended.esp]
+
+;;Ref: "load after "unique Maar Gan" and "Maar Gan Extended"." http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8853
+[Order]
+unique Maar Gan.esp
+unique Maar Gan - extended addon.esp
+
+[Order]
+Maar_Gan_Extended.esp
+unique Maar Gan - extended addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28217,8 +28653,21 @@ Ushindra Beach v1.2 Master Headpack X Addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Uvirith Inside [The DopeHatMan]
+;; @Uvirith Inside 1.6 [The DopeHatMan]
 
+;;Dragon32: Text only exists in v1.52's description, not 1.6
+[Note]
+ ! There is a new version of The DopeHatMan's "Uvirith Inside" available, 1.6. You should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=766
+[DESC !/Icons in DDS format/ Uvirith Inside.esp]
+
+;;Dragon32: Only v1.6, not v1.52
+[Note]
+ !! This plugin suffers from "SignRotate Contamination". It includes three "dirty" scripts (DagothUrCreature1, EndGame and LorkhanHeart). The ESP needs cleaning to remove these "dirty" scripts.
+ !! Ref: http://wryemusings.com/GMST%20Vaccine.html
+[SIZE 1118342 Uvirith Inside.esp]
+
+;;v1.52 only
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
@@ -28230,6 +28679,17 @@ Ushindra Beach v1.2 Master Headpack X Addon.esp
 Uvirith Inside.esp
 [ANY Uvirith Unleashed v1.2.esp
      uvirithvaultv10.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Uvirith Inside Patch 1.61 [The Mad God]
+
+[Note]
+ ! The Mad God has patched v1.6 of The DopeHatMan's "Uvirith Inside", consider upgrading.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4830
+[ANY [SIZE 1118342 Uvirith Inside.esp] ;;v6 uncleaned
+     [SIZE 1100376 Uvirith Inside.esp] ;;v6 cleaned with TESTool
+     [SIZE 1110978 Uvirith Inside.esp]] ;;v6 cleaned with tes3cmd
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28779,6 +29239,7 @@ Tenpacebootsfix.esp
 TreboniusAntabolisFix_0606.esp
 Tribunal Crimson Plague tweaker.esp
 TribunalQuestFix.esp
+Tribunal - Realistic Ingredient Weights.esp
 UupseFix.esp
 vampfix.esp
 vampirequestrepair.esp
@@ -29154,6 +29615,14 @@ TreboniusAntabolisFix_0606.esp
 Tribunal Crimson Plague tweaker.esp
 
 [Conflict]
+ The MPP obsoletes Tribunal - Realistic Ingredient Weights (MadPauly).
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=946462&view=findpost&p=13837411
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
+Tribunal - Realistic Ingredient Weights.esp
+
+[Conflict]
  The MPP obsoletes Vampire Levitation Fix (Kal Choedan).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
@@ -29495,12 +29964,148 @@ Vader.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vality's AI for Vurt's AI [knots]
+
+[Conflict]
+ "[Vality's AI for Vurt's AI.esp is a] modified version of Vality7's Ascadian Isles .esp, specifically for use with Vurt's Ascadian Isles tree overhaul"
+ You should not use Vality's original plugin with Knots' "Vality's AI for Vurt's AI.esp"
+ (Ref: "Vality's AI for Vurt's AI.zip\README.txt")
+Vality's Ascadian Isles Addon.esp
+Vality's AI for Vurt's AI.esp
+
+;;Dragon32 - Order rules adapted from "@Marriage of Vality's Ascadian Isles mod with Vurt's trees [Macready]"
+
+;;  This mod coexists peacefully with the following Ascadian Isles mods (so long as my .esp is dated EARLIER):
+;;  - Unused well of Pelagiad (jman0war)
+[Order]
+Vality's AI for Vurt's AI.esp
+Well.esp
+
+;;  - Suran Extended (Princess Stomper)
+[Order]
+Vality's AI for Vurt's AI.esp
+Clean Suran Extended.esp
+Suran Extended Family.esp
+
+;;  - Suran Archery Tradehouse (WizBang)
+[Order]
+Vality's AI for Vurt's AI.esp
+Suran Archery Store_v3.0.esp
+Suran Archery Store_v3.0 NSE.esp ;;version from Nicholiathan's New Suran Extended
+
+;;  - Ascadian Rose Cottage (Korana)
+[Order]
+Vality's AI for Vurt's AI.esp
+Ascadian_Rose_Cottage_ver1.0.esp
+
+;;  - Provincial Bath Shoppe (Korana)
+[Order]
+Vality's AI for Vurt's AI.esp
+Provincial_Bath _Shoppe_v1.esp
+Provincial_Bath _Shoppe_for_Stinkers.esp ;;Stinkers 1.71
+Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp ;;Stinkers 2.0
+Stinkers PBS for v3.esp ;;Stinkers v3
+
+;;  - LGNPC Pelagiad (LGNPC team)
+[Order]
+Vality's AI for Vurt's AI.esp
+LGNPC_Pelagiad_v?_??.esp
+LGNPC Gowns.esp ;;Starfire Compatibility ESPs [Spiffyman]
+
+;;Dragon32: New Suran Extended by Nicholiathan includes Princess Stomper's Suran Extended.
+[Order]
+Vality's AI for Vurt's AI.esp
+New Suran Extended 1.5.esp
+Balanced NSE 1.5.esp
+New Suran Extended CoM 1.5.esp
+Balanced NSE CoM 1.5.esp
+Suran Archery Store_v3.0 NSE.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vality's Ascadian Isles Addon [Vality]
+
+;;Dragon32: Ordering rules stolen from "@Marriage of Vality's Ascadian Isles mod with Vurt's trees [Macready]"
+
+;;  This mod coexists peacefully with the following Ascadian Isles mods (so long as my .esp is dated EARLIER):
+;;  - Unused well of Pelagiad (jman0war)
+[Order]
+Vality's Ascadian Isles Addon.esp
+Well.esp
+
+;;  - Suran Extended (Princess Stomper)
+[Order]
+Vality's Ascadian Isles Addon.esp
+Clean Suran Extended.esp
+Suran Extended Family.esp
+
+;;  - Suran Archery Tradehouse (WizBang)
+[Order]
+Vality's Ascadian Isles Addon.esp
+Suran Archery Store_v3.0.esp
+Suran Archery Store_v3.0 NSE.esp ;;version from Nicholiathan's New Suran Extended
+
+;;  - Ascadian Rose Cottage (Korana)
+[Order]
+Vality's Ascadian Isles Addon.esp
+Ascadian_Rose_Cottage_ver1.0.esp
+
+;;  - Provincial Bath Shoppe (Korana)
+[Order]
+Vality's Ascadian Isles Addon.esp
+Provincial_Bath _Shoppe_v1.esp
+Provincial_Bath _Shoppe_for_Stinkers.esp ;;Stinkers 1.71
+Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp ;;Stinkers 2.0
+Stinkers PBS for v3.esp ;;Stinkers v3
+
+;;  - LGNPC Pelagiad (LGNPC team)
+[Order]
+Vality's Ascadian Isles Addon.esp
+LGNPC_Pelagiad_v?_??.esp
+LGNPC Gowns.esp ;;Starfire Compatibility ESPs [Spiffyman]
+
+;;Dragon32: New Suran Extended by Nicholiathan includes Princess Stomper's Suran Extended.
+[Order]
+Vality's Ascadian Isles Addon.esp
+New Suran Extended 1.5.esp
+Balanced NSE 1.5.esp
+New Suran Extended CoM 1.5.esp
+Balanced NSE CoM 1.5.esp
+Suran Archery Store_v3.0 NSE.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vality's Balmora Addon [Vality]
 
 [Requires]
+ "[Vality's "Balmora Addon"] is an addon to ["Vality's Bitter Coast Tree Replacer & Bitter Coast Addon"]"
  (Ref: "Vality's Balmora Mod.txt")
 Vality's Balmora Addon.esp
 Vality's Bitter Coast Addon.esp
+
+;;Dragon32: Landscape confict in TESPCD, logical to load the addon after the main plugin
+[Order]
+Vality's Bitter Coast Addon.esp
+Vality's Balmora Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Vality's BC for Vurt's BC [Knots]
+
+[Conflict]
+ "["Vality's BC for Vurt's BC" is a] modified version of Vality7's Bitter Coast addon and Balmora addon."
+ You should not use Vality's original plugins with Knots' "Vality's BC for Vurt's BC"
+ (Ref: "Vality's BC for Vurt's BC.7z\README.txt")
+[ANY Vality's Balmora for Vurt's BC.esp
+     Vality's BC for Vurt's BC.esp]
+[ANY Vality's Balmora Addon.esp
+     Vality's Bitter Coast Addon.esp]
+
+[Conflict]
+ Lucien Fairfax's "Atmospheric Balmora" conflicts with Vality's "Balmora Addon." So, it will also conflict with Knots' modified version of Vality's plugin.
+ (Ref: Atmospheric Balmora for VBA.RAR\readme.txt)
+Clean Atmospheric Balmora.ESP
+Vality's Balmora for Vurt's BC.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30586,6 +31191,12 @@ Vampire_Embrace.esp
 ; Dragon32: Added Order rule for the combined Wakim's mod with no-glo. See also "Vampire_Embrace_Readme.TXT"
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
+Vampire_Embrace.esp
+
+; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
+; Dragon32: Added Order rule for the Gameplay - Dialogue.esp. That conflicts in TESPCD so I assume it's that one.
+[Order]
+Gameplay - Dialogue.esp
 Vampire_Embrace.esp
 
 
