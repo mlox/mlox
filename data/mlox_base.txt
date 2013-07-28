@@ -65,8 +65,22 @@
 ;; They are intended to be used only for very special circumstances.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;Dragon32: Added some fix mods (fixes are not included in MPP 1.6.5b). Try to keep these to the absolute minimum.
+
 [NearStart]
 Morrowind.esm
+;;arvisrend's Morrowind fixes 0.5 [arvisrend], q.v.
+arvisrend - fixes - books.ESP
+arvisrend - fixes - dialogue.ESP
+arvisrend - fixes - objects (no shadows).ESP
+arvisrend - fixes - objects.ESP
+arvisrend - fixes - persistent corpses.ESP
+arvisrend - fixes - scripts.ESP
+;;Unofficial Morrowind Patch Project Bug Fixes 2.0 [EnderAndrew], q.v.
+Clean UMPP-fixes-BTB-v2.esp
+Clean UMPP-fixes-v2.esp
+;;Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien], q.v.
+Clean_bloodmoonpatch_05.esp
 
 [NearEnd]
 multipatch.esp
@@ -2140,6 +2154,68 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @arvisrend's Morrowind fixes 0.5 [arvisrend]
+
+;;Dragon32: See also [NearStart] section
+
+[Note]
+ ! There are newer versions of "arvisrend's Morrowind fixes" available. You should upgrade!
+ ! http://morrowind.nexusmods.com/mods/36373/
+[ANY [VER < 0.5 arvisrend - fixes - books.ESP]
+     [VER < 0.3 arvisrend - fixes - dialogue.ESP]
+     [VER < 0.5 arvisrend - fixes - dren plantation.ESP]
+     [VER < 0.5 arvisrend - fixes - objects (no shadows).ESP]
+     [VER < 0.5 arvisrend - fixes - objects.ESP]
+     [VER < 0.3 arvisrend - fixes - persistent corpses.ESP]
+     [VER < 0.3 arvisrend - fixes - scripts.ESP]]
+
+[Conflict]
+ "*Don't use these two versions at the same time.* Kittens will die."
+ (Ref: "arvisrends Morrowind fixes v0 4-36373-0-4.7z\readme.txt")
+arvisrend - fixes - objects (no shadows).ESP
+arvisrend - fixes - objects.ESP
+
+;;"This plugin will conflict with any mod that alters any of the NPCs Neetinei, Ahzini and gah_julan, or the script hidesFootScript. (Conflict in the strong meaning of this word: I can't rule out crashes.) Also, mods that alter script drenSlaveOwners render this plugin useless, at least if loaded after this plugin."
+;;Ref: "arvisrends Morrowind fixes v0 4-36373-0-4.7z\readme.txt"
+;;Dragon32: first two Order rules here are checks I've made in TESPCD
+[Order]
+ImprovedFollowers.esp
+arvisrend - fixes - dren plantation.ESP
+
+[Order]
+Morrowind Rebirth <VER>.esp
+arvisrend - fixes - dren plantation.ESP
+
+;;Following plugins reported as affecting NPCs Neetinei, Ahzini or gah_julan; or scripts: hidesFootScript, drenSlaveOwners
+
+;;Dragon32: Neetinei and Ahzini; NPDT and AIDT for both Arvisrend's mod and Grandmaster are the same. From TESPCD check NPDT and AIDT are the only differences between Grandmaster and Morrowind.esm. Arvisrend's mod adds a modified script to each NPC
+[Order]
+Grandmaster of Hlaalu.esp
+arvisrend - fixes - dren plantation.ESP
+
+;;Morrowind Patch 1.6.5 Beta (BTB Edit).esm adds NPCO subrecord: slave_bracer_right to Gah Julan
+;;Also changes drenSlaveOwners
+;; BUG	Hides-His-Foot is always detected so everyone at the Dren Plantation attacks when he follows
+;; FIX	Changed drenSlaveOwners script to check if player is detected
+
+;;Ultimate Face Pack.esp - changes head and hair meshes for the NPCs, makes Ahzani a Dark Argonian. Should merge OK with Merged Objects
+[Order]
+Ultimate Face Pack.esp
+arvisrend - fixes - dren plantation.ESP
+
+;;GOTYFullTidyZeroMPPv2.01.esm - changes drenSlaveOwners and hidesFootScript; don't seem to be fixing the FPS as arvisrend's script does
+
+;;New Khajiit Diversity - changes Ahzini; really can't see what the changes are here seems to be only NPDT different to Morrowind.esm 
+[Order]
+New Khajiit Diversity(CIV).esp
+arvisrend - fixes - dren plantation.ESP
+
+[Order]
+New Khajiit Diversity(BEAST).esp
+arvisrend - fixes - dren plantation.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ascadia 1 - The Lost City of the Dwemer [M7]
 
 [Note]
@@ -4174,6 +4250,7 @@ Better Clothes_v1.1_nac.esp
 
 [Note]
  ! Better Clothes 1.0 is updated by Better Clothes 1.1, you should upgrade!
+ ! http://mw.modhistory.com/download-21-14097
 Better Clothes_v1.0.esp
 
 [Note]
@@ -4185,7 +4262,7 @@ Better Clothes_v1.0.esp
 [Note]
  ! There is a newer version of "Better Clothes" available, you should upgrade.
  ! Despite the version numbers "Better Clothes v1.1" was released after the beta "Better Clothes Beta_1.4.esp".
- ! http://www.psychodogstudios.com/betterclothes/
+ ! http://mw.modhistory.com/download-21-14097
 Better Clothes Beta_1.4.esp
 
 [Requires]
@@ -4194,6 +4271,29 @@ Better Clothes Beta_1.4.esp
 [ANY Better Clothes_v1.1.esp
      Better Clothes_v1.1_nac.esp]
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Clothes for Bloodmoon 1.4 [Spirited Treasure]
+
+[Requires]
+ "[Spirited Treasure's "Better Clothes for Bloodmoon"] assumes you have Better Clothes, More Better clothes, and Better Clothes for Tribunal."
+ (Ref: "BetterClothesBloodmoon1.4.txt")
+BetterClothesBloodmoonPlus<VER>.esp
+[ALL [ANY Better Clothes_v1.1.esp
+          Better Clothes_v1.1_nac.esp]
+     More Better Clothes.esp
+     BetterClothesForTB.esp]
+
+;;"This mod should load below your Better clothes mod as it changes the meshes that were used to point to female but were actually male meshes."
+;;Ref: http://forums.bethsoft.com/topic/1446772-rel-better-clothes-bloodmoon-plus/?p=22874566
+[Order]
+Better Clothes_v1.1.esp
+BetterClothesBloodmoonPlus<VER>.esp
+
+[Order]
+Better Clothes_v1.1_nac.esp
+BetterClothesBloodmoonPlus<VER>.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5087,6 +5187,10 @@ Bloodmoon.esm
 Bloodmoon Landscape Overhaul 1.0.esm
 BT_Whitewolf_2_0.esm ;(Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=947130&view=findpost&p=13694991 )
 
+[Order]
+Bloodmoon.esm
+Texture Fix - Bloodmoon 1.?.esm
+
 [Conflict]
  No need to have both these activated as the Overhaul includes "Texture Fix - Bloodmoon".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5268 )
@@ -5380,6 +5484,18 @@ Booty.esp
 [Order]
 Illuminated Order v1.0 (IndyBank Compatible).esp
 Booty.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bound Armor Bugfix [Tizzo]
+
+[Conflict]
+ "Please only use one plugin (Light, Medium, Heavy, Rebalance) at a time!"
+ (Ref: "Bound Armor Bugfix Readme.txt")
+Bound Armor Bugfix (Heavy).esp
+Bound Armor Bugfix (Light).esp
+Bound Armor Bugfix (Medium).esp
+Bound Armor Bugfix (Rebalance).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7062,6 +7178,18 @@ Travel Addon-DagonFelMill-V1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dagoth Ur Fix 1.1 [hollaajith]
+
+[Conflict]
+ Only use one plugin:
+  Dagoth Ur Fix.esp - Makes him as tough as you would have if you have met him vanilla after killing all the Ash Vampires.
+  Dagoth Ur Fix-Tougher.esp - Makes him much tougher than vanilla even after killing all the Ash Vampires.
+ (Ref: "Dagoth Ur Fix.txt")
+Dagoth Ur Fix-Tougher.esp
+Dagoth Ur Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dandras Fix [YrthWyndAndFyre]
 
 [Note]
@@ -7226,10 +7354,8 @@ Dark Brotherhood Assassins Fix.esp
      DM_DB Armor Replacer-ExpDDBA.esp
      DM_DB Armor Replacer-ExpRanks.esp
      DM_DB Armor Replacer-ExpRanksDDBA.esp]
-[ANY DBAttack Tweaked 1.1-Easy.esp
-     DBAttack Tweaked 1.1.esp
-     DBAttack Tweaked 1.3-Easy.esp
-     DBAttack Tweaked 1.3.esp]
+[ANY DBAttack Tweaked <VER>-Easy.esp
+     DBAttack Tweaked <VER>.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7359,10 +7485,8 @@ DB_Attack_Mod.esp
 DB_Attack_Mod_Jeoshua.esp
 DB_Attack_Mod3.esp
 db_attack_fixed.esp
-DBAttack Tweaked 1.1-Easy.esp
-DBAttack Tweaked 1.1.esp
-DBAttack Tweaked 1.3-Easy.esp
-DBAttack Tweaked 1.3.esp
+DBAttack Tweaked <VER>-Easy.esp
+DBAttack Tweaked <VER>.esp
 ddb.esp
 Murderous Dreams.esp
 Murderous Dreams_Safe.esp
@@ -7564,26 +7688,22 @@ dh_furn_6th_house_addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @DBAttack Tweaked [hollaajith]
+;; @DBAttack Tweaked 1.4 [hollaajith]
 
 ;; See "@Dark Brotherhood Assassins Fix [Fetus X]" and "@Dark Brotherhood delay mods [Various]" for conflict information
 
 [Note]
  ! You are using an old version of hollaajith's "DBAttack Tweaked", you should upgrade!
  ! http://morrowind.nexusmods.com/mods/42299
-DBAttack Tweaked.esp
+[ANY DBAttack Tweaked.esp
+     [VER < 1.4 DBAttack Tweaked <VER>-Easy.esp]
+     [VER < 1.4 DBAttack Tweaked <VER>.esp]]
 
 [Conflict]
- Only use one plugin:
-  "DBAttack Tweaked 1.1-Easy.esp" - If you don't like the idea of safe places. Attacks begin and progress at a slower pace.
-  "DBAttack Tweaked 1.1.esp" - If you don't like the idea of safe places.
-  "DBAttack Tweaked 1.3-Easy.esp" - For safe place advantage. Attacks begin and progress at a slower pace.
-  "DBAttack Tweaked 1.3.esp" - For safe place advantage.
+ Only use one plugin. "For Easy Plugins, the attacks begin and progress at a slower pace."
  (Ref: "DBAttack Tweaked Readme.txt")
-DBAttack Tweaked 1.1-Easy.esp
-DBAttack Tweaked 1.1.esp
-DBAttack Tweaked 1.3-Easy.esp
-DBAttack Tweaked 1.3.esp
+DBAttack Tweaked <VER>-Easy.esp
+DBAttack Tweaked <VER>.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10528,7 +10648,8 @@ Bloodmoon.esm
  The MPP (Morrowind Patch Project) includes the Brittlewind fix, and it is recommended you use that instead.
 [ALL Brittlewind fix.esp
      [NOT [ANY Morrowind Patch v1.6.4.esm
-	       Morrowind Patch v1.6.5-BETA.esm]]]
+	       Morrowind Patch v1.6.5-BETA.esm
+               Morrowind Patch 1.6.5 Beta (BTB Edit).esm]]]
 
 ;; GCD_WE_patch
 ;; "Load order shouldn't matter for this patch."
@@ -11589,7 +11710,9 @@ GOTYScriptTidy(CommentsIn).esp
  (Ref: "GOTYST_01 ReadMe.txt")
 [ANY GOTYFullTidySomeMPPv2.01.esm
      GOTYFullTidySomeMPPv2.01.esp]
-Morrowind Patch v1.6.4.esm
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
 
 ; Ref: "GOTYST_01 ReadMe.txt"
 [Order]
@@ -11601,17 +11724,23 @@ GOTYFullTidySomeMPPv2.01.esm
  (Ref: "GOTYST_01 ReadMe.txt")
 GOTYSTMPPPatchv1.0.esp
 [ALL GOTYFullTidyZeroMPPv2.01.esm
-     Morrowind Patch v1.6.4.esm]
+     [ANY Morrowind Patch v1.6.4.esm
+          Morrowind Patch v1.6.5-BETA.esm
+          Morrowind Patch 1.6.5 Beta (BTB Edit).esm]]
 
 ; Ref: "GOTYST_01 ReadMe.txt"
 [Order]
 Bloodmoon.esm
 GOTYFullTidyZeroMPPv2.01.esm
 Morrowind Patch v1.6.4.esm
+Morrowind Patch v1.6.5-BETA.esm
+Morrowind Patch 1.6.5 Beta (BTB Edit).esm
 
 ; Ref: "GOTYST_01 ReadMe.txt"
 [Order]
 Morrowind Patch v1.6.4.esm
+Morrowind Patch v1.6.5-BETA.esm
+Morrowind Patch 1.6.5 Beta (BTB Edit).esm
 GOTYMinImpactSomeMPPv2.01.esm
 
 [Conflict]
@@ -17396,6 +17525,32 @@ MGE_Foggy_weather.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien]
+
+;;Dragon32: See also [NearStart] section
+
+[Note]
+ ! All of these plugins are either included in, or the problems they address are also addressed by Midgetalien's "Bloodmoon Patch". It is recommended that you replace them with the "Bloodmoon Patch":
+ ! http://morrowind.nexusmods.com/mods/42097
+;;lfx_rare_holly.esp - removed from here as we already list this in the MPP section
+MA_nordleg_enchantment.ESP
+MA_Udyrfrykte_Arrows.ESP
+
+[Conflict]
+ Midgetalien's earlier mods "Nord Leg Enchantment" and "Udyrfrykte Arrows" are included in his "Bloodmoon Patch"
+ (Ref: "bloodmoon patch 05 readme.txt")
+Clean_bloodmoonpatch_05.esp
+[ANY MA_nordleg_enchantment.ESP
+     MA_Udyrfrykte_Arrows.ESP]
+
+[Conflict]
+ Midgetalien's "Bloodmoon Patch" obsoletes Alphax's "Bloodmoon Holly addon"
+ (Ref: "bloodmoon patch 05 readme.txt")
+Clean_bloodmoonpatch_05.esp
+lfx_rare_holly.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mildlife [The Vagrant Wolf]
 
 [Patch]
@@ -17782,9 +17937,13 @@ Morag_Tong_Armor_Replacer.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More Better Clothes! [Plangkye]
 
-;; Dragon32: More Better Clothes Readme.txt - "This mod must be loaded AFTER Better Clothes, or the Argonian shirt scripts won't work." So no Order rule for "Better Clothes_v1.1_Nac.esp" created.
+;; Dragon32: More Better Clothes Readme.txt - "This mod must be loaded AFTER Better Clothes, or the Argonian shirt scripts won't work."
 [Order]
 Better Clothes_v1.1.esp
+More Better Clothes.esp
+
+[Order]
+Better Clothes_v1.1_nac.esp
 More Better Clothes.esp
 
 
@@ -18095,6 +18254,10 @@ Morrowind Advanced.esm
 
 [Order]
 Morrowind Patch v1.6.5-BETA.esm
+Morrowind Advanced.esm
+
+[Order]
+Morrowind Patch 1.6.5 Beta (BTB Edit).esm
 Morrowind Advanced.esm
 
 ;; Note that you will still need to run "MW_Adv_Required.esp" after the
@@ -21850,6 +22013,7 @@ Object Permanence Full.esm
 [Order]
 Morrowind Patch v1.6.4.esm
 Morrowind Patch v1.6.5-BETA.esm
+Morrowind Patch 1.6.5 Beta (BTB Edit).esm
 Object Permanence Full.esm
 Object Permanence Morrowind.esm
 Object Permanence Tribunal.esm
@@ -22365,6 +22529,17 @@ Dwemer golem.esp
 [Order]
 Dwemer golem.esp
 Clean Playable Golem.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @PMR - Sea of Destiny Complete [Pinkertonius]
+
+[Conflict]
+ "[PMR - Sea of Destiny Complete] merges the SOD main file with the SOD patch and the SOD expansion Frostfall into a single ESP[, "PMR - Sea of Destiny 1.1.ESP"]."
+PMR - Sea of Destiny 1.1.ESP
+[ANY Sea-of-Destiny.esm
+     SoD Frost Fall.esp
+     sodpatch1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28597,6 +28772,87 @@ Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unofficial Morrowind Patch Project Bug Fixes 2.0 [EnderAndrew]
+
+;;Dragon32: See also [NearStart] section
+
+[Note]
+ ! There is a new version of EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes" available. You should upgrade!
+ ! http://morrowind.nexusmods.com/mods/40947/
+UMPP-fixes.esp
+
+[Conflict]
+ Only use one plugin
+  Clean UMPP-fixes-BTB-v2.esp - If you use "Morrowind Patch v1.6.5 BETA (BTB Edit).esm"
+  Clean UMPP-fixes-v2.esp -   If you use "Morrowind Patch v1.6.5-BETA.esm"
+ (Ref: "UMPP fixes.txt")
+Clean UMPP-fixes-BTB-v2.esp
+Clean UMPP-fixes-v2.esp
+
+[Note]
+ ! All of these plugins are either included in, or the problems they address are also addressed by EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes". It is recommended that you replace them with the "Unofficial Morrowind Patch Project Bug Fixes":
+ ! http://morrowind.nexusmods.com/mods/40947/
+arvisrend - fixes - books.ESP
+arvisrend - fixes - dialogue.ESP
+arvisrend - fixes - objects (no shadows).ESP
+arvisrend - fixes - objects.ESP
+arvisrend - fixes - persistent corpses.ESP
+arvisrend - fixes - scripts.ESP
+Bloodmoon_East Empire Essential Npcs.esp
+Clean_Foeburner_Fix.esp
+lfx_foeburner.esp
+shvEquityFix.esp
+Wings of the Queen of Bats.esp
+
+[Conflict]
+ arvisrend's "arvisrend's Morrowind fixes" are included in EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+[ANY arvisrend - fixes - books.ESP
+     arvisrend - fixes - dialogue.ESP
+     arvisrend - fixes - objects (no shadows).ESP
+     arvisrend - fixes - objects.ESP
+     arvisrend - fixes - persistent corpses.ESP
+     arvisrend - fixes - scripts.ESP]
+
+[Conflict]
+ A similar change to Xeth-Ban's "Foeburner Fix" is made by EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+Clean_Foeburner_Fix.esp
+
+[Conflict]
+ A similar change to Alphax's "Flamin' Foeburner Fix" is made by EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+lfx_foeburner.esp
+
+[Conflict]
+ qwert44643's "East Empire Essential NPCs" is included in EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+Bloodmoon_East Empire Essential Npcs.esp
+
+[Conflict]
+ shiva7663's "Ring of Equity Fix" is included in EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+shvEquityFix.esp
+
+[Conflict]
+ TheOne&Only's "Wings of the Queen of Bats" is included in EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+Wings of the Queen of Bats.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Usagi of the Moon [???]
 
 [Note]
@@ -29201,6 +29457,7 @@ Glass arrow fix.esp
 Gnisis Gaurd Fix.esp
 HasphatsBooks.esp
 heartwood.esp
+Illy's Solsteim Rumour Fix.esp
 lfx_edwinna_book.esp
 lfx_nerevarine_greetings.esp
 lfx_rare_heartwood.esp
@@ -29427,6 +29684,14 @@ Gnisis Gaurd Fix.esp
      Morrowind Patch v1.6.5-BETA.esm
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
 heartwood.esp
+
+[Conflict]
+ The MPP does something similar to Illy's Solsteim Rumour Fix [Illuminiel].
+ "Solsteim Rumour Fix" integrates the topic into Morrowind better, and should be used if preferred.
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
+Illy's Solsteim Rumour Fix.esp
 
 [Conflict]
  The MPP obsoletes Edwinna Elbert's Book (Alphax).
@@ -31248,7 +31513,7 @@ wl_lodge_vi.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Water Level Fix [Taddeus]
+;; @Water Level Fix 1.1 [Taddeus]
 
 ; Water Level Fix should come last in load order so we put it after multipatch, which is [Nearend]
 [Order]
@@ -31296,6 +31561,14 @@ Water Level Fix - Full.esp
      Water Level Fix - BM.esp]
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ ! "Since its 2.0 release, the Morrowind Code Patch contains a 'Detect water level fix' (Bug fixes section - checked by default). If you install it, you'll no longer need my Water Level Fix, since they solve the same problem, but MCP does it in a more reliable and complete way."
+ ! (Ref: http://forums.bethsoft.com/topic/1114091-rel-water-level-fix/?p=18219328 )
+[ANY Water Level Fix - BM.esp
+     Water Level Fix - Full.esp
+     Water Level Fix - MW.esp
+     Water Level Fix - TB.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
