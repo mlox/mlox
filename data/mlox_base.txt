@@ -668,8 +668,8 @@ Bloodmoon.esm
 ;All versions
 [Note]
  According to its readme "ADVANCED GUARDS IV DOES NOT affect third party mods. So the guards from the Bank mod, for example, will not be affected. If you are concerned about this, you must check the special GUARDS.esp as well. This will make the low-level spawns of guards just as strong as the high level spawns of guards, however."
-ADVANCED GUARDS.esm
-NOT GUARDS.esp
+[ALL ADVANCED GUARDS.esm
+     [NOT GUARDS.esp]]
 
 ;; (Ref: "Advanced GUARDS IV.doc")
 [Order]
@@ -4293,6 +4293,10 @@ BetterClothesBloodmoonPlus<VER>.esp
 
 [Order]
 Better Clothes_v1.1_nac.esp
+BetterClothesBloodmoonPlus<VER>.esp
+
+[Order]
+Better Clothes Complete (BTB Edit).esp
 BetterClothesBloodmoonPlus<VER>.esp
 
 
@@ -8888,9 +8892,15 @@ DynamicMagickaRegeneration-2.1-Tribunal.esp
 ;; @East Knaarus [PCC aka Blockhead]
 
 [Requires]
+ "You run this plugin along with Knaarus.  This plugin does not replace the Knaarus plugin."
  (Ref: "pcc_east_knaarus_28_readme.txt")
 pcc_east_knaarus_28.esp
-pcc_knaarus_02.esp
+PCC_Knaarus_02.esp
+
+;;Ref: "the file date on this plugin must be more recent than the file date of the Knaarus plugin."
+[Order]
+PCC_Knaarus_02.esp
+pcc_east_knaarus_28.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9071,6 +9081,16 @@ Enchantable Gloves of the Bal Molagmer (uber).esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 10311 Enchanted Weapons.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Enchanting Desk [Arcimaestro Antares]
+
+[Conflict]
+ Arcimaestro Antares' "Enchanting Desk" shouldn't be used with any variation of GCD. GCD and mods derived from it use a script to keep track of stats, which can cause all kinds of havoc with mods like this that boost stats.
+ (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=22907825 )
+Enchanting Desk.esp
+Galsiahs Character Development.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9280,6 +9300,7 @@ RAH Expanded Entertainers.esp
 [Note]
  ! The latest version of Expanded Sounds is 1.3, you may want to upgrade:
  ! http://z13.invisionfree.com/Pirate_Lords_Mods/index.php?showtopic=35
+ ! http://mw.modhistory.com/download-76-14627
 [SIZE !439651 Expanded Sounds.esp]
 
 ;;Dragon32: Expanded Sounds makes some small changes to weather settings (a few % points according to readme). If player's loaded a weather-changing mod then they'll really want those changes loaded instead.
@@ -9298,6 +9319,19 @@ Isirion_RealisticWeather.esp
 [Order]
 Expanded Sounds.esp
 Sol-Weather Tweak.esp
+
+;;Ref: http://forums.bethsoft.com/topic/1470111-expanded-sounds-awful-noise-chargen/
+[Order]
+TLM - Ambient Light + Fog Update.esp
+TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Natural Water).esp
+TLM - Light Sources (Lanterns).esp
+TLM - External Lights Ownership.esp
+TLM - NPC Light Sources.esp
+TLM - Sneak Modifiers (Code).esp
+TLM - Sneak Modifiers (Locations).esp
+TLM - Complete.esp
+Expanded Sounds.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9517,6 +9551,21 @@ Exquisite_Robes.esp
  ! WizBang's "Exquisite Robes II" contains the original six robes from his first version, as well as 18 new robes.
  ! Download it from Morrowind Modding History: http://mw.modhistory.com/download--1942
 Exquisite_Robes.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Extended Smeradon [PCC aka Blockhead]
+
+[Requires]
+ "THIS PLUGIN REQUIRES SMERADON!"
+ (Ref: "pcc_extended_smeradon_21_readme.txt")
+pcc_extended_smeradon_21.esp
+pcc_smeradon_17.esp
+
+;;Dragon32: TESPCD shows two CONT entries differ between these two mods and: "One important note: the file date on this plugin must be more recent than the file date of the Smeradon plugin."
+[Order]
+pcc_smeradon_17.esp
+pcc_extended_smeradon_21.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10480,6 +10529,42 @@ Better Bodies.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 69602 Funkys Summer House.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Further Extended Smeradon [PCC aka Blockhead]
+
+[Requires]
+ "You run [PCC aka Blockhead's "Further Extended Smeradon"] along with Smeradon, Extended Smeradon, Knaarus, Dunzar and Xindaz Veft: all plugins must be active.  This plugin does not replace those other plugins."
+ (Ref: "pcc_further_ext_smer_20_readme.txt")
+pcc_further_ext_smer_20.esp
+[ALL pcc_smeradon_17.esp
+     pcc_extended_Smeradon_21.esp
+     pcc_knaarus_02.esp
+     pcc_dunzar_02.esp
+     pcc_xindaz_veft_05.esp]
+
+;;Ref: "the file date on this plugin must be more recent than the file date of the Smeradon, Knaarus, Dunzar, Xindaz Veft, and Extended Smeradon plugins."
+[Order]
+pcc_smeradon_17.esp
+pcc_smeradon_patch_04.esp
+pcc_extended_Smeradon_21.esp
+pcc_knaarus_02.esp
+pcc_dunzar_02.esp
+pcc_xindaz_veft_05.esp
+pcc_further_ext_smer_20.esp
+
+[Patch]
+ "Fixes a bug in Further Extended Smeradon that could break the Bloodmoon Main Quest!"
+ http://mw.modhistory.com/download-13-14917
+ (Ref: "pcc_further_ext_FIX_readme.txt")
+pcc_further_ext_FIX_01.esp
+pcc_further_ext_smer_20.esp
+
+;;Ref: "For this plugin to work correctly, it's file date must be newer than the file date of the Further Extended Smeradon plugin."
+[Order]
+pcc_further_ext_smer_20.esp
+pcc_further_ext_FIX_01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16514,16 +16599,45 @@ LBS_Lite v1.4(trib).esp
 ;; @Lob Shephli [PCC aka Blockhead]
 
 [Requires]
+ "If you already have my East Knaarus plugin (and its dependencies)[, or Arnor's "Super Vvardenfell Tunnels" which includes it,] you can connect Lob Shephli to it using the included "pcc_lob_knaarus_option.esp" plugin.  To use this, enable *both* it *and* pcc_lob_shepphli."
  (Ref: "pcc_lob_shephli_readme.txt")
 pcc_lob_knaarus_option.esp
 [ALL pcc_lob_shephli_66.esp
-     pcc_east_knaarus_28.esp]
+     [ANY pcc_east_knaarus_28.esp
+          Arn_DungeonTunnels.esp]]
+
+[Order]
+pcc_lob_shephli_66.esp
+pcc_lob_knaarus_option.esp
+
+[Order]
+pcc_east_knaarus_28.esp
+pcc_lob_knaarus_option.esp
+
+[Order]
+Arn_DungeonTunnels.esp
+pcc_lob_knaarus_option.esp
 
 [Requires]
+ "If you already have my Xindaz Veft plugin[, or Arnor's "Super Vvardenfell Tunnels" which includes it,] you can connect Lob Shephli to it using the included "pcc_lob_xindaz_option.esp" plugin.  To use this, enable *both* it *and* pcc_lob_shepphli."
  (Ref: "pcc_lob_shephli_readme.txt")
 pcc_lob_xindaz_option.esp
 [ALL pcc_lob_shephli_66.esp
-     pcc_xindaz_veft_05.esp]
+     [ANY pcc_xindaz_veft_05.esp
+          Arn_DungeonTunnels.esp]]
+
+[Order]
+pcc_lob_shephli_66.esp
+pcc_lob_xindaz_option.esp
+
+[Order]
+pcc_xindaz_veft_05.esp
+pcc_lob_xindaz_option.esp
+
+[Order]
+Arn_DungeonTunnels.esp
+pcc_lob_xindaz_option.esp
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17451,6 +17565,23 @@ animalbehave.esp
 ;;time.esp - deprecated in favor of abot's Tempus Fugit ring or console
 ;;training.esp
 ;;underwatertime.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Merri's Character Development 1.12 [Merranvo]
+
+[Conflict]
+ Only use one plugin:
+  Merri's Character Development  - Harder.esp
+  Merri's Character Development.esp
+Merri's Character Development  - Harder.esp
+Merri's Character Development.esp
+
+[Requires]
+ (Ref: "Merris_Character_Development_2.zip\Install.txt"
+MCD Initialize.esp
+[ANY Merri's Character Development  - Harder.esp
+     Merri's Character Development.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19515,6 +19646,7 @@ DN_1st_Person_Helm1.1.esp
 Encumbrance Bar.esp
 Fatigued Bar.esp
 LOCH_Brass_Telescope_(1.1).esp
+Opponent_Fatigue_Indicator.esp
 [DESC !/or MGE XE/ Ownership Indicator.esp]
 Rage Indicator.esp
 Short Ranged Teleport.esp
@@ -20554,9 +20686,10 @@ Murderous Dreams_Safe.esp
 [Conflict]
  Princess Stomper's "Museum of Artifacts Improved Expanded" is a merge of both her "Museum of Artifacts Improvements" mod and "Expanded Museum of Artifacts" by TheOtherFelix.
  You only need to run "Museum of Artifacts Improved Expanded".
-[ALL Museum of Artifacts Improved Expanded.esp
-     [ANY ExpandedMoA.esp
-          Clean Museum of Artifacts Improvements.esp]]
+ (Ref: "Museum of Artifacts Improved Expanded readme.txt")
+Museum of Artifacts Improved Expanded.esp
+[ANY ExpandedMoA.esp
+     Clean Museum of Artifacts Improvements.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23008,6 +23141,22 @@ propylons1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Prosey's Better Female Pants 1.0 [Prosey]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 13017 Prosey_female_pants_replace.esp]
+
+[Conflict]
+ Prosey's "Better Female Pants" is not needed if you use Psychodog Studio's "Better Clothes"
+Prosey_female_pants_replace.esp
+[ANY Better Clothes_v1.1.esp
+     Better Clothes_v1.1_nac.esp
+     Better Clothes Complete (BTB Edit).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Protective Guards [Fliggerty]
 [Note]
  ! If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
@@ -25253,33 +25402,34 @@ Slof's Goth Shop II.esp
 
 [Patch]
  This patch fixes 2 visual glitches in "pcc_smeradon_17.esp".
+ http://mw.modhistory.com/download-31-2662
  (Ref: "pcc_smeradon_patch_04_readme.txt")
 pcc_smeradon_patch_04.esp
 pcc_smeradon_17.esp
 
-[Requires]
- (Ref: "pcc_extended_smeradon_21_readme.txt")
-pcc_extended_smeradon_21.esp
+[Order]
 pcc_smeradon_17.esp
+pcc_smeradon_patch_04.esp
 
-[Patch]
- "Fixes a bug in Further Extended Smeradon that could break the Bloodmoon Main Quest!"
- (Ref: "pcc_further_ext_FIX_readme.txt")
-pcc_further_ext_FIX_01.esp
-pcc_further_ext_smer_20.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Smeradon 2 Dwemer Tunnels [PCC aka Blockhead]
+
+[Requires]
+ "[PCC aka Blockhead's "Smeradon 2 Dwemer Tunnels"] requires Smeradon_17.esp and "Dwemer Tunnels and Coprusarium Cavern.esp" by xereau."
+ (Ref: "pcc_smeradon2DT_05_readme.txt")
+pcc_smeradon2DT_07.esp
+[ALL pcc_smeradon_17.esp
+     Dwemer Tunnels and Coprusarium Cavern.esp]
+
+;;Dragon32: Not specified but it's logical
+[Order]
+pcc_smeradon_17.esp
+pcc_smeradon2DT_07.esp
 
 [Order]
-pcc_further_ext_smer_20.esp
-pcc_further_ext_FIX_01.esp
-
-[Requires]
- (Ref: "pcc_further_ext_smer_20_readme.txt")
-pcc_further_ext_smer_20.esp
-[ALL pcc_smeradon_17.esp
-     pcc_extended_Smeradon_21.esp
-     pcc_knaarus_02.esp
-     pcc_dunzar_02.esp
-     pcc_xindaz_veft_05.esp]
+Dwemer Tunnels and Coprusarium Cavern.esp
+pcc_smeradon2DT_07.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25405,6 +25555,21 @@ DA_Sobitur_YA_Compatibility.ESP
  ! Souly Soulgems 1.0 has now been updated to v1.1, and no longer requires an .esp. You should upgrade and stop using the .esp!
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5161
 WA_SoulGems(!).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @South Dunzar [PCC aka Blockhead]
+
+[Requires]
+ "[PCC aka Blockhead's "South Dunzar"] requires Dunzar (pcc_dunzar_02.esp)."
+ (Ref: "pcc_south_dunzar_01_readme.txt")
+pcc_south_dunzar_01.esp
+pcc_dunzar_02.esp
+
+;;Dragon32: Not mentioned in readme, makes sense though
+[Order]
+pcc_dunzar_02.esp
+pcc_south_dunzar_01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26457,6 +26622,27 @@ MMSugarMoon-b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Super Vvardenfell Tunnels [Arnor]
+
+[Conflict]
+ "Super Vvardenfell Tunnels" by Armor merges PCC aka Blockhead's Smeradon, Dunzar, Knaarus, Xindaz and Veft dungeons. It also includes Xerau's "Dwemer Tunnels and Corprusarium Caverns".
+ (Ref: "Arnor's Super Vvardenfell Tunnels Mod - Readme.txt")
+Arn_DungeonTunnels.esp
+[ANY pcc_smeradon_17.esp
+     pcc_smeradon_patch_04.esp
+     pcc_extended_smeradon_21.esp
+     pcc_smeradon2DT_07.esp
+     pcc_knaarus_02.esp
+     pcc_east_knaarus_28.esp
+     pcc_dunzar_02.esp
+     pcc_south_dunzar_01.esp
+     pcc_xindaz_veft_05.esp
+     pcc_further_ext_smer_20.esp
+     pcc_further_ext_FIX_01.esp
+     Dwemer Tunnels and Coprusarium Cavern.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Suran Archery Tradehouse [Wizbang]
 
 [Note]
@@ -27415,7 +27601,7 @@ BE-Callenwald.esp
 ;; @Texture Fix - Tamriel Rebuilt [Slartibartfast]
 
 [Note]
- There is a new version of Slartibartfast's "Texture Fix - Tamriel Rebuilt" available for the Sacred East release of "Tamriel Rebuilt.
+ There is a new version of Slartibartfast's "Texture Fix - Tamriel Rebuilt" available for the Sacred East release of "Tamriel Rebuilt".
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4728
 Texture Fix -TR -1.0.esp
 
