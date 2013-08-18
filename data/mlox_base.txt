@@ -1248,6 +1248,14 @@ _Legends_of_Ydumea_v2.esp
      Ald-Vendras_V31-LoKKen.esp
      Ald-Vendras_V31-LoKKen-SC.esp]
 
+[Conflict]
+ Centurion's "Ald Vendras" includes Lucan's "Nordic town of Vogar", there is no need to run Lucan's mod when running "Ald Vendras".
+ (Ref: "Ald-Vendras_V3_readme.txt")
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
+Lucans_Vogar_01.esp
+
 [Note]
  ! An upgraded version (v3.1) of Ald Vendras is available:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3523
@@ -4466,6 +4474,119 @@ BL-Morrowind.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 7422 Better Looking Weapons Katanas Tantos Wakizashis.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Morrowind Armor 0.5.2RC [Moranar]
+
+[Conflict]
+ "You may enable ONE of DeFemm-patches"
+  Better Morrowind Armor DeFemm(a).ESP - Disables all female versions of armor, except female greaves.
+  Better Morrowind Armor DeFemm(o).ESP - Most faithful to the original game version.
+  Better Morrowind Armor DeFemm(r).ESP - Only cuirasses made from stretchy material have female versions.
+ (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
+Better Morrowind Armor DeFemm(a).ESP
+Better Morrowind Armor DeFemm(o).ESP
+Better Morrowind Armor DeFemm(r).ESP
+
+[Requires]
+ (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
+[ANY Better Morrowind Armor DeFemm(a).ESP
+     Better Morrowind Armor DeFemm(o).ESP
+     Better Morrowind Armor DeFemm(r).ESP]
+Better Morrowind Armor.esp
+
+;;Dragon32: Checked order in TESPCD
+[Order]
+Better Morrowind Armor.esp
+Better Morrowind Armor DeFemm(a).ESP
+
+[Order]
+Better Morrowind Armor.esp
+Better Morrowind Armor DeFemm(o).ESP
+
+[Order]
+Better Morrowind Armor.esp
+Better Morrowind Armor DeFemm(r).ESP
+
+[Note]
+ !! "If you want to install ["Better Morrowind Armor" by Moranar] on game without Tribunal, you must use either Better Morrowind Armor DeFemm(a).ESP, or install meshes of 3 female cuirasses from "patch for installation without Tribunal"."
+ !!(Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
+[ALL Better Morrowind Armor.esp
+     [NOT Better Morrowind Armor DeFemm(a).ESP]
+     [NOT Tribunal.esm]]
+
+;;"The part of Left Gloves Addon (which change armor) was integrated."
+;;Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt"
+;;Dragon32: So load left gloves mods (and those which integrate it) before this one
+[Order]
+HELLUVA Balanced Vanilla Addon.esp
+Better Morrowind Armor.esp
+
+[Order]
+HELLUVA Balanced BTB.esp
+Better Morrowind Armor.esp
+
+[Order]
+HELLLUVA Balanced BTB CS.esp
+Better Morrowind Armor.esp
+
+[Order]
+LeftGloves_Addon_v2.esp
+Better Morrowind Armor.esp
+
+[Order]
+LeftGloves.esp
+Better Morrowind Armor.esp
+
+;;Kahkahra's "Complete Armor Joints" patch
+[Conflict]
+ You should use the version of Kahkahra's "Complete Armor Joints" which comes with Moranar's "Better Morrowind Armor"
+ (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
+Better Morrowind Armor.esp
+[DESC !/Better Morrowind Armor/ Complete Armor Joints.esp]
+
+;;Dragon32: checked with TESPCD
+[Order]
+Better Morrowind Armor.esp
+Complete Armor Joints.esp
+
+;; Bethesda's "LeFemme Armors" patch
+[Conflict]
+ You should use the version of Bethesda's "LeFemme Armors" which comes with Moranar's "Better Morrowind Armor"
+ (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
+Better Morrowind Armor.esp
+[DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
+
+;;Dragon32: To get the balance tweaks and mesh changes load Moranar's after Taddeus' and assume they're running a Merged Objects file
+[Order]
+Taddeus'BalancedArmors.esp
+[DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
+
+[Order]
+Taddeus'BalancedArmors_Rotate.esp
+[DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
+
+;;Dragon32: To ensure Moranar's changes are included, load after merged mods which include LeFemme Armor
+[Order]
+Clean Official Plugins v1.1.esp
+[DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
+
+[Order]
+OfficialMods_v5.esp
+[DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
+
+;;Saint_Jiub's "Snow Prince Armor Redux" patch
+[Conflict]
+ You should use the version of Saint_Jiub's "Snow Prince Armor Redux" which comes with Moranar's "Better Morrowind Armor"
+ (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
+Better Morrowind Armor.esp
+[DESC !/A model replacer for the Ancient Steel armor/ Snow Prince Armor Redux.ESP]
+
+;;Dragon32: checked with TESPCD
+[Order]
+Better Morrowind Armor.esp
+Snow Prince Armor Redux.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7938,6 +8059,65 @@ FireHeaven Deora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Detailed Armor [Baofu92]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5897 DA (Chitin).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5917 DA (Daedric).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5899 DA (Dwemer).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5975 DA (Ebony).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6089 DA (Glass).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6579 DA (Imperial).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5715 DA (Indoril).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6057 DA (Iron).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5737 DA (Nordic Fur).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6083 DA (Steel).esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6545 DA (Templar).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Devil's Rock for Vivec's Soul [Illtempered]
 
 ;;Dragon32: Not sure if the one available on MMH is this patch or not... November 2012.
@@ -8622,21 +8802,53 @@ Drowcity Denizens.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Dungeon Island & Dungeon Island To Vogar Bridge [PCC aka Blockhead]
+;; @Dungeon Island [PCC aka Blockhead]
 
-[Requires]
+[Patch]
+ "pcc_d_island_2_xindaz_02 connects Dungeon Island to the dungeon in Xindaz Veft, so you can then walk from Vvardenfell to Solstheim to Dungeon Island, entirely underground"
+ (Ref: "pcc_dungeon_island_19_readme.txt")
+pcc_d_island_2_xindaz_02.esp
+[ALL pcc_dungeon_island_19.esp
+     pcc_Xindaz_Veft_05.esp]
+
+;;Dragon32: Not specified but it's logical
+[Order]
+pcc_dungeon_island_19.esp
+pcc_d_island_2_xindaz_02.esp
+
+[Order]
+pcc_Xindaz_Veft_05.esp
+pcc_d_island_2_xindaz_02.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dungeon Island to Vogar bridge [PCC aka Blockhead]
+
+[Patch]
+ Allows your character to walk from the island of Vogar (included in Centurion's "Ald Vendras" mod) to PCC aka Blockhead's "Dungeon Island".       
+ http://mw.modhistory.com/download-45-2643
  (Ref: "pcc_di_vo_bridge_06_readme.txt")
 pcc_di_vo_bridge_06.esp
 [ALL pcc_dungeon_island_19.esp
      [ANY Ald-Vendras_V31.esp
 	  Ald-Vendras_V31-LoKKen.esp
-	  Ald-Vendras_V31-LoKKen-SC.esp]]
+	  Ald-Vendras_V31-LoKKen-SC.esp
+          Lucans_Vogar_01.esp]]
 
-[Requires]
- (Ref: "pcc_dungeon_island_19_readme.txt")
-pcc_d_island_2_xindaz_02.esp
-[ALL pcc_dungeon_island_19.esp
-     pcc_Xindaz_Veft_05.esp]
+;;Dragon32: Not specified but it's logical
+[Order]
+pcc_dungeon_island_19.esp
+pcc_di_vo_bridge_06.esp
+
+[Order]
+Ald-Vendras_V31.esp
+Ald-Vendras_V31-LoKKen.esp
+Ald-Vendras_V31-LoKKen-SC.esp
+pcc_di_vo_bridge_06.esp
+
+[Order]
+Lucans_Vogar_01.esp
+pcc_di_vo_bridge_06.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12793,6 +13005,14 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
           Helseth_Shield_notAdded.esp
           Left Wraithguard.esp]]
 
+[Conflict]
+ "[Sandman101's "HELLUVA Awesome Armor Completion Set" adds] the meshes that Bethesda didn't use to the Templar pauldrons."
+ (Ref: http://forums.bethsoft.com/topic/1118289-relz-ob-style-quivers-and-sheathing-bows-for-morrowind/?p=16435065 )
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+[ANY Clean Templar Pauldron Fix.esp
+     Clean_Templar_Pauldron_Fix_v11.esp
+     Cjad's Templar Pauldron Fix.esp]
+
 ;;Dragon32 - See "H.E.L.L.U.V.A. Armor Completion read me.rtf"
 [Order]
 H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
@@ -12993,6 +13213,18 @@ HELLUVA Balanced Vanilla Addon.esp
      Ice's Glass Cuirass.esp
      Ice_FemaleSteelCuirass.esp
      Ice_Wolf_Cuirass_Mod.esp]
+
+[Conflict]
+ "[Sandman101's "HELLUVA Awesome Armor Completion Set" adds] the meshes that Bethesda didn't use to the Templar pauldrons."
+ (Ref: http://forums.bethsoft.com/topic/1118289-relz-ob-style-quivers-and-sheathing-bows-for-morrowind/?p=16435065 )
+[ANY HELLLUVA Balanced CompletionSet.esp
+     HELLUVA Balanced Armor.esp
+     HELLUVA Balanced Complete.ESP
+     HELLLUVA Balanced BTB CS.esp
+     HELLUVA Balanced BTB.esp]
+[ANY Clean Templar Pauldron Fix.esp
+     Clean_Templar_Pauldron_Fix_v11.esp
+     Cjad's Templar Pauldron Fix.esp]
 
 [Note]
  Sandman101's "H.E.L.L.U.V.A. Armor Completion" uses the resources from the following mods to complete the armor sets. Whilst "H.E.L.L.U.V.A. Armor Completion" does not duplicate these mods completely you may want to consider disabling them as "H.E.L.L.U.V.A. Armor Completion" already adds their armor to the game world.
@@ -16020,6 +16252,11 @@ Better Bodies.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Left Gloves Addon [Alaisiagae]
+
+[Note]
+ ! There is a new version of Alaisiagae's "Left Gloves Addon". You should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6684
+Clean LeftGloves_TBandBM.esp
 
 [Conflict]
  Do NOT have "Lurlock's Left Gloves" and "Left Gloves Addon" running at the same time.
@@ -22188,6 +22425,198 @@ Oblivion-Style Spellcasting.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @OB Style Quivers and Sheathing Bows for Morrowind [Sandman101]
+
+[Conflict]
+ "DO NOT USE MORE THAN 1 OF THE ESP'S"
+  OB_Style Auto Quivers And Bows.esp - Adds a choice script to all of the stock left pauldrons.
+  OB_Style Quivers And Bows 4$.esp - No stock items have been effected in game, the pauldrons are sold by Hodlismod in Caldera.
+  OB_Style Quivers And Bows.esp - Completely automatic, anybody wearing a left pauldron will have quivers regardless if they have a bow or not.
+ (Ref: "OB Style Quivers for MW Read me .rtf")
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+
+[Conflict]
+ "[Sandman101's "OB Style Quivers and Sheathing Bows for Morrowind"] will conflict with Weapon Sheaths Ultimate and Weapon sheaths 1, 2 and 3 by PeterNL."
+ You could use Mike Alexander's "Weapon Sheaths Ultimate - Glove Slot Edition" instead:
+ http://morrowind.nexusmods.com/mods/14894
+ (Ref: "OB Style Quivers for MW Read me .rtf")
+[ANY OB_Style Auto Quivers And Bows.esp
+     OB_Style Quivers And Bows 4$.esp
+     OB_Style Quivers And Bows.esp
+     OB_Style Auto Quivers And Bows_CAJ.esp
+     OB_Style Quivers And Bows 4$_CAJ.esp
+     OB_Style Quivers And Bows_CAJ.esp]
+[ANY Weapon Sheaths Part 1.esp
+     Weapon Sheaths Part 2.esp
+     Weapon Sheaths Part 3.esp
+     Clean Weapon Sheaths Ultimate.esp]
+
+[Conflict]
+ "[Sandman101's "OB Style Quivers and Sheathing Bows for Morrowind" adds] the meshes that Bethesda didn't use to the templar pauldrons [...].  I've added them both because there are several mods that do this."
+ (Ref: "OB Style Quivers for MW Read me .rtf")
+[ANY OB_Style Auto Quivers And Bows.esp
+     OB_Style Quivers And Bows 4$.esp
+     OB_Style Quivers And Bows.esp
+     OB_Style Auto Quivers And Bows_CAJ.esp
+     OB_Style Quivers And Bows 4$_CAJ.esp
+     OB_Style Quivers And Bows_CAJ.esp]
+[ANY Clean Templar Pauldron Fix.esp
+     Clean_Templar_Pauldron_Fix_v11.esp
+     Cjad's Templar Pauldron Fix.esp]
+
+[Conflict]
+ "[Sandman101's "OB Style Quivers and Sheathing Bows for Morrowind"] will conflict with armor replacers that use an esp."
+ (Ref: "OB Style Quivers for MW Read me .rtf")
+[ANY OB_Style Auto Quivers And Bows.esp
+     OB_Style Quivers And Bows 4$.esp
+     OB_Style Quivers And Bows.esp
+     OB_Style Auto Quivers And Bows_CAJ.esp
+     OB_Style Quivers And Bows 4$_CAJ.esp
+     OB_Style Quivers And Bows_CAJ.esp]
+[ANY Better armor (rev1 Daedrik).esp
+     Better armor (rev1_BoundDaedrArm).esp
+     Better armor (rev2_Dwemer).esp
+     Better armor (rev3_Ebony).esp
+     Better armor (rev4 Chitin).esp
+     Better armor (rev5_Steel).esp
+     Better armor (rev6_Iron).esp
+     Better armor (rev7_Templar).esp
+     Better armor (rev8_Imperial(AD-rome).esp
+     Better armor (rev8_Imperial(STANDART).esp
+     Better_Armor (Rev.10 - Orcish-AD)Eng.esp
+     Better armor (rev11_Indoril(AD).esp
+     Better Armor (rev11_Indoril(ST).esp
+     Better armor (rev12_Furs&Nord&Leather).esp
+     Better armor (rev14_Glass).esp
+     Better_Armor(Tb_pack_baseEN).esp
+     Better_Armor(Tb_pack_FULL).esp
+     Better Morrowind Armor.esp
+     DA (Chitin).esp
+     DA (Daedric).esp
+     DA (Dwemer).esp
+     DA (Ebony).esp
+     DA (Glass).esp
+     DA (Imperial).esp
+     DA (Indoril).esp
+     DA (Iron).esp
+     DA (Netch Leather).esp
+     DA (Nordic Fur).esp
+     DA (Steel).esp
+     DA (Templar).esp]
+
+;;Dragon32: Sandman101's HELLUVA Awesome Armour Completion Set also adds the missing Templar pauldron meshes.
+;; http://forums.bethsoft.com/topic/1118289-relz-ob-style-quivers-and-sheathing-bows-for-morrowind/?p=16435065
+[Order]
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+;;Spiffyman's merged mods including HELLUVA Awesome Armour Completion Set (see "@HELLUVA Balanced 2.3 [Spiffyman]")
+[Order]
+HELLUVA Balanced BTB.esp
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+[Order]
+HELLLUVA Balanced BTB CS.esp
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+[Order]
+HELLUVA Balanced Complete.ESP
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+[Order]
+HELLUVA Balanced Armor.esp
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+[Note]
+ !! Using Sandman101's "OB Style Quivers and Sheathing Bows for Morrowind" and Alaisagae's "Left Gloves Addon" or Lurlock's "Left Gloves" (or mods which include them) without a TESTool-generated Merged Objects plugin means that the scripts from Sandman101's mod will not work.
+ !! (Ref: http://forums.bethsoft.com/topic/1466182-is-anybody-having-luck-running-this-mod-obqsb/ )
+[ALL [ANY OB_Style Auto Quivers And Bows.esp
+          OB_Style Quivers And Bows 4$.esp
+          OB_Style Quivers And Bows.esp
+          OB_Style Auto Quivers And Bows_CAJ.esp
+          OB_Style Quivers And Bows 4$_CAJ.esp
+          OB_Style Quivers And Bows_CAJ.esp]
+     [ANY HELLUVA Balanced Vanilla Addon.esp
+          HELLUVA Balanced BTB.esp
+          HELLLUVA Balanced BTB CS.esp
+          LeftGloves_Addon_v2.esp
+          LeftGloves.esp]
+     [NOT Merged_Objects.esp]]
+
+;;Complete Armor Joints patch
+[Conflict]
+ "DO NOT USE MORE THAN 1 OF THE ESP'S"
+  OB_Style Auto Quivers And Bows_CAJ.esp - Adds a choice script to all of the stock left pauldrons.
+  OB_Style Quivers And Bows 4$_CAJ.esp - No stock items have been effected in game, the pauldrons are sold by Hodlismod in Caldera.
+  OB_Style Quivers And Bows_CAJ.esp - Completely automatic, anybody wearing a left pauldron will have quivers regardless if they have a bow or not.
+ (Ref: "OBQSB_CAJ Read me.rtf")
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+[Conflict]
+ "DO NOT USE ANY OF THE ESP"S FROM THE MAIN OB Style Quivers and Sheathing Bows for Morrowind DOWNLOAD.JUST THE RESOURCES(Meshes, Textures, Icons)"
+ (Ref: "OBQSB_CAJ Read me.rtf")
+[ANY OB_Style Auto Quivers And Bows_CAJ.esp
+     OB_Style Quivers And Bows 4$_CAJ.esp
+     OB_Style Quivers And Bows_CAJ.esp]
+[ANY OB_Style Auto Quivers And Bows.esp
+     OB_Style Quivers And Bows 4$.esp
+     OB_Style Quivers And Bows.esp]
+
+[Conflict]
+ You should use the version of Sandman101's "OB Style Quivers and Sheathing Bows for Morrowind" which is compatible with Kahkahra's "Complete Armor Joints" instead
+ (Ref: "OBQSB_CAJ Read me.rtf")
+[ANY OB_Style Auto Quivers And Bows.esp
+     OB_Style Quivers And Bows 4$.esp
+     OB_Style Quivers And Bows.esp]
+Complete Armor Joints.esp
+
+[Requires]
+ "You will still need to download and use [Kahkahra's "Complete Armor Joints"] as it effects things that aren't in the scope of this mod."
+ (Ref: "OBQSB_CAJ Read me.rtf")
+[ANY OB_Style Auto Quivers And Bows_CAJ.esp
+     OB_Style Quivers And Bows 4$_CAJ.esp
+     OB_Style Quivers And Bows_CAJ.esp]
+Complete Armor Joints.esp
+
+;;"Just make sure that these esps are after CAJ in load order."
+;;Ref: "OBQSB_CAJ Read me.rtf"
+[Order]
+Complete Armor Joints.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Oblivion Style Vampires [DoctorEss]
 
 ;;Dragon32: Ran this in TESPCD against Vampire Realism, Vampire Embrace, Vampiric Hunger and Vampiric Illusions. VR was the only one which came up with a definitive error. Others are likely to conflict too though I reckon
@@ -22215,7 +22644,7 @@ OfficialMods_v5.esp
      BCsounds.esp
      EBQ_Artifact.esp
      Entertainers.esp
-     LeFemmArmor.esp
+     [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
      Master_Index.esp
      Siege at Firemoth.esp]
 
@@ -22229,6 +22658,7 @@ Clean Official Plugins v1.1.esp
 ;; @Official Plugins v1.0 [Combined by Murlocke]
 
 [Conflict]
+ "Clean Official Plugins v1.1.esp" is a compilation of all the official Bethesda mods. You should deactivate the individual mods it includes.
 Clean Official Plugins v1.1.esp
 [ANY AdamantiumArmor.esp
      AreaEffectArrows.esp
@@ -22239,7 +22669,7 @@ Clean Official Plugins v1.1.esp
      BCsounds.esp
      EBQ_Artifact.esp
      Entertainers.esp
-     LeFemmArmor.esp
+     [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
      Master_Index.esp
      Siege at Firemoth.esp]
 
@@ -25415,8 +25845,9 @@ pcc_smeradon_patch_04.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Smeradon 2 Dwemer Tunnels [PCC aka Blockhead]
 
-[Requires]
- "[PCC aka Blockhead's "Smeradon 2 Dwemer Tunnels"] requires Smeradon_17.esp and "Dwemer Tunnels and Coprusarium Cavern.esp" by xereau."
+[Patch]
+ "[PCC aka Blockhead's "Smeradon 2 Dwemer Tunnels"] requires Smeradon_17.esp and "Dwemer Tunnels and Coprusarium Cavern.esp" by xereau.[It] connects the dungeon of Smeradon to the most excellent Dwemer Tunnels."
+ http://mw.modhistory.com/download-31-2677
  (Ref: "pcc_smeradon2DT_05_readme.txt")
 pcc_smeradon2DT_07.esp
 [ALL pcc_smeradon_17.esp
@@ -26917,7 +27348,7 @@ Sri Alchemy BM List Patch.esp
  (Ref:  Taddeus'BalancedArmors - Readme.txt)
 [ANY Taddeus'BalancedArmors.esp
      Taddeus'BalancedArmors_Rotate.esp]
-[ANY LeFemmArmor.esp
+[ANY [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
      adamantiumarmor.esp
      EBQ_Artifact.esp
      bm_wolf_greaves_fix.esp
