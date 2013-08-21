@@ -747,18 +747,26 @@ Advanced Herbalism - BM.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Advanced Herbalism - MO.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Advanced Herbalism - TR & BM.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Advanced Herbalism - TR.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Advanced Herbalism - BM.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -4795,6 +4803,16 @@ Better_Sounds.esp
 Better_Sounds.esp
 BS_BM_WeatherChange.esp
 
+;;Dragon32: BetterSounds-9967.zip\ReadMe_ENG.txt - "This plugins includes the official «Bitter Coast Sounds Plugin», which was significantly improved."
+;;So load mods which bundle bcsounds before Better Sounds
+[Order]
+OfficialMods_v5.esp
+Better_Sounds.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Better_Sounds.esp
+
 [Note]
  !! TJ and Jeka's "Better Sounds" renames several regions:
  !!  Bitter Coast Region --> Bitter Coat Region
@@ -7411,8 +7429,12 @@ DandrasFix.esp
 Bloodmoon.esm
 GDR_MasterFile.esm
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 DN-GDRv1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
 DN-GDRv1.esp
+DN-GDRv1 (BTB Edit).esp
 
 [Requires]
  (Ref: DNGDRv1.zip/"readme.htm")
@@ -7420,45 +7442,13 @@ GDR_MasterFile.esm
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-[Note]
- !! If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
-[ALL [ANY DN-GDRv1.esp
-          DN-GDRv1_NOM.esp]
-     Merged_Objects.esp]
-
-[Conflict]
- Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
+[Requires]
  (Ref: DNGDRv1.zip/"readme.htm")
 [ANY DN-GDRv1.esp
-     DN-GDRv1_NOM.esp]
-Clean Ghostgate.esp
-
-[Conflict]
- Darknut's "Greater Dwemer Ruins" is not compatible with Sabregirls' "Tougher Sixth House"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1_NOM.esp]
-SG-toughersixth.esp
-
-[Conflict]
- The NOM (Necessities of Morrowind) version of Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
- (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1_NOM.esp
-Great House Dagoth.esp
-
-[Conflict]
- Darknut's "Greater Dwemer Ruins" includes "Dagoth Ur Voice Addon v1.0"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1_NOM.esp]
-Dagoth Ur Voice Addon v1.0.esp
-
-[Conflict]
- Darknut's "Greater Dwemer Ruins" includes "Darknut's Unique Ash Vampires"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1_NOM.esp]
-DN_AshVampires.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+GDR_MasterFile.esm
 
 [Conflict]
  If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp, otherwise, use DN-GDRv1.esp.
@@ -7466,57 +7456,78 @@ DN_AshVampires.esp
 DN-GDRv1.esp
 DN-GDRv1_NOM.esp
 
+[Conflict]
+ "If you use NOM (Necessities of Morrowind), then use "DN-GDRv1_NOM (BTB Edit).esp", otherwise, use "DN-GDRv1 (BTB Edit).esp"."
+ (Ref: "Readme - BTB Edit.txt")
+DN-GDRv1 (BTB Edit).esp
+DN-GDRv1_NOM (BTB Edit).esp
+
+[Conflict]
+ "Use one of these [...] in lieu of the original plugin(s)"
+ (Ref: "Readme - BTB Edit.txt")
+[ANY DN-GDRv1.esp
+     DN-GDRv1_NOM.esp]
+[ANY DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+
 [Patch]
  !! If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
  !! (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1_NOM.esp
+[ANY DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
 [ALL GDR_MasterFile.esm
      NOM 2.13.esp]
 
-[Patch]
- MoonAndStar's "Great House Dagoth/ Darknut's Greater Dwemer Ruins Compatibility Patch" patches TheMadGod's "Great House Dagoth" for use with Darknut's "Greater Dwemer Ruins".
- http://mw.modhistory.com/download--7195
- (Ref.Readme GHD-DNGDR Patch.txt)
-[ANY DNGDR-GHD Patch OV.esp
-          DNGDR-GHD Patch.esp]
-[ALL Great House Dagoth.esp
-     DN-GDRv1.esp]
-
-[Patch]
- Darknut's "Greater Dwemer Ruins" has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by the patch: "LAMW_GDRv1_Patch.esp".
- (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
-LAMW_GDRv1_Patch.esp
-[ALL DN-GDRv1.esp
-     [ANY Clean The Lost Artifacts of Morrowind.esm
-	  Clean The Lost Artifacts of Morrowind.esp]]
-
-[Patch]
- Darknut's "Greater Dwemer Ruins" (NOM version) has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by the patch: "LAMW_GDRv1_NOM_Patch.esp".
- (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
-LAMW_GDRv1_NOM_Patch.esp
-[ALL DN-GDRv1_NOM.esp
-     [ANY Clean The Lost Artifacts of Morrowind.esm
-	  Clean The Lost Artifacts of Morrowind.esp]]
-
-[Requires]
+[Conflict]
+ Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
  (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1.esp
-GDR_MasterFile.esm
-
-; Dragon32: Included conflict here for MoonAndStar's patch rather than a new section.
-[Conflict]
- Use only one plugin
-  DNGDR-GHD Patch OV.esp - Use this mod if you want to keep Dagoth Ur's original voices
-  DNGDR-GHD Patch.esp - Use this mod if you want to use the voices from "Dagoth Ur Voice Addon v1.0"
- (Ref.Readme GHD-DNGDR Patch.txt)
-DNGDR-GHD Patch OV.esp
-DNGDR-GHD Patch.esp
+[ANY DN-GDRv1.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+Clean Ghostgate.esp
 
 [Conflict]
- The "DNGDR-GHD Patch.esp" plugin refers to a "DNO_dreamer guard00" that does not exist in "DN-GDRv1_NOM.esp". To make the patch compatible, you may need to edit the patch in the CS to comment out this line of the calmcorprus script: "DNO_dreamer guard00->setfight 10".
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=981265&view=findpost&p=14193898 )
-DN-GDRv1_NOM.esp
-DNGDR-GHD Patch.esp
+ Darknut's "Greater Dwemer Ruins" is not compatible with Sabregirls' "Tougher Sixth House"
+ (Ref: DNGDRv1.zip/"readme.htm")
+[ANY DN-GDRv1.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+SG-toughersixth.esp
+
+[Conflict]
+ The NOM (Necessities of Morrowind) version of Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
+ (Ref: DNGDRv1.zip/"readme.htm")
+[ANY DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+Great House Dagoth.esp
+
+[Conflict]
+ Darknut's "Greater Dwemer Ruins" includes "Dagoth Ur Voice Addon v1.0"
+ (Ref: DNGDRv1.zip/"readme.htm")
+[ANY DN-GDRv1.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+Dagoth Ur Voice Addon v1.0.esp
+
+[Conflict]
+ Darknut's "Greater Dwemer Ruins" includes "Darknut's Unique Ash Vampires"
+ (Ref: DNGDRv1.zip/"readme.htm")
+[ANY DN-GDRv1.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+DN_AshVampires.esp
+
+[Note]
+ !! If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM.esp
+          DN-GDRv1_NOM (BTB Edit).esp]
+     Merged_Objects.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11052,6 +11063,10 @@ GCD_BigMod2_patch.esp
 [ALL Galsiahs Character Development.esp
      BigMod2 v2.0 RELEASE.esp]
 
+[Order]
+BigMod2 v2.0 RELEASE.esp
+GCD_BigMod2_patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Galsiah's Character Development Lean [Galsiah, Huskobar]
@@ -12284,7 +12299,7 @@ Grandmaster of Hlaalu11NOMpatch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Graphic Herbalism [ManaUser]
+;; @Graphic Herbalism 1.2 [ManaUser]
 
 ;;Dragon32: See also - @Herbalism mods [Various]
 
@@ -12327,6 +12342,8 @@ Graphic Herbalism.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Graphic Herbalism.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -12474,14 +12491,14 @@ GraveGoods.esp
  When using "Great House Dagoth.esp" and any version of Bethesda's Master Index plugin, you should use the patch provided. It is also suggested that you read the "Note for Master Index Users" in "readme_Great House Dagoth.txt".
 Great House Dagoth ( Master Index Compatibility ).esp
 [ALL Great House Dagoth.esp
-     [ANY	master_index.esp
-		Wilderness Sounds.esp
-		Wilderness Sounds Bloodmoon.esp
-		Wilderness Sounds Tribunal.esp
-		Wilderness Sounds T & B.esp
-		Clean Official Plugins v1.1.esp
-		OfficialMods_v5.esp
-		propylons1.1.esp]]
+     [ANY master_index.esp
+          Wilderness Sounds.esp
+          Wilderness Sounds Bloodmoon.esp
+          Wilderness Sounds Tribunal.esp
+          Wilderness Sounds T & B.esp
+          Clean Official Plugins v1.1.esp
+          OfficialMods_v5.esp
+          propylons1.1.esp]]
 
 ;[Patch]
 ; When using "Great House Dagoth.esp" and DarkValor's version of the Master Index plug-in, you should use the special patch ;provided. It is also suggested that you read the "Note for Master Index Users" in "readme_Great House Dagoth.txt".
@@ -12555,7 +12572,9 @@ Great House Dagoth ( Master Index Compatibility ).esp
 [ANY DNGDR-GHD Patch.esp
      DNGDR-GHD Patch OV.esp]
 [ALL [ANY DN-GDRv1_NOM.esp
-          DN-GDRv1.esp]
+          DN-GDRv1_NOM (BTB Edit).esp
+          DN-GDRv1.esp
+          DN-GDRv1 (BTB Edit).esp]
      Great House Dagoth.esp]
 
 [Conflict]
@@ -12577,19 +12596,30 @@ DNGDR-GHD Patch OV.esp
 
 [Order]
 DN-GDRv1.esp
+DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch.esp
 
 [Order]
 DN-GDRv1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
 DNGDR-GHD Patch.esp
 
 [Order]
 DN-GDRv1.esp
+DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch OV.esp
 
 [Order]
 DN-GDRv1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
 DNGDR-GHD Patch OV.esp
+
+[Conflict]
+ The "DNGDR-GHD Patch.esp" plugin refers to a "DNO_dreamer guard00" that does not exist in "DN-GDRv1_NOM.esp". To make the patch compatible, you may need to edit the patch in the CS to comment out this line of the calmcorprus script: "DNO_dreamer guard00->setfight 10".
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=981265&view=findpost&p=14193898 )
+[ANY DN-GDRv1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+DNGDR-GHD Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13448,7 +13478,7 @@ H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Herbalism [balor]
+;; @Herbalism 1.3 [balor]
 
 ;;Dragon32: See also - @Herbalism mods [Various]
 
@@ -13479,6 +13509,8 @@ Herbalismv1.3(Tribunal).esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Herbalismv1.3(Tribunal).esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -13526,6 +13558,8 @@ Herbalismv1.1.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Herbalismv1.1.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -13583,10 +13617,14 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 ; JMS - to ensure that HFP flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Syc_HerbalismforPurists.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Syc_HerbalismforPurists_TB_ONLY.esp
 
 ;; (Ref: "Readme - Herbalism for Purists.txt")
@@ -13714,6 +13752,8 @@ Herbalism_Lite_+Bloodmoon_v1.0.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Herbalism_Lite_v1.0.esp
 Herbalism_Lite_+Tribunal_v1.0.esp
 Herbalism_Lite_+Bloodmoon_v1.0.esp
@@ -13785,6 +13825,8 @@ Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -13923,10 +13965,14 @@ Herbalism Redux 1.12a - Bloated MW.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Herbalism Redux 1.12a.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Herbalism Redux 1.12a - Bloated MW.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -14039,10 +14085,14 @@ HR 1.12a BMW + EW 1.5.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 HR 1.12a + EW 1.5.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 HR 1.12a BMW + EW 1.5.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -15620,7 +15670,17 @@ Keening_Reforged_v2.0.ESP
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8474 )
 Keening_Reforged_v2.0_GDR.ESP
 [ANY DN-GDRv1_NOM.esp
-     DN-GDRv1.esp]
+     DN-GDRv1_NOM (BTB Edit).esp
+     DN-GDRv1.esp
+     DN-GDRv1 (BTB Edit).esp]
+
+;;Dragon32: Checked in TESPCD, SCPT "MrTSLorkhanHeart"
+[Order]
+DN-GDRv1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
+DN-GDRv1.esp
+DN-GDRv1 (BTB Edit).esp
+Keening_Reforged_v2.0_GDR.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16142,7 +16202,9 @@ Laszlo_Abot_Birds_v7.385.esp
 [Requires]
 Laszlo_CX_v7.385.esp
 [ALL Lazslo_Manor_v7.385.esp
-    Creatures.esp]
+     [ANY Creatures.esp
+          Creatures (lore).esp
+          Creatures (Semi).esp]]
 
 [Requires]
 Laszlo_CMF_v7.385.esp
@@ -17041,6 +17103,40 @@ Lord Alt Tab.esp
 [Order]
 Lord Alt Tab.esp
 LordAltabTrader Fix v0.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lost Artifacts of Tamriel DN_GDRv1 Patch [latendresse76]
+
+[Patch]
+ Darknut's "Greater Dwemer Ruins" has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by latendresse76's patch "LAMW_GDRv1_Patch.esp".
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8461
+ (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
+LAMW_GDRv1_Patch.esp
+[ALL [ANY DN-GDRv1.esp
+          DN-GDRv1 (BTB Edit).esp]
+     [ANY Clean The Lost Artifacts of Morrowind.esm
+	  Clean The Lost Artifacts of Morrowind.esp]]
+
+[Order]
+DN-GDRv1.esp
+DN-GDRv1 (BTB Edit).esp
+LAMW_GDRv1_Patch.esp
+
+[Patch]
+ Darknut's "Greater Dwemer Ruins" (NoM version) has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by latendresse76's patch "LAMW_GDRv1_NOM_Patch.esp".
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8461
+ (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
+LAMW_GDRv1_NOM_Patch.esp
+[ALL [ANY DN-GDRv1_NOM.esp
+          DN-GDRv1_NOM (BTB Edit).esp]
+     [ANY Clean The Lost Artifacts of Morrowind.esm
+	  Clean The Lost Artifacts of Morrowind.esp]]
+
+[Order]
+DN-GDRv1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
+LAMW_GDRv1_Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21460,6 +21556,8 @@ NoM_Creatures Loot Standard.esp
 ; JMS - load order deduced
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 NoM_Creatures Loot PHW.esp
 NoM_Creatures Loot Standard.esp
 
@@ -21569,6 +21667,8 @@ NoM 3.0.esp
 
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 NoM 3.0.esp
 
 [Conflict]
@@ -29042,6 +29142,8 @@ Ultra Light Herbalism.esp
 ; Dragon32 - to ensure that flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
 Ultra Light Herbalism.esp
 
 ;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
@@ -33138,13 +33240,15 @@ Wilderness Sounds T & B.esp
           Clean Official Plugins v1.1.esp
           OfficialMods_v5.esp]]
 
-;; Load Wilderness Sounds after Leon "pancreas" Medado's Morrowind
-;; Sound Enhancements and Duncann's Atmospheric Sound Effects
-;; (Ref: "Wilderness Sounds 3.0.doc")
+;;Load Wilderness Sounds after Leon "pancreas" Medado's Morrowind Sound Enhancements and Duncann's Atmospheric Sound Effects
+;;(Ref: "Wilderness Sounds 3.0.doc")
+;;Dragon32: Assumed similar for other large sound mods (PirateLord's "Expanded Sounds" and TJ and Jeka's "Better Sounds")
 [Order]
 AtmosphericSoundEffects-3.0.esp
 AtmosphericSoundEffects-3.0-Tribunal.esp
 AtmosphericSoundEffects-3.0-TBM.esp
+Better_Sounds.esp
+Expanded Sounds.esp
 Sound Enhancements.esp
 Wilderness Sounds Bloodmoon.esp
 Wilderness Sounds T & B.esp
