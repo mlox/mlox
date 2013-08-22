@@ -1456,7 +1456,11 @@ BC altbegin 2.2.esp
           altbegin 2.1.esp
           BC altbegin 2.1(nioliv).esp
           BC altbegin 2.1.esp]
-     [ANY Galsiahs Character Development.esp
+     [ANY [ANY Galsiahs Character Development.esp
+               GCD v1.08 with Startscript, fixed [Galsiah].esp
+               GCDLean204STD.esp
+               GCDLean204EASY.esp
+               GCDLean204HARD.esp]
           NoM 3.0.esp]]
 
 
@@ -2010,6 +2014,33 @@ BTB - Equipment.esp
 [ALL [ANY Clean Arkeylan Armor.esp
           Arkeylan Armor 2.esp]
      [NOT Better Bodies.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Armor Effects-WD 2.0 [LDones and WDog]
+
+[Conflict]
+ "DON'T use both versions at once."
+ (Ref: "readme_ArmorEffects-LD.txt")
+Armor Effects-LD 2.0-WD (No Agility Penalty).esp
+Armor Effects-LD 2.0-WD.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Armor Effects Armor Balancing Companion-LD 1.0 [LDones]
+
+;;Dragon32: TESPCD shows conflicts for ebony_towershield, daedric_shield and daedric_towershield
+[Order]
+Wakim's Game Improvement 9.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
+[Order]
+Balance - items.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8033,12 +8064,12 @@ Birthsigns.esp
 Birthsigns.esp
 Definitive Birthsigns Redux Patch.esp
 
-;;Dragon32: Not sure if this works with "Galsiah's Character Development Lean [Galsiah, Huskobar]" or "GCD v1.08 with Startscript, fixed [Gluby]"
 [Note]
  "If you use GCD, be sure to also use the DBirth-Redux GCD Patch.esp found in the GCD patch folder."
  (Ref: "Definitive Birthsign Redux.txt")
 [ALL Definitive Birthsigns Redux Patch.esp
-     Galsiahs Character Development.esp
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
      [NOT [ANY BirthsignsAMFun_BM.esp
                BirthsignsAMFun_MW.esp]
           DBirth-Redux GCD Patch.esp]]
@@ -8055,6 +8086,7 @@ DBirth-Redux GCD Patch.esp
      [ANY BirthsignsAMFun_BM.esp
           BirthsignsAMFun_MW.esp]
      [NOT Galsiahs Character Development.esp]
+     [NOT GCD v1.08 with Startscript, fixed [Galsiah].esp]
      [NOT DBirth-Redux BAMF Patch.ESP]]
 
 [Order]
@@ -8076,7 +8108,8 @@ Definitive Birthsigns Redux Patch.esp
 [ALL Definitive Birthsigns Redux Patch.esp
      [ANY BirthsignsAMFun_BM.esp
           BirthsignsAMFun_MW.esp]
-     Galsiahs Character Development.esp
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
      [NOT DBirth-Redux GCDxBAMF Patch.ESP]]
 
 [Order]
@@ -8088,6 +8121,14 @@ DBirth-Redux GCDxBAMF Patch.ESP
  (Ref: "Definitive Birthsign Redux.txt")
 Definitive Birthsigns Redux Patch.esp
 Definitive Birthsigns Unofficial Patch.esp
+
+[Conflict]
+ "GCD Lean and the GCD patch from Pluto's Definitive Birthsigns Redux Patches are incompatible. Trying to use them both results in a crash while loading due to Lean's changes."
+ (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=22922747 )
+DBirth-Redux GCD Patch.esp
+[ANY GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8105,13 +8146,14 @@ Birthsigns.esp
 Birthsigns.esp
 Definitive Birthsigns Unofficial Patch.esp
 
-;;Dragon32: Not sure if this works with "Galsiah's Character Development Lean [Galsiah, Huskobar]" or "GCD v1.08 with Startscript, fixed [Gluby]"
+;;Dragon32: Not sure if this works with "Galsiah's Character Development Lean [Galsiah, Huskobar]"
 [Patch]
  "GCD Compatibility via the "DB-UP GCD Patch.esp" file"
  (Ref: "Definitive Birthsigns Unoffical Patch README.txt")
 DB-UP GCD Patch.esp
 [ALL Definitive Birthsigns Unofficial Patch.esp
-     Galsiahs Character Development.esp]
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]]
 
 [Order]
 Definitive Birthsigns Unofficial Patch.esp
@@ -8278,6 +8320,7 @@ Diablerie.esp
 ;;(Ref: Diablerie_Readme.txt)
 [Order]
 Galsiahs Character Development.esp
+GCD v1.08 with Startscript, fixed [Galsiah].esp
 GCD StartScript for Trib or Bloodmoon.esp
 GCD better balanced birthsigns.esp
 GCD Over 60 level speedup.esp
@@ -9394,7 +9437,11 @@ Enchantable Gloves of the Bal Molagmer (uber).esp
  Arcimaestro Antares' "Enchanting Desk" shouldn't be used with any variation of GCD. GCD and mods derived from it use a script to keep track of stats, which can cause all kinds of havoc with mods like this that boost stats.
  (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=22907825 )
 Enchanting Desk.esp
-Galsiahs Character Development.esp
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10876,8 +10923,12 @@ pcc_further_ext_FIX_01.esp
 
 ;;Dragon 32: See also Magicka regeneration mods [Various]
 
+;;Dragon32: also includes rules for "@GCD v1.08 with Startscript, fixed [Gluby]"
+;;[PATCH] rule doesn't seem to accept NOT arguments so couldn't suppress rules when "Galsiahs Character Development.esp" is present.
+
 [Order]
 Galsiahs Character Development.esp
+GCD v1.08 with Startscript, fixed [Galsiah].esp ;;Gluby
 GCD StartScript for Trib or Bloodmoon.esp
 GCD better balanced birthsigns.esp
 GCD Over 60 level speedup.esp
@@ -10897,13 +10948,15 @@ GCD_107x_to_108_patch_MwOnly.esp
 
 ;; expdep
 [Requires]
- "Galsiahs Character Development.esp" depends on using one of the
- expansions because it uses the Tribunal function
- getspellreadied. This dependency was removed with the
- patch: "GCD_107x_to_108_patch_MwOnly.esp", which you should use
- if you do not have the expansions.
+ "Galsiahs Character Development.esp" depends on using one of the expansions because it uses the Tribunal function "getspellreadied".
+ This dependency was removed with the patch: "GCD_107x_to_108_patch_MwOnly.esp", which you should use if you do not have the expansions.
 [ALL Galsiahs Character Development.esp
      [NOT GCD_107x_to_108_patch_MwOnly.esp]]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+GCD StartScript for Trib or Bloodmoon.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
@@ -10912,7 +10965,8 @@ GCD_107x_to_108_patch_MwOnly.esp
  (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
 [ANY StateBasedHitPointsv1.1.esp
      StateBasedHitPoints1.0.esp]
-Galsiahs Character Development.esp
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp]
 
 ;; "GCD settings fairly easy" ... "Do not use this with the hard settings esp"
 [Conflict]
@@ -10921,25 +10975,36 @@ Galsiahs Character Development.esp
 GCD settings fairly easy.esp
 GCD settings hard.esp
 
-[Requires]
-GCD StartScript for Trib or Bloodmoon.esp
-[ANY Tribunal.esm
-     Bloodmoon.esm]
+[Patch]
+CharGen Revamped delay2.esp
+[ALL CharGen_Revamped_v14.esp
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]]
 
 [Order]
 CharGen_Revamped_v14.esp
 CharGen Revamped delay2.esp
 
-[Patch]
-CharGen Revamped delay2.esp
-[ALL CharGen_Revamped_v14.esp
-     Galsiahs Character Development.esp]
+[Conflict]
+ Disable these mods when running Gluby's "GCD v1.08 with Startscript, fixed" as Gluby's mod "Incorporates the v1.08 patch [and] incorporates the Startscript"
+ (Ref: "GCD v1.08 with Startscript, fixed [Galsiah] - Readme.txt")
+[ALL GCD v1.08 with Startscript, fixed [Galsiah].esp
+     [ANY Galsiahs Character Development.esp
+          GCD StartScript for Trib or Bloodmoon.esp
+          GCD_107x_to_108_patch.esp]]
 
 ;; GCD TEO compatibility patch.esp:
-;; "To be used only if you use Thief Experience Overhaul (by LDones). The
-;; patch must be /after/ TEO in the load order"
-;; TBD - This rule may need double-checking, since the modular version
-;; of TEO has more .esps, which may need to appear below
+;; "To be used only if you use Thief Experience Overhaul (by LDones). The patch must be /after/ TEO in the load order"
+;; TBD - This rule may need double-checking, since the modular version of TEO has more .esps, which may need to appear below
+[Patch]
+ "[GCD TEO compatibility patch.esp is] to be used only if you use Thief Experience Overhaul (by LDones)."
+ (Ref: "GCD Readme first 107c.txt")
+GCD TEO compatibility patch.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
+     [ANY Stealth Enhancements-LD 1.5b (Tribunal).esp
+	  Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp]]
+
 [Order]
 Stealth Enhancements-LD 1.5b (Tribunal).esp
 GCD TEO compatibility patch.esp
@@ -10948,24 +11013,103 @@ GCD TEO compatibility patch.esp
 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 GCD TEO compatibility patch.esp
 
-[Patch]
- (Ref: "GCD Readme first 107c.txt")
-GCD TEO compatibility patch.esp
-[ALL Galsiahs Character Development.esp
-     [ANY Stealth Enhancements-LD 1.5b (Tribunal).esp
-	  Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp]]
-
 ;; GCD - Cult of the clouds patch
 ;; "Use only with CoC. Should be after CoC in the load order."
+[Patch]
+ "[GCD - Cult of the Clouds patch.fixes] a few minor issues using GCD with CoC. Use only with CoC."
+ (Ref: "GCD Readme first 107c.txt")
+GCD - Cult of the Clouds patch.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
+     MW_CultOfTheClouds_v10.esp]
+
 [Order]
 MW_CultOfTheClouds_v10.esp
 GCD - Cult of the Clouds patch.esp
 
+;; GCD_SS_patch
+;; "Only use with Scripted Spells (Cortex). Should be after Scripted
+;; Spells in the load order."
+;; (Ref: "GCD Readme first 107c.txt")
 [Patch]
+ "Patch for use of Scripted Spells with GCD. Only use with Scripted Spells (Cortex)."
  (Ref: "GCD Readme first 107c.txt")
-GCD - Cult of the Clouds patch.esp
-[ALL Galsiahs Character Development.esp
-     MW_CultOfTheClouds_v10.esp]
+GCD_SS_patch.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
+     Scripted_Spells.esp]
+
+[Order]
+Scripted_Spells.esp
+GCD_SS_patch.esp
+
+;; GCD_WE_patch
+;; "Load order shouldn't matter for this patch."
+;; (Ref: "GCD Readme first 107c.txt")
+;; (We only put in an order rule so that the patch appears near the
+;; plugins it is related to.)
+[Patch]
+ "Patch for use only with Werewolf Evolution (Cortex)."
+ (Ref: "GCD Readme first 107c.txt")
+GCD_WE_patch.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
+     Werewolf_Evolution.esp]
+
+[Order]
+Werewolf_Evolution.esp
+GCD_WE_patch.esp
+
+[Patch]
+ You may need to get the following patch to make GCD work well with BigMod2:
+ http://www.mediafire.com/file/zmnr0gzzwy5/GCD_BigMod2_patch.zip
+ http://mw.modhistory.com/download-90-1812
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=913903&st=0&p=13269662&;entry13269662 )
+GCD_BigMod2_patch.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]
+     BigMod2 v2.0 RELEASE.esp]
+
+[Order]
+BigMod2 v2.0 RELEASE.esp
+GCD_BigMod2_patch.esp
+
+;; Note: Brittlewind fix is included in MPP, see MPP rules
+;; Brittlewind fix
+;; "This fixes the Brittlewind bug introduced by Bloodmoon. This bug
+;; gives all NPCs a powerful frost damage spell (10pts for 10 seconds)
+;; which usually spells death to level 1 characters. GCD can apparently
+;; trigger this bug, so if you use Bloodmoon, then you should use this
+;; fix esp (unless you enjoy getting frozen to death repeatedly)."
+;; (Ref: "GCD Readme first 107c.txt")
+[Requires]
+ (Ref: "GCD Readme first 107c.txt")
+Brittlewind fix.esp
+Bloodmoon.esm
+
+[Note]
+ The MPP (Morrowind Patch Project) includes the Brittlewind fix, and it is recommended you use that instead.
+[ALL Brittlewind fix.esp
+     [NOT [ANY Morrowind Patch v1.6.4.esm
+	       Morrowind Patch v1.6.5-BETA.esm
+               Morrowind Patch 1.6.5 Beta (BTB Edit).esm]]]
+
+;; GCD_VH_patch2
+;; "Only use with Vampire HungerIII (zennorious). Should be after
+;; Vampire HungerIII in the load order."
+;; (Ref: "GCD Readme first 107c.txt")
+[Order]
+Vampiric Hunger Base.esp
+GCD_VH_patch2.esp
+
+; Version 1.2 of Vampiric Hunger (size == 288521) no longer requires this patch
+; Readme_VH.htm: "Do not enable the Vampiric Hunger patch for Galsiah's Character Development. That was created for version 1.0 and it's no longer necessary."
+; See "Vampiric Hunger III v1.2 [zennorious]"
+;[Patch]
+; (Ref: "GCD Readme first 107c.txt")
+;GCD_VH_patch2.esp
+;[ALL Galsiahs Character Development.esp
+;     Vampiric Hunger Base.esp]
 
 ; Deprecated in deference to: havish_scimitar_gcd_update.rar
 ;;; Havish patch
@@ -10989,83 +11133,6 @@ GCD - Cult of the Clouds patch.esp
 ;GCD_Havish_patch.esp
 ;[ANY Tribunal.esm
 ;     Bloodmoon.esm]
-
-;; GCD_SS_patch
-;; "Only use with Scripted Spells (Cortex). Should be after Scripted
-;; Spells in the load order."
-;; (Ref: "GCD Readme first 107c.txt")
-[Order]
-Scripted_Spells.esp
-GCD_SS_patch.esp
-
-[Patch]
- (Ref: "GCD Readme first 107c.txt")
-GCD_SS_patch.esp
-[ALL Galsiahs Character Development.esp
-     Scripted_Spells.esp]
-
-;; GCD_VH_patch2
-;; "Only use with Vampire HungerIII (zennorious). Should be after
-;; Vampire HungerIII in the load order."
-;; (Ref: "GCD Readme first 107c.txt")
-[Order]
-Vampiric Hunger Base.esp
-GCD_VH_patch2.esp
-
-; Version 1.2 of Vampiric Hunger (size == 288521) no longer requires this patch
-; Readme_VH.htm: "Do not enable the Vampiric Hunger patch for Galsiah's Character Development. That was created for version 1.0 and it's no longer necessary."
-;[Patch]
-; (Ref: "GCD Readme first 107c.txt")
-;GCD_VH_patch2.esp
-;[ALL Galsiahs Character Development.esp
-;     Vampiric Hunger Base.esp]
-
-;; Note: Brittlewind fix is included in MPP, see MPP rules
-;; Brittlewind fix
-;; "This fixes the Brittlewind bug introduced by Bloodmoon. This bug
-;; gives all NPCs a powerful frost damage spell (10pts for 10 seconds)
-;; which usually spells death to level 1 characters. GCD can apparently
-;; trigger this bug, so if you use Bloodmoon, then you should use this
-;; fix esp (unless you enjoy getting frozen to death repeatedly)."
-;; (Ref: "GCD Readme first 107c.txt")
-[Requires]
- (Ref: "GCD Readme first 107c.txt")
-Brittlewind fix.esp
-Bloodmoon.esm
-
-[Note]
- The MPP (Morrowind Patch Project) includes the Brittlewind fix, and it is recommended you use that instead.
-[ALL Brittlewind fix.esp
-     [NOT [ANY Morrowind Patch v1.6.4.esm
-	       Morrowind Patch v1.6.5-BETA.esm
-               Morrowind Patch 1.6.5 Beta (BTB Edit).esm]]]
-
-;; GCD_WE_patch
-;; "Load order shouldn't matter for this patch."
-;; (Ref: "GCD Readme first 107c.txt")
-;; (We only put in an order rule so that the patch appears near the
-;; plugins it is related to.)
-[Order]
-Werewolf_Evolution.esp
-GCD_WE_patch.esp
-
-[Patch]
- (Ref: "GCD Readme first 107c.txt")
-GCD_WE_patch.esp
-[ALL Galsiahs Character Development.esp
-     Werewolf_Evolution.esp]
-
-[Patch]
- You may need to get the following patch to make GCD work well with BigMod2:
- http://www.mediafire.com/file/zmnr0gzzwy5/GCD_BigMod2_patch.zip
- (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=913903&st=0&p=13269662&;entry13269662 )
-GCD_BigMod2_patch.esp
-[ALL Galsiahs Character Development.esp
-     BigMod2 v2.0 RELEASE.esp]
-
-[Order]
-BigMod2 v2.0 RELEASE.esp
-GCD_BigMod2_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11285,37 +11352,6 @@ Gartheka update.esp
 [Note]
  Please ensure that you have copied the contents of the Forest Elf Meshes and Textures folders into the respective Morrowind Folders.
 Frozen Forest Plug-in.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @GCD v1.08 with Startscript, fixed [Gluby]
-
-;;Dragon32: Need to duplicate the standard rules, either here or by modifying the main GCD entry. Trouble is the PATCH rules doesn't seem to accept NOT so we can't suppress rules when "Galsiahs Character Development.esp" is present. Generally, replace so "Galsiahs Character Development.esp" --> "GCD v1.08 with Startscript, fixed [Galsiah].esp" At least we've got load order here
-
-;;Dragon 32: See also Magicka regeneration mods [Various]
-
-[Conflict]
- Disable these mods when running Gluby's "GCD v1.08 with Startscript, fixed"
-[ALL GCD v1.08 with Startscript, fixed [Galsiah].esp
-     [ANY Galsiahs Character Development.esp
-          GCD StartScript for Trib or Bloodmoon.esp
-          GCD_107x_to_108_patch.esp]]
-
-[Order]
-GCD v1.08 with Startscript, fixed [Galsiah].esp
-GCD better balanced birthsigns.esp
-GCD Over 60 level speedup.esp
-GCD Restore Potions Fix.esp
-GCD settings fairly easy.esp
-GCD settings hard.esp
-GCD - Cult of the Clouds patch.esp
-GCD_Havish_patch.esp
-GCD_SS_patch.esp
-GCD TEO compatibility patch.esp
-GCD_VH_patch2.esp
-CharGen Revamped delay2.esp
-Brittlewind fix.esp
-GCD_WE_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12919,7 +12955,8 @@ Havish - Scimitar Update (no MWE).esp
 [ALL Havish.esm
      MWE_Base.esp
      [ANY Booty.esp
-	  Galsiahs Character Development.esp]]
+	  [ANY Galsiahs Character Development.esp
+               GCD v1.08 with Startscript, fixed [Galsiah].esp]]]
 Havish - Scimitar Update.esp
 
 [Requires]
@@ -12936,7 +12973,8 @@ Havish - Scimitar Update.esp
  (Ref: "Havish - Scimitar.txt")
 [ALL Havish.esm
      [NOT MWE_Base.esp]
-     Galsiahs Character Development.esp]
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp]]
 Havish - Scimitar Update + GCD (no MWE).esp
 
 [Requires]
@@ -12953,7 +12991,8 @@ Havish - Scimitar Update + GCD (no MWE).esp
 [ALL Havish.esm
      Booty.esp
      [NOT MWE_Base.esp]
-     [NOT Galsiahs Character Development.esp]]
+     [NOT Galsiahs Character Development.esp]
+     [NOT GCD v1.08 with Startscript, fixed [Galsiah].esp]]
 Havish - Scimitar Update (no MWE).esp
 
 [Requires]
@@ -15015,7 +15054,8 @@ Bloodmoon.esm
  "[Improved Skilled Magicka] requires GCD if you want the skill gains to go towards your levelling, without GCD it will just be a bonus that doesn't affect your levelling."
  (Ref: "Improved Skilled Magicka.txt")
 [ALL Improved Skilled Magicka.esp
-     [NOT Galsiahs Character Development.esp]]
+     [NOT Galsiahs Character Development.esp]
+     [NOT GCD v1.08 with Startscript, fixed [Galsiah].esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17332,7 +17372,11 @@ Madd Leveler - Base.esp
 
 [Conflict]
  Do not use both Madd and GCD leveling mods at the same time.
-Galsiahs Character Development.esp
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
 Madd Leveler - Base.esp
 
 [Conflict]
@@ -20180,7 +20224,11 @@ MWInhabitants Freeform (Vol 1).esp
  The unpatched version of "Morrowind Inhabitants" conflicts with "Galsiah's Character Development". Ensure you apply the "Morrowind Inhabitants" patch.
   (Ref: MWInhabitants PATCH.01 README.txt)
 [ALL MWInhabitants Freeform (Vol 1).esp
-     Galsiahs Character Development.esp
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp
+          GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
      [NOT MWInhabitants Freeform PATCH.01.esp]]
 
 [Order]
@@ -26224,7 +26272,11 @@ DA_Sobitur_YA_Compatibility.ESP
 [Note]
  "[Galsiahs Character Development] - its been reported that GCD could conflict with this mod. However the two "work" together. The only problem is at the start of the game, instead of the menus poping up one by one, they pop up all at once. Not really a game breaking issuie, just annoying."
  (Ref: "Bloodmoon Chargen v6 Readme.txt")
-[ALL Galsiahs Character Development.esp
+[ALL [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp
+          GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]
      bloodmoonchargen.ESP]
 
 
@@ -26863,7 +26915,11 @@ Cali_StarstoneOutpost.esp
  You don't need "State-Based Hit Points" if you are using "Galsiah's Character Development", it already adjusts health.
  (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
 Talrivian's State-Based HP Mod v.2.2.esp
-Galsiahs Character Development.esp
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
 
 [Note]
  ! Talrivian has released an updated verion of HotFusion4's "State-Based Hit Points":
@@ -28373,6 +28429,104 @@ Constance1_0.esp
 [Order]
 GIANTS Ultimate Control file.esp
 Constance1_0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Thief Experience Overhaul 1.3b [LDones]
+
+[Conflict]
+ "Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp" conmbines the effects of the four individual mods from LDones' "Thief Experience Overhaul 1.3b".
+ (Ref: "readme_ThiefExperienceOverhaul-LD(Tribunal).txt")
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+[ANY Improved Lockpicking.esp
+     Improved Open Spell Balance-LD.esp
+     Improved Trap Settings (Tribunal).esp
+     Stealth Enhancements-LD 1.5b (Tribunal).esp]
+
+;;Dragon32: TESPCD shows conficts for ENCH "sc_ekashslocksplitter_en" and "sc_ondusisunhinging_en"
+[Order]
+BTB - Equipment.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+;;Dragon32: assorted plugins which merge in "BTB - Equipment.esp"
+[Order]
+BTB - Unique Finery Equipment.esp
+HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+;;Dragon32: TESPCD shows conficts for GMST "fTrapCostMult" and "fPickLockMult"
+[Order]
+BTB - Settings.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+;;Dragon32: TESPCD shows conficts for SPEL "open", "wild open", "strong open", "great open", "ondusi's open door"
+[Order]
+BTB - Spells.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+;;Dragon32: TESPCD shows conficts for MGEF "Index 13"
+[Order]
+Balance - Magic Effects.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+;;Dragon32: TESPCD shows conficts for SPEL "great open" and "strong open"
+[Order]
+Balance - spells.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+;;Dragon32: TESPCD shows conficts for GMST "fPickLockMult"
+[Order]
+BTB - Settings.esp
+Improved Lockpicking.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Improved Lockpicking.esp
+
+;;Dragon32: TESPCD shows conficts for ENCH "sc_ekashslocksplitter_en" and "sc_ondusisunhinging_en"
+[Order]
+BTB - Equipment.esp
+Improved Open Spell Balance-LD.esp
+
+;;Dragon32: assorted plugins which merge in "BTB - Equipment.esp"
+[Order]
+BTB - Unique Finery Equipment.esp
+HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB.esp
+Improved Open Spell Balance-LD.esp
+
+;;Dragon32: TESPCD shows conficts for SPEL "open", "wild open", "strong open", "great open", "ondusi's open door"
+[Order]
+BTB - Spells.esp
+Improved Open Spell Balance-LD.esp
+
+;;Dragon32: TESPCD shows conficts for MGEF "Index 13"
+[Order]
+Balance - Magic Effects.esp
+Improved Open Spell Balance-LD.esp
+
+;;Dragon32: TESPCD shows conficts for SPEL "great open" and "strong open"
+[Order]
+Balance - spells.esp
+Improved Open Spell Balance-LD.esp
+
+;;Dragon32: TESPCD shows conficts for GMST "fTrapCostMult"
+[Order]
+BTB - Settings.esp
+Improved Trap Settings (Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31615,6 +31769,7 @@ VH Clan Example.esp
 ;; should come after GCD, checked with TESPCD - JMS
 [Order]
 Galsiahs Character Development.esp
+GCD v1.08 with Startscript, fixed [Galsiah].esp
 Vampiric Hunger Base.esp
 Vampiric Hunger Extended.esp
 Vampiric Hunger - SU.esp
@@ -32308,6 +32463,12 @@ Weapon Range Balance.esp
  Use only one of these two .esps.
 Wakim's Game Improvement 9.esp
 Wakim's Game Improvements with No-glo v9.esp
+
+[Requires]
+ "Please note if you use the "Balance - Spells" mod, you MUST used the "Balance - Magic Effects" mod, as the "Spells" mod is intended to work with the new "Magic Effect" changes."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7382 )
+Balance - spells.esp
+Balance - Magic Effects.esp
 
 ; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
 ; in particular: "Your kind is not welcome here, vampire. Ask me what you will, and be on your way." which does: ModDisposition -10
