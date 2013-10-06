@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 BEGIN {
-    $::VERSION = "0.37t";
+    $::VERSION = "0.37v";
 }
 # tes3cmd: command line tool to do various hacks with TES3 plugins
 # Copyright 2012 by John Moonsugar
@@ -14,7 +14,8 @@ BEGIN {
 # pp -o tes3cmd.exe tes3cmd
 
 # modify --replace needs a way to specify first replacement only (override default global replace)
-
+# change default backup strategy to stash in tes3cmd/Backups
+# field name inputs should be automatically lowercased so they match correctly.
 # delete should support sub-record groups. (what do with MVRF ???)
 #
 #add ability to dump with things splitted out into individual files --output-folder
@@ -351,6 +352,7 @@ sub find_datadir {
 	$TES3CMD_DIR = '.';
 	$opt_no_cache = 1;	# don't know where MW stuff is, turn off caching
     }
+    prn qq{<DATADIR> is "$DATADIR"} if (VERBOSE);
     unless (-d $TES3CMD_DIR) {
 	if (-e $TES3CMD_DIR) {
 	    abort(qq{"$TES3CMD_DIR" exists, but is not a directory, please remove or rename it.});
@@ -1496,7 +1498,7 @@ my @RECDEFS =
 	       [NAME => [["id", "Z*"]]],
 	       [DESC => @RD_Description],
 	       [FNAM => [["name", "Z*"]]],
-	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [NPCS => [["spell", ["Z32", "a32"]]]], # Spells
 	       [TNAM => [["image", "Z*"]]]
 	      ], { rdflags => [qw(mergeable)] }],
      [CELL => [
@@ -1612,7 +1614,7 @@ my @RECDEFS =
 				     $self->{x}, $self->{y}, flags_tostr($self->{flags}, \%CELL_FLAGS));
 			 }
 		     } else {
-			 sprintf("X:%0.2f  Y:%0.2f  Z:%0.2f  X_Angle:%0.2f  Y_Angle:%0.2f  Z_Angle:%0.2f",
+			 sprintf("X:%0.3f  Y:%0.3f  Z:%0.3f  X_Angle:%0.4f  Y_Angle:%0.4f  Z_Angle:%0.4f",
 				 $self->{x}, $self->{y}, $self->{z}, $self->{x_angle}, $self->{y_angle}, $self->{z_angle});
 		     }
 		 },
@@ -1671,7 +1673,7 @@ my @RECDEFS =
 
 	       [KNAM => [["key", "Z*"]]],
 	       [NAM0 => [["reference_count", "L"]], { rdflags => [qw(startgroup)] }],
-	       [NAM5 => [["color", "L"]]], # Map Color
+	       [NAM5 => [["color", "L"]]], # Map Color (TBD - display as RGB)
 	       [NAME => [["name", "Z*"]]],
 	       [RGNN => [["region", "Z*"]]],
 	       [WHGT => [["water_height", "f"]]],
@@ -1744,9 +1746,9 @@ my @RECDEFS =
 			 ["primary_attribute_2", "l", { lookup => \%ATTRIBUTE }],
 			 ["specialization", "L", { lookup => \%SPECIALIZATION }],
 			 (["minor_skill_1", "l", { lookup => \%SKILL }], ["major_skill_1", "l", { lookup => \%SKILL }]) x 5,
-			 ["flags", "L", { lookup => \%PLAYABLE }], ["autocalc", "L", { symflags => \%AUTOCALC_FLAGS }]],
-		{
-		 columns => 2 }],
+			 ["flags", "L", { lookup => \%PLAYABLE }],
+			 ["autocalc", "L", { symflags => \%AUTOCALC_FLAGS }]],
+		{ columns => 2 }],
 	       [DESC => @RD_Description],
 	       [FNAM => [["name", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
@@ -1768,7 +1770,7 @@ my @RECDEFS =
      [CNTC => [
 	       [NAME => [["id", "Z*"]]],
 	       [INDX => [["index", "L"]]],
-	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]],
+	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]], # Objects
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array_ess], # Script Localvar Float Data
@@ -1786,7 +1788,7 @@ my @RECDEFS =
 	       [FLAG => [["container_flags", "L", { symflags => \%CONTAINER_FLAGS }]]],
 	       [INDX => [["unknown_1", "L"]], { rdflags => [qw(ess)] }],
 	       [MODL => [["model", "Z*"]]],
-	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]],
+	       [NPCO => [["count", "l"], ["Name", ["Z32", "a32"]]]], # Objects
 	       [SCRI => [["script", "Z*"]]],
 	      ], { rdflags => [qw(mergeable)] }],
      # CHECK CS ??? (Animations? Unknowns?)
@@ -1824,8 +1826,8 @@ my @RECDEFS =
 	       [FNAM => [["name", "Z*"]]],
 	       [INDX => @RD_Unknown_ess],
 	       [MODL => [["model", "Z*"]]],
-	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]],
-	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]], # Objects (Inventory)
+	       [NPCS => [["spell", ["Z32", "a32"]]]],		    # Spells
 	       [NPDT => [["type", "L", { lookup => \%CREA_TYPE }], ["lev", "L"], ["str", "L"], ["int", "L"], ["wil", "L"],
 			 ["agi", "L"], ["spd", "L"], ["end", "L"], ["per", "L"], ["lck", "L"],
 			 ["health", "L"], ["spell_points", "L"], ["fatigue", "L"], ["soul", "L"],
@@ -1845,7 +1847,7 @@ my @RECDEFS =
 	       [AI_T => @RD_AI_Travel],
 	       [AI_W => @RD_AI_Wander_CREA],
 	       [INDX => [["instance", "L"]]],
-	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }], # Objects (Inventory)
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
 	       [SLFD => @RD_float_array_ess], # Script Localvar Float Data
@@ -2160,7 +2162,7 @@ my @RECDEFS =
 	       [AI_F => @RD_AI_Follow],
 	       [AI_T => @RD_AI_Travel],
 	       [AI_W => @RD_AI_Wander_NPC],
-	       [NPCO => [["count", "l"], ["Name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }],
+	       [NPCO => [["count", "l"], ["Name", ["Z*", "a32"]]], { rdflags => [qw(startgroup)] }], # Objects (Inventory)
 	       [NPDT => @RD_Unknown],
 	       [SCRI => [["script", "Z*"]]],
 	       [SLCS => [["n_shorts", "L"], ["n_longs", "L"], ["n_floats", "L"]]],
@@ -2193,8 +2195,8 @@ my @RECDEFS =
 	       [FLAG => [["flags", "L", { symflags => \%NPC_FLAGS }]]],
 	       [KNAM => [["hair_model", "Z*"]]],
 	       [MODL => [["model", "Z*"]]],
-	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]],
-	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [NPCO => [["count", "l"], ["name", ["Z*", "a32"]]]], # Objects (Inventory)
+	       [NPCS => [["spell", ["Z32", "a32"]]]],		    # Spells
 	       [NPDT => [],
 		{
 		 decode => sub {
@@ -2374,41 +2376,40 @@ my @RECDEFS =
 	       	      return($self);
 	       	  },
 	       	  encode => sub {
-	       	     my($self) = @_;
-	       	     $self->{_subbuf_} = pack("L*", @{$self->{connections}});
-	       	     return($self);
+		      my($self) = @_;
+		      $self->{_subbuf_} = pack("L*", @{$self->{connections}});
+		      return($self);
 	       	  },
 	       	  tostr => sub {
-	       	     my($self) = @_;
-	       	     my $str;
-		     my @points = @{$self->{_parent_}->{SH}->{PGRP}->[0]->{points}};
-		     my $pointcount = $self->{_parent_}->{SH}->{DATA}->[0]->{pointcount};
-		     err("PGRD.PGRC ($self->{_id_}) (N points=@{[scalar(@points)]} != pointcount($pointcount)")
-			 if (scalar(@points) != $pointcount);
-	       	     my @conn = @{$self->{connections}};
-	       	     my @str = ("Connections:");
-	       	     #my @str = ("Connections:" . " " . join(" ", @conn));
-		     my $ci = 0;
-		     for (my $p1=0; $p1<$pointcount; $p1++) {
-			 my $nconn = $points[$p1]->{nconn};
-			 my @ps;
-			 for (my $j=0; $j<$nconn; $j++) {
-			     push(@ps, $conn[$ci++]);
-			 }
-			 push(@str, sprintf("%3d -> %s", $p1, join(", ", @ps))) if (@ps);
-		     }
-	       	     return(join("\n\t", @str));
+		      my($self) = @_;
+		      my $str;
+		      my @points = @{$self->{_parent_}->{SH}->{PGRP}->[0]->{points}};
+		      my $pointcount = $self->{_parent_}->{SH}->{DATA}->[0]->{pointcount};
+		      err("PGRD.PGRC ($self->{_id_}) (N points=@{[scalar(@points)]} != pointcount($pointcount)")
+			  if (scalar(@points) != $pointcount);
+		      my @conn = @{$self->{connections}};
+		      my @str = ("Connections:");
+		      #my @str = ("Connections:" . " " . join(" ", @conn));
+		      my $ci = 0;
+		      for (my $p1=0; $p1<$pointcount; $p1++) {
+			  my $nconn = $points[$p1]->{nconn};
+			  my @ps;
+			  for (my $j=0; $j<$nconn; $j++) {
+			      push(@ps, $conn[$ci++]);
+			  }
+			  push(@str, sprintf("%3d -> %s", $p1, join(", ", @ps))) if (@ps);
+		      }
+		      return(join("\n\t", @str));
 	       	  },
 	       	}]
-	      ],
-      { id => sub {
-	    my($self) = @_;
-	    return($self->{_id_}) if (defined $self->{_id_});
-	    my $name = $self->get('NAME', 'name');
-	    my $x = $self->get('DATA', 'x');
-	    my $y = $self->get('DATA', 'y');
-	    return($self->{_id_} = (($x == 0 and $y == 0) ? $name : "$name ($x, $y)"));
-	}}],
+	      ], { id => sub { # PGRD->id
+		       my($self) = @_;
+		       return($self->{_id_}) if (defined $self->{_id_});
+		       my $name = $self->get('NAME', 'name');
+		       my $x = $self->get('DATA', 'x');
+		       my $y = $self->get('DATA', 'y');
+		       return($self->{_id_} = (($x == 0 and $y == 0) ? $name : "$name ($x, $y)"));
+		   }}],
      [PROB => [
 	       [NAME => [["id", "Z*"]]],
 	       [FNAM => [["name", "Z*"]]],
@@ -2447,7 +2448,7 @@ my @RECDEFS =
 	       [NAME => [["id", "Z*"]]],
 	       [DESC => @RD_Description],
 	       [FNAM => [["name", "Z*"]]],
-	       [NPCS => [["spell", ["Z32", "a32"]]]],
+	       [NPCS => [["spell", ["Z32", "a32"]]]], # Spells
 	       [RADT => [
 			 (["skill_1", "l", { lookup => \%SKILL }], ["bonus_1", "L"]) x 7,
 			 (["attr_male_1", "l", { lookup => \%ATTRIBUTE }], ["attr_female_1", "l", { lookup => \%ATTRIBUTE }]) x 8,
@@ -3051,7 +3052,11 @@ sub color_tostr {
     my $r = $color & 0xff;
     my $g = (($color >> 8) & 0xff);
     my $b = (($color >> 16) & 0xff);
-    return("(RGB=$r,$g,$b)");
+    if (VERBOSE) {
+	return(sprintf("RGB=0x%0x ($r,$g,$b)", $color));
+    } else {
+	return("RGB=($r,$g,$b)");
+    }
 }
 
 sub gen_custom {
@@ -3224,6 +3229,7 @@ sub gen_subrec_methods {
 			$n = 0;
 		    }
 		}
+		push(@columnized_lines, join("  ", @line)) if (@line);
 		$print_format = join("\n\t", @columnized_lines);
 	    } else {
 		my $last_format = ' ';
@@ -4448,17 +4454,20 @@ The goal of the "clean" command is that it should always be safe to use it
 with no options to get the default cleaning behavior. The different cleaning
 operations are explained below:
 
+Much of what is considered "dirt" is with respect to a plugin's masters.
+Plugins that do not have masters cannot be checked for duplicate object
+definitions and instances (references), cell parameters and junk-cells.
+
 Object Instances (--instances)
 
   The clean command will clean objects in the plugin that match objects in any
-  of its masters. Object instances in cells (some people call these
-  "references", but "object instance" is a more accurate descriptive term) are
-  defined as byte sequences starting in the subrecord following a FRMR
-  subrecord, and match only if this is the same byte sequence as in the
-  master, along with the same Object-Index from the FRMR. NAM0 subrecords are
-  not part of object instances, and if instances are deleted from a cell, the
-  NAM0 subrecord for the cell is updated to reflect any changing instance
-  count.
+  of its masters. Object instances in cells (sometimes called "references",
+  but "object instance" is a more accurate descriptive term) are defined as
+  byte sequences starting in the subrecord following a FRMR subrecord, and
+  match only if this is the same byte sequence as in the master, along with
+  the same Object-Index from the FRMR. NAM0 subrecords are not part of object
+  instances, and if instances are deleted from a cell, the NAM0 subrecord for
+  the cell is updated to reflect any changing instance count.
 
 Cell Params (--cell-params)
 
@@ -5066,7 +5075,7 @@ tes3cmd header --synchronize "my plugin.esp"
 		       unless (($_ eq 'help') or ($_ =~ /^-/));
 	       }
 	       die <<"EOF";
-Usage: tes3cmd COMMAND OPTIONS plugins...
+Usage: tes3cmd COMMAND OPTIONS plugin...
 
 VERSION: $::VERSION
 
@@ -5183,7 +5192,7 @@ EOF
 	   $lint_expansion_functions = 1  if ($opt_lint_bloodmoon_dependency or $opt_lint_expansion_dependency);
        },
        process => \&cmd_lint,
-       usage => qq{Usage: tes3cmd lint OPTIONS plugins...
+       usage => qq{Usage: tes3cmd lint OPTIONS plugin...
 
 OPTIONS:
  --all/recommended
@@ -5743,6 +5752,35 @@ tes3cmd resetdates
 },
      },
 
+     '-undelete' =>
+     { description => qq{Modifies plugins to undelete object instances (references)},
+       options => [@STDOPT],
+       process => \&cmd_undelete,
+       usage => qq{Usage: tes3cmd undelete OPTIONS plugin...
+
+OPTIONS:
+ --debug
+	turn on debug messages
+
+ --verbose
+	print items that are undeleted from each cell.
+
+DESCRIPTION:
+
+Sometimes when a plugin deletes an object from a cell, and another plugin in
+your load order comes along and tries to modify that object (perhaps by moving
+it), then you get a message about the object "is missing in Master file". This
+function allows you to safely undelete those objects so that you do not get
+those annoying messages.
+
+When this function undeletes an object instance, it removes the DELE
+sub-record and adds ZNAM sub-record to mark the object as disabled. It also
+adds a DATA sub-record that positions the disabled instance at the origin (since
+object instances that have been deleted do not have a DATA sub-record, and
+Morrowind expects all object instances to have a position).
+},
+     },
+
      '-codec' =>
      { description => qq{Describe TES3 record codec (not implemented)},
        options => [@STDOPT],
@@ -6024,6 +6062,14 @@ sub read_quick_parse {
 	    my($x, $y) = unpack("x[L]ll", $subrecs{DATA}[0]);
 	    $id = "$name ($x, $y)";
 	}
+    } elsif ($rectype eq "PGRD") {
+	my $name = unpack("Z*", ($subrecs{NAME}[0]));
+	my($x, $y) = unpack("ll", $subrecs{DATA}[0]);
+	if ($x == 0 and $y == 0) {
+	    $id = $name;
+	} else {
+	    $id = "$name ($x, $y)";
+	}
     } elsif ($rectype eq "SCPT") {
 	$id = unpack("Z32", $subrecs{SCHD}[0]);
     } elsif (defined $subrecs{INDX}) {
@@ -6271,7 +6317,12 @@ sub load_master {
     }
     return if (load_master_cache($esm)); # load pre-parsed data
     print "Loading Master: $esm\n";
-    my $inp = open_for_input($T3->datapath($esm));
+    my $master_file = $T3->datapath($esm);
+    if (not $master_file) {
+	err("Master: $esm not found in <DATADIR>");
+	return;
+    }
+    my $inp = open_for_input($master_file);
     eval {
 	while (my($rectype, $id, $srh, $recbuf, $hdrflags) = read_quick_parse($inp, undef, $esm)) {
 	    last if (not defined $rectype);
@@ -6445,6 +6496,7 @@ sub update_header {
 	    $hedr_tsr = $tsr;
 	    if ($opt_header_author) {
 		$modified++;
+		$tsr->{author} =~ s!\000+$!!;
 		dbg("HEDR modified: author") if (DBG);
 		if ($opt_header_author =~ /^\+(.*)/) {
 		    $tsr->{author} .= $1;
@@ -6454,6 +6506,7 @@ sub update_header {
 	    }
 	    if ($opt_header_description) {
 		$modified++;
+		$tsr->{description} =~ s!\000+$!!;
 		dbg("HEDR modified: description: $opt_header_description") if (DBG);
 		$opt_header_description =~ s/\\n/\n/g;
 		$opt_header_description =~ s/\\r/\r/g;
@@ -6734,6 +6787,14 @@ sub process_plugin_for_update {
     return(1);
 } # process_plugin_for_update
 
+# get the object instance (reference) name from a FRMR group of sub-records
+sub instance_name {
+    foreach (@_) {
+	return($_->{name}) if ($_->subtype eq 'NAME');
+    }
+    return(undef);
+}
+
 ### MAIN COMMANDS
 
 # format a simple report for the given items
@@ -6797,14 +6858,17 @@ sub cmd_lint {
 	    $tr->decode;
 	    my $id = $tr->id;
 	    my($type, $field) = @{$GMST_TYPE{substr($id, 0, 1)}};
-	    my $val = $tr->get($type)->subbuf;
-	    my $hexval = unpack("H*", "$type $val");
-	    if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
-		$evil{"BM $id"}++;
-		$evil_bm++;
-	    } elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
-		$evil{"TB $id"}++;
-		$evil_tb++;
+	    my $val_tsr = $tr->get($type);
+	    if ($val_tsr) {
+		my $val = $val_tsr->subbuf;
+		my $hexval = unpack("H*", "$type $val");
+		if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
+		    $evil{"BM $id"}++;
+		    $evil_bm++;
+		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
+		    $evil{"TB $id"}++;
+		    $evil_tb++;
+		}
 	    }
 	} elsif ($rectype eq 'SPEL') {
 	} elsif ($rectype eq 'TES3') {
@@ -7710,33 +7774,44 @@ sub cmd_clean {
     my %duptype = map {$_,1} @CLEAN_DUP_TYPES;
     my %my_master;
     my %stats;
+    my %persistent;
     my $fun = sub {
 	my($rectype, $plug_tr) = @_;
 	my $record_modified = 0;
+	if ($opt_clean_instances) {
+	    if ($plug_tr->hdrflags & $HDR_FLAGS{persistent}) {
+		my $id = $plug_tr->decode()->id;
+		$persistent{$id}++;
+	    }
+	}
 	if ($rectype eq 'GMST') {
 	    if ($opt_clean_gmsts) {
 		# CLEAN EVIL GMSTS
 		my $id = $plug_tr->decode()->id;
 		my($type, $field) = @{$GMST_TYPE{substr($id, 0, 1)}};
-		my $val = $plug_tr->get($type)->subbuf;
 		dbg("examining GMST  ID=$id  TYPE=$type  FIELD=$field") if (DBG);
-		unless (defined $val) {
-		    my $what = "GMST with no value";
-		    $stats{$what}++;
-		    print " Cleaned $what: $id\n";
-		    return;	# return undef to delete
-		}
-		my $hexval = unpack("H*", "$type $val");
-		if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
-		    my $what = "Evil-GMST Bloodmoon";
-		    $stats{$what}++;
-		    print " Cleaned $what: $id\n";
-		    return;	# return undef to delete
-		} elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
-		    my $what = "Evil-GMST Tribunal";
-		    $stats{$what}++;
-		    print " Cleaned $what: $id\n";
-		    return;	# return undef to delete
+		my $val_tsr = $plug_tr->get($type);
+		if ($val_tsr) {
+		    # we only process GMSTs that have associated value sub-records
+		    my $val = $val_tsr->subbuf;
+		    unless (defined $val) {
+			my $what = "GMST with no value";
+			$stats{$what}++;
+			print " Cleaned $what: $id\n";
+			return;	# return undef to delete
+		    }
+		    my $hexval = unpack("H*", "$type $val");
+		    if (defined($EVIL_BM{$id}) and ($EVIL_BM{$id} eq $hexval)) {
+			my $what = "Evil-GMST Bloodmoon";
+			$stats{$what}++;
+			print " Cleaned $what: $id\n";
+			return;	# return undef to delete
+		    } elsif (defined($EVIL_TB{$id}) and ($EVIL_TB{$id} eq $hexval)) {
+			my $what = "Evil-GMST Tribunal";
+			$stats{$what}++;
+			print " Cleaned $what: $id\n";
+			return;	# return undef to delete
+		    }
 		}
 	    }
 	} elsif ($rectype eq 'CELL') {
@@ -7763,20 +7838,15 @@ sub cmd_clean {
 			# don't clean moved objects (FRMR group after MVRF)
 			push(@newcell, @this_group);
 			$skip_moved_object = 0;
-			if (DBG) {
-			    my $name;
-			    foreach my $tsr (@this_group) {
-				if ($tsr->subtype eq 'NAME') {
-				    $name = $tsr->{name};
-				    last;
-				}
-			    }
-			    dbg("Not cleaning Moved Object: $name");
-			}
+			dbg("Not cleaning Moved Object: ".instance_name(@this_group)) if (DBG);
 		    } elsif ($this_group[0]->subtype eq 'MVRF') {
 			# don't clean moved objects (MVRF group)
 			push(@newcell, @this_group);
 			$skip_moved_object = 1;
+		    } elsif ($persistent{instance_name(@this_group)}) {
+			# don't clean persistent instances
+			dbg("Not cleaning Persistent Object: ".instance_name(@this_group)) if (DBG);
+			push(@newcell, @this_group);
 		    } else {
 			my($plug_objidx, $plug_buf, $plug_objname) = buffalize(@this_group);
 		      CHECK_MASTER_INSTANCES:
@@ -8131,6 +8201,41 @@ sub cmd_codec {
 	    # NOTYET
 	}
     }
+}
+
+sub cmd_undelete {
+    my($plugin) = @_;
+    dbg("undelete") if (DBG);
+    my $fun = sub {
+	my($rectype, $tr) = @_;
+	return('') unless ($rectype eq 'CELL');	# passthrough unchanged
+	$tr->decode;
+	my $id = $tr->id;
+	my @newsl;
+	my @objects;
+	my $name;
+	foreach my $tsr ($tr->subrecs()) {
+	    if ($tsr->subtype eq 'DELE') {
+		$tr->{_modified_} = 1;
+		push(@objects, $name) if (VERBOSE and defined $name);
+		push(@newsl, CELL::ZNAM->new({disabled => 0}));
+		push(@newsl, CELL::DATA->new({x => 0, y =>0, z=>0, x_angle=>0, y_angle=>0, z_angle=>0}));
+	    } else {
+		$name = $tsr->{name} if ($tsr->subtype eq 'NAME');
+		push(@newsl, $tsr);
+	    }
+	}
+	if ($tr->{_modified_}) {
+	    print "Undeleted objects in CELL: $id\n";
+	    foreach my $obj (@objects) {
+		print "\t$obj\n";
+	    }
+	    return(CELL->new([@newsl]));
+	} else {
+	    return('');			# passthrough unchanged
+	}
+    };
+    process_plugin_for_update($plugin, $fun) or return(0);
 }
 
 sub cmd_active {
