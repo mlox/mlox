@@ -14464,13 +14464,19 @@ AV2-moved_Addon2_Castle_Avalon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @House of Mannequins v1.0 [Grumblepunk]
+;; @House of Mannequins 1.0 [Grumblepunk]
 
 [Patch]
  "Fixes the mistform mannequins from 'House of Mannequins' by giving them clothing when you drop them."
  (Ref: "HoMfix.txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2180
 House of Mannequins - Mistform fix.esp
 House of Mannequins v1.0.esp
+
+;;Dragon32: Logical to load the patch after the main mod, neh?
+[Order]
+House of Mannequins v1.0.esp
+House of Mannequins - Mistform fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16780,23 +16786,25 @@ LGNPC_TelUvirith_v<VER>_UI.esp
 LGNPC_TelUvirith_v<VER>.esp
 
 [Requires]
- The UI version of LGNPC Tel Uvirith is for "users of Uvirith Inside or Uvirith's Legacy"
- (Ref: "LGNPC_TelUvirith_Readme.txt")
+ The UI version of LGNPC Tel Uvirith is for "users of Uvirith Inside or Uvirith's Legacy". Stuporstar says "Uvirith's Legacy Beta: use LGNPC Tel Uvirith 1.2 UI; Uvirith's Legacy Final: use LGNPC Tel Uvirith 1.2"
+ (Ref: "LGNPC_TelUvirith_Readme.txt" and "Uvirith's Legacy_README.txt")
 LGNPC_TelUvirith_v<VER>_UI.esp
 [ANY Uvirith Inside.esp
-     Uvirith's Legacy_Final_2.0.esp]
+     Uvirith's Legacy_BETA1.09.esp
+     Uvirith's Legacy_BETA1.10.esp]
 
 ;; Cyran0: "Since Stuporstar has made some accommodation for this, certainly Uvirith's Legacy should load after LGNPC Tel Uvirith".
 ;;Dragon32: Duplicated rest of load order, just in case.
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1073249&view=findpost&p=15607572
 [Order]
+LGNPC_TelUvirith_v?_??.esp
 LGNPC_TelUvirith_v?_??_UI.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran_v?_??.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 
 ;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
 ;; See Order notes for other LGNPC mods
@@ -16914,6 +16922,92 @@ LGNPC_TelUvirith_v?_??.esp
 [Order]
 Less_Generic_Nerevarine.esp
 LGNPC_TelUvirith_v?_??_UI.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @LichCraft 2.03 [VenomByte]
+
+[Conflict]
+ Only use one plugin:
+  vn_lichcraft2.esp - "Default. When you become a Lich, you lose the ability to use certain clothing slots."
+  vn_lichcraft2_alt.esp - "Alternative. When you become a Lich you may use any equipment slot, but your original appearance is forever lost."
+ (Ref: "readme_lichcraft.txt")
+vn_lichcraft2.esp
+vn_lichcraft2_alt.esp
+
+;;Ref: readme_lichcraft.txt - "If you are also running the Mad Leveller, make sure it is loaded AFTER LichCraft"
+[Order]
+vn_lichcraft2.esp
+Madd Leveler - Base.esp
+
+[Order]
+vn_lichcraft2.esp
+Madd Leveler - Base.esp
+
+[Conflict]
+ "DO NOT use the Mad Leveller LichCraft fix. It is no longer compatible, or necessary."
+ (Ref: "readme_lichcraft.txt")
+Madd Leveler - Lichcraft Fix.esp
+[ANY vn_lichcraft2.esp
+     vn_lichcraft2_alt.esp]
+
+[Note]
+ "If [when adding VenomByte's "LichCraft" to your game] you're already a lich via Illuminated Order, you'll need instead to type in the console
+  'startscript, vn_ordercheck'
+ This will also add a phlyactery to your inventory."
+ (Ref: "readme_lichcraft.txt")
+[ALL [ANY vn_lichcraft2.esp
+          vn_lichcraft2_alt.esp]
+     [ANY Illuminated Order v1.0.esp
+          Illuminated Order v1.0 (IndyBank WC Compatible).esp
+          Illuminated Order v1.0 (IndyBank Compatible).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
+
+;;Dragon32: Really not sure about the compatibility of these two; LichCraft's readme implies they can be run together:
+;;"This plugin was designed as an alternative, expanded take on the Lich experience originally offered by Illimunated Order."
+;;and see the text quoted in the above Note rule.
+;;Checked plugins in TESPCD and LichCraft does overwrite some Illuminated Order records (CLOTH, GLOB, SCPT, SPEL)
+;;So....
+[Order]
+Illuminated Order v1.0.esp
+vn_lichcraft2.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+vn_lichcraft2.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
+vn_lichcraft2.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+vn_lichcraft2.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+vn_lichcraft2.esp
+
+[Order]
+Illuminated Order v1.0.esp
+vn_lichcraft2_alt.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+vn_lichcraft2_alt.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
+vn_lichcraft2_alt.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+vn_lichcraft2_alt.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+vn_lichcraft2_alt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20800,12 +20894,16 @@ CE-DepthPerception100+BTB's Character.ESP
 CE-DepthPerception100.esp
 Detect Owner.esp
 Elemental Magicka II - MWSE Addon.ESP
+Get Fezzed!.esp
 Gravedigger.esp
 Inventory Search.esp
 mel_teleportPlugin_1_3.esp
 Shut_Up.esp
+UL_3.2_MWSE_Add-on.esp
+UL_MWSE_Companions.esp
 UL_MWSE_patch.esp
 UL_Primus_MWSE.esp
+UL_Upgrader_MWSE.esp
 
 ;;Dragon32 - On Melian's teleport mod, above. Original (1.0) said it wasn't compatible with MGE's built-in MWSE. Latest version (1.2) changes this to say its compatible with MGE 3.8.0-rev118, however AFAIK the last change to MGE's inbuilt MWSE came in v3.5.6 of MGE when MWSE 0.9.4 functions were added.
 
@@ -25683,9 +25781,11 @@ sg1-sgaileach_estate-NOM.esp
 NoM 3.0.esp
 
 [Conflict]
- "Just uncheck ["Waterfall" by Heremod Production] from the list when running Sgaileach Estate.
+ "Just uncheck ["Waterfall" by Heremod Production, or similar mods,] from the list when running Sgaileach Estate.
  (Ref: "sgaileach_estate_2.01.rar\readme.txt")
-Waterfall v1.0.esp
+[ANY Waterfall v1.0.esp
+     Azura's waterfall.esp
+     BalmoraWaterfal01_0808.esp]
 [ANY sg1-sgaileach_estate.esp
      sg1-sgaileach_estate-NOM.esp]
 
@@ -25728,6 +25828,15 @@ Stinkers v2 - Mod Compatibility.esp
 [Order]
 sg1-sgaileach_estate-NOM.esp
 Stinkers v2 - Mod Compatibility.esp
+
+[Patch]
+ "[Stuporstar's "Stinkers 2.0 to 3.0 Upgrade Patch "] can be used with any mod with built-in Stinkers 2.0 compatibility[, like "Sgaileach Estate 2.01" by Phinix]. It replaces 2.0 resources with 3.0 resources."
+ http://download.fliggerty.com/download--894
+ (Ref: "Ref: Stinkers 2.0 to 3.0 Upgrade.txt")
+Stinkers 2.0 to 3.0 Upgrader.esp
+[ALL Stinkers 3.0.esp
+     [ANY [DESC /Version 2.01/ sg1-sgaileach_estate.esp]
+          [DESC /Version 2.01/ sg1-sgaileach_estate-NOM.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26755,7 +26864,7 @@ LGNPC Gowns.esp
 ;;Order rules from LGNPC
 [Order]
 LGNPC Gowns.esp
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 
 [Order]
 DreamersAwakenedv1.0.esp
@@ -27170,7 +27279,7 @@ StinkersBE.esp
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8304
  (Ref: "Stinkers v2 - Mod Compatibility Readme.txt")
 Stinkers v2 - Mod Compatibility.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
+[ALL Uvirith's Legacy_<VER>.esp
      [ANY [VER >1.71 Stinkers.esp]
           StinkersBE.esp
           Stinkers.esm
@@ -27178,8 +27287,57 @@ Stinkers v2 - Mod Compatibility.esp
 
 ;;Ref: "Stinkers v2 - Mod Compatibility Readme.txt"
 [Order]
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 Stinkers v2 - Mod Compatibility.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Stinkers 2.0 to 3.0 Upgrade Patch [Stuporstar]
+
+;;Dragon32: included in download for @Uvirith's Legacy 3.1 [StuporStar] (q.v.)
+
+;;Ref: Stinkers 2.0 to 3.0 Upgrade.txt - "load Stinkers 3.0 last to make sure its scripts overwrite any Stinkers 3.0 resources placed in other mods."
+[Order]
+Stinkers 2.0 to 3.0 Upgrader.esp
+Stinkers 3.0.esp
+
+[Requires]
+ "Run [Stinkers 2.0 to 3.0 Upgrade Patch] continuously alongside Stinkers 3.0 to ensure all 2.0 resources are automatically replaced as you play the game."
+ (Ref: "Ref: Stinkers 2.0 to 3.0 Upgrade.txt")
+Stinkers 2.0 to 3.0 Upgrader.esp
+Stinkers 3.0.esp
+
+[Conflict]
+ "DO NOT RUN THIS WITH STINKERS 2.0"
+ (Ref: "Ref: Stinkers 2.0 to 3.0 Upgrade.txt")
+Stinkers 2.0 to 3.0 Upgrader.esp
+[ANY Stinkers.esp
+     StinkersBE.esp
+     Stinkers.esm
+     StinkersBE.esm
+     Stinkers v2 - Mod Compatibility.esp]
+
+[Note]
+ "Because [Stuporstar] made this patch to work with any mod, it does not resize the Telvanni bathing crystals after replacing them. When you walk into a [Uvirith's Legacy] bathroom and get a face full of crystal, open the console, click on the crystal, and type "setscale 0.5""
+ (Ref: "Uvirith's Legacy_README.txt")
+[ALL Uvirith's Legacy_<VER>.esp
+     Stinkers 2.0 to 3.0 Upgrader.esp]
+
+;;Ref: Stinkers 2.0 to 3.0 Upgrade.txt - "[Stinkers 2.0 to 3.0 Upgrade Patch] must be loaded after any mod you want to replace Stinkers 2.0 resources in."
+
+;;Uvirith's Legacy 3.2 [StuporStar]
+[Order]
+Uvirith's Legacy_<VER>.esp
+Stinkers 2.0 to 3.0 Upgrader.esp
+
+;;Sgaileach Estate 2.0 [Phinix]
+[Order]
+sg1-sgaileach_estate-NOM.esp
+Stinkers 2.0 to 3.0 Upgrader.esp
+
+[Order]
+sg1-sgaileach_estate.esp
+Stinkers 2.0 to 3.0 Upgrader.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28288,7 +28446,7 @@ Morrowind.esm
 Texture Fix <VER>.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Texture Fix - Balmora Expansion [Slartibartfast]
+;; @Texture Fix - Balmora Expansion 1.4 [Slartibartfast]
 
 [NOTE]
  The latest version of Slartibartfast's "Texture Fix - Balmora Expansion" is 1.4 (Balmora Expansion v1.4+(1.4).esp).
@@ -28317,6 +28475,13 @@ Waterfall v1.0.esp
  Slartibartfast's Texture Fix - Balmora Expansion includes Waterfall by Heremod Production. Heremod Production's mod was based on Mike Newmen's Balmora Waterfall.
  (Ref: Readme - Texture Fix - Balmora Expansion.txt)
 BalmoraWaterfal01_0808.esp
+[ANY Balmora Expansion v1.4+(1.4).esp
+     BE+(1.4) Better Looking Morrowind.esp]
+
+[Conflict]
+ Slartibartfast's "Texture Fix - Balmora Expansion" includes "Waterfall" by Heremod Production. Jakey's "Azura's Waterfall" similarly embellishes the waterfall to the orth outside of Balmora.
+ (Ref: Readme - Texture Fix - Balmora Expansion.txt)
+Azura's waterfall.esp
 [ANY Balmora Expansion v1.4+(1.4).esp
      BE+(1.4) Better Looking Morrowind.esp]
 
@@ -29972,89 +30137,142 @@ Uvirith Inside.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Uvirith's Legacy [StuporStar]
+;; @Uvirith's Legacy 3.2 [StuporStar]
 
 ;;Old versions
 [Note]
  A new version of StuporStar's "Uvirith's Legacy" is available, you should upgrade:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
+ http://download.fliggerty.com/download-35-884
 [ANY Uvirith's Legacy_ALPHA1.08.esp
      Uvirith's Legacy_BETA1.09.esp
-     Uvirith's Legacy_BETA1.10.esp]
+     Uvirith's Legacy_BETA1.10.esp
+     Uvirith's Legacy_Final_PreRelease.esp
+     Uvirith's Legacy_Final_2.0.esp
+     Uvirith's Legacy_3.0.esp
+     Uvirith's Legacy_3.1.esp]
 
+;;;;;;;;;;
 ;;Add-ons
-;;
+;;;;;;;;;;
+
 ;;Morrowind Script Extender
+
+[Note]
+ !! "UL_MWSE_patch.esp" is for versions of Stuporstar's "Uvirith's Legacy" prior to version 3.2. Version 3.2's MWSE addon is "UL_3.2_MWSE_Add-on.esp" and should be the one used with that version.
+[ALL Uvirith's Legacy_<VER>.esp
+     UL_MWSE_patch.esp]
+
 [Requires]
- Adds MWSE scripting to a few things already present in UL.
+ "Adds MWSE scripting to a few things already present in UL."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_MWSE_patch.esp
-Uvirith's Legacy_Final_2.0.esp
+UL_3.2_MWSE_Add-on.esp
+Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
-UL_MWSE_patch.esp
+Uvirith's Legacy_<VER>.esp
+UL_3.2_MWSE_Add-on.esp
+UL_TLM_ambiance.esp
 
 [Requires]
- Adds improved teleport scripting to Primus.
+ "Adds MWSE scripting to a few [companion-related] things already present in UL."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_Primus_MWSE.esp
-Uvirith's Legacy_Final_2.0.esp
+UL_MWSE_Companions.esp
+Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
+UL_MWSE_Companions.esp
+
+[Note]
+ "[Uvirith Legacy's MWSE addon] has been split between the companion scripts and the other stuff, so you have to choice to use Melian's Teleportation Mod instead."
+ (Ref: "Uvirith's Legacy_README.txt")
+[ALL UL_MWSE_Companions.esp
+     mel_teleportPlugin_1_3.esp]
+
+[Requires]
+ "Adds improved teleport scripting to Primus."
+ (Ref: "Uvirith's Legacy_README.txt")
 UL_Primus_MWSE.esp
+Uvirith's Legacy_<VER>.esp
+
+[Order]
+; Ref: "Uvirith's Legacy_README.txt"
+Uvirith's Legacy_Final_<VER>.esp
+UL_Primus_MWSE.esp
+
+;;Tamriel Rebuilt
+
+[Requires]
+ "Adds TR ingredients to the tower shipments[...] Adds TR books to the library book sorter[...] Adds new teleportation platforms to most TR towers and quests to build/repair some of them."
+ "Check your UL and TR version number before loading this add-on. Make sure you unload older ones."
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_3.2_TR_SE1.5_Addon.esp
+[ALL Uvirith's Legacy_<VER>.esp
+     TR_data.esm
+     TR_mainland.esm]
+
+[Order]
+; Ref: "Uvirith's Legacy_README.txt"
+Uvirith's Legacy_<VER>.esp
+UL_3.2_TR_SE1.5_Addon.esp
+UL_TLM_ambiance.esp
+
+[Note]
+ !! "Check your UL and TR version number before loading this add-on. Make sure you unload older ones."
+ !! (Ref: "Uvirith's Legacy_README.txt")
+[ALL Uvirith's Legacy_<VER>.esp
+     [ANY UL_3.0_TR_SE1.5_Addon.esp
+          UL_3.1_TR_SE1.5_Addon.esp
+          UL_TR_Addon.esp]]
 
 ;;Rise of House Telvanni
-[Note]
- As you are running running "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al you may want to use "Uvirith's Legacy v2.0 Compatibility Addon for RoHT v1.52", which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, new teleportation platforms to all of the RoHT towers and levitation for the Telvanni Tower slippers in all of the RoHT towers.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4449
- (Ref: "UL v2.0 RoHT v1.52 Compatibility Readme.txt")
-[ALL [NOT UL v2.0 RoHT v1.52 Compatibility.esp]
-     Uvirith's Legacy_Final_2.0.esp
-     Rise of House Telvanni.esm]
-
-;[Note]
-; It is suggested you use "UL_RoHT_1.4_Compatibility.esp" when using both Stuporstar's "Uvirith's Legacy" and "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
-; "Uvirith's Legacy"and "Rise of House Telvanni" are fully compatible as they stand, this patch is not required for compatibility. "Uvirith's Legacy" functions perfectly well with "Rise of House Telvanni" without it.
-; (Ref: "Uvirith's Legacy_README.txt")
-;[ALL Uvirith's Legacy_Final_2.0.esp
-;     UL_RoHT_1.4_Compatibility.esp]
 
 [Requires]
- The optional "UL v2.0 RoHT v1.52 Compatibility.esp" patch, which adds books from "Rise of House Telvanni" to the "Uvirith's Legacy" book sorter, should only be used if you are also running version 1.52 of "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ "Adds RoHT books to the library book sorter.[...] Adds teleport platforms to all towers added by RoHT.[...] Adds levitation to the Telvanni Travel Slippers within the RoHT towers."
  (Ref: "Uvirith's Legacy_README.txt")
- (Ref: "UL v2.0 RoHT v1.52 Compatibility Readme.txt")
-UL v2.0 RoHT v1.52 Compatibility.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
+UL_3.2_RoHT_1.52_Compatibility.esp
+[ALL Uvirith's Legacy_<VER>.esp
      [VER=1.52 Rise of House Telvanni.esm]]
 
+[Order]
+; Ref: "Uvirith's Legacy_README.txt"
+Uvirith's Legacy_<VER>.esp
+UL_3.2_RoHT_1.52_Compatibility.esp
+UL_TLM_ambiance.esp
+
 [Note]
- ! This RoHT compatibility patch should no longer be used with version 2.0 of "Uvirith's Legacy". A new version of the patch is available for version 2.0 of "Uvirith's Legacy" and should be used instead.
- ! (Ref: "Uvirith's Legacy_README.txt")
-[ALL [ANY UL_RoHT_Compatibility.esp
-          UL_RoHT_Compatibility_1.3.esp]
-     Uvirith's Legacy_Final_2.0.esp]
+ !! "Check your UL and RoHT version number before loading this add-on. Make sure you unload older ones."
+ !! (Ref: "Uvirith's Legacy_README.txt")
+[ALL Uvirith's Legacy_<VER>.esp
+     [ANY UL v2.0 RoHT v1.52 Compatibility.esp
+          UL_RoHT_1.4_Compatibility.esp
+          UL_RoHT_Compatibility.esp
+          UL_RoHT_Compatibility_1.3.esp
+          UL_3.0_RoHT_1.52_Compatibility.esp]]
 
 ;;Chess Add-on
+
 [Requires]
+ "Adds a working chess board to the Upper Tower.[...] Fully compatible with other versions of the Chess mod. These are not required."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_chess_addon.esp
-Uvirith's Legacy_Final_2.0.esp
+UL_Chess_Add-on.esp
+Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
-UL_chess_addon.esp
+Uvirith's Legacy_<VER>.esp
+UL_Chess_Add-on.esp
+UL_TLM_ambiance.esp
 
 ;;Book Jackets
+
 [Requires]
- 'Uvirith's Legacy Book Jackets Add-on.esp' requires either Daleth's "Book Jackets" or Nicholiathan's "Librarian" mods.
+ "UL_BookJackets_Add-on.esp" requires either Daleth's "Book Jackets" or Nicholiathan's "Librarian" mods.
  (Ref: "Uvirith's Legacy_README.txt")
-Uvirith's Legacy Book Jackets Add-on.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
+UL_BookJackets_Add-on.esp
+[ALL Uvirith's Legacy_<VER>.esp
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
 	       Librarian with Jackets BM Trib.esp]
 	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
@@ -30065,10 +30283,10 @@ Uvirith's Legacy Book Jackets Add-on.esp
 		    Book Jackets - Bloodmoon.esp]]]]
 
 [Note]
- 'Uvirith's Legacy Book Jackets Add-on.esp' is not required for compatibility, but it will make the sorter books look much better when using Daleth's "Book Jackets" (or Nicholiathan's "Librarian") with "Uvirith's Legacy".
+ "UL_BookJackets_Add-on.esp" is not required for compatibility, but it will make the sorter books look much better when using Daleth's "Book Jackets" (or Nicholiathan's "Librarian") with "Uvirith's Legacy".
  (Ref: "Uvirith's Legacy_README.txt")
-[ALL Uvirith's Legacy_Final_2.0.esp
-     [NOT Uvirith's Legacy Book Jackets Add-on.esp]
+[ALL Uvirith's Legacy_<VER>.esp
+     [NOT UL_BookJackets_Add-on.esp]
      [ANY [ANY Librarian with Jackets & Rotate BM Trib.esp
 	       Librarian with Jackets BM Trib.esp]
 	  [ALL [ANY Book Jackets - Morrowind - BookRotate.esp
@@ -30080,181 +30298,259 @@ Uvirith's Legacy Book Jackets Add-on.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
-Uvirith's Legacy Book Jackets Add-on.esp
+Uvirith's Legacy_<VER>.esp
+UL_BookJackets_Add-on.esp
 
 [Order]
 Book Jackets - *.esp
-Uvirith's Legacy Book Jackets Add-on.esp
+UL_BookJackets_Add-on.esp
 
 [Order]
 Librarian with Jackets *.esp
-Uvirith's Legacy Book Jackets Add-on.esp
+UL_BookJackets_Add-on.esp
 
 ;;Srikandi Alchemy
+
 [Note]
- This patch is from an older version of Stuporstar's "Uvirith's Legacy". The new version of this patch is called 'UL_Srikandy_patch_BM.esp'.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5997
+ Since v3.0 of "Uvirith's Legacy" Stuporstar has "added Sri's Alchemy ingredients to main mod. ["Uvirith's Legacy"] No longer requires the add-on."
+ You should remove these addons
+ (Ref: "Uvirith'sLegacy_CHANGELOG.txt")
 UL_Srikandy_patch_BM.esp
 UL_Srikandy_patch_2.1.esp
-
-[Requires]
- Use "UL_Srikandy_patch.esp" when using Sri's Alchemy BM with Uvirith's Legacy. This plug-in adds all the SA ingredients to the main sorting table.
- (Ref: "Uvirith's Legacy_README.txt")
-UL_Srikandy_patch.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
-     Sris_Alchemy_BM.esp]
-
-[Note]
- 'UL_Srikandy_patch.esp' is not required for compatibility, but adds all the Srikandi's "Alchemy BM" ingredients to Tel Uvirith's Secret Lab and Storage Room.
- (Ref: "Uvirith's Legacy_README.txt")
-[ALL [NOT UL_Srikandy_patch.esp]
-     Uvirith's Legacy_Final_2.0.esp
-     Sris_Alchemy_BM.esp]
-
-[Order]
-; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
-UL_Srikandy_patch_BM.esp
-
-[Order]
-Sris_Alchemy_BM.esp
 UL_Srikandy_patch.esp
 
 ;;The Lighting Mod
+
 [Patch]
- Use "UL_TLM_ambiance.esp" when using The Lighing Mod with Uvirith's Legacy, otherwise the light in interiors will be very bright.
+ "[Use "UL_TLM_ambiance.esp" to alter] the ambiance of all the new cells added by UL so that they look good with TLM loaded."
  (Ref: "Uvirith's Legacy_README.txt")
 UL_TLM_ambiance.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
+[ALL Uvirith's Legacy_<VER>.esp
      [ANY TLM - Ambient Light + Fog Update.esp
           TLM - Complete.esp]]
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 UL_TLM_ambiance.esp
 
 ; Dragon32: This order from Stuporstar forum post (albeit for beta v1.10)
 ; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15273304
 [Order]
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 TLM - Complete.esp
 
 ; Dragon32: Based on above Order rule, enforce same load order for this module of TLM too
 [Order]
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 TLM - Ambient Light + Fog Update.esp
 
 ;;Children of Morrowind
+
 [Requires]
- 'Uvirith's Legacy CoM Add-on.esp' turns apprentice Gavyn and servant Meiree from Stuporstar's "Uvirith's Legacy" into teenagers using Emma's "Children of Morrowind" mod.
+ "UL_CoM_Add-on.esp" turns apprentice Gavyn and servant Meiree from Stuporstar's "Uvirith's Legacy" into teenagers using Emma's "Children of Morrowind" mod.
  (Ref: "Uvirith's Legacy_README.txt")
-Uvirith's Legacy CoM Add-on.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
+UL_CoM_Add-on.esp
+[ALL Uvirith's Legacy_<VER>.esp
      MW_Children_1_0.esm]
 
 [Note]
- As you use Emma's "Children of Morrowind" mod it's suggested you use the 'Uvirith's Legacy CoM Add-on.esp' add-on that turns apprentice Gavyn and servant Meiree into teenagers.
+ As you use Emma's "Children of Morrowind" it's suggested you use the "UL_CoM_Add-on.esp" add-on that turns apprentice Gavyn and servant Meiree into teenagers.
  (Ref: "Uvirith's Legacy_README.txt")
-[ALL Uvirith's Legacy_Final_2.0.esp
-     [NOT Uvirith's Legacy CoM Add-on.esp]
+[ALL Uvirith's Legacy_<VER>.esp
+     [NOT UL_CoM_Add-on.esp]
      MW_Children_1_0.esm]
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
-Uvirith's Legacy CoM Add-on.esp
+Uvirith's Legacy_<VER>.esp
+UL_CoM_Add-on.esp
+UL_TLM_ambiance.esp
+
+;;Weapon Rotate
+
+[Requires]
+ "["UL_WeaponRotate_Addon.esp"] does not replace the few weapon racks in the prison barracks, or touch anything added by UL. It simply adds tons of WR racks to Tel Uvirith."
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_WeaponRotate_Addon.esp
+[ALL Uvirith's Legacy_<VER>.esp
+     Weapon Rotate.esm]
+
+;;Dragon32: Not sure if this is really needed
+[Order]
+Uvirith's Legacy_<VER>.esp
+UL_WeaponRotate_Addon.esp
+UL_TLM_ambiance.esp
 
 ;;Ash Armor Divine Domina
+
 [Requires]
  This add-on for Stuporstar's "Uvirith's Legacy" will suit up the female version of Ash-Kosh with armor from Jeremy McGuinn's "Divine Domina" series (the latter is included with "Taddeus' Balanced Armor").
  (Ref: "Uvirith's Legacy_README.txt")
 UL_AshArmor_DivineDomina.esp
-[ALL Uvirith's Legacy_Final_2.0.esp
+[ALL Uvirith's Legacy_<VER>.esp
      [ANY Taddeus'BalancedArmors.esp
           Taddeus'BalancedArmors_Rotate.esp
           Divine_domina_part_1.esp]]
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 UL_AshArmor_DivineDomina.esp
 
 ;;Ash Armor Plankye
+
 [Requires]
- "UL_AshArmor_Plankye.esp" will suit up the female version of Ash-Kosh with Plankye's female daedric cuirass for Uvirith's Legacy Final 2.0.
+ "UL_AshArmor_Plankye.esp" will suit up the female version of Ash-Kosh with Plankye's female daedric cuirass.
  (Ref: "Uvirith's Legacy_README.txt")
-UL_AshArmor_Plankye.esp
-Uvirith's Legacy_Final_2.0.esp
+[ANY UL_AshArmor_Plankye.esp
+     UL_AshArmor_Plangkye.esp]
+Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 UL_AshArmor_Plankye.esp
+UL_AshArmor_Plangkye.esp
 
+;;UL_Upgrader_MWSE
+
+[Requires]
+ "[UL_Upgrader_MWSE.esp is] an add-on that will let you stuff everything in the Bag of Holding for safe-keeping if you've already moved into your tower."
+ It should only be used by people upgrading from "Uvirith's Legacy" 3.0 to 3.1
+ Ref: "UL_READMEFIRSTIMEANIT.txt")
+UL_Upgrader_MWSE.esp
+Uvirith's Legacy_<VER>.esp
+
+[Note]
+ ! "[UL_Upgrader_MWSE.esp is] an add-on that will let you stuff everything in the Bag of Holding for safe-keeping if you've already moved into your tower."
+ ! It should only be used by people upgrading from "Uvirith's Legacy" 3.0 to 3.1
+ ! (Ref: "UL_READMEFIRSTIMEANIT.txt")
+UL_Upgrader_MWSE.esp
+
+
+;;Dragon32; Don't think this is really needed as there's everything in the updater addon is unique and doesn't overwrite the main UL mod
+[Order]
+Uvirith's Legacy_<VER>.esp
+UL_Upgrader_MWSE.esp
+
+;;;;;;;;;;;;;;;;
 ;;Compatibility
-;;
+;;;;;;;;;;;;;;;;
+
 ;; LGNPC Tel Uvirith
+
 ; Dragon32: See "Uvirith's Legacy_README.txt", refers to being compatible with v1.20 of "Less Generic NPCs (LGNPC) Tel Uvirith"
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
 LGNPC_TelUvirith_v?_??.esp
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 
 [Conflict]
  You should use the standard "LGNPC Tel Uvirith" mod with Stuporstar's "Uvirith's Legacy" rather than the Uvirith Inside version of "LGNPC Tel Uvirith"
  (Ref: "Uvirith's Legacy_README.txt")
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 LGNPC_TelUvirith_UI_v?_??.esp
 
 ;; Building Up Uvirith's Grave
+
 [Conflict]
  Stuporstar's "Uvirith's Legacy" and Acheron's "Building Up Uvirith's Grave" are not compatible as they both make changes to Tel Uvirith.
- You should consider using Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" that replaces the old "Building Up Uvirith's Grave" with a new "Uvirith's Legacy"-compatible one
+ You should use instead Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" that replaces the old "Building Up Uvirith's Grave" with a new "Uvirith's Legacy"-compatible one.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7736
  (Ref: "Uvirith's Legacy_README.txt")
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 Building Up Uvirith's Grave 1.1.esp
 
 ;; Uvirith Inside
+
 [Conflict]
  Stuporstar's "Uvirith's Legacy" is not compatible with The DopeHatMan's "Uvirith Inside", as it has been derived from that mod and does many of the same things.
  (Ref: "Uvirith's Legacy_README.txt")
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 Uvirith Inside.esp
 
 ;;Necessities of Morrowind
-[Order]
-; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
-NOM 2.13.esp
-UL_NoM2.13_backwardscompat.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
 NOM 3.0.esp
 
-[Requires]
- "Uvirith's Legacy" includes resources from Taddeus' "Necessities of Morrowind" v3.0, the 'UL_NoM2.13_backwardscompat.esp' compatibility patch adds the old "Necessities of Morrowind" scripts to these new "Necessities of Morrowind" resources.
- (Ref: "Uvirith's Legacy_README.txt")
-UL_NoM2.13_backwardscompat.esp
-[ALL NOM 2.13.esp
-     Uvirith's Legacy_Final_2.0.esp]
-
 ;;The Bathing Mod 2
-[Order]
-; "Uvirith's Legacy_README.txt" - "Bathing Mod compatible objects have been added to all bathing areas of the tower"
+;;See also @Stinkers 2.0 to 3.0 Upgrade Patch [Stuporstar]
+
+; "Uvirith's Legacy_README.txt" - "Bathing Mod 2.0 compatible objects have been added to all bathing areas of the tower"
 ; So, load the mod that defines those objects before the mod that uses them.
+[Order]
 Stinkers.esp
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
+
+[Order]
+StinkersBE.esp
+Uvirith's Legacy_<VER>.esp
 
 ;;Vampire Embrace
+
 [Order]
 ; "Uvirith's Legacy_README.txt" - "The apprentice [and the tower staff are] fully VE compatible"
 ; So, load the mod that defines those objects before the mod that uses them.
 Vampire_Embrace.esp
-Uvirith's Legacy_Final_2.0.esp
+Uvirith's Legacy_<VER>.esp
+
+;;Unique Finery (and other replacers for Aryon's gloves)
+
+;;House of Mannequins
+
+[Note]
+ "The wall partition in St. Delyns with the House of Mannequins banner will not be removed."
+ (Ref: "Uvirith's Legacy_README.txt")
+[ALL Uvirith's Legacy_<VER>.esp
+     House of Mannequins v1.0.esp]
+
+;;Illuminated Order/Lichcraft
+
+;;Dragon32: Uvirith's Legacy includes a Global "PCOrdLich" from Illuminated Order. Probably don't need these Order rules but...
+[Order]
+Uvirith's Legacy_<VER>.esp
+Illuminated Order v1.0.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+Illuminated Order v1.0 (IndyBank Compatible).esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+
+;;Books of Vvardenfell
+
+;;Dragon32: 4 Book show differences in TESPCD, checking bk_bloat_cultivation shows UV sets SCRI as "BROctavo_Bloat", Books of Vvardenfell 2.4 as "BROctavo_new". Taking a punt.
+[Order]
+Uvirith's Legacy_<VER>.esp
+Books of Vvardenfell.esp
+
+;;Tea Mod
+
+;;Make sure you load the Tea Mod AFTER UL to get full functionality on all the teapots
+[Order]
+Uvirith's Legacy_<VER>.esp
+TeaMod_<VER>.esp
+
+;;Get Fezzed
+
+;;Dragon32: ARMO entries for fezzes in UL differ from those in Get Fezzed! (e.g. FEZ_ordinary_ar, MODL in UL is "FEZ\fez_gnd.nif" in GF is "FEZ\fez.nif"). Taking another punt.
+[Order]
+Uvirith's Legacy_<VER>.esp
+Get Fezzed!.esp
 
 ;; Dragon32: rules removed in updates for beta versions:
 ;;
@@ -30274,8 +30570,6 @@ Uvirith's Legacy_Final_2.0.esp
 ;; Uvirith's Legacy_ALPHA1.08.esp
 ;; UL_RoHT_Compatibility.esp
 ;;
-;;
-;;
 ;; Dragon32: Rules removed in update to v2.0:
 ;;
 ;; [Note]
@@ -30289,6 +30583,21 @@ Uvirith's Legacy_Final_2.0.esp
 ;; [ALL UL_RoHT_Compatibility.esp
 ;;      [ANY Uvirith's Legacy_BETA1.10.esp
 ;;           Uvirith's Legacy_BETA1.09.esp]]
+;;
+;;Dragon32: Rules removed in update to 3.1
+;;
+;; [Order]
+;; ; Ref: "Uvirith's Legacy_README.txt"
+;; Uvirith's Legacy_Final_2.0.esp
+;; NOM 2.13.esp
+;; UL_NoM2.13_backwardscompat.esp
+;; 
+;; [Requires]
+;; "Uvirith's Legacy" includes resources from Taddeus' "Necessities of Morrowind" v3.0, the 'UL_NoM2.13_backwardscompat.esp' compatibility patch adds the old "Necessities of Morrowind" scripts to these new "Necessities of Morrowind" resources.
+;;  (Ref: "Uvirith's Legacy_README.txt")
+;; UL_NoM2.13_backwardscompat.esp
+;; [ALL NOM 2.13.esp
+;;      Uvirith's Legacy_Final_2.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32641,6 +32950,19 @@ Gondoliers.esp
  (Ref: abotWaterLife.txt)
 [VER > 1.16 abotWaterLife.esm]
 Antares' Creatures -  Cecaelia.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Waterfall [Heremod Production]
+
+[Conflict]
+ All these plugins embellish the waterfall to the north outside Balmora, choose one.
+; Azura's Waterfall by Jakey
+Azura's waterfall.esp
+; Balmora Waterfall by Mike Newmen
+BalmoraWaterfal01_0808.esp
+; Waterfall by Heremod Production
+Waterfall v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
