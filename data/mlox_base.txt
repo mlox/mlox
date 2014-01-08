@@ -4289,16 +4289,6 @@ Clean Better Caldera.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Clothes [Psychodog Studios]
 
-[Order]
-Better Clothes_v1.1.esp
-Better Clothes_v1.1_nac.esp
-BetterClothes_Patch.esp
-
-[Requires]
-BetterClothes_Patch.esp
-[ANY Better Clothes_v1.1.esp
-     Better Clothes_v1.1_nac.esp]
-
 [Conflict]
  Use only one of these mods. NAC stands for "non-Argonian Change"
  (Ref: betterclothes.txt)
@@ -4309,12 +4299,6 @@ Better Clothes_v1.1_nac.esp
  ! Better Clothes 1.0 is updated by Better Clothes 1.1, you should upgrade!
  ! http://mw.modhistory.com/download-21-14097
 Better Clothes_v1.0.esp
-
-[Note]
- When using TESTOOL's "Merged_Objects.esp", it is recommended to omit Keazen's BC patch from the merge.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
-[ALL BetterClothes_Patch.esp
-     Merged_Objects.esp]
 
 [Note]
  ! There is a newer version of "Better Clothes" available, you should upgrade.
@@ -4328,6 +4312,34 @@ Better Clothes Beta_1.4.esp
 [ANY Better Clothes_v1.1.esp
      Better Clothes_v1.1_nac.esp]
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Clothes Patch [Keazen]
+
+[Order]
+Better Clothes_v1.1.esp
+Better Clothes_v1.1_nac.esp
+BetterClothes_Patch.esp
+
+[Requires]
+ Keazen's "Patch for Better Clothes" requires that Psychodog Studio's "Better Clothes" is loaded.
+ http://mw.modhistory.com/download-21-14097
+BetterClothes_Patch.esp
+[ANY Better Clothes_v1.1.esp
+     Better Clothes_v1.1_nac.esp]
+
+[Note]
+ !! As its readme describes, Keazen's "Patch for Better Clothes" fixes error messages ("Not able to find Foot part in BC_shoes...") appearing in your warnings.txt, which don't appear in game and the errors reported don't affect gameplay. However, using the patch means that you can see peoples' feet meshes through the shoe meshes.
+ !! You have a choice of using the mod and suffering visual glitches in game or not using the mod and having some harmless error messages added to your warnings.txt file.
+BetterClothes_Patch.esp
+
+[Note]
+ When using TESTOOL's "Merged_Objects.esp", it is recommended to omit Keazen's BC patch from the merge.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
+[ALL BetterClothes_Patch.esp
+     Merged_Objects.esp]
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4577,7 +4589,7 @@ HELLUVA Balanced BTB.esp
 Better Morrowind Armor.esp
 
 [Order]
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 Better Morrowind Armor.esp
 
 [Order]
@@ -13180,19 +13192,19 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @HELLUVA Balanced 2.3 [Spiffyman]
+;; @HELLUVA Balanced 2.4 [Spiffyman]
 
 [Conflict]
  Choose ONLY ONE esp to use:
   HELLUVA Balanced BTB.esp - Also changes Vanilla and HELLUVA equipment. Replaces BTB's equipment esp.
-  HELLLUVA Balanced BTB CS.esp - Same as above, but only includes HELLUVA Completion Set armors and HELLUVA weapons.
+  HELLUVA Balanced BTB CS.esp - Same as above, but only includes HELLUVA Completion Set armors and HELLUVA weapons.
   HELLUVA Balanced Complete.ESP - Contains all weapons/armors.
   HELLUVA Balanced Armor.esp - Only contains armors, for those not wanting the weapons portion.
   HELLUVA Balanced Weapons.esp - Only contains weapons, for those not wanting the armor portion.
-  HELLLUVA Balanced CompletionSet.esp - Contains only the armor sets that complete vanilla armors. Includes the Vanilla armors as well.
+  HELLUVA Balanced CompletionSet.esp - Contains only the armor sets that complete vanilla armors. Includes the Vanilla armors as well.
  (Ref: "Helluva Balanced Readme.txt")
-HELLLUVA Balanced BTB CS.esp
-HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced BTB CS.esp
+HELLUVA Balanced CompletionSet.esp
 HELLUVA Balanced Armor.esp
 HELLUVA Balanced BTB.esp
 HELLUVA Balanced Complete.ESP
@@ -13202,7 +13214,7 @@ HELLUVA Balanced Weapons.esp
  "HELLUVA Balanced BTB [...] Replaces BTB's equipment esp"
  (Ref: "Helluva Balanced Readme.txt")
 [ANY HELLUVA Balanced BTB.esp
-     HELLLUVA Balanced BTB CS.esp]
+     HELLUVA Balanced BTB CS.esp]
 BTB - Equipment.esp
 
 [Conflict]
@@ -13210,7 +13222,7 @@ BTB - Equipment.esp
  (Ref: "Helluva Balanced Readme.txt")
 [ANY HELLUVA Balanced Vanilla Addon.esp
      HELLUVA Balanced BTB.esp
-     HELLLUVA Balanced BTB CS.esp]
+     HELLUVA Balanced BTB CS.esp]
 [ANY LeftGloves_Addon_v2.esp
      LeftGloves.esp]
 
@@ -13218,7 +13230,7 @@ BTB - Equipment.esp
  "The BTB version[s of HELLUVA Balanced] include Alisiagae's Unique Finery mod."
  (Ref: "Helluva Balanced Readme.txt")
 [ANY HELLUVA Balanced BTB.esp
-     HELLLUVA Balanced BTB CS.esp]
+     HELLUVA Balanced BTB CS.esp]
 [ANY UFR_v3dot2.esp
      UFR_v3dot2_noRobe.esp]
 
@@ -13265,9 +13277,9 @@ HELLUVA Balanced BTB.esp
      H.E.L.L.U.V.A. Spears.esp]
 
 [Conflict]
- "HELLLUVA Balanced BTB CS.esp" includes HELLUVA Awesome Armor's Completion Set and HELLUVA Wicked Weapons. There is no need to run Sandman101's original plugins.
+ "HELLUVA Balanced BTB CS.esp" includes HELLUVA Awesome Armor's Completion Set and HELLUVA Wicked Weapons. There is no need to run Sandman101's original plugins.
  (Ref: "Helluva Balanced Readme.txt")
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 [ANY H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
      H.E.L.L.U.V.A. Axes.esp
      H.E.L.L.U.V.A. Blunt.esp
@@ -13329,27 +13341,32 @@ HELLUVA Balanced Weapons.esp
      H.E.L.L.U.V.A. Shortblades.esp
      H.E.L.L.U.V.A. Spears.esp]
 
-[Conflict]
- "HELLLUVA Balanced CompletionSet.esp" includes HELLUVA Awesome Armor's Completion Set. There is no need to run Sandman101's original plugin.
- (Ref: "Helluva Balanced Readme.txt")
-HELLLUVA Balanced CompletionSet.esp
+[Requires]
+ "HELLUVA Balanced CompletionSet.esp" requires Sandman101's original HELLUVA Awesome Armor's Completion Set.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6650
+ (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/?p=23205502 )
+HELLUVA Balanced CompletionSet.esp
 H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+
+[Order]
+H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+HELLUVA Balanced CompletionSet.esp
 
 [Conflict]
  "BTB version includes [HELLUVA Balanced Vanilla Addon.esp] so don't activate with that one"
  (Ref: "Helluva Balanced Readme.txt")
 HELLUVA Balanced Vanilla Addon.esp
 [ANY HELLUVA Balanced BTB.esp
-     HELLLUVA Balanced BTB CS.esp]
+     HELLUVA Balanced BTB CS.esp]
 
 ;;Dragon32: Modified rules from @HELLUVA Awesome Armor [Sandman101 and friends]
 
 [Conflict]
  Sandman101's H.E.L.L.U.V.A. Armor Completion provides female versions of all of Morrowind's (including expansions) armors. H.E.L.L.U.V.A. Armor Completion also adds many other armor items to complete the armor sets. There is no need to run any of the other plugins that add female versions.
-[ANY HELLLUVA Balanced CompletionSet.esp
+[ANY HELLUVA Balanced CompletionSet.esp
      HELLUVA Balanced Armor.esp
      HELLUVA Balanced Complete.ESP
-     HELLLUVA Balanced BTB CS.esp
+     HELLUVA Balanced BTB CS.esp
      HELLUVA Balanced BTB.esp]
 [ANY AV_fem_armor_Trib.esp
      AV_female_armor.esp
@@ -13368,10 +13385,10 @@ HELLUVA Balanced Vanilla Addon.esp
 [Conflict]
  "[Sandman101's "HELLUVA Awesome Armor Completion Set" adds] the meshes that Bethesda didn't use to the Templar pauldrons."
  (Ref: http://forums.bethsoft.com/topic/1118289-relz-ob-style-quivers-and-sheathing-bows-for-morrowind/?p=16435065 )
-[ANY HELLLUVA Balanced CompletionSet.esp
+[ANY HELLUVA Balanced CompletionSet.esp
      HELLUVA Balanced Armor.esp
      HELLUVA Balanced Complete.ESP
-     HELLLUVA Balanced BTB CS.esp
+     HELLUVA Balanced BTB CS.esp
      HELLUVA Balanced BTB.esp]
 [ANY Clean Templar Pauldron Fix.esp
      Clean_Templar_Pauldron_Fix_v11.esp
@@ -13379,10 +13396,10 @@ HELLUVA Balanced Vanilla Addon.esp
 
 [Note]
  Sandman101's "H.E.L.L.U.V.A. Armor Completion" uses the resources from the following mods to complete the armor sets. Whilst "H.E.L.L.U.V.A. Armor Completion" does not duplicate these mods completely you may want to consider disabling them as "H.E.L.L.U.V.A. Armor Completion" already adds their armor to the game world.
-[ALL [ANY HELLLUVA Balanced CompletionSet.esp
+[ALL [ANY HELLUVA Balanced CompletionSet.esp
           HELLUVA Balanced Armor.esp
           HELLUVA Balanced Complete.ESP
-          HELLLUVA Balanced BTB CS.esp
+          HELLUVA Balanced BTB CS.esp
           HELLUVA Balanced BTB.esp]
      [ANY Dragonscale.esp
           chain_armor_set.esp
@@ -13406,27 +13423,27 @@ HELLUVA Balanced Vanilla Addon.esp
 ;;Dragon32 - See "H.E.L.L.U.V.A. Armor Completion read me.rtf": "From some testing it appears this mod should be loaded after Museum of Artifacts Improved Expanded or Museum of Artifacts Improved.". Set these load orders for all of Spiffyman's mods which include the Completion Set. Note that people should only be using one of Spiffyman's Balanced mods so the load order for those is only for ease of writing the rules.
 [Order]
 Clean Museum of Artifacts Improvements.esp
-HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced CompletionSet.esp
 HELLUVA Balanced Armor.esp
 HELLUVA Balanced Complete.ESP
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 HELLUVA Balanced BTB.esp
 
 [Order]
 Museum of Artifacts Improved Expanded.esp
-HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced CompletionSet.esp
 HELLUVA Balanced Armor.esp
 HELLUVA Balanced Complete.ESP
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 HELLUVA Balanced BTB.esp
 
 ;; Dragon32: TheOtherFelix's "Expanded Museum of Artifacts" not mentioned in readme but as P_S's mod ("Museum of Artifacts Improved Expanded") that includes it is mentioned I've added a similar Order rule
 [Order]
 ExpandedMoA.esp
-HELLLUVA Balanced CompletionSet.esp
+HELLUVA Balanced CompletionSet.esp
 HELLUVA Balanced Armor.esp
 HELLUVA Balanced Complete.ESP
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 HELLUVA Balanced BTB.esp
 
 
@@ -13464,8 +13481,8 @@ H.E.L.L.U.V.A. Guards.esp
      H.E.L.L.U.V.A._A.A._LIGHT 1.0.esp
      H.E.L.L.U.V.A._A.A._MEDIUM 1.0.esp
      H.E.L.L.U.V.A._A.A._Heavy 1.0.esp
-     HELLLUVA Balanced BTB CS.esp
-     HELLLUVA Balanced CompletionSet.esp
+     HELLUVA Balanced BTB CS.esp
+     HELLUVA Balanced CompletionSet.esp
      HELLUVA Balanced Armor.esp
      HELLUVA Balanced BTB.esp
      HELLUVA Balanced Complete.ESP
@@ -14831,6 +14848,15 @@ ASE Tribunal Expansion.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=866830&hl= )
 Illuminated Windows.esp
 Vality's Bitter Coast Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Illy's Solsteim Rumour Fix [Illuminiel]
+
+;;Ref: http://forums.bethsoft.com/topic/1094671-relz-illys-solsteim-rumour-fix/?p=18160887
+[Order]
+Less_Generic_Bloodmoon.esp
+Illy's Solsteim Rumour Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17344,9 +17370,16 @@ LL Companion & Objects.esp
 ;; @Lots of Rings [Wulfgar]
 
 [Conflict]
- Choose only one plugin
- (Ref: LotsOfRingsReadMe.txt)
+ Choose only one plugin:
+  LotsOfRingsPlus.esp - Includes Wulfgar's recolour of the vanilla game's Exquisite Ring 02.
+  LotsOfRings.esp - Does not include the recolour.
+ (Ref: "LotsOfRingsReadMe.txt")
 LotsOfRings.esp
+LotsOfRingsPlus.esp
+
+[Note]
+ When installing ensure you "copy the files from the included EXTRAS folder" into your Data Files folder, otherwise you will get errors about missing meshes and textures.
+ (Ref: "LotsOfRingsReadMe.txt")
 LotsOfRingsPlus.esp
 
 
@@ -22919,7 +22952,7 @@ OB_Style Quivers And Bows 4$_CAJ.esp
 OB_Style Quivers And Bows_CAJ.esp
 
 [Order]
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 OB_Style Auto Quivers And Bows.esp
 OB_Style Quivers And Bows 4$.esp
 OB_Style Quivers And Bows.esp
@@ -22956,7 +22989,7 @@ OB_Style Quivers And Bows_CAJ.esp
           OB_Style Quivers And Bows_CAJ.esp]
      [ANY HELLUVA Balanced Vanilla Addon.esp
           HELLUVA Balanced BTB.esp
-          HELLLUVA Balanced BTB CS.esp
+          HELLUVA Balanced BTB CS.esp
           LeftGloves_Addon_v2.esp
           LeftGloves.esp]
      [NOT Merged_Objects.esp]]
@@ -28617,7 +28650,7 @@ Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 ;;Dragon32: assorted plugins which merge in "BTB - Equipment.esp"
 [Order]
 BTB - Unique Finery Equipment.esp
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 HELLUVA Balanced BTB.esp
 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 
@@ -28670,7 +28703,7 @@ Improved Open Spell Balance-LD.esp
 ;;Dragon32: assorted plugins which merge in "BTB - Equipment.esp"
 [Order]
 BTB - Unique Finery Equipment.esp
-HELLLUVA Balanced BTB CS.esp
+HELLUVA Balanced BTB CS.esp
 HELLUVA Balanced BTB.esp
 Improved Open Spell Balance-LD.esp
 
@@ -29894,7 +29927,7 @@ Unique Jewelry and Accessories_no ench.esp
           BTB - Settings (Alternate).esp
           BTB - Unique Finery Equipment.esp
           HELLUVA Balanced BTB.esp
-          HELLLUVA Balanced BTB CS.esp
+          HELLUVA Balanced BTB CS.esp
           Wakim's Game Improvement 9.esp
           Wakim's Game Improvements with No-glo v9.esp]]
 
@@ -31019,13 +31052,13 @@ Gnisis Gaurd Fix.esp
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
 heartwood.esp
 
-[Conflict]
- The MPP does something similar to Illy's Solsteim Rumour Fix [Illuminiel].
- "Solsteim Rumour Fix" integrates the topic into Morrowind better, and should be used if preferred.
-[ANY Morrowind Patch v1.6.4.esm
-     Morrowind Patch v1.6.5-BETA.esm
-     Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
-Illy's Solsteim Rumour Fix.esp
+[Note]
+ ! The MPP does something similar to Illy's Solsteim Rumour Fix [Illuminiel].
+ ! However, Illuminiel's "Solstheim Rumour Fix" integrates the topic into Morrowind better and should be used if preferred.
+[ALL [ANY Morrowind Patch v1.6.4.esm
+          Morrowind Patch v1.6.5-BETA.esm
+          Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
+     Illy's Solsteim Rumour Fix.esp]
 
 [Conflict]
  The MPP obsoletes Edwinna Elbert's Book (Alphax).
@@ -31466,14 +31499,14 @@ shvBugFix02.esp
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
 Snow Bear boot fix.esp
 
-[Conflict]
- The MPP does something similar to Solstheim Undialog [SeekerVI].
- "abyssmal terror" reports: Solstheim Undialog integrates the topic into morrowind better, and should be used if preferred.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
-[ANY Morrowind Patch v1.6.4.esm
-     Morrowind Patch v1.6.5-BETA.esm
-     Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
-Solstien_undialog.esp
+[Note]
+ ! The MPP does something similar to Solstheim Undialog [SeekerVI].
+ ! "abyssmal terror" reports: Solstheim Undialog integrates the topic into morrowind better, and should be used if preferred.
+ ! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
+[ALL [ANY Morrowind Patch v1.6.4.esm
+          Morrowind Patch v1.6.5-BETA.esm
+          Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
+     Solstien_undialog.esp]
 
 [Conflict]
  The MPP obsoletes Eisenfaust's "St Llothis Fix.esp"
