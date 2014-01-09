@@ -161,79 +161,6 @@ Werewolves.esp
 Mashed Lists.esp
 Merged_Leveled_Lists.esp
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Wrye Patches [Wrye]
-; (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
-
-[Requires]
- All of the Wrye Patches require both Tribunal and Bloodmoon be installed.
- (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
-[ANY Wrye Patches A.esp
-     Wrye Patches A1.esp
-     Wrye Patches B.esp
-     Wrye Patches C.esp
-     Wrye Patches C1.esp
-     Wrye Patches G.esp
-     Wrye Patches M.esp
-     Wrye Patches M1.esp
-     Wrye Patches W.esp]
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-[Conflict]
- The "A" version is for vanilla Morrowind, the "A1" version depends on Avenger's female armor.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches A.esp
-Wrye Patches A1.esp
-
-[Conflict]
- According to Wrye's documentation, you should not load Avenger's female armor plugins along with the A1 patch.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches A1.esp
-[ANY AV_female_armor.esp
-     AV_fem_armor_Trib.esp]
-
-[Conflict]
- According to Wrye's documentation, you should not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches C1.esp
-[ANY AV_fem_shirts.esp
-     AV_fem_robes.esp
-     AV_fem_robes_BM.esp
-     AV_fem_robes_Trib.esp
-     Prosey female pants replace.esp]
-
-[Conflict]
- According to Wrye's documentation, you should not load Daduke's key replacer plugin along with the M1 patch.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches M1.esp
-Key Replacer Trib & BM.esp
-
-[Requires]
- "Wrye Patches A1.esp" requires "LeFemmArmor.esp" or any compilation that includes it.
-Wrye Patches A1.esp
-[ANY LeFemmArmor.esp
-     OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp
-     Taddeus'BalancedArmors.esp
-     Taddeus'BalancedArmors_Rotate.esp]
-
-[Conflict]
- The "C" version is for vanilla Morrowind, the "C1" version depends on Avenger's female shirts/robes, and Prosey's female pants.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches C.esp
-Wrye Patches C1.esp
-
-[Conflict]
- The "M" version is for vanilla Morrowind, the "M1" version depends on Daduke's Key Replacer.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches M.esp
-Wrye Patches M1.esp
-
-[Note]
- "Wrye Patches M.esp" incorrectly defines the NIF model for object "misc_dwrv_ark_key00" (key to Arkngthand) as "dd\misc_dwrv_Ark_key00.nif". It should be: "m\misc_dwrv_Ark_key00.nif". This model is supposed to be used for the version "Wrye Patches M1.esp", but apparently got used in "Wrye Patches M.esp" by mistake. So you may run across this as a missing or incorrect model in your game. It is easy to correct the name of the model in the Construction Set should you encounter this problem.
-[SIZE 63823 Wrye Patches M.esp]
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @TESTOOL [ghostwheel]
@@ -863,15 +790,6 @@ adventurers_tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Adventurer's Vests v.1.0 [Hurdy Gurdy]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 17682 HG_adventurers vests.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurers TC Beta 1
 
 [Patch]
@@ -880,8 +798,29 @@ AdvTC_TribunalAddon.esp
 [ALL AdventurersTC_beta1.esp
      Tribunal.esm]
 
+[Order]
+AdventurersTC_beta1.esp
+AdvTC_TribunalAddon.esp
+
+[Conflict]
+ "Adventurers TC Beta 1" includes "Adventurers NPCs"
+ (Ref: checked with TESPCD, Dragon32)
+AdventurersTC_beta1.esp
+adv_npcs_v1.1.esp
+
+
 ;; from the distribution archive - what is this?:
 ;;time_2x.esp
+;;Dragon32: alters TimeScale global to 15, makes days last twice as long
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adventurer's Vests v.1.0 [Hurdy Gurdy]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 17682 HG_adventurers vests.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2847,6 +2786,13 @@ Area Effect Projectiles (PAR Edit).esp
 Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
 
+;;Super Adventurers
+[Order]
+Assassins Armory - No Scripts.esp
+super_adventurers302.esp
+Assassins Armory - Arrows.esp
+Assassins Armory - Bolt Rifles.esp
+
 [Requires]
  "Assassins Armory - Arrows.esp" requires Bethesda's "Area Effect Arrows" plugin or a modified version of it.
  (Ref: "Assassin's Armory readme.doc")
@@ -2857,7 +2803,8 @@ Assassins Armory - Arrows.esp
      Area Effect Projectiles.esp
      Area Effect Projectiles (PAR Edit).esp
      Clean Official Plugins v1.1.esp
-     OfficialMods_v5.esp]
+     OfficialMods_v5.esp
+     super_adventurers302.esp]
 
 [Patch]
  "Assassins Armory - Unofficial Patch 7.7" is a patch for a couple small glitches in Assassin's Armory. It's available here:
@@ -3086,13 +3033,14 @@ female_cuirasses_2.0.esp
 AV_fem_Armor_Trib.esp
 Tribunal.esm
 
-; "OfficialMods_v5.esp" and "Clean Official Plugins v1.1.esp" are compilations of all official Bethesda mods
+;;Dragon32: "OfficialMods_v5.esp" and "Clean Official Plugins v1.1.esp" are compilations of all official Bethesda mods. "super_adventurers302.esp" includes LeFemmArmor.esp
 [Requires]
  (Ref: AV_female_armor.esp)
 AV_female_armor.esp
 [ANY LeFemmArmor.esp
      OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4637,6 +4585,10 @@ Clean Official Plugins v1.1.esp
 OfficialMods_v5.esp
 [DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
 
+[Order]
+super_adventurers302.esp
+[DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
+
 ;;Saint_Jiub's "Snow Prince Armor Redux" patch
 [Conflict]
  You should use the version of Saint_Jiub's "Snow Prince Armor Redux" which comes with Moranar's "Better Morrowind Armor"
@@ -4854,6 +4806,10 @@ Better_Sounds.esp
 
 [Order]
 Clean Official Plugins v1.1.esp
+Better_Sounds.esp
+
+[Order]
+super_adventurers302.esp
 Better_Sounds.esp
 
 [Note]
@@ -9489,12 +9445,13 @@ Encumbrance Bar.esp
 ;; @Entertainers Expanded [adul]
 
 [Conflict]
- "Please make sure [Bethesda Softworks "Entertainers Plugin"] (the original plugin) is NOT activated."
+ "Please make sure [Bethesda Softworks "Entertainers Plugin" or any mod which includes it] (the original plugin) is NOT activated."
  (Ref: "Readme_Entertainers_Expanded.txt")
 Entertainers_Expanded.esp
 [ANY entertainers.esp
      OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 [Conflict]
  All these mods make a similar change: increase the inns and taverns where the PC can "entertain the patrons". You do not need to run all of them.
@@ -9513,9 +9470,10 @@ Josie's Entertainers.esp
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6032
 entertainers-NoM fix.esp
 [ALL [ANY entertainers.esp
-          Entertainers_Expanded.esp
+          Entertainers_Expanded.esp ;;adul's Entertainers Expanded
           OfficialMods_v5.esp
-          Clean Official Plugins v1.1.esp] ;;adul's Entertainers Expanded
+          Clean Official Plugins v1.1.esp
+          super_adventurers302.esp]
      NOM 2.13.esp]
 
 [Order]
@@ -9533,6 +9491,11 @@ entertainers-NoM fix.esp
 
 [Order]
 Clean Official Plugins v1.1.esp
+entertainers-NoM fix.esp
+
+;;Dragon32: And the combined official mods too
+[Order]
+super_adventurers302.esp
 entertainers-NoM fix.esp
 
 ;;Dragon32: I think this should work - @Entertainers Expanded [adul]
@@ -9624,12 +9587,13 @@ GCD better balanced birthsigns.esp
 [SIZE 200800 RAH Expanded Entertainers.esp]
 
 [Conflict]
- Rahul's "Expanded Entertainers" is based on Bethesda Softworks "Entertainers Plugin", there is no need to run both.
+ Rahul's "Expanded Entertainers" is based on Bethesda Softworks "Entertainers Plugin", there is no need to run both the "Entertainers Plugin" (or a mod which includes it) and Rahul's "Expanded Entertainers".
  (Ref: "Readme Expanded Entertainers.txt")
 RAH Expanded Entertainers.esp
 [ANY entertainers.esp
      OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 [Note]
  Rahul's "Expanded Entertainers" allows the PC to "entertain the patrons" across Vvardenfell and Mournhold. It does not cover Solstheim. If you wish to entertain there consider:
@@ -10493,10 +10457,11 @@ Fire_Hurt_Tribunal.esp
 [SIZE 842930 FireMoth Moved.ESP]
 
 [Conflict]
- "OfficialMods_v5.esp" and Murlocke's "Official Plugins v1.0" are compilations of all the official Bethesda mods.
+ "OfficialMods_v5.esp" and Murlocke's "Official Plugins v1.0" are compilations of all the official Bethesda mods. "Super Adventurers" includes all Bethesda's official plugins.
 FireMoth Moved.ESP
 [ANY OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 ;:Dragon32 - This may work...
 [Order]
@@ -12546,7 +12511,8 @@ Great House Dagoth ( Master Index Compatibility ).esp
           Wilderness Sounds T & B.esp
           Clean Official Plugins v1.1.esp
           OfficialMods_v5.esp
-          propylons1.1.esp]]
+          propylons1.1.esp
+          super_adventurers302.esp]]
 
 ;[Patch]
 ; When using "Great House Dagoth.esp" and DarkValor's version of the Master Index plug-in, you should use the special patch ;provided. It is also suggested that you read the "Note for Master Index Users" in "readme_Great House Dagoth.txt".
@@ -12602,6 +12568,11 @@ Great House Dagoth ( Master Index Compatibility ).esp
 [Order]
 ;(Ref: readme_Great House Dagoth.txt)
 propylons1.1.esp
+Great House Dagoth ( Master Index Compatibility ).esp
+
+[Order]
+;(Ref: readme_Great House Dagoth.txt)
+super_adventurers302.esp
 Great House Dagoth ( Master Index Compatibility ).esp
 
 ;[Order]
@@ -14795,6 +14766,15 @@ Boe_lich_particle.esp
 Illuminated Order v1.0 (IndyBank Compatible).esp
 Boe_lich_particle.esp
 
+;:Dragon32: Checked with TESPCD, conflict with CLOTH record "_order_lich_shirt"
+[Order]
+vn_lichcraft2.esp
+Boe_lich_particle.esp
+
+[Order]
+vn_lichcraft2_alt.esp
+Boe_lich_particle.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Illuminated Windows [DrkAngl66]
@@ -15016,6 +14996,22 @@ Improved Inns BM.esp
 Clean Official Plugins v1.1.esp
 Improved Inns MW.esp
 
+[Order]
+super_adventurers302.esp
+Improved Inns.esp
+
+[Order]
+super_adventurers302.esp
+Improved Inns TB.esp
+
+[Order]
+super_adventurers302.esp
+Improved Inns BM.esp
+
+[Order]
+super_adventurers302.esp
+Improved Inns MW.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Morag Tong Grandmaster [PetrusOctavianus]
@@ -15176,6 +15172,10 @@ Index fix.esp
 
 [Order]
 propylons1.1.esp
+Index fix.esp
+
+[Order]
+super_adventurers302.esp
 Index fix.esp
 
 
@@ -15476,15 +15476,16 @@ AllHousesMod.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Josie's Entertainers [Eisoj5]
 
-;;Dragon32: See also: @Entertainers Expanded [adul]
+;;Dragon32: See also: Entertainers Expanded [adul]
 
 [Conflict]
- Eisoj5's "Josie's Entertainers" is based on Bethesda Softworks "Entertainers Plugin", there is no need to run both.
+ Eisoj5's "Josie's Entertainers" is based on Bethesda Softworks "Entertainers Plugin", there is no need to run both the "Entertainers Plugin" (or a plugin that includes it) and "Josie's Entertainers".
  (Ref: "josie_entertainers_readme.txt")
 Josie's Entertainers.esp
 [ANY entertainers.esp
      OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 [Conflict]
  "Conflicts with several of the LGNPC mods, particularly those for Ald-ruhn, Pelagiad, and Tel Mora, and possibly Maar Gan as well."
@@ -18006,7 +18007,8 @@ Suran Archery Store_v3.0 NSE.esp
           Wilderness Sounds Tribunal.esp
           Wilderness Sounds T & B.esp
           Clean Official Plugins v1.1.esp
-          OfficialMods_v5.esp]
+          OfficialMods_v5.esp
+          super_adventurers302.esp]
      [NOT DXM_masterindex_journalfix.esp]
      [ANY Tribunal.esm
           Bloodmoon.esm]]
@@ -18021,7 +18023,8 @@ DXM_masterindex_journalfix.esp
      Wilderness Sounds Tribunal.esp
      Wilderness Sounds T & B.esp
      Clean Official Plugins v1.1.esp
-     OfficialMods_v5.esp]
+     OfficialMods_v5.esp
+     super_adventurers302.esp]
 
 ; Dragon32: Not mentioned in readme but logically, Journalfix has to load later
 ; than the Master Index plugin. Examined plugins and this seems to be the case.
@@ -18053,6 +18056,10 @@ DXM_masterindex_journalfix.esp
 
 [Order]
 OfficialMods_v5.esp
+DXM_masterindex_journalfix.esp
+
+[Order]
+super_adventurers302.esp
 DXM_masterindex_journalfix.esp
 
 
@@ -21882,7 +21889,8 @@ NOM 2.13.esp
 [ANY entertainers.esp
      Entertainers_Expanded.esp
      OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24928,7 +24936,7 @@ RoHT Taddeus Balancing.esp
      Rise of House Telvanni.esm]
 
 [Note]
- Bethesda Softwork's "Master Index Plugin" requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
+ Bethesda Softwork's "Master Index Plugin" (and mods that include it) requires that the player talks to Caldera's Mages Guild steward, Folms Mirel. "Rise of House Telvanni" will move him to Shenk's Shovel after a certain decision has been made.
  (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 [ALL [ANY master_index.esp
           Wilderness Sounds.esp
@@ -24937,7 +24945,8 @@ RoHT Taddeus Balancing.esp
           Wilderness Sounds T & B.esp
           Clean Official Plugins v1.1.esp
           OfficialMods_v5.esp
-          propylons1.1.esp]
+          propylons1.1.esp
+          super_adventurers302.esp]
      Rise of House Telvanni.esm]
 
 ;; Dragon32: v1.5 readme: "Fixed compatibility for cdc_teleportation" I think it means this mod? Same author and Propylons conflict not in v1.5 readme.
@@ -27541,12 +27550,58 @@ MMSugarMoon-b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Super Adventurer's 3.02 [Various]
+;; @Super Adventurers 3.02 [Various]
 
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 3265745 super_adventurers302.esp]
+
+[Conflict]
+ "Don't use this plugin with the main Adventurers 3 plugin, since it is already included."
+ (Ref: "readme_super_adv3.html")
+super_adventurers302.esp
+adventurers302.esp
+
+[Conflict]
+ "[Super Adventurers 3.02] also includes fixed versions of all the official Bethesda-released plugins (like Bitter Coast sounds, Adamantium and LeFemme armor, etc.)"
+ (Ref: "readme_super_adv3.html")
+super_adventurers302.esp
+[ANY AdamantiumArmor.esp
+     AreaEffectArrows.esp
+     Area Effect Arrows.esp
+     AreaEffectArrows XB Edition.esp
+     Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp
+     BCsounds.esp
+     EBQ_Artifact.esp
+     Entertainers.esp
+     [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
+     Master_Index.esp
+     Siege at Firemoth.esp]
+
+;:Dragon32 - This may work...
+[Order]
+super_adventurers302.esp
+TLM - AdjMod - Siege At Firemoth.esp
+
+[Requires]
+ (Ref: "readme_super_adv3.html" and "readme_adventurers3.html")
+adventurers_tribunal.esp
+[ALL [ANY super_adventurers302.esp
+          adventurers302.esp]
+     Tribunal.esm]
+
+;;Dragon32: duplicate Adventurers load order ("adventurers_tribunal.esp" is the same plugin)
+[Order]
+super_adventurers302.esp
+adventurers_tribunal.esp
+
+[Conflict]
+ "Super Adventurers 3.02" includes "Adventurers NPCs"
+ (Ref: http://mw.modhistory.com/download-37-13942 )
+super_adventurers302.esp
+adv_npcs_v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27859,7 +27914,8 @@ Sri Alchemy BM List Patch.esp
      AV_female_armor.esp
      AV_fem_armor_Trib.esp
      OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp]
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 [Conflict]
  Use only one of these two .esps.
@@ -28001,7 +28057,8 @@ Tales of Tel Branora.esp
      OfficialMods_v5.esp
      Clean Official Plugins v1.1.esp
      Taddeus'BalancedArmors.esp
-     Taddeus'BalancedArmors_Rotate.esp]
+     Taddeus'BalancedArmors_Rotate.esp
+     super_adventurers302.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28294,7 +28351,7 @@ master_index.esp
 ring_teleport v3_Tealpanda.esp
 ring_teleport cost_Tealpanda.esp
 
-;; Dragon32: Master Index plugin included in Wilderness mod, OfficialMods_v5 and Official Plugins v1.0
+;; Dragon32: Master Index plugin included in Wilderness mod, Super Adventurers, OfficialMods_v5 and Official Plugins v1.0
 [Order]
 Wilderness Sounds.esp
 ring_teleport v3_Tealpanda.esp
@@ -28322,6 +28379,11 @@ ring_teleport cost_Tealpanda.esp
 
 [Order]
 OfficialMods_v5.esp
+ring_teleport v3_Tealpanda.esp
+ring_teleport cost_Tealpanda.esp
+
+[Order]
+super_adventurers302.esp
 ring_teleport v3_Tealpanda.esp
 ring_teleport cost_Tealpanda.esp
 
@@ -34124,6 +34186,81 @@ World_Of_Faces.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wrye Patches [Wrye]
+; (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
+
+[Requires]
+ All of the Wrye Patches require both Tribunal and Bloodmoon be installed.
+ (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
+[ANY Wrye Patches A.esp
+     Wrye Patches A1.esp
+     Wrye Patches B.esp
+     Wrye Patches C.esp
+     Wrye Patches C1.esp
+     Wrye Patches G.esp
+     Wrye Patches M.esp
+     Wrye Patches M1.esp
+     Wrye Patches W.esp]
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ The "A" version is for vanilla Morrowind, the "A1" version depends on Avenger's female armor.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches A.esp
+Wrye Patches A1.esp
+
+[Conflict]
+ According to Wrye's documentation, you should not load Avenger's female armor plugins along with the A1 patch.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches A1.esp
+[ANY AV_female_armor.esp
+     AV_fem_armor_Trib.esp]
+
+[Conflict]
+ According to Wrye's documentation, you should not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches C1.esp
+[ANY AV_fem_shirts.esp
+     AV_fem_robes.esp
+     AV_fem_robes_BM.esp
+     AV_fem_robes_Trib.esp
+     Prosey female pants replace.esp]
+
+[Conflict]
+ According to Wrye's documentation, you should not load Daduke's key replacer plugin along with the M1 patch.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches M1.esp
+Key Replacer Trib & BM.esp
+
+[Requires]
+ "Wrye Patches A1.esp" requires "LeFemmArmor.esp" or any compilation that includes it.
+Wrye Patches A1.esp
+[ANY LeFemmArmor.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp
+     Taddeus'BalancedArmors.esp
+     Taddeus'BalancedArmors_Rotate.esp]
+
+[Conflict]
+ The "C" version is for vanilla Morrowind, the "C1" version depends on Avenger's female shirts/robes, and Prosey's female pants.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches C.esp
+Wrye Patches C1.esp
+
+[Conflict]
+ The "M" version is for vanilla Morrowind, the "M1" version depends on Daduke's Key Replacer.
+ (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches M.esp
+Wrye Patches M1.esp
+
+[Note]
+ "Wrye Patches M.esp" incorrectly defines the NIF model for object "misc_dwrv_ark_key00" (key to Arkngthand) as "dd\misc_dwrv_Ark_key00.nif". It should be: "m\misc_dwrv_Ark_key00.nif". This model is supposed to be used for the version "Wrye Patches M1.esp", but apparently got used in "Wrye Patches M.esp" by mistake. So you may run across this as a missing or incorrect model in your game. It is easy to correct the name of the model in the Construction Set should you encounter this problem.
+[SIZE 63823 Wrye Patches M.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wrye World [Wrye]
 
 [Requires]
@@ -34155,7 +34292,8 @@ Wrye Travel Exp.esp
          Wilderness Sounds Tribunal.esp
          Wilderness Sounds T & B.esp
          Clean Official Plugins v1.1.esp
-         OfficialMods_v5.esp]
+         OfficialMods_v5.esp
+         super_adventurers302.esp]
     Bloodmoon.esm
     Tribunal.esm]
 
@@ -34196,6 +34334,10 @@ Wrye Travel Exp.esp
 
 [Order]
 propylons1.1.esp
+Wrye Travel Exp.esp
+
+[Order]
+super_adventurers302.esp
 Wrye Travel Exp.esp
 
 ;;Dragon32: Also includes Firemoth location
@@ -34476,9 +34618,3 @@ The Zone (Tribunal).esp
  !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 3900 Zyndaar's Bows.esp]
-
-
-;;TBD
-;;Vampire_Werewolf.esp
-;;werewolfrealism-moononly.esp
-;;There is a patch for these to work together
