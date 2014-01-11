@@ -69,6 +69,12 @@
 
 [NearStart]
 Morrowind.esm
+Tribunal.esm
+Bloodmoon.esm
+;;wildcard to pick up all the iterations of the MPP
+Morrowind Patch *.esm
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+Morrowind Rebirth <VER> - Morrowind Patch <VER> [Rebirth Edit].esm
 ;;arvisrend's Morrowind fixes 0.5 [arvisrend], q.v.
 arvisrend - fixes - books.ESP
 arvisrend - fixes - dialogue.ESP
@@ -3920,6 +3926,7 @@ Balmora Thieves' Hideout 3.1.esp
 Weapons to Add to Bal, Thieves' Hideout 3.1.esp
 Balmora Thieves' Hideout 3.1.esp
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Tomb  [Angus]
 
@@ -3927,6 +3934,26 @@ Balmora Thieves' Hideout 3.1.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 146547 balmora,Tomb.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Underworld 1.1 [Fulgore]
+
+[Conflict]
+ "Users of MW Rebirth 2.0 and newer [...] Uninstall the old version and use this one"
+ (Ref: "FLG - Balmora's Underworld V1.1.txt")
+Morrowind Rebirth <VER> - Balmora Underworld <VER> [Addon].ESP
+FLG - Balmora's Underworld V1.1.esp
+
+[Note]
+ ! There is a new version of "Balmora Underworld" available, with additional quests and dialogue.
+ ! http://www.nexusmods.com/morrowind/mods/42448
+Morrowind Rebirth <VER> - Balmora Underworld <VER> [Addon].ESP
+
+;;Dragon32: checked in TESPCD, PGRD conflict in Balmora
+[Order]
+Morrowind Rebirth <VER>.ESP
+FLG - Balmora's Underworld V1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9568,7 +9595,8 @@ MWE_base.esp
 Encumbrance Bar.esp
 
 [Note]
- There is a newer version of Yacoby's "Encumbrance Bar" available, you should upgrade.
+ ! There is a newer version of Yacoby's "Encumbrance Bar" available, you should upgrade.
+ ! http://mw.modhistory.com/download-45-14739
 [VER<0.4 Encumbrance Bar.esp]
 
 
@@ -11048,7 +11076,7 @@ pcc_further_ext_FIX_01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Galsiahs Character Development 1.08 (GCD)
+;; @Galsiah's Character Development 1.08 (GCD)
 
 ;;Dragon 32: See also Magicka regeneration mods [Various]
 
@@ -11088,14 +11116,6 @@ GCD_107x_to_108_patch_MwOnly.esp
 GCD StartScript for Trib or Bloodmoon.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
-
-[Conflict]
- Posted by Galsiah at the Bethsoft forums: 'By the way, you don't need "State-Based Hit Points" if you're using GCD. GCD already adjusts health (or will when it's working ), so having SBHP do it too is asking for trouble.'
- (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
-[ANY StateBasedHitPointsv1.1.esp
-     StateBasedHitPoints1.0.esp]
-[ANY Galsiahs Character Development.esp
-     GCD v1.08 with Startscript, fixed [Galsiah].esp]
 
 ;; "GCD settings fairly easy" ... "Do not use this with the hard settings esp"
 [Conflict]
@@ -12015,6 +12035,16 @@ Glow-Away.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 36990 GnisisBridgeFinal.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gnisis Imperial Bridge [ddfields]
+
+[Conflict]
+ ddfield's "Gnisis Imperial Bridge" adds a stone bridge to Gnisis in the same place as bridges added by Matt a.k.a mjr162006's "Gnisis Bridge" and Untot's "Gnisis Enhanced v1.0"
+Complete Gnisis Bridge.esp
+Gnisis Bridge.ESP
+Clean gnis.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15510,9 +15540,9 @@ Improved_No_Glow_v1-MW_Trib_Blood.esp
 
 [Conflict]
  All these plugins remove the shimmering glow from enchanted items. You should choose only one of these mods. The recommended mod to use is Shadre's "Improved No Glow" because all the others have the undesired side-effect of removing the "Detect Life/Creature" effect.
- Maybe even a better choice would be "Pluginless NoGlow" by Plangkye:
+ Maybe a better choice would be "Pluginless NoGlow" by Plangkye:
   http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6984
- which has none of the side-effects, and is pluginless, so it will have fewer conflicts with other mods.
+ That has none of the side-effects, and is pluginless, so it will have fewer conflicts with other mods.
 [ANY Improved_No_Glow_v1-MW_Only.esp
      Improved_No_Glow_v1-MW_Trib.esp
      Improved_No_Glow_v1-MW_Blood.esp
@@ -20916,7 +20946,239 @@ MWlib_NOM_patch_0.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Rebirth [Trancemaster_1988]
+;; @Morrowind Rebirth 2.6 [Trancemaster_1988]
+
+;;version check
+[Note]
+ ! There is a new version of Trancemaster_1988's "Morrowind Rebirth" available, you should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/37795
+Morrowind Rebirth 1.5.esp
+Morrowind Rebirth 1.6.esp
+Morrowind Rebirth 1.7.esp
+Morrowind Rebirth 1.8.esp
+Morrowind Rebirth 1.9.esp
+Morrowind Rebirth 2.0.esp
+Morrowind Rebirth 2.1.esp
+Morrowind Rebirth 2.11.ESP
+Morrowind Rebirth 2.2.esp
+Morrowind Rebirth 2.3.esp
+Morrowind Rebirth 2.4.ESP
+Morrowind Rebirth 2.5.esp
+
+;; plugins included in Morrowind Rebirth
+
+[Requires]
+ Fulgore's "Balmora's underworld" is "an add-on for [Trancemaster_1988's] Morrowind Rebirth."
+ (Ref: "Morrowind Rebirth 2.6 - Balmora Underworld  - Readme.txt")
+Morrowind Rebirth <VER> - Balmora Underworld <VER> [Addon].ESP
+Morrowind Rebirth <VER>.ESP
+
+;;Dragon32: checked in TESPCD, PGRD conflict in Balmora
+[Order]
+Morrowind Rebirth <VER>.ESP
+Morrowind Rebirth <VER> - Balmora Underworld <VER> [Addon].ESP
+
+[Requires]
+ Trancemaster_1988's "Racial Diversity" is "an add-on for [his] Morrowind Rebirth."
+ (Ref: "Morrowind Rebirth 2.6 - Racial Diversity - Readme.txt")
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].ESP
+Morrowind Rebirth <VER>.ESP
+
+;;Dragon32: checked in TESPCD, SPEL conflict
+[Order]
+Morrowind Rebirth <VER>.ESP
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].ESP
+
+[Conflict]
+ Trancemaster_1988's "Racial Diversity" modifies the abilities of the races in Morrowind. As do other mods from "Wakim's Game Improvements", "BTB's Game Improvements" (emptythe's "Combat Experience - Depth Perception" includes BTB's mod) and Alaisiagae's "Races Are More Fun"
+ You should decide which plugin you wish to use.
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].ESP
+[ANY BTB - Character.esp
+     BTB - Character (Alternate).esp
+     Balance - Character.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp
+     RAMF_Mer_for_NPCs.esp
+     RAMF.esp
+     RAMF_for_NPCs.esp
+     RAMF_Mer.esp
+     CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP]
+
+[Requires]
+ "[The Rebirth edit of the MPP] removes all (or most of them) conflicting changes between the Morrowind Patch Project and Morrowind Rebirth, making it a seamless experience"
+ You should only use this with Trancemaster_1988's "Morrowind Rebirth".
+ (Ref: "Morrowind Rebirth 2.6 - Morrowind Patch 1.6.5 - Readme.txt")
+Morrowind Rebirth <VER> - Morrowind Patch <VER> [Rebirth Edit].esm
+Morrowind Rebirth <VER>.ESP
+
+[Order]
+Bloodmoon.esm
+Morrowind Rebirth <VER> - Morrowind Patch <VER> [Rebirth Edit].esm
+
+;; mod conflicts
+
+[Conflict]
+ "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
+ (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
+Morrowind Rebirth <VER>.esp
+Poorly Placed Object Fix  ?.?.esm
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+[ANY Clean_Foeburner_Fix.esp
+     lfx_foeburner.esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" changes Redoran guards in a similar way to Xeth-Ban's "Redoran Guards - Katanas and Shields"
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+Morrowind Rebirth <VER>.esp
+[ANY Redoran Guards with Katanas and Shields.esp
+     Redoran Guards with Katanas.esp
+     Redoran Guards with Shields.esp]
+
+[Conflict]
+ "[More Detailed Places] won't work at all with Rebirth, no matter what you do with your loadorder."
+ (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21680865 )
+Morrowind Rebirth <VER>.esp
+[ANY MDP Compilation.ESP
+     MDP - Dagon Fel.ESP
+     MDP - Dagon Fel 1.0.ESP
+     MDP - Ebonheart.ESP
+     MDP - Ebonheart - 1.0.ESP
+     MDP - Fort Buckmoth.ESP
+     MDP - Gnaar Mok.ESP
+     MDP - Hla Oad.esp
+     MDP - Khuul.ESP
+     MDP - Maar Gan.ESP
+     MDP - Maar Gan - 1.0.ESP
+     MDP - Sadrith Mora.ESP]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" adds a stone bridge to Gnisis. Other mods which add bridges to Gnisis include ddfield's "Gnisis Imperial Bridge", Matt a.k.a mjr162006's "Gnisis Bridge", Chestnut Stallion's "Gnisis Bridge" and Untot's "Gnisis Enhanced v1.0"
+Morrowind Rebirth <VER>.esp
+[ANY Complete Gnisis Bridge.esp
+     Gnisis Bridge.ESP
+     Clean gnis.esp
+     GnisisBridgeFinal.esp]
+
+;; mods merged into or equivalents included in Rebirth
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes these mods:
+  Vurt's Ascadian Isles Tree Replacer II
+  Vurt's Bitter Coast Trees II
+ (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
+Morrowind Rebirth <VER>.esp
+[ANY Vurt's BC Tree Replacer II.ESP
+     Vurt's Leafy West Gash.esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes Loki the Grouch's "Better Caldera"
+ (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
+Morrowind Rebirth <VER>.esp
+[ANY Clean Better Caldera.esp
+     New Better Caldera (Trancemaster Edit).esp]
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes Xeth-Ban's "Ald-Ruhn Temple Expansion"
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+ (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
+Morrowind Rebirth <VER>.esp
+Clean Ald-Ruhn Temple Expansion <VER>.ESP
+
+[Conflict]
+ Trancemaster_1988's "Morrowind Rebirth" includes his Gnisis and Seyda Neen expansion mods.
+ (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+Morrowind Rebirth <VER>.esp
+[ANY New Gnisis 1.2.ESP
+     New Seyda Neen 1.6.esp]
+
+[Conflict]
+ Trancemaster_1988's "New Seyda Neen", which is included in his "Morrowind Rebirth", conflicts with Emma's "Children of Morrowind" and lonnie's "Seyda Neen Docks"
+ (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
+Morrowind Rebirth <VER>.esp
+[ANY Seyda Neen Docks V7.0 Bloodmoon.esp
+     Seyda Neen Docks V7.0 Tribunal.esp
+     MW_Children_1_0.esm]
+
+[Conflict]
+ Trancemaster_1988 has merged these mods into his "Morrowind Rebirth", there is no need to run the plugins separately.
+ (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
+ (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21680865 )
+Morrowind Rebirth <VER>.esp
+[ANY ;;Dongle's Adamantium Shields
+     Adamantium Roundshield.esp
+     Adamantium Towershield.esp
+     ;;Dongle's Windmills
+     Windmills-Demo.esp
+     ;;Templar Shield by Korana
+     TemplarSheild.esp
+     ;;Tale of the Devious Trader by Xeth-Ban
+     Resource Tale of the Devious Trader.esp
+     Tale of the Devious Trader.esp
+     ;;Golden Saint Armor by Arcimaestro Antares
+     Golden Saint Armor.esp
+     ;;Animated Morrowind by Arcimaestro Antares
+     Animated Morrowind 1.0.esp
+     ;;various monsters by Arcimaestro Antares
+     Antares' Creatures - Beholder.esp
+     Antares' Creatures - Frost Giant.esp
+     Antares' Creatures - Frost Monarch.esp
+     Antares' Creatures - Green Slime.esp
+     Antares' Creatures - Hill Giant.esp
+     Antares' Creatures - Treant.esp
+     Antares' Creatures - Trolls!.esp
+     Draugr Deathlord.esp
+     ;;quorn's Imperial chain boots/Gauntlets
+     chain_armor_set.esp
+     ;;quorn's Hospitality Papers
+     HospitalityPapers.esp
+     ;;quorn's Muck Shovel Use
+     MuckShovelUse.esp
+     ;;quorn's Miner's Pick Use
+     MinerPickUseGOTY.esp
+     ;;quorn's Ascended Sleeper sound fix
+     AscendedSleeperSFX.esp
+     ;;quorn's Steel Broadsword fix
+     Steel Broadsword Fix BM.esp
+     ;;Kalian, Hedgehog-12 & Windwalker's Black Glass set
+     Black Glass.esp
+     ;;Psymoniser's Psymons Dwemer statue pack
+     Psy_Dwemer_statue_pack.esp
+     ;;BTB's Spell Fixes
+     BTB - Spells.esp
+     ;;Electric Slaughterfish by PeterBitt
+     PB_ElectricSlaughterfish.esp
+     ;;Guarskin Drum Replacer by Alaisiagae
+     guarskin_drum_replacer.esp
+     ;;Potion Sorter Mod by Srikandi
+     PotionSorter.esp
+     ;;Potion/Scroll Icons and Potion Sort by rmrfstar, includes above
+     PSsorticon.esp
+     ;;Repair Tools by The Iron Chicken
+     Rare Repairs.esp]
+
+     ;;Vality7's Vvardenfell 3D Map
+     ;;Vality's 3d Map of Vvardenfell.esp - D32: removed in 2.6
+     ;;VagabondAngel's Silver Katana
+     ;;VA_SilverKatana.esp - D32: removed in 2.6
+     ;;Petiboy's House Dagoth Bonemold armor
+     ;;PB_Dagoth_Bonemold.esp - D32: removed in 2.6
+     ;;Soulshade's Weapons Of Tamriel - D32: removed in 2.6
+     ;;Weapons of Tamriel v1.2.esp
+     ;;Arcimaestro Antares's Gated Caldera
+     ;;Dragon32 - Can't find this
+     ;;Arcimaestro Antares's Gated Ald-Rhun
+     ;;Dragon32 - Can't find this
+     ;;Bernadettes's Imports by Crankgorilla
+     ;;Dragon32 - Can't find this
+     ;;Dragon32 - Actually there's loads I can't find as I CBA to decipher the readme into searchable terms
+
+;;Order rules for herbalism mods
 
 ;; Order suggested by Hordane: ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21761617
 ;;Dragon32: Hordane only suggested Graphic Herbalism, added in the other herbalism mods. People should only be running one of these so this mega-Order rule should be OK
@@ -20984,15 +21246,7 @@ HR 1.12a BMW + EW 1.5.esp
 Morrowind Rebirth <VER>.esp
 Ultra Light Herbalism.esp
 
-;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
-[Order]
-Morrowind Rebirth <VER>.esp
-JAC_Jasmine.esp
-
-;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
-[Order]
-Morrowind Rebirth <VER>.esp
-The Apartment.esp
+;;Order rules for quorn's Muck Shovel Use and similar mods
 
 ;;Dragon32: Rebirth includes quorn's Muck Shovel Use.
 [Order]
@@ -21024,6 +21278,8 @@ Morrowind Crafting 2-1.esp
 Morrowind Rebirth <VER>.esp
 Resources Enhanced.esp
 
+;;Order rules for animal pacification mods
+
 ;;Dragon32: load animal pacifying mods after Rebirth
 [Order]
 Morrowind Rebirth <VER>.esp
@@ -21052,6 +21308,8 @@ Real_wildlife_v1.0.esp
 [Order]
 Morrowind Rebirth <VER>.esp
 wildlife_behaviour.esp
+
+;;Order rules for game settings-affecting mods
 
 ;;Dragon32: load BTB's game settings plugins after Rebirth
 [Order]
@@ -21090,6 +21348,11 @@ BTB - Unique Finery Equipment.esp ;Revan's BTB's Unique Finery Equipment
 Morrowind Rebirth <VER>.esp
 BTB - Spells.esp
 
+;;Dragon32: SPEL conflict - "rally beast"
+[Order]
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].ESP
+BTB - Spells.esp
+
 [Order]
 Morrowind Rebirth <VER>.esp
 BTB - Settings.esp
@@ -21123,6 +21386,11 @@ Balance - NPC Spellcasting.esp
 Morrowind Rebirth <VER>.esp
 Balance - spells.esp
 
+;;Dragon32: SPEL conflict - "rally beast"
+[Order]
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].ESP
+Balance - spells.esp
+
 [Order]
 Morrowind Rebirth <VER>.esp
 Gameplay - Dialogue.esp
@@ -21139,136 +21407,17 @@ Wakim's Game Improvement 9.esp
 Morrowind Rebirth <VER>.esp
 Wakim's Game Improvements with No-glo v9.esp
 
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" includes these mods:
-  Vurt's Ascadian Isles Tree Replacer II
-  Vurt's Bitter Coast Trees II
- (Ref: "Morrowind_Rebirth_v_1.5.rar\Readme.doc")
-Morrowind Rebirth <VER>.esp
-[ANY Vurt's BC Tree Replacer II.ESP
-     Vurt's Leafy West Gash.esp]
+;; Order rules for assorted other mods
 
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" includes Loki the Grouch's "Better Caldera"
- (Ref: "Morrowind_Rebirth_v_1.5.rar\Readme.doc")
+;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
+[Order]
 Morrowind Rebirth <VER>.esp
-[ANY Clean Better Caldera.esp
-     New Better Caldera (Trancemaster Edit).esp]
+JAC_Jasmine.esp
 
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" includes Xeth-Ban's "Ald-Ruhn Temple Expansion"
- (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
+[Order]
 Morrowind Rebirth <VER>.esp
-Clean Ald-Ruhn Temple Expansion <VER>.ESP
-
-[Conflict]
- "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
- (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
-Morrowind Rebirth <VER>.esp
-Poorly Placed Object Fix  ?.?.esm
-
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
- (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
-[ANY Clean_Foeburner_Fix.esp
-     lfx_foeburner.esp]
-
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" changes Redoran guards in a similar way to Xeth-Ban's "Redoran Guards - Katanas and Shields"
- (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
-Morrowind Rebirth <VER>.esp
-[ANY Redoran Guards with Katanas and Shields.esp
-     Redoran Guards with Katanas.esp
-     Redoran Guards with Shields.esp]
-
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" includes his Gnisis and Seyda Neen expansion mods.
- (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
-Morrowind Rebirth <VER>.esp
-[ANY New Gnisis 1.2.ESP
-     New Seyda Neen 1.6.esp]
-
-[Conflict]
- Trancemaster_1988's "New Seyda Neen", which is included in his "Morrowind Rebirth", conflicts with Emma's "Children of Morrowind" and lonnie's "Seyda Neen Docks"
- (Ref: New_Seyda_Neen_1.6.rar\Readme.doc)
-Morrowind Rebirth <VER>.esp
-[ANY Seyda Neen Docks V7.0 Bloodmoon.esp
-     Seyda Neen Docks V7.0 Tribunal.esp
-     MW_Children_1_0.esm]
-
-[Conflict]
- "[More Detailed Places] won't work at all with Rebirth, no matter what you do with your loadorder."
- (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21680865 )
-Morrowind Rebirth <VER>.esp
-[ANY MDP Compilation.ESP
-     MDP - Dagon Fel.ESP
-     MDP - Dagon Fel 1.0.ESP
-     MDP - Ebonheart.ESP
-     MDP - Ebonheart - 1.0.ESP
-     MDP - Fort Buckmoth.ESP
-     MDP - Gnaar Mok.ESP
-     MDP - Hla Oad.esp
-     MDP - Khuul.ESP
-     MDP - Maar Gan.ESP
-     MDP - Maar Gan - 1.0.ESP
-     MDP - Sadrith Mora.ESP]
-
-[Conflict]
- Trancemaster_1988's "Morrowind Rebirth" already includes these mods.
- (Ref: "Morrowind_Rebirth_v_1.5.rar\Readme.doc")
- (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21680865 )
-Morrowind Rebirth <VER>.esp
-[ANY ;;Dongle's Adamantium Shields
-     Adamantium Roundshield.esp
-     Adamantium Towershield.esp
-     ;;Dongle's Windmills
-     Windmills-Demo.esp
-     ;;Templar Shield by Korana
-     TemplarSheild.esp
-     ;;Tale of the Devious Trader by Xeth-Ban
-     Resource Tale of the Devious Trader.esp
-     Tale of the Devious Trader.esp
-     ;;Golden Saint Armor by Arcimaestro Antares
-     Golden Saint Armor.esp
-     ;;Animated Morrowind by Arcimaestro Antares
-     Animated Morrowind 1.0.esp
-     ;;various monsters by Arcimaestro Antares
-     Antares' Creatures - Beholder.esp
-     Antares' Creatures - Frost Giant.esp
-     Antares' Creatures - Frost Monarch.esp
-     Antares' Creatures - Green Slime.esp
-     Antares' Creatures - Hill Giant.esp
-     Antares' Creatures - Treant.esp
-     Antares' Creatures - Trolls!.esp
-     Draugr Deathlord.esp
-     ;;Arcimaestro Antares's Gated Caldera
-     ;;Dragon32 - Can't find this
-     ;;Arcimaestro Antares's Gated Ald-Rhun
-     ;;Dragon32 - Can't find this
-     ;;Vality7's Vvardenfell 3D Map
-     Vality's 3d Map of Vvardenfell.esp
-     ;;VagabondAngel's Silver Katana
-     VA_SilverKatana.esp
-     ;;quorn's Imperial chain boots/Gauntlets
-     chain_armor_set.esp
-     ;;quorn's Hospitality Papers
-     HospitalityPapers.esp
-     ;;quorn's Muck Shovel Use
-     MuckShovelUse.esp
-     ;;quorn's Miner's Pick Use
-     MinerPickUseGOTY.esp
-     ;;quorn's Ascended Sleeper sound fix
-     AscendedSleeperSFX.esp
-     ;;quorn's Steel Broadsword fix
-     Steel Broadsword Fix BM.esp
-     ;;Petiboy's House Dagoth Bonemold armor
-     PB_Dagoth_Bonemold.esp
-     ;;Soulshade's Weapons Of Tamriel
-     Weapons of Tamriel v1.2.esp
-     ;;Kalian, Hedgehog-12 & Windwalker's Black Glass set
-     Black Glass.esp
-     ;;Psymoniser's Psymons Dwemer statue pack
-     Psy_Dwemer_statue_pack.esp]
+The Apartment.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21568,6 +21717,10 @@ MRM.esm
 
 [Order]
 Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+MRM.esm
+
+[Order]
+Morrowind Patch*.esm
 MRM.esm
 
 [Order]
@@ -25227,6 +25380,18 @@ Reign of Fire v1.92BETA [Razhkul, Rev. Gluby].esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Repair Tools [The Iron Chicken]
+
+[Conflict]
+ Use only one plugin:
+  Repair Tools.esp - "Only contains the retextures of the original armorer's hammers and prongs."
+  Rare Repairs.esp - "Contains the new Dwemer an Daedric hammers and the new blacksmithing books along with the retextures."
+ (Ref: "Repair Tools-41332-v1-00.rar\Repair Tools\Readme.txt")
+Rare Repairs.esp
+Repair Tools.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Respawns [Zenethor]
 
 [Note]
@@ -25859,6 +26024,10 @@ The Sable Dragon 1.6.esp
 [Order]
 The Sable Dragon 1.6.esp
 NOM 2.13.esp
+
+[Order]
+The Sable Dragon 1.6.esp
+NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27686,6 +27855,21 @@ StarstoneShields.esp
  Wulfgar's "Starstone Shields" needs Calislahn's "Starstone Outpost" to be loaded.
 StarstoneShields.esp
 Cali_StarstoneOutpost.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @State-Based Hit Points 1.1 [HotFusion4]
+
+[Conflict]
+ Posted by Galsiah at the Bethsoft forums: "By the way, you don't need [HotFusion4's] "State-Based Hit Points" if you're using GCD. GCD already adjusts health (or will when it's working ), so having SBHP do it too is asking for trouble."
+ (Ref: http://forums.bethsoft.com/index.php?/topic/1120044-gcd-error-message/page__view__findpost__p__16467760 )
+[ANY StateBasedHitPointsv1.1.esp
+     StateBasedHitPoints1.0.esp]
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31320,7 +31504,7 @@ Get Fezzed!.esp
 ;; Uvirith's Legacy_Final_2.0.esp
 ;; NOM 2.13.esp
 ;; UL_NoM2.13_backwardscompat.esp
-;; 
+;;
 ;; [Requires]
 ;; "Uvirith's Legacy" includes resources from Taddeus' "Necessities of Morrowind" v3.0, the 'UL_NoM2.13_backwardscompat.esp' compatibility patch adds the old "Necessities of Morrowind" scripts to these new "Necessities of Morrowind" resources.
 ;;  (Ref: "Uvirith's Legacy_README.txt")
@@ -34415,6 +34599,7 @@ Wilderness Mod Rectifier.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wilderness Sounds [The Puma Man]
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  "Wilderness Sounds.esp" if you only have Morrowind.
@@ -34456,16 +34641,26 @@ Wilderness Sounds T & B.esp
      Tribunal.esm]
 
 [Conflict]
- Wilderness Sounds includes the official Bitter Coast Sounds and Master Index plugins.
+ Wilderness Sounds includes the official Bitter Coast Sounds plugin.
  (Ref: "Wilderness Sounds 3.0.doc")
 [ANY Wilderness Sounds.esp
      Wilderness Sounds Bloodmoon.esp
      Wilderness Sounds Tribunal.esp
      Wilderness Sounds T & B.esp]
 [ANY bcsounds.esp
-     [ANY master_index.esp
-          Clean Official Plugins v1.1.esp
-          OfficialMods_v5.esp]]
+     Clean Official Plugins v1.1.esp
+     OfficialMods_v5.esp]
+
+[Conflict]
+ Wilderness Sounds includes the official Master Index plugins.
+ (Ref: "Wilderness Sounds 3.0.doc")
+[ANY Wilderness Sounds.esp
+     Wilderness Sounds Bloodmoon.esp
+     Wilderness Sounds Tribunal.esp
+     Wilderness Sounds T & B.esp]
+[ANY master_index.esp
+     Clean Official Plugins v1.1.esp
+     OfficialMods_v5.esp]
 
 ;;Load Wilderness Sounds after Leon "pancreas" Medado's Morrowind Sound Enhancements and Duncann's Atmospheric Sound Effects
 ;;(Ref: "Wilderness Sounds 3.0.doc")
@@ -35253,7 +35448,7 @@ Tribunal.esm
  "The Zone" replaces two of the stock daedric ruin textures:
   Tx_Daed_metal_02.dds
   Tx_Daed_wall_03.dds
- This will interfere with any daedric texture replacers you are using and cause problems with  MGE rendering the Daedric ruins as distant statics. It is recommended that you delete these two  texture files.
+ This will interfere with any daedric texture replacers you are using and cause problems with MGE rendering the Daedric ruins as distant statics. It is recommended that you delete these two texture files.
 The Zone (Tribunal).esp
 
 
