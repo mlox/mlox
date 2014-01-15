@@ -88,6 +88,11 @@ Clean UMPP-fixes-v2.esp
 ;;Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien], q.v.
 Clean_bloodmoonpatch_05.esp
 
+[Order]
+Morrowind.esm
+Tribunal.esm
+Bloodmoon.esm
+
 [NearEnd]
 multipatch.esp
 Mashed Lists.esp
@@ -1406,7 +1411,41 @@ BC altbegin 2.2.esp
                GCDLean204STD.esp
                GCDLean204EASY.esp
                GCDLean204HARD.esp]
-          NoM 3.0.esp]]
+          abotWaterLife.esm
+          ACE_Airattack.esp
+          ACE_Backstab.esp
+          ACE_Charge.esp
+          ACE_Subtitles.esp
+          Adj_Magicka Regen (0.10%).esp
+          Adj_Magicka Regen (0.25%).esp
+          Adj_Magicka Regen (0.50%).esp
+          Adj_Magicka Regen (1.00%).esp
+          ASH 2.0.esp
+          BR_Werewolf_Patch.esp
+          Clean Blight Infections.esp
+          Decorator+ (Balanced).esp
+          Decorator+.esp
+          DynamicMagickaRegeneration-2.0-Tribunal.esp
+          DynamicMagickaRegeneration-2.1-Tribunal.esp
+          ExoticsBoutique.esp
+          ExoticsBoutiqueNoMusic.esp
+          Fishing Academy v2.54.esp
+          Flying Carpet.esp
+          Improved Inns MW.esp
+          LeveledMagicka.esp
+          Levelling.esp
+          Melee Missiles v1.2.esp
+          NoM 3.0.esp
+          Mr Cellophane's Lovers and Legends V0.esp
+          NPC LCV Schedules 03.esp
+          ScentOfBlood_MWSE_AddOn.esp
+          SG_Ryukaissen-M.esp
+          SG_Ryukaissen.esp
+          Tejón's Fatigue Effects - Blackout.esp
+          Teleportation Spells.esp
+          Tenience's Rare Items.esp
+          Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
+          Undress For Me.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2825,7 +2864,7 @@ Assassins Armory - Arrows.esp
      super_adventurers302.esp]
 
 [Patch]
- "Assassins Armory - Unofficial Patch 7.7" is a patch for a couple small glitches in Assassin's Armory. It's available here:
+ "Assassins Armory - Unofficial Patch 7.7" is a patch for a couple of small glitches in Assassin's Armory. It's available here:
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=644
  (Ref: "readme_AssassinsArmoryUnofficialPatch_7_7.txt")
 Assassins Armory - Unofficial Patch 7.7.esp
@@ -4418,7 +4457,8 @@ BetterClothes_Patch.esp
  http://mw.modhistory.com/download-21-14097
 BetterClothes_Patch.esp
 [ANY Better Clothes_v1.1.esp
-     Better Clothes_v1.1_nac.esp]
+     Better Clothes_v1.1_nac.esp
+     Better Clothes Complete (BTB Edit).esp]
 
 [Note]
  !! As its readme describes, Keazen's "Patch for Better Clothes" fixes error messages ("Not able to find Foot part in BC_shoes...") appearing in your warnings.txt, which don't appear in game and the errors reported don't affect gameplay. However, using the patch means that you can see peoples' feet meshes through the shoe meshes.
@@ -6183,6 +6223,12 @@ BTB - Unique Finery Equipment.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BUUG - Building Up Uvirith's Grave [Acheron]
 
+[Conflict]
+ Acheron's "Building Up Uvirith's Grave" and Stuporstar's "Uvirith's Legacy" are incompatible. However, Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" patches these two popular Tel Uvirth Stronghold mods together.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7736
+Building Up Uvirith's Grave 1.1.esp
+Uvirith's Legacy_<VER>.esp
+
 ;; "If you wish to use the alchemy sorters for expansion packs or
 ;; Srikandi ingredients, you should also load the appropriate optional
 ;; plug-ins labeled "BUUG Alchemy" (make sure that they are loaded *after*
@@ -6255,6 +6301,14 @@ Building Up Uvirith's Legacy1.01.ESP
  (Ref: Building Up Uvirith's Legacy Readme.txt)
 Fast Eddie Fix v.0001.esp
 Uvirith's Legacy_*.esp
+
+;;expdep
+[Requires]
+ This plugin uses some Tribunal scripting functions:
+ (placeitemcell, getsquareroot, setdelete, getwaterlevel).
+Building Up Uvirith's Legacy1.1.ESP
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7969,11 +8023,11 @@ Dark Town of Uvirith (TL).esp
 ;; @Dark Uvirith Exterior for BuUG [Stuporstar]
 
 [Requires]
- Stuporstar's "Dark Uvirith Exterior for BuUG" requires either Building up Uvirith's Grave or Building up Uvirith's Legacy.
+ Stuporstar's "Dark Uvirith Exterior for BuUG" requires either Acheron's "Building up Uvirith's Grave" or Artimis Fowl the 3rd's "Building up Uvirith's Legacy".
  (Ref: DarkUvirithExteriorBuUG_README.txt)
 Dark Uvirith Exterior BuUG 1.0.esp
 [ANY Building Up Uvirith's Grave 1.1.esp
-     Building Up Uvirith's Legacy1.01.ESP]
+     Building Up Uvirith's Legacy1.1.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10978,6 +11032,17 @@ ForestOfLife_D32Edit.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Forest Pharlans 1.5 [Sabregirl]
+
+;;expdep
+[Requires]
+ This plugin uses a startscript
+SG_forest_pharlan.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Forgotten Hall  [John W. aka (jondagamkd)]
 
 [Note]
@@ -11117,6 +11182,28 @@ pcc_further_ext_smer_20.esp
 [Order]
 pcc_further_ext_smer_20.esp
 pcc_further_ext_FIX_01.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Galesa Pharlans 1.0 [Sabregirl]
+
+;;expdep
+[Requires]
+ This plugin uses a startscript and the Tribunal function: setdelete
+SG_galesapharl.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Galith Companions 1.0 [Baratheon79]
+
+[Requires]
+ "Requires the Galith Race mod, by kwshipman. [...] REQUIRES TRIBUNAL EXPANSION"
+ (Ref: "Galith Companions v1.0 Readme.txt")
+BAR_Galith Companions v1.0.esp
+[ALL Galith_v1.0.esp
+     Tribunal.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11491,6 +11578,15 @@ GCDVHPatch.esp
 ;; (Ref: "3GCDReadmeFirst.txt")
 ;;GCDVHPatch.esp
 ;;Vampire_Embrace.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Gapharl Wings [Saberfang321]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6788 sa_wings_pharlan.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12759,15 +12855,19 @@ Graphic Herbalism.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism / Expanded Sounds Patch [philologos]
 
-;;GH_ES1.2 - For Expanded Sounds v1.2
+;;For both 1.2 and 1.3 versions of the patch
 [Patch]
- philologos' "GH_ES1.2 Patch.esp" patches "Expanded Sounds" 1.2 by PirateLord and "Graphic Herbalism" by ManaUser. Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
+ philologos' "GH_ES1.2 Patch.esp" patches "Expanded Sounds" 1.2 by PirateLord and "Graphic Herbalism" by ManaUser; his "GH_ES1.3 Patch.esp" patches "Expanded Sounds" 1.3 by PirateLord and "Graphic Herbalism".
+ Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
+ Unfortunately there's no reliable way for mlox to distinguish which version of PirateLord's "Expanded Sounds" you are running, ensure you download and install the right patch!
  http://morrowind.nexusmods.com/mods/23108
  (Ref: Ref: GH_ES1.2 Patch.txt)
-GH_ES1.2 Patch.esp
+[ANY GH_ES1.2 Patch.esp
+     GH_ES1.3 Patch.esp]
 [ALL Graphic Herbalism.esp
-     [SIZE 438953 Expanded Sounds.esp]]
+     Expanded Sounds.esp]
 
+;;GH_ES1.2 - For Expanded Sounds v1.2
 [Requires]
  (Ref: Ref: GH_ES1.2 Patch.txt)
 GH_Extra_ES1.2 Patch.esp
@@ -12788,14 +12888,6 @@ GH_Extra_ES1.2 Patch.esp
  ! http://morrowind.nexusmods.com/mods/23108
 Graphic Herbalism ES1.3.esp
 Graphic Herbalism ES1.3 Extra.esp
-
-[Patch]
- philologos' "GH_ES1.3 Patch.esp" patches "Expanded Sounds" 1.3 by PirateLord and "Graphic Herbalism" by ManaUser. Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
- http://morrowind.nexusmods.com/mods/23108
- (Ref: Ref: GH_ES1.3 Patch.txt)
-GH_ES1.3 Patch.esp
-[ALL Graphic Herbalism.esp
-     [SIZE 439651 Expanded Sounds.esp]]
 
 [Requires]
  (Ref: Ref: GH_ES1.3 Patch.txt)
@@ -13205,7 +13297,8 @@ STA_guides_replacer.esp
 STA_guides_replacer_NoScript.esp
 
 [Conflict]
- Stalker's "Guide to... replacer" plugin adds rotate scripts to the Guide to... scrolls. As you are using Cydine & Maboroshi Daikon's "Book Rotate", which adds rotate scripts to all books and  scrolls, there is no need to use this version of Stalker's "Guide to... replacer". You should use Stalker's alternative plugin: STA_guides_replacer_NoScript.esp
+ Stalker's "Guide to... replacer" plugin adds rotate scripts to the Guide to... scrolls. As you are using Cydine & Maboroshi Daikon's "Book Rotate", which adds rotate scripts to all books and  scrolls, there is no need to use this version of Stalker's "Guide to... replacer". You should use the alternative plugin "STA_guides_replacer_NoScript.esp" available at Morrowind Modding History (see Additional Files for "STA_guides_replacer_NoScript.7z"):
+ http://mw.modhistory.com/download--3101
 STA_guides_replacer.esp
 [ANY Book Rotate - Morrowind v1.1.esp
      Book Rotate.esm]
@@ -17201,6 +17294,13 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;;expdep
+[Requires]
+ This plugin uses the Tribunal function: placeitem
+LGNPC_HlaOad.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
 ;; expdep
 [Requires]
  Uses Tribunal function: forcerun.
@@ -17208,10 +17308,10 @@ LGNPC_PaxRedoran_v1_20.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-;; expdep
+;;expdep
 [Requires]
- Uses Tribunal function: hasitemequipped.
-LGNPC_Pelagiad_v1_22.esp
+ This plugin uses the Tribunal function: hasitemequipped
+LGNPC_Pelagiad.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
@@ -17316,29 +17416,11 @@ LGNPC_Pelagiad_v1_22.esp
 [VER < 2.21 LGNPC_VivecFQ_v<VER>.esp]
 [VER < 2.21 LGNPC_VivecFQ.esp]
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;Begin Vivec Redoran bodge
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;Dragon32: Vivec Redoran 1.61 has "1.60" in the Description field, therefore this rule comes up even with latest version:
-
-;;[Note]
-;; ! A newer version is available, check the LGNPC download site:
-;; ! http://www.lgnpc.org/downloads
-;;[VER < 1.61 LGNPC_VivecRedoran_v<VER>.esp]
-
-;;Dragon32: Temporary solution. Until next version of Vivec Redoran. With, hopefully, an accurate version number in the Description
-
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[ALL LGNPC_VivecRedoran_v<VER>.esp
-     [NOT LGNPC_VivecRedoran_v1_62.esp]]
+[VER < 1.62 LGNPC_VivecRedoran_v<VER>.esp]
 [VER < 1.62 LGNPC_VivecRedoran.esp]
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;/End Vivec Redoran bodge
-;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [Conflict]
  Use only one plugin:
@@ -18945,6 +19027,28 @@ Mills of Morrowind.esp
 Mills of Morrowind.esp
 Morrowind Crafting 2-1.esp
 
+;;Dragon32: Land tears with Firemoth and Mills of Morrowind. Load Mills of Morrowind after Firemoth.
+;; http://forums.bethsoft.com/topic/1480857-relz-mills-of-morrowind-expansion/?p=23253653
+[Order]
+Siege at Firemoth.esp
+Mills of Morrowind.esp
+
+;;Dragon32: I assume it's some dirty LAND records in original Beth plugin but we'll load plugins which merge the Official mods and modified Firemoth plugins after Mills of Morrowind too.
+[Order]
+OfficialMods_v5.esp
+Mills of Morrowind.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Mills of Morrowind.esp
+
+[Order]
+super_adventurers302.esp
+Mills of Morrowind.esp
+
+[Order]
+FireMoth Moved.ESP
+Mills of Morrowind.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Minas Ithil Keep  [Miguel Felix]
@@ -19149,6 +19253,158 @@ Modman_windowlights_Purist_2.esp
  ! See "readme_modman_lights_2.txt"
 Modman_windowlights_Full_2.esp
 Modman_windowlights_Purist_2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mog Companions 1.0 [Baratheon79]
+
+[Requires]
+ "[Baratheon79's "Mog Companions"] REQUIRES TRIBUNAL EXPANSION [...] Also requires Ian McConville's Mog Mod"
+ (Ref: "Mog Companions v1.0 Readme.txt")
+BAR_Mog Companions.esp
+[ANY _Mog_Race_v4b.esp
+     Mog_Fix.esp
+     Mog_HeightFix.esp
+     Mog_JumpFix.esp
+     Mog_TotalFix.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mog Fixes [Ger]
+
+[Conflict]
+ Choose only one plugin:
+  Mog_Fix.esp - Just fixes the problem with the female hands not pointing to the correct mesh file.
+  Mog_HeightFix.esp - Fixes the female hands and alters the Mog size to prevent certain game problems, such as getting stuck in doorways.
+  Mog_JumpFix.esp - Fixes the female hands and alters the Mog's Jump ability to lessen it.
+  Mog_TotalFix.esp - Fixes the female hands and the Mog Jump Ability and the Mog Height.
+ (Ref: "MogFix Readme.txt")
+Mog_Fix.esp
+Mog_HeightFix.esp
+Mog_JumpFix.esp
+Mog_TotalFix.esp
+
+[Conflict]
+ Do not use any of Ger's "Mog Fix" plugins with Ian McConville's original "Mog Mod". Use one of the "Mox Fix" plugins instead of Ian McConville's original.
+ (Ref: "MogFix Readme.txt")
+_Mog_Race_v4b.esp
+[ANY Mog_Fix.esp
+     Mog_HeightFix.esp
+     Mog_JumpFix.esp
+     Mog_TotalFix.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mog Helms [Ger]
+
+[Conflict]
+ Choose only one plugin:
+  Mog_Helms.esp - Adds a merchant that sells the Mog helms in Seyda Neen.
+  Mog_HelmsToADD.esp - A modder's resource and does not place the helms in-game.
+ (Ref: "Moogle_Helms_and_Wraithpaw.zip\installation guide.txt")
+Mog_Helms.esp
+Mog_HelmsToADD.esp
+
+[Requires]
+ "[Ger's "Mog Helms"] requires the game and BOTH expansions and [...] the Mog mod"
+ Ref: "Moogle_Helms_and_Wraithpaw.zip\installation guide.txt")
+[ANY Mog_Helms.esp
+     Mog_HelmsToADD.esp]
+[ALL [ANY _Mog_Race_v4b.esp
+          Mog_Fix.esp
+          Mog_HeightFix.esp
+          Mog_JumpFix.esp
+          Mog_TotalFix.esp]
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ "The helms [included in "Mog Helms" by Ger] were released in an earlier version of Ian's Mog mod"
+ Ref: "Moogle_Helms_and_Wraithpaw.zip\installation guide.txt")
+[ANY Mog_Helms.esp
+     Mog_HelmsToADD.esp]
+[ANY _Mog_BM_helms_v4.esp
+     _Mog_helms_v4.esp
+     _Mog_TR_helms_v4.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mog Mod 4.0b [Ian McConville]
+
+[Note]
+ ! There is a new version of Ian McConville's "Mog Mod". You should upgrade!
+ ! http://mw.modhistory.com/download-70-2258
+_Mog_Race_v4.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 35665 _Mog_Race_v4b.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 11893 _Mog_helms_v4.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5807 _Mog_TR_helms_v4.esp]
+
+;;Dragon32: Checked with TESPCD
+[Conflict]
+ These plugins were released for an earlier version (4.0) of Ian McConville's "Mog Mod".
+  "_Mog_Voice_v4.esp" - is included in version 4.0b
+  "_Mog_BM_helms_v4.esp", "_Mog_helms_v4.esp", and "_Mog_TR_helms_v4.esp" - Available in a combined mod "Mog Helms" by Ger: http://mw.modhistory.com/download-70-2216
+[ANY _Mog_Race_v4b.esp
+     Mog_Fix.esp
+     Mog_HeightFix.esp
+     Mog_JumpFix.esp
+     Mog_TotalFix.esp]
+[ANY _Mog_BM_helms_v4.esp
+     _Mog_helms_v4.esp
+     _Mog_TR_helms_v4.esp
+     _Mog_Voice_v4.esp]
+
+[Requires]
+ "["_Mog_ENABLE_ONLY_IF_EXPANSIONS_PRESENT.esp" is] an optional ESP for the users of the expansion to resize the race to its intended proportions."
+ (Ref: http://mw.modhistory.com/download-70-2258 )
+_Mog_ENABLE_ONLY_IF_EXPANSIONS_PRESENT.esp
+[ALL [ANY _Mog_Race_v4b.esp
+          Mog_Fix.esp
+          Mog_HeightFix.esp
+          Mog_JumpFix.esp
+          Mog_TotalFix.esp]
+     [ANY Tribunal.esm
+          Bloodmoon.esm]]
+
+[Order]
+_Mog_Race_v4b.esp
+Mog_Fix.esp
+Mog_HeightFix.esp
+Mog_JumpFix.esp
+Mog_TotalFix.esp
+_Mog_ENABLE_ONLY_IF_EXPANSIONS_PRESENT.esp
+
+[Note]
+ You may be interested in "Mog Fixes" by Ger. It offers a number of replacement plugins which fix all or some of: the female Mog hands not pointing to the correct mesh file, alter the size of Mogs to prevent certain game problems (such as getting stuck in doorways) and lessen the Mog's Jump ability.
+ http://mw.modhistory.com/download-71-4642
+_Mog_Race_v4b.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mog Supplies 1.1 [Smite_Plight]
+
+[Requires]
+ Smite_Plight's "Mog Supplies" is an add-on for Ian McConville's "Mog Mod"
+ (Ref: "Readme Mog Supplies.txt")
+Mog Supplies v1.1.esp
+[ANY _Mog_Race_v4b.esp
+     Mog_Fix.esp
+     Mog_HeightFix.esp
+     Mog_JumpFix.esp
+     Mog_TotalFix.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mokbar [Dalibor "Sahardoom" Brankov]
@@ -20180,6 +20436,27 @@ MCA 6 - H.E.L.L.U.V.A. Wicked Weapons.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Kage Mog Addon 1.0 [Marbred]
+
+[Requires]
+ "[To use Marbred's "MCA Kage Mog Addon"] you must already have Morrowind Comes Alive v4.1 by Neoptolemus and Mog*Mod v4b by Ian McConville and MCA Mog Addon v5"
+ (Ref: "MCA Kage Mog Addon.txt")
+MCA Mog Kage Addon.esp
+[ALL [SIZE 2442550 Morrowind Comes Alive.esm]
+     [ANY _Mog_Race_v4b.esp
+          Mog_Fix.esp
+          Mog_HeightFix.esp
+          Mog_JumpFix.esp
+          Mog_TotalFix.esp]
+     MCA Mog Addon v5.esp]
+
+;;Dragon32: Checked with TESPCD: some LEVC conflicts (meh) and a couple of NPC_ conflicts
+[Order]
+MCA Mog Addon v5.esp
+MCA Mog Kage Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA 5.1 Lighter [Jeoshua]
 
 [Requires]
@@ -20323,6 +20600,7 @@ MCA v5.2 - Lite.esp
 Elders MCA Add-on v2.0.esp
 MCA v5.2 - Lite.esp
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA Lore Correct 5.1 [Denunci]
 
@@ -20332,6 +20610,21 @@ MCA v5.2 - Lite.esp
  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5376
 MCA Lore Correct 5.1.esp
 [DESC /over 1200 friendly/ MCA.ESM]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MCA Mog Addon 5.0 [Marbred]
+
+[Requires]
+ "[To use Marbred's "MCA Mog Addon"] you must already have Morrowind Comes Alive v4.1 by Neoptolemus and Mog*Mod v4b by Ian McConville"
+ (Ref: "Readme - MCA Mog Addon.txt")
+MCA Mog Addon v5.esp
+[ALL [SIZE 2442550 Morrowind Comes Alive.esm]
+     [ANY _Mog_Race_v4b.esp
+          Mog_Fix.esp
+          Mog_HeightFix.esp
+          Mog_JumpFix.esp
+          Mog_TotalFix.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20720,12 +21013,37 @@ MWE_Base.esp
 
 [Requires]
  Hitto's "ACE Addons" require Aerelorn's "Combat Enhanced" to be loaded
- (Ref: ACE - addons xxxxxxx.txt)
-[ANY ACE_Subtitles.esp
-     ACE_Airattack.esp
+ (Ref: "ACE addons - Air Attack.txt", "ACE addons - Backstab.txt, ACE addons - Charge.txt, ACE addons - Subtitles.txt")
+[ANY ACE_Airattack.esp
+     ACE_Backstab.esp
      ACE_Charge.esp
-     ACE_Backstab.esp]
+     ACE_Subtitles.esp]
 MWE_Combat.esp
+
+;;expdep
+[Requires]
+ This plugin uses a startscript and the Tribunal function: getpcjumping
+ACE_Airattack.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ This plugin uses a startscript and the Tribunal functions: getpcsneaking and getweapondrawn
+ACE_Backstab.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ This plugin uses a startscript and the Tribunal functions: getpcrunning and getweapondrawn
+ACE_Charge.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ This plugin uses a startscript
+ACE_Subtitles.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 [Conflict]
  Use only one version of the mod:
@@ -21127,7 +21445,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
  "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
  (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
 Morrowind Rebirth <VER>.esp
-Poorly Placed Object Fix  ?.?.esm
+Poorly Placed Object Fix  <VER>.esm
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
@@ -22270,7 +22588,7 @@ ModMan_Hungermod.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities for Purists script add-ons [maura amalia]
 
-;;Dragon32 For "Necessities_for_Purists__Real_Wildlife.esp" see "@Necessities for Purists & Real Wildlife Compatibility Patch [The Vagrant Wolf]"
+;;Dragon32 For "Necessities_for_Purists__Real_Wildlife.esp" see "Necessities for Purists & Real Wildlife Compatibility Patch [The Vagrant Wolf]"
 [Conflict]
  "ONLY one add-on script.esp can be checked"
  (Ref: "NfP script addons ReadMe.txt)
@@ -22347,7 +22665,7 @@ NfP The Wilderness Mod addon.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Necessities for Purists & Real Wildlife Compatibility Patch [The Vagrant Wolf]
 
-;;Dragon32: See also "@Necessities for Purists script add-ons [maura amalia]"
+;;Dragon32: See also "Necessities for Purists script add-ons [maura amalia]"
 
 [Patch]
  [Necessities for Purists & Real Wildlife Compatibility Patch] "adds the food items of Real Wildlife to Necessities for Purists"
@@ -22366,10 +22684,10 @@ Necessities_for_Purists__Real_Wildlife.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Necessities of Morrowind 3.0 (NOM) [Taddeus]
+;; @NoM (Necessities of Morrowind) 3.0 [Taddeus]
 
 [Note]
- ! There is a newer version of Necessities of Morrowind (NOM) available, you may want to upgrade:
+ ! There is a newer version of Necessities of Morrowind (NoM) available, you may want to upgrade:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8707
 Necessities of Morrowind 2.0.esp
 Necessities of Morrowind 2.1.esp
@@ -22607,6 +22925,26 @@ NOM 2.13.esp
      OfficialMods_v5.esp
      Clean Official Plugins v1.1.esp
      super_adventurers302.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NOM3fix [abot]
+
+[Patch]
+ "[abot's NOM3 fix is] a small patch hopefully solving a bug with penalties not applying and tisanes allowed when distant from fire in NOM3.0"
+ http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=26&Itemid=50&-NOM3-penalties-fix
+NOM3fix.esp
+NOM 3.0.esp
+
+[Requires]
+ "[abot's NOM3 fix is] a small patch hopefully solving a bug with penalties not applying and tisanes allowed when distant from fire in NOM3.0"
+ http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=26&Itemid=50&-NOM3-penalties-fix
+NOM3fix.esp
+NOM 3.0.esp
+
+[Order]
+NOM 3.0.esp
+NOM3fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24176,6 +24514,49 @@ Clean_AK_PCClothier_patch_v1.67.esp
 Clean_AK_PCSmithy_v1.0.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Pharlan replacement wings [Sabregirl]
+
+[Requires]
+ "[Sabregirl's "Pharlan Replacement wings"] mus be used in conjunction with and load AFTER the appropriate race mod."
+ (Ref: "readme_Pharlan-wing-replacer.txt")
+SG_forpharl_replacement_wings.esp
+SG_forest_pharlan.esp
+
+[Requires]
+ "[Sabregirl's "Pharlan Replacement wings"] mus be used in conjunction with and load AFTER the appropriate race mod."
+ (Ref: "readme_Pharlan-wing-replacer.txt")
+SG_galpharl_replacement_wings.esp
+SG_galesapharl.esp
+
+[Requires]
+ "[Sabregirl's "Pharlan Replacement wings"] mus be used in conjunction with and load AFTER the appropriate race mod."
+ (Ref: "readme_Pharlan-wing-replacer.txt")
+SG_STD_pharlan-replacement-wings.esp
+SG_Pharlan_std_4_0-BB.esp
+
+[Order]
+SG_Pharlan_std_4_0-BB.esp
+SG_STD_pharlan-replacement-wings.esp
+
+[Order]
+SG_forest_pharlan.esp
+SG_forpharl_replacement_wings.esp
+
+[Order]
+SG_galesapharl.esp
+SG_galpharl_replacement_wings.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Pharlans addon: Hit sounds [Sabregirl]
+
+[Requires]
+ "[Sabregirl's "Pharlans addon: Hit sounds"] adds sounds for hit reactions to Pharlan characters-both male and female."
+pharl-hitvoices.esp
+SG_Pharlan_std_4_0-BB.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28249,7 +28630,7 @@ Stinkers v2 - Mod Compatibility.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Stinkers 2.0 to 3.0 Upgrade Patch [Stuporstar]
 
-;;Dragon32: included in download for @Uvirith's Legacy 3.1 [StuporStar] (q.v.)
+;;Dragon32: included in download for Uvirith's Legacy 3.1 [StuporStar] (q.v.)
 
 ;;Ref: Stinkers 2.0 to 3.0 Upgrade.txt - "load Stinkers 3.0 last to make sure its scripts overwrite any Stinkers 3.0 resources placed in other mods."
 [Order]
@@ -29755,7 +30136,7 @@ Third Person Crosshair.esp
 ;; @Thirsk Expanded [Princess Stomper]
 
 [Conflict]
- Choose ONLY ONE of these plugins. Use "Thirsk Expanded Family.esp" if you have "Chidren of Morrowind" installed and want children.
+ Choose ONLY ONE of these plugins. Use "Thirsk Expanded Family.esp" if you have "Children of Morrowind" installed and want children.
  (Ref: "Thirsk Expanded Readme.rtf")
 Thirsk Expanded.esp
 Thirsk Expanded Family.esp
@@ -30467,6 +30848,96 @@ Leggings for Ultimate Knight Shop.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Ranger 2.0 - Galith Add On 1.0 [GhostNull]
+
+[Patch]
+ GhostNull's "Ultimate Ranger 2.0 - Galith Add On 1.0" is a patch for Corv's Ultimate Ranger 2 and kwshipman's Galith custom race.
+ (Ref: "UR-Galith  Readme.txt")
+ http://mw.modhistory.com/download-56-4635
+Ultimate Ranger - Galith Add On.esp
+[ALL Galith_v1.0.esp
+     Corv's Ultimate Ranger Mod 2.0.esp]
+
+;;Ref: "UR-Galith  Readme.txt" - "make sure this .esp is loaded after Ultimate Ranger 2 and the Galith plugins."
+[Order]
+Galith_v1.0.esp
+Ultimate Ranger - Galith Add On.esp
+
+[Order]
+Corv's Ultimate Ranger Mod 2.0.esp
+Ultimate Ranger - Galith Add On.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Ranger 2.0 - Mog Add On 1.0 [GhostNull]
+
+[Patch]
+ GhostNull's "Ultimate Ranger 2.0 - Mog Add On 1.0" is a patch for Corv's Ultimate Ranger 2 and Ian Machall's Moogle custom race." 
+ (Ref: "UR-Mog  Readme.txt")
+ http://mw.modhistory.com/download-56-4610
+Ultimate Ranger - Mog Add On.esp
+[ALL [ANY _Mog_Race_v4b.esp
+          Mog_Fix.esp
+          Mog_HeightFix.esp
+          Mog_JumpFix.esp
+          Mog_TotalFix.esp]
+     Corv's Ultimate Ranger Mod 2.0.esp]
+
+[Note]
+ ! "[GhostNull's "Ultimate Ranger 2.0 - Mog Add On"] assumes your using Ger's Moogle Fixes, namely the Total Fix."
+ ! Ger's Mog Fixes: http://mw.modhistory.com/download-71-4642
+ ! (Ref: "UR-Mog  Readme.txt")
+[ALL Ultimate Ranger - Mog Add On.esp
+     [NOT Mog_TotalFix.esp]]
+
+;;Ref: "UR-Mog  Readme.txt" - "make sure this .esp is loaded after Ultimate Ranger 2 and the Mog plugins."
+[Order]
+Mog_TotalFix.esp
+Ultimate Ranger - Mog Add On.esp
+
+[Order]
+Mog_Fix.esp
+Ultimate Ranger - Mog Add On.esp
+
+[Order]
+Mog_HeightFix.esp
+Ultimate Ranger - Mog Add On.esp
+
+[Order]
+Mog_JumpFix.esp
+Ultimate Ranger - Mog Add On.esp
+
+[Order]
+_Mog_Race_v4b.esp
+Ultimate Ranger - Mog Add On.esp
+
+[Order]
+Corv's Ultimate Ranger Mod 2.0.esp
+Ultimate Ranger - Mog Add On.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ultimate Ranger 2.0 - Pharlan Add On 1.0 [GhostNull]
+
+;;Dragon32: Add-on says Pharlan v3.1; however it only makes changes to Ultimate Ranger scripts. Should be OK with v4 of Pharlan race. *Crosses fingers*
+[Patch]
+ GhostNull's "Ultimate Ranger 2.0 - Pharlan Add On 1.0" is a patch for Corv's Ultimate Ranger 2 and Sabregirl's Pharlan custom race.
+ (Ref: "UR-Pharlan Readme.txt")
+Ultimate Ranger - Pharlan Add On.esp
+[ALL SG_Pharlan_std_4_0-BB.esp
+     Corv's Ultimate Ranger Mod 2.0.esp]     
+
+;;Ref: "UR-Pharlan Readme.txt" - "make sure this .esp is loaded after Ultimate Ranger 2 and the Pharlan plugins."
+[Order]
+SG_Pharlan_std_4_0-BB.esp
+Ultimate Ranger - Pharlan Add On.esp
+
+[Order]
+Corv's Ultimate Ranger Mod 2.0.esp
+Ultimate Ranger - Pharlan Add On.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ultra Light Herbalism [Qwert]
 
 ;;Dragon32: See also - Herbalism mods [Various]
@@ -30995,6 +31466,11 @@ Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP
  ! http://morrowind.nexusmods.com/mods/40947/
 UMPP-fixes.esp
 
+[Note]
+ !! "The Umbra script of "Clean UMPP-fixes-BTB-v2.esp" (UMPP 1.6.5 fixes) seems to bugged. As soon as i have killed Umbra i get an never ending stream of Journal Updates and my inventory gets glitched up."
+ !! (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=32&t=5902 )
+Clean UMPP-fixes-BTB-v2.esp
+
 [Conflict]
  Only use one plugin
   Clean UMPP-fixes-BTB-v2.esp - If you use "Morrowind Patch v1.6.5 BETA (BTB Edit).esm"
@@ -31212,8 +31688,10 @@ Uvirith's Legacy_<VER>.esp
 UL_MWSE_Companions.esp
 
 [Note]
- "[Uvirith Legacy's MWSE addon] has been split between the companion scripts and the other stuff, so you have to choice to use Melian's Teleportation Mod instead."
- (Ref: "Uvirith's Legacy_README.txt")
+ ! "[Uvirith Legacy's MWSE addon] has been split between the companion scripts and the other stuff, so you have to choice to use Melian's Teleportation Mod instead."
+ ! "[StuporStar would] not recommend using the MWSE Companion Addon with Melian's Teleport Mod anymore (there seems to be more conflict between them since MTM was last updated). Just use MTM instead, since it's more advanced."
+ ! http://forums.bethsoft.com/topic/1469888-rel-uviriths-legacy-30-and-bov-22/?p=22959871
+ ! (Ref: "Uvirith's Legacy_README.txt")
 [ALL UL_MWSE_Companions.esp
      mel_teleportPlugin_1_3.esp]
 
@@ -34090,6 +34568,28 @@ Waterfall v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Way of the Talon 2.1 [Sabregirl]
+
+;;Dragon32: Looked at plugins trying to work out this from changelog: "Version 1.2 Fixed dialogue conflict with Neven'as Twin Lamps mod". Think this order is correct, TESPCD shows some DIAL conflicts. Matches plugin timestamps
+[Order]
+Nevena's Twin Lamps & Slave Hunters 1.2.esp
+SG_Way_of_the_Talon_2_1.esp
+
+;;Ref: WOTT-readme2_1.txt - "I would recommend updating [Pharlan/Galesa pharlan/forest pharlan race esp] so that it loads AFTER the WOTT mod."
+[Order]
+SG_Way_of_the_Talon_2_1.esp
+SG_Pharlan_std_4_0-BB.esp
+
+[Order]
+SG_Way_of_the_Talon_2_1.esp
+SG_galesapharl.esp
+
+[Order]
+SG_Way_of_the_Talon_2_1.esp
+SG_forest_pharlan.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Weapon collection pack 3.0 [Khan raider]
 
 [Conflict]
@@ -34467,14 +34967,22 @@ Werewolves BM add-on.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Westly Presents-Mog Head Pack & BB Mogs [Westly]
 
-;; (Ref: "Westly's Mog Head Pack and BB Mog README.txt")
 [Requires]
+ "[The two mods contained in "Westly Presents-Mog Head Pack & BB Mogs" are], of course, both dependent on the mod "Mog v4b""
+ (Ref: "Westly's Mog Head Pack and BB Mog README.txt")
 Westly Presents-BB Mog.esp
 _Mog_Race_v4b.esp
 
 [Requires]
+ "[The two mods contained in "Westly Presents-Mog Head Pack & BB Mogs" are], of course, both dependent on the mod "Mog v4b""
+ (Ref: "Westly's Mog Head Pack and BB Mog README.txt")
 Westly's Mog Head Pack.esp
 _Mog_Race_v4b.esp
+
+;;Dragon32: Checked with TESPCD
+[Order]
+_Mog_Race_v4b.esp
+Westly Presents-BB Mog.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
