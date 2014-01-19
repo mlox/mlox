@@ -11416,6 +11416,16 @@ GCD_VH_patch2.esp
 ;     Bloodmoon.esm]
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Galsiah's Character Development (GCD) v1.08 AzuMite Edit [AzuMite]
+
+[Note]
+ AzuMite's version of GCD inspired Gluby to make his version, which is recommended instead:
+ http://mw.modhistory.com/download--6955
+GCD Main 108kai2.esp
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Galsiah's Character Development Lean [Galsiah, Huskobar]
 
@@ -11444,7 +11454,6 @@ GCDLean204STD.esp
 GCDLean204EASY.esp
 GCDLean204HARD.esp
 
-;;Dragon32: Don't have the Azumite version in mlox yet.
 [Conflict]
  "GCDLean is completely incompatible with the original Galsiah's Character Development and variants by other modders such as Azumite and Gluby"
  (Ref: "2ReadMeGCDLean.txt")
@@ -11452,7 +11461,8 @@ GCDLean204HARD.esp
      GCDLean204EASY.esp
      GCDLean204HARD.esp]
 [ANY Galsiahs Character Development.esp
-     GCD v1.08 with Startscript, fixed [Galsiah].esp]
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCD Main 108kai2.esp]
 
 [NOTE]
  "[GCDBetterBalancedBirthsigns.esp] should therefore work well alongside most other birthsign mods [but] it is not well balanced for use without GCD."
@@ -13162,6 +13172,16 @@ Update 1.0.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 10627 grenades.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Grow your own Telvanni towers 2.0 [kaos_nyrb]
+
+;;bmdep
+[Requires]
+ This plugin uses a Bloodmoon scripting function: placeatme
+Grow Towers [Final].esp
+Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18938,6 +18958,17 @@ MGE_Foggy_weather.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MGSO (Morrowind Overhaul - Sounds & Graphics) 3.0 [various, edited by Kingpix]
+
+[Note]
+ !!! It looks like you are using "Morrowind Overhaul - Sounds & Graphics (MGSO)". There are a number of bugs with version 3.0 of MGSO which can be addressed by using these two patches:
+ !!! MGSO v3 Temporary Patch 5 by john.moonsugar - http://download.fliggerty.com/download-13-726
+ !!! Spirit's MGSO Daedric Armor Fixes by Spirithawke - http://download.fliggerty.com/download--852
+[ALL [SIZE 755202 OTR_Coast_Variety.esp]
+     [SIZE 20029 Poorly Placed Object Fix 1.2.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien]
 
 ;;Dragon32: See also [NearStart] section
@@ -21445,7 +21476,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
  "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
  (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
 Morrowind Rebirth <VER>.esp
-Poorly Placed Object Fix  <VER>.esm
+Poorly Placed Object Fix*<VER>.esm
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
@@ -21896,6 +21927,7 @@ ASH2.0.esp
 Better Telekinesis.esp
 bjam_Aragon_at_MWSEpatch_v1.0.esp
 bjam_at_MWSE_patch.esp
+Bjam_DGL_rt_MWSEpatch_v1.0.esp
 BPC_MWSE_1.2.esp
 Controlled Jumps.esp
 Decorator+.esp
@@ -22153,7 +22185,7 @@ Morrowind Advanced.esm
 MRM.esm
 
 [Order]
-Poorly Placed Object Fix  <VER>.esm
+Poorly Placed Object Fix*<VER>.esm
 MRM.esm
 
 
@@ -24327,6 +24359,8 @@ Dialogue Make-over.esp
 Pax Hlaalu Mod Mediator.esp
 [ALL Pax Hlaalu (Revision 3.0).esp
      [ANY Sea-of-Destiny.esm
+          PMR - Sea of Destiny 1.1.ESP
+          PMR - Sea of Destiny 1.1_TR.esp
           Illuminated Order v1.0.esp
           Illuminated Order v1.0 (IndyBank WC Compatible).esp
           Illuminated Order v1.0 (IndyBank Compatible).esp
@@ -24360,6 +24394,10 @@ Pax Hlaalu Mod Mediator.esp
 
 [Order]
 PMR - Sea of Destiny 1.1.ESP
+Pax Hlaalu Mod Mediator.esp
+
+[Order]
+PMR - Sea of Destiny 1.1_TR.esp
 Pax Hlaalu Mod Mediator.esp
 
 [Order]
@@ -24684,7 +24722,7 @@ Clean Playable Golem.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @PMR - Sea of Destiny Complete [Pinkertonius]
+;; @PMR - Sea of Destiny Complete 1.1 [Pinkertonius]
 
 [Conflict]
  "[PMR - Sea of Destiny Complete] merges the SOD main file with the SOD patch and the SOD expansion Frostfall into a single ESP[, "PMR - Sea of Destiny 1.1.ESP"]."
@@ -24693,6 +24731,13 @@ PMR - Sea of Destiny 1.1.ESP
      SoD Frost Fall.esp
      sodpatch1.esp]
 
+[Conflict]
+ Envy123 has released a moved version of Pinkertonius' "PMR - Sea of Destiny Complete" which is fully compatible with Tamriel Rebuilt.
+ http://mw.modhistory.com/download--14242
+[ANY PMR - Sea of Destiny 1.1.ESP
+     Sea-of-Destiny.esm]
+TR_Mainland.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Poorly Placed Object Fix [Slartibartfast]
@@ -24700,18 +24745,18 @@ PMR - Sea of Destiny 1.1.ESP
 [Note]
  ! There is a new version of Slartibartfast's "Poorly Placed Object Fix" available, you should upgrade!
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9197
-[VER <1.2 Poorly Placed Object Fix  <VER>.esm]
+[VER <1.2 Poorly Placed Object Fix*<VER>.esm]
 Poorly Placed Object Fix.esm
 
 ;;Dragon32: Not mentioned but worth adding.
 [Order]
 Bloodmoon.esm
-Poorly Placed Object Fix  <VER>.esm
+Poorly Placed Object Fix*<VER>.esm
 
 [Conflict]
  The "Poorly Placed Object Fix" esm file has all the individual fixes merged together.
  (Ref: "Readme - Poorly placed object Fix.txt")
-Poorly Placed Object Fix  <VER>.esm
+Poorly Placed Object Fix*<VER>.esm
 [ANY AC 14,1 floating rock fix.esp
      Addamasartus floating bellows fix.esp
      Addamasartus floating goblets fix.esp
@@ -24795,7 +24840,7 @@ Poorly Placed Object Fix  <VER>.esm
 [Conflict]
  "Poorly Placed Object Fix" by Slartibartfast "is incompatible with the 'Ebonheart Fix' mod by Kid 77 as both fix the same things but in different fashion."
  (Ref: "Readme - Poorly placed object Fix.txt")
-[ANY Poorly Placed Object Fix  <VER>.esm
+[ANY Poorly Placed Object Fix*<VER>.esm
      Eboneart bridge clipping fix.esp
      Ebonheart bridge missing faces fix.esp
      Ebonheart clipping chimney  fix.esp
@@ -24809,13 +24854,13 @@ Ebonheart Fix.ESP
 [Conflict]
  Early versions of Slartibartfast's "Texture Fix" included "Pond_scum_fix 1.0.esp", this mod is no longer needed when using Slartibartfast's "Poorly Placed Object Fix"
  (Ref: "Readme - Poorly placed object Fix.txt")
-[ANY Poorly Placed Object Fix  <VER>.esm
+[ANY Poorly Placed Object Fix*<VER>.esm
      Pond_scum_alignment_fix.esp]
 Pond_scum_fix 1.0.esp
 
 [Conflict]
  Both "Suran tower wall and door fix.esp" from Slartibartfast's "Poorly Placed Object Fix" and "MCR_Suran Guard Tower Door Fix.esp" from Mr. C. Racer's "Little Details and Fixes" fix the same thing.
-[ANY Poorly Placed Object Fix  <VER>.esm
+[ANY Poorly Placed Object Fix*<VER>.esm
      Suran tower wall and door fix.esp]
 MCR_Suran Guard Tower Door Fix.esp
 
@@ -24825,10 +24870,18 @@ MCR_Suran Guard Tower Door Fix.esp
 
 [Conflict]
  rmrfstar's "Potion/Scroll Icons and Potion Sort" is a merge of Erasmus' "Potions" and "Scrolls" and Srikandi's "Potion Sorter Mod" mods. There is no need to run the original mods
+ (Ref: "PSsorticon - Readme.txt")
 PSsorticon.esp
 [ANY PotionSorter.esp
      Potions.esp
      Scrollsv1.1.esp]
+
+;;Dragon32: SIZE is same for rmrfstar's original archive and plugin included in MGSO 3.0
+[Note]
+ !! "Potion/Scroll Icons and Potion Sort" by rmrfstar accidentally removes the summoning enchantment from the Golden Saint summoning scrolls.
+ !! Spirithawke has released a version which restores this enchantment, as well as another version which removes some controversial changes to three chests.
+ !! http://mw.modhistory.com/download--12174
+[SIZE 86859 PSsorticon.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25359,6 +25412,34 @@ MWE_Combat.esp
  (Ref: Readme - Rage Indicator.esp)
 Rage Indicator.esp
 [VER<0.3 Encumbrance Bar.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Ranger Tent - Advanced Scripts [the SASS Man]
+
+[Requires]
+ "Enable ["The Ranger Tent - Advanced Scripts"], along with Dongle's Ranger Tent"
+ (Ref: "Ranger Tent Advanced Scripts.txt")
+Ranger Tent Advanced Scripts.esp
+Ranger Tent.esp
+
+[Order]
+Ranger Tent.esp
+Ranger Tent Advanced Scripts.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ranger Tent MWSE Patch [bjam]
+
+[Requires]
+ "[bjam's "Ranger Tent MWSE Patch"] requires Dongle's Ranger Tent"
+ (Ref: "Bjam_DGL_rt_MWSEpatch.txt")
+Bjam_DGL_rt_MWSEpatch_v1.0.esp
+Ranger Tent.esp
+
+[Order]
+Ranger Tent.esp
+Bjam_DGL_rt_MWSEpatch_v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30002,7 +30083,7 @@ Constance1_0.esp
 ;; @Thief Experience Overhaul 1.3b [LDones]
 
 [Conflict]
- "Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp" conmbines the effects of the four individual mods from LDones' "Thief Experience Overhaul 1.3b".
+ "Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp" combines the effects of the four individual mods from LDones' "Thief Experience Overhaul 1.3b".
  (Ref: "readme_ThiefExperienceOverhaul-LD(Tribunal).txt")
 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 [ANY Improved Lockpicking.esp
@@ -32037,10 +32118,12 @@ Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 
 ;;Books of Vvardenfell
 
-;;Dragon32: 4 Book show differences in TESPCD, checking bk_bloat_cultivation shows UV sets SCRI as "BROctavo_Bloat", Books of Vvardenfell 2.4 as "BROctavo_new". Taking a punt.
+;;Dragon32: 4 Book show differences in TESPCD, checking bk_bloat_cultivation shows UV sets SCRI as "BROctavo_Bloat", Books of Vvardenfell 2.4 as "BROctavo_new".
+;; "Actually, Uvirith's Legacy should load after BoV."
+;;Ref: http://forums.bethsoft.com/topic/1481668-rel-uviriths-legacy-32/?p=23266070
 [Order]
-Uvirith's Legacy_<VER>.esp
 Books of Vvardenfell.esp
+Uvirith's Legacy_<VER>.esp
 
 ;;Tea Mod
 
@@ -32051,7 +32134,8 @@ TeaMod_<VER>.esp
 
 ;;Get Fezzed
 
-;;Dragon32: ARMO entries for fezzes in UL differ from those in Get Fezzed! (e.g. FEZ_ordinary_ar, MODL in UL is "FEZ\fez_gnd.nif" in GF is "FEZ\fez.nif"). Taking another punt.
+;;Dragon32: ARMO entries for fezzes in UL differ from those in Get Fezzed! (e.g. FEZ_ordinary_ar, MODL in UL is "FEZ\fez_gnd.nif" in GF is "FEZ\fez.nif").
+;;"The order of UL and Get Fezzed shouldn't matter though"
 [Order]
 Uvirith's Legacy_<VER>.esp
 Get Fezzed!.esp
