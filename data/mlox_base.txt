@@ -1817,7 +1817,10 @@ Appropriate Greetings M - T - 1.5.2.esp
      Appropriate Greetings M - T - 1.5.2.esp]
 [ANY lfx_nerevarine_greetings.esp
      Nerevarine Greeting tweaks.esp
-     ExcuseMe.esp]
+     ExcuseMe.esp
+     Gameplay - Dialogue.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
 
 [Conflict]
  "It is better not to use this mod with [...] "VGreetings.esp" of the mod "Voice Greetings plugin""
@@ -6474,6 +6477,40 @@ New_Carnithus'_Armamentarium.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cast On Use B-Gone 1.1 [Lork]
+
+;;Dragon32: Hummed and hahed about whether to do a Conflict or an Order rule here. Went with an Order rule as person's specifically decided to use this Cast On Use B-Gone mod and *all* it does is replace cast on use with constant effect enchantments. TESPCD shows conflicts between "Cast On Use B-Gone" and "Balance - Items.esp" from Wakim's and BTB's equipment plugin. So order this mod after conflicting ones (including those mods which merge in Wakim's or BTB's changes).
+
+[Order]
+Balance - items.esp
+Cast On Use B-Gone.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Cast On Use B-Gone.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Cast On Use B-Gone.esp
+
+[Order]
+BTB - Equipment.esp
+Cast On Use B-Gone.esp
+
+[Order]
+BTB - Unique Finery Equipment.esp
+Cast On Use B-Gone.esp
+
+[Order]
+HELLUVA Balanced BTB.esp
+Cast On Use B-Gone.esp
+
+[Order]
+HELLUVA Balanced BTB CS.esp
+Cast On Use B-Gone.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CastReduce [Aragon]
 
 [Note]
@@ -8040,7 +8077,7 @@ Dark Uvirith Exterior BuUG 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Dave Humphrey's Furniture mod 2.1 [Dave Humphrey]
+;; @Dave Humphrey's Furniture mod 2.01 [Dave Humphrey]
 
 [Order]
 dh_furn.esp
@@ -8049,10 +8086,14 @@ dh_homes.esp
 dh_thriftshop.esp
 
 [Requires]
+ "[DH_FURN.ESP is] needed for the dh_furn_stores.esp and dh_thriftshop.esp to work."
+ (Ref: "readme_dhfurn_201.txt")
 dh_furn_stores.esp
 dh_furn.esp
 
 [Requires]
+ "[DH_FURN.ESP is] needed for the dh_furn_stores.esp and dh_thriftshop.esp to work."
+ (Ref: "readme_dhfurn_201.txt")
 dh_thriftshop.esp
 dh_furn.esp
 
@@ -8063,6 +8104,16 @@ dh_furn.esp
 ;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13503499 )
 [Order]
 Vality's Ascadian Isles Addon.esp
+dh_homes.esp
+
+;;Marriage of Vality's Ascadian Isles mod with Vurt's trees [Macready]
+[Order]
+ValityAIMod_VurtTrees.esp
+dh_homes.esp
+
+;;Vality's AI for Vurt's AI [knots]
+[Order]
+Vality's AI for Vurt's AI.esp
 dh_homes.esp
 
 [Patch]
@@ -8841,6 +8892,11 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;;Dragon32: conflict on a INFO (dialog text entry). Arbitrary Order rule, I see Django's as more specific than TheOne&Only's so loading that last.
+[Order]
+Lore Fix.esp
+Djangos Dialogue.ESP
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dock in Tel Fyr  [Ciriuz]
@@ -9602,6 +9658,20 @@ Elemental Magicka II.ESP
 Elemental Magicka II - Of Fire and Frost.ESP
 Elemental Magicka II - Of Earth and Air.ESP
 Elemental Magicka II - MWSE Addon.ESP
+
+[Patch]
+ ""Excellent Magic Sounds" by Asiron which changes spell sound IDs. So it would conflict with any mod which works based on Getsoundplaying[, such as "Elemental Magicka II" by NMZmaster.]".
+ NMZmaster has uploaded a patch:
+ http://www.nexusmods.com/morrowind/mods/42106
+ However, he says "I found the sound from [Excellent Magic Sounds] overbearing due to the way Elemental Magicka II spams magic effects. I would probably recommend choosing one mod and disabling the other"
+ (Ref: http://forums.bethsoft.com/topic/1330818-wiprel-elemental-magicka-ii/?p=22989328 )
+Elemental Magicka II - Excellent Magic Sounds Patch.esp
+[ALL Elemental Magicka II.ESP
+     ExcellentMagicSounds.esp]
+
+[Order]
+Elemental Magicka II.ESP
+Elemental Magicka II - Excellent Magic Sounds Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13540,6 +13610,26 @@ SG_ hazaeki_race-1_2.esp
 ;[SIZE 10054 Healers.esp] by Brucinater, cleaned (places healers in specific locations)
 ;[SIZE 25808 Healers.esp] by Raejak, not cleaned (only minor dirty refs) (enables 'healing' by NPCs of class 'Healer Service', adds additional healers in select locations, and adds a Temple Marker to the Vos Chapel)
 ;[SIZE 24033 Healers.esp] by Raejak, cleaned
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Health Fix 1.5 [Kosta Darjania]
+
+[Conflict]
+ You don't need Kosta Darjania's "Health Fix" if you are using "Galsiah's Character Development", it already adjusts health.
+ (Ref: http://forums.bethsoft.com/topic/1414876-zarkons-gonna-start-playing-morrowind-mod-research/page__view__findpost__p__21626638 )
+Health Fix.esp
+[ANY Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp]
+
+[Conflict]
+ All of these mods adjust how the PC's health is calculated.
+Health Fix.esp
+StateBasedHitPointsv1.1.esp
+Talrivian's State-Based HP Mod v.2.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17545,6 +17635,18 @@ Nerevarine Greeting tweaks.esp
 LGNPC_NoLore.esp
 ExcuseMe.esp
 
+[Order]
+LGNPC_NoLore.esp
+Gameplay - Dialogue.esp
+
+[Order]
+LGNPC_NoLore.esp
+Wakim's Game Improvement 9.esp
+
+[Order]
+LGNPC_NoLore.esp
+Wakim's Game Improvements with No-glo v9.esp
+
 [Conflict]
  LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
@@ -17926,6 +18028,42 @@ Lord Alt Tab.esp
 [Order]
 Lord Alt Tab.esp
 LordAltabTrader Fix v0.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lore Fix 1.01 [TheOne&Only]
+
+;;Dragon32:
+;;Lore Fix v1.01.txt - "Also adds lines to "my trade" topic for npc assassins and thieves."
+;;So, possible confict with Von Djangos' "What Thieves Guild", as Von Djangos' mod is more specific load that later
+[Order]
+Lore Fix.esp
+What Thieves Guild.ESP
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+Lore Fix.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23878,6 +24016,30 @@ Nymeria's mages'guild fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nymeria's Monthly Respawn [Nymeria]
+
+[Conflict]
+ "If you play with Graphic Herbalism or any of the other similar [herbalism] mods that Nymeria's Monthly Respawn is unnecessary."
+ http://forums.bethsoft.com/topic/1439244-the-mod-discovery-thread/?p=22148167
+[ANY Advanced Herbalism - MO.esp
+     Advanced Herbalism - TR & BM.esp
+     Advanced Herbalism - TR.esp
+     Advanced Herbalism - BM.esp
+     Graphic Herbalism.esp
+     Herbalismv1.3(Tribunal).esp
+     Herbalismv1.1.esp
+     Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp
+     Herbalism_Lite_v1.0.esp
+     Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+     Herbalism Redux 1.12a.esp
+     Herbalism Redux 1.12a - Bloated MW.esp
+     HR 1.12a + EW 1.5.esp
+     HR 1.12a BMW + EW 1.5.esp
+     Ultra Light Herbalism.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Object Permanence 2.0 [TheOne&Only]
 
 [Note]
@@ -26148,6 +26310,23 @@ Ring Capability Shop - TR+BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rings of Level Playing [Princess Stomper]
+
+[Conflict]
+ "DO NOT ATTEMPT TO SELECT MORE THAN ONE .ESP FILE AT ANY ONE TIME":
+  Rings of Level Playing All TB BM.esp - If you wish to advance through the Bloodmoon and Tribunal quests.
+  Rings of Level Playing.esp - Only advances through the Morrowind quests.
+ (Ref: "Ring of Level Playing - REALLY IMPORTANT readme.txt")
+Rings of Level Playing All TB BM.esp
+Rings of Level Playing.esp
+
+[Note]
+ ! "Rings of Level Playing All TB BM.ESP, changes the scripts of the Bloodmoon and Tribunal creatures and as such breaks both Tribunal and Bloodmoon quests. [...] Please only use the Rings of Level Playing All TB BM.ESP if you are not planning on playing the Tribunal or Bloodmoon main quests."
+ ! (Ref: "Ring of Level Playing - REALLY IMPORTANT readme.txt")
+Rings of Level Playing All TB BM.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Riptide's Face, Armor, & Clothing Replace Final [Riptide]
 
 [Conflict]
@@ -28036,7 +28215,15 @@ Illuminated Windows.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sri's Alchemy [Srikandi]
 
-;; Dragon32 - Information about Srikandi's "Sris_Alchemy_Trib.esp" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+;; Dragon32 - Information about Srikandi's "Sris_Alchemy_Trib.esp" use of deprecated levelled lists is under the "Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+
+[Conflict]
+ Use only one plugin:
+  Sris_Alchemy_Trib.esp - If you only have Tribunal.
+  Sris_Alchemy_BM.esp - If you have Bloodmoon and Tribunal.
+ (Ref: "readme_SrisAlchemyBM.txt" and "readme_SrisAlchemyTrib.txt")
+Sris_Alchemy_Trib.esp
+Sris_Alchemy_BM.esp
 
 [Order]
 Sris_Alchemy_BM.esp
@@ -28422,6 +28609,11 @@ Cali_StarstoneOutpost.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @State-Based Hit Points 1.1 [HotFusion4]
+
+[Note]
+ ! There is a new version of HotFusion4's "State-Based Hit Points" available, you should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5837
+StateBasedHitPoints1.0.esp
 
 [Conflict]
  Posted by Galsiah at the Bethsoft forums: "By the way, you don't need [HotFusion4's] "State-Based Hit Points" if you're using GCD. GCD already adjusts health (or will when it's working ), so having SBHP do it too is asking for trouble."
@@ -29115,7 +29307,7 @@ Suran Archery Store_v3.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Suran Underworld 3.0 [Wollibeebee and Matthew]
 
-;;Dragon32: See also "@Suran Underworld 2.5 [Matthew]"
+;;Dragon32: See also "Suran Underworld 2.5 [Matthew]"
 
 [Conflict]
  The docks at Fort Frostmoth were modified to accommodate a ship in the original version of "Suran Underworld", this has caused problems with some mods.
@@ -29547,6 +29739,12 @@ Season of the Harvest v1.1.esp
  http://forums.nexusmods.com/index.php?/topic/152538-tel-nechim/?p=7720962
 TR_Mainland.esm
 Tel Nechim.esp
+
+[Conflict]
+ Landmass conflict. Dallara's "Château de Hadeborg" uses the same cells as Tamriel Rebuilt's Bal Oyra.
+ http://tamriel-rebuilt.org/forum/viewtopic.php?p=308220
+TR_Mainland.esm
+Château de Hadeborg V1.0.esp
 
 ;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
 ;[Conflict]
@@ -32325,6 +32523,16 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
           Morrowind Rebirth <VER> - Morrowind Patch *.esm]
      Text Patch for Morrowind with Tribunal & Bloodmoon.esp]
 
+[Note]
+ quorn's MPP (Morrowind Patch Project) versions 1.6.4, 1.6.5 Beta and BTB's edited version of 1.6.5 Beta, unintentionally edit the "Hair Shirt of St. Aralor" setting its enchantment to "hair shirt" rather than the vanilla game's "hair shirt ", note the trailing space.
+ When coupled with a TESTool-generated Merged Objects file this can lead to errors in game:
+  Unable to locate Enchanting "hair shirt "
+ (Ref: http://forums.bethsoft.com/topic/1305729-mod-recommendations-for-new-players/page-3#entry23136256 )
+[ALL [ANY Morrowind Patch v1.6.4.esm
+          Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+          Morrowind Patch v1.6.5-BETA.esm]
+     Merged_Objects.esp]
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;;Master list of superseded plugins
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -34460,6 +34668,16 @@ Weapon Range Balance.esp
 Wakim's Game Improvement 9.esp
 Wakim's Game Improvements with No-glo v9.esp
 
+[Conflict]
+ The "Gameplay - Dialogue" module of Wakim's Game Improvements "reduced chance that the Neveraine will always be greeted by the "E.e.e.excuse me big hero" stutter to 10%"
+ (Ref: "Gameplay - Dialogue.txt")
+[ANY Gameplay - Dialogue.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+[ANY lfx_nerevarine_greetings.esp
+     Nerevarine Greeting tweaks.esp
+     ExcuseMe.esp]
+
 [Requires]
  "Please note if you use the "Balance - Spells" mod, you MUST used the "Balance - Magic Effects" mod, as the "Spells" mod is intended to work with the new "Magic Effect" changes."
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7382 )
@@ -34514,6 +34732,20 @@ Indy Bank (SW Comp. Patch).ESP
      Balmora Expansion v1.4+(1.4).esp
      BE+(1.4) Better Looking Morrowind.esp
      Balmora Expansion - LITE 1.0.esp]
+
+;;"I just had to change the load order so the Private Tower Balmora mod is loaded after Walled City of Balmora."
+;;Ref: http://forums.bethsoft.com/topic/1415148-best-cityvillage-expansions/?p=21626606
+[Order]
+Walled_City_v1.2.esp
+Private_Tower_Balmora.esp
+
+[Order]
+WalledCity_IndyBank.esp
+Private_Tower_Balmora.esp
+
+[Order]
+IndybankWC.esp
+Private_Tower_Balmora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -35077,6 +35309,35 @@ Westly Presents-BB Mog.esp
  (Ref: "Wharf v2.0.txt")
 Wharf v2.0.esp
 Seyda Neen Floating Home.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @What Thieves Guild? 1.2 [Von Djangos]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+What Thieves Guild.ESP
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
