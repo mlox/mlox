@@ -1595,6 +1595,17 @@ Balmora Expansion v1.4+(1.4).esp
 Balmora Expansion - LITE 1.0.esp
 BE+(1.4) Better Looking Morrowind.esp
 
+;;"If you are playing with NoM, load that mod *after* this one"
+;;Ref: "ReadMe - Annastia.txt"
+[Order]
+Annastia V3.3.esp
+NOM 2.13.esp
+
+[Note]
+ "The original Annastia mod has dirty landscape references with the potential to conflict with mods that change the land between northern Balmora and Caldera, Balmora Expansion was one mod that Annastia conflicted with. The fixed Annastia esp has had the dirty landscape references removed."
+ Download "Annastia V3.3(Fixed) Alernative esp.7z" from Morrowind Modding History and replace the original plugin with this cleaned version by Slartibartfasts.
+ (Ref: http://mw.modhistory.com/download-48-6992 )
+[SIZE !4921700 Annastia V3.3.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Another Balmora 1.1 [basswalker]
@@ -2046,7 +2057,7 @@ Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 AIM_MW_1dot0.esp
 AIM_MW_TB_BM_1dot0.esp
 AIM_MW_TB_1dot0.esp
-AIM_MW_1dot0.espAIM_MW_BM_1dot0.esp
+AIM_MW_BM_1dot0.esp
 
 ;; Dragon32: The TR addon isn't mentioned in the readme.
 ;; The TR addon has dependencies on Map 1 and Map 2 as well. For this rule we'll just check for TR_Data.esm, which is where the armour information is held
@@ -2143,6 +2154,39 @@ bm_wolf_greaves_fix.esp
      Imperial Uniforms (v1.1).esp
      ImperialLegionUniform.esp
      More Legion Uniforms.esp]
+
+;;Dragon32: These versions of AIM adjust Adamantium armour
+[Order]
+adamantiumarmor.esp
+AIM_MW_TB_BM_1dot0.esp
+
+[Order]
+OfficialMods_v5.esp
+AIM_MW_TB_BM_1dot0.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+AIM_MW_TB_BM_1dot0.esp
+
+[Order]
+super_adventurers302.esp
+AIM_MW_TB_BM_1dot0.esp
+
+[Order]
+adamantiumarmor.esp
+AIM_MW_TB_1dot0.esp
+
+[Order]
+OfficialMods_v5.esp
+AIM_MW_TB_1dot0.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+AIM_MW_TB_1dot0.esp
+
+[Order]
+super_adventurers302.esp
+AIM_MW_TB_1dot0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5161,6 +5205,11 @@ acsSunsiBBShirt.esp
      [ANY TheBlackMill11.esp
 	  TheBlackMill.esp]]
 
+;;Dragon32: Checked with TESPCD
+[Order]
+TheBlackMill11.esp
+acsSunsiBBShirt.esp
+
 [Conflict]
  landmass conflict.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
@@ -5987,7 +6036,7 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @BTB's Game Improvements 8.6 [BTB]
+;; @BTB's Game Improvements 13.0 [BTB]
 
 [Requires]
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -6001,18 +6050,56 @@ BTB - Equipment.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
 
-[Note]
- !! "BTB - Alchemy.esp" is derived from HotFusion's "Economy Adjuster" mod, there is no point in running both mods.
- !! (Ref: "morrowind_btb.zip\Readme.txt")
-[ALL BTB - Alchemy.esp
-     [ANY EcoAdj(Sri+Ingredients).esp
-          EcoAdj Ingredients.esp]]
+;;expdep
+[Requires]
+ These plugins use a Startup script:
+[ANY BTB - Character.esp
+     BTB - Character (Alternate).esp
+     BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Only use ONE plugin, "BTB - Settings (Alternate).esp" omits the changes made by the original to the growth rates of major, minor, and, particularly, misc skills.
+ (Ref: Readme - Settings (Alternate).txt)
+BTB - Settings (Alternate).esp
+BTB - Settings.esp
+
+[Conflict]
+ Only use ONE plugin, "BTB - Character (Alternate).esp" does not modify the Khajiit Eye of Night spell into a permanent ability
+ (Ref: Readme - Character (Alternate).txt)
+BTB - Character (Alternate).esp
+BTB - Character.esp
+
+[Conflict]
+ "I have merged [Da Nang's "CalSurGuardMod" mod] with [the BTB - Settings] plugin."
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+CalSurGuardMod.esp
+
+[Conflict]
+ BTB's Character plugin includes a copy of a similar birthsign remover script to the one in AzuMite's "Level Up Birthsign Remover"
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY BTB - Character.esp
+     BTB - Character (Alternate).esp]
+[ANY Level Up Birthsign Remover 103.esp
+     Level Up Birthsign Remover WGI 103.esp]
+
+[Conflict]
+ "BTB - Alchemy.esp" is derived from HotFusion's "Economy Adjuster" mod, there is no point in running both mods.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Alchemy.esp
+[ANY EcoAdj(Sri+Ingredients).esp
+     EcoAdj Ingredients.esp]
 
 ;;Dragon32: Checked Wakim's and BTB's mods using TESPCD
 
 ;;"BTB - Alchemy.esp" - no conflict with Wakim
 
 ;;"BTB - Character.esp"
+
 [Conflict]
  "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter character settings.
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -6023,6 +6110,7 @@ BTB - Equipment.esp
      Wakim's Game Improvements with No-glo v9.esp]
 
 ;;"BTB - Equipment.esp"
+
 [Conflict]
  "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter equipment settings.
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -6031,7 +6119,25 @@ BTB - Equipment.esp
      Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp]
 
+;;Dragon32: BTB's changes AR values etc of Adamantium armour
+[Order]
+adamantiumarmor.esp
+BTB - Equipment.esp
+
+[Order]
+OfficialMods_v5.esp
+BTB - Equipment.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+BTB - Equipment.esp
+
+[Order]
+super_adventurers302.esp
+BTB - Equipment.esp
+
 ;;"BTB - Settings.esp"
+
 [Conflict]
  "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter settings.
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -6044,6 +6150,7 @@ BTB - Equipment.esp
      Wakim's Game Improvements with No-glo v9.esp]
 
 ;; "BTB - Spells.esp"
+
 [Conflict]
  "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter spell and magic settings.
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -6061,6 +6168,8 @@ BTB - Settings.esp
 [Order]
 BTB - Spells.esp
 BTB - Settings (Alternate).esp
+
+;;BTB-modified plugins
 
 [Conflict]
  "Dark Brotherhood Armor Replacer - Expanded" by Dimitri Mazieres conflicts with BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
@@ -6134,7 +6243,7 @@ IceNioLivRobeReplacerPLUS (BTB Edit).esp
 IceBradyHurdyRobeReplacerALL (BTB Edit).esp
 IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
 
-;;Version 12.1 (July 22, 2011)
+;;Version 12.0 (July 21, 2011)
 ;;"Removed edit to "random_belladonna_spriggan" leveled list, which made it possible to find Heartwood past level 3 - this fix already exists as part of the Morrowind Patch Project"
 ;;
 ;; [Conflict]
@@ -6142,18 +6251,6 @@ IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
 ;;  (Ref: "morrowind_btb.zip\Readme.txt")
 ;; heartwood.esp
 ;; BTB - Alchemy.esp
-
-[Conflict]
- Only use ONE plugin, "BTB - Settings (Alternate).esp" omits the changes made by the original to the growth rates of major, minor, and, particularly, misc skills.
- (Ref: Readme - Settings (Alternate).txt)
-BTB - Settings (Alternate).esp
-BTB - Settings.esp
-
-[Conflict]
- Only use ONE plugin, "BTB - Character (Alternate).esp" does not modify the Khajiit Eye of Night spell into a permanent ability
- (Ref: Readme - Character (Alternate).txt)
-BTB - Character (Alternate).esp
-BTB - Character.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6458,22 +6555,73 @@ Cali's Clothing v1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Carnithus' Armamentarium [Carnithus]
+;; @Carnithus' Armamentarium Complete [Carnithus]
+
+;;original Carnithus' Armamentarium
+
+[Note]
+ Carnithus' "Armamentarium" requires both Bloodmoon and Tribunal. An alternative plugin is available for those with just Tribunal:
+ http://mw.modhistory.com/download-51-1593
+[ALL Carnithus Armamentarium.esp
+     [NOT Tribunal.esm]]
 
 [Conflict]
- Choose ONLY ONE of these plugins.
- Use "NG_New_Carnithus'_Armamentarium.esp" if you've never used
- Carnithus' Armamentarium before, otherwise read
- "New Carnithus' Armamentarium readme.txt" from crn_add_ii.rar and use the
- upgrade procedure outined for "New_Carnithus'_Armamentarium.esp".
+ Only use one plugin:
+  Carnithus Armamentarium.esp - If you have Bloodmoon and Tribunal
+  Carnithus Armamentarium Tribunal.esp - If you only have Tribunal
+Carnithus Armamentarium.esp
+Carnithus Armamentarium Tribunal.esp
+
+;;addon 1
+[Requires]
+ "Carnithus' Armamentarium Add-On I" is an add-on for "Carnithus' Armamentarium" and requires the original mod to be loaded.
+ (Ref: "Carnithus' Armamentarium Add-On I readme.txt")
+Carnithus Armamentarium Add-On I.esp
+[ANY Carnithus Armamentarium.esp
+     Carnithus Armamentarium Tribunal.esp]
+
+;;Dragon32: checked with TESPCD
+[Order]
+Carnithus Armamentarium.esp
+Carnithus Armamentarium Tribunal.esp
+Carnithus Armamentarium Add-On I.esp
+
+;;addon 2
+[Conflict]
+ "[If you will use] a saved game that you have loaded Carnithus’ Armamentarium and the Add-On, and have already visited the Armamentarium in. [...] ONLY use the New Carnithus’ Armamentarium esp. file. Be sure that Carnithus’ Armamentarium and the Add-On are NOT selected."
+ (Ref: "New  Carnithus’ Armamentarium readme.txt")
+New_Carnithus'_Armamentarium.esp
+[ANY Carnithus Armamentarium.esp
+     Carnithus Armamentarium Tribunal.esp
+     Carnithus Armamentarium Add-On I.esp]
+
+[Conflict]
+ Use only one plugin:
+  NG_New_Carnithus'_Armamentarium.esp - If you have never used Carnithus' Armamentarium before.
+  New_Carnithus'_Armamentarium.esp - If you have, but ensure you read "New  Carnithus’ Armamentarium readme.txt" for details on upgrading.
+ (Ref: "New  Carnithus’ Armamentarium readme.txt")
 NG_New_Carnithus'_Armamentarium.esp
 New_Carnithus'_Armamentarium.esp
 
+;;Carnithus' Armamentarium Complete
+
 [Note]
- These are old versions of "Carnithus' Armamentarium", you should use "Carnithus' Armamentarium Complete" ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3046 ) or "Carnithus' Armamentarium Add-On II" ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2642 )
- (Ref: "New  Carnithus' Armamentarium readme.txt")
+ These are old versions of "Carnithus' Armamentarium", you could use "Carnithus' Armamentarium Complete"
+  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3046
+ Unless you are using a save game loaded with "Carnithus' Armamentarium" and you have already visited the Armamentarium. In which case, download "Carnithus' Armamentarium Add-On II" and follow the upgrade instructions in that mod
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2642
+ (Ref: "NG_New_Carnithus'_Armamentarium_ReadMe.txt" and "New  Carnithus' Armamentarium readme.txt")
 [ANY Carnithus Armamentarium Add-On I.esp
-     Carnithus Armamentarium.esp]
+     Carnithus Armamentarium.esp
+     Carnithus Armamentarium Tribunal.esp]
+
+[Conflict]
+ "Carnithus' Armamentarium Complete" includes Carnithus' original Armamentarium mod and its addon.
+ (Ref: "NG_New_Carnithus'_Armamentarium_ReadMe.txt")
+NG_New_Carnithus'_Armamentarium.esp
+[ANY Carnithus Armamentarium Add-On I.esp
+     Carnithus Armamentarium.esp
+     Carnithus Armamentarium Tribunal.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7007,6 +7155,15 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Comes-By-Road Healer Companion [melian]
+
+[Requires]
+mel_ComesByRoad_1_0.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Companion Arya [Baratheon79]
 
 [Requires]
@@ -7077,12 +7234,133 @@ Comp RPP CoverUp Add-on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Comes-By-Road Healer Companion [melian]
+;; @Complete and Balanced Armors 1.3 [BloodNAshes]
 
-[Requires]
-mel_ComesByRoad_1_0.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
+[Note]
+ BloodNAshes's "Complete and Balanced Armors" includes the armour from the following mods. If you just wish the armour available in game there is no need to run the separate plugins. However, some of these mods add additional content beyond just armour.
+  Imperial Newtscale Armor Set Resource by quorn
+  Imperial Chain Armor Set Resource by quorn
+  Full Dragonscale Armor by DracoDraKonis
+  Silt Strider Armor by Melchior
+  Nordic Trollbone Armor Set Resource by quorn
+  Complete Dragonbone Set by Niero (CDR)
+  Adamantium Round Shield by dongle
+  Adamantium Towershield by dongle
+  Royal Guard shield by Alaisiagae, original by GMatthews
+  Dwemer Towershield by T-Bone
+  Netch Adamantium Armor II by Jester
+  Durzog Armor by Dracus Dragan
+  Shalk Armor by DarkRebis
+  New Imperial Helms by grVulture, original by Khan raider
+  Royal Golden Armor by MikeMS
+  Male Oblivion Mithril Armor by kalikut
+  Ebony-Bone Armor by Melchior
+  Snow Prince Enhanced by Midgetalien & Vality
+  Fine Leather Armor by Cutthroat Mods
+  Bug Shield by Schwaa
+  Argonian Armor Sets by quorn
+ (Ref: "C&BArmorsREADME.pdf")
+[ALL C&BArmors.esp
+     [ANY newtscale_armor_set.esp
+          chain_armor_set.esp
+          Dragonscale.esp
+          Silt Strider Armor - Ashlander Guards.ESP
+          trollbone_armor_set.esp
+          CDR_Dragonbone_Set.esp
+          Byb_Armor300_v3.5.esp
+          Adamantium Roundshield.esp
+          Adamantium Towershield.esp
+          DGLAdamantiumShields.esp
+          Helseth_Shield.esp
+          Helseth_Shield_notAdded.esp
+          Royal_Guard_Addon.esp
+          tbone_dwe_tshield.esp
+          Clean Netch Adamantium Armor IIa.esp
+          Netch Adamantium Armor II.esp
+          Dracus's Durzog Armor MW V1.esp
+          Dracus's Durzog Armor Tribunal V1.esp
+          Dracus's Durzog Armor Tribumal V1.esp
+          Shalk_Armor.esp
+          New_Imperial_Helms.esp
+          Imperial helms.esp
+          Royal Golden Armor v3.1.esp
+          kalikut-MaleOblivionMirthril.esp
+          Ashlandic Marauder Armor.ESP
+          MA_snowprincetomb_v3.esp
+          Clean_CM_Fine_Leather_Armor.esp
+          K_BugShield_v1.0.esp
+          Argonian_Armor_sets.esp]]
+
+[Conflict]
+ "All "Imperial" cuirasses altered to be recognized as Imperial Legion uniforms [by BloodNAshes' "Complete and Balanced Armors"]."
+ The other mods identified (NukeouT's "Imperial Uniforms", Santtu Pajukanta's "Imperial Legion Uniforms" and Maelstrom's "More Legion Uniforms") do a similar thing, there is no need to run them with "Complete and Balanced Armors".
+ (Ref: "C&BArmorsREADME.pdf")
+C&BArmors.esp
+[ANY Imperial Uniforms T B (v1.2).esp
+     Imperial Uniforms (v1.1).esp
+     ImperialLegionUniform.esp
+     More Legion Uniforms.esp]
+
+;;Dragon32: checked all included plugins vs C&B Armours in TESPCD
+[Order]
+Argonian_Armor_sets.esp
+C&BArmors.esp
+
+[Order]
+Byb_Armor300_v3.5.esp
+C&BArmors.esp
+
+[Order]
+Dracus's Durzog Armor Tribumal V1.esp
+C&BArmors.esp
+
+[Order]
+Dragonscale.esp
+C&BArmors.esp
+
+[Order]
+Helseth_Shield.esp
+C&BArmors.esp
+
+[Order]
+Imperial helms.esp
+C&BArmors.esp
+
+[Order]
+New_Imperial_Helms.esp
+C&BArmors.esp
+
+[Order]
+Royal_Guard_Addon.esp
+C&BArmors.esp
+
+[Order]
+chain_armor_set.esp
+C&BArmors.esp
+
+[Order]
+newtscale_armor_set.esp
+C&BArmors.esp
+
+[Order]
+trollbone_armor_set.esp
+C&BArmors.esp
+
+[Order]
+adamantiumarmor.esp
+C&BArmors.esp
+
+[Order]
+OfficialMods_v5.esp
+C&BArmors.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+C&BArmors.esp
+
+[Order]
+super_adventurers302.esp
+C&BArmors.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8834,19 +9112,42 @@ female_cuirasses_2.0.esp
 [ANY Divine_domina_part_3_Tribunal.esp
      Divine_domina_part_1.esp]
 
-; (Ref: DivDomCompatibility.txt from "Divine Domina Compatibility Patches" by iamnone)
-; Dragon32: DD part 4 contains the chain armour
+;;Dragon32: DD part 3 contains the adamantium armour
 [Order]
-Divine_domina_part_4.esp
-Imperial Chain Boots n Gauntlets.ESP
-DivDom_ImperialChain.esp
-
-; (Ref: DivDomCompatibility.txt from "Divine Domina Compatibility Patches" by iamnone)
-; Dragon32: DD part 3 contains the adamantium armour
-[Order]
+adamantiumarmor.esp
 Divine_domina_part_3_Tribunal.esp
-ImprovedAdamantiumArmor.esp
+
+[Order]
+OfficialMods_v5.esp
+Divine_domina_part_3_Tribunal.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Divine_domina_part_3_Tribunal.esp
+
+[Order]
+super_adventurers302.esp
+Divine_domina_part_3_Tribunal.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Divine Domina Compatibility Patches [iamnone]
+
+[Patch]
+ "Divine Domina Compatibility Patches" by iamnone provides compatiblity patches for Jeremy McGuinn's "Divine Domina" and iamnone's "Improved Adamantium Armor"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7397
+ (Ref: "DivDomCompatibility.txt")
+DivDom_ImperialChain.esp
+[ALL Divine_domina_part_4.esp
+     Imperial Chain Boots n Gauntlets.ESP]
+
+[Patch]
+ "Divine Domina Compatibility Patches" by iamnone provides compatiblity patches for Jeremy McGuinn's "Divine Domina" and Cjad the Nord's "Imperial Chain Boots n Gauntlets"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7397
+ (Ref: "DivDomCompatibility.txt")
 DivDom_ImprovedAdamantium.esp
+[ALL Divine_domina_part_3_Tribunal.esp
+     ImprovedAdamantiumArmor.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13704,6 +14005,7 @@ H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
           chain_armor_set.esp
           Adamantium Roundshield.esp
           Adamantium Towershield.esp
+          DGLAdamantiumShields.esp
           Dragonbone Armor [v.1.2].esp
           dreugh_armor_set.esp
           tenpace_remix.esp
@@ -13957,6 +14259,7 @@ HELLUVA Balanced Vanilla Addon.esp
           chain_armor_set.esp
           Adamantium Roundshield.esp
           Adamantium Towershield.esp
+          DGLAdamantiumShields.esp
           Dragonbone Armor [v.1.2].esp
           dreugh_armor_set.esp
           tenpace_remix.esp
@@ -14300,9 +14603,9 @@ Flora Glow 1.0.esp
  !!   Player->additem "random_pearl", 1
  !! To:
  !!   Player->additem "ingred_pearl_01", 1
- !! Alternatively, BTB has released a version of "Herbalism for Purists" that removes all changes to kollups:
- !! http://btb2.free.fr/morrowind.html
-[SIZE 77593 Syc_HerbalismforPurists.esp]
+ !! Alternatively, Spirithawke has released a fixed version of "Herbalism for Purists" which corrects this bug, scroll down to the Additional Files section:
+ !! http://mw.modhistory.com/download--9321
+[DESC !/Spirithawke Edit/ Syc_HerbalismforPurists.esp]
 
 ;;Morrowind Inhabitants [scruggs]
 [Conflict]
@@ -14723,6 +15026,18 @@ HR 1.12a BMW + EW 1.5.esp
 MWInhabitants Freeform (Vol 1).esp
 [ANY HR 1.12a + EW 1.5.esp
      HR 1.12a BMW + EW 1.5.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @HG Armour Balance [Holy_Handgrenade]
+
+[Conflict]
+ "[Holy_Handgrenade's "HG Armour Balance" has] included here the Adamantium roundshield and towershield by dongle. They can be found in some shops in Vvardenfall"
+ (Ref: "Armour Readme.txt")
+HG Armour Balance.esp
+[ANY Adamantium Roundshield.esp
+     Adamantium Towershield.esp
+     DGLAdamantiumShields.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15158,6 +15473,21 @@ IceNioLivRobeReplacerMW.esp
 IceNioLivRobeReplacerTB.esp
 IceNioLivRobeReplacerBM.esp
 IceNioLivRobeReplacerPLUS.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ice's Female Templar Robe [CanadianIce]
+
+[Requires]
+ "[CanadianIce's "Ice's Female Templar Robe" is] DEPENDANT ON THE BLACK MILL ESP!!!!!"
+ (Ref: "readme-IcesBMFemaleTemplar.html")
+Ice_BlackMillFemaleRobes.esp
+TheBlackMill11.esp
+
+;;Dragon32: Checked with TESPCD
+[Order]
+TheBlackMill11.esp
+Ice_BlackMillFemaleRobes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17336,6 +17666,56 @@ Tribunal.esm
 Less Annoying Guards - Tribunal and Bloodmoon.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Level Up Birthsign Remover 1.03 [AzuMite]
+
+[Conflict]
+ Choose only one plugin:
+  Level Up Birthsign Remover WGI 103.esp - If you are using Wakim's Game Improvements.
+  Level Up Birthsign Remover 103.esp - If you are not.
+ (Ref: "Level Up Birthsign Remover 103 Readme_Translated.txt")
+Level Up Birthsign Remover 103.esp
+Level Up Birthsign Remover WGI 103.esp
+
+[Requires]
+ "Level Up Birthsign Remover WGI 103.esp" is for users of Wakim's Game Improvements.
+ (Ref: "Level Up Birthsign Remover 103 Readme_Translated.txt")
+Level Up Birthsign Remover WGI 103.esp
+[ANY Wakim's Game Improvements with No-glo v9.esp
+     Wakim's Game Improvement 9.esp
+     Balance - Character.esp]
+
+[Conflict]
+ AzuMite's "Level Up Birthsign Remover" conflicts with mods which "alter the mechanism of the "level- up while sleeping " . GCD etc"
+ (Ref: "Level Up Birthsign Remover 103 Readme_Translated.txt")
+[ANY Level Up Birthsign Remover 103.esp
+     Level Up Birthsign Remover WGI 103.esp]
+[ANY GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp
+     Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp]
+
+[Conflict]
+ AzuMite's "Level Up Birthsign Remover" conflicts with birthsign mods.
+ (Ref: "Level Up Birthsign Remover 103 Readme_Translated.txt")
+[ANY Level Up Birthsign Remover 103.esp
+     Level Up Birthsign Remover WGI 103.esp]
+[ANY BirthsignsAMFun_BM.esp
+     BirthsignsAMFun_MW.esp
+     Birthsigns.esp
+     ExpandedBirthsigns4Purists.esp]
+
+[Conflict]
+ AzuMite's "Level Up Birthsign Remover" conflicts with attribute limit elimination mods.
+ (Ref: "Level Up Birthsign Remover 103 Readme_Translated.txt")
+[ANY Level Up Birthsign Remover 103.esp
+     Level Up Birthsign Remover WGI 103.esp]
+[ANY Madd Leveler - Base.esp
+     CapRemover 1.2 alpha.esp
+     CapRemover 1.1c.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20134,6 +20514,17 @@ Better Gameplay.esp
  ! (Ref: "MCP Readme.txt")
 Morrowind Code Patch Showcase.esp
 
+[Note]
+ !!! The game mechanics changes of "Attribute uncap" and "Skill uncap" available in the "Morrowind Code Patch" (MCP) by Hrnchamd should not be used by players of "Galsiah's Character Development" (GCD).
+ !!! GCD uses its own workaround to increase skills and attributes over 100, using MCP's "Attribute uncap" and "Skill uncap" functions is unnecessary and can cause GCD's workaround to freeze or crash the game.
+ !!! Ref: http://forums.bethsoft.com/topic/1484931-conflict-between-gcd-and-mcp-21/?p=23273977
+ !!! Ref: http://mw.modhistory.com/download-53-6955
+[ANY GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp
+     Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp]
+
 ;; rules for mods obsoleted by the MCP
 [Note]
  ! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Fashionable Merchants 1.0.esp"
@@ -20167,7 +20558,7 @@ Unarmored_Corrector_V01_TRIB.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MCA - Morrowind Comes Alive [Neoptolemus]
+;; @MCA (Morrowind Comes Alive) 7.1 [Neoptolemus]
 
 ;;Dragon32: MCA size and version information
 ;;[SIZE 2442550 Morrowind Comes Alive.esm] = MCA 4.1
@@ -20297,6 +20688,12 @@ MCA - TR Addon.ESP
      TR_Mainland.esm
      [DESC /v7.1/ MCA.ESM]]
 
+[Note]
+ Spirithawke has updated the "Tamriel Rebuilt" addon for Neoptolemus' "Morrowind Comes Alive" so that it works with v1.5 of "Tamriel Rebuilt"
+ Download "MCA - TR Addon v7.1a.7z" from the Additional Files section:
+ http://mw.modhistory.com/download--14634
+[VER < 7.1a MCA - TR Addon.esp]
+
 [Patch]
  "[MCA - Khajiit Diversity Revamped Addon.esp] changes some of the MCA khajiit NPCs into Dagi-Raht, Ohmes-Raht, Cathay-Raht and Senche-Raht. Requires Westly's Khajiit Diversity Revamped mod, and will work with any of the 4 esps."
  (Ref: MCA - Readme.txt)
@@ -20306,6 +20703,23 @@ MCA - Khajiit Diversity Revamped Addon.esp
           New Khajiit Diversity(BEAST)X.esp
           New Khajiit Diversity(CIV).esp
           New Khajiit Diversity(CIV)X.esp]]
+
+;;Dragon32: Not sure if this is needed, but load the mod using new races after plugin which defines them
+[Order]
+New Khajiit Diversity(BEAST).esp
+MCA - Khajiit Diversity Revamped Addon.esp
+
+[Order]
+New Khajiit Diversity(BEAST)X.esp
+MCA - Khajiit Diversity Revamped Addon.esp
+
+[Order]
+New Khajiit Diversity(CIV).esp
+MCA - Khajiit Diversity Revamped Addon.esp
+
+[Order]
+New Khajiit Diversity(CIV)X.esp
+MCA - Khajiit Diversity Revamped Addon.esp
 
 
 ;;**********
@@ -21703,6 +22117,7 @@ Morrowind Rebirth <VER>.esp
 [ANY ;;Dongle's Adamantium Shields
      Adamantium Roundshield.esp
      Adamantium Towershield.esp
+     DGLAdamantiumShields.esp
      ;;Dongle's Windmills
      Windmills-Demo.esp
      ;;Templar Shield by Korana
@@ -22078,6 +22493,7 @@ Health Indicators MWSE.esp
 Improved Bartering.esp
 Improved Hand to Hand.esp
 Inventory Helpers.esp
+Inventory Search.esp
 Loot Sack.esp
 Melee Missiles v1.2.esp
 Morrowind Battle Cry.esp
@@ -22132,7 +22548,6 @@ Detect Owner.esp
 Elemental Magicka II - MWSE Addon.ESP
 Get Fezzed!.esp
 Gravedigger.esp
-Inventory Search.esp
 mel_teleportPlugin_1_3.esp
 Shut_Up.esp
 UL_3.2_MWSE_Add-on.esp
@@ -22328,13 +22743,102 @@ MRM.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @mournhold downtown v1.40 [Varg 'Euthanasiologist' Axenov]
+;; @Mournhold Docks [Nemon]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 922427 Mournhold_DocksAnd.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mournhold Downtown 1.40 [Varg 'Euthanasiologist' Axenov]
 
 [Conflict]
  "Deactivate Mournhold Farms.esp or any previous versions of this mod if you have it activated."
  (Ref: "Mournhold Downtown 140.txt")
 Mournhold Downtown.esp
 Mournhold Farms.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mournhold Expanded 1.51 [Princess Stomper et al]
+
+[Note]
+ ! A new version of Princess Stomper et al's "Mournhold Expanded" is available!
+ ! However, the only version updated to 1.5 is the Children of Morrowind and No Chess version.
+ ! http://mw.modhistory.com/download-87-14676
+ ! (Ref: "MOURNHOLD EXPANDED README.rtf")
+[VER < 1.5 Mournhold Expanded COM NC.esp]
+[VER < 1.5 Mournhold Expanded COM.esp]
+[VER < 1.5 Mournhold Expanded NC.esp]
+[VER < 1.5 Mournhold Expanded.esp]
+
+[Conflict]
+ Choose only one plugin:
+  Mournhold Expanded COM NC.esp - Children of Morrowind and No Chess version
+  Mournhold Expanded COM.esp - Children of Morrowind version
+  Mournhold Expanded NC.esp - No Chess version
+  Mournhold Expanded.esp - Standard version
+ (Ref: "MOURNHOLD EXPANDED README.rtf")
+Mournhold Expanded COM NC.esp
+Mournhold Expanded COM.esp
+Mournhold Expanded NC.esp
+Mournhold Expanded.esp
+
+[Note]
+ "[Princess Stomper et al's "Mournhold Expanded"] will run without Better Bodies, but with graphical errors."
+ (Ref: "MOURNHOLD EXPANDED README.rtf")
+[ALL [ANY Mournhold Expanded COM NC.esp
+          Mournhold Expanded COM.esp
+          Mournhold Expanded NC.esp
+          Mournhold Expanded.esp]
+     [NOT Better Bodies.esp]]
+
+[Conflict]
+ "Please do not try to play [Mournhold Expanded] together with Nemon's Mournhold Docks."
+ (Ref: "MOURNHOLD EXPANDED README.rtf")
+Mournhold_DocksAnd.esp
+[ANY Mournhold Expanded COM NC.esp
+     Mournhold Expanded COM.esp
+     Mournhold Expanded NC.esp
+     Mournhold Expanded.esp]
+
+;;"Necessities of Morrowind needs to be loaded AFTER the Mournhold Expanded esp"
+;;Ref: "MOURNHOLD EXPANDED README.rtf"
+[Order]
+Mournhold Expanded COM NC.esp
+NOM 2.13.esp
+
+[Order]
+Mournhold Expanded COM.esp
+NOM 2.13.esp
+
+[Order]
+Mournhold Expanded NC.esp
+NOM 2.13.esp
+
+[Order]
+Mournhold Expanded.esp
+NOM 2.13.esp
+
+[Conflict]
+ "Due to sharing the cell name "Mournhold Docks", [Mournhold Expanded] is incompatible with - Mournhold Downtown by Euthanasiologist."
+ (Ref: "MOURNHOLD EXPANDED README.rtf")
+Mournhold Downtown.esp
+[ANY Mournhold Expanded COM NC.esp
+     Mournhold Expanded COM.esp
+     Mournhold Expanded NC.esp
+     Mournhold Expanded.esp]
+
+[Conflict]
+ Princess Stomper et al's "Mournhold Expanded" and Qarl's "The Underground 2" both use the same ID, duck1, for an object. "Mournhold Expanded" uses it for a Creature, "The Underground 2" for a Sound.
+ You should upgrade to a later version of "Mournhold Expanded", or edit either "Mournhold Expanded" or "The Underground 2" renaming the duck1 ID (to e.g. ""ME_duck1" or "UN_duck1").
+ (Ref: http://forums.bethsoft.com/topic/1140559-smartmerger/?p=18223850 )
+[ANY Mournhold Expanded COM.esp
+     Mournhold Expanded NC.esp
+     Mournhold Expanded.esp]
+[ANY Morrowind Patch v1.6.3.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22580,24 +23084,37 @@ EG Music Mod V1.1 MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @My Favorites Compatible and Combined ver 1.4 [Dale French]
+;; @My Favorites Compatible and Combined 1.4 [Dale French]
 
-;[Conflict]
-; My Favorites Compatible and Combine ver 1.4.esp
-;[ANY
-;	--Captain Guar-skin's Crew ver 1.2 FINAL
-;	--Eerie Shack on the Odai
-;	--Jester's Hat of Delight ver 5 FINAL
-;	--Lute of First Impressions ver 2
-;	--Gnomes and Gadabouts FINAL
-;	--Myth and Murder ver 1.1
-;	--Night Lizards, Marplots, and the Faker Sign ver 1.1
-;	--The Seekers Faction ver 1.8
-;	--Swervo Random the Gambler
-;	--The Runaway ver 1.2
-;	--The Soothsayer ver 1.1
-;	--The Widow Fedaris ver 1.1
-;]
+[Conflict]
+ "[Dale French's "My Favorites Compatible and Combined"] contains the following:
+  --Captain Guar-skin's Crew ver 1.2 FINAL
+  --Eerie Shack on the Odai
+  --Jester's Hat of Delight ver 5 FINAL
+  --Lute of First Impressions ver 2
+  --Gnomes and Gadabouts FINAL
+  --Myth and Murder ver 1.1
+  --Night Lizards, Marplots, and the Faker Sign ver 1.1
+  --The Seekers Faction ver 1.8
+  --Swervo Random the Gambler
+  --The Runaway ver 1.2
+  --The Soothsayer ver 1.1
+  --The Widow Fedaris ver 1.1"
+ "You may safely delete ALL of the above-listed mods and just put [My Favorites Compatible and Combine ver 1.4.esp] in your Data Files folder."
+ (Ref: "My Favorites Compatible and Combined.txt")
+My Favorites Compatible and Combine ver 1.4.esp
+[ANY Captain Guar-skin's Crew ver 1.2.esp
+     Eerie Shack on the Odai.esp
+     Jester's Hat of Delight FINAL.esp
+     Lute of First Impressions.esp
+     Male Gnomes and Gadabouts ver 1.1.esp
+     Myth and Murder ver 1.1.esp
+     Night Lizards, Marplots, and the Faker Sign.esp
+     Seekers Faction v1.8.esp
+     Swervo Random the Gambler.esp
+     The Runaway ver 1 2.esp
+     The Soothsayer ver 1.1.esp
+     The Widow Fedaris ver 1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23121,6 +23638,7 @@ NOM3fix.esp
 ;; @Necromantic Robe 2 [MP*Canus]
 
 [Requires]
+ "[CanadianIce's "Ice's Female Necromantic Robe"] REQUIRES THAT CANUS’ NECROMANTIC ROBE VERSION 2 BE INSTALLED"
  (Ref: readme-IcesCNSFemaleNecromantic.html)
 Ice_CNS_FemaleNecromanticRobe.esp
 Clean_Necromantic_Robe_V2.esp
@@ -23327,7 +23845,7 @@ NewBlood_MwTbBm1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @New fire damage effect v1.1 [Mad DJ]
+;; @New fire damage effect 1.1 [Mad DJ]
 
 [Note]
  !! This plugin contains evil GMSTs. (Even though Readme
@@ -23421,6 +23939,28 @@ New Icons - WGI Compat.esp
 [Order]
 Balance - Magic Effects.esp
 New Icons - WGI Compat.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New Imperial Helms 1.0 [grVulture]
+
+[Conflict]
+ grVulture's "New Imperial Helms" is based on Khan raider's "Imperial helms"
+ (Ref: "New_Imperial_Helms.txt")
+New_Imperial_Helms.esp
+Imperial helms.esp
+
+[Note]
+ !! This plugin should only be used when uninstalling grVulture's "New Imperial Helms"
+ !! (Ref: "New_Imperial_Helms.txt")
+New_Imperial_Helms_Uninstall.esp
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script
+New_Imperial_Helms_Uninstall.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23690,6 +24230,22 @@ NightElvesBBPatch1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Night Gallery - Better Body Addon [CanadianIce]
+
+[Requires]
+ "Make sure you have the Night Gallery esp checked and Better Bodies checked as well [as "The Night Gallery - Better Body Addon" by CanadianIce]."
+ (Ref: "README_The_Night_Gallery_BBAddon.txt")
+Night_Gallery_BB_Addon.esp
+[ALL Better Bodies.esp
+     night gallery.esp]
+
+;;Dragon32: TESPCD check
+[Order]
+night gallery.esp
+Night_Gallery_BB_Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Night Song Armour [Westly]
 
 [Note]
@@ -23753,7 +24309,7 @@ Ninja_Girl_JapHouse_teleport.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @npcreplace3_0 [Arathrax/Motoki]
+;; @NPC Replace 3.0 [Arathrax/Motoki]
 
 [Note]
  !! This plugin contains evil GMSTs.
@@ -23982,6 +24538,24 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @No Tapestries for Carnithus' Armamentarium Complete [Chief Stubbs]
+
+[Requires]
+ (Ref: "CA_NoTapestries_Readme.txt")
+Ca_NoTapestries.esp
+NG_New_Carnithus'_Armamentarium.esp
+
+[Order]
+NG_New_Carnithus'_Armamentarium.esp
+Ca_NoTapestries.esp
+
+;;Dragon32: This might work.
+[Order]
+New_Carnithus'_Armamentarium.esp
+Ca_NoTapestries.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Nude System-B Beta 1 [Manauser]
 
 [Requires]
@@ -24062,6 +24636,16 @@ Object Permanence v2.esm
 [Order]
 Object Permanence v2.esm
 Better Heads.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Oblivion Mithril [CanadianIce]
+
+[Requires]
+ "This pluggin requires Better Bodies v2.1 or later."
+ (Ref: "Ice_OblivionMithril_Readme.txt")
+Ice_OblivionMithril.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25318,6 +25902,20 @@ PrivateersHold.esp
 [Requires]
 PrivateersHold.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Prized Possession [Dale French]
+
+[Note]
+ The Morrowind Patch Project (MPP) fixes the problem that the Pillow Quest is activated only when you have cleared Drarayne Thelas' storeroom of rats (Fighters' Guild quest) and reported that to her. Unfortunately, without the MPP, the quest can't show up once you've also reported the clearance back to the Fighters' Guild.
+ Dale French's "Prized Possession" hooks into this vanilla game quest and so you would benefit from running the MPP at the same time.
+ (Ref: "Morrowind Patch quest.rtf" and "Prized Possession readme.txt")
+[ALL Prized Possession.esp
+     [NOT [ANY Morrowind Patch v1.6.4.esm
+               Morrowind Patch v1.6.5-BETA.esm
+               Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+               Morrowind Rebirth <VER> - Morrowind Patch *.esm]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26672,7 +27270,7 @@ ROV World.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Royal Chargen version 1.2 [Princess Stomper]
+;; @Royal Chargen 1.2 [Princess Stomper]
 
 ;; expdep
 [Requires]
@@ -26689,6 +27287,62 @@ Bloodmoon.esm
  !! Princess Stomper's "Royal Chargen" includes the improvements to the Mournhold palace made by her "Mournhold Palace Revamped", there is no need to run both mods.
 Clean Royal Chargen.esp
 Mournhold Palace Revamped.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Royal Guard Addons 1.0 [Sir-Stabs-Alot]
+
+[Conflict]
+ "Pick from one of the two esp. files included, and delete the other.
+  Royal Guard Addons.esp: Normal Version
+  Royal Guard Addons No Groin Plates.esp: Groin Plateless version"
+ (Ref: "Royal Guard Addons.txt")
+Clean Royal Guard Addons.esp
+Royal Guard Addons No Groinplates.esp
+
+[Note]
+ ! "If using [the Groin Plateless version], insure that the meshes in the optional folder are where they need to be."
+ ! (Ref: "Royal Guard Addons.txt")
+Royal Guard Addons No Groinplates.esp
+
+[Conflict]
+ The Royal Guard shields in Sir-Stabs-Alot's "Royal Guard Addons" are from GMatthew's "Royal Shield", there is no need to run GMatthew's original mod.
+ (Ref: "readme_Royal Guard Addon.txt" and "readme_Royal Guard Addon_AIM_1dot0.txt")
+[ANY Clean Royal Guard Addons.esp
+     Royal Guard Addons No Groinplates.esp]
+[ANY Helseth_Shield.esp
+     Helseth_Shield_notAdded.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Royal Guard Shield Addon 1.0 [Alaisiagae]
+
+[Note]
+ ! There is a newer version of Alaisiagae's "Royal Guard Shield Addon" available. You should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/21855
+Royal_Guard_Addon_AIM_0dot6.esp
+
+[Conflict]
+ "Do not run both [Alaisiagae's "Royal Guard Shield Addon"] and GMatthew's ["Royal Shield"] at the same time. Bad stuff could happen."
+ (Ref: "readme_Royal Guard Addon.txt" and "readme_Royal Guard Addon_AIM_1dot0.txt")
+[ANY Royal_Guard_Addon.esp
+     Royal_Guard_Addon_AIM_1dot0.esp]
+[ANY Helseth_Shield.esp
+     Helseth_Shield_notAdded.esp]
+
+[Conflict]
+ Only use one plugin:
+  Royal_Guard_Addon_AIM_1dot0.esp - If you are using Alaisiagae's "Armor Integrative Modifications".
+  Royal_Guard_Addon.esp - If you are not.
+Royal_Guard_Addon.esp
+Royal_Guard_Addon_AIM_1dot0.esp
+
+[Requires]
+ "[Alaisiagae's "Royal Guard Shield Addon - AIM v1.0 Compatible"] is compatible with [her] Armor Integrative Modifications mod (version 1.0), which will adjust the shield properties to the formulae used in that mod."
+ (Ref: "readme_Royal Guard Addon_AIM_1dot0.txt")
+Royal_Guard_Addon_AIM_1dot0.esp
+[ANY AIM_MW_TB_BM_1dot0.esp
+     AIM_MW_TB_1dot0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27023,6 +27677,16 @@ Scissors & Thimbles Merge.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Scripted Spells 1.5 [Cortex]
+
+[Conflict]
+ "Excellent Magic Sounds" by Asiron changes spell sound IDs. So it conflicts with any mod which works based on Getsoundplaying, such as "Scripted Spells" by Cortex.
+ (Ref: http://forums.bethsoft.com/topic/1091351-alphawip-elemental-magicka/?p=16438396 )
+Scripted_Spells.esp
+ExcellentMagicSounds.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scroll Upgrade [Schwaa]
 
 [Conflict]
@@ -27172,6 +27836,15 @@ Eldar Plug In.esp
  (Ref: Secret Bridge - Read Me.txt)
 Secret Bridge V-2.esp
 TR_Map1.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Seekers Faction 2.0 [Dale French]
+
+;;Dragon32: "My Favorites Compatible and Combined 1.4 [Dale French]" has 1.8 of Seekers Faction
+[Order]
+My Favorites Compatible and Combine ver 1.4.esp
+Seekers Faction v2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27341,7 +28014,7 @@ SkeldaleHouseMTM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Sgaileach Estate 2.0 [Phinix]
+;; @Sgaileach Estate 2.01 [Phinix]
 
 [Conflict]
  Only load one plugin:
@@ -27410,12 +28083,12 @@ Stinkers v2 - Mod Compatibility.esp
 sg1-sgaileach_estate-NOM.esp
 Stinkers v2 - Mod Compatibility.esp
 
-[Patch]
- "[Stuporstar's "Stinkers 2.0 to 3.0 Upgrade Patch "] can be used with any mod with built-in Stinkers 2.0 compatibility[, like "Sgaileach Estate 2.01" by Phinix]. It replaces 2.0 resources with 3.0 resources."
- http://download.fliggerty.com/download--894
- (Ref: "Ref: Stinkers 2.0 to 3.0 Upgrade.txt")
-Stinkers 2.0 to 3.0 Upgrader.esp
+[Note]
+ ! "[Stuporstar's "Stinkers 2.0 to 3.0 Upgrade Patch "] can be used with any mod with built-in Stinkers 2.0 compatibility[, like "Sgaileach Estate 2.01" by Phinix]. It replaces 2.0 resources with 3.0 resources."
+ ! http://download.fliggerty.com/download--894
+ ! (Ref: "Ref: Stinkers 2.0 to 3.0 Upgrade.txt")
 [ALL Stinkers 3.0.esp
+     [NOT Stinkers 2.0 to 3.0 Upgrader.esp]
      [ANY [DESC /Version 2.01/ sg1-sgaileach_estate.esp]
           [DESC /Version 2.01/ sg1-sgaileach_estate-NOM.esp]]]
 
@@ -27573,6 +28246,17 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Silt Strider Animator 1.11 [Max a.k.a. ~NOBODY~]
+
+;;Dragon32: Expanded Sounds overrides the "a_siltstrider" Activator of Silt Strider Animator (TESPCD check)
+;;"I have installed Silt Strider Animator, too, and this only works when loaded after Expanded Sounds"
+;;Ref: http://forums.bethsoft.com/topic/1484920-voiceless-silt-strider-after-mod-addition/?p=23273826
+[Order]
+Expanded Sounds.esp
+Silt Strder Animator.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silt Striders [abot]
 
 [Conflict]
@@ -27605,6 +28289,17 @@ LN_silt_striders.esp
 Silt_Striders_Are_In_Vvardenfell.esp
 [ANY Real_wildlife_2b Complete.esp
      Real_wildlife_2b.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Silt Striders in the Wild [M6n6M6]
+
+[Conflict]
+ Nedius' "Real Wildlife" adds Silt Striders to creature levelled lists. There is no need to run M6n6M6's plugin, which directly places them into the game world.
+ (Ref: "readme real wildlife 2.txt")
+[ANY Real_wildlife_2b Complete.esp
+     Real_wildlife_2b.esp]
+Silt Striders in the Wild.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30042,6 +30737,8 @@ Telperion Basement Addon.esp
 ;; @Telvanni Robe Version 2 [MP*Canus]
 
 [Requires]
+ "[CanadianIce's "Ice's Female Telvanni Robe V2"] REQUIRES THAT CANUS’ TELVANNI ROBE Version2 BE INSTALLED"
+ (Ref: "readme-IcesCNSFemaleTelvanni.html")
 Ice_CNS_FemaleTelvanniRobeV2.esp
 Clean Telvanni_Robe_V2.esp
 
@@ -31151,7 +31848,7 @@ Ultimate Ranger - Galith Add On.esp
 ;; @Ultimate Ranger 2.0 - Mog Add On 1.0 [GhostNull]
 
 [Patch]
- GhostNull's "Ultimate Ranger 2.0 - Mog Add On 1.0" is a patch for Corv's Ultimate Ranger 2 and Ian Machall's Moogle custom race." 
+ GhostNull's "Ultimate Ranger 2.0 - Mog Add On 1.0" is a patch for Corv's Ultimate Ranger 2 and Ian Machall's Moogle custom race."
  (Ref: "UR-Mog  Readme.txt")
  http://mw.modhistory.com/download-56-4610
 Ultimate Ranger - Mog Add On.esp
@@ -31204,7 +31901,7 @@ Ultimate Ranger - Mog Add On.esp
  (Ref: "UR-Pharlan Readme.txt")
 Ultimate Ranger - Pharlan Add On.esp
 [ALL SG_Pharlan_std_4_0-BB.esp
-     Corv's Ultimate Ranger Mod 2.0.esp]     
+     Corv's Ultimate Ranger Mod 2.0.esp]
 
 ;;Ref: "UR-Pharlan Readme.txt" - "make sure this .esp is loaded after Ultimate Ranger 2 and the Pharlan plugins."
 [Order]
@@ -31658,6 +32355,14 @@ Ring Texture Fix.esp
  (Ref: "Readme - Unique Jewelry and Accessories by tealpanda.txt")
 Unique Jewelry and Accessories.esp
 Unique Jewelry and Accessories_no ench.esp
+
+[Conflict]
+ "[Thepal's "Morrowind Patch Project" 1.6.3] and [Tealpanda's "Unique Jewelry and Accessories"] both use the same ID, furn_pillow_01, for an object. The patch uses it as an Activator, [Tealpanda's] mod uses it as a Static."
+ You should upgrade to a later version of the Morrowind Patch Project or edit Tealpanda's mod to rename the pillow's ID.
+ (Ref: http://forums.bethsoft.com/topic/1473350-crash-when-using-unique-jewelry-morrowind-patch/?p=23003270 )
+[ANY Unique Jewelry and Accessories.esp
+     Unique Jewelry and Accessories_no ench.esp]
+[ANY Morrowind Patch v1.6.3.esm]
 
 ;;Dragon32: Ran a TESPCD check against all the BTB and Wakim mods I have. Added in rules for mods which merge those plugins too.
 [Note]
@@ -32548,7 +33253,8 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
  !  1.6.4 - The last official release by quorn. Enhances Thepal's original patch (1.6.3b) with more unaddressed bug fixes.
  !             - http://mw.modhistory.com/download-50-7319
  ! Ref: http://www.uesp.net/wiki/Tes3Mod:Morrowind_Patch_Project
-[ALL [ANY ARJAN_VampireFly_Fix.esp
+[ALL [ANY ARJAN_PillowQuest_Fix.esp
+          ARJAN_VampireFly_Fix.esp
           acsEbonyGreaves.esp
           ArchMage_Fix_0604.esp
           Ash Ghoul Hearts.esp
@@ -32659,6 +33365,15 @@ acsEbonyGreaves.esp
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm
      Morrowind Rebirth <VER> - Morrowind Patch *.esm]
 ArchMage_Fix_0604.esp
+
+[Conflict]
+ The MPP obsoletes "ARJAN_PillowQuest_Fix.esp" (Arjan Wardekker)
+ This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+     Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+ARJAN_PillowQuest_Fix.esp
 
 [Conflict]
  The MPP obsoletes "ARJAN_VampireFly_Fix.esp" (Arjan Wardekker)
@@ -35244,7 +35959,8 @@ Werewolf ReEquip.esp
  "Werewolves" is not compatible with Mephisto's "Cap Remover" mod.
  (Ref: werewolves_mod_readme.htm)
 Werewolves.esp
-CapRemover 1.2 alpha.esp
+[ANY CapRemover 1.2 alpha.esp
+     CapRemover 1.1c.esp]
 
 [Conflict]
  "Werewolves" is not compatible with Nik's "Dark Powers" mod.
