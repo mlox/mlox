@@ -2982,7 +2982,7 @@ Vality's Balmora Addon.esp
  (Ref: Atmospheric Balmora for VBA.RAR\readme.txt)
 Atmospheric Balmora for VBAnIW.ESP
 [ALL Vality's Balmora Addon.esp
-     Illuminated Windows.esp]
+     Illuminated Windows v1.2.esp]
 
 [Order]
 Vality's Balmora Addon.esp
@@ -11128,7 +11128,7 @@ TLM - AdjMod - Siege At Firemoth.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @1st Person Enhanced 1.2 [Darknut]
+;; @First Person Enhanced 1.2 [Darknut]
 
 [Requires]
  Darknut's "1st Person Enhanced" requires loading either "DN_1st_Person_bodies.esp" (for LizTail's "New Beast Bodies") or "DN_1st_Person_bodies-AS.esp" (for Alienslof's "Better Beasts")
@@ -11191,6 +11191,15 @@ DN_1st_Person_bodies.esp
 Slof's Better Beasts a.esp
 Slof's Better Beasts b.esp
 Slof's Civilised Beasts.esp
+DN_1st_Person_bodies-AS.esp
+
+;;Dragon32: TESPCD shows BODY records in Darknut's plugin conflicting with BB, load DN's after BB.
+[Order]
+Better Bodies.esp
+DN_1st_Person_bodies.esp
+
+[Order]
+Better Bodies.esp
 DN_1st_Person_bodies-AS.esp
 
 
@@ -15039,6 +15048,23 @@ HG Armour Balance.esp
      Adamantium Towershield.esp
      DGLAdamantiumShields.esp]
 
+;;Dragon32: HG Armour Balance adjusts Adamantium armour
+[Order]
+adamantiumarmor.esp
+HG Armour Balance.esp
+
+[Order]
+OfficialMods_v5.esp
+HG Armour Balance.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+HG Armour Balance.esp
+
+[Order]
+super_adventurers302.esp
+HG Armour Balance.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @High Elves Females Beauty 2.0 [Astarsis]
@@ -16982,6 +17008,49 @@ Syc_HerbalismforPurists_BM.esp
 Syc_HerbalismforPurists_TB.esp
 Syc_HerbalismforPurists_TB-ONLY.esp
 
+;;Dragon32: Kirel's Interior Weather modifies egg_kwama00, adding a script. As does TheLys' Resources Enhanced.
+;;Following precedent for Herbalism mods, loading Resources Enhanced after this one.
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Resources Enhanced.esp
+
+;;Dragon32: Kirel's Interior Weather modifies egg_kwama00, adding a script. Sensei's The Lighting Mod modified that light's settings, but doesn't add a Script
+;;So... assume someone's using Merged Objects, load TLM later so its light values take effect and Kirel's SCRI should be added too. Boom. Best of both worlds.
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+TLM - Light Sources (Clearer Lighting).esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+TLM - Complete.esp
+
+;;Dragon32: Similar to TLM, True Lights and Darkness modifies light values (only) of light_dae_brazier00, Light_MH_streetlamp_01 and Light_MH_streetlamp_01_550
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+True_Lights_And_Darkness_1.1.esp
+
+;;Dragon32: Again, checking Lights 300 it alters the light_dae_brazier00 but doesn't add a script
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Lights 300 v5.esp
+
+;;Dragon32: Both NoM and Kirel's Interior Weather add a SCRI to light_dae_brazier00
+;;loading NoM after Interior Weather as player is more likely to notice cooking not working
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+NoM 3.0.esp
+
 ;Dragon32: Not mentioned in readme but scripts in k_in_tent.esp use sounds defined in main plugin
 [Requires]
  "Interior Tent Sounds addon for Kirel's Interior Weather" requires Kirel's original mod
@@ -18320,6 +18389,36 @@ LBS_Lite v1.4(trib).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Light Sounds [Leon "pancreas" Medado]
+
+;;Dragon32: Light Sounds adds sounds to various light sources, the lighting mods change the light values of those lights.
+;;Load lighting mods after Light Sounds and if someone's got a Merged Objects file then both sounds and light value changes should be picked up
+[Order]
+Light Sounds.esp
+Lights 300 v5.esp
+
+[Order]
+Light Sounds.esp
+TLM - Complete.esp
+
+[Order]
+Light Sounds.esp
+TLM - Light Sources (Clearer Lighting).esp
+
+[Order]
+Light Sounds.esp
+TLM - Light Sources (Lanterns).esp
+
+[Order]
+Light Sounds.esp
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+
+[Order]
+Light Sounds.esp
+True_Lights_And_Darkness_1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lights 300 [Byblos]
 
 [Note]
@@ -18327,6 +18426,44 @@ LBS_Lite v1.4(trib).esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 305902 Lights_300_V4.esp]
 
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 322459 Byb_Lights_300_V4.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lights 300 4.3 [Byblos & X-Bahamut]
+
+[Note]
+ ! X-Bahamut has updated Byblos' "Lights 300", you should upgrade!
+ ! http://mw.modhistory.com/download-4-1163
+[ANY Byb_Lights_300_V4.esp
+     Lights_300_V4.esp]
+
+[Conflict]
+ "[Byblos & X-Bahamut's "Lights 300"] includes True Lights and Darkness already in it and Light Based Sneaking."
+ (Ref: "readme_Lights 300 v4.3.txt")
+Lights 300 v5.esp
+[ANY True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp
+     LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp]
+
+[Conflict]
+ "[Byblos & X-Bahamut's "Lights 300" has] incompatabilities [with] any mod that alters lights"
+  (Ref: "readme_Lights 300 v4.3.txt")
+Lights 300 v5.esp
+[ANY TLM - Ambient Light + Fog Update.esp
+     TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Natural Water).esp
+     TLM - Light Sources (Lanterns).esp
+     TLM - External Lights Ownership.esp
+     TLM - NPC Light Sources.esp
+     TLM - Sneak Modifiers (Code).esp
+     TLM - Sneak Modifiers (Locations).esp
+     TLM - Complete.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lob Shephli [PCC aka Blockhead]
@@ -22749,6 +22886,11 @@ MRM.esm
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 922427 Mournhold_DocksAnd.esp]
+
+[Conflict]
+ Due to sharing the cell name "Mournhold Docks", Nemon's "Mournhold Docks" is incompatible with "Mournhold Downtown" by Euthanasiologist.
+Mournhold Downtown.esp
+Mournhold_DocksAnd.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28901,10 +29043,12 @@ SpzInteriorDaylight.esp
 Tribunal.esm
 
 [Conflict]
- Both Spuzzum's "Interior Daylight" and Dark Angel's "Illuminated Windows" add daylight to interior windows. You only need to run one of these plugins.
+ Spuzzum's "Interior Daylight", abot's "Windows Glow Expansion", B00ze's "True Lights and Darkness" and Dark Angel's "Illuminated Windows" add daylight to interior windows. You only need to run one of these plugins.
  (Ref: readme_spzdl.txt and Illuminated Windows.zip\DrkAngel Readme.doc)
 SpzInteriorDaylight.esp
-Illuminated Windows.esp
+[ANY Illuminated Windows v1.2.esp
+     abotWindowsGlow.esp
+     True_Lights_And_Darkness_1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30155,29 +30299,36 @@ Sri Alchemy BM List Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Taddeus' Balanced Armor [Taddeus]
+;; @Taddeus' Balanced Armor 1.2 [Taddeus]
 
 [Conflict]
- Taddeus'BalancedArmors includes balanced versions of the following plugins: (official) LeFemme  Armors, (official) Adamantium Armor, (official) Adamantium Helm of Tohan, Aedroth's Bloodmoon  Wolf Greaves Fix, Avenger's Female Armors (some meshes), Canadianice's Domina Madnness Armors, Dongle's Adamantium Round and Tower Shields, Jeremy's Divine Domina (part 1, 2, 3, 4 and 5), TommyKhajiit's Ebony Greaves fix, Venymora's Red Leather (Tribunal version).
- (Ref:  Taddeus'BalancedArmors - Readme.txt)
+ Taddeus' Balanced Armor includes balanced versions of the following plugins: (official) LeFemme  Armors, (official) Adamantium Armor, (official) Adamantium Helm of Tohan, Aedroth's Bloodmoon Wolf Greaves Fix, Avenger's Female Armors (some meshes), Canadianice's Domina Madness Armors, Dongle's Adamantium Round and Tower Shields, Jeremy's Divine Domina (parts 1, 2, 3, 4 and 5), TommyKhajiit's Ebony Greaves fix, Venymora's Red Leather (Tribunal version).
+  You should remove all the plugins included in this one (see above) to avoid problems (doubling, ...). 
+ (Ref:  "Taddeus'BalancedArmors - Readme.txt")
 [ANY Taddeus'BalancedArmors.esp
      Taddeus'BalancedArmors_Rotate.esp]
 [ANY [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
      adamantiumarmor.esp
      EBQ_Artifact.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp
      bm_wolf_greaves_fix.esp
-     acsEbonyGreaves.esp
+     AV_female_armor.esp
+     AV_fem_armor_Trib.esp
+     Ice_FemaleSteelCuirass.esp
+     Ice's BM Ice & NordicMail.esp
+     Ice's Glass Cuirass.esp
      DGLAdamantiumShields.esp
+     Adamantium Roundshield.esp
+     Adamantium Towershield.esp
      Divine_domina_part_1.esp
      Divine_domina_part_2.esp
      Divine_domina_part_3_Tribunal.esp
      Divine_domina_part_4.esp
      Divine_domina_part_5.esp
-     AV_female_armor.esp
-     AV_fem_armor_Trib.esp
-     OfficialMods_v5.esp
-     Clean Official Plugins v1.1.esp
-     super_adventurers302.esp]
+     acsEbonyGreaves.esp
+     venymora_intro_v1p0.esp]
 
 [Conflict]
  Use only one of these two .esps.
@@ -30232,15 +30383,63 @@ female_cuirasses_2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Armor (light) 1.2 [Taddeus]
+
+[Conflict]
+ "["Taddeus' Balanced Armor (light) 1.2"] includes the balanced version of the following plugins:
+  - (official) LeFemme Armors
+  - (official) Adamantium Armor
+  - (official) Adamantium Helm of Tohan"
+ "You should remove all the OFFICIAL plugins included in this one (see above) to avoid problems (doubling, ...)."
+ (Ref:  "Taddeus'BalancedArmors(light)-Readme.txt")
+Taddeus'BalancedArmors(light).esp
+[ANY [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
+     adamantiumarmor.esp
+     EBQ_Artifact.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
+
+;;"DON'T remove Dongle's and venymora plugins if you run them!"
+;;Dragon32: So Order rules so they load before this stat-adjusting mod.
+[Order]
+DGLAdamantiumShields.esp
+Taddeus'BalancedArmors(light).esp
+
+[Order]
+Adamantium Roundshield.esp
+Taddeus'BalancedArmors(light).esp
+
+[Order]
+Adamantium Towershield.esp
+Taddeus'BalancedArmors(light).esp
+
+[Order]
+venymora_intro_v1p0.esp
+Taddeus'BalancedArmors(light).esp
+	 
+[Note]
+ Taddeus' Balanced Armor (light) is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
+ If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ (Ref:  "Taddeus'BalancedArmors(light)-Readme.txt")
+[All Taddeus'BalancedArmors(light).esp
+     [ANY Balance - items.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Taddeus' Balanced Objects [Taddeus]
 
 [Conflict]
- Taddeus'BalancedObjects includes balanced versions of the following plugins: Erasmus' Potion Icons, Erasmus' Scroll Icons, Srikandi's Potion Sorter. (Ref: Taddeus'BalancedObjects - Readme.txt)
+ Taddeus' Balanced Objects includes balanced versions of the following plugins: Erasmus' Potion Icons, Erasmus' Scroll Icons, Srikandi's Potion Sorter.
+ (Ref: "Taddeus'BalancedObjects - Readme.txt")
 [ANY Taddeus'BalancedObjects.esp
      Taddeus'BalancedObjects_Rotate.esp]
-[ANY Erasmus' Potion Icons.esp
-     Erasmus' Scroll Icons.esp
-     Srikandi's Potion Sorter.esp]
+[ANY PotionSorter.esp
+     Potions.esp
+     Scrollsv1.1.esp
+     PSsorticon.esp]
 
 [Conflict]
  Use only one of these two .esps
@@ -30248,9 +30447,33 @@ Taddeus'BalancedObjects.esp
 Taddeus'BalancedObjects_Rotate.esp
 
 [Note]
- Taddeus'BalancedObjects is compatibale with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedObjects - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
-[All [ANY Taddeus'BalancedObjects.esp
+ Taddeus' Balanced Objects is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
+ If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ (Ref: "Taddeus'BalancedObjects - Readme.txt")
+[ALL [ANY Taddeus'BalancedObjects.esp
           Taddeus'BalancedObjects_Rotate.esp]
+     [ANY Balance - items.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Objects (light) 1.2 [Taddeus]
+
+[Note]
+ Taddeus' Balanced Objects includes balanced versions of the following plugins: Erasmus' Potion Icons, Erasmus' Scroll Icons, Srikandi's Potion Sorter. You may wish to use that plugin rather than the "light" version.
+ (Ref: "Taddeus'BalancedObjects - Readme.txt")
+[ALL Taddeus'BalancedObjects(light).esp
+     [ANY PotionSorter.esp
+          Potions.esp
+          Scrollsv1.1.esp
+          PSsorticon.esp]]
+	 
+[Note]
+ Taddeus' Balanced Objects (light) is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
+ If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ (Ref: "Taddeus'BalancedObjects(light)-Readme.txt")
+[All Taddeus'BalancedObjects(light).esp
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
           Wakim's Game Improvements with No-glo v9.esp]]
@@ -30333,10 +30556,10 @@ Tales of Tel Branora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @TR - Tamriel Rebuilt [Tamriel Rebuilt team]
+;; @TR (Tamriel Rebuilt) [Tamriel Rebuilt team]
 
+;;Dragon32: Removed Bloodmoon.esm from Order rule as [NearStart] section ensures Bethesda ESMs load first
 [Order]
-Bloodmoon.esm
 TR_Data.esm
 TR_Mainland.esm
 
@@ -31335,7 +31558,11 @@ TLM - Sneak Modifiers (Code).esp
  "any other lighting alteration mod will be made impotent by installing TLM. This includes such mods as CoolDemon's True Lights And Darkness"
  (Ref: "TLM - ~Readme.htm")
 TLM - Sneak Modifiers (Code).esp
-True_Lights_And_Darkness_0.5.esp
+[ANY True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp
+     Lights 300 v5.esp
+     Vibrant lights 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31639,9 +31866,70 @@ TriggerDBAttack_v1_00.esp
 ;; @True Lights and Darkness 0.5 [Cool Demon]
 
 [Note]
+ ! B00ze has updated Cool Demon's original "True Lights and Darkness" mod, you should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/39605/?
+True_Lights_And_Darkness_0.5.esp
+ 
+[Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 299579 True_Lights_And_Darkness_0.5.esp]
+
+[Conflict]
+ According to B00ze, who has updated Cool Demon's original "True Lights and Darkness", the scripted sunlight in the original "True Lights and Darkness" didn't take weather into account and so interfered with the lightning effects in "Atmospheric Sound Effects".
+ (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+True_Lights_And_Darkness_0.5.esp
+[ANY AtmosphericSoundEffects-3.0-TBM.esp
+     AtmosphericSoundEffects-3.0-Tribunal.esp
+     AtmosphericSoundEffects-3.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @True Lights and Darkness 1.1 [B00ze]
+
+[Note]
+ ! There is an updated version of B00ze's "True Lights and Darkness", you should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/39605/?
+True_Lights_And_Darkness_1.0.esp
+
+[Note]
+ B00ze recommends editing the Light Attenuation settings in your morrowind.ini
+ (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
+[ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp]
+
+[Conflict]
+ "Copy one of the ESP's to your Morrowind installation's Data Files folder:
+   Copy "True_Lights_And_Darkness_1.1.esp" for the version with the scripted sunlight.
+   Copy "True_Lights_And_Darkness_1.0-NoDaylight.esp" for the version without any scripts."
+ (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.1.esp
+
+[Conflict]
+ "I've also included the excellent color enhancements of the Byblos Lights 300 mod into ["True Lights and Darkness"]."
+ (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
+[ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp]
+[ANY Byb_Lights_300_V4.esp
+     Lights_300_V4.esp
+     Lights 300 v5.esp]
+
+[Conflict]
+ "[B00ze] made a version [of "True Lights and Darkness", True_Lights_And_Darkness_1.0-NoDaylight.esp,] without the sunlights too, in case you're using another mod that does the same thing."
+ abot's "Windows Glow Expansion", Spuzzum's "Interior Daylight" and Dark Angel's "Illuminated Windows" add daylight to interior windows.
+ (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
+True_Lights_And_Darkness_1.1.esp
+[ANY SpzInteriorDaylight.esp
+     abotWindowsGlow.esp
+     Illuminated Windows v1.2.esp]
+	 
+[Conflict]
+ "Instead of using the mod's original esp [, Mudcrab Island.esp], use TLAD's [Mudcrab Island TLAD.esp]."
+ (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
+Mudcrab Island.esp
+[ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32687,7 +32975,7 @@ Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_Final_<VER>.esp
+Uvirith's Legacy_<VER>.esp
 UL_Primus_MWSE.esp
 
 ;;Tamriel Rebuilt
@@ -35015,13 +35303,14 @@ vibrant trees 2.0.esp
 Clean VIBRANT TREES 1.0.esp
 vibrant trees 2.0.esp
 
-;;Dragon32: Plugin looks like it adds lights to exterior cells, so added conflicts for Modman's mod and  those derived from it.
+;;Dragon32: Plugin looks like it adds lights to exterior cells, so added conflicts for Modman's mod and those derived from it.
 [Conflict]
  "Do not use vibrant lights with any other Lighting plug in."
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5607 )
 Vibrant lights 1.0.esp
-[ANY Illuminated Windows.esp
-     Illuminated Windows - Bloodmoon.esp
+[ANY Illuminated Windows v1.2.esp
+     Illuminated Windows - Bloodmoon v1.2.esp
+     Lights 300 v5.esp
      Modman_windowlights_Full_2.esp
      Modman_windowlights_Purist_2.esp
      SpzInteriorDaylight.esp
@@ -35034,7 +35323,9 @@ Vibrant lights 1.0.esp
      TLM - Sneak Modifiers (Code).esp
      TLM - Sneak Modifiers (Locations).esp
      TLM - Complete.esp
-     True_Lights_And_Darkness_0.5.esp]
+     True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36636,9 +36927,12 @@ abotWindowsGlow.esp
 
 [Note]
  abot's "Windows Glow Expansion" is compatible with Spuzzum's "Interior Daylight", though both mods will add lights to interiors.
+ B00ze's "True Lights and Darkness" and Dark Angel's "Illuminated Windows" add daylight to interior windows too.
  (Ref: "abotWindowsGlow.txt")
 [ALL abotWindowsGlow.esp
-     SpzInteriorDaylight.esp]
+     [ANY SpzInteriorDaylight.esp
+          Illuminated Windows v1.2.esp
+          True_Lights_And_Darkness_1.1.esp]]
 
 [Requires]
  "From version 1.7b abotWindowsGlowTR.esp does not include abotWindowsGlow.esp anymore, you have to load both."
