@@ -205,6 +205,16 @@ A good place to stay, Ver 1,8.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @A Good Cottage [Cuchullian]
+
+[Conflict]
+ "There's a conflict with [Cuchullian's "A Good Cottage" and] the Ascadian Guar Ranch (it's the Ranch's fault, I think) that buries the yard and doorway of the Cottage in a hill."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=546 )
+A Good Cottage.esp
+AscadianRanch-1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @A Grand Abode [Mike L.]
 
 [Note]
@@ -5679,6 +5689,19 @@ BloodmoonQuickFixes-LITE (Non-Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloodmoon SpellFix [whiteraider]
+
+[Note]
+ If you feel the need to load this mod because the three summons (Fabricant, Wolf, Bear) do not work when using Bloodmoon then a dirty plugin loading later in your modlist is breaking the spells.
+ You should use tes3cmd to clean your plugins.
+  https://code.google.com/p/mlox/wiki/Tes3cmd
+ As tes3cmd is a commandline program you may wish to use one of these batch files:
+  http://www.fliggerty.com/phpBB3/viewtopic.php?style=5&f=9&t=5734
+ (Ref: http://forums.bethsoft.com/topic/1041190-beta-relz-morrowind-patch-project-165-beta/?p=15974266 )
+BM_SpellFix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloody Oath_v.1.0 [Aquan]
 
 [Conflict]
@@ -6914,6 +6937,12 @@ BT_Lokken_child1.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 9278532 C0N2 v1.01.esp]
+
+[Note]
+ ! "There is a small interference from ["Children of the Night 1"] if you have both [it and "Children of the Night 2"] installed, this is a minor situation that enables the "Background" topic to appear on No lore NPC. I suggest you uninstall ["Children of the Night 1"] if you already played it."
+ ! (Ref: "CON2 Readme.doc")
+[ALL C0N2 v1.01.esp
+     Clean Children V2.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11339,6 +11368,17 @@ Fliggerty's Armor Project (Rebalanced by jeclxohko).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Foeburner Fix [Turelek]
+
+[Note]
+ !! This plugin suffers from "SignRotate Contamination". It includes five "dirty" scripts (Float, SignRotate, DagothUrCreature1, EndGame and LorkhanHeart). The ESP needs cleaning to remove these "dirty" scripts.
+ !! Ref: http://wryemusings.com/GMST%20Vaccine.html
+ !! Or download the updated version:
+ !! http://www.nexusmods.com/morrowind/mods/43038/
+[SIZE 11951 MWFoeburner Fix.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Foliage Season [ayse]
 
 [Note]
@@ -13201,6 +13241,18 @@ Resources Enhanced.esp
 Bloated Caves.esp
 Bloated Morrowind.esp
 
+;;Morrowind Inhabitants [scruggs]
+[Conflict]
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ (Ref: MWInhabitants PATCH.01 README.txt)
+MWInhabitants Freeform (Vol 1).esp
+Graphic Herbalism.esp
+
+[Conflict]
+ Both quorn's "Miner's Pick Use" and "Graphic Herbalism Extra" by ManaUser require the player to have a miner's pick in their possession while harvesting ebony, glass, diamond or adamantium.
+Graphic Herbalism Extra.esp
+MinerPickUseGOTY.esp
+
 ; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
 [Order]
 DN-GDRv1.esp
@@ -13235,12 +13287,6 @@ Graphic Herbalism.esp
 Expanded Sounds.esp
 Graphic Herbalism.esp
 
-;;Morrowind Inhabitants [scruggs]
-[Conflict]
- There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
- (Ref: MWInhabitants PATCH.01 README.txt)
-MWInhabitants Freeform (Vol 1).esp
-Graphic Herbalism.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism / Expanded Sounds Patch [philologos]
@@ -13321,13 +13367,23 @@ GH MC Patch.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism TR [Spiffyman]
 
+[Patch]
+ Spiffyman's "Graphic Herbalism TR" patches the plants in "Tamriel Rebuilt" so they are harvested in a similar way to the plants affected by ManaUser's "Graphic Herbalism"
+ (Ref: Graphic Herbalism TR Readme.txt)
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7211
+Graphic Herbalism TR.esp
+[ALL Graphic Herbalism.esp
+     TR_Data.esm]
+
+;;Dragon32: Assume that as this mod only alters CONT objects, should load fine with later TR_Mainland releases.
 [Requires]
  Spiffyman's "Graphic Herbalism TR" requires ManaUser's "Graphic Herbalism" and "Tamriel Rebuilt" Maps 1 and 2
  (Ref: Graphic Herbalism TR Readme.txt)
 Graphic Herbalism TR.esp
 [ALL TR_Data.esm
-     TR_Map1.esm
-     TR_Map2.esm
+     [ANY TR_Mainland.esm
+          [ALL TR_Map1.esm
+               TR_Map2.esm]]
      Graphic Herbalism.esp]
 
 [Requires]
@@ -18118,18 +18174,59 @@ LGNPC_SecretMasters_MCA5.esp
 
 [Note]
  ! You appear to have an older version of Less Generic Bloodmoon, you can find the latest here:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5908
-[VER < 1.2 Less_Generic_Bloodmoon.esp]
+ ! http://www.nexusmods.com/morrowind/mods/23346/
+[VER < 1.3 Less_Generic_Bloodmoon.esp]
 
 [Note]
  ! You appear to have an older version Less Generic Nerevarine, you can find the latest here:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7380
-[VER < 1.21 Less_Generic_Nerevarine.esp]
+ ! http://www.nexusmods.com/morrowind/mods/23335/
+[VER < 1.3 Less_Generic_Nerevarine.esp]
+[VER = 1.21 Less_Generic_Nerevarine.esp]
 
 [Note]
  ! You appear to have an older version Less Generic Tribunal, you can find the latest here:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7339
 [VER < 1.1 Less_Generic_Tribunal.esp]
+
+[Conflict]
+ Do not load both Less Generic Bloodmoon patches.
+  LG_BM_Thirsk_Ex_COM_patch.ESP - For users of the "Children of Morrowind" version of Princess Stomper's "Thirsk Expanded".
+  LG_BM_Thirsk_Ex_patch.ESP - For users of the normal version of Princess Stomper's "Thirsk Expanded".
+ (Ref: "Less Generic Bloodmoon readme.txt")
+LG_BM_Thirsk_Ex_patch.ESP
+LG_BM_Thirsk_Ex_COM_patch.ESP
+
+[Patch]
+ "LG_BM_Thirsk_Ex_patch.ESP" is a compatibility patch for users of both Princess Stomper's "Thirsk Expanded" and ostar's "Less Generic Bloodmoon".
+ (Ref: "Less Generic Bloodmoon readme.txt")
+LG_BM_Thirsk_Ex_patch.ESP
+[ALL Less_Generic_Bloodmoon.esp
+     Thirsk Expanded.esp]
+
+;;Dragon32: load order not specified but seems logical
+[Order]
+Less_Generic_Bloodmoon.esp
+LG_BM_Thirsk_Ex_patch.ESP
+
+[Order]
+Thirsk Expanded.esp
+LG_BM_Thirsk_Ex_patch.ESP
+
+[Patch]
+ "LG_BM_Thirsk_Ex_COM_patch.ESP" is a compatibility patch for users of both Princess Stomper's "Thirsk Expanded" (the "Children of Morrowind" version) and ostar's "Less Generic Bloodmoon".
+ (Ref: "Less Generic Bloodmoon readme.txt")
+LG_BM_Thirsk_Ex_COM_patch.ESP
+[ALL Less_Generic_Bloodmoon.esp
+     Thirsk Expanded Family.esp]
+
+;;Dragon32: load order not specified but seems logical
+[Order]
+Less_Generic_Bloodmoon.esp
+LG_BM_Thirsk_Ex_COM_patch.ESP
+
+[Order]
+Thirsk Expanded Family.esp
+LG_BM_Thirsk_Ex_COM_patch.ESP
 
 [Conflict]
  "Join All Houses" by Heph will likely create odd results.
@@ -19387,7 +19484,7 @@ DXM_masterindex_journalfix.esp
  # Sul-Senipul's Longbow Quest: Included in UMP v1.6.3b.
  # Recovering CloudCleaver: Included in UMP v1.6.3b.
  # Museum of Artifacts (Tribunal): Included in UMP v1.6.3b. Although uses a different method to Max's Quest Fixes.
- # The Patchwork Airship quest (Bloodmoon): Not included in the MPP.
+ # The Patchwork Airship quest (Bloodmoon): Not completely included in the MPP, which corrects journal entry errors, but does not touch the scripts.
  It is your choice whether you want to continue using this plugin if you also use the MPP.
  http://planetelderscrolls.gamespy.com/View.php?view=mods.detail&id=735
  http://mw.modhistory.com/download--7995
@@ -19689,7 +19786,7 @@ Mildlife.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Mills of Morrowind 1.01 [RubberMan and abot]
+;; @Mills of Morrowind 1.01b [RubberMan and abot]
 
 [Note]
  ! abot has released an updated version of "Mills of Morrowind" called "Mills of Morrowind expansion". You should upgrade!
@@ -19703,8 +19800,46 @@ Mildlife.esp
      Better Heads Tribunal addon.esm
      Better Heads Bloodmoon addon.esm]
 
+[Note]
+ ! "If you are using Pluto's The Sable Dragon 1.6.esp [with RubberMan and abot's "Mills of Morrowind"] and have land seams, there is a patched replacer version [of Pluto's mod, The Sable Dragon 1.6 mmc.esp]"
+ ! (Ref: "Mills of Morrowind.txt")
+[ALL The Sable Dragon 1.6.esp
+     Mills of Morrowind.esp]
+
+[Conflict]
+ "The Sable Dragon 1.6 mmc.esp" is a patched version of Pluto's "The Sable Dragon" for use with RubberMan and abot's "Mills of Morrowind", it should not be run at the same time as Pluto's original.
+ (Ref: "Mills of Morrowind.txt")
+The Sable Dragon 1.6.esp
+The Sable Dragon 1.6 mmc.esp
+
+;;Dragon32: For those who don't run the compatibility version
 [Order]
 The Sable Dragon 1.6.esp
+Mills of Morrowind.esp
+
+;;(Ref: "Mills of Morrowind.txt")
+[Order]
+The Sable Dragon 1.6 mmc.esp
+Mills of Morrowind.esp
+
+;;Dragon32: Order rules from Pluto's Sable Dragon
+;;  (Ref: The Sable Dragon, Read Me.txt)
+[Order]
+Vality's Bitter Coast Addon.esp
+The Sable Dragon 1.6 mmc.esp
+
+;;  (Ref: The Sable Dragon, Read Me.txt)
+[Order]
+The Sable Dragon 1.6 mmc.esp
+NOM 2.13.esp
+
+[Order]
+The Sable Dragon 1.6 mmc.esp
+NoM 3.0.esp
+
+;;Dragon32: merged version of The Sable Dragon and Odai Cascade. Probably worth a Conflict rule but I'll wait for reports, maybe this Order rule will help
+[Order]
+Dragon Falls V2.esp
 Mills of Morrowind.esp
 
 ;;"if you load Morrowing Crafting AFTER this mod, mill owners should also buy/sell wood"
@@ -20646,6 +20781,8 @@ Better Gameplay.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCP (Morrowind Code Patch) [Hrnchamd]
 
+;;Dragon32: See also "@Toggle Sneak 1.1 [Yacoby]"
+
 [Note]
  ! The Morrowind Code Patch Showcase does not need to be loaded for MCP to function. Disable the mod after you have compared how patched Morrowind differs from normal Morrowind.
  ! (Ref: "MCP Readme.txt")
@@ -20691,7 +20828,12 @@ SpzYearPatchTrib.esp
 Unarmored_Corrector_V01_BM.esp
 Unarmored_Corrector_V01_TRIB.esp
 
-;;Dragon32: See also "@Toggle Sneak 1.1 [Yacoby]"
+[Note]
+ ! "Morrowind [...] makes heavier things harder to steal, [TheOne&Only's "Pickpocket Fix"] makes heavier things easier to steal. Things appear easier for the wrong reason."
+ ! (Ref: http://forums.bethsoft.com/topic/1041190-beta-relz-morrowind-patch-project-165-beta/?p=15974266 )
+ ! Rather than using this mod you should try the "Pickpocket overhaul" in the highly recommended "Morrowind Code Patch" by Hrnchamd.
+ ! (Ref: http://morrowind.nexusmods.com/mods/19510 ) 
+Pickpocket Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21609,13 +21751,14 @@ Morrowind Crafting Equipment.esp
 Morrowind Crafting 2-1.esp
 
 [Conflict]
- Drac & Toccatta's "Morrowind Crafting" adds scripts to the various ore rocks, other mods which also add scripts include evelas' "Minerals", quorn's "Miner's Pick Use" and TheLys' "Resources Enhanced". Such mods are not compatible with "Morrowind Crafting".
+ Drac & Toccatta's "Morrowind Crafting" adds scripts to the various ore rocks, other mods which also add scripts include ManaUser's "Graphic Herbalism Extra", evelas' "Minerals", quorn's "Miner's Pick Use" and TheLys' "Resources Enhanced". Such mods are not compatible with "Morrowind Crafting".
  (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__15859457 )
 Morrowind Crafting 2-1.esp
 [ANY Resources Enhanced.esp
      Minerals.esp
      Minerals (Tribunal&Bloodmoon).esp
-     MinerPickUseGOTY.esp]
+     MinerPickUseGOTY.esp
+     Graphic Herbalism Extra.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22171,7 +22314,8 @@ Poorly Placed Object Fix*<VER>.esm
  Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
  (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
 [ANY Clean_Foeburner_Fix.esp
-     lfx_foeburner.esp]
+     lfx_foeburner.esp
+     MWFoeburner Fix.ESP]
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" changes Redoran guards in a similar way to Xeth-Ban's "Redoran Guards - Katanas and Shields"
@@ -25027,6 +25171,60 @@ OB_Style Quivers And Bows_CAJ.esp
  (Ref: TESPCD check by Dragon32)
 Oblivion Style Vampires.esp
 Vampire Realism II.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Odai Cascade 2.5 [Thondur]
+
+[Conflict]
+ "[Thondur's "Odai Cascade"] will conflict with Ascadian Guar Ranch by TiE 23 since it also changed the Ropebridge to a Hlaalu style bridge."
+ (Ref: Odai Cascade - Read Me.txt")
+Odai-Cascade V2.5.esp
+AscadianRanch-1.0.esp
+
+[Conflict]
+ Thondur's "Odai Cascade" conflicts slightly with Drac & Toccatta's "Morrowind Crafting" in that a sandbar and clay added by Morrowind Crafting no float in midstream of the Odai.
+ This is fixed in Thondur's "Dragon Falls", which is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon".
+ (Ref: "Dragon Falls - Read me or else....txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=274898&id=7769
+Odai-Cascade V2.5.esp
+Morrowind Crafting 2-1.esp
+
+[Conflict]
+ There are multiple landscape conflicts when running Thondur's "Odai Cascade" and Pluto's "The Sable Dragon" together.
+ These are fixed in Thondur's "Dragon Falls", which is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon".
+ (Ref: "Dragon Falls - Read me or else....txt")
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=274898&id=7769
+Odai-Cascade V2.5.esp
+The Sable Dragon 1.6.esp
+
+[Conflict]
+ Thondur's "Dragon Falls" is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon". Do not run the constiuent mods with the merged mod.
+ (Ref: "Dragon Falls - Read me or else....txt")
+Dragon Falls V2.esp
+[ANY Odai-Cascade V2.5.esp
+     The Sable Dragon 1.6.esp]
+
+[Conflict]
+ "[Thondur's "Odai Cascade", which is merged into his "Dragon Falls" mod] will conflict with Ascadian Guar Ranch by TiE 23 since it also changed the Ropebridge to a Hlaalu style bridge."
+ (Ref: Odai Cascade - Read Me.txt")
+Dragon Falls V2.esp
+AscadianRanch-1.0.esp
+
+;;Dragon32: Order rules from Pluto's Sable Dragon
+;;  (Ref: The Sable Dragon, Read Me.txt)
+[Order]
+Vality's Bitter Coast Addon.esp
+Dragon Falls V2.esp
+
+;;  (Ref: The Sable Dragon, Read Me.txt)
+[Order]
+Dragon Falls V2.esp
+NOM 2.13.esp
+
+[Order]
+Dragon Falls V2.esp
+NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32763,6 +32961,7 @@ arvisrend - fixes - scripts.ESP
 Bloodmoon_East Empire Essential Npcs.esp
 Clean_Foeburner_Fix.esp
 lfx_foeburner.esp
+MWFoeburner Fix.ESP
 shvEquityFix.esp
 Wings of the Queen of Bats.esp
 
@@ -32791,6 +32990,13 @@ Clean_Foeburner_Fix.esp
 [ANY Clean UMPP-fixes-BTB-v2.esp
      Clean UMPP-fixes-v2.esp]
 lfx_foeburner.esp
+
+[Conflict]
+ A similar change to Turelek's "Foeburner Fix" is made by EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
+ (Ref: "UMPP fixes.txt")
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+MWFoeburner Fix.ESP
 
 [Conflict]
  qwert44643's "East Empire Essential NPCs" is included in EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
@@ -33577,6 +33783,7 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
           Female Ice Gauntlet Fix.esp
           fix_false_incarnate.esp
           fixdialog-bmeec-stockcertificate-notrib.esp
+          fixedkings.esp
           Ghostgate_Shrine_fix.esp
           Glass arrow fix.esp
           Gnisis Gaurd Fix.esp
@@ -33593,6 +33800,7 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
           lfx_rare_merged-uniques.esp
           lfx_rare_merged.esp
           lfx_tenpace_tribunal.esp
+          Lurios_BugFixs.esp
           Master Trainer Fix v.01.esp
           milyn_faram_fix_0529.esp
           Nerevarine Greeting tweaks.esp
@@ -33631,6 +33839,7 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
      [NOT Morrowind Patch v1.6.5-BETA.esm]
      [NOT Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
      [NOT Morrowind Rebirth <VER> - Morrowind Patch *.esm]]
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;;Superseded patch mods
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -33806,6 +34015,15 @@ Female Ice Gauntlet Fix.esp
 fixdialog-bmeec-stockcertificate-notrib.esp
 
 [Conflict]
+ The MPP obsoletes King's Oath Fix (Paktu).
+ This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
+ (Ref: MPP-BETA-165 2.zip\Patch Documentation\Object Changes.txt )
+[ANY Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+     Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+fixedkings.esp
+
+[Conflict]
  The MPP obsoletes False Incarnate Fix (Ciante).
  This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
  (Ref: Gluby's Comprehensive Catalog and Guide to Bugfixes for Morrowind http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=0 )
@@ -33867,8 +34085,8 @@ lfx_edwinna_book.esp
      Morrowind Patch v1.6.5-BETA.esm
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm
      Morrowind Rebirth <VER> - Morrowind Patch *.esm]
-lfx_nerevarine_greetings.esp
-ExcuseMe.esp
+[ANY lfx_nerevarine_greetings.esp
+     ExcuseMe.esp]
 
 [Conflict]
  The MPP obsoletes "Wild Rare Ingredients v1.00" by Alphax.
@@ -33892,8 +34110,19 @@ lfx_rare_ingredients-uniques.esp
      Morrowind Patch v1.6.5-BETA.esm
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm
      Morrowind Rebirth <VER> - Morrowind Patch *.esm]
-lfx_tenpace_tribunal.esp
-Tenpacebootsfix.esp
+[ANY lfx_tenpace_tribunal.esp
+     Tenpacebootsfix.esp]
+
+[Conflict]
+ "[Lurios' "BugFixes"] is obsolete and is almost completely incorporated into and superseded by Thepal's Unofficial Patch v1.6.3b [that in turn has been superseded by the MPP]. 
+ There are only a relative few additional tweaks and changes it makes that are not included in Thepal's patch, and most of them are either (1) dialogue additions for a fair number of NPCs to to reflect the completion of the Main Quest; (2) "fixes" of more discretionary or nonessential nature, such as the addition of a messagebox to the daedra in Mount Kand informing the player that, if she has killed them, it is okay and they will respawn; and (3) fixes that are of questionable merit."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1768 )
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+     Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+Lurios_BugFixs.esp
+
 
 [Conflict]
  The MPP obsoletes Master Trainers Fix (HitokiriOTD).
