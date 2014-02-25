@@ -768,6 +768,46 @@ MWInhabitants Freeform (Vol 1).esp
      Advanced Herbalism - BM.esp]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Advanced Persuasion 1.2 [Danjb]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 20373 Advanced Persuasion.esp]
+
+;; expdep
+[Requires]
+ This plugin uses a startscript.
+Advanced Persuasion.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+Advanced Persuasion.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adventurer Clothing [kalikut]
@@ -2050,6 +2090,23 @@ Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 Balance - items.esp
 Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 
+;;Dragon32: adjusts Adamantium armour
+[Order]
+adamantiumarmor.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
+[Order]
+OfficialMods_v5.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
+[Order]
+super_adventurers302.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Armor: Integrative Modifications - Morrowind and Tribunal and Bloodmoon 1.0 [Alaisiagae]
@@ -2218,6 +2275,56 @@ valshea_bloodmoon.esp
 [Requires]
 valshea_tribunal.esp
 Tribunal.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Armor Project Patch [Grendel Prime]
+
+[Requires]
+ Grendel Prime's "Armor Project Patch" spreads out various armors from "Fliggerty's Armor Project".
+ (Ref: "Armor project patch.txt")
+AP patch.esp
+[ANY Fliggerty's Armor Project 2.esp
+     FAP Low Chance.esp
+     Fliggerty's Armor Project (Rebalanced by jeclxohko).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Armored Skeletons Gone Wild [Sandman]
+
+;;Dragon32: Checked "ASGW GIANTS Ult Compatability.esp" against all the patches for GIANTS I have, no conflicts in TESPCD. COmpatibility plugin only alters one creature levelled list: in_Giants_Skeletons_
+
+[Requires]
+ "If you are also using Giants Ultimate [with Sandman's "Armored Skeletons Gone Wild"], activate the appropriate MTT3 add-on[, "ASGW GIANTS Ult Compatability.esp"]."
+ (Ref: "Armored Skeletons Gone Wild-Read Me.doc")
+ASGW GIANTS Ult Compatability.esp
+[ALL GIANTS.esm
+     Armored Skeletons Gone Wild.esp]
+
+[Requires]
+ "If you are using Magical Trinkets of Tamriel [volume III, with Sandman's "Armored Skeletons Gone Wild"], activate the compatability module[, "ASGW MTT3 Addon (companion version).esp" or "ASGW MTT3 Addon (guard version).esp"]."
+ These add-ons will not work with Magical Trinkets of Tamriel volume IV
+ (Ref: "Armored Skeletons Gone Wild-Read Me.doc")
+[ANY ASGW MTT3 Addon (companion version).esp
+     ASGW MTT3 Addon (guard version).esp]
+[ALL MTT Vol III.esp
+     Armored Skeletons Gone Wild.esp]
+
+[Conflict]
+ "Only activate one of the two versions.
+   If you activate the "companion version", your loyal skeletons will have the behavior of normal NPC companions. The "guard version" will make them act like the imperial guards in the various towns."
+ (Ref: "Armored Skeletons Gone Wild-Read Me.doc")
+ASGW MTT3 Addon (companion version).esp
+ASGW MTT3 Addon (guard version).esp
+
+;;Dragon32: multiple DIAL and SCRI conflicts shown in TESPCD
+[Order]
+MTT Vol III.esp
+ASGW MTT3 Addon (companion version).esp
+
+[Order]
+MTT Vol III.esp
+ASGW MTT3 Addon (guard version).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4788,6 +4895,11 @@ Better Morrowind Armor.esp
 LeftGloves.esp
 Better Morrowind Armor.esp
 
+;;Dragon32: To ensure Moranar's changes are included, load after Adamantium Armor
+[Order]
+adamantiumarmor.esp
+Better Morrowind Armor.esp
+
 ;;Kahkahra's "Complete Armor Joints" patch
 [Conflict]
  You should use the version of Kahkahra's "Complete Armor Joints" which comes with Moranar's "Better Morrowind Armor"
@@ -6061,18 +6173,6 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BTB's Game Improvements 13.0 [BTB]
 
-[Requires]
- (Ref: "morrowind_btb.zip\Readme.txt")
-BTB - Alchemy.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-[Requires]
- (Ref: "morrowind_btb.zip\Readme.txt")
-BTB - Equipment.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
 ;;expdep
 [Requires]
  These plugins use a Startup script:
@@ -6083,32 +6183,15 @@ BTB - Equipment.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-[Conflict]
- Only use ONE plugin, "BTB - Settings (Alternate).esp" omits the changes made by the original to the growth rates of major, minor, and, particularly, misc skills.
- (Ref: Readme - Settings (Alternate).txt)
-BTB - Settings (Alternate).esp
-BTB - Settings.esp
+;;Dragon32: Checked Wakim's and BTB's mods using TESPCD
 
-[Conflict]
- Only use ONE plugin, "BTB - Character (Alternate).esp" does not modify the Khajiit Eye of Night spell into a permanent ability
- (Ref: Readme - Character (Alternate).txt)
-BTB - Character (Alternate).esp
-BTB - Character.esp
+;;"BTB - Alchemy.esp" - no conflict with Wakim
 
-[Conflict]
- "I have merged [Da Nang's "CalSurGuardMod" mod] with [the BTB - Settings] plugin."
+[Requires]
  (Ref: "morrowind_btb.zip\Readme.txt")
-[ANY BTB - Settings.esp
-     BTB - Settings (Alternate).esp]
-CalSurGuardMod.esp
-
-[Conflict]
- BTB's Character plugin includes a copy of a similar birthsign remover script to the one in AzuMite's "Level Up Birthsign Remover"
- (Ref: "morrowind_btb.zip\Readme.txt")
-[ANY BTB - Character.esp
-     BTB - Character (Alternate).esp]
-[ANY Level Up Birthsign Remover 103.esp
-     Level Up Birthsign Remover WGI 103.esp]
+BTB - Alchemy.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
 
 [Conflict]
  "BTB - Alchemy.esp" is derived from HotFusion's "Economy Adjuster" mod, there is no point in running both mods.
@@ -6117,11 +6200,13 @@ BTB - Alchemy.esp
 [ANY EcoAdj(Sri+Ingredients).esp
      EcoAdj Ingredients.esp]
 
-;;Dragon32: Checked Wakim's and BTB's mods using TESPCD
-
-;;"BTB - Alchemy.esp" - no conflict with Wakim
-
 ;;"BTB - Character.esp"
+
+[Conflict]
+ Only use ONE plugin, "BTB - Character (Alternate).esp" does not modify the Khajiit Eye of Night spell into a permanent ability
+ (Ref: Readme - Character (Alternate).txt)
+BTB - Character (Alternate).esp
+BTB - Character.esp
 
 [Conflict]
  "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter character settings.
@@ -6132,6 +6217,14 @@ BTB - Alchemy.esp
      Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp]
 
+[Conflict]
+ BTB's Character plugin includes a copy of a similar birthsign remover script to the one in AzuMite's "Level Up Birthsign Remover"
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY BTB - Character.esp
+     BTB - Character (Alternate).esp]
+[ANY Level Up Birthsign Remover 103.esp
+     Level Up Birthsign Remover WGI 103.esp]
+
 ;;"BTB - Equipment.esp"
 
 [Conflict]
@@ -6141,6 +6234,12 @@ BTB - Equipment.esp
 [ANY Balance - items.esp
      Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp]
+
+[Requires]
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB - Equipment.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
 
 ;;Dragon32: BTB's changes AR values etc of Adamantium armour
 [Order]
@@ -6162,6 +6261,19 @@ BTB - Equipment.esp
 ;;"BTB - Settings.esp"
 
 [Conflict]
+ Only use ONE plugin, "BTB - Settings (Alternate).esp" omits the changes made by the original to the growth rates of major, minor, and, particularly, misc skills.
+ (Ref: Readme - Settings (Alternate).txt)
+BTB - Settings (Alternate).esp
+BTB - Settings.esp
+
+[Conflict]
+ "I have merged [Da Nang's "CalSurGuardMod" mod] with [the BTB - Settings] plugin."
+ (Ref: "morrowind_btb.zip\Readme.txt")
+[ANY BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+CalSurGuardMod.esp
+
+[Conflict]
  "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter settings.
  (Ref: "morrowind_btb.zip\Readme.txt")
 [ANY BTB - Settings.esp
@@ -6171,6 +6283,14 @@ BTB - Equipment.esp
      Balance - items.esp
      Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp]
+
+;;Dragon32: Checked with TESPCD
+[Conflict]
+ BTB's Game Improvements alters AI flee settings. There is no need to run another mod which alters the same settings.
+[ANY BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
 
 ;; "BTB - Spells.esp"
 
@@ -7393,6 +7513,15 @@ C&BArmors.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Complete Armor Joints 1.5 [Kahkahra]
+
+[Note]
+ ! There is a new version of Kahkahra's "Complete Armor Joints" available, you should upgrade!
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6358
+Complete Armor.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Complete Morrowind [Max also known as ~NOBODY~]
 
 [Requires]
@@ -7679,6 +7808,77 @@ Creatures 6th House Patch.esp
 Creatures (Semi).esp
 Sixth House.esp
 Creatures 6th House Patch.esp
+
+;;Dragon32: Checked with TESPCD
+[Conflict]
+ PirateLord's "Creatures" alters AI flee settings. There is no need to run another mod which alters the same settings.
+[ANY Creatures (lore).esp
+     Creatures (Semi).esp
+     Creatures.esp]
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, Creatures' is 25. IMO, lower the better for this value
+[Order]
+Balance - game settings.esp
+Creatures.esp
+
+[Order]
+Balance - game settings.esp
+Creatures (lore).esp
+
+[Order]
+Balance - game settings.esp
+Creatures (Semi).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Creatures.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Creatures (lore).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Creatures (Semi).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Creatures.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Creatures (lore).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Creatures (Semi).esp
+
+;;Dragon32: Arbitrary Order rule, BTB's value for fAIFleeHealthMult is 45, Creatures' is 25. IMO, lower the better for this value
+[Order]
+BTB - Settings.esp
+Creatures.esp
+
+[Order]
+BTB - Settings.esp
+Creatures (lore).esp
+
+[Order]
+BTB - Settings.esp
+Creatures (Semi).esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Creatures.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Creatures (lore).esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Creatures (Semi).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8898,6 +9098,25 @@ Diablerie.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Dialogue Request Mod [Casey Tucker]
+
+[Note]
+ ! Casey Tucker's "NPC Functionality" is an enhanced version of his "The Dialogue Request Mod". You may wish to upgrade.
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6859
+The Request Mod.esp
+
+[Conflict]
+ Casey Tucker's "The Dialogue Request Mod" includes or replicates the behaviour of other mods: TheLys' "Give Your Orders", "Dracandros' Voice" and kirel's "How Are You?"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4648
+The Request Mod.esp
+[ANY Give your orders v13.esp
+     dracandrosvoice.esp
+     archcanonsvoice.esp
+     hortatorsvoice.esp
+     k_howareyou.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dinky Monsta  [Tom Hackett aka FoRx]
 
 [Note]
@@ -9401,6 +9620,31 @@ C0N2 v1.01.esp
 dracandrosvoice.esp
 [ANY archcanonsvoice.esp
      hortatorsvoice.esp]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+dracandrosvoice.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10888,7 +11132,7 @@ FallingDown.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Farmer Mod [Josh aka Xeon]
+;; @Farmer Mod 4.3 [Josh aka Xeon]
 
 ;; expdep
 [Requires]
@@ -10943,6 +11187,26 @@ Japanese_House.esp
  Should only be used when upgrading to the newest version of "Farmer Mod" and should not be loaded during normal play.
  (Ref: "SmartCleaning.html")
 Farmer Mod SmartCleaner 4.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Farmer Mod 4.0 Special Slave Companions 2.0 Compatibility Patch [Fliggerty]
+
+[Patch]
+ The Farmer Mod removes the top floor of the Suran Slave Market, causing all of the Special Slaves to fall through the ceiling.
+ Fliggerty's compatibility patch fixes this issue:
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3781
+Farmer Mod SSlaves Patch.esp
+[ALL Farmer Mod v4.3.esp
+     SSlave_Companions.esp]
+
+[Order]
+Farmer Mod v4.3.esp
+Farmer Mod SSlaves Patch.esp
+
+[Order]
+SSlave_Companions.esp
+Farmer Mod SSlaves Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11306,6 +11570,14 @@ fletcher.esp
 Fligg's Slave Mod.esp
 Give your orders v13.esp
 
+;;Dragon32: TESPCD check
+[Conflict]
+ Fliggerty's "Slave Mod", Ghostwalker71's "Slavers" and Nevana's "Twin Lamps & Slave Hunters" make extensive changes to the Morrowind script "slaveScript"
+ You cannot use these plugins together.
+Fligg's Slave Mod.esp
+[ANY Slavers By Ghostwalker71.esm
+     Nevena's Twin Lamps & Slave Hunters 1.2.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fliggerty's Almanac [Fliggerty]
@@ -11346,6 +11618,42 @@ Crystal_Forge.esp
 Fliggerty's Armor Project (Rebalanced by jeclxohko).esp
 [ANY Fliggerty's Armor Project 2.esp
      FAP Low Chance.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Flora Glow [Nigedo & Max_aka_NOBODY]
+
+;;Dragon32: Darknut's GDR changes flora_bc_mushroom_04 / 08
+;;See also same Order rules for the Herbalism mods
+[Order]
+DN-GDRv1.esp
+Flora Glow 1.0.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Flora Glow 1.0.esp
+
+[Conflict]
+ "If you use [Nigedo & Max_aka_NOBODY's "Flora Glow"] with a herbalism mod, you must use TESTool or a similar utility to merge changes to objects."
+ (Ref: "Flora_Glow1-0.zip\Flora Glow 1.0\ReadMe.txt")
+Flora Glow 1.0.esp
+[ALL [ANY Advanced Herbalism - MO.esp
+          Advanced Herbalism - TR & BM.esp
+          Advanced Herbalism - TR.esp
+          Advanced Herbalism - BM.esp
+          Graphic Herbalism.esp
+          Herbalismv1.3(Tribunal).esp
+          Herbalismv1.1.esp
+          Syc_HerbalismforPurists.esp
+          Syc_HerbalismforPurists_TB_ONLY.esp
+          Herbalism_Lite_v1.0.esp
+          Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+          Herbalism Redux 1.12a.esp
+          Herbalism Redux 1.12a - Bloated MW.esp
+          HR 1.12a + EW 1.5.esp
+          HR 1.12a BMW + EW 1.5.esp
+          Ultra Light Herbalism.esp]
+     [NOT Merged_Objects.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12413,6 +12721,11 @@ GIANTS_No_Wraiths.esp
 GIANTS Ultimate Control file.esp
 GIANTS dragon patch.esp
 
+;;Dragon32: Helios' unofficial patch removes dragons. Hopefully this LO change will fix that little conflict
+[Order]
+HelioS - Giants Fix.esp
+GIANTS dragon patch.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GIANTS (No Nude)  [TomatoOfDoom]
@@ -12446,6 +12759,28 @@ HelioS - Giants Fix.esp
 ;Dragon32: There's this "control file" in the GIANTS install, makes sense to load mods that change GIANTS after it[Order]
 GIANTS Ultimate Control file.esp
 HelioS - Giants Fix.esp
+
+[Note]
+ HelioS/Michael Bennett's Unofficial GIANTS Patch:
+ "Removes godawfull creatures such as:
+  - All the Night Sprites
+  - Face of the Forest
+  - The giant night spriggans (that horrible "thing" that looks
+    slightly like a tree hit by a paint truck)
+  - Those dwemer golem constructs that look like the...
+    er, well there isnt really anything to compare them against.
+  - Those dragons. They weren't that bad but I didnt like em.
+  - Rot worms, Ice golems, Seducers... and a few more"
+ (Ref: "GIANTS Patch Readme.txt")
+[ALL [ANY [SIZE 1841362 GIANTS.esm]
+          HelioS - Giants Fix.esp]
+     [ANY GIANTS_No_Dragons.esp
+          GIANTS_No_FacesOftheForest.esp
+          GIANTS_No_NightSpriggans.esp
+          GIANTS_No_NightSprites.esp
+          GIANTS_No_RotWorms.esp
+          GIANTS_No_Seducers.esp
+          GIANTS_No_WingedNightSprites.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12488,6 +12823,35 @@ GIANTS Ultimate no monsters in cities T.esp
 [Order]
 GIANTS Ultimate Control file.esp
 GIANTS Ultimate no monsters in cities TB.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Give Your Orders 1.3 [TheLys]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+Give your orders v13.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15465,6 +15829,42 @@ House of Mannequins - Mistform fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @How Are You? [Kirel]
+
+;; expdep
+[Requires]
+ This plugin uses a startscript.
+k_howareyou.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+k_howareyou.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Hugely Expanded Leveled Lists Ultimate Version Addition [Sandman101 and Friends]
 
 ;;Dragon32: Rules split into separate sections for the various HELLUVA plugins
@@ -18124,33 +18524,35 @@ LGNPC_Secret_Masters_v?_??.esp
 
 ;;Theoretical conflict with other plugins that fix the Nerevarine greeting. While the method may be different from other mods, the result is pretty much the same. LGNPC's early date stamp will allow the changes by other mods to prevail
 ;; (Ref: LGNPC_NoLore_Readme.txt)
-;; Dragon32: So, I'm not sure if these Order rules are needed, to be reviewed.
+;; Dragon32: Load order here is following the general rule that we load generic dialogue mods (i.e. Nerevarine greeting tweaks) before specific dialogue mods (i.e. the LGNPC series).
+
 ;; lfx_nerevarine_greetings by Alphax
 [Order]
-LGNPC_NoLore.esp
 lfx_nerevarine_greetings.esp
+LGNPC_NoLore.esp
 
 ;; Nerevarine Greeting tweaks by Glassboy
 [Order]
-LGNPC_NoLore.esp
 Nerevarine Greeting tweaks.esp
+LGNPC_NoLore.esp
 
 ;; No More 'Excuse Me Nerevarine' by Raptormeat
 [Order]
-LGNPC_NoLore.esp
 ExcuseMe.esp
-
-[Order]
 LGNPC_NoLore.esp
+
+;; Wakim's Game Improvements
+[Order]
 Gameplay - Dialogue.esp
+LGNPC_NoLore.esp
 
 [Order]
-LGNPC_NoLore.esp
 Wakim's Game Improvement 9.esp
+LGNPC_NoLore.esp
 
 [Order]
-LGNPC_NoLore.esp
 Wakim's Game Improvements with No-glo v9.esp
+LGNPC_NoLore.esp
 
 [Conflict]
  LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
@@ -20832,7 +21234,7 @@ Unarmored_Corrector_V01_TRIB.esp
  ! "Morrowind [...] makes heavier things harder to steal, [TheOne&Only's "Pickpocket Fix"] makes heavier things easier to steal. Things appear easier for the wrong reason."
  ! (Ref: http://forums.bethsoft.com/topic/1041190-beta-relz-morrowind-patch-project-165-beta/?p=15974266 )
  ! Rather than using this mod you should try the "Pickpocket overhaul" in the highly recommended "Morrowind Code Patch" by Hrnchamd.
- ! (Ref: http://morrowind.nexusmods.com/mods/19510 ) 
+ ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
 Pickpocket Fix.esp
 
 
@@ -24595,6 +24997,106 @@ Ninja_Girl_JapHouse_teleport.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NPC Functionality 1.3 [Casey Tucker]
+
+[Conflict]
+ Casey Tucker's "NPC Functionality" is an enhanced version of his "The Dialogue Request Mod".
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6859
+NPC Functionality.esp
+The Request Mod.esp
+
+[Conflict]
+ Casey Tucker's "The Dialogue Request Mod", which his "NPC Functionality" mod is an enhanced version of, includes or replicates the behaviour of other mods: TheLys' "Give Your Orders", "Dracandros' Voice" and kirel's "How Are You?"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4648
+NPC Functionality.esp
+[ANY Give your orders v13.esp
+     dracandrosvoice.esp
+     archcanonsvoice.esp
+     hortatorsvoice.esp
+     k_howareyou.esp]
+
+[Note]
+ ! Casey Tucker's "NPC Functionality" alters the distance your PC needs to be from an NPC before the NPC greets you. In vanilla Morrowind this value is 6 (if the Construction Set help is to be believed this is multiplied by the NPC's Hello rating to get the distance before they talk); "NPC Functionality" increases this value to 9 as it adds text greetings if your PC is waving a drawn weapon around.
+ ! LadyDeadlock's "Reduced (Passing) Commentary Mod" and "No Greet" both decrease this value (to 3 an 0 respectively). mlox will load "Reduced (Passing) Commentary Mod" or "No Greet" after Casey Tucker's "NPC Functionality" mod so the reduced greeting distance is used. If you wish to use the higher greeting distance of "NPC Functionality" then remove either "Reduced (Passing) Commentary Mod" or "No Greet".
+[ALL NPC Functionality.esp
+     [ANY LadyD_Reduced_Commentary.esp
+          no_greet_0705.esp]]
+
+[Order]
+NPC Functionality.esp
+LadyD_Reduced_Commentary.esp
+
+[Order]
+NPC Functionality.esp
+no_greet_0705.esp
+
+[Note]
+ ! Casey Tucker's "NPC Functionality" alters the distance your PC needs to be from an NPC before the NPC greets you. In vanilla Morrowind this value is 6 (if the Construction Set help is to be believed this is multiplied by the NPC's Hello rating to get the distance before they talk); "NPC Functionality" increases this value to 9 as it adds text greetings if your PC is waving a drawn weapon around.
+ ! BTB's Settings plugin from "BTB's Game Improvements" reduces the value. If you want the larger greeting distance from "NPC Functionality" or the smaller distance from "BTB's Game Improvements" then add an appropriate Order rule to your mlox_user.txt file.
+[ALL NPC Functionality.esp
+     [ANY BTB - Settings (Alternate).esp
+          BTB - Settings.esp]]
+
+;;Dragon32: Checked with TESPCD
+[Conflict]
+ Casey Tucker's "NPC Functionality" alters AI flee settings. There is no need to run another mod which alters the same settings.
+NPC Functionality.esp
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
+
+;;Dragon32: Arbitrary Order rule, Creatures' value for fAIFleeHealthMult is 25, NPC Functionality's is 20. IMO, lower the better for this value
+[Order]
+Creatures (lore).esp
+NPC Functionality.esp
+
+[Order]
+Creatures (Semi).esp
+NPC Functionality.esp
+
+[Order]
+Creatures.esp
+NPC Functionality.esp
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, NPC Functionality's is 20. IMO, lower the better for this value
+[Order]
+Balance - game settings.esp
+NPC Functionality.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+NPC Functionality.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+NPC Functionality.esp
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+NPC Functionality.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NPC Replace 3.0 [Arathrax/Motoki]
 
 [Note]
@@ -24700,6 +25202,19 @@ No-Glo_0709.esp
  !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6984
  !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=70 )
 No-Glo_Revisited.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @No Greet [Unknown]
+
+;;Dragon32: BTB's mods set iGreetDistance to 2; No Greet sets it to 0
+[Order]
+BTB - Settings (Alternate).esp
+no_greet_0705.esp
+
+[Order]
+BTB - Settings.esp
+no_greet_0705.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24855,6 +25370,35 @@ Nude_SB.esp
 [Requires]
 Nude_FX.esp
 Nude_SB.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nudity Greeting Expansion 1.0 [Glassboy]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+Nudity Greeting Expansion V1.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25113,6 +25657,16 @@ OB_Style Quivers And Bows_CAJ.esp
           LeftGloves_Addon_v2.esp
           LeftGloves.esp]
      [NOT Merged_Objects.esp]]
+
+;;Dragon32: OB Style Quivers and Sheathing Bows for Morrowind affects adamantium armour
+[Order]
+adamantiumarmor.esp
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
 
 ;;Complete Armor Joints patch
 [Conflict]
@@ -25599,13 +26153,43 @@ Pegas Horse Ranch v<VER>.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Persuasion response expansion v4 [Glassboy]
+;; @Persuasion Response Expansion 4.0 [Glassboy]
 
 [Note]
  ! The latest version of this mod is 4.0 ("P.R.E. v4.0.esp"), you may want to upgrade:
  ! http://www.freewebs.com/glassboy/dialogfocus.htm
 Persuasion Response Expansion.esp
 Persuasion Response Expansion v2.5.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 205320 P.R.E. v4.0.esp]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+P.R.E. v4.0.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25968,6 +26552,15 @@ PSsorticon.esp
  !! Spirithawke has released a version which restores this enchantment, as well as another version which removes some controversial changes to three chests.
  !! http://mw.modhistory.com/download--12174
 [SIZE 86859 PSsorticon.esp]
+
+[Conflict]
+ BTB's Alchemy and Equipment plugins from "BTB's Game Improvements" mod alter scrolls and potions whilst retaining the default icons. Erasmus' "Potions" and "Scrolls" change the icons used by potions and scrolls whilst keeping their default names and other values. To use BTB's and Erasmus' mods together you will need to run TESTool's Merge Objects function and enable the Merged_Objects.esp.
+[ANY PSsorticon.esp
+     Potions.esp
+     Scrollsv1.1.esp]
+[ALL [ANY BTB - Alchemy.esp
+          BTB - Equipment.esp]
+     [NOT Merged_Objects.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26967,6 +27560,17 @@ Clean Redesigned Vivec - com_mca patch.esp
 Redoran Guards with Katanas and Shields.esp
 Redoran Guards with Katanas.esp
 Redoran Guards with Shields.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Reduced (Passing) Commentary Mod [LadyDeadlock]
+
+;;Dragon32: Found this out using TESTPCD
+[Conflict]
+ BTB's Settings plugin from "BTB's Game Improvements" reduces the Game Setting iGreetDistance, as LadyDeadlock's "Reduced (Passing) Commentary" does. In fact, BTB's mod reduces the value even more than LadyDeadlock's mod. So, there is no need to run LadyDeadlock's mod as well as BTB's.
+LadyD_Reduced_Commentary.esp
+[ANY BTB - Settings (Alternate).esp
+     BTB - Settings.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28017,6 +28621,28 @@ Scissors & Thimbles Merge.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Scourge of the Lich Father Acts I and II 1.2[Dan Taylor]
+
+;;Dragon32: TESPCD shows some conflicts between Act I and Act II plugins. I assume the Act II stuff should win, matches their time stamps too
+[Order]
+Lich Father Act I.esp
+Lich Father Act II.esp
+
+;;"SotLF Female Cuirass 1.0" by Forseti
+[Order]
+Lich Father Act II.esp
+SotLF Female Shadow Cuirass v1.esp
+
+;;"Known Conflicts:
+;;Necessities of Morrowind
+;;This mod uses the same space as Goldington.
+;;I have been told that it is easy to fix by loading NOM in the TESCS,
+;;setting the Ignore flag on the West Gash Region cells where Goldington is located."
+;;
+;;Dragon32: No LAND conflicts in TESPCD for either NOM 2.13.esp or NoM 3.0.esp though
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scripted Spells 1.5 [Cortex]
 
 [Conflict]
@@ -28709,7 +29335,7 @@ CAB_SkullzImproved_TRBM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Slavers V1.01 [Ghostwalker71]
+;; @Slavers 1.01 [Ghostwalker71]
 
 [Conflict]
  "there is a script conflict with 'Scourge of the Lich Father'. It will cause your system to crash to desktop."
@@ -28717,6 +29343,15 @@ CAB_SkullzImproved_TRBM.esp
 Slavers By Ghostwalker71.esm
 [ANY Lich Father Act I.esp
      Lich Father Act II.esp]
+
+;;Dragon32: TESPCD check
+[Conflict]
+ Ghostwalker71's "Slavers", Fliggerty's "Slave Mod", Nevana's "Twin Lamps & Slave Hunters" and TheLys' "Give Your Orders" make extensive changes to the Morrowind script "slaveScript"
+ You cannot use these plugins together.
+Slavers By Ghostwalker71.esm
+[ANY Give your orders v13.esp
+     Nevena's Twin Lamps & Slave Hunters 1.2.esp
+     Fligg's Slave Mod.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30501,7 +31136,7 @@ Sri Alchemy BM List Patch.esp
 
 [Conflict]
  Taddeus' Balanced Armor includes balanced versions of the following plugins: (official) LeFemme  Armors, (official) Adamantium Armor, (official) Adamantium Helm of Tohan, Aedroth's Bloodmoon Wolf Greaves Fix, Avenger's Female Armors (some meshes), Canadianice's Domina Madness Armors, Dongle's Adamantium Round and Tower Shields, Jeremy's Divine Domina (parts 1, 2, 3, 4 and 5), TommyKhajiit's Ebony Greaves fix, Venymora's Red Leather (Tribunal version).
-  You should remove all the plugins included in this one (see above) to avoid problems (doubling, ...). 
+  You should remove all the plugins included in this one (see above) to avoid problems (doubling, ...).
  (Ref:  "Taddeus'BalancedArmors - Readme.txt")
 [ANY Taddeus'BalancedArmors.esp
      Taddeus'BalancedArmors_Rotate.esp]
@@ -30615,7 +31250,7 @@ Taddeus'BalancedArmors(light).esp
 [Order]
 venymora_intro_v1p0.esp
 Taddeus'BalancedArmors(light).esp
-	 
+
 [Note]
  Taddeus' Balanced Armor (light) is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
  If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
@@ -30666,7 +31301,7 @@ Taddeus'BalancedObjects_Rotate.esp
           Potions.esp
           Scrollsv1.1.esp
           PSsorticon.esp]]
-	 
+
 [Note]
  Taddeus' Balanced Objects (light) is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
  If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
@@ -32067,7 +32702,7 @@ TriggerDBAttack_v1_00.esp
  ! B00ze has updated Cool Demon's original "True Lights and Darkness" mod, you should upgrade!
  ! http://www.nexusmods.com/morrowind/mods/39605/?
 True_Lights_And_Darkness_0.5.esp
- 
+
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
@@ -32121,7 +32756,7 @@ True_Lights_And_Darkness_1.1.esp
 [ANY SpzInteriorDaylight.esp
      abotWindowsGlow.esp
      Illuminated Windows v1.2.esp]
-	 
+
 [Conflict]
  "Instead of using the mod's original esp [, Mudcrab Island.esp], use TLAD's [Mudcrab Island TLAD.esp]."
  (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
@@ -32669,6 +33304,21 @@ Balmora University 2.0 - unique Balmora addon.esp
 unique Balmora.esp
 balmorauversion2.0.ESP
 Balmora University 2.0 - unique Balmora addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Creatures [Neoptolemus]
+
+;;Dragon32: Purposefully not thinking about "Creatures Merged Objects Fix.esp" ;-)
+
+[Conflict]
+ "[Neoptolemus' "Unique Creatures"] will conflict with any other mod that alters Morrowind's creatures in any way, so you may have to 'merge objects' with TESTool."
+ (Ref: "Neo's Unique Creatures.txt")
+Neo's Unique Creatures.esp
+[ALL [ANY Creatures (lore).esp
+          Creatures (Semi).esp
+          Creatures.esp]
+     [NOT Merged_Objects.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34114,7 +34764,7 @@ lfx_rare_ingredients-uniques.esp
      Tenpacebootsfix.esp]
 
 [Conflict]
- "[Lurios' "BugFixes"] is obsolete and is almost completely incorporated into and superseded by Thepal's Unofficial Patch v1.6.3b [that in turn has been superseded by the MPP]. 
+ "[Lurios' "BugFixes"] is obsolete and is almost completely incorporated into and superseded by Thepal's Unofficial Patch v1.6.3b [that in turn has been superseded by the MPP].
  There are only a relative few additional tweaks and changes it makes that are not included in Thepal's patch, and most of them are either (1) dialogue additions for a fair number of NPCs to to reflect the completion of the Main Quest; (2) "fixes" of more discretionary or nonessential nature, such as the addition of a messagebox to the daedra in Mount Kand informing the player that, if she has killed them, it is okay and they will respawn; and (3) fixes that are of questionable merit."
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1768 )
 [ANY Morrowind Patch v1.6.4.esm
@@ -35874,7 +36524,7 @@ Lazarus_Manor-Caldera.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Wakim's Game Improvments 9 (WGI) [Wakim]
+;; @Wakim's Game Improvements 9 (WGI) [Wakim]
 
 [Conflict]
  "Wakim's Game Improvement 9.esp" combines all of the modular WGI plugins
@@ -35941,6 +36591,85 @@ Vampire_Embrace.esp
 [Order]
 Gameplay - Dialogue.esp
 Vampire_Embrace.esp
+
+;;Dragon32: Checked with TESPCD
+[Conflict]
+ Wakim's Game Improvements alters AI flee settings. There is no need to run another mod which alters the same settings.
+[ANY Balance - game settings.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+;; Gameplay - Dialogue.esp adds some generic rumours and the like
+[Order]
+Gameplay - Dialogue.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36859,6 +37588,10 @@ GIANTS_Ultimate_Official_Fixes.esp
 	  The Wilderness Mod 2.0.esm]
      GIANTS.esm]
 
+[Order]
+GIANTS Ultimate Control file.esp
+GIANTS_Ultimate_Official_Fixes.esp
+
 ;; expdep
 [Requires]
  Uses a tribunal function: getweapondrawn.
@@ -37290,6 +38023,15 @@ Wizards' Islands Super Patch.esp
 [ANY Wizards_Islands_SotFB_Patch.esp
      Wizards_Islands_BM_Patch.esp
      Wizards_Islands_FPS_Fix.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Wizbang's Clothing (and armor) Randomizer [WizBang]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1510186 WizBang's Clothing Randomizer.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
