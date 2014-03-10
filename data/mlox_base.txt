@@ -5708,7 +5708,7 @@ Blood and Gore Wilderness add-on.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodlines [Carnithus]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 [Requires]
  Bloodlines requires Bloodmoon, Tribunal and Cortex's "Vampire Embrace" version 1.35 or above.
@@ -7605,6 +7605,27 @@ correctUV Ore Replacer 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Council Book Replacer [Ithilien87]
+
+;;Dragon32: Both change BOOK records for the three Great House Council Books. Assume if someone's gone to the trouble of loading Ithilien87's mod they want those meshes
+[Order]
+Book Jackets - Morrowind - BookRotate.esp
+Council Book Replacer V1.esp
+
+[Order]
+Book Jackets - Morrowind.esp
+Council Book Replacer V1.esp
+
+[Order]
+Librarian with Jackets & Rotate BM Trib.esp
+Council Book Replacer V1.esp
+
+[Order]
+Librarian with Jackets BM Trib.esp
+Council Book Replacer V1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CoverUp 1.0 [ManaUser]
 
 [Conflict]
@@ -9023,7 +9044,7 @@ Vampire Embrace MCA Patch.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Diablerie [AlienSlof & Peter]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 ;;That sets [Order] for Diablerie's MWSE addon
 
 [Requires]
@@ -9087,7 +9108,7 @@ Diablerie.esp
 ScentOfBlood_MCA.esp
 Diablerie.esp
 
-;;Dragon32 - This is in "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32 - This is in "Vampire Load Order - based on Yacoby's web page"
 ;;[Order]
 ;;ScentOfBlood_MCA_VR.esp
 ;;Diablerie.esp
@@ -9941,6 +9962,18 @@ Dwarves! MCA addon v2.1.esp
 Dwarves!.esp
 Dwarves! BB.esp
 Dwarves! MCA addon v2.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Books 1.1 [Misty Moon]
+
+[Conflict]
+ Use only one plugin:
+  Dwemer Book's-TR.esp - If you have Tribunal.
+  Dwemer Book's.esp - If you do not.
+ (Ref: "Dwemer Book's.txt")
+Dwemer Book's-TR.esp
+Dwemer Book's.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16387,6 +16420,20 @@ ASE Extras Expansion.esp
 [Order]
 BE+(1.4) Better Looking Morrowind.esp
 ASE Extras Expansion.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Illy's Dirty Books [Illuminiel]
+
+[Conflict]
+ "Q:	Does ["Illy's Dirty Books"] work with Book Rotate?
+ A:	It will if you don't activate ["Illy's Dirty Books.ESP"] and just use the replacer textures, otherwise it will conflict with any scripts added to books that use meshes I needed to remap."
+ Alternatively using TESTool's Merged Objects function will merge the new meshes from "Illy's Dirty Books" with the script changes from "Book Rotate".
+ (Ref: "Dirty Books Guide.txt")
+Illy's Dirty Books.ESP
+[ALL [ANY Book Rotate.esm
+          Book Rotate - Morrowind v1.1.esp]
+     [NOT Merged_Objects.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23231,6 +23278,8 @@ Detect Owner.esp
 Elemental Magicka II - MWSE Addon.ESP
 Get Fezzed!.esp
 Gravedigger.esp
+Library_Portable.esp
+Library_Portable_Book_Jackets_Compatible.esp
 mel_teleportPlugin_1_3.esp
 Shut_Up.esp
 UL_3.2_MWSE_Add-on.esp
@@ -26536,6 +26585,30 @@ MCR_Suran Guard Tower Door Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Portable Library Book Jackets Compatibility Patch [Skizo]
+
+[Conflict]
+ Skizo has released "Portable Library Book Jackets Compatibility Patch" which changes Adul's "Portable Library" to use the meshes and textures from Daleth's "Book Jackets" mod.
+ http://mw.modhistory.com/download-11-6546
+Library_Portable.esp
+[ANY Book Jackets - Bloodmoon - BookRotate.esp
+     Book Jackets - Bloodmoon.esp
+     Book Jackets - Morrowind - BookRotate.esp
+     Book Jackets - Morrowind.esp
+     Book Jackets - Tribunal - BookRotate.esp
+     Book Jackets - Tribunal.esp
+     Librarian with Jackets & Rotate BM Trib.esp
+     Librarian with Jackets BM Trib.esp]
+
+[Conflict]
+ Use only one plugin
+  Library_Portable.esp - Adul's original mod
+  Library_Portable_Book_Jackets_Compatible.esp - Skizo's version, for users of Daleth's "Book Jackets" mod.
+Library_Portable.esp
+Library_Portable_Book_Jackets_Compatible.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Potion/Scroll Icons and Potion Sort [rmrfstar]
 
 [Conflict]
@@ -28521,7 +28594,7 @@ SauronsAbode252.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scent of Blood 1.2 [AlienSlof & Peter]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 [Note]
  ! The latest version of "Scent of Blood" is version 1.2, you should upgrade.
@@ -32780,7 +32853,7 @@ Serpentax's Predator Tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Twin Lamps and Slave Hunters [Nevena]
+;; @Twin Lamps and Slave Hunters 1.5 [Nevena]
 
 [Note]
  There is a newer version of "Twin Lamps and Slave Hunters" available, you should upgrade.
@@ -32789,6 +32862,30 @@ Serpentax's Predator Tweaks.esp
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 971153 Nevena's Twin Lamps & Slave Hunters 1.5.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+ !! Alternatively, use the latest version of Nevena's "Twin Lamps & Slave Hunters"
+ !! http://mw.modhistory.com/download-48-3023
+[SIZE 966017 Nevena's Twin Lamps & Slave Hunters 1.2.esp]
+
+;; expdep
+[Requires]
+ This plugin uses the Tribunal functions: setdelete and placeitem.
+Nevena's Twin Lamps & Slave Hunters <VER>.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;;Dragon32: TESPCD check
+[Conflict]
+ Nevana's "Twin Lamps & Slave Hunters", Fliggerty's "Slave Mod", Ghostwalker71's "Slavers" and TheLys' "Give Your Orders" make extensive changes to the Morrowind script "slaveScript"
+ You cannot use these plugins together.
+Nevena's Twin Lamps & Slave Hunters <VER>.esp
+[ANY Give your orders v13.esp
+     Slavers By Ghostwalker71.esm
+     Fligg's Slave Mod.esp]
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -35530,6 +35627,7 @@ VampiricIllusion_MWSE_AddOn.esp
 ScentOfBlood.esp
 ScentOfBlood_MCA.esp
 ScentOfBlood_MCA_VR.esp
+ScentOfBlood_MCA_VR_NoStake.esp
 ScentOfBlood_VR.esp
 ScentOfBlood_MWSE_AddOn.esp
 Diablerie.esp
@@ -35559,7 +35657,7 @@ Vampire Auto-Blood Injector.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Embrace 2.4 [Cortex]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 [Requires]
 Vampire_Embrace.esp
@@ -35645,7 +35743,7 @@ Vampire Hider.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampire Realism II [Jaxalot]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 ;; Vampire Realism II comes after "Blood Lines" and before
 ;; "Vampiric Hunger III"
@@ -35771,7 +35869,7 @@ Vamp_Upgrade.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampiric Hunger III v1.2 [zennorious]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 [Requires]
  Zennorious' "Vampiric Hunger" requires Bloodmoon, Tribunal and Cortex's "Vampire Embrace" version 2.3 or greater.
@@ -35890,7 +35988,7 @@ Vampiric Hunger - BL.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampiric Illusion 1.4 [AlienSlof & Peter]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 [Requires]
  "Vampiric Illusion" requires Zennorious' "Vampiric Hunger III" v1.1 or v1.2; Cortex's "Scripted Spells" v1.5 and "Vampire Embrace" v2.4
@@ -35910,7 +36008,7 @@ VampiricIllusion.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vampiric Regeneration 1.2 [AlienSlof & Peter]
 
-;;Dragon32: See also "@Vampire Load Order - based on Yacoby's web page"
+;;Dragon32: See also "Vampire Load Order - based on Yacoby's web page"
 
 [Requires]
  "Vampiric Regeneration" requires Zennorious' "Vampiric Hunger III"; Jaxalot's "Vampire Realism II" and "Vampire Embrace" v2.4
