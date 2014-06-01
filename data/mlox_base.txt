@@ -1823,6 +1823,26 @@ Antares' Big Mod <VER>.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Antares' Tribunal Main Quest [Arcimaestro Antares]
+
+;;bmdep
+[Requires]
+ This plugin uses a Bloodmoon scripting function: placeatme
+Antares' Tribunal Main QUest.esp
+Bloodmoon.esm
+
+;;Model Antares uses for the Mazed Band is based on that in Alaisiagae's Unique Finery Relacer
+;;Ref: Antares' Tribunal Main Quest - README.pdf
+[Order]
+UFR_v3dot2.esp
+Antares' Tribunal Main QUest.esp
+
+[Order]
+UFR_v3dot2_noRobe.esp
+Antares' Tribunal Main QUest.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @AOF Potions Recolored 1.1 [Bycote]
 
 [Conflict]
@@ -6542,7 +6562,8 @@ Building Up Uvirith's Legacy1.01.ESP
 [Conflict]
  The "Fast Eddie Fix" plugin from Artimis Fowl the 3rd's "Building Up Uvirith's Legacy" is incompatible with Stuporstar's "Uvirith's Legacy"
  (Ref: Building Up Uvirith's Legacy Readme.txt)
-Fast Eddie Fix v.0001.esp
+[ANY Fast Eddie Fix v.0001.esp
+     Fast Eddie Fix v .0001.esp]
 Uvirith's Legacy_*.esp
 
 ;;expdep
@@ -10323,6 +10344,77 @@ Enchantable Gloves of the Bal Molagmer (uber).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Enchanted Weapon Variety 1.11 [michael163377]
+
+[Conflict]
+ "[michael163377's "Enchanted Weapon Variety"] Includes quorn's Steel Broadsword Fix."
+ (Ref: "Enchanted Weapon Variety - Readme.txt")
+[ANY Enchanted Weapon Variety BM.esp
+     Enchanted Weapon Variety ME.esp
+     Enchanted Weapon Variety PTE Patch ME.esp
+     Enchanted Weapon Variety PTE Patch.esp
+     Enchanted Weapon Variety.esp]
+[ANY Steel Broadsword Fix BM.esp
+     Steel Broadsword Fix.esp]
+
+[Conflict]
+ Use only one plugin:
+  Enchanted Weapon Variety BM.esp - If using Morrowind with Bloodmoon
+  Enchanted Weapon Variety ME.esp - If using Morrowind with Marksman Enhanced
+  Enchanted Weapon Variety.esp - If using Morrowind without Bloodmoon
+ (Ref: "Enchanted Weapon Variety - Readme.txt")
+Enchanted Weapon Variety BM.esp
+Enchanted Weapon Variety ME.esp
+Enchanted Weapon Variety.esp
+
+[Requires]
+ "If using Morrowind with Marksman Enhanced, use Enchanted Weapon Variety ME.esp"
+ (Ref: "Enchanted Weapon Variety - Readme.txt")
+Enchanted Weapon Variety ME.esp
+Marksman Enhanced v1.2.esp
+
+;;Dragon32: Conflict between these two for corkbulb bolt. Assume that the mod designed to work with the other (i.e. "Enchanted Weapon Variety ME.esp" with "Marksman Enhanced v1.2.esp") should load last
+[Order]
+Marksman Enhanced v1.2.esp
+Enchanted Weapon Variety ME.esp
+
+[Patch]
+ "If using Morrowind with Piratelords Trade Enhancements, use Enchanted Weapon Variety PTE Patch.esp with Enchanted Weapon Variety BM.esp."
+ (Ref: "Enchanted Weapon Variety - Readme.txt")
+Enchanted Weapon Variety PTE Patch.esp
+[ALL Enchanted Weapon Variety BM.esp
+     Piratelords Trade Enhancements.esp]
+
+[Order]
+Enchanted Weapon Variety BM.esp
+Enchanted Weapon Variety PTE Patch.esp
+
+[Order]
+Piratelords Trade Enhancements.esp
+Enchanted Weapon Variety PTE Patch.esp
+
+[Patch]
+ "If using Morrowind with Marksman Enhanced and Piratelords Trade Enhancements, use Enchanted Weapon Variety PTE Patch ME.esp with Enchanted Weapon Variety ME.esp."
+ (Ref: "Enchanted Weapon Variety - Readme.txt")
+Enchanted Weapon Variety PTE Patch ME.esp
+[ALL Enchanted Weapon Variety ME.esp
+     Marksman Enhanced v1.2.esp
+     Piratelords Trade Enhancements.esp]
+
+[Order]
+Enchanted Weapon Variety ME.esp
+Enchanted Weapon Variety PTE Patch ME.esp
+
+[Order]
+Marksman Enhanced v1.2.esp
+Enchanted Weapon Variety PTE Patch ME.esp
+
+[Order]
+Piratelords Trade Enhancements.esp
+Enchanted Weapon Variety PTE Patch ME.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Enchanted Weapons  [Ryan]
 
 [Note]
@@ -11374,6 +11466,16 @@ Final Fantasy Spells.esp
 Final Fantasy Spells- Materia v2.esp
 [All	Final Fantasy Spells.esp
 	Final Fantasy Spells- Materia v1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fine Clothiers of Tamriel 1.0 [Westly]
+
+[Requires]
+ "The items in this mod were designed with the Better Bodies mod in mind."
+ (Ref: "Westly_Presents_FCOT_README.txt")
+Westly_Presents_FCOT.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14140,6 +14242,27 @@ Guar Followers Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Guards 1.4 [abot]
+
+[Conflict]
+ Only use one plugin:
+  abotGuards.esp - If you have Morrowind but only one expansion.
+  abotGuardsBM.esp - If you have both expansions.
+  abotGuardsTR.esp - If you have both expansions and Tamriel Rebuilt.
+ (Ref: "abotGuards.txt")
+abotGuards.esp
+abotGuardsBM.esp
+abotGuardsTR.esp
+
+;; expdep
+[Requires]
+ This plugin uses a startscript and the Tribunal functions: getweapondrawn and getwaterlevel so it requires one of the expansions.
+abotGuards.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Guide to... replacer [Stalker]
 
 [Conflict]
@@ -16436,6 +16559,29 @@ Illy's Dirty Books.ESP
      [NOT Merged_Objects.esp]]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Illy's Oh my Goddess 1.03 [Illuminiel]
+
+;;bmdep
+[Requires]
+ This plugin uses a Bloodmoon scripting function: placeatme
+Illy's Oh my Goddess.ESP
+Bloodmoon.esm
+
+[Note]
+ !! "[When using "Illy's Oh my Goddess" Ygfa] does have a schedule [...] and therefore could conflict with any mod that puts her on a schedule like ["Living Cities of Vvardenfell"] - I suggest if you know how take her off any other schedule before using ["Illy's Oh my Goddess"] or don't use ["Living Cities of Vvardenfell"] while you try ["Illy's Oh my Goddess"] out - once Ygfa is back in Pelagiad then install ["Living Cities of Vvardenfell"]."
+ !! (Ref: "Illy's Oh my Goddess.txt")
+[ALL Illy's Oh my Goddess.ESP
+     NPC LCV Schedules 03.esp]
+
+;; "Although Ygfa has some new topics and dialogue her dialogue and story is not intended to conflict with the LGNPC-Pelagiad mod"
+;; (Ref: "Illy's Oh my Goddess.txt")
+;;Dragon32: SO, hopefully, loading this after LGNPC should be OK
+[Order]
+LGNPC_Pelagiad.esp
+Illy's Oh my Goddess.ESP
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Illy's Solsteim Rumour Fix [Illuminiel]
 
@@ -18629,13 +18775,13 @@ LGNPC_SecretMasters_MCA5.esp
 [Note]
  ! You appear to have an older version Less Generic Nerevarine, you can find the latest here:
  ! http://www.nexusmods.com/morrowind/mods/23335/
-[VER < 1.3 Less_Generic_Nerevarine.esp]
+[VER < 1.4 Less_Generic_Nerevarine.esp]
 [VER = 1.21 Less_Generic_Nerevarine.esp]
 
 [Note]
  ! You appear to have an older version Less Generic Tribunal, you can find the latest here:
  ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7339
-[VER < 1.1 Less_Generic_Tribunal.esp]
+[VER < 2.0 Less_Generic_Tribunal.esp]
 
 [Conflict]
  Do not load both Less Generic Bloodmoon patches.
@@ -18678,11 +18824,16 @@ Thirsk Expanded Family.esp
 LG_BM_Thirsk_Ex_COM_patch.ESP
 
 [Conflict]
- "Join All Houses" by Heph will likely create odd results.
- (Ref: "Less_Generic_Nerevarine_Readme.txt", "Less_Generic_Tribunal_Readme.txt")
-[ANY Less_Generic_Nerevarine.esp
-     Less_Generic_Tribunal.esp]
+ "[Running ostar's "Less Generic Nerevarine" with] "Join All Houses" by Heph will likely create odd results."
+ (Ref: "Less_Generic_Nerevarine_Readme.txt")
+Less_Generic_Nerevarine.esp
 Join All Houses.esp
+
+[Conflict]
+ "[ostar's "Less Generic Tribunal" conflicts with] "Antares' Tribunal Main Quest", since it replaces the default Main Quest, could cause weird things to happen. Play his mod without LG Tribunal active, or at least finish LG Tribunal first."
+ (Ref: "Less_Generic_Tribunal_Readme.txt")
+Less_Generic_Tribunal.esp
+Antares' Tribunal Main QUest.esp
 
 [Note]
  !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
@@ -19783,17 +19934,127 @@ Marandus Abode MCA Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Marksman mod [Intelligentsia]
+;; @Marksman Ammunition Enchanting 0.1 [krimhorn]
 
+[Note]
+ "You must install the Morrowind Code Patch and select the 'Arrow Enchanting' option"
+ (Ref: Arrow Enchant-43048-0-1.rar\readme.txt)
+Arrow Enchant.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Marksman Enhanced 1.2 [Bravo1]
+
+;; [Marksman Enhanced 1.2] changes the store chance of projectiles to 85% (as opposed to the normal 25%)
+;; (Ref: "Marksman Enhanced v1.2 ReadMe.txt")
+[Order]
+Marksman Enhanced v1.2.esp
+100ProjectileStoreChance.esp
+
+[Conflict]
+ "[Bravo1's "Marksman Enhanced"] will probably NOT work with other marksman mods that change current weapons."
+ (Ref: "Marksman Enhanced v1.2 ReadMe.txt")
+Marksman Enhanced v1.2.esp
+[ANY Xenn's Marksman Overhaul.ESP
+     newarrows.esp
+     newarrowsLITE.esp]
+
+;;Dragon32: Some dirty refs in Xenn's mod, this version shouldn't change vanilla objects
+[Order]
+Xenn's Marksman Overhaul - Vanilla.ESP
+Marksman Enhanced v1.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Marksman Mod 1.46 [Intelligentsia]
+
+[Conflict]
+ Choose only one of these plugins.
+ "newarrowsLITE is a compatibility version of Marksman Mod" and so should be used instead of newarrows.esp rather than alongside it.
+ (Ref: "Marksmanmod README.doc")
+newarrows.esp
+newarrowsLITE.esp
+
+;;Dragon32: "newarrows - crossbow realism.esp" makes changes to crossbows defined in main Marksman mod
 [Order]
 newarrows.esp
 newarrows - crossbow realism.esp
 
-[Conflict]
- Choose ONLY ONE of these plugins.
- (Ref: "Marksmanmod README.doc")
-newarrows.esp
+[Order]
 newarrowsLITE.esp
+newarrows - crossbow realism.esp
+
+;;Dragon32: If someone's loading BTB's mods then I expect they want its balancing and Marksman mod's additional weapons...
+[Order]
+newarrows.esp
+BTB - Equipment.esp
+
+[Order]
+newarrows.esp
+BTB - Settings.esp
+
+[Order]
+newarrows.esp
+BTB - Settings (Alternate).esp
+
+[Order]
+newarrows.esp
+BTB - Spells.esp
+
+[Order]
+newarrowsLITE.esp
+BTB - Equipment.esp
+
+[Order]
+newarrowsLITE.esp
+BTB - Settings.esp
+
+[Order]
+newarrowsLITE.esp
+BTB - Settings (Alternate).esp
+
+[Order]
+newarrowsLITE.esp
+BTB - Spells.esp
+
+;;Dragon32: If someone's loading Wakim's mods then I expect they want its balancing and Marksman mod's additional weapons...
+[Order]
+newarrows.esp
+Balance - items.esp
+
+[Order]
+newarrowsLITE.esp
+Balance - items.esp
+
+;;Dragon32: Not sure about this. Just going on Last Modified Times for the two plugins. Version of AEA in Marksman Mod is earlier than newarrows.esp
+;; Nothing in readme
+[Order]
+AreaEffectArrows.esp
+newarrows.esp
+
+[Order]
+AreaEffectArrows.esp
+newarrowsLITE.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Marksman Overhaul 1.0 [Xenn]
+
+[Conflict]
+ Choose only one plugin:
+  Xenn's Marksman Overhaul - Bow Resource.ESP - "Simply a modders resource[...] Nothing in-game is altered with this .esp"
+  Xenn's Marksman Overhaul - Vanilla.ESP - Adds the new marksman weapons without changing existing stats or game settings.
+  Xenn's Marksman Overhaul.ESP - Adds the new marksman weapons and changes existing stats and game settings.
+ (Ref: "Xenns_Marksman_Overhaul.rar\Xenn's Marksman Overhaul\readme.txt")
+Xenn's Marksman Overhaul - Bow Resource.ESP
+Xenn's Marksman Overhaul - Vanilla.ESP
+Xenn's Marksman Overhaul.ESP
+
+;; "[Xenn's Marksman Overhaul.ESP] changes the store chance of projectiles to 85% (as opposed to the normal 25%)"
+;; (Ref: "Xenns_Marksman_Overhaul.rar\Xenn's Marksman Overhaul\readme.txt")
+[Order]
+Xenn's Marksman Overhaul.ESP
+100ProjectileStoreChance.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21286,7 +21547,7 @@ Pickpocket Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MCA (Morrowind Comes Alive) 7.1 [Neoptolemus]
+;; @MCA (Morrowind Comes Alive) 8.1 [Neoptolemus]
 
 ;;Dragon32: MCA size and version information
 ;;[SIZE 2442550 Morrowind Comes Alive.esm] = MCA 4.1
@@ -21299,6 +21560,8 @@ Pickpocket Fix.esp
 ;;[SIZE 2597537 MCA.ESM] = MCA 6.1
 ;;[SIZE 2831631 MCA.ESM] = MCA 7.0
 ;;[SIZE 2838068 MCA.ESM] = MCA 7.1
+;;[SIZE 2213215 MCA.ESM] = MCA 8.0
+;;[SIZE 2218142 MCA.ESM] = MCA 8.1
 
 ;;Dragon32: MCA Description tests. 5.0 and 5.1 same text; 5.2 basic and The Undead-compatible same text; both versions of 6.0 and 6.1 same text
 ;;[DESC /over 1000 friendly/ MCA.ESM] = MCA 5.0
@@ -21309,38 +21572,57 @@ Pickpocket Fix.esp
 ;;[DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM] = MCA 6.0 from "MCA Fix.zip"
 ;;[DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM] = MCA 6.1
 ;;[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM] = MCA 7.0
-;;[DESC /v7.1/ MCA.ESM] = MCA 7.1
-
+;;[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM] or [DESC /v7.1/ MCA.ESM] = MCA 7.1
+;;[DESC /Adds 1200 types of NPCs to over 550/ MCA.ESM] or [DESC /v8.0/ MCA.ESM] = MCA 8.0
+;;[DESC /Adds 1200 types of NPCs to over 550/ MCA.ESM] or [DESC /v8.1/ MCA.ESM] = MCA 8.1
 
 ;;**********
-;;v7.x rules
+;;v8.x rules
 ;;**********
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+MCA.ESM
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+MCA.ESM
 
 [Note]
- ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 7.1, you should upgrade!
+ ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 8.1, you should upgrade!
  ! http://morrowind.nexusmods.com/mods/6006
-[DESC !/v7.1/ MCA.ESM]
+[ANY [DESC !/Adds 1200 types of NPCs to over 550/ MCA.ESM]
+     [VER < 8.1 MCA.ESM]]
 
-[Note]
- !! Version 6.0 and above of Neoptolemus' "Morrowind Comes Alive" use the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have its meshes and textures installed.
- !! (Ref: MCA - Readme.txt)
-[ALL [ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
-          [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
-     [NOT Westly's Master Headpack X.esp]]
+;; BB Peasant Gowns addon
 
-[Note]
- !! Version 7.0 and above of Neoptolemus' "Morrowind Comes Alive" "incorporated the old Guards Patch into the main .esm", you should not load "MCA - Guards Patch.esp"
- !! (Ref: MCA - Readme.txt)
-[ALL MCA - Guards Patch.esp
-     [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
+[Patch]
+ "[MCA - BB Peasant Gowns Addon.esp] adds Korana's peasant gowns for 'Better Bodies' to some of the MCA peasant women. Requires either 'BB Peasant Gowns' OR 'Peasant Gowns Replacer' by Korana."
+ (Ref: "MCA - Readme.txt")
+MCA - BB Peasant Gowns Addon.esp
+[ALL MCA.ESM
+     [ANY BB2_Peasant_Gowns.esp
+          PeasantGownsReplacer.esp]]
 
-;;Dragon32: Applies to 5.x, 6.x and 7.x
+[Order]
+BB2_Peasant_Gowns.esp
+MCA - BB Peasant Gowns Addon.esp
+
+[Order]
+PeasantGownsReplacer.esp
+MCA - BB Peasant Gowns Addon.esp
+
+;;Clothiers of Vvardenfell addon
+
+;;Dragon32: Applies to 5.x, 6.x, 7.x and 8.x
 [Patch]
  "MCA - COV Addon.esp" is recommended when you have both Neoptolemus'"Morrowind Comes Alive" and Korana, BadKarma and Lady Rae's "Clothiers of Vvardenfell". With it enabled, some NPCs will now be wearing the clothing from "Clothiers of Vvardenfell".
- (Ref: MCA - Readme.txt)
+ (Ref: "MCA - Readme.txt")
 MCA - COV Addon.esp
 [ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
-     MCA.esm]
+     MCA.ESM]
 
 ;;Dragon32: Not yet confirmed as a problem for v7.0
 [Note]
@@ -21353,80 +21635,49 @@ MCA - COV Addon.esp
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 MCA - COV Addon.esp
 
-;;Dragon32: Applies to 5.x, 6.x and 7.x
-[Requires]
- "Use [MCA - Vampire Realism Patch.esp] if you use Jaxalot's Vampire Realism mod, and want the vampires added by MCA to require staking like the VR ones. Don't activate it without VR, or it will probably screw up your game."
+;; Fine Clothiers of Tamriel addon
+
+[Patch]
+ "[MCA - Westly's FCOT Addon.esp] adds the clothing from Westly's 'Fine Clothiers of Tamriel' to the MCA NPCs."
  (Ref: "MCA - Readme.txt")
-MCA - Vampire Realism Patch.esp
-[ALL MCA.esm
-     Vampire Realism II.esp]
+MCA - Westly's FCOT Addon.esp
+[ALL MCA.ESM
+     Westly_Presents_FCOT.esp]
 
-;;Dragon32: Patch uses some VR variables in scripts, probably best to load after VR
 [Order]
-Vampire Realism II.esp
-MCA - Vampire Realism Patch.esp
+Westly_Presents_FCOT.esp
+MCA - Westly's FCOT Addon.esp
 
-;;Dragon32: Can actually use DESC check for 7.0. Can't use DESC to distinguish between 6.0 and 6.1 though, those checks still rely on SIZE and are in the v6.x rules section, below.
-[Conflict]
- Since version 6.1 of Neoptolemus'"Morrowind Comes Alive" no longer modifies Bethesda's Bed_Standard script it no longer requires a patch to be compatible with Taddeus' "Necessities of Morrowind".
- (Ref: MCA - Readme.txt)
-MCA - NOM Patch.esp
-[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+;; "Make sure [MCA - Westly's FCOT Addon.esp] loads after the 'Khajiit Diversity Revamped' and 'Clothiers of Vvardenfell' add-ons if you are using those."
+;; Ref: "MCA - Readme.txt"
+[Order]
+MCA - Khajiit Diversity Revamped Addon.esp
+MCA - Westly's FCOT Addon.esp
 
-[Conflict]
- Version 6.0 and later of Neoptolemus' "Morrowind Comes Alive" merged in his "The Undead" mod, which is now obsolete if you are using MCA 6.0 or above.
- (Ref: MCA - Readme.txt)
-[ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
-     [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
-The Undead.esm
+[Order]
+MCA - COV Addon.esp
+MCA - Westly's FCOT Addon.esp
 
-[Conflict]
- Version 6.0 and later of Neoptolemus' "Morrowind Comes Alive" merged in his "Minions of House Dagoth" mod, which is now obsolete if you are using MCA 6.0 or above.
- (Ref: MCA - Readme.txt)
-[ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
-     [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
-[ANY Minions of House Dagoth.esp
-     Minions of House Dagoth - No Undead.esp]
+;; Illy's Oh my Goddess addon
 
-[Note]
- "Use [MCA - Divine Domina Addon.ESP] to integrate MCA with Jeremy's Divine Domina mods. All cuirasses added by MCA will have female versions, and some of the completed armour sets will show up on NPCs. You do not have to have Divine Domina activated to use this add on."
- (Ref: MCA - Readme.txt)
-[ALL MCA - Divine Domina Addon.ESP
-     [ANY Divine_domina_part_1.esp
-          Divine_domina_part_2.esp
-          Divine_domina_part_3_Tribunal.esp
-          Divine_domina_part_4.esp
-          Divine_domina_part_5.esp]]
+[Patch]
+ "[MCA - Illy's OMG Addon.esp] adds Illuminiel's amazing Imperial Cult robes to the MCA priests and priestesses. Requires 'Illy's Oh my Goddess'."
+ (Ref: "MCA - Readme.txt")
+MCA - Illy's OMG Addon.esp
+[ALL MCA.ESM
+     Illy's Oh my Goddess.ESP]
 
-[Note]
- !! "You do not have to have Divine Domina activated to use this add on, but it must be installed."
- !!  (Ref: "MCA - Readme.txt")
-[ALL MCA - Divine Domina Addon.ESP
-     [NOT [ANY Divine_domina_part_1.esp
-               Divine_domina_part_2.esp
-               Divine_domina_part_3_Tribunal.esp
-               Divine_domina_part_4.esp
-               Divine_domina_part_5.esp]]]
+[Order]
+Illy's Oh my Goddess.ESP
+MCA - Illy's OMG Addon.esp
 
-[Requires]
- "[MCA - TR Addon.ESP] adds MCA NPCs and creatures to Tamriel Rebuilt Sacred East. Also adds some of the new TR items to the MCA leveled lists. Requires Tamriel Rebuilt."
- (Ref: MCA - Readme.txt)
-MCA - TR Addon.ESP
-[ALL TR_Data.esm
-     TR_Mainland.esm
-     [DESC /v7.1/ MCA.ESM]]
-
-[Note]
- Spirithawke has updated the "Tamriel Rebuilt" addon for Neoptolemus' "Morrowind Comes Alive" so that it works with v1.5 of "Tamriel Rebuilt"
- Download "MCA - TR Addon v7.1a.7z" from the Additional Files section:
- http://mw.modhistory.com/download--14634
-[VER < 7.1a MCA - TR Addon.esp]
+;; Khajiit Diversity Revamped addon
 
 [Patch]
  "[MCA - Khajiit Diversity Revamped Addon.esp] changes some of the MCA khajiit NPCs into Dagi-Raht, Ohmes-Raht, Cathay-Raht and Senche-Raht. Requires Westly's Khajiit Diversity Revamped mod, and will work with any of the 4 esps."
- (Ref: MCA - Readme.txt)
+ (Ref: "MCA - Readme.txt")
 MCA - Khajiit Diversity Revamped Addon.esp
-[ALL [DESC /v7.1/ MCA.ESM]
+[ALL MCA.ESM
      [ANY New Khajiit Diversity(BEAST).esp
           New Khajiit Diversity(BEAST)X.esp
           New Khajiit Diversity(CIV).esp
@@ -21449,6 +21700,111 @@ MCA - Khajiit Diversity Revamped Addon.esp
 New Khajiit Diversity(CIV)X.esp
 MCA - Khajiit Diversity Revamped Addon.esp
 
+;; Tamriel Rebuilt addon
+
+[Patch]
+ "[MCA - TR Addon.esp] adds MCA NPCs and creatures to Tamriel Rebuilt Sacred East. Also adds some of the new TR items to the MCA leveled lists. Requires Tamriel Rebuilt."
+ (Ref: "MCA - Readme.txt")
+MCA - TR Addon.esp
+[ALL TR_Data.esm
+     TR_Mainland.esm
+     MCA.ESM]
+
+;;Vampire Realism patch
+
+;;Dragon32: Applies to 5.x, 6.x, 7.x and 8.x
+[Patch]
+ "Use [MCA - Vampire Realism Patch.esp] if you use Jaxalot's Vampire Realism mod, and want the vampires added by MCA to require staking like the VR ones. Don't activate it without VR, or it will crash your game."
+ (Ref: "MCA - Readme.txt")
+MCA - Vampire Realism Patch.esp
+[ALL MCA.ESM
+     Vampire Realism II.esp]
+
+;;Dragon32: Patch uses some VR variables in scripts, probably best to load after VR
+[Order]
+Vampire Realism II.esp
+MCA - Vampire Realism Patch.esp
+
+;; Incorporated mods
+
+[Conflict]
+ Version 6.0 and later of Neoptolemus' "Morrowind Comes Alive" merged in his "Minions of House Dagoth" mod, which is now obsolete if you are using MCA 6.0 or above.
+ (Ref: "MCA - Readme.txt")
+[ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
+     [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+     [DESC /v8/ MCA.ESM]]
+[ANY Minions of House Dagoth.esp
+     Minions of House Dagoth - No Undead.esp]
+
+;; Old addons
+
+;;Dragon32: Can actually use DESC check for 7.x and 8.x. Can't use DESC to distinguish between 6.0 and 6.1 though, those checks still rely on SIZE and are in the v6.x rules section, below.
+[Conflict]
+ Since version 6.1 of Neoptolemus'"Morrowind Comes Alive" no longer modifies Bethesda's Bed_Standard script it no longer requires a patch to be compatible with Taddeus' "Necessities of Morrowind".
+ (Ref: "MCA - Readme.txt")
+MCA - NOM Patch.esp
+[ANY [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+     [DESC /v8/ MCA.ESM]]
+
+[Conflict]
+ Version 7.0 and above of Neoptolemus' "Morrowind Comes Alive" "incorporated the old Guards Patch into the main .esm", you should not load "MCA - Guards Patch.esp"
+ (Ref: "MCA - Readme.txt")
+MCA - Guards Patch.esp
+[ANY [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+     [DESC /v8/ MCA.ESM]]
+
+;;**********
+;;v7.x rules
+;;**********
+
+[Note]
+ !! Version 6.* and 7.* of Neoptolemus' "Morrowind Comes Alive" use the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have its meshes and textures installed.
+ !! (Ref: MCA - Readme.txt)
+[ALL [ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
+          [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
+     [NOT Westly's Master Headpack X.esp]]
+
+[Conflict]
+ Version 6.* and 7.* and later of Neoptolemus' "Morrowind Comes Alive" merged in his "The Undead" mod, which you do not need to load if you are using MCA 6.* or 7.*.
+ (Ref: MCA - Readme.txt)
+[ANY [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
+     [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
+The Undead.esm
+
+;; Divine Domina addon
+
+[Note]
+ "Use [MCA - Divine Domina Addon.ESP] to integrate MCA with Jeremy's Divine Domina mods. All cuirasses added by MCA will have female versions, and some of the completed armour sets will show up on NPCs. You do not have to have Divine Domina activated to use this add on."
+ (Ref: MCA - Readme.txt)
+[ALL MCA - Divine Domina Addon.ESP
+     [ANY Divine_domina_part_1.esp
+          Divine_domina_part_2.esp
+          Divine_domina_part_3_Tribunal.esp
+          Divine_domina_part_4.esp
+          Divine_domina_part_5.esp]
+     [ANY [DESC /over 1000 friendly/ MCA.ESM]
+          [DESC /over 1200 friendly/ MCA.ESM]
+          [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]
+          [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]]
+
+[Note]
+ !! "You do not have to have Divine Domina activated to use this add on, but it must be installed."
+ !!  (Ref: "MCA - Readme.txt")
+[ALL MCA - Divine Domina Addon.ESP
+     [NOT [ANY Divine_domina_part_1.esp
+               Divine_domina_part_2.esp
+               Divine_domina_part_3_Tribunal.esp
+               Divine_domina_part_4.esp
+               Divine_domina_part_5.esp]]]
+
+;; Tamriel Rebuilt addon
+
+[Note]
+ Spirithawke has updated the "Tamriel Rebuilt" addon for Neoptolemus' "Morrowind Comes Alive" so that it works with v1.5 of "Tamriel Rebuilt"
+ Download "MCA - TR Addon v7.1a.7z" from the Additional Files section:
+ http://mw.modhistory.com/download--14634
+[ALL [DESC !/v8/ MCA.ESM]
+     [DESC !/7.1a/ MCA - TR Addon.esp]]
 
 ;;**********
 ;;v6.x rules
@@ -26148,11 +26504,18 @@ Pearls Enhanced - HFP patch v2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Peasant Gowns Replacer [Korana]
+;; @Peasant Gowns Replacer 2.0 [Korana]
+
+[Requires]
+ "These "Peasant Gowns" are full gowns, designed for use with Better Bodies 2.0."
+ (Ref: "Peasant Gowns Replacer READ-ME.txt")
+[ANY PeasantGownsReplacer.esp
+     BB2_Peasant_Gowns.esp]
+Better Bodies.esp
 
 [Requires]
  'PeasantGownsReplacerTRIB.esp' requires Morrowind and Tribunal. You WILL need to run both the replacer for Morrowind and the Tribunal esp in order for the Tribunal replacer addon to work correctly.
- (Ref: Peasant Gowns Replacer READ-ME.txt)
+ (Ref: "Peasant Gowns Replacer READ-ME.txt")
 PeasantGownsReplacerTRIB.esp
 [ALL PeasantGownsReplacer.esp
      Tribunal.esm]
@@ -26163,7 +26526,7 @@ PeasantGownsReplacerTRIB.esp
 
 [Conflict]
  'PeasantGownsReplacer.esp' adds the shop to the game world. Please discontinue use of 'BB2_Peasant_Gowns.esp' and use 'PeasantGownsReplacer.esp' instead. Otherwise there are potential doubling issues.
- (Ref: Peasant Gowns Replacer READ-ME.txt)
+ (Ref: "Peasant Gowns Replacer READ-ME.txt")
 PeasantGownsReplacer.esp
 BB2_Peasant_Gowns.esp
 
@@ -33219,7 +33582,32 @@ THE_UNDERGROUND_2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Undead [Neoptolemus]
+;; @The Undead 4.0 [Neoptolemus]
+
+;;[DESC /Adds 150 new undead/ The Undead.esm] = v3.0
+;;[DESC /Adds 280 new undead/ The Undead.esm] = v4.0
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+The Undead.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+The Undead.esm
+
+;; Tamriel Rebuilt addon
+
+[Patch]
+ "[The Undead - TR Addon.esp adds] the new undead creatures to the Tamriel Rebuilt leveled lists."
+ (Ref: "The Undead - Readme.txt")
+The Undead - TR Addon.esp
+[ALL TR_Data.esm
+     TR_Mainland.esm
+     The Undead.esm]
+
+;;Rules for pre-4.0
 
 [Conflict]
  Version 4.1 and up of Neoptolemus' "Morrowind Comes Alive" have integrated version 2.2 of his "The Undead" mod. There is no need to run "The Undead.esp" with your current version of "Morrowind Comes Alive."
@@ -33228,20 +33616,21 @@ The Undead.esp
 [ANY Morrowind Comes Alive.esm
      [SIZE !2519851 MCA.ESM]]
 
+;;Dragon32: MCA 5.2, the The Undead-compatible version
 [Note]
  The version of Neoptolemus' "Morrowind Comes Alive" you are running is compatible with v3.0 of his "The Undead" mod, not version 2.2 that you have enabled.
 [ALL The Undead.esp
      [SIZE 2519851 MCA.ESM]]
 
 [Conflict]
- There is no need to run both version 2.2 and 3.0 of Neoptolemus' "The Undead" mod.
+ There is no need to run both version 2.2 (ESP file) and a later version (ESM file) of Neoptolemus' "The Undead" mod.
 The Undead.esm
 The Undead.esp
 
 ;;Dragon32: Noticed some conflicts (e.g. in the 'NP Phantom' RACE record) between these two. I assume that 'The Undead.esm' should load after 'MCA.esm' as "The Undead" was released after 5.2 of "Morrowind Comes Alive"
 [Order]
 MCA.esm
-The Undead.esm
+[DESC /Adds 150 new undead/ The Undead.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36989,7 +37378,7 @@ farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @weapon fix v1.77 [Varg 'Euthanasiologist' Axenov]
+;; @Weapon Fix 1.77 [Varg 'Euthanasiologist' Axenov]
 
 [Requires]
  (Ref: "WeaponFix177.txt")
@@ -37046,24 +37435,84 @@ WeaponFix164_WCM_addon.esp
 ; through addons. "WeaponFix177.txt" says that Weapon Fix mods need to load
 ; last. (Dragon32)
 ;
-; Note: It's possible we may want to break this up, if the only orderings between
-; individual plugins in this list and "Weapon Fix" are relevant. - JMS
+; "Underwater Ruins" mentioned in readme - cannot find ESP file.
+
+
 [Order]
 Aduls_Arsenal.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 FW_Sabre.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 Leias_Dual_Wield_03.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 newarrows.esp
 newarrowsLITE.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 Additions_Revamped__clean_.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 Re-coloured Ebony and Dwarven.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 The Arsenal.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 SOPBeta1.4.esp
 SOP1.4Patch1.34.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 The_Swords_of_Morrowind.esp
-; "Underwater Ruins" mentioned in readme - cannot find ESP file.
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 Assassins Armory - No Scripts.esp
 Assassins Armory - Arrows.esp
 Assassins Armory - Bolt Rifles.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+WeaponFix164_WCM_addon.esp
+WeaponFix_anticheat.esp
+
+[Order]
 farrp_WeaponCompilationMod_V1.esp
 farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
 weaponFix177.esp
@@ -37167,27 +37616,6 @@ Welcome to the Arena! v6.0.esp
 Welcome to the Arena! v<VER>.esp
 [ANY Gladiator.esp
      MWInhabitants Freeform (Vol 1).esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Westly's Headpacks [Westly]
-
-[Conflict]
- Westly's individual headpacks are already included in Westly's Master Headpack.
- (Ref: "Westly's Master Headpack v1 README.txt")
-Westly's Master Headpack X.esp
-[ANY Westly's Female Headpack - Elves and Orcs.esp
-     Westly's Female Head Pack-Humans.esp
-     Westly's High Elf Male Headpack.esp
-     Westly's Breton Male Headpack.esp
-     Westly's Imperial Male Headpack.esp
-     Westly's Wood Elf Male Headpack.esp
-     Westly's Nord Male Headpack.esp
-     Westly's Orc Male Headpack.esp
-     Westly's Redguard Male Headpack.esp
-     Westly's Redguard Male Headpack (Weight Fix).esp
-     Westly's Young Male Mystic Headpack.esp
-     Westly's Redguard Male Headpack (Weight Fix).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37344,6 +37772,27 @@ Werewolves BM add-on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Westly FCOT clothes in Tamriel Rebuilt 2.0 [Aoimevelho]
+
+[Note]
+ ! There is a new version of Aoimevelho's "Westly FCOT clothes in Tamriel Rebuilt". You should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/42652/
+TR_WestlyFCOT_Addon.ESP
+
+[Patch]
+ "[With "Westly FCOT clothes in Tamriel Rebuilt" by Aoimevelho] some Tamriel Rebuilt NPCs are now wearing wonderful outfits from Westly's "Fine Clothiers of Tamriel"."
+ (Ref: http://www.nexusmods.com/morrowind/mods/42652/ )
+TR_WestlyFCOT_Addon2.ESP
+[ALL Westly_Presents_FCOT.esp
+     TR_Data.esm
+     TR_Mainland.esm]
+
+[Order]
+Westly_Presents_FCOT.esp
+TR_WestlyFCOT_Addon2.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Westly Presents-Mog Head Pack & BB Mogs [Westly]
 
 [Requires]
@@ -37362,6 +37811,27 @@ _Mog_Race_v4b.esp
 [Order]
 _Mog_Race_v4b.esp
 Westly Presents-BB Mog.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Westly's Headpacks [Westly]
+
+[Conflict]
+ Westly's individual headpacks are already included in Westly's Master Headpack.
+ (Ref: "Westly's Master Headpack v1 README.txt")
+Westly's Master Headpack X.esp
+[ANY Westly's Female Headpack - Elves and Orcs.esp
+     Westly's Female Head Pack-Humans.esp
+     Westly's High Elf Male Headpack.esp
+     Westly's Breton Male Headpack.esp
+     Westly's Imperial Male Headpack.esp
+     Westly's Wood Elf Male Headpack.esp
+     Westly's Nord Male Headpack.esp
+     Westly's Orc Male Headpack.esp
+     Westly's Redguard Male Headpack.esp
+     Westly's Redguard Male Headpack (Weight Fix).esp
+     Westly's Young Male Mystic Headpack.esp
+     Westly's Redguard Male Headpack (Weight Fix).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38167,11 +38637,10 @@ World_Of_Faces.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wrye Patches [Wrye]
-; (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
 
 [Requires]
- All of the Wrye Patches require both Tribunal and Bloodmoon be installed.
- (Ref: http://wrye.ufrealms.net/Wrye Patches.html )
+ "Note: All ["Wrye Patches"] require that both Tribunal and Bloodmoon be loaded."
+ (Ref: http://wryemusings.com/Wrye%20Patches.html )
 [ANY Wrye Patches A.esp
      Wrye Patches A1.esp
      Wrye Patches B.esp
@@ -38184,37 +38653,25 @@ World_Of_Faces.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
 
+;;Wrye Patches A
+
 [Conflict]
- The "A" version is for vanilla Morrowind, the "A1" version depends on Avenger's female armor.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+ Don't load both plugins:
+  Wrye Patches A.esp - "Built on top of the standard Bethesda installation."
+  Wrye Patches A1.esp - "Built on top of additional 3rd party mods [...] you'll need to have the appropriate 3rd party mods installed."
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches A.esp
 Wrye Patches A1.esp
 
 [Conflict]
- According to Wrye's documentation, you should not load Avenger's female armor plugins along with the A1 patch.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+ You should not load "Avenger's Female Armor" or "Female Armor Tribunal" plugins along with the A1 patch.
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches A1.esp
 [ANY AV_female_armor.esp
      AV_fem_armor_Trib.esp]
 
-[Conflict]
- According to Wrye's documentation, you should not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches C1.esp
-[ANY AV_fem_shirts.esp
-     AV_fem_robes.esp
-     AV_fem_robes_BM.esp
-     AV_fem_robes_Trib.esp
-     Prosey female pants replace.esp]
-
-[Conflict]
- According to Wrye's documentation, you should not load Daduke's key replacer plugin along with the M1 patch.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
-Wrye Patches M1.esp
-Key Replacer Trib & BM.esp
-
 [Requires]
- "Wrye Patches A1.esp" requires "LeFemmArmor.esp" or any compilation that includes it.
+ "Wrye Patches A1.esp" requires Bethesda's "LeFemm Armor", or any compilation that includes it.
 Wrye Patches A1.esp
 [ANY LeFemmArmor.esp
      OfficialMods_v5.esp
@@ -38223,21 +38680,321 @@ Wrye Patches A1.esp
      Taddeus'BalancedArmors.esp
      Taddeus'BalancedArmors_Rotate.esp]
 
+;;Dragon32: Order rules for those that just include the Bethesda mod without re-balancing stats.
+[Order]
+LeFemmArmor.esp
+Wrye Patches A1.esp
+
+[Order]
+OfficialMods_v5.esp
+Wrye Patches A1.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Wrye Patches A1.esp
+
+;;Dragon32: Makes changes to Beth's Adamantium Armor
+[Order]
+adamantiumarmor.esp
+Wrye Patches A.esp
+
+[Order]
+adamantiumarmor.esp
+Wrye Patches A1.esp
+
+[Conflict]
+ "[Wrye's "Wrye Patches" are] primarily concerned with rationalizing names so that items are more accessible both in inventories and in the spell menu."
+ Other mods change the statistics or graphics of those items resulting in a conflict. If you use TESTool or similar utility to generate a Merged Objects plugin then the name changes from "Wrye Patches" and the item statistic or graphical changes from the other mod will both be present in your game.
+[ANY Wrye Patches A.esp
+     Wrye Patches A1.esp]
+[ALL [ANY AIM_MW_1dot0.esp
+          AIM_MW_BM_1dot0.esp
+          AIM_MW_TB_1dot0.esp
+          AIM_MW_TB_BM_1dot0.esp
+          Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+          Better armor (rev1 Daedrik).esp
+          Better armor (rev1_BoundDaedrArm).esp
+          Better armor (rev2_Dwemer).esp
+          Better armor (rev3_Ebony).esp
+          Better armor (rev4 Chitin).esp
+          Better armor (rev5_Steel).esp
+          Better armor (rev6_Iron).esp
+          Better armor (rev7_Templar).esp
+          Better armor (rev8_Imperial(AD-rome).esp
+          Better armor (rev8_Imperial(STANDART).esp
+          Better_Armor (Rev.10 - Orcish-AD)Eng.esp
+          Better armor (rev11_Indoril(AD).esp
+          Better Armor (rev11_Indoril(ST).esp
+          Better armor (rev12_Furs&Nord&Leather).esp
+          Better armor (rev14_Glass).esp
+          Better_Armor(Tb_pack_baseEN).esp
+          Better_Armor(Tb_pack_FULL).esp
+          Better Morrowind Armor.esp
+          BTB - Equipment.esp
+          C&BArmors.esp
+          Complete Armor.esp
+          Complete Armor Joints.esp
+          DA (Chitin).esp
+          DA (Daedric).esp
+          DA (Dwemer).esp
+          DA (Ebony).esp
+          DA (Glass).esp
+          DA (Imperial).esp
+          DA (Indoril).esp
+          DA (Iron).esp
+          DA (Netch Leather).esp
+          DA (Nordic Fur).esp
+          DA (Steel).esp
+          DA (Templar).esp
+          H.E.L.L.U.V.A. Awesome Armor_Completion Set.esp
+          HELLUVA Balanced BTB.esp
+          HELLUVA Balanced BTB CS.esp
+          HELLUVA Balanced Complete.ESP
+          HELLUVA Balanced Armor.esp
+          HG Armour Balance.esp
+          OB_Style Quivers And Bows.esp
+          OB_Style Quivers And Bows 4$.esp
+          OB_Style Quivers And Bows.esp
+          OB_Style Auto Quivers And Bows_CAJ.esp
+          OB_Style Quivers And Bows 4$_CAJ.esp
+          OB_Style Quivers And Bows_CAJ.esp
+          Taddeus'BalancedArmors(light).esp
+          Taddeus'BalancedArmors.esp]
+     [NOT Merged_Objects.esp]]
+
+;;Wrye Patches B
+
+[Conflict]
+ "[Wrye's "Wrye Patches" are] primarily concerned with rationalizing names so that items are more accessible both in inventories and in the spell menu."
+ Other mods change the statistics or graphics of those items resulting in a conflict. If you use TESTool or similar utility to generate a Merged Objects plugin then the name changes from "Wrye Patches" and the item statistic or graphical changes from the other mod will both be present in your game.
+Wrye Patches B.esp
+[ALL [ANY Balance - items.esp
+          Book Jackets - Bloodmoon - BookRotate.esp
+          Book Jackets - Bloodmoon.esp
+          Book Jackets - Morrowind - BookRotate.esp
+          Book Jackets - Morrowind.esp
+          Book Jackets - Tribunal - BookRotate.esp
+          Book Jackets - Tribunal.esp
+          Book Rotate - Bloodmoon v5.3.esp
+          Book Rotate - Morrowind v1.1.esp
+          Book Rotate - Tribunal v5.3.esp
+          BTB - Equipment.esp
+          BTB - Settings.esp
+          BTB - Settings (Alternate).esp
+          Dwemer Book's-TR.esp
+          Dwemer Book's.esp
+          Illy's Dirty Books.ESP
+          Librarian with Jackets & Rotate BM Trib.esp
+          Librarian with Jackets BM Trib.esp
+          PSsorticon.esp
+          Scrollsv1.1.esp]
+     [NOT Merged_Objects.esp]]
+
+;;Wrye Patches C
+
+[Conflict]
+ According to Wrye's documentation, you should not load Avenger's female shirts/robes or Prosey Female Pants plugins along with the C1 patch.
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches C1.esp
+[ANY AV_fem_shirts.esp
+     AV_fem_robes.esp
+     AV_fem_robes_BM.esp
+     AV_fem_robes_Trib.esp
+     Prosey female pants replace.esp]
+
 [Conflict]
  The "C" version is for vanilla Morrowind, the "C1" version depends on Avenger's female shirts/robes, and Prosey's female pants.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches C.esp
 Wrye Patches C1.esp
 
 [Conflict]
+ "[Wrye's "Wrye Patches" are] primarily concerned with rationalizing names so that items are more accessible both in inventories and in the spell menu."
+ Other mods change the statistics or graphics of those items resulting in a conflict. If you use TESTool or similar utility to generate a Merged Objects plugin then the name changes from "Wrye Patches" and the item statistic or graphical changes from the other mod will both be present in your game.
+[ANY Wrye Patches C.esp
+     Wrye Patches C1.esp]
+[ALL [ANY Better Clothes_v1.1.esp
+          Better Clothes_v1.1_nac.esp
+          Better Clothes Complete (BTB Edit).esp
+          BetterClothes_Patch.esp
+          BetterClothesBloodmoonPlus1.5.esp
+          BetterClothesForTB.esp
+          BTB - Equipment.esp
+          Clean MCFC_1.0.ESP
+          IceBradyHurdyRobeReplacerALL.esp
+          IceBradyHurdyRobeReplacerALL (BTB Edit).esp
+          IceBradyHurdyRobeReplacerBM.esp
+          IceBradyHurdyRobeReplacerMW.esp
+          IceBradyHurdyRobeReplacerPLUS.esp
+          IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
+          IceBradyHurdyRobeReplacerTB.esp
+          IceNioLivRobeReplacerALL.esp
+          IceNioLivRobeReplacerALL (BTB Edit).esp
+          IceNioLivRobeReplacerBM.esp
+          IceNioLivRobeReplacerMW.esp
+          IceNioLivRobeReplacerPLUS.esp
+          IceNioLivRobeReplacerPLUS (BTB Edit).esp
+          IceNioLivRobeReplacerTB.esp
+          LeftGloves.esp
+          LeftGloves_Addon_v2.esp
+          More Better Clothes.ESP
+          UF_HortRobeF001.esp
+          UFR_v3dot2.esp
+          UFR_v3dot2_noRobe.esp]
+     [NOT Merged_Objects.esp]]
+
+;;Dragon32: dirty ref in DN GDR for common_robe_05_c
+[Order]
+DN-GDRv1.esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv1.esp
+Wrye Patches C1.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Wrye Patches C1.esp
+
+;;Wrye Patches G
+
+;;Dragon32: All make changes to sRestIllegal GMST; to me Wrye's one scans better than Wakim's and BTB's makes more extensive changes to resting mechanics. All make other GMST changes which don't conflict so went with these Order rules rather than Conflict rules
+
+[Order]
+Balance - game settings.esp
+Wrye Patches G.esp
+
+[Order]
+Wrye Patches G.esp
+BTB - Settings.esp
+
+[Order]
+Wrye Patches G.esp
+BTB - Settings (Alternate).esp
+
+;;Wrye Patches M
+
+[Conflict]
+ According to Wrye's documentation, you should not load Daduke's key replacer plugin along with the M1 patch.
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions )
+Wrye Patches M1.esp
+[ANY Key Replacer Bloodmoon.esp
+     Key Replacer MW.esp
+     Key Replacer Trib & BM.esp
+     Key Replacer Tribunal.esp]
+
+[Conflict]
  The "M" version is for vanilla Morrowind, the "M1" version depends on Daduke's Key Replacer.
- (Ref: http://wrye.ufrealms.net/Wrye%20Patches.html#AlternateVersions )
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions )
 Wrye Patches M.esp
 Wrye Patches M1.esp
 
 [Note]
  "Wrye Patches M.esp" incorrectly defines the NIF model for object "misc_dwrv_ark_key00" (key to Arkngthand) as "dd\misc_dwrv_Ark_key00.nif". It should be: "m\misc_dwrv_Ark_key00.nif". This model is supposed to be used for the version "Wrye Patches M1.esp", but apparently got used in "Wrye Patches M.esp" by mistake. So you may run across this as a missing or incorrect model in your game. It is easy to correct the name of the model in the Construction Set should you encounter this problem.
 [SIZE 63823 Wrye Patches M.esp]
+
+[Conflict]
+ "Wrye Patches M.esp" and "Wrye Patches M1.esp" rename Morrowind's keys. There is no need to use Shadowriath's "Key Replacer MW Renamer" or Lurlock's "Key Namer" as well.
+ (Ref: http://wryemusings.com/Wrye%20Patches.html#AlternateVersions ) 
+[ANY Wrye Patches M.esp
+     Wrye Patches M1.esp]
+[ANY Clean Key Replacer MW Renamer.esp
+     KeyNamer.esp]
+
+[Conflict]
+ "[Wrye's "Wrye Patches" are] primarily concerned with rationalizing names so that items are more accessible both in inventories and in the spell menu."
+ Other mods change the statistics or graphics of those items resulting in a conflict. If you use TESTool or similar utility to generate a Merged Objects plugin then the name changes from "Wrye Patches" and the item statistic or graphical changes from the other mod will both be present in your game.
+[ANY Wrye Patches M.esp
+     Wrye Patches M1.esp]
+[ALL [ANY AllSoulgemsTest.esp
+          Better Soul Gems v2.0.ESP
+          BetterSoulGerms.esp
+          master_index.esp
+          moons_soulgems.esp
+          NB_Soulgems_ReplacerCLEAN.esp
+          Real Misc Items GFX.esp
+          SirLuthor-Tools.esp]
+     [NOT Merged_Objects.esp]]
+
+;;Dragon32: dirty ref in DN GDR for misc_dwrv_gear00
+[Order]
+DN-GDRv1.esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv1.esp
+Wrye Patches M1.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Wrye Patches M1.esp
+
+;;Wrye Patches W
+
+;; Dragon32: Wrye Patches W can safely overwrite AEA
+;; http://wryemusings.com/Wrye%20Patches.html : "Area Effect Arrows will not appear in the game unless you load Bethesda's Area Arrows plugin (which adds a shop in Vivec, Foreign Quarter)."
+[Order]
+AreaEffectArrows.esp
+Wrye Patches W.esp
+
+;;by Xeth-Ban
+[Order]
+AreaEffectArrows XB Edition.esp
+Wrye Patches W.esp
+
+;;from Particle_Arrow_Replacer_v30
+[Order]
+Area Effect Arrows.esp
+Wrye Patches W.esp
+
+;;BTB's edited version
+[Order]
+Area Effect Projectiles.esp
+Wrye Patches W.esp
+
+;;BTB's edited version
+[Order]
+Area Effect Projectiles (PAR Edit).esp
+Wrye Patches W.esp
+
+[Conflict]
+ "[Wrye's "Wrye Patches" are] primarily concerned with rationalizing names so that items are more accessible both in inventories and in the spell menu."
+ Other mods change the statistics or graphics of those items resulting in a conflict. If you use TESTool or similar utility to generate a Merged Objects plugin then the name changes from "Wrye Patches" and the item statistic or graphical changes from the other mod will both be present in your game.
+Wrye Patches W.esp
+[ALL [ANY Arrow Enchant.ESP
+          Assassins Armory - Arrows.esp
+          Balance - items.esp
+          BTB - Equipment.esp
+          Enchanted Weapon Variety BM.esp
+          Enchanted Weapon Variety ME.esp
+          Enchanted Weapon Variety.esp
+          Marksman Enhanced v1.2.esp
+          newarrows - crossbow realism.esp
+          newarrows.esp
+          newarrowsLITE.esp
+          Steel Broadsword Fix BM.esp
+          Steel Broadsword Fix.esp
+          Taddeus'BalancedWeapons.esp
+          Taddeus'BalancedWeapons_Rotate.esp
+          Xenn's Marksman Overhaul.ESP]
+     [NOT Merged_Objects.esp]]
+
+;;Dragon32: dirty ref in DN GDR for dwarven crossbow and bm_ebonyarrow_s
+[Order]
+DN-GDRv1.esp
+Wrye Patches W.esp
+
+[Order]
+DN-GDRv1_NOM.esp
+Wrye Patches W.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
