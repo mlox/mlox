@@ -452,6 +452,72 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Absolutely Aleatory Accoutrements 2.2 [Raym]
+
+;;Dragon32:  "I suggest you load it [Raym's Absolutely Aleatory Accoutrements.ESM] immediately after Morrowind, Tribunal and Bloodmoon."
+;;Ref: "Raym's Absolutely Aleatory Accoutrements 2.2 Readme.txt"
+;;Order rule for after MPP so changes show up and we're recommending a Merged Object plugin anyway
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Raym's Absolutely Aleatory Accoutrements <VER>.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Raym's Absolutely Aleatory Accoutrements <VER>.esm
+
+[Note]
+ !! "Since this mod modifies almost every single NPC in the game, it's pretty likely that there will be conflicts with other mods; to be safe, you may want to merge objects for your mod list."
+ !! (Ref: "Raym's Absolutely Aleatory Accoutrements 2.2 Readme.txt")
+[ALL Raym's Absolutely Aleatory Accoutrements <VER>.esm
+     [NOT Merged_Objects.esp]]
+
+;;Westly's Fine Clothiers of Tamriel addons
+
+[Conflict]
+ Only use one plugin:
+  AAA 2.2 Addon - Westly.ESP - Used together with Westly's "Fine Clothiers of Tamriel" mod.
+  AAA 2.2 Addon - Westly (standalone).ESP - Used  when someone doesn't have Westly's "Fine Clothiers of Tamriel" mod loaded.
+ (Ref:"AAA 2.2 Addon - Westly Readme.txt" and "AAA 2.2 Addon - Westly (standalone) Readme.txt")
+AAA <VER> Addon - Westly.ESP
+AAA <VER> Addon - Westly (standalone).ESP
+
+[Conflict]
+ This is a standalone addon for Raym's "Absolutely Aleatory Accoutrements" and should not be run together with Westly's "Fine Clothiers of Tamriel" mod. 
+ (Ref: "AAA 2.2 Addon - Westly (standalone) Readme.txt")
+AAA <VER> Addon - Westly (standalone).ESP
+Westly_Presents_FCOT.esp
+
+[Requires]
+ "The items in [Westly's "Fine Clothiers of Tamriel"] mod were designed with the Better Bodies mod in mind."
+ (Ref: "Westly_Presents_FCOT_README.txt")
+AAA <VER> Addon - Westly (standalone).ESP
+Better Bodies.esp
+
+;;Dragon32: Probably not needed but...
+[Order]
+AAA <VER> Addon - Vanilla.ESP
+AAA <VER> Addon - Westly (standalone).ESP
+
+[Requires]
+ "["AAA 2.2 Addon - Westly.ESP"] is to be used together with the original ["Fine Clothiers of Tamriel"] mod by Westly."
+ (Ref:"AAA 2.2 Addon - Westly Readme.txt")
+AAA <VER> Addon - Westly.ESP
+Westly_Presents_FCOT.esp
+
+;;Dragon32: Probably not needed but...
+[Order]
+Westly_Presents_FCOT.esp
+AAA <VER> Addon - Westly.ESP
+
+[Order]
+AAA <VER> Addon - Vanilla.ESP
+AAA <VER> Addon - Westly.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Acheron's Camping Gear 2 [Acheron]
 
 [Order]
@@ -2189,15 +2255,16 @@ AIM- Unarmored BoosterMY_TB_BM.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 4924 AIM- Unarmored Booster MW.esp]
 
-;; Dragon32 - Counciler's mod is invalidated by the MPP, see the MPP entry
+;; Dragon32 - Counciler's and Cjad's mods are invalidated by the MPP, see the MPP entry
 [Conflict]
- Alaisiagae's "Armor: Integrative Modifications" includes the fixes for the missing Templar armor pauldrons included in Counciler's "Templar Pauldrons Fix".
+ Alaisiagae's "Armor: Integrative Modifications" includes the fixes for the missing Templar armor pauldrons included in Counciler's "Templar Pauldrons Fix" and Cjad's "Templar Pauldron Fix".
 [ANY AIM_MW_TB_BM_1dot0.esp
      AIM_MW_TB_1dot0.esp
      AIM_MW_1dot0.esp
      AIM_MW_BM_1dot0.esp]
 [ANY Clean Templar Pauldron Fix.esp
-     Clean_Templar_Pauldron_Fix_v11.esp]
+     Clean_Templar_Pauldron_Fix_v11.esp
+     Cjad's Templar Pauldron Fix.esp]
 
 ;; Dragon32 - Aedroth's mod is invalidated by the MPP, see the MPP entry
 [Conflict]
@@ -3401,6 +3468,97 @@ BS_1.0.1.esp
 [Order]
 BS_1.0.1.esp
 Clean BS_GM_1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balanced Weapons 1.0 [Number One]
+
+[Patch]
+ "[Number One's "Balanced Assassins Amory.esp"] balances the assassins armory plugin by Michael 'HelioS' Bennett according to [Number One's] balanced weapons and armor plugins."
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6693
+ (Ref: "Balanced Assassins Amory.txt")
+Balanced Assassins Amory.esp
+[ALL [ANY Balanced Weapons by Number One.esp
+          Balanced weapons and armor.esp]
+     Assassins Armory.esm]
+
+;;Dragon32: Ordering from TESPCD check
+[Order]
+Balanced Weapons by Number One.esp
+Balanced Assassins Amory.esp
+
+[Order]
+Balanced weapons and armor.esp
+Balanced Assassins Amory.esp
+
+[Order]
+Assassins Armory - No Scripts.esp
+Balanced Assassins Amory.esp
+
+[Order]
+Assassins Armory - Bolt Rifles.esp
+Balanced Assassins Amory.esp
+
+;;For "TAD_AssassinsArmoryArrows.esp" see Taddeus' Balanced Mods [Taddeus]
+
+;;Dragon32: Really not sure on the most recent name for House of Spears, added both plugins I have
+[Conflict]
+ "[Number One's "Balanced House of Spears.esp"] takes the wonderful work of Nazz in the House of Spears mod and balances them according to my Balanced Weapons mod"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6693
+ (Ref: "Balanced House of Spears Readme.txt")
+[ANY House_spear.esp
+     House of Spears3.0.esp]
+[ANY Balanced Weapons by Number One.esp
+     Balanced weapons and armor.esp]
+
+[Conflict]
+ You should use Number One's "Balanced House of Spears.esp" instead of Nazz's original plugin.
+ (Ref: "Balanced House of Spears Readme.txt")
+Balanced House of Spears.esp
+[ANY House_spear.esp
+     House of Spears3.0.esp]
+
+[Order]
+Balanced Weapons by Number One.esp
+Balanced House of Spears.esp
+
+[Order]
+Balanced weapons and armor.esp
+Balanced House of Spears.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balanced Weapons and Armor 2.0 [Number One]
+
+;;Dragon32: Can't find "Balanced Armor"
+[Conflict]
+ "[Number One's "Balanced Weapons and Armor"] combines [his] original 2 mods "balanced weapons" and "balanced armor"into one."
+ (Ref: "BWA readme.txt")
+Balanced weapons and armor.esp
+Balanced Weapons by Number One.esp
+
+;;Dragon32: Includes Adamantium Armor
+[Order]
+adamantiumarmor.esp
+Balanced weapons and armor.esp
+
+[Order]
+OfficialMods_v5.esp
+Balanced weapons and armor.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+Balanced weapons and armor.esp
+
+[Order]
+super_adventurers302.esp
+Balanced weapons and armor.esp
+
+[Note]
+ "Balanced Weapons and Armor" by Number One uses a number of resources from Fidel_'s "Blademaster Resource pack". Whilst you do not need Fidel_'s plugin enabled you will need the resources from his "Blademaster Resource pack" installed: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1225
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8634 )
+[ALL Balanced weapons and armor.esp
+     [NOT blademaster.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6260,6 +6418,24 @@ BTB - Equipment.esp
 BTB - Equipment.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ "[BTB's "Game Improvements"] added "LegionUniform" script to Imperial Studded Cuirass & Imperial Newstscale Cuirass".
+ The other mods identified (NukeouT's "Imperial Uniforms", Santtu Pajukanta's "Imperial Legion Uniforms" and Maelstrom's "More Legion Uniforms") do a similar thing. However, these other mods also add the "LegionUniform" script to the Imperial Silver Cuirass and Imperial Dragonscale Cuirass.
+ (Ref: "Changes - Equipment.txt")
+[ALL BTB - Equipment.esp
+     [ANY Imperial Uniforms T B (v1.2).esp
+          Imperial Uniforms (v1.1).esp
+          ImperialLegionUniform.esp
+          More Legion Uniforms.esp]]
+
+[Conflict]
+ BTB's "Game Improvements" includes the fixes for the missing Templar armor pauldrons included in Counciler's "Templar Pauldrons Fix" and Cjad's "Templar Pauldron Fix".
+ (Ref: "Changes - Equipment.txt")
+BTB - Equipment.esp
+[ANY Clean Templar Pauldron Fix.esp
+     Clean_Templar_Pauldron_Fix_v11.esp
+     Cjad's Templar Pauldron Fix.esp]
 
 ;;Dragon32: BTB's changes AR values etc of Adamantium armour
 [Order]
@@ -10693,6 +10869,14 @@ Isirion_RealisticWeather.esp
 [Order]
 Expanded Sounds.esp
 Sol-Weather Tweak.esp
+
+[Order]
+Expanded Sounds.esp
+SeriousWeather_BM_v1_00.esp
+
+[Order]
+Expanded Sounds.esp
+SeriousWeather_v1_00.esp
 
 ;;Ref: http://forums.bethsoft.com/topic/1470111-expanded-sounds-awful-noise-chargen/
 [Order]
@@ -25873,6 +26057,56 @@ Object Permanence v2.esm
 Better Heads.esm
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Objects and Game Balance Mod 1.8 [Demens Ignis and DreadNoughtOmnis]
+
+[Conflict]
+ Demens Ignis and DreadNoughtOmnis's "Objects and Game Balance Mod" includes XmirroR's "Plain Paper Fix"
+ (Ref: "Objects and Game Balance Mod v. 1.8 Readme.txt")
+dej_plain_paper_fix.esp
+Objects and Game Balance Mod Public.esp
+
+;;Dragon32: Plain Paper Fix ckl [claudekennilol] shuld overwrite (q.v.)
+[Order]
+Objects and Game Balance Mod Public.esp
+PlainPaperFix_ALL.esp
+
+[Order]
+Objects and Game Balance Mod Public.esp
+PlainPaperFix_MW+BM.esp
+
+[Order]
+Objects and Game Balance Mod Public.esp
+PlainPaperFix_MW+TRIB.esp
+
+[Order]
+Objects and Game Balance Mod Public.esp
+PlainPaperFix_MWonly.esp
+
+[Conflict]
+ "When using [Demens Ignis and DreadNoughtOmnis's "Objects and Game Balance Mod"] all "Imperial" cuirasses and helmets now have the script of "Legion Uniform", which allows the player to wear them and be acknowledged by members of the Legion.  This includes cuirasses and helms of "unofficial" types, including newtscale, dragonscale, and other such armor types."
+ The other mods identified (NukeouT's "Imperial Uniforms", Santtu Pajukanta's "Imperial Legion Uniforms" and Maelstrom's "More Legion Uniforms") do a similar thing, there's is no need to run them with Demens Ignis and DreadNoughtOmnis's "Objects and Game Balance Mod"
+ (Ref: "Objects and Game Balance Mod v. 1.8 Readme.txt")
+Objects and Game Balance Mod Public.esp
+[ANY Imperial Uniforms T B (v1.2).esp
+     Imperial Uniforms (v1.1).esp
+     ImperialLegionUniform.esp
+     More Legion Uniforms.esp]
+
+[Conflict]
+ "The ranges of nearly all weapons have been changed [by Demens Ignis and DreadNoughtOmnis's "Objects and Game Balance Mod"] to reflect their actual length, as it was very strange that a dagger, a fist, and a claymore had exactly the same effective reach."
+ (Ref: "Objects and Game Balance Mod v. 1.8 Readme.txt")
+Objects and Game Balance Mod Public.esp
+Weapon Range Balance.esp
+
+[Conflict]
+ Demens Ignis and DreadNoughtOmnis's "Objects and Game Balance Mod" makes a similar attempt to correct the Unarmored skill as does DinkumThinkum's "Unarmored Corrector".
+ (Ref: "Objects and Game Balance Mod v. 1.8 Readme.txt")
+Objects and Game Balance Mod Public.esp
+[ANY Unarmored_Corrector_V01_BM.esp
+     Unarmored_Corrector_V01_TRIB.esp]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Oblivion Mithril [CanadianIce]
 
@@ -26742,7 +26976,7 @@ PTE - BC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Plain Paper Fix [dej]
+;; @Plain Paper Fix [XmirroR]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
@@ -26751,7 +26985,7 @@ PTE - BC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Plain Paper Fix ckl [claudekennilol]
+;; @Plain Paper Fix ckl 1.0 [claudekennilol]
 
 [Conflict]
  Only use one plugin:
@@ -26765,8 +26999,15 @@ PlainPaperFix_MW+BM.esp
 PlainPaperFix_MW+TRIB.esp
 PlainPaperFix_MWonly.esp
 
+;; expdep
+[Requires]
+ "PlainPaperFix_MWonly.esp" uses Tribunal function setdelete so it requires one of the expansions.
+PlainPaperFix_MWonly.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
 [Conflict]
- claudekennilol's "Plain Paper Fix ckl" is an alternative to dej's "Plain Paper Fix" because dej's alters the ID of the paper making it incompatible with mods that require the game's paper to make other items.
+ claudekennilol's "Plain Paper Fix ckl" is an alternative to XmirroR's "Plain Paper Fix" because XmirroR's alters the ID of the paper making it incompatible with mods that require the game's paper to make other items.
  (Ref: "Plain Paper Fix.txt")
 [ANY PlainPaperFix_ALL.esp
      PlainPaperFix_MW+BM.esp
@@ -28954,6 +29195,24 @@ SauronsEnchantments252.esp
 SauronsAbode252.esp
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Scatter Mod 1.0 [Number One]
+
+[Conflict]
+ Only use one plugin:
+  Scatter Mod.esp - The standard mod
+  Scatter Mod (with Loot Balance).esp - Also includes Number One's "Loot Balance" mod.
+ (Ref: "Scatter Mod Readme.txt")
+Scatter Mod (with Loot Balance).esp
+Scatter Mod.esp
+
+[Conflict]
+ Number One's "Scatter Mod (with Loot Balance).esp" includes his "Loot Balance" mod.
+ (Ref: "Scatter Mod Readme.txt")
+Scatter Mod (with Loot Balance).esp
+Loot Balance.esp
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scent of Blood 1.2 [AlienSlof & Peter]
 
@@ -29302,6 +29561,28 @@ Serabul Redesigned Vivec Patch.esp
 Serabul - NOM Patch.esp
 [ALL Serabul.esp
      NOM 2.13.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Serious Weather 1.0 [Cyrano]
+
+[Conflict]
+ "Activate only one or the other plugin!":
+  SeriousWeather_BM_v1_00.esp - If you have Bloodmoon
+  SeriousWeather_v1_00.esp - If you do not
+ (Ref: "SeriousWeather_Readme.txt")
+SeriousWeather_BM_v1_00.esp
+SeriousWeather_v1_00.esp
+
+[Conflict]
+ "This plug-in will conflict with any other mod that [...] alter regional weather"
+ (Ref: "SeriousWeather_Readme.txt")
+[ANY SeriousWeather_BM_v1_00.esp
+     SeriousWeather_v1_00.esp]
+[ANY NiceWeather_0617.esp
+     Realistic Weather v2.0.esp
+     Isirion_RealisticWeather.esp
+     Sol-Weather Tweak.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31605,7 +31886,7 @@ Taddeus'BalancedArmors.esp
 Taddeus'BalancedArmors_Rotate.esp
 
 [Note]
- Taddeus'BalancedArmors is compatibale with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedArmors - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ Taddeus'BalancedArmors is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedArmors - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
 [ALL [ANY Taddeus'BalancedArmors.esp
           Taddeus'BalancedArmors_Rotate.esp]
      [ANY Balance - items.esp
@@ -31749,7 +32030,7 @@ Taddeus'BalancedObjects_Rotate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Taddeus' Balanced Weapons [Taddeus]
+;; @Taddeus' Balanced Weapons 1.3 [Taddeus]
 
 [Conflict]
  Taddeus'BalancedWeapons includes a balanced version of the following plugin: (official) Area Effect Arrows.
@@ -32812,21 +33093,32 @@ TLM - AdjMod - Spuzzum's Interior Daylight.esp
 [Conflict]
  "any mod that provides armor or weather penalties and bonuses will be duplicated by the TLM - Sneak Modifiers part of this mod. This applies to mods such as LDones & WDog's Armor Effects-LD"
  (Ref: "TLM - ~Readme.htm")
-TLM - Sneak Modifiers (Code).esp
+[ANY TLM - Sneak Modifiers (Code).esp
+     TLM - Complete.esp]
 [ANY Armor Effects-LD 2.0-WD.esp
      Armor Effects-LD 2.0-WD (No Agility Penalty).esp]
 
 [Conflict]
  "any mod that provides armor or weather penalties and bonuses will be duplicated by the TLM - Sneak Modifiers part of this mod. This applies to mods such as Vanhikes' Light Based Sneaking"
  (Ref: "TLM - ~Readme.htm")
-TLM - Sneak Modifiers (Code).esp
+[ANY TLM - Sneak Modifiers (Code).esp
+     TLM - Complete.esp]
 [ANY LBS_Full v1.4(trib).esp
      LBS_Lite v1.4(trib).esp]
 
 [Conflict]
+ "any mod that provides [...] weather penalties and bonuses will be duplicated by the TLM - Sneak Modifiers part of this mod."
+ (Ref: "TLM - ~Readme.htm")
+[ANY TLM - Sneak Modifiers (Code).esp
+     TLM - Complete.esp]
+[ANY SeriousWeather_BM_v1_00.esp
+     SeriousWeather_v1_00.esp]
+
+[Conflict]
  "any other lighting alteration mod will be made impotent by installing TLM. This includes such mods as CoolDemon's True Lights And Darkness"
  (Ref: "TLM - ~Readme.htm")
-TLM - Sneak Modifiers (Code).esp
+[ANY TLM - Sneak Modifiers (Code).esp
+     TLM - Complete.esp]
 [ANY True_Lights_And_Darkness_0.5.esp
      True_Lights_And_Darkness_1.0-NoDaylight.esp
      True_Lights_And_Darkness_1.1.esp
@@ -37380,52 +37672,51 @@ farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Weapon Fix 1.77 [Varg 'Euthanasiologist' Axenov]
 
-[Requires]
- (Ref: "WeaponFix177.txt")
-[ANY WeaponFix164_WCM_addon.esp
-     WeaponFix164_Assassin_addon.esp
-     WeaponFix_anticheat.esp]
-WeaponFix177.esp
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 377906 weaponFix177.esp]
 
-;; expdep
+;;expdep
 [Requires]
- Uses Tribunal function: getweapondrawn.
+ This plugin uses the Tribunal function getweapondrawn so it requires one of the expansions.
 weaponFix177.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+;;Dragon32: "WeaponFix_anticheat.esp" just alters fEncumbranceStrMult GMST. Doesn't conflict with other Weapon Fix mods, BTB's or Wakim's game improvements
 
 [Conflict]
  WeaponFix144basic.esp is an older version without major effectiveness changes, which you should use by itself if you want just to fix the weight and some inconsistencies.
  (Ref: "WeaponFix177.txt")
 WeaponFix144basic.esp
-[ANY WeaponFix177.esp
+[ANY weaponFix177.esp
      WeaponFix164_WCM_addon.esp
-     WeaponFix164_Assassin_addon.esp
-     WeaponFix_anticheat.esp]
+     WeaponFix164_Assassin_addon.esp]
 
-[Requires]
- Use WeaponFix164_Assassin_addon.esp to add Weapon fixes to Assassin's Armory.
+[Patch]
+ Use WeaponFix164_Assassin_addon.esp to add weapon fixes to "Assassin's Armory".
  (Ref: "WeaponFix177.txt")
 WeaponFix164_Assassin_addon.esp
-[ALL WeaponFix177.esp
+[ALL weaponFix177.esp
      Assassins Armory.esm]
 
-[Requires]
- Use WeaponFix164_WCM_addon.esp to add Weapon fixes to farrp's Weapon Compilation Mod.
+[Patch]
+ Use WeaponFix164_WCM_addon.esp to add weapon fixes to farrp's "Weapon Compilation Mod".
  (Ref: "WeaponFix177.txt")
 WeaponFix164_WCM_addon.esp
-[ALL WeaponFix177.esp
+[ALL weaponFix177.esp
      [ANY farrp_WeaponCompilationMod_V1.esp
 	  farrp_WeaponCompilationMod_V1_NoLegendWeps.esp]]
 
 [Note]
- Weapon Fix only mentions v1.0 of farrp's weapon compilation mod, you are using v2.0. It is not clear if the Weapon Fix addon will work satisfactorily with this version.
+ Weapon Fix only mentions v1.0 of farrp's "Weapon Compilation Mod", you are using v2.0. It is not clear if the "Weapon Fix" addon will work satisfactorily with this version.
  (Ref: "WeaponFix177.txt")
 [ALL WeaponFix164_WCM_addon.esp
      farrp_WeaponCompilationMod_V2.esp]
 
 [Note]
- The Weapon Fix plugin does not include body parts for Leia's Double Wield Mod. This means the defensive weapons will not be visible in game. To fix this you will need to run TESTool's Merge Objects function and enable the Merged_Objects.esp.
+ The "Weapon Fix" plugin does not include body parts for Leia's Double Wield Mod. This means the defensive weapons will not be visible in game. To fix this you will need to run TESTool's Merge Objects function and enable the Merged_Objects.esp.
  (Ref: Dragon32, examined the plugins)
 [ALL Leias_Dual_Wield_03.esp
      weaponFix177.esp
@@ -37434,91 +37725,82 @@ WeaponFix164_WCM_addon.esp
 ; Following plugins are either supported by the main weaponFix177.esp plugin or
 ; through addons. "WeaponFix177.txt" says that Weapon Fix mods need to load
 ; last. (Dragon32)
-;
-; "Underwater Ruins" mentioned in readme - cannot find ESP file.
 
+; "Underwater Ruins" mentioned in readme - cannot find ESP file.
 
 [Order]
 Aduls_Arsenal.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 FW_Sabre.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 Leias_Dual_Wield_03.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 newarrows.esp
+weaponFix177.esp
+
+[Order]
 newarrowsLITE.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 Additions_Revamped__clean_.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 Re-coloured Ebony and Dwarven.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 The Arsenal.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 SOPBeta1.4.esp
+weaponFix177.esp
+
+[Order]
 SOP1.4Patch1.34.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 The_Swords_of_Morrowind.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 Assassins Armory - No Scripts.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+
+[Order]
 Assassins Armory - Arrows.esp
+weaponFix177.esp
+WeaponFix164_Assassin_addon.esp
+
+[Order]
 Assassins Armory - Bolt Rifles.esp
 weaponFix177.esp
 WeaponFix164_Assassin_addon.esp
-WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
 
 [Order]
 farrp_WeaponCompilationMod_V1.esp
+weaponFix177.esp
+WeaponFix164_WCM_addon.esp
+
+[Order]
 farrp_WeaponCompilationMod_V1_NoLegendWeps.esp
 weaponFix177.esp
-WeaponFix164_Assassin_addon.esp
 WeaponFix164_WCM_addon.esp
-WeaponFix_anticheat.esp
+
+[Order]
+farrp_WeaponCompilationMod_V2.esp
+weaponFix177.esp
+WeaponFix164_WCM_addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38712,6 +38994,7 @@ Wrye Patches A1.esp
           AIM_MW_TB_1dot0.esp
           AIM_MW_TB_BM_1dot0.esp
           Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+          Balanced weapons and armor.esp
           Better armor (rev1 Daedrik).esp
           Better armor (rev1_BoundDaedrArm).esp
           Better armor (rev2_Dwemer).esp
@@ -38758,6 +39041,7 @@ Wrye Patches A1.esp
           OB_Style Auto Quivers And Bows_CAJ.esp
           OB_Style Quivers And Bows 4$_CAJ.esp
           OB_Style Quivers And Bows_CAJ.esp
+          Objects and Game Balance Mod Public.esp
           Taddeus'BalancedArmors(light).esp
           Taddeus'BalancedArmors.esp]
      [NOT Merged_Objects.esp]]
@@ -38911,13 +39195,20 @@ Wrye Patches M1.esp
 [ANY Wrye Patches M.esp
      Wrye Patches M1.esp]
 [ALL [ANY AllSoulgemsTest.esp
+          Better Picks'n'Probs Diversity.ESP
           Better Soul Gems v2.0.ESP
           BetterSoulGerms.esp
+          JamesW's Lockpicks And Probes Retextures.esp
+          JamesW's Repairs Retex.esp
           master_index.esp
           moons_soulgems.esp
           NB_Soulgems_ReplacerCLEAN.esp
+          Objects and Game Balance Mod Public.esp
           Real Misc Items GFX.esp
-          SirLuthor-Tools.esp]
+          SirLuthor-Tools.esp
+          TIM_MW.esp
+          TIM_MW_JamesW.esp
+          TIM_MW_SirLuthor.esp]
      [NOT Merged_Objects.esp]]
 
 ;;Dragon32: dirty ref in DN GDR for misc_dwrv_gear00
@@ -38972,6 +39263,8 @@ Wrye Patches W.esp
 [ALL [ANY Arrow Enchant.ESP
           Assassins Armory - Arrows.esp
           Balance - items.esp
+          Balanced weapons and armor.esp
+          Balanced Weapons by Number One.esp
           BTB - Equipment.esp
           Enchanted Weapon Variety BM.esp
           Enchanted Weapon Variety ME.esp
@@ -38980,10 +39273,16 @@ Wrye Patches W.esp
           newarrows - crossbow realism.esp
           newarrows.esp
           newarrowsLITE.esp
+          Objects and Game Balance Mod Public.esp
           Steel Broadsword Fix BM.esp
           Steel Broadsword Fix.esp
           Taddeus'BalancedWeapons.esp
           Taddeus'BalancedWeapons_Rotate.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp
+          Weapon Range Balance.esp
+          weaponFix177.esp
+          WeaponFix144basic.esp
           Xenn's Marksman Overhaul.ESP]
      [NOT Merged_Objects.esp]]
 
