@@ -496,11 +496,6 @@ Westly_Presents_FCOT.esp
 AAA <VER> Addon - Westly (standalone).ESP
 Better Bodies.esp
 
-;;Dragon32: Probably not needed but...
-[Order]
-AAA <VER> Addon - Vanilla.ESP
-AAA <VER> Addon - Westly (standalone).ESP
-
 [Requires]
  "["AAA 2.2 Addon - Westly.ESP"] is to be used together with the original ["Fine Clothiers of Tamriel"] mod by Westly."
  (Ref:"AAA 2.2 Addon - Westly Readme.txt")
@@ -512,9 +507,14 @@ Westly_Presents_FCOT.esp
 Westly_Presents_FCOT.esp
 AAA <VER> Addon - Westly.ESP
 
-[Order]
+[Conflict]
+ "DO NOT use this plugin with "AAA 2.2 addon - Vanilla": you don't need it, and the two are NOT compatible."
+ (Ref: "AAA 2.2 Addon - Westly Readme.txt" and "AAA 2.2 Addon - Westly (standalone) Readme.txt")
+ As ESP files can only add items to levelled lists it is impossible to remove the items added by the Vanilla addon where they clash with those added by the Westly addon, or where the Westly addon gives more appropriate choices.
+ (Ref: http://forums.bethsoft.com/topic/1498128-rel-rayms-absolutely-aleatory-accoutrements-20/?p=23646232 )
+[ANY AAA <VER> Addon - Westly.ESP
+     AAA <VER> Addon - Westly (standalone).ESP]
 AAA <VER> Addon - Vanilla.ESP
-AAA <VER> Addon - Westly.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -832,6 +832,24 @@ MWInhabitants Freeform (Vol 1).esp
      Advanced Herbalism - TR & BM.esp
      Advanced Herbalism - TR.esp
      Advanced Herbalism - BM.esp]
+
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Advanced Herbalism - MO.esp
+
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Advanced Herbalism - TR & BM.esp
+
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Advanced Herbalism - TR.esp
+
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Advanced Herbalism - BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1811,7 +1829,13 @@ NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Antares' Big Mod 7.3d [Arcimaestro Antares]
+;; @Antares' Big Mod 7.3h [Arcimaestro Antares]
+
+;;Dragon32 - Can't do a version check as no Description information
+[Note]
+ ! The latest version of "Antares' Big Mod" is 7.3h, check if you need to upgrade:
+ ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892
+Antares' Big Mod <VER>.esp
 
 [Conflict]
  Antares' Big Mod includes these other mods. You should not run them at the same time.
@@ -1831,12 +1855,6 @@ Antares' Big Mod <VER>.esp
      Scout's Services <VER>.esp
      Smith's Services.esp
      You violated the law <VER>.esp]
-
-;;Dragon32 - this is weird, seems to display the Note whatever the version number actually is. I've spent ages trying to get this to work properly so it'll have to do.
-[Note]
- ! The latest version of "Antares' Big Mod" is 7.3d, check if you need to upgrade:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892
-[VER = 7.3d Antares' Big Mod <VER>.esp]
 
 [Requires]
  Uses Bloodmoon function: placeatme.
@@ -3056,7 +3074,17 @@ DW_assassination_VE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Assassins Armory [Michael 'HelioS' Bennett]
+;; @Assassins Armory 7.6 [Michael 'HelioS' Bennett]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Assassins Armory.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Assassins Armory.esm
 
 [Order]
 Assassins Armory.esm
@@ -3198,7 +3226,7 @@ Atmospheric Balmora for VBAnIW.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Atmospheric Sound Effects (ASE 3.0) [Duncan]
+;; @Atmospheric Sound Effects (ASE) 3.0 [Duncan]
 
 ;;See also: Illuminated Windows 1.2 [DrkAngl66]
 
@@ -3295,6 +3323,81 @@ AtmosphericSoundEffects-3.0-TBM.esp
 [Order]
 super_adventurers302.esp
 AtmosphericSoundEffects-3.0.esp
+
+;;Dragon32: ASE alters weather settings, if someone's got a weather mod loaded they they'll want that to take effect
+;;Ref: http://forums.bethsoft.com/topic/1215570-is-there-an-official-mod-confliction-thread/?p=18215928
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+NiceWeather_0617.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+NiceWeather_0617.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+NiceWeather_0617.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+Realistic Weather v2.0.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+Realistic Weather v2.0.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+Realistic Weather v2.0.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+Isirion_RealisticWeather.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+Isirion_RealisticWeather.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+Isirion_RealisticWeather.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+Sol-Weather Tweak.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+Sol-Weather Tweak.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+Sol-Weather Tweak.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+SeriousWeather_BM_v1_00.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+SeriousWeather_BM_v1_00.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+SeriousWeather_BM_v1_00.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+SeriousWeather_v1_00.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+SeriousWeather_v1_00.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+SeriousWeather_v1_00.esp
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5280,7 +5383,7 @@ Better Skulls.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Sounds [TJ and Jeka]
+;; @Better Sounds 1.1 [TJ and Jeka]
 
 [Conflict]
  "If you have "Bitter Coast Sounds Plugin" (bcsounds.esp), don't use it"
@@ -5947,6 +6050,26 @@ BT_Whitewolf_2_0.esm ;(Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showt
 
 [Order]
 Bloodmoon.esm
+Texture Fix - Bloodmoon 1.?.esm
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Bloodmoon Landscape Overhaul 1.0.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Bloodmoon Landscape Overhaul 1.0.esm
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Texture Fix - Bloodmoon 1.?.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Texture Fix - Bloodmoon 1.?.esm
 
 [Conflict]
@@ -7885,7 +8008,7 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Cragonmoor v1.1 [Quatloos]
+;; @Cragonmoor 1.1 [Quatloos]
 
 [Conflict]
  Cragonmoor has a serious conflict with Princess Stomper's Suran Extended.
@@ -8503,7 +8626,7 @@ DN_AshVampires.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dark Brotherhood Armor Replacer v1.1 [Dimitri Mazieres]
 
-;;DRagon32: See "@Dark Brotherhood Assassins Fix [Fetus X]" for more conflict information
+;;Dragon32: See "Dark Brotherhood Assassins Fix [Fetus X]" for more conflict information
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -8680,6 +8803,23 @@ Murderous Dreams_Safe.esp
 DM_DB Armor Replacer-ExpDDBA.esp
 DM_DB Armor Replacer-ExpRanksDDBA.esp
 Increased DB Delayed Attacks Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dark Ebonheart 1.60 [Chris M.]
+
+;; "Conflicts with Better Bodies[...]. It should be loaded before better bodies or it'll cause some npcs to have the default blocky body."
+;; http://forums.bethsoft.com/topic/1215570-is-there-an-official-mod-confliction-thread/?p=18215985
+[Order]
+Dark Ebonheart.esp
+Better Bodies.esp
+
+[Conflict]
+ "Dark Ebonheart - Conflicts with ["Vality's Bitter Coast Mod"]. One of the trees in Vality's mod gets in the way of the crystal gate in Seyda Neen [added by Chris M.'s "Dark Ebonheart"]. It blocks most of the entrance way."
+ (Ref: http://forums.bethsoft.com/topic/1215570-is-there-an-official-mod-confliction-thread/?p=18215985 )
+Dark Ebonheart.esp
+[ANY Vality's Bitter Coast Addon.esp
+     Vality's BC for Vurt's BC.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8917,7 +9057,35 @@ io_deadite_race-1.4b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Death Dealer Axe  [Miral]
+;; @Deadly Dagoths 1.0 [Danjb]
+
+;;expdep
+[Requires]
+ This plugin uses the Tribunal function setdelete and the Bloodmoon function placeatme
+Deadly Dagoths.esp
+Bloodmoon.esm
+
+;; "I've just taken a quick look at Darknut's GDR and it seems he's edited 9 of the Dagoths (out of 30+). To avoid problems I'd make his mod load last."
+;; Ref: http://forums.bethsoft.com/index.php?/topic/1194471-relz-deadly-dagoths/page__view__findpost__p__17751272
+[Order]
+Deadly Dagoths.esp
+DN-GDRv1_NOM.esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv1_NOM (BTB Edit).esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv1.esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv1 (BTB Edit).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Death Dealer Axe [Miral]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
@@ -10345,6 +10513,18 @@ pcc_east_knaarus_28.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ebonheart Expanded 1.2 [cdethier]
+
+[Conflict]
+ "[cdethier's "Ebonheart Expanded"] will conflict with any other mod that changes Ebonheart or the surrounding Ascadian Isles area [...] including the wonderful Vality's Ascadian Isles mod."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7796 )
+CD_ebonheart.ESP
+[ANY Vality's Ascadian Isles Addon.esp
+     ValityAIMod_VurtTrees.esp
+     Vality's AI for Vurt's AI.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ebonite Race  [Denegoth (Jack Anders)]
 
 [Note]
@@ -10757,6 +10937,17 @@ Erengard Mines-MC-Compatible 2.1.esp
 [Order]
 Morrowind Crafting 2-1.esp
 Erengard Mines-MC-Compatible 2.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Erin's Improved Weather 0.1B [Dirges]
+
+[Conflict]
+ "Erin's Improved Weather" modifies the scripts from Cyrano's "Serious Weather" mod.
+ (Ref: "erin's_improved_weather.txt")
+erin's_improved_weather.esp
+[ANY SeriousWeather_BM_v1_00.esp
+     SeriousWeather_v1_00.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12145,6 +12336,17 @@ FortArgonia.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fort Frostmoth Docks Expanded [Midgetalien]
+
+[Conflict]
+ There are clipping issues when using Midgetalien's "Fort Frostmoth Docks Expanded" with Slartibartfast's "Bloodmoon Landscape Overhaul" or the Bloodmoon version of Neoptolemus's "Ships of the Imperial Navy".
+ (Ref: http://forums.bethsoft.com/topic/1215570-is-there-an-official-mod-confliction-thread/?p=18215928 )
+Frostmoth Docks.ESP
+[ANY Bloodmoon Landscape Overhaul 1.0.esm
+     Ships of the Imperial Navy (Bloodmoon).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @FPS Optimizer 2.0 [mark_s]
 
 [Note]
@@ -13327,7 +13529,7 @@ The Goblin Lab v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Golden_Gold__Shining_Gold [Arcimaestro Antares]
+;; @Golden Gold & Shining Gold [Arcimaestro Antares]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -13338,6 +13540,7 @@ Shining Gold.esp
 ;;Dragon32: Golden Gold from "Morrowind Overhaul - Sounds & Graphics" merges osiris' patch. Size is 2,537 bytes
 [Patch]
  "Golden Gold Patch v1.0.esp" adds the Golden Gold texture to two cursed Daedric coin types which were left out of the original.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6467
  (Ref: "osiris' Golden Gold Patch v1.0 Readme.txt")
 Golden Gold Patch v1.0.esp
 [SIZE !2537 Golden Gold.esp]
@@ -13551,6 +13754,19 @@ Immersive Chargen.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GOTY Script Tidy 2.02 [huskobar]
 
+; Ref: "GOTYST_01 ReadMe.txt"
+[Order]
+Bloodmoon.esm
+GOTYFullTidyZeroMPPv2.01.esm
+Morrowind Patch *.esm
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+
+; Ref: "GOTYST_01 ReadMe.txt"
+[Order]
+Morrowind Patch *.esm
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+GOTYMinImpactSomeMPPv2.01.esm
+
 [Note]
  "GOTYScriptTidy(CommentsIn).esp is for modders .... It is NOT intended for use in game!"
  (Ref: "GOTYST_01 ReadMe.txt")
@@ -13604,6 +13820,19 @@ GOTYMinImpactSomeMPPv2.01.esm
      GOTYFullTidySomeMPPv2.01.esp
      GOTYFullTidyZeroMPPv2.01.esm]
 LGNPC_PaxRedoran_v1_20.esp
+
+;;Dragon32: rules for mod conflicts with main Script Tidy mod
+
+[Conflict]
+ "When loading [DrSilent's "Morrowind Public Library"] with GOTY Script Tidy v2.02 I get the following error:
+  Script variable "rent" not found for dialogue type Topic
+  Info "EMPTY""
+ (Ref: http://forums.bethsoft.com/topic/1086703-goty-script-tidy/?p=16625185 )
+MW_Public_Library.esp
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp
+     GOTYFullTidyZeroMPPv2.01.esm
+     GOTYMinImpactSomeMPPv2.01.esm]
 
 ;;Dragon32: Following rules are for "LGNPC_PaxRedoran_v1_20_GOTYST.esp", duplicating the equivalents from the main LGNPC section
 
@@ -13682,6 +13911,13 @@ VGreetings-Hit.esp
  (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Hit/ReadMe.txt")
 GOTYFullTidyZeroMPPv2.01.esm
 VGreetings-Hit.esp
+
+[Note]
+ !! These plugins are working versions of huskobar's replacement VGreetings plugins. They are not intended to be loaded for play.
+ !! (Ref: http://forums.bethsoft.com/index.php?/topic/1135344-problem-between-some-patch-mods/page__view__findpost__p__16623781 )
+[ANY VGreetings-AttackGOTYSTRawSome.esp
+     VGreetings-AttackGOTYSTRawZero.esp
+     VGreetingPatchGOTYSTRaw.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13968,6 +14204,12 @@ Graphic Herbalism.esp
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
 Expanded Sounds.esp
+Graphic Herbalism.esp
+
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
 Graphic Herbalism.esp
 
 
@@ -15163,6 +15405,8 @@ H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 
 ;;Dragon32: See also - Herbalism mods [Various]
 
+;;Dragon32: See also - Morrowind Inhabitants [scruggs]
+
 [Requires]
  (Ref: "Herbalism readme.txt")
 Herbalismv1.3(Bloodmoon addon).esp
@@ -15207,7 +15451,11 @@ Herbalismv1.3(Tribunal).esp
 Expanded Sounds.esp
 Herbalismv1.3(Tribunal).esp
 
-;;Dragon32: See also - Morrowind Inhabitants [scruggs]
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Herbalismv1.3(Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15261,6 +15509,12 @@ Herbalismv1.1.esp
  There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
  (Ref: MWInhabitants PATCH.01 README.txt)
 MWInhabitants Freeform (Vol 1).esp
+Herbalismv1.1.esp
+
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
 Herbalismv1.1.esp
 
 
@@ -15391,9 +15645,15 @@ MWInhabitants Freeform (Vol 1).esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 Resources Enhanced.esp
 
+;;Dragon32: See also "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Herbalism Lite v1.0 [Shakeidas]
+;; @Herbalism Lite 1.0 [Shakeidas]
 
 ;;Dragon32: See also - Herbalism mods [Various]
 
@@ -15469,6 +15729,14 @@ Herbalism_Lite_v1.0.esp
 Herbalism_Lite_v1.0.esp
 Resources Enhanced.esp
 
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Herbalism_Lite_v1.0.esp
+Herbalism_Lite_+Tribunal_v1.0.esp
+Herbalism_Lite_+Bloodmoon_v1.0.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism Lite for Tamriel Rebuilt [Tealpanda]
@@ -15535,6 +15803,12 @@ Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
 Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 Resources Enhanced.esp
+
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15676,6 +15950,16 @@ MWInhabitants Freeform (Vol 1).esp
 [ANY Herbalism Redux 1.12a.esp
      Herbalism Redux 1.12a - Bloated MW.esp]
 
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Herbalism Redux 1.12a - Bloated MW.esp
+
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Herbalism Redux 1.12a.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Herbalism Redux + Explorers Wilderness Compatibility [Mode_Locrian]
@@ -15795,6 +16079,16 @@ HR 1.12a BMW + EW 1.5.esp
 MWInhabitants Freeform (Vol 1).esp
 [ANY HR 1.12a + EW 1.5.esp
      HR 1.12a BMW + EW 1.5.esp]
+
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+HR 1.12a + EW 1.5.esp
+
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+HR 1.12a BMW + EW 1.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19131,6 +19425,56 @@ vn_lichcraft2_alt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @LichcraftHunger []
+
+;;Dragon32: No idea about this mod, no readme and no description
+
+[Order]
+vn_lichcraft2.esp
+lichcrafthunger.esp
+
+[Order]
+vn_lichcraft2_alt.esp
+lichcrafthunger.esp
+
+[Order]
+Illuminated Order v1.0.esp
+lichcrafthunger.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+lichcrafthunger.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
+lichcrafthunger.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+lichcrafthunger.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+lichcrafthunger.esp
+
+[Order]
+vn_lichcraft2.esp
+lcpatchnoorder.esp
+
+[Order]
+vn_lichcraft2_alt.esp
+lcpatchnoorder.esp
+
+[Order]
+vn_lichcraft2.esp
+lcpatchnohungerorder.esp
+
+[Order]
+vn_lichcraft2_alt.esp
+lcpatchnohungerorder.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Light The Way [Enmesharra]
 
 [Note]
@@ -19648,7 +19992,7 @@ Maar Gan Extended.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Madd Leveler [Madd Mugsy/Sederien]
+;; @Madd Leveler 1.0b [Madd Mugsy/Sederien]
 
 ;; ALL PLUGINS REQUIRE THE MADD LEVELER - BASE.ESP TO BE INSTALLED AND LOADED FIRST!
 ;; (Ref: "Madd Leveler Readme.txt")
@@ -19674,24 +20018,31 @@ Madd Leveler - Illuminated Order And LichCraft Fix.esp
 [Order]
 Immersive Chargen.esp
 Madd Leveler - Base.esp
+
 [Order]
 From Hell To Heaven part 2.esp
 Madd Leveler - Base.esp
+
 [Order]
 PrivateersHold.esp
 Madd Leveler - Base.esp
+
 [Order]
 Clean Royal Chargen.esp
 Madd Leveler - Base.esp
+
 [Order]
 ComprehensiveChargen.esp
 Madd Leveler - Base.esp
+
 [Order]
 No CharGen MessageBoxes.esp
 Madd Leveler - Base.esp
+
 [Order]
 Quick Char.esp
 Madd Leveler - Base.esp
+
 [Order]
 Character Maker (qs).esp
 Madd Leveler - Base.esp
@@ -19730,6 +20081,10 @@ Madd Leveler - Assassin's Armory Fix.esp
 [ALL Madd Leveler - Base.esp
      Assassins Armory.esm]
 
+[Order]
+Assassins Armory - No Scripts.esp
+Madd Leveler - Assassin's Armory Fix.esp
+
 [Patch]
  "Makes the Madd Leveler compatible with Illuminated Order 1.0C"
  (Ref: "Madd Leveler Readme.txt")
@@ -19755,6 +20110,26 @@ Madd Leveler - Illuminated Order Fix.esp
 	  Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
 	  Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp]]
 
+[Order]
+Illuminated Order v1.0.esp
+Madd Leveler - Illuminated Order Fix.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Madd Leveler - Illuminated Order Fix.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
+Madd Leveler - Illuminated Order Fix.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Madd Leveler - Illuminated Order Fix.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Madd Leveler - Illuminated Order Fix.esp
+
 [Patch]
  "Makes the Madd Leveler compatible with Lichcraft 1.0."
  (Ref: "Madd Leveler Readme.txt")
@@ -19768,12 +20143,28 @@ Madd Leveler - Lichcraft Fix.esp
  !! (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Lichcraft Fix.esp
 
+[Order]
+vn_lichcraft2.esp
+Madd Leveler - LichCraft Fix.esp
+
+[Order]
+vn_lichcraft2_alt.esp
+Madd Leveler - LichCraft Fix.esp
+
 [Patch]
  "Makes the Madd Leveler compatible with Illuminated Order 1.0C and Lichcraft 1.0 when they are used together. Use in addition to the IO and Lichcraft Fixes."
  (Ref: "Madd Leveler Readme.txt")
 Madd Leveler - Illuminated Order And Lichcraft Fix.esp
 [ALL Madd Leveler - Lichcraft Fix.esp
      Madd Leveler - Illuminated Order Fix.esp]
+
+[Order]
+Madd Leveler - LichCraft Fix.esp
+Madd Leveler - Illuminated Order And LichCraft Fix.esp
+
+[Order]
+Madd Leveler - Illuminated Order Fix.esp
+Madd Leveler - Illuminated Order And LichCraft Fix.esp
 
 [Conflict]
  Conflicts with Mephisto's Cap Remover (both remove caps)
@@ -23778,6 +24169,7 @@ Real Time Updating.esp
 ScentOfBlood_MWSE_AddOn.esp
 VampiricIllusion_MWSE_AddOn.esp
 ve_comp_control.esp
+VH_Bloodreport.esp
 
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.2a or later, or MGE v3.1 or later.
@@ -24171,6 +24563,40 @@ Windows Glow - Tribunal Eng.esp
 [Order]
 Mournhold Overhaul v2.0 - WG + NPC's.esp
 Windows Glow - Tribunal Eng.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mournhold, The Great Bazaar 1.2 [Quatloos]
+
+;; "I have also added a small change to the projectile recovery chance - now there is a 50-50 chance."
+;;Ref: "Mournhold, The Great Bazaar Readme.txt"
+[Order]
+Mournhold, The Great Bazaar.esp
+Marksman Enhanced v1.2.esp
+
+[Order]
+Mournhold, The Great Bazaar.esp
+100ProjectileStoreChance.esp
+
+[Order]
+Mournhold, The Great Bazaar.esp
+Xenn's Marksman Overhaul.ESP
+
+[Conflict]
+ "Korana's older mod: Magus Realm Tower has a transporter NPC in the Magic shop.  Running this mod of hers together with [Quatloos' "Mournhold, The Great Bazaar"], causes an extra one of the game NPCs in the Magic shop."
+ (Ref: "Mournhold, The Great Bazaar Readme.txt")
+Mournhold, The Great Bazaar.esp
+Clean Magus Realm Tower V2.esp
+
+[Conflict]
+ "I noticed that several of the 'teleport' doors introduced to towns like Ebonheart etc [by Quatloos' "Mournhold, The Great Bazaar"] were blocked by crates/barrels."
+ (Ref: http://forums.bethsoft.com/topic/1215570-is-there-an-official-mod-confliction-thread/?p=18215928 )
+ Dragon32: According to Quatloos the only teleport door added by "Mournhold, The Great Bazaar" is to Ebonheart.
+ (Ref: "Mournhold, The Great Bazaar Readme.txt")
+Mournhold, The Great Bazaar.esp
+[ANY MDP Compilation.ESP
+     MDP - Ebonheart.ESP
+     MDP - Ebonheart - 1.0.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28880,6 +29306,14 @@ Clean TR Rose-Wayfarer Landscape Fix.esp
 [ALL Ascadian_Rose_Cottage_ver1.0.esp
      Wayfarer's Rest v1.21.esp]
 
+[Order]
+Wayfarer's Rest v1.21.esp
+Clean TR Rose-Wayfarer Landscape Fix.esp
+
+[Order]
+Ascadian_Rose_Cottage_ver1.0.esp
+Clean TR Rose-Wayfarer Landscape Fix.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @ROV World [RodrigoVinholo]
@@ -29577,6 +30011,7 @@ SeriousWeather_v1_00.esp
 [Conflict]
  "This plug-in will conflict with any other mod that [...] alter regional weather"
  (Ref: "SeriousWeather_Readme.txt")
+ Cyrano's "Serious Weather" alters regional weather chances as do these other mods. If you wish altered weather chances and the adverse effects from Cyrano's mod then you could try Dirges' "Erin's Improved Weather": http://download.fliggerty.com/download--243
 [ANY SeriousWeather_BM_v1_00.esp
      SeriousWeather_v1_00.esp]
 [ANY NiceWeather_0617.esp
@@ -29875,7 +30310,7 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Silgrad Tower [Various]
+;; @Silgrad Tower 1.4.6.6 [Various]
 
 [Note]
  ! There is a suggested update for Silgrad Tower:
@@ -29917,6 +30352,17 @@ Texture Fix - Silgrad Tower 1.0.esp
 [Order]
 silgrad_tower_1-4_6.6.esp
 Texture Fix - Silgrad Tower 1.0.esp
+
+[Conflict]
+ "[Bethesda's official] Firemoth plugin is merged into the 1.4.6.6 update [of "Silgrad Tower]."
+ (Ref: http://forums.bethsoft.com/topic/1402028-silgrad-tower/?p=21351297 )
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+[ANY Siege at Firemoth.esp
+     FireMoth Moved.ESP
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31487,6 +31933,52 @@ Clean_Tel_Ulvirith_Vault.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Subterranean Tel Uvirith 1.1 [morphera]
+
+;; "Subterranean Tel Uvirith-->Adds a really cool area to explore in your dungeon. Compatible with all the other mods here, but make sure it loads BEFORE book jackets."
+;; Ref: http://forums.bethsoft.com/topic/1379647-tel-uvirith-telvanni-stronghold-mods/?p=20903759
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Librarian with Jackets & Rotate BM Trib.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Librarian with Jackets BM Trib.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Book Jackets - Morrowind - BookRotate.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Book Jackets - Morrowind.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Book Jackets - Bloodmoon - BookRotate.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Book Jackets - Bloodmoon.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Book Jackets - Tribunal - BookRotate.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Book Jackets - Tribunal.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+Jac_Passing time while reading -  BRBJ patch.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp
+UL_BookJackets_Add-on.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sugarmoon's Culture Shack  [Matthew Martin]
 
 [Note]
@@ -31976,6 +32468,17 @@ Taddeus'BalancedArmors(light).esp
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
           Wakim's Game Improvements with No-glo v9.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Taddeus' Balanced Enchanting [Taddeus]
+
+[Conflict]
+ "[Taddeus' Balanced Enchanting] will conflict with all the plugins modifying the same creatures, settings and soul gems."
+ (Ref: "Taddeus'BalancedEnchanting-Readme.txt")
+Taddeus'BalancedEnchanting.esp
+[ANY BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32575,7 +33078,7 @@ Tenience's Rare Items.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Texture Fix [Slartibartfast]
+;; @Texture Fix 2.0 [Slartibartfast]
 
 [Note]
  ! There is a newer version of Texture Fix by Slartibartfast, you should upgrade:
@@ -32593,6 +33096,16 @@ Texture Fix.esm
 
 [Order]
 Morrowind.esm
+Texture Fix <VER>.esm
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Texture Fix <VER>.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Texture Fix <VER>.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32846,6 +33359,58 @@ Improved Trap Settings (Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Thieves' Step [TJ]
+
+[Conflict]
+ Choose only one plugin:
+  SNR_ThievesStep_BS.esp - For TJ and Jeka's "Better Sounds" mod
+  SNR_ThievesStep_Standart.esp - For standard sounds
+ (Ref: "ThievesStep.7z\ReadMe_ENG.txt")
+SNR_ThievesStep_Standart.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
+Better_Sounds.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
+Expanded Sounds.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
+Better_Sounds.esp
+SNR_ThievesStep_Standart.esp
+
+[Order]
+Expanded Sounds.esp
+SNR_ThievesStep_Standart.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-Tribunal.esp
+SNR_ThievesStep_Standart.esp
+
+[Order]
+AtmosphericSoundEffects-3.0-TBM.esp
+SNR_ThievesStep_Standart.esp
+
+[Order]
+AtmosphericSoundEffects-3.0.esp
+SNR_ThievesStep_Standart.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Thigh-High Boots [Durgoth]
 
 [Requires]
@@ -32898,7 +33463,7 @@ MW_Children_1_0.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Threads of the Webspinner Completed [Curmudgeon]
+;; @Threads of the Webspinner Completed 2.1 [Curmudgeon]
 
 [Conflict]
  You should not use Curmudgeon's "WBSP_LOOT.esp" plugin with either of his "WBSP_MAIN.esp" or "WBSP_NPC.ESP" plugins.
@@ -32912,6 +33477,13 @@ WBSP_LOOT.esp
  ! http://mw.modhistory.com/download--5667
 [ANY WBSP_MAIN.esp
      WBSP_NPC.ESP]
+
+;;Dragon32: No idea who wrote this: "To Serve Sithis conflicts with Threads of the Webspinner - I ended up with two of Eno Hlaalu"
+[Conflict]
+ "[Curmudgeon's "Threads of the Webspinner Completed"] WILL conflict with any mod that requires or changes Bethesda's "enoHlaaluScript" or that alters the NPC "eno hlaalu""
+ (Ref: "WBSP_V2_1_ReadMe.rtf")
+Webspinner_V2_1.esp
+Clean To Serve Sithis_.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -33830,6 +34402,12 @@ Ultra Light Herbalism.esp
  There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
  (Ref: MWInhabitants PATCH.01 README.txt)
 MWInhabitants Freeform (Vol 1).esp
+Ultra Light Herbalism.esp
+
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
 Ultra Light Herbalism.esp
 
 
@@ -36946,6 +37524,23 @@ Vertical limit climbing mod 1.02.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @VH Bloodreport 1.0 [Peter]
+
+[Requires]
+ "[Peter's "VH Bloodreport"] requires [...] Vampiric Hunger III"
+ (Ref: "")
+VH_Bloodreport.esp
+Vampiric Hunger Base.esp
+
+;; expdep
+[Requires]
+ This plugin uses a Startup script.
+VH_Bloodreport.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vibrant Morrowind 4.0 [Skydye & HeadlessWonder]
 
 [Note]
@@ -37518,6 +38113,16 @@ wl_lodge_vi.esp
 ; Water Level Fix should come last in load order so we put it after multipatch, which is [Nearend]
 [Order]
 multipatch.esp
+Water Level Fix - Full.esp
+Water Level Fix - MW.esp
+Water Level Fix - TB.esp
+Water Level Fix - BM.esp
+
+;;Dragon32: Water Level Fix - Full must be loaded after NoM 3.0
+[Order]
+NOM 2.12.esp
+NOM 2.13.esp
+NoM 3.0.esp
 Water Level Fix - Full.esp
 Water Level Fix - MW.esp
 Water Level Fix - TB.esp
@@ -38301,7 +38906,7 @@ WhiteSuran2_patch_vurt.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @White Wolf of Lokken [Emma]
+;; @White Wolf of Lokken 2.1 [Emma]
 
 ;; For the older 2.0 Version:
 ;; If you play with a female char, you should use the KISS-patch
@@ -38311,10 +38916,20 @@ WhiteSuran2_patch_vurt.esp
 ;; (Ref: http://lovkullen.net/Emma/lokken.htm )
 
 [Note]
- The latest version of White Wolf of Lokken is 2.1, which includes Children of Morrowind 2.0 and the "kiss patch". You may want to upgrade:
- http://lovkullen.net/Emma/lokken.htm
+ ! The latest version of White Wolf of Lokken is 2.1, which includes Children of Morrowind 2.0 and the "kiss patch". You may want to upgrade:
+ ! http://lovkullen.net/Emma/lokken.htm
 [ANY [SIZE !3829352 BT_Whitewolf_2_0.esm]
      [SIZE !3829352 BT_Whitewolf_2_0.esp]]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+BT_Whitewolf_2_0.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+BT_Whitewolf_2_0.esm
 
 [Order]
 BT_Whitewolf_2_0.esp
