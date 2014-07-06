@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- mode: python -*-
 # mlox - the elder scrolls Mod Load Order eXpert
-# Copyright 2011 by John Moonsugar
+# Copyright 2014 by John Moonsugar
 # Distributed as part of the mlox project:
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.58"
+Version = "0.59"
 
 import locale
 import os
@@ -18,6 +18,8 @@ import traceback
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 import cPickle
+import urllib
+import subprocess
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -41,6 +43,7 @@ Opt.Quiet = False
 Opt.Update = False
 Opt.WarningsOnly = False
 Opt._Game = None
+Opt.NoUpdate = False
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -1235,7 +1238,7 @@ class loadorder:
         """change the modification times of files to be in order of file list,
         oldest to newest"""
         if Opt._Game == "Morrowind":
-            mtime_first = 1024695106 # Morrowind.esm
+            mtime_first = 1024695106 # Fri Jun 21 17:31:46 2002 # Morrowind.esm, made compatible with tes3cmd resetdates
         else: # Opt._Game == Oblivion
             mtime_first = 1165600070 # Oblivion.esm
         if len(files) > 1:
@@ -1244,10 +1247,34 @@ class loadorder:
             if mtime_last < 1228683562: # Sun Dec  7 14:59:56 CST 2008
                 mtime_last = 1228683562
             loadorder_mtime_increment = (mtime_last - mtime_first) / len(files)
-            mtime = mtime_first
+
+            tes3cmd_resetdates_morrowind_mtime = 1024695106 # Fri Jun 21 17:31:46 2002
+            tes3cmd_resetdates_tribunal_mtime  = 1035940926 # Tue Oct 29 20:22:06 2002
+            tes3cmd_resetdates_bloodmoon_mtime = 1051807050 # Thu May  1 12:37:30 2003
+
+            lastmtime = tes3cmd_resetdates_morrowind_mtime
             for p in files:
-                os.utime(self.datadir.find_path(p), (-1, mtime))
-                mtime += loadorder_mtime_increment
+                change = False
+                if p == "morrowind.esm":
+                    mtime = tes3cmd_resetdates_morrowind_mtime
+                    change = True
+                    os.utime(self.datadir.find_path("morrowind.bsa"), (-1, mtime))
+                elif p == "tribunal.esm":
+                    mtime = tes3cmd_resetdates_tribunal_mtime
+                    change = True
+                    os.utime(self.datadir.find_path("tribunal.bsa"), (-1, mtime))
+                elif p == "bloodmoon.esm":
+                    mtime = tes3cmd_resetdates_bloodmoon_mtime
+                    change = True
+                    os.utime(self.datadir.find_path("bloodmoon.bsa"), (-1, mtime))
+                else:
+                    mtime = os.path.getmtime(self.datadir.find_path(p))
+                    if mtime <= lastmtime:
+                        mtime = lastmtime + 5 # fraction of standard 1 minute Mash step, hopefully avoid redating some mods
+                        change = True
+                if change:
+                    os.utime(self.datadir.find_path(p), (-1, mtime))
+                lastmtime = mtime
 
     def save_order(self, filename, order, what):
         out = myopen_file(filename, 'w')
@@ -1710,6 +1737,31 @@ def version_info():
 def print_version():
     print version_info()
 
+def update_mloxdata():
+    fname = 'mlox-data.7z'
+    durl = 'https://mlox.googlecode.com/svn/trunk/downloads/%s' % fname
+    d = urllib.urlopen(durl)
+    print d.info()
+    if os.path.isfile(fname):
+        fsize = os.stat(fname).st_size
+        print 'Current %s size: %d' % (fname,fsize)
+        dsize = d.info()['Content-Length']
+        print 'Downloadable %s size: %s' % (fname,dsize)
+        update = int(dsize) != int(fsize)
+    else:
+        update = 1
+    if update: 
+        d = urllib.urlretrieve(durl,fname)
+        print 'File %s downloaded' % fname
+        #print('7za.exe e "%s" -aoa' % fname)
+        cmd = '7za.exe e "%s" -aoa' % fname
+        if subprocess.call(cmd) == 0:
+            print("mlox_base.txt updated from %s" % fname)
+        else:
+            print("Error while extracting from %s" % fname)
+    else:
+        print 'No update necessary for file %s' % fname	
+
 
 def main():
     if Opt.FromFile:
@@ -1719,6 +1771,8 @@ def main():
         for file in args:
             loadorder().update(file)
     elif Opt.GUI == True:
+        if Opt.NoUpdate == False:
+            update_mloxdata()
         # run with gui
         Opt.DBG = True
         mlox_gui().start()
@@ -1749,9 +1803,9 @@ if __name__ == "__main__":
     # process command line arguments
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
-        opts, args = getopt(sys.argv[1:], "acde:fhlpquvw",
-                            ["all", "base-only", "check", "debug", "explain=", "fromfile", "gui", "help", 
-                             "listversions", "parsedebug", "profile", "quiet", "translations=",
+        opts, args = getopt(sys.argv[1:], "acde:fhlnpquvw",
+                            ["all", "base-only", "check", "debug", "explain=", "fromfile", "gui", "help",
+                             "listversions", "nodownload", "parsedebug", "profile", "quiet", "translations=",
                              "update", "version", "warningsonly"])
     except GetoptError, err:
         print str(err)
@@ -1800,6 +1854,8 @@ if __name__ == "__main__":
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True
+        elif opt in ("-n", "--nodownload"):
+            Opt.NoUpdate = True
 
     if Opt.Profile:
         import hotshot, hotshot.stats
