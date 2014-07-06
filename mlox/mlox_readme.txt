@@ -1,6 +1,6 @@
 Name: mlox
-Version: 0.57
-Copyright 2011 John Moonsugar <john.moonsugar@gmail.com>
+Version: 0.59
+Copyright 2014 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
         mlox - the elder scrolls Mod Load Order eXpert
@@ -24,6 +24,7 @@ o Testing
 o Note to Wrye Mash users
 o Usage
 oo The mlox GUI
+o Known Issues
 o ChangeLog
 
 ------------------------------------------------------------
@@ -31,8 +32,6 @@ o Features
 
 - optimally reorders your load order to avoid known problems, where
 "optimally" is relative to the quality and coverage of the rule-base.
-(As of March 2009 the rule-base knows about many of the popular Morrowind
-mods, but there is more work to be done to include more mods).
 - warns about missing pre-requisites
 - warns about plugin conflicts
 - prints notes for things you might want to know about a mod, but may
@@ -51,14 +50,17 @@ o Installation and Quick Start
 
 oo Requirements
 
-- mlox.py is written using Python 2.5 with wxWidgets, just like Wrye
-  Mash. (For Windows, there is a stand-alone executable that does not
+- mlox.py is written using Python with wxWidgets, just like Wrye Mash.
+  (For Windows, there is a stand-alone executable that does not
   require these pre-requisites). You do need to install Python
-  and wxWidgets if you wish to run the script form of the program. 
+  and wxWidgets if you wish to run the script form of the program.
   You can do this Windows if you install the following two packages:
 
-  http://www.python.org/ftp/python/2.5/python-2.5.msi
+  https://www.python.org/ftp/python/2.6.5/python-2.6.5.msi
+    [install this version or newer as earlier versions only support US version of
+    Windows and code page 437]
   http://downloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.7.1-py25.exe
+    [there are later versions of wxPython but mlox needs the ANSI version]
 
   (Please note that the version of wxWidgets necessary for mlox is slightly
   newer than the one recommended for Mash, but will work for both
@@ -67,7 +69,7 @@ oo Requirements
 
 - It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP
   ("Morrowind Code Patch"):
-  http://www.tesnexus.com/downloads/file.php?id=19510
+  http://www.nexusmods.com/morrowind/mods/19510
   The MCP makes it safer to change your load order in an existing
   savegame, amongst many other wonderful fixes it does.
   You are also encouraged to use Wrye Mash to manage your plugins:
@@ -85,11 +87,11 @@ oo Requirements
 - The rule-base is released as a separate archive (mlox-data_<DATE>.7z),
   unpack this archive in the mlox directory created when you unpacked the
   application.
+  Version 0.59 added an automated downloader for updating the mlos rule-base.
 
 - A quick explanation of the included batch files for Windows (unless
   otherwise specified, run these batch files from the mlox directory):
 
-  mlox - run mlox in GUI mode. This is the one you normally use.
   locheck - run mlox in command-line mode to check (not update).
   lofix - run mlox in command-line mode to update your load order.
   lo - (run this in "Data Files") just prints your current load order.
@@ -112,7 +114,7 @@ o Support
 
 If you run into a problem with mlox, the best thing to do to get help
 is to post on the BethSoft Morrowind Mods forums:
-http://forums.bethsoft.com/index.php?/forum/12-mods/
+http://forums.bethsoft.com/forum/12-morrowind-mods/
 You can search for the latest mlox thread by using the forum Search function.
 
 If you get a popup error window, please include the contents in your report.
@@ -172,13 +174,13 @@ put them in mlox_user.txt to cover these situations.
 o Origins of mlox
 
 mlox is inspired by Random007's BOSS (formerly FCOMhelper) project, (see:
-http://www.bethsoft.com/bgsforums/index.php?showtopic=890589 ). BOSS (Better
-Oblivion Sorting Software) is truly invaluable for Oblivion, because Oblivion
-is particularly susceptible to crashing if the load order isn't correct, and
-some mod projects, notably FCOM, require a very large and complicated load
-ordering that can be difficult to get right. After BOSS came along, when
-people post about Oblivion load order problems, the answer to them simply
-became: "run BOSS". Hopefully, mlox will become as useful for Morrowind.
+https://boss-developers.github.io/ ). BOSS (Better Oblivion Sorting Software)
+is truly invaluable for Oblivion, because Oblivion is particularly susceptible
+to crashing if the load order isn't correct, and some mod projects, notably
+FCOM, require a very large and complicated load ordering that can be difficult
+to get right. After BOSS came along, when people post about Oblivion load order
+problems, the answer to them simply became: "run BOSS". Hopefully, mlox will
+become as useful for Morrowind.
 
 However, I decided to take a different approach in the design than the
 approach used in BOSS. BOSS uses a "total order" approach, every plugin in the
@@ -239,14 +241,13 @@ mlox can also tell the version from the filename. So, for example, this works:
 
 Plugin_V1.0.esp
 
-The next thing is teaching mlox about your mod. If you like, you can ask me to
-add rules for you. Or you can write them yourself and email them to me or post
-on the Bethsoft forums and I'll put them in the next release of the rule-base.
+The next thing is teaching mlox about your mod. If you like, you can ask for
+rules to be added for you, post on the Bethsoft forums and they'll be added
+into the next release of the rule-base.
 If you're adventurous and know about Subversion, you can ask for write access
 to the rule-base, and I'll let you make changes to the rule-base directly.
-(There will be directions on the mlox wiki on how to do this, so don't worry
-if it sounds too technical). I'll try to help as much as I can, the more mlox
-knows, the more useful it is, and people will have fewer load order problems.
+The more mlox knows, the more useful it is, and people will have fewer load
+order problems.
 
 ------------------------------------------------------------
 o On the Importance of the output warnings
@@ -303,7 +304,8 @@ your load order with mlox, then you can turn "Lock Times" back on.
 ------------------------------------------------------------
 o Usage
 
-On Windows, run mlox.exe or the batch file: mlox.bat
+On Windows, run mlox.exe or if you have the .py file association set-up
+double-click mlox.py
 On Linux, run the python script: mlox.py
 
 These commands will start mlox in GUI mode. If the proposed load order looks
@@ -337,14 +339,16 @@ Usage: mlox [OPTIONS]
 	directory. File formats accepted: Morrowind.ini, load order
 	output of Wrye Mash, and Reorder Mods++.
  -h|--help
-	print this help.
+	Print this help.
  -l|--listversions
         Use this to list the version numbers parsed from your plugins.
-        The output is in 2 columns, the first is the version from the 
+        The output is in 2 columns, the first is the version from the
         plugin filename, if present, the second is from the plugin header,
         if present. Naturally, many plugins do not use version numbers so
         results are spotty. This information can be used to write rules
         using the [VER] predicate.
+ -n|--nodownload
+	Do not automatically download and update the mlox rules.
  -p|--parsedebug
 	Turn on debugging for the rules parser. (This can generate a
 	fair amount of output).
@@ -421,10 +425,40 @@ automatically copy the contents to a file: mlox_debug.out). If you run into
 problems with mlox, I may need you to send me this bugdump so I can figure out
 what happened.
 
-==================================================
+----------------------------------------------------------------------
+o Known Issues
 
+- Updating does not immediately refresh [mlox-base YYYY-MM-DD HH:MM:SS (UTC)]
+  string in the top text pane, although the update is effective.
+
+- There appear to be compatiblity issues with Yacoby's Wrye Mash Standalone.
+  If you are using Yacoby's mash.exe avoid using these options:
+    Mlox\Sort using mlox
+    Mlox\revert changes
+  Instead, use:
+    1 - Mash\Lock times off
+    2 - Mlox\Launch mlox
+    3 - Sort mods using the mlox GUI
+    4 - Mash\lock times on
+
+==================================================
 o ChangeLog
 
+Version 0.59 - 2014/07/06
+	* Fix conflict with tes3cmd's resetdates and only redate files if
+          necessary [abot]
+	* Automatic checking for and downloading of new rule-base [abot]
+Version 0.58 - 2011/02/16 [Not released]
+	* Fix for parsing [SIZE] predicate with plugin names that contain
+          brackets
+	* Added Melchor's workaround for problem displaying different
+          encodings in wx.
+Version 0.57 - 2009/11/03
+	* Added a check for max progress value in the progress dialog
+Version 0.56 - 2009/10/29
+	* Use a popup error window instead of mlox.err
+	* Logo is now a button that does a refresh
+	* Added a progress dialog when reading the rule-base
 Version 0.55 - 2009/03/16
 	* Documentation update: DOS line endings.
 Version 0.54 - 2009/03/14
@@ -434,8 +468,8 @@ Version 0.52 - 2009/01/08
 Version 0.51 - 2009/01/08
 	* Fixed a few bugs in how filenames are expanded.
 	* Small GUI presentation tweak to ensure the labels at the bottom of
-	the load order panes don't collide when the sash is adjusted all the
-	way down.
+	  the load order panes don't collide when the sash is adjusted all the
+	  way down.
 Version 0.50 - 2009/01/06
 	* Beta release. Documentation has been edited to be current. No new
-	application functionality from version 0.41.
+	  application functionality from version 0.41.
