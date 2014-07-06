@@ -1,11 +1,15 @@
 - convert mlox-data to CRLF :(
+  - Dragon32: Done (not sure on version)
 
 - auto-updater so that program/data updates are automatically downloaded and installed.
   (will need a preferences file for URL from which to retrieve updates and if user wants to turn it off).
+  - Dragon32: Done in 0.59. No preferences file, URL is hardcoded in mlox.py; commanline switch to turn off auto-updating
 
 - CSV file for plugin name aliases
+  - Dragon32: i.e. allow user to specify one plugin includes one or more other plugins
 
 - Change error reporting to use a popup, instead of mlox.err :(
+  - Dragon32: Done in 0.56
 
 - If 2 plugins have the same timestamp, force a "unsorted" state so they can be sorted.
 
@@ -17,3 +21,16 @@
 - compile rules files to .pkl versions when changed. and load from .pkl!
 
 - Get rid of mlox.bat, no longer needed I think.
+  - Dragon32: Done, removed in 0.59; anyone with a recent version of Python can just double-click .py files in Windows
+
++Added by Dragon32:
+
+- internationalisation bug (cope with plugin names containing non-standard characters like £)
+
+- program preferences (including the download location for mlox-data.7z)
+
+- mlox community rule editing website and option to automatically update from rules website so user does not have manually download rules.
+
+- allow user to suppress any given warning. 
+
+- highlight the text of Conflict rules in yellow
