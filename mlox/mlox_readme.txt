@@ -51,10 +51,9 @@ o Installation and Quick Start
 oo Requirements
 
 - mlox.py is written using Python with wxWidgets, just like Wrye Mash.
-  (For Windows, there is a stand-alone executable that does not
-  require these pre-requisites). You do need to install Python
-  and wxWidgets if you wish to run the script form of the program.
-  You can do this Windows if you install the following two packages:
+  You do need to install Python and wxWidgets if you wish to run the script 
+  form of the program.
+  You can do this in Windows if you install the following two packages:
 
   https://www.python.org/ftp/python/2.6.5/python-2.6.5.msi
     [install this version or newer as earlier versions only support US version of
@@ -66,6 +65,14 @@ oo Requirements
   newer than the one recommended for Mash, but will work for both
   applications. mlox will not work with wxPython 2.8.0.1, which is the
   version recommended by Mash!).
+
+- For Windows, there is a stand-alone executable that requires the Microsoft
+  Visual C++ 2008 Redistributable Package (vcredist_x86.exe):
+
+  http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&displaylang=en
+
+  It is important to get the right version, which the Python interpreter was
+  compiled with. So get the above installer and not the VS2008 SP1 version.
 
 - It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP
   ("Morrowind Code Patch"):
