@@ -1175,7 +1175,34 @@ HB_Bob's_Armory_Alchemy_Lab.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Alchemy Storage Helper v2.0 [scruggs]
+;; @Alchemy Stockpile Helper [Shanjaq]
+
+[Conflict]
+ "There are 5 versions of the plugin, use only one"
+  AlchemyStockpileHelper10_Morrowind.esp - If you only have Morrowind
+  AlchemyStockpileHelper10_BM.esp - If you have Morrowind and Bloodmoon
+  AlchemyStockpileHelper10_Trib.esp - If you have Morrowind and Tribunal
+  AlchemyStockpileHelper10_Trib_BM.esp - If you have Morrowind, Bloodmoon and Tribunal
+  AlchemyStockpileHelper10_Trib_BM_Sri.esp - If you have Morrowind, Bloodmoon, Tribunal and Sri's Alchemy, Bloodmoon Edition
+ (Ref: "AlchemyStockpileHelper10.zip\readme.txt")
+AlchemyStockpileHelper10_BM.esp
+AlchemyStockpileHelper10_Morrowind.esp
+AlchemyStockpileHelper10_Trib.esp
+AlchemyStockpileHelper10_Trib_BM.esp
+AlchemyStockpileHelper10_Trib_BM_Sri.esp
+
+[Requires]
+ (Ref: "AlchemyStockpileHelper10.zip\readme.txt")
+AlchemyStockpileHelper10_Trib_BM_Sri.esp
+[ALL Morrowind.esm
+     Tribunal.esm
+     Bloodmoon.esm
+     [ANY Sris_Alchemy_BM.esp
+          EcoAdj(Sri+Ingredients).esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Storage Helper 2.0 [scruggs]
 
 [Requires]
  This plugin uses a startup script so it requires one of the expansions.
@@ -1185,7 +1212,9 @@ ASH 2.0.esp
 
 [Note]
  The latest version of Alchemy Storage Helper is 2.0:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1649
+ http://mw.modhistory.com/download-44-6047
+ Leonardo has released a patched version of "Alchemy Storage Helper" fixing the "Unable to find script 'ASH_Zombie_S' on object 'ASH_Dead'" error:
+ http://mw.modhistory.com/download-1-11736
 AlchemyStorageHelper10.esp
 
 [Note]
@@ -1196,6 +1225,16 @@ AlchemyStorageHelper10.esp
  Leonardo has released a patched version of "Alchemy Storage Helper" fixing this error:
  http://mw.modhistory.com/download-1-11736
 [SIZE !11054 ASH2.0.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alchemy Storage Helper 2.0 Ort Edit [Ortorin]
+
+[Conflict]
+ "[Ortorin's "Alchemy Storage Helper 2.0 Ort Edit"] is not compatible with previous versions of Alchemy Storage Helper. Disable any versions you may have installed before running [Ortorin's version]."
+ (Ref: "ASH 2.0 Ort Edit Readme.txt")
+ASH 2.0 Ort Edit.esp
+ASH 2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1426,6 +1465,17 @@ Nevena's Assistants & Apprentices 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alighiere's Blood Thirst Fix [Rellac]
+
+;;Dragon32: Checked in TES:CS
+[Note]
+ !! There is no need to run Rellac's "Alighiere's Blood Thirst Fix" with version 1.52 or higher of "Rise of House Telvanni" by Pozzo, Karpik777, bhl et al.
+ !! The "Alighiere's Blood Thirst" spell is already set as non-"Auto Calulate Cost"
+[ALL Alighiere's Blood Thirst Fix.ESP
+     [VER >1.51 Rise of House Telvanni.esm]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @All Boats and Striders [Quatloos]
 
 [Conflict]
@@ -1473,6 +1523,8 @@ All Destinations.esp
  ! In Pseron Wyrd's modified version of evermoon's "Alternate Beginnings" he notes "Not all the Alternate Beginnings work as intended in original".
  ! It's probable that these are the "Teleported into the Caldera Mages Guild" and "Drinking at the tavern in Dagon Fel" choices. This is based on information in "Alternate Beginnings 2" by BlueBit and Narfblat, an update to evermoon's original "Alternate Beginnings".
  ! (Ref: "Clean altbegin.txt" and "Alternate_Beginnings_2_v11.rar\README.txt")
+ ! "Alternate Beginnings 2" by BlueBit and Narfblat is available on MMH:
+ ! http://mw.modhistory.com/download-53-12399
 [ANY altbegin.esp
      Alternate_Beginnings.esp]
 
@@ -1485,6 +1537,11 @@ All Destinations.esp
  (Ref: http://mw.modhistory.com/download-90-11600 )
 [ANY altbegin.esp
      Alternate_Beginnings.esp]
+Alternate_Beginnings__Simons_fix.esp
+
+[Note]
+ !! "The Great Simonski's Alternate Beginnings - Simon's Fix, a limited update to ["Alternate Beginnings" by Evermoon] designed to fix [its failure to activate certain aspects of the main quest and certain general dialogue options], is nonfunctional and should not be used until it is fixed."
+ !! http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MinorCharGenMods
 Alternate_Beginnings__Simons_fix.esp
 
 
@@ -1604,6 +1661,30 @@ Levelling.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Alternate Start: Delayed Orders [Zerocyde]
+
+[Note]
+ "Not recommended for use because it contains quest-breaking bugs that were never fixed."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MinorCharGenMods )
+ZAS1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @AltStart 3.0 [iamnone]
+
+[Conflict]
+ "[With iamnone's "AltStart 3.0"] the Imperial Prison Ship is changed to Imperial Coast Guard Ship and is not disabled after character generation."
+ The boat that departs to Fort Firemoth in Bethesda's "Siege at Firemoth" plugin leaves from the same dock that the Imperial Prison Ship mooors to.
+ (Ref: "AltStart_v3.txt")
+AltStart_v3.esp
+[ANY Siege at Firemoth.esp
+     FireMoth Moved.ESP
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     super_adventurers302.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alu'Couatl / Couatl  [The Undying One]
 
 [Note]
@@ -1681,6 +1762,7 @@ Bloodmoon.esm
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 4228 TribunalAnimalLootMod.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Animated Morrowind - Expanded [Wikart]
@@ -1950,6 +2032,15 @@ AOF Potions Recolored T+B.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @APime's House Project  [APime11987]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 628046 APime's House Project.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Appoldro's Weaponstore [TommyKhaajit, Dragon32]
 
 [Conflict]
@@ -1996,7 +2087,8 @@ Appropriate Greetings M - T - 1.5.2.esp
      ExcuseMe.esp
      Gameplay - Dialogue.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 [Conflict]
  "It is better not to use this mod with [...] "VGreetings.esp" of the mod "Voice Greetings plugin""
@@ -2007,12 +2099,88 @@ VGreetings.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @APime's House Project  [APime11987]
+;; @Aprogas's Vampire [Jasper Jongmans]
 
-[Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 628046 APime's House Project.esp]
+[Conflict]
+ Aprogas's "Vampire" and "Wakim's Game Improvements" conflict.
+ Jasper Jongmans has released a merged version:
+ http://mw.modhistory.com/download-90-8153
+ (Ref: "AprogasVampire WakimImprovements.20021210.txt")
+AprogasVampire.20021210.esp
+[ANY Gameplay - Dialogue.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
+
+[Conflict]
+ Don't use Aprogas's "Vampire" and the mod which merges it with "Wakim's Game Improvements" together.
+AprogasVampire.20021210.esp
+AprogasVampire WakimImprovements.20021210.esp
+
+[Conflict]
+ "[Jasper Jongmans's "Aprogas's Vampire plus Wakim's Improvements" is a] merge of conflicting Wakim's Improvements and Aprogas's Vampire plugins."
+AprogasVampire WakimImprovements.20021210.esp
+[ANY Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp
+     Balance - Character.esp
+     Balance - Magic Effects.esp
+     Balance - NPC Spellcasting.esp
+     Balance - game settings.esp
+     Balance - items.esp
+     Balance - spells.esp
+     Gameplay - Dialogue.esp
+     Gameplay - Faction.esp]
+
+;;Duplicate relevant WGI rules
+[Conflict]
+ Changes the same values.
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+Weapon Range Balance.esp
+AprogasVampire WakimImprovements.20021210.esp
+[Conflict]
+ The "Gameplay - Dialogue" module of Wakim's Game Improvements "reduced chance that the Neveraine will always be greeted by the "E.e.e.excuse me big hero" stutter to 10%"
+ (Ref: "Gameplay - Dialogue.txt")
+AprogasVampire WakimImprovements.20021210.esp
+[ANY lfx_nerevarine_greetings.esp
+     Nerevarine Greeting tweaks.esp
+     ExcuseMe.esp]
+
+; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Vampire_Embrace.esp
+
+;;Dragon32: Checked with TESPCD
+[Conflict]
+ Wakim's Game Improvements alters AI flee settings. There is no need to run another mod which alters the same settings.
+AprogasVampire WakimImprovements.20021210.esp
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+;; Gameplay - Dialogue.esp adds some generic rumours and the like
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2169,6 +2337,66 @@ BTB - Equipment.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Argonian Water Breathing Toggle [Jack]
+
+;; expdep
+[Requires]
+ This plugin uses a startup script so it requires one of the expansions.
+Argonian Breathing Toggle.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;;Dragon32: Ran TESPCD checks on a bunch of race-affecting mods I was messing around with. Load this after those to get the toggle effect.
+[Order]
+Clean Races_Update.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+birthsigns.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+BTB - Character.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+BTB - Character (Alternate).esp
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+Balance - Character.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Argonian Breathing Toggle.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Arkeylan Armor [Arkeyla]
 
 [Note]
@@ -2220,6 +2448,10 @@ Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 
 [Order]
 super_adventurers302.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
 Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 
 
@@ -3424,7 +3656,7 @@ Atronach Expansion.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Atronach Store  [Denegoth (Jack Anders)]
+;; @Atronach Store [Denegoth (Jack Anders)]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
@@ -3441,6 +3673,17 @@ Atronach Expansion.ESP
 Atronach Store.esp
 Atronach Store Add-on.esp
 Atronach Store Fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Atronach Wombburn Toggle 1.1 [Tealpanda]
+
+;; expdep
+[Requires]
+ This plugin uses a startup script so it requires one of the expansions.
+Atronach Wombburn Toggle.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5576,6 +5819,47 @@ BigMod 2.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Birthsigns [Bot]
+
+[Note]
+ ! "A certain part of the main quest requires the player character to take damage to the point of reducing Health to 1 while drowning. If the character has permanent, constant-effect waterbreathing, it effectively breaks this quest."
+ ! "Birthsigns" by Bot makes Argonian water-breathing a constant-effect ability.
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#FAQ )
+[ALL birthsigns.esp
+     [NOT Argonian Breathing Toggle.esp]]
+
+[Order]
+birthsigns.esp
+Argonian Breathing Toggle.esp
+
+;;Load the specific birthsign-affecting mod after WGI
+[Order]
+Balance - Character.esp
+birthsigns.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+birthsigns.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+birthsigns.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+birthsigns.esp
+
+;;Load the specific birthsign-affecting mod after BTB
+[Order]
+BTB - Character.esp
+birthsigns.esp
+
+[Order]
+BTB - Character (Alternate).esp
+birthsigns.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Birthsigns Are More Fun [Alaisiagae]
 
 [Requires]
@@ -6572,7 +6856,8 @@ BTB - Character.esp
      BTB - Character (Alternate).esp]
 [ANY Balance - Character.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 [Conflict]
  BTB's Character plugin includes a copy of a similar birthsign remover script to the one in AzuMite's "Level Up Birthsign Remover"
@@ -6582,6 +6867,18 @@ BTB - Character.esp
 [ANY Level Up Birthsign Remover 103.esp
      Level Up Birthsign Remover WGI 103.esp]
 
+[Note]
+ ! "A certain part of the main quest requires the player character to take damage to the point of reducing Health to 1 while drowning. If the character has permanent, constant-effect waterbreathing, it effectively breaks this quest."
+ ! "BTB's Game Improvements" makes Argonian water-breathing a constant-effect ability.
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#FAQ )
+[ALL [ANY BTB - Character.esp
+          BTB - Character (Alternate).esp
+          CE-DepthPerception25+BTB's Character.ESP
+          CE-DepthPerception50+BTB's Character.ESP
+          CE-DepthPerception75+BTB's Character.ESP
+          CE-DepthPerception100+BTB's Character.ESP]
+     [NOT Argonian Breathing Toggle.esp]]
+
 ;;"BTB - Equipment.esp"
 
 [Conflict]
@@ -6590,7 +6887,8 @@ BTB - Character.esp
 BTB - Equipment.esp
 [ANY Balance - items.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 [Requires]
  (Ref: "morrowind_btb.zip\Readme.txt")
@@ -6657,7 +6955,8 @@ CalSurGuardMod.esp
      Balance - game settings.esp
      Balance - items.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 ;;Dragon32: Checked with TESPCD
 [Conflict]
@@ -6676,7 +6975,8 @@ BTB - Spells.esp
 [ANY Balance - Magic Effects.esp
      Balance - spells.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 ;; Ref: "morrowind_btb.zip\Readme.txt"
 [Order]
@@ -6800,12 +7100,13 @@ BTB - Unique Finery Equipment.esp
 
 ;;Dragon32 - Duplicated Conflict warnings from BTB's Equipment plugin. See "@BTB's Game Improvements 8.6 [BTB]"
 [Conflict]
- "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running a modifed version of BTB's and Wakim's mods that alter equipment settings.
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running a modified version of BTB's and Wakim's mods that alter equipment settings.
  (Ref: "morrowind_btb.zip\Readme.txt")
 BTB - Unique Finery Equipment.esp
 [ANY Balance - items.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 [Conflict]
  "Dark Brotherhood Armor Replacer - Expanded" by Dimitri Mazieres conflicts with this modified version of BTB's Equipment plugin, you should use the compatibility plugins BTB provides in the Extras folder.
@@ -7161,6 +7462,10 @@ Wakim's Game Improvements with No-glo v9.esp
 Cast On Use B-Gone.esp
 
 [Order]
+AprogasVampire WakimImprovements.20021210.esp
+Cast On Use B-Gone.esp
+
+[Order]
 BTB - Equipment.esp
 Cast On Use B-Gone.esp
 
@@ -7336,6 +7641,15 @@ CharGen_Revamped_v14.esp
 CharGen Revamped wDiseases.esp
 
 ;;Notes on Marbred's older CharGen mods
+[Note]
+ ! "[Marbred's "CharGen Diseases"] is an update/replacer for my old Chargen Vampire and Chargen Werewolf mods. This combines both those mod ideas into one mod."
+ ! http://mw.modhistory.com/download-90-11436
+ ! (Ref: "Readme - Chargen Diseases.txt")
+[ANY Chargen Werewolf.esp
+     Vampire Birthsigns.esp
+     Chargen Vampire_Berne.esp
+     Chargen Vampire.esp]
+
 [Conflict]
  Do not use Marbred's "Chargen Werewolf" and "Chargen Vampire Birthsigns" at the same time
  (Ref: "ChargenWereWolf ReadMe.txt")
@@ -7347,19 +7661,31 @@ Vampire Birthsigns.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2941 Vampire Birthsigns.esp]
 
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 3053 Chargen Vampire.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6869 Chargen Vampire_Berne.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Chargen mods [Various]
+;; @CharGen mods [Various]
 
 [Conflict]
- All of the following plugins affect the player character generation (chargen) process and so they will conflict with each other. You should only use one Chargen mod.
+ All of the following plugins affect the player character generation (CharGen) process and so they will conflict with each other. You should only use one CharGen mod.
 altbegin.esp
 altbegin 2.1(nioliv).esp
 altbegin 2.1.esp
 altbegin 2.2(nioliv).esp
 altbegin 2.2.esp
 Alternate Beginnings 2.esp
+Alternate_Beginnings.esp
 Alternate_Beginnings__Simons_fix.esp
+AltStart_v3.esp
 BC altbegin 2.1(nioliv).esp
 BC altbegin 2.1.esp
 BC altbegin 2.2(nioliv).esp
@@ -7380,11 +7706,19 @@ PrivateersHold.esp
 Quick Char.esp
 QuickChar.esp
 QuickCharTR.esp
+SilentCharGen.esp
+SkipTutorial1.0.esp
+Tutorial Disable.esp
 ZAS1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CharGen Revamped 1.4 [gman21]
+
+[Note]
+ ! A new version of "Chargen Revamped", version 2.3, is available. You should upgrade!
+ ! http://mw.modhistory.com/download-18-12898
+CharGen_Revamped_v14.esp
 
 [Conflict]
  gman21's "CharGen Revamped" includes "Character Maker" by Zerocyde.
@@ -7392,6 +7726,15 @@ ZAS1.esp
 [ANY Character Maker.esp
      Character Maker (qs).esp]
 CharGen_Revamped_v14.esp
+
+[Conflict]
+ gman21's "CharGen Revamped" includes Bluebit's upgrade to Evermoon's "Alternate Beginnings"
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MinorCharGenMods )
+CharGen_Revamped_v14.esp
+[ANY Alternate Beginnings 2.esp
+     Alternate_Beginnings.esp
+     altbegin.esp
+     Clean altbegin.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7426,6 +7769,31 @@ The Goblin Lab v1.1.esp
 [ANY Chargen_Revamped_v2_3.esp
      Clean Chargen_Revamped_v2_3.esp]
 
+[Conflict]
+ Pwin/Eisenfaust's "CharGen Revamped" builds on gman21's original "CharGen Revamped" which includes "Character Maker" by Zerocyde.
+ (Ref: "chargen_revamped_v14.zip\readme.txt" and http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MajorCharGenMods )
+[ANY Character Maker.esp
+     Character Maker (qs).esp]
+[ANY Chargen_Revamped_v2_3.esp
+     Clean Chargen_Revamped_v2_3.esp]
+
+[Conflict]
+ "[Pwin/Eisenfaust's "Chargen Revamped 2.3"] also provides an option for the player to go through the standard CharGen process, with or without the tutorial."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MajorCharGenMods )
+No CharGen MessageBoxes.esp
+[ANY Chargen_Revamped_v2_3.esp
+     Clean Chargen_Revamped_v2_3.esp]
+
+[Conflict]
+ Pwin/Eisenfaust's "CharGen Revamped" includes Bluebit's upgrade to Evermoon's "Alternate Beginnings"
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MinorCharGenMods )
+[ANY Chargen_Revamped_v2_3.esp
+     Clean Chargen_Revamped_v2_3.esp]
+[ANY Alternate Beginnings 2.esp
+     Alternate_Beginnings.esp
+     altbegin.esp
+     Clean altbegin.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @CharGen Revamped Delay [Galsiah]
@@ -7444,6 +7812,17 @@ CharGen Revamped delay.esp
  There is no need to run both of these mods together
 CharGen Revamped delay.esp
 CharGen Revamped delay2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Chargen Revamped Fix [?]
+
+;;No idea which Charge Revamped mod this affects. After cleaning it only seems to add "chargen statssheet" into "Seyda Neen, Census and Excise Office"
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5538 chargen_Revamped_Fix.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7699,7 +8078,8 @@ BTB - Character (Alternate).esp
      CE-DepthPerception100+BTB's Character.ESP]
 [ANY Balance - Character.esp
      Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp]
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8020,12 +8400,38 @@ ComprehensiveChargen.esp
      Clean altbegin.esp]
 
 [Conflict]
+ "[Shade the Bandit's "Comprehensive Chargen" is] incompatible with Necessities of Morrowind (NoM)."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MajorCharGenMods )
+ComprehensiveChargen.esp
+[ANY NoM 3.0.esp
+     NOM 2.13.esp]
+
+[Note]
+ ! "[Shade the Bandit] reports possible conflicts with [his "Comprehensive Chargen" and] Galsiah's Character Development (GCD), though several [people] have reported that they work fine together."
+ ! (Ref: "ShadeChargen.txt" and http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MajorCharGenMods )
+[ALL ComprehensiveChargen.esp
+     [ANY Galsiahs Character Development.esp
+          GCD v1.08 with Startscript, fixed [Galsiah].esp
+          GCDLean204STD.esp
+          GCDLean204EASY.esp
+          GCDLean204HARD.esp]]
+
+[Conflict]
+ "Reports of incompatibility with [Shade the Bandit's "Comprehensive Chargen" and] Yacoby's Pursuit Enhanced."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MajorCharGenMods )
+ComprehensiveChargen.esp
+Pursuit Enhanced.esp
+
+[Conflict]
  Options in "Comprehensive Chargen" by Shade the Bandit "allow the player the option to start as a vampire or as a werewolf, if they so desire.".
  (Ref: "ShadeChargen.txt")
 ComprehensiveChargen.esp
 [ANY CharGen Diseases.esp
      Chargen Werewolf.esp
-     Vampire Birthsigns.esp]
+     Vampire Birthsigns.esp
+     Chargen Vampire_Berne.esp
+     Chargen Vampire.esp
+     Birthsign Diseases.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8330,6 +8736,18 @@ Creatures (lore).esp
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
+Creatures (Semi).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Creatures.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Creatures (lore).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
 Creatures (Semi).esp
 
 ;;Dragon32: Arbitrary Order rule, BTB's value for fAIFleeHealthMult is 45, Creatures' is 25. IMO, lower the better for this value
@@ -9305,13 +9723,17 @@ BirthsignsAMFun_BM.esp
 Birthsigns.esp
 BirthsignsAMFun_MW.esp
 
+[Order]
+Birthsigns.esp
+ExpandedBirthsigns4Purists.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Definitive Birthsigns Redux Patch [Pluto]
 
 [Requires]
  "The original version of The Definitive Birthsigns Pack must be installed"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=150
+ http://mw.modhistory.com/download-8-7483
  (Ref: "Definitive Birthsign Redux.txt")
 Definitive Birthsigns Redux Patch.esp
 Birthsigns.esp
@@ -9393,7 +9815,7 @@ DBirth-Redux GCD Patch.esp
 
 [Requires]
  "Required files: [...] "The Definitive Birthsigns Pack" by Doy and IceNine0"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=150
+ http://mw.modhistory.com/download-8-7483
  (Ref: "Definitive Birthsigns Unoffical Patch README.txt")
 Definitive Birthsigns Unofficial Patch.esp
 Birthsigns.esp
@@ -9594,6 +10016,11 @@ Brittlewind fix.esp
 GCD_WE_patch.esp
 GCD_107x_to_108_patch.esp
 GCD_107x_to_108_patch_MwOnly.esp
+Diablerie.esp
+
+;;Dragon32: Supposed to replace "GCD better balanced birthsigns.esp"
+[Order]
+ExpandedBirthsigns4Purists.esp
 Diablerie.esp
 
 ;;Ref: Diablerie_Readme.txt
@@ -11120,10 +11547,31 @@ ExoticsBoutiqueNoMusic.esp
 ;; @Expanded Birthsigns for Purists [Tyrthyllanos]
 
 [Conflict]
- "(ExpandedBirthsigns4Purists.esp) was originally designed for use with Galsiah's Character Development, and is based off of the .esp for birthsigns balanced for GCD. If you've been using that, you'll need to disable it when you enable this."
+ "[Tyrthyllanos' "Expanded Birthsigns for Purists"] was originally designed for use with Galsiah's Character Development, and is based off of the .esp for birthsigns balanced for GCD. If you've been using that, you'll need to disable it when you enable this."
  (Ref: "ExpandedBirthsigns4Purists-Readme.txt")
 ExpandedBirthsigns4Purists.esp
 GCD better balanced birthsigns.esp
+
+;;Dragon32: Designed to replace "GCD better balanced birthsigns.esp" from GCD so let's add it in to the same place in the GCD Order list
+[Order]
+Galsiahs Character Development.esp
+GCD v1.08 with Startscript, fixed [Galsiah].esp ;;Gluby
+GCD StartScript for Trib or Bloodmoon.esp
+ExpandedBirthsigns4Purists.esp
+GCD Over 60 level speedup.esp
+GCD Restore Potions Fix.esp
+GCD settings fairly easy.esp
+GCD settings hard.esp
+GCD - Cult of the Clouds patch.esp
+GCD_Havish_patch.esp
+GCD_SS_patch.esp
+GCD TEO compatibility patch.esp
+GCD_VH_patch2.esp
+CharGen Revamped delay2.esp
+Brittlewind fix.esp
+GCD_WE_patch.esp
+GCD_107x_to_108_patch.esp
+GCD_107x_to_108_patch_MwOnly.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13609,11 +14057,9 @@ TheGloryRoad.esm
 ;; @Glow-Away 1.0 [Zeanu]
 
 [Note]
- !! While this plugin does remove the glow from enchanted items, it also has the undesired effect of removing the "Detect Life/Creature" effect. You might want to try either "Improved No-Glow" by Shadre:
- !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4034
- !! or maybe even better "Pluginless NoGlow" by Plangkye:
- !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6984
- !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=426 )
+ !! "[Zeanu's "Glow-Away" plugin] affects the map icons created by Detect Creature, Detect Key and Detect Enchantment spells, making them black/transparent as well, and rendering these spells useless. Second, it interferes with reflection-mapped custom mod items."
+ !! "[If you are using hrnchamd's] MCP, there is no longer any reason to use the [no glow] plugin method."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_MagicItemSpellFX_Mods.htm#FAQ )
 Glow-Away.esp
 
 
@@ -14893,6 +15339,24 @@ Westly Presents_Halflings (UNDERWEAR).esp
  (Ref: "Westly Presents Half Races of Tamriel README.txt")
 Westly Presents_Half Races of Tamriel.esp
 Westly Presents_Half Races of Tamriel_X.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Handy Equipping 1.1 [Fliggerty]
+
+[Note]
+ ! There is a new version, 1.1, of Fliggerty's "Handy Equipping" available. You should check if you need to upgrade!
+ ! http://download.fliggerty.com/download--11
+[SIZE !47574 Handy Equipping.esp]
+
+
+[Conflict]
+ "Reports of incompatibility with [Shade the Bandit's "Comprehensive Chargen" and] Fliggerty's Handy Equipping."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MajorCharGenMods )
+ With version 1.1 of Fliggerty's "Handy Equipping" the "Setup script will no longer run immediately upon starting a new game.  It will begin about a minute after character generation is completely finished."
+ It is unconfirmed if this change makes "Handy Equipping" compatible with "Comprehensive Chargen"
+ComprehensiveChargen.esp
+Handy Equipping.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17230,6 +17694,7 @@ Illy's Solsteim Rumour Fix.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Immersive Chargen 1.25 [Qebehsenuf]
 
+;;Dragon32: 1.24 (and I assume ealier don't come with "Immersive Chargen - CM.esp")
 [Note]
  ! There is a new version of "Immersive Chargen" by Qebehsenuf, 1.25. You should upgrade!
  ! http://mw.modhistory.com/download-54-6184
@@ -17256,6 +17721,17 @@ Immersive Chargen - CM.esp
 [ANY Immersive Chargen.esp
      Immersive Chargen - CM.esp]
 No CharGen MessageBoxes.esp
+
+[Conflict]
+ "[Qebehsenuf's "Immersive Chargen" ] provides an opportunity via dialogue to choose to begin as a vampire, with choice of bloodline."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#ThematicCharGenMods )
+[ANY Immersive Chargen.esp
+     Immersive Chargen - CM.esp]
+[ANY CharGen Diseases.esp
+     Vampire Birthsigns.esp
+     Chargen Vampire_Berne.esp
+     Chargen Vampire.esp
+     Birthsign Diseases.esp]
 
 [Note]
  "If anyone is having problems with the "Who's there?" dialog, look up the "it's me you idiot" mod [in ManaUser's "Mini Mods Collection"]. That will fix your problems and you will be able to use the latest version [of "Immersive Chargen" by Qebehsenuf]."
@@ -17487,18 +17963,14 @@ Improved_No_Glow_v1-MW_Trib.esp
 Improved_No_Glow_v1-MW_Blood.esp
 Improved_No_Glow_v1-MW_Trib_Blood.esp
 
-[Conflict]
- All these plugins remove the shimmering glow from enchanted items. You should choose only one of these mods. The recommended mod to use is Shadre's "Improved No Glow" because all the others have the undesired side-effect of removing the "Detect Life/Creature" effect.
- Maybe a better choice would be "Pluginless NoGlow" by Plangkye:
-  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6984
- That has none of the side-effects, and is pluginless, so it will have fewer conflicts with other mods.
+[Note]
+ !! "[Shadre's "Improved No Glow" plugin] interferes with reflection-mapped custom mod items."
+ !! "[If you are using hrnchamd's] MCP, there is no longer any reason to use the [no glow] plugin method."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_MagicItemSpellFX_Mods.htm#FAQ )
 [ANY Improved_No_Glow_v1-MW_Only.esp
      Improved_No_Glow_v1-MW_Trib.esp
      Improved_No_Glow_v1-MW_Blood.esp
      Improved_No_Glow_v1-MW_Trib_Blood.esp]
-No-Glo_Revisited.esp
-Glow-Away.esp
-No-Glo_0709.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18287,6 +18759,62 @@ New Khajiit Diversity(BEAST).esp
 New Khajiit Diversity(BEAST)X.esp
 New Khajiit Diversity(CIV).esp
 New Khajiit Diversity(CIV)X.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Khajiit Eye of Night Toggle 1.0 [Taehl]
+
+;; expdep
+[Requires]
+ This plugin uses a startup script so it requires one of the expansions.
+Khajiit Eye of Night Toggle.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;;Dragon32: Ran TESPCD checks on a bunch of race-affecting mods I was messing around with. Load this after those to get the toggle effect.
+[Order]
+Clean Races_Update.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+Races1.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+BTB - Character.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
+Argonian Breathing Toggle.esp
+
+[Order]
+Balance - Character.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Argonian Breathing Toggle.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Argonian Breathing Toggle.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19086,6 +19614,7 @@ Level Up Birthsign Remover WGI 103.esp
 Level Up Birthsign Remover WGI 103.esp
 [ANY Wakim's Game Improvements with No-glo v9.esp
      Wakim's Game Improvement 9.esp
+     AprogasVampire WakimImprovements.20021210.esp
      Balance - Character.esp]
 
 [Conflict]
@@ -19428,6 +19957,10 @@ LGNPC_NoLore.esp
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
+LGNPC_NoLore.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
 LGNPC_NoLore.esp
 
 [Conflict]
@@ -20513,6 +21046,69 @@ Mage Friendly Bloodmoon.esp
  !! This plugin contains one evil GMST (sEffectSummonFabricant)
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 6220  Magic Alembic v1.1.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MTT (Magical Trinkets of Tamriel) [Chris Woods]
+
+; MTT should load after WGI as they both change the MGEF which MTT uses for the floating ioun stone
+[Order]
+Wakim's Game Improvement 9.esp
+Wakim's Game Improvements with No-glo v9.esp
+AprogasVampire WakimImprovements.20021210.esp
+MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
+MTT IV Master.esp
+
+[Order]
+Balance - Magic Effects.esp
+MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
+MTT IV Master.esp
+
+;;Also load after BTB's settings plugin, changes same MGEF
+[Order]
+BTB - Spells.esp
+MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
+MTT IV Master.esp
+
+[Conflict]
+ "MTT_IV_Master.esp" is a replacement for "MTT IV Master.esp", so you should remove the latter.
+MTT_IV_Master.esp
+MTT IV Master.esp
+
+[Note]
+ !! Magical Trinkets of Tamriel IV (both Chris Woods' original, "MTT IV Master.esp", and the modified version by habile, "MTT IV Updated v0.79.esp") contains deprecated use of the function AddToLev*. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ !! It is suggested that you get a replacement patch, such as MTT_IV_Master-jms_patch-0.2.7z (from http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods ) or Magical Trinkets of Tamriel IV beta - Dragon32 patch (from http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9392 )
+[ANY [ALL [MTT IV Master.esp
+          [SIZE !1629334 MTT IV Master.esp]] ;;Dragon32's edited version
+     MTT IV Updated v0.79.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MTT4 Necromantic Tweaks [Sandman]
+
+[Requires]
+ (Ref: "MTT4 Necro Tweak.txt")
+MTT4 Necro Tweaks.esp
+[ANY MTT IV Master.esp
+     MTT_IV_Master.esp
+     MTT IV Updated v0.79.esp
+     MTT IV v0.79 (LL fixed)_DWS version.esp]
+
+[Conflict]
+ Dragon32's edited version of "Magical Trinkets of Tamriel IV" adjusts the resistances of skeleton and phantom minions just as Sandman's "MTT4 Necromantic Tweaks" does.
+ (Ref: "MTT IV Master_D32Edit.txt")
+[SIZE 1629334 MTT IV Master.esp]
+MTT4 Necro Tweaks.esp
+
+[Order]
+MTT_IV_Master.esp			; patched version by JMS
+MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
+MTT IV Updated v0.79.esp		; habile's version
+MTT IV Master.esp			; Chris Woods' original
+MTT4 Necro Tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23775,6 +24371,7 @@ MWInhabitants Freeform (Vol 1).esp
 [ALL MWInhabitants Flee AI Patch.esp
      [ANY Wakim's Game Improvement 9.esp
 	  Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp
           Balance - game settings.esp]]
 
 
@@ -23817,9 +24414,9 @@ Morrowind_Inhabitants.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Public Library v1.5 [DrSilent]
+;; @Morrowind Public Library 1.5 [DrSilent]
 
-;; No-glo, for instance, should be loaded after this mod
+;;"No-glo, for instance, should be loaded after this mod"
 ;;(Ref: "MWlib_readme.txt")
 [Order]
 MW_Public_Library.esp
@@ -23827,6 +24424,10 @@ Improved_No_Glow_v1-MW_Only.esp
 Improved_No_Glow_v1-MW_Trib.esp
 Improved_No_Glow_v1-MW_Blood.esp
 Improved_No_Glow_v1-MW_Trib_Blood.esp
+Glow-Away.esp
+No-Glo_0709.esp
+No-Glo_Revisited.esp
+Wakim's Game Improvements with No-glo v9.esp
 
 ;; (Dragon 32: See MWlib_NOM_patch.txt)
 [Order]
@@ -23901,6 +24502,7 @@ Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
      Balance - Character.esp
      Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp
      RAMF_Mer_for_NPCs.esp
      RAMF.esp
      RAMF_for_NPCs.esp
@@ -24312,6 +24914,10 @@ Wakim's Game Improvement 9.esp
 Morrowind Rebirth <VER>.esp
 Wakim's Game Improvements with No-glo v9.esp
 
+[Order]
+Morrowind Rebirth <VER>.esp
+AprogasVampire WakimImprovements.20021210.esp
+
 ;; Order rules for assorted other mods
 
 ;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
@@ -24377,6 +24983,7 @@ ImprovedTeleportation2.0.esp
  These mods require Morrowind Script Extender (MWSE) v0.9.2 or later, or MGE v3.0.3 or later.
 Alchemist's Arsenal v1.0.esp
 ASH2.0.esp
+ASH 2.0 Ort Edit.esp
 Better Telekinesis.esp
 bjam_Aragon_at_MWSEpatch_v1.0.esp
 bjam_at_MWSE_patch.esp
@@ -24415,6 +25022,7 @@ VH_Bloodreport.esp
 Arrow De-nocker.esp
 Blasphemous Revenants.esp
 Enhanced Summoning.esp
+Handy Equipping.esp
 Keyring.esp
 LA_MWSE Addon.esp
 Merchant Investments.esp
@@ -24467,7 +25075,7 @@ MCA_Companions_Enhanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @TES: Morrowind Sound Enhancement Plugin Version 1.5 [Leon "pancreas" Medado]
+;; @Morrowind Sound Enhancement Plugin Version 1.5 [Leon "pancreas" Medado]
 
 [Note]
  !! The "No Tribunal" version of this plugin contains evil GMSTs.
@@ -24532,68 +25140,6 @@ MTC-LGNPC SN.ESP
 From Hell To Heaven.esm
 [ALL From Hell To Heaven part 2.esp
      From Hell To Heaven part 3.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MTT (Magical Trinkets of Tamriel) [Chris Woods]
-
-; MTT should load after WGI as they both change the MGEF which MTT uses for the floating ioun stone
-[Order]
-Wakim's Game Improvement 9.esp
-Wakim's Game Improvements with No-glo v9.esp
-MTT_IV_Master.esp			; patched version by JMS
-MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
-MTT IV Master.esp
-
-[Order]
-Balance - Magic Effects.esp
-MTT_IV_Master.esp			; patched version by JMS
-MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
-MTT IV Master.esp
-
-;;Also load after BTB's settings plugin, changes same MGEF
-[Order]
-BTB - Spells.esp
-MTT_IV_Master.esp			; patched version by JMS
-MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
-MTT IV Master.esp
-
-[Conflict]
- "MTT_IV_Master.esp" is a replacement for "MTT IV Master.esp", so you should remove the latter.
-MTT_IV_Master.esp
-MTT IV Master.esp
-
-[Note]
- !! Magical Trinkets of Tamriel IV (both Chris Woods' original, "MTT IV Master.esp", and the modified version by habile, "MTT IV Updated v0.79.esp") contains deprecated use of the function AddToLev*. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
- !! It is suggested that you get a replacement patch, such as MTT_IV_Master-jms_patch-0.2.7z (from http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods ) or Magical Trinkets of Tamriel IV beta - Dragon32 patch (from http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9392 )
-[ANY [ALL [MTT IV Master.esp
-          [SIZE !1629334 MTT IV Master.esp]] ;;Dragon32's edited version
-     MTT IV Updated v0.79.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MTT4 Necromantic Tweaks [Sandman]
-
-[Requires]
- (Ref: "MTT4 Necro Tweak.txt")
-MTT4 Necro Tweaks.esp
-[ANY MTT IV Master.esp
-     MTT_IV_Master.esp
-     MTT IV Updated v0.79.esp
-     MTT IV v0.79 (LL fixed)_DWS version.esp]
-
-[Conflict]
- Dragon32's edited version of "Magical Trinkets of Tamriel IV" adjusts the resistances of skeleton and phantom minions just as Sandman's "MTT4 Necromantic Tweaks" does.
- (Ref: "MTT IV Master_D32Edit.txt")
-[SIZE 1629334 MTT IV Master.esp]
-MTT4 Necro Tweaks.esp
-
-[Order]
-MTT_IV_Master.esp			; patched version by JMS
-MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
-MTT IV Updated v0.79.esp		; habile's version
-MTT IV Master.esp			; Chris Woods' original
-MTT4 Necro Tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25557,6 +26103,37 @@ NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NoM_BTB Compatibility Plugins [Stilleas]
+
+[Patch]
+ Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
+NoM_BTB-Alchemy Compatibility Plugin.esp
+[ALL BTB - Alchemy.esp
+     NoM 3.0.esp]
+
+[Patch]
+ Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
+NoM_BTB-Settings Compatibility Plugin.esp
+[ALL [ANY BTB - Settings (Alternate).esp
+          BTB - Settings.esp]
+     NoM 3.0.esp]
+
+[Order]
+NoM 3.0.esp
+NoM_BTB-Alchemy Compatibility Plugin.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+NoM_BTB-Settings Compatibility Plugin.esp
+
+[Order]
+BTB - Settings.esp
+NoM_BTB-Settings Compatibility Plugin.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NOM3fix [abot]
 
 [Patch]
@@ -25787,16 +26364,6 @@ NewBlood_MwTbBm1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @New fire damage effect 1.1 [Mad DJ]
-
-[Note]
- !! This plugin contains evil GMSTs. (Even though Readme
- !! says it's clean, it isn't)
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 5307 New fire damage effect v1.1 .esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NEDE - New Elemental Damage Effects [rocker]
 
 ;; "you must reorder your mod so that NEDE WGI patch would be loaded after
@@ -25804,9 +26371,10 @@ NewBlood_MwTbBm1.1.esp
 ;; (Ref: "Readme New Elemental Damage Effects v1.2.txt")
 
 [Order]
-Wakim's Game Improvement 9.esp		     ;\
-Wakim's Game Improvements with No-glo v9.esp ; } these are actually mutally exclusive
-Balance - Magic Effects.esp		     ;/
+Wakim's Game Improvement 9.esp		      ;\
+Wakim's Game Improvements with No-glo v9.esp  ; |
+AprogasVampire WakimImprovements.20021210.esp ; } these are actually mutally exclusive
+Balance - Magic Effects.esp		      ;/
 NEDE v1.2.esp
 NEDE WGI patch.esp
 
@@ -25816,7 +26384,18 @@ NEDE WGI patch.esp
 [ALL NEDE v1.2.esp
      [ANY Wakim's Game Improvement 9.esp
           Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp
 	  Balance - Magic Effects.esp]]	; WGI 9 Modular
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @New fire damage effect 1.1 [Mad DJ]
+
+[Note]
+ !! This plugin contains evil GMSTs. (Even though Readme
+ !! says it's clean, it isn't)
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 5307 New fire damage effect v1.1 .esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25876,6 +26455,7 @@ New Icons - BM Add-on.esp
 [Order]
 Wakim's Game Improvement 9.esp
 Wakim's Game Improvements with No-glo v9.esp
+AprogasVampire WakimImprovements.20021210.esp
 New Icons - WGI Compat.esp
 
 [Order]
@@ -26238,9 +26818,29 @@ Ninja_Girl_JapHouse_teleport.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @No-Glo [Cu]
+
+[Note]
+ !! "[Cu's "No-Glo" plugin] affects the map icons created by Detect Creature, Detect Key and Detect Enchantment spells, making them black/transparent as well, and rendering these spells useless. Second, it interferes with reflection-mapped custom mod items."
+ !! "[If you are using hrnchamd's] MCP, there is no longer any reason to use the [no glow] plugin method."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_MagicItemSpellFX_Mods.htm#FAQ )
+No-Glo_0709.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @No-Glo Revisited [kaiton4]
+
+[Note]
+ !! "[kaiton4's "No-Glo Revisited" plugin] affects the map icons created by Detect Creature, Detect Key and Detect Enchantment spells, making them black/transparent as well, and rendering these spells useless. Second, it interferes with reflection-mapped custom mod items."
+ !! "[If you are using hrnchamd's] MCP, there is no longer any reason to use the [no glow] plugin method."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_MagicItemSpellFX_Mods.htm#FAQ )
+No-Glo_Revisited.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NPC Enhanced MWSE add-on [Charles Cooley]
 
-;;Dragon32: See "@Morrowind Enhanced [Aerelorn]" section.
+;;Dragon32: See "Morrowind Enhanced [Aerelorn]" section.
 
 ; This needs further investigation. http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13747955
 ;[Note]
@@ -26322,6 +26922,10 @@ NPC Functionality.esp
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
+NPC Functionality.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
 NPC Functionality.esp
 
 ;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
@@ -26436,29 +27040,6 @@ Clean NofemKnights.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @No-Glo [Cu]
-
-[Note]
- !! While this plugin does remove the glow from enchanted items, it also has the undesired effect of removing the "Detect Life/Creature" effect. You might want to try either "Improved No-Glow" by Shadre:
- !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4034
- !! or maybe even better "Pluginless NoGlow" by Plangkye:
- !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6984
-No-Glo_0709.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @No-Glo Revisited [kaiton4]
-
-[Note]
- !! While this plugin does remove the glow from enchanted items, it also has the undesired effect of removing the "Detect Life/Creature" effect. You might want to try either "Improved No-Glow" by Shadre:
- !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4034
- !! or maybe even better "Pluginless NoGlow" by Plangkye:
- !!  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6984
- !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=70 )
-No-Glo_Revisited.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @No Greet [Unknown]
 
 ;;Dragon32: BTB's mods set iGreetDistance to 2; No Greet sets it to 0
@@ -26472,34 +27053,13 @@ no_greet_0705.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @NoM_BTB Compatibility Plugins [Stilleas]
+;; @No Thieving Start [Tarnsman]
 
-[Patch]
- Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
-NoM_BTB-Alchemy Compatibility Plugin.esp
-[ALL BTB - Alchemy.esp
-     NoM 3.0.esp]
-
-[Patch]
- Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
-NoM_BTB-Settings Compatibility Plugin.esp
-[ALL [ANY BTB - Settings (Alternate).esp
-          BTB - Settings.esp]
-     NoM 3.0.esp]
-
-[Order]
-NoM 3.0.esp
-NoM_BTB-Alchemy Compatibility Plugin.esp
-
-[Order]
-BTB - Settings (Alternate).esp
-NoM_BTB-Settings Compatibility Plugin.esp
-
-[Order]
-BTB - Settings.esp
-NoM_BTB-Settings Compatibility Plugin.esp
+[Conflict]
+ "[Tarnsman's "No Thieving Start"] has been merged with the Tutorial Disable mod by JTE, which removes all the tutorial messages when you start a new game."
+ (Ref: "No thieving start - readme.txt")
+No thieving start 1.0.esp
+Tutorial Disable.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26511,6 +27071,10 @@ Improved_No_Glow_v1-MW_Only.esp
 Improved_No_Glow_v1-MW_Trib.esp
 Improved_No_Glow_v1-MW_Blood.esp
 Improved_No_Glow_v1-MW_Trib_Blood.esp
+Glow-Away.esp
+No-Glo_0709.esp
+No-Glo_Revisited.esp
+Wakim's Game Improvements with No-glo v9.esp
 NoShieldEffect.esp
 
 
@@ -27128,6 +27692,73 @@ Clean Official Plugins v1.1.esp
      [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
      Master_Index.esp
      Siege at Firemoth.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Om'Nartus' Racial/Birthsign Realism Mod 1.0 [Om'Nartus]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8903 Birthsign1.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 16821 Races1.esp]
+
+
+;;Load the specific birthsign-affecting mod after WGI
+[Order]
+Balance - Character.esp
+Birthsign1.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Birthsign1.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Birthsign1.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Birthsign1.esp
+
+;;Load the specific birthsign-affecting mod after BTB
+[Order]
+BTB - Character.esp
+Birthsign1.esp
+
+[Order]
+BTB - Character (Alternate).esp
+Birthsign1.esp
+
+;;Load the specific race-affecting mod after WGI
+[Order]
+Balance - Character.esp
+Races1.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Races1.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Races1.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Races1.esp
+
+;;Load the specific race-affecting mod after BTB
+[Order]
+BTB - Character.esp
+Races1.esp
+
+[Order]
+BTB - Character (Alternate).esp
+Races1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28299,11 +28930,11 @@ Suran-Waterfront-v-4.4.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Pursuit Enhanced [Yacoby]
+;; @Pursuit Enhanced 1.2.4 [Yacoby]
 
 [Note]
  ! The latest version of "Pursuit Enhanced" is 1.2.4, you should upgrade.
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4481
+ ! http://mw.modhistory.com/download-90-6153
 [VER < 1.2.4 Pursuit Enhanced.esp]
 
 [Conflict]
@@ -28384,7 +29015,51 @@ TR_Mainland.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Races Are More Fun [Alaisiagae]
+;; @Race/Birthsign Remix [paulkdad]
+
+;;Load the specific race-affecting mod after WGI
+[Order]
+Balance - Character.esp
+race_birthsign_remix.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+race_birthsign_remix.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+race_birthsign_remix.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+race_birthsign_remix.esp
+
+;;Load the specific race-affecting mod after BTB
+[Order]
+BTB - Character.esp
+race_birthsign_remix.esp
+
+[Order]
+BTB - Character (Alternate).esp
+race_birthsign_remix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Race Rebuild 1.41 [Mythos]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1382260 race_rebuildv1_41.esp]
+
+[Note]
+ !! "Not recommended for use in its current state. The mod is highly problematic, and contains a large amount of dirty refs from the official Bethesda mods that the mod author likely had installed, but which have no business being in this mod."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#RaceMods )
+race_rebuildv1_41.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Races Are More Fun 0.5 [Alaisiagae]
 
 [Conflict]
  You don't need Taehl's "Khajiit Eye of Night Toggle" when running "Races Are More Fun" by Alaisiagae.
@@ -28401,14 +29076,15 @@ Khajiit Eye of Night Toggle.esp
   "RAMF_Mer.esp" - Use this if you want the Elf names to change to Mer names.
   "RAMF_Mer_for_NPCs.esp" - Use this if you want Elf names to change to Mer names AND you want NPCs to be able to use racial powers and spells.
   "RAMF.esp" - Use this if you don't want the other versions.
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7154 )
+ (Ref: http://www.nexusmods.com/morrowind/mods/21875/ )
 RAMF_Mer_for_NPCs.esp
 RAMF.esp
 RAMF_for_NPCs.esp
 RAMF_Mer.esp
 
-; Dragon32: Gluby clued me onto this by PM. This mod has a similar issue with Merged Objects as Alaisiagae's Birthsigns Are More Fun, q.v. So, in a TESTool merge with any mod that happens to also alter racial abilities (say, WGI), you're going to get both the new ones from RAMF and the original one, even if you place RAMF later in load order.
-; So, BAMF needs to load after Merged Objects.
+;;Dragon32: Gluby clued me onto this by PM. This mod has a similar issue with Merged Objects as Alaisiagae's Birthsigns Are More Fun, q.v. So, in a TESTool merge with any mod that happens to also alter racial abilities (say, WGI), you're going to get both the new ones from RAMF and the original one, even if you place RAMF later in load order.
+;;So, RAMF needs to load after Merged Objects.
+;;See also http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#RaceMods
 [Order]
 Merged_Objects.esp
 RAMF_Mer_for_NPCs.esp
@@ -28453,12 +29129,38 @@ RAMF_Playable_Children.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Race Rebuild  [Mythos]
+;; @Races Update 3.1 [Levercham]
 
 [Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 1382260 race_rebuildv1_41.esp]
+ !! "Mod author left his test NPCs in the mod; they should be removed before use."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#RaceMods )
+Clean Races_Update.esp
+
+;;Load the specific race-affecting mod after WGI
+[Order]
+Balance - Character.esp
+Clean Races_Update.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Clean Races_Update.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Clean Races_Update.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Clean Races_Update.esp
+
+;;Load the specific race-affecting mod after BTB
+[Order]
+BTB - Character.esp
+Clean Races_Update.esp
+
+[Order]
+BTB - Character (Alternate).esp
+Clean Races_Update.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30303,7 +31005,8 @@ SeriousWeather_v1_00.esp
           Service_Requirements_V1.4.3&WGI.esp]
      [ANY Gameplay - Faction.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 [Conflict]
  Use only one of these two .esps.
@@ -30573,6 +31276,17 @@ Better Bodies.esp
 [ALL WA_SignySigns(!)_TR_Map1.ESP
      TR_Map1.esm
      TR_Map2.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Silent Chargen 1.001 [Jason Robinson, Kir]
+
+[Note]
+ Kir released a modified version, Silent CharGen v1.001, that eliminates a few more scripted pauses and modifies Sellus Gravius's greeting to further streamline CharGen, and which may be preferable.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MinorCharGenMods )
+ Kir's mod is downloadable from Nexus:
+ http://www.nexusmods.com/morrowind/mods/14890/ 
+[SIZE !30881 SilentCharGen.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31271,6 +31985,7 @@ horatio_casting_trib_2.esp
 [Order]
 Wakim's Game Improvement 9.esp
 Wakim's Game Improvements with No-glo v9.esp
+AprogasVampire WakimImprovements.20021210.esp
 SpellFix_WGI.esp
 
 ; ref: SpellFix_WGI.txt
@@ -31285,6 +32000,7 @@ SpellFix_WGI.esp
 SpellFix_WGI.esp
 [ANY Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp
      Balance - spells.esp]
 
 [Conflict]
@@ -32652,12 +33368,13 @@ Taddeus'BalancedArmors.esp
 Taddeus'BalancedArmors_Rotate.esp
 
 [Note]
- Taddeus'BalancedArmors is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedArmors - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ Taddeus'BalancedArmors is compatible with Wakin's Game Improvements, but it is recommended to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedArmors - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
 [ALL [ANY Taddeus'BalancedArmors.esp
           Taddeus'BalancedArmors_Rotate.esp]
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 [Note]
  !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
@@ -32735,13 +33452,14 @@ venymora_intro_v1p0.esp
 Taddeus'BalancedArmors(light).esp
 
 [Note]
- Taddeus' Balanced Armor (light) is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
+ Taddeus' Balanced Armor (light) is compatible with Wakin's Game Improvements, but it is recommended to use the modular version of Wakin's Game Improvements and to exclude the "Items" file.
  If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
  (Ref:  "Taddeus'BalancedArmors(light)-Readme.txt")
 [All Taddeus'BalancedArmors(light).esp
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32756,7 +33474,7 @@ Taddeus'BalancedEnchanting.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Taddeus' Balanced Objects [Taddeus]
+;; @Taddeus' Balanced Objects 1.2 [Taddeus]
 
 [Conflict]
  Taddeus' Balanced Objects includes balanced versions of the following plugins: Erasmus' Potion Icons, Erasmus' Scroll Icons, Srikandi's Potion Sorter.
@@ -32774,14 +33492,15 @@ Taddeus'BalancedObjects.esp
 Taddeus'BalancedObjects_Rotate.esp
 
 [Note]
- Taddeus' Balanced Objects is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
+ Taddeus' Balanced Objects is compatible with Wakin's Game Improvements, but it is recommended to use the modular version of Wakin's Game Improvements and to exclude the "Items" file.
  If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
  (Ref: "Taddeus'BalancedObjects - Readme.txt")
 [ALL [ANY Taddeus'BalancedObjects.esp
           Taddeus'BalancedObjects_Rotate.esp]
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32797,13 +33516,14 @@ Taddeus'BalancedObjects_Rotate.esp
           PSsorticon.esp]]
 
 [Note]
- Taddeus' Balanced Objects (light) is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file.
+ Taddeus' Balanced Objects (light) is compatible with Wakin's Game Improvements, but it is recommended to use the modular version of Wakin's Game Improvements and to exclude the "Items" file.
  If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
  (Ref: "Taddeus'BalancedObjects(light)-Readme.txt")
 [All Taddeus'BalancedObjects(light).esp
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32821,12 +33541,13 @@ Taddeus'BalancedObjects_Rotate.esp
      Area Effect Projectiles (PAR Edit).esp]
 
 [Note]
- Taddeus'BalancedWeapons is compatible with Wakin's Game Improvements, but it is recommend to use the modular version and to exclude the "Items" file. (Ref: Taddeus'BalancedWeapons - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
+ Taddeus'BalancedWeapons is compatible with Wakin's Game Improvements, but it is recommended to use the modular version of Wakin's Game Improvements and to exclude the "Items" file. (Ref: Taddeus'BalancedWeapons - Readme.txt) If using a non-modular version of WGI whichever .esp loads last will over-rule the other .esp, so adjust your load order depending on which changes you prefer.
 [All [ANY Taddeus'BalancedWeapons.esp
           Taddeus'BalancedWeapons_Rotate.esp]
      [ANY Balance - items.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 [Conflict]
  Use only one of these two .esps
@@ -33589,6 +34310,10 @@ Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+AprogasVampire WakimImprovements.20021210.esp
 
 ;;Dragon32: TESPCD shows conficts for GMST "fPickLockMult"
 [Order]
@@ -34906,6 +35631,16 @@ Undress For Me.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Birthsigns 1.2 [Glassboy]
+
+;;Dragon32: This is 1.0
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 31945 Unique Birthsigns.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Unique Balmora [basswalker]
 
 [Patch]
@@ -35143,7 +35878,8 @@ Unique Jewelry and Accessories_no ench.esp
           HELLUVA Balanced BTB.esp
           HELLUVA Balanced BTB CS.esp
           Wakim's Game Improvement 9.esp
-          Wakim's Game Improvements with No-glo v9.esp]]
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]]
 
 ;; "Compatible with Unique Finery Replacer (UFR) by Alaisiagae, just load her mod after this one."
 ;; Ref: "Readme - Unique Jewelry and Accessories by tealpanda.txt"
@@ -36044,6 +36780,7 @@ UUMPP Steel Broadsword Patch v1.6.4.esp
           Book Placement Fix - Tribunal.esp
           BouyantClassFix.esp
           Brittlewind Fix.esp
+          BrittlewindFixed.esp
           cattle_fix.esp
           Cjad's Templar Pauldron Fix.esp
           Clean Devil_Tanto_Bug_Fix.esp
@@ -36207,6 +36944,15 @@ BM-Fixes.esp
      Morrowind Patch 1.6.5 Beta (BTB Edit).esm
      Morrowind Rebirth <VER> - Morrowind Patch *.esm]
 BouyantClassFix.esp
+
+[Conflict]
+ The MPP obsoletes Brittlewind Fix [Michael Damon, aka Launcelot].
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=794715&st=80&p=12924494&;entry12924494 )
+[ANY Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+     Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+BrittlewindFixed.esp
 
 [Conflict]
  The MPP obsoletes Correct Spell Sounds (Zener).
@@ -38174,6 +38920,13 @@ Lazarus_Manor-Caldera.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Wakim's Game Improvements 9 (WGI) [Wakim]
 
+[Note]
+ ! The latest version of "Wakim's Game Improvements" is version 9. You should upgrade!
+ ! MMH has both the modular and combined versions available.
+ ! Modular: http://mw.modhistory.com/download-90-13337
+ ! Combined: http://mw.modhistory.com/download-90-459
+Wakim's Game Improvements5.esp
+
 [Conflict]
  "Wakim's Game Improvement 9.esp" combines all of the modular WGI plugins
  "Wakim's Game Improvements with No-glo v9.esp" also combines all of the modular WGI plugins and adds No-Glo
@@ -38187,6 +38940,24 @@ Wakim's Game Improvements with No-glo v9.esp
      Balance - spells.esp
      Gameplay - Dialogue.esp
      Gameplay - Faction.esp]
+
+[Note]
+ !! "Grumblepunk's [...] consolidated version which includes Cu's No-Glo in it, [...] is not recommended because No-Glo uses a now-obsolete and undesirable method that should be avoided"
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#RaceMods )
+ !! "[Cu's "No-Glo" plugin] affects the map icons created by Detect Creature, Detect Key and Detect Enchantment spells, making them black/transparent as well, and rendering these spells useless. Second, it interferes with reflection-mapped custom mod items."
+ !! "[If you are using hrnchamd's] MCP, there is no longer any reason to use the [no glow] plugin method."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_MagicItemSpellFX_Mods.htm#FAQ )
+Wakim's Game Improvements with No-glo v9.esp
+
+[Note]
+ ! "A certain part of the main quest requires the player character to take damage to the point of reducing Health to 1 while drowning. If the character has permanent, constant-effect waterbreathing, it effectively breaks this quest."
+ ! "Wakim's Game Improvements" makes Argonian water-breathing a constant-effect ability.
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#FAQ )
+[ALL [ANY Balance - Character.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp]
+     [NOT Argonian Breathing Toggle.esp]]
 
 [Conflict]
  Changes the same values.
@@ -38232,12 +39003,6 @@ Vampire_Embrace.esp
 ; Dragon32: Added Order rule for the combined Wakim's mod with no-glo. See also "Vampire_Embrace_Readme.TXT"
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
-Vampire_Embrace.esp
-
-; Vampire_Embrace.esp needs to override some of the dialogue that Wakim's introduces - JMS
-; Dragon32: Added Order rule for the Gameplay - Dialogue.esp. That conflicts in TESPCD so I assume it's that one.
-[Order]
-Gameplay - Dialogue.esp
 Vampire_Embrace.esp
 
 ;;Dragon32: Checked with TESPCD
@@ -38782,6 +39547,14 @@ Welcome to the Arena! v<VER>.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Werewolf Clans of Vvardenfell [Sabregirl]
 
+[Conflict]
+ SabreGirl's "Werewolf Clans of Vvardenfell" requires you to contract lycanthropy a cerain way. Using a mod which makes the player a lycanthrope at character generation will break SabreGirl's mod.
+ (Ref: "birthsign_diseases.rar\birthsign_diseases\readme.txt"
+SG_werewolfclans.esp
+[ANY CharGen Diseases.esp
+     Chargen Werewolf.esp
+     Birthsign Diseases.esp]
+
 [Note]
  !! AFTER becoming a werewolf you will need to start these scripts:
  !!  Startscript Full_moon_warning
@@ -38876,9 +39649,10 @@ Werevampire_realism_changeatwill_patch.esp
  Yacoby's "Werewolf ReEquip" is incompatible with mods that alter the 'WereChangeScript' script, as these do. See "Werewolf ReEquip - Readme.txt" for how you can make them compatible.
  (Ref: Werewolf ReEquip - Readme.txt)
 Werewolf ReEquip.esp
-[ANY werewolfrealism-moononly.esp
-     werewolfrealism-moononly_changeatwill.esp
-     old-Hircine-ring.esp]
+[ANY old-Hircine-ring.esp
+     were-better.esp
+     werewolfrealism-moononly.esp
+     werewolfrealism-moononly_changeatwill.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40169,6 +40943,7 @@ Wrye Patches W.esp
           Taddeus'BalancedWeapons_Rotate.esp
           Wakim's Game Improvement 9.esp
           Wakim's Game Improvements with No-glo v9.esp
+          AprogasVampire WakimImprovements.20021210.esp
           Weapon Range Balance.esp
           weaponFix177.esp
           WeaponFix144basic.esp
