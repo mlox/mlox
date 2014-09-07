@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.59
+Version: 0.60
 Copyright 2014 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -94,13 +94,17 @@ oo Requirements
 - The rule-base is released as a separate archive (mlox-data_<DATE>.7z),
   unpack this archive in the mlox directory created when you unpacked the
   application.
-  Version 0.59 added an automated downloader for updating the mlos rule-base.
+  Version 0.59 added an automated downloader for updating the mlox rule-base.
 
 - A quick explanation of the included batch files for Windows (unless
   otherwise specified, run these batch files from the mlox directory):
 
   locheck - run mlox in command-line mode to check (not update).
+            Not available for users of the standalone Windows executable
+            version of mlox.
   lofix - run mlox in command-line mode to update your load order.
+          Not available for users of the standalone Windows executable
+          version of mlox.
   lo - (run this in "Data Files") just prints your current load order.
 
 - On Windows, run mlox.exe. On Linux, run: mlox.py
@@ -451,6 +455,11 @@ o Known Issues
 ==================================================
 o ChangeLog
 
+Version 0.60 - 2014/09/07
+	* mlox will now skip reporting an error if it fails to make a 
+	  connection when downloading the rule-base [abot]
+	* fixed potential compatibility issues caused by Python changing their
+	  function names between versions [abot]
 Version 0.59 - 2014/07/06
 	* Fix conflict with tes3cmd's resetdates and only redate files if
           necessary [abot]
