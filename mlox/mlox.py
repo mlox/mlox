@@ -6,7 +6,7 @@
 #   http://code.google.com/p/mlox/
 # under the MIT License:
 #   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.59"
+Version = "0.60"
 
 import locale
 import os
@@ -1557,12 +1557,21 @@ class mlox_gui():
     def highlight_warnings(self, txt):
         # highlight warnings in message window to help convey urgency
         # highlight styles:
-        low = rt.TextAttrEx()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
-        medium = rt.TextAttrEx() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
-        high = rt.TextAttrEx()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
-        happy = rt.TextAttrEx()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
-        hide = rt.TextAttrEx()   ; hide.SetBackgroundColour(wx.BLACK)
-        url = rt.TextAttrEx()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
+	# try coping with python changing function names between versions /abot
+        try:
+            low = rt.RichTextAttr()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
+            medium = rt.RichTextAttr() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
+            high = rt.RichTextAttr()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
+            happy = rt.RichTextAttr()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
+            hide = rt.RichTextAttr()   ; hide.SetBackgroundColour(wx.BLACK)
+            url = rt.RichTextAttr()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
+        except:
+            low = rt.TextAttrEx()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
+            medium = rt.TextAttrEx() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
+            high = rt.TextAttrEx()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
+            happy = rt.TextAttrEx()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
+            hide = rt.TextAttrEx()   ; hide.SetBackgroundColour(wx.BLACK)
+            url = rt.TextAttrEx()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
         highlighters = {
             re.compile(r'http://\S+', re.IGNORECASE): url,
             re.compile(r'^\[conflict\]', re.IGNORECASE): medium,
@@ -1740,28 +1749,40 @@ def print_version():
 def update_mloxdata():
     fname = 'mlox-data.7z'
     durl = 'https://mlox.googlecode.com/svn/trunk/downloads/%s' % fname
-    d = urllib.urlopen(durl)
-    print d.info()
-    if os.path.isfile(fname):
-        fsize = os.stat(fname).st_size
-        print 'Current %s size: %d' % (fname,fsize)
-        dsize = d.info()['Content-Length']
-        print 'Downloadable %s size: %s' % (fname,dsize)
-        update = int(dsize) != int(fsize)
-    else:
-        update = 1
-    if update: 
-        d = urllib.urlretrieve(durl,fname)
-        print 'File %s downloaded' % fname
-        #print('7za.exe e "%s" -aoa' % fname)
-        cmd = '7za.exe e "%s" -aoa' % fname
-        if subprocess.call(cmd) == 0:
-            print("mlox_base.txt updated from %s" % fname)
+    ok = True
+    try:
+        d = urllib.urlopen(durl)
+    except:
+        ok = False
+        print 'Error connecting to %s, skipping mlox data update.' % durl
+ 
+    if ok:
+        print d.info()
+        if os.path.isfile(fname):
+            fsize = os.stat(fname).st_size
+            print 'Current %s size: %d' % (fname,fsize)
+            dsize = d.info()['Content-Length']
+            print 'Downloadable %s size: %s' % (fname,dsize)
+            update = int(dsize) != int(fsize)
         else:
-            print("Error while extracting from %s" % fname)
-    else:
-        print 'No update necessary for file %s' % fname	
+            update = 1
+        if update: 
+            try:
+                d = urllib.urlretrieve(durl,fname)
+            except:
+                ok = False
+                print 'Error downloading %s, skipping mlox data update' % durl
 
+            if ok:
+                print 'File %s downloaded' % fname
+                #print('7za.exe e "%s" -aoa' % fname)
+                cmd = '7za.exe e "%s" -aoa' % fname
+                if subprocess.call(cmd) == 0:
+                    print("mlox_base.txt updated from %s" % fname)
+                else:
+                    print("Error while extracting from %s" % fname)
+        else:
+            print 'No update necessary for file %s' % fname
 
 def main():
     if Opt.FromFile:
