@@ -362,7 +362,7 @@ Clean Children V2.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Abot's Tempus Fugit Ring [Abot]
+;; @abot's Tempus Fugit Ring 1.3 [abot]
 
 [Requires]
  (Ref: "abotTempusFugitRing.txt")
@@ -390,7 +390,8 @@ abotWaterLife.esm
      time.esp]
 
 [Note]
- You do not need Sid's TimeMod or "time.esp" from "Merkin's Multi-mod" to set the timescale, just use the console command: "set timescale to X", where X is 30 (the default for Vanilla Morrowind, or X is 1, for real-time, or X is 15 for twice as slow as Vanilla. Or alternatively, use Abot's Tempus Fugit Ring and you can set the timescale to whatever you want while the game is running.
+ You do not need Sid's TimeMod or "time.esp" from "Merkin's Multi-mod" to set the timescale, just use the console command: "set timescale to X"; where X is 30, the default for vanilla Morrowind; or X is 1, for real-time; or X is 15 for twice as slow as vanilla. Or alternatively, use Abot's "Tempus Fugit Ring" to set the timescale to whatever you want while the game is running.
+ abot's "Tempus Fugit Ring" on Morrowind Modding History: http://mw.modhistory.com/download-37-7919
 2xTimeMod.esp
 RealTimeMod.esp
 time.esp
@@ -1779,6 +1780,61 @@ Bloodmoon.esm
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 4228 TribunalAnimalLootMod.esp]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animal pacification mods [various]
+
+[Conflict]
+ There is no need to load these mods together as they perform a similar task: pacifying creatures.
+;;from "Merkin's Multi-mod"
+animalbehave.esp
+;;Animal Realism by Sal Maker
+Animal Behaviour.esp
+;;Less Aggressive Critters by Brett Flannigan
+Less Aggressive Critters.esp
+;;Mildlife by The Vagrant Wolf
+Mildlife.esp
+;;Non-Homicidal Ecosystem by White_Wolf9088
+Non-Homicidal Ecosystem - Morrowind.ESP
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+Non-Homicidal Ecosystem - Tribunal.ESP
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+;;Passive Wildlife Vvardenfell 1.1 by Lucror
+Passive Wildlife Vvardenfell.esp
+;;Passive Healthy Wildlife 2.0 by Marty V. a.k.a. The Puma Man
+Passive_Healthy_Wildlife.esp
+;;Rational Wildlife by Max
+Rational Wildlife.esp
+;;Wildlife Behaviour by Dakilleux
+wildlife_behaviour.esp
+
+[Conflict]
+ An animal pacification mod is not needed if you use "Sabregirl's Morrowind Ecology", which already makes similar changes.
+ (Ref: "readme_mw_ecology.txt")
+[ANY animalbehave.esp
+     Animal Behaviour.esp
+     Less Aggressive Critters.esp
+     Mildlife.esp
+     Non-Homicidal Ecosystem - Morrowind.ESP
+     Non-Homicidal Ecosystem - Bloodmoon.ESP
+     Non-Homicidal Ecosystem - Tribunal.ESP
+     Non-Homicidal Ecosystem Trib. & Blood..ESP
+     Passive_Healthy_Wildlife.esp
+     Passive Wildlife Vvardenfell.esp
+     Rational Wildlife.esp
+     wildlife_behaviour.esp]
+[ANY SG-MW-ecology-BM-plugin.esp
+     SG-MW-ecology-carnivore-plugin.esp
+     SG-MW-ecology-WW-plugin.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animal Respawns [Radamino El Lino]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 73733 Animal Respawns.esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Animated Morrowind - Expanded [Wikart]
@@ -6073,7 +6129,7 @@ Clean Black Queen Chronicles Ver 2.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Blasphemous Revenants [Fliggerty]
+;; @Blasphemous Revenants 2.5 [Fliggerty]
 
 ;;Dragon32 - There's nothing in the Description field for this mod so no version numbers to check
 
@@ -6093,15 +6149,51 @@ Blasphemous Revenants.esp
 ;;  http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15673238
 ;;Dragon32: Apparently fixed in v2.4 "Removed two dirty objects; a mudcrab and a "player" NPC." Left Order rules as they are, remove them if issues arise
 
-;;Creatures X adds a scipt
+;;Creatures adds a script
 [Order]
 Blasphemous Revenants.esp
-Creatures X.esp
+Creatures.esp
+
+[Order]
+Blasphemous Revenants.esp
+Creatures (lore).esp
+
+[Order]
+Blasphemous Revenants.esp
+Creatures (Semi).esp
 
 ;;These are all the 'passive wildlife' mods in mlox_base at the moment, modifying Mudcrab's Fight values
 [Order]
 Blasphemous Revenants.esp
-Rational Wildlife.esp
+animalbehave.esp
+
+[Order]
+Blasphemous Revenants.esp
+Animal Behaviour.esp
+
+[Order]
+Blasphemous Revenants.esp
+Less Aggressive Critters.esp
+
+[Order]
+Blasphemous Revenants.esp
+Mildlife.esp
+
+[Order]
+Blasphemous Revenants.esp
+Non-Homicidal Ecosystem - Morrowind.ESP
+
+[Order]
+Blasphemous Revenants.esp
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+
+[Order]
+Blasphemous Revenants.esp
+Non-Homicidal Ecosystem - Tribunal.ESP
+
+[Order]
+Blasphemous Revenants.esp
+Non-Homicidal Ecosystem Trib. & Blood..ESP
 
 [Order]
 Blasphemous Revenants.esp
@@ -6109,38 +6201,36 @@ Passive_Healthy_Wildlife.esp
 
 [Order]
 Blasphemous Revenants.esp
-SG-MW-ecology-WW.esp
-
-[Order]
-Blasphemous Revenants.esp
-SG-MW-ecology-BM.esp
-
-[Order]
-Blasphemous Revenants.esp
-SG-MW-ecology-carnivore.esp
-
-[Order]
-Blasphemous Revenants.esp
-animalbehave.esp
-
-[Order]
-Blasphemous Revenants.esp
 Passive Wildlife Vvardenfell.esp
 
 [Order]
 Blasphemous Revenants.esp
-Animal Behaviour.esp
+Rational Wildlife.esp
+
+[Order]
+Blasphemous Revenants.esp
+SG-MW-ecology-BM-plugin.esp
+
+[Order]
+Blasphemous Revenants.esp
+SG-MW-ecology-carnivore-plugin.esp
+
+[Order]
+Blasphemous Revenants.esp
+SG-MW-ecology-WW-plugin.esp
+
+[Order]
+Blasphemous Revenants.esp
+wildlife_behaviour.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Blasphemous Revenants Werewolf Patch BETA [Fliggerty]
 
 [Patch]
- BR_Werewolf_Patch.esp is an available optional patch for Blasphemous Revenants.
- "BR_Werewolf_Patch.esp will ensure that if you change into a werewolf in
- front of only your revenants you will not become a 'known werewolf.'
- It only works with BR revenants."
+ "BR_Werewolf_Patch.esp will ensure that if you change into a werewolf in front of only your revenants you will not become a 'known werewolf.' It only works with BR revenants."
  (Ref: "BR Werewolf Patch BETA Readme.txt")
+ Download it from Morrowind Modding History (Additional Files section): http://mw.modhistory.com/download-37-10488
 BR_Werewolf_Patch.esp
 Blasphemous Revenants.esp
 
@@ -8030,11 +8120,20 @@ Christmas At Lokken.esp
 [Conflict]
  Misty Moon's "Cliffracer-FIX" makes cliffracers not so eager to attack. You are using another mod that makes creatures, including cliffracers, less aggressive. Review whether you need Misty Moon's mod loaded as well.
 Cliffracer-FIX.esp
-[ANY animalbehave.esp
-     Passive_Healthy_Wildlife.esp
-     Passive Wildlife Vvardenfell.esp
-     Rational Wildlife.esp
+[ANY Non-Homicidal Ecosystem - Morrowind.ESP
+     Non-Homicidal Ecosystem - Bloodmoon.ESP
+     Non-Homicidal Ecosystem - Tribunal.ESP
+     Non-Homicidal Ecosystem Trib. & Blood..ESP
+     Non-Homicidal Ecosystem - Daedra Edition.ESP
+     Non-Homicidal Ecosystem - Dwemer Edition.ESP
+     Non-Homicidal Ecosystem - Sixth House Edition.ESP
+     Non-Homicidal Ecosystem - Undead Edition (Trib. & Blood.).ESP
+     animalbehave.esp
      Animal Behaviour.esp
+     Mildlife.esp
+     Passive Wildlife Vvardenfell.esp
+     Passive_Healthy_Wildlife.esp
+     Rational Wildlife.esp
      wildlife_behaviour.esp]
 
 
@@ -21975,19 +22074,13 @@ Merged MCA Files.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Merkin's Multi-mod v1 [Merkin]
+;; @Merkin's Multi-mod 1.0 [Merkin]
+
+;;See also "Animal pacification mods [various]"
 
 ; (Ref: "multimodreadme.txt")
 
-[Conflict]
- "animalbehave.esp" from "Merkin's Multi-mod" makes creatures less aggressive, as does another mod you have loaded.
-animalbehave.esp
-[ANY Passive_Healthy_Wildlife.esp
-     Passive Wildlife Vvardenfell.esp
-     Rational Wildlife.esp
-     Animal Behaviour.esp
-     wildlife_behaviour.esp]
-
+;;animalbehave.esp
 ;;encumbrance.esp
 ;;magicbalance.esp
 ;;marksman.esp
@@ -22113,6 +22206,8 @@ lfx_rare_holly.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mildlife [The Vagrant Wolf]
 
+;;See also "Animal pacification mods [various]"
+
 [Patch]
  "Mildlife - Creatures X.esp"is a compatibility patch for PirateLord's "Creatures" mod and The Vagrant Wolf's "Mildlife"
  (Ref: "Mildlife - Information and Assorted Curios.txt"
@@ -22138,15 +22233,6 @@ Mildlife.esp
 [Order]
 Mildlife.esp
 Mildlife - Creatures X.esp
-
-;;Dragon32 - Real Wildlife ESPs have some dirty entries
-[Order]
-Real_wildlife_2b.esp
-Mildlife.esp
-
-[Order]
-Real_Wildlife_2b_Bloodmoon.esp
-Mildlife.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22359,7 +22445,7 @@ Tome of Spellmaking.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Minions of House Dagoth v1.1 [Neoptolemus]
+;; @Minions of House Dagoth 1.1 [Neoptolemus]
 
 ;; (Ref: "Minions of House Dagoth - Readme.txt")
 [Order]
@@ -22370,10 +22456,14 @@ Minions of House Dagoth - MCA 5.x Patch.esp
 Merged_Leveled_Lists.esp
 Minions of House Dagoth - MCA 5.x Patch.esp
 
+[Order]
+multipatch.esp
+Minions of House Dagoth - MCA 5.x Patch.esp
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  "Minions of House Dagoth.esp" contains undead creatures.
- "Minions of House Dagoth - No Undead.esp" removes undead (Blight Skeletons, Ash Lich, Ash Revenants).
+ "Minions of House Dagoth - No Undead.esp" removes undead creatures (e.g. Blight Skeletons, Ash Lich, Ash Revenants).
  (Ref: "Minions of House Dagoth - Readme.txt")
 Minions of House Dagoth.esp
 Minions of House Dagoth - No Undead.esp
@@ -22999,6 +23089,60 @@ Cali_MormegilManor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Additions 1.0 [M6n6M6(Derek)]
+
+[Conflict]
+ "Morrowind Additions" by M6n6M6(Derek) includes his "Creatures of Morrowind" mod, there is no need to run both plugins.
+ (Ref: "ReadMe for Morrowind Additions Version 1.0.txt")
+Morrowind Additions.esp
+Creatures of Morrowind.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1451408 Morrowind Additions.esp]
+
+[Note]
+ Brewu4 & Harlequin's "Morrowind Additions Revamped" is a huge update to M6n6M6(Derek)'s original "Morrowind Additions" mod. Brewu4 & Harlequin made extensive changes to the mod, improving both compatibility and its effect on performance. You may wish to download Brewu4 & Harlequin's version from Morrowind Modding History: http://mw.modhistory.com/download-90-2567
+Morrowind Additions.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Additions Add-on for Blood & Gore [Vencha]
+
+[Patch]
+ Vencha released a patch adding support for "Blood and Gore" by TheLys to "Morrowind Additions" by M6n6M6(Derek).
+ http://mw.modhistory.com/download-55-3062
+Blood and Gore Morrowind Additions add-on.esp
+[ALL Blood and Gore.esp
+     Morrowind Additions.esp]
+
+[Order]
+Blood and Gore.esp
+Blood and Gore Morrowind Additions add-on.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Additions Revamped 0.9 [Brewu4 & Harlequin]
+
+[Conflict]
+ "[Brewu4 & Harlequin's "Morrowind Additions Revamped"] is a huge update to the old Morrowind Additions mod." There is no need to run both plugins.
+Additions_Revamped__clean_.esp
+Morrowind Additions.esp
+
+[Conflict]
+ Brewu4 & Harlequin's "Morrowind Additions Revamped" is an update to "Morrowind Additions" by M6n6M6(Derek), which included his "Creatures of Morrowind" mod, there is no need to run both plugins.
+ (Ref: "ReadMe for Morrowind Additions Version 1.0.txt")
+Additions_Revamped__clean_.esp
+Creatures of Morrowind.esp
+
+[Note]
+ ! The meshes and textures for the Dark Argonians are missing from the original download of "Morrowind Additions Revamped".
+ ! You can download these missing resources from Morrowind Modding History: http://mw.modhistory.com/download-55-3030
+Additions_Revamped__clean_.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Advanced 1.82 [Gary Noonan/WormGod]
 
 ;; If you are running Thepal's Unofficial Morrowind Patch you should load
@@ -23050,9 +23194,75 @@ MW_Adv_PHW.esp
 [ALL MW_Adv_Required.esp
      Passive_Healthy_Wildlife.esp]
 
+;;Dragon32: Whilst "MW_Adv_PHW.esp" is designed for Passive Healthy Wildlife (see above Patch rule) it can be used with other animal pacification mods.
 [Order]
 Passive_Healthy_Wildlife.esp
 MW_Adv_PHW.esp
+
+[Order]
+animalbehave.esp
+MW_Adv_PHW.esp
+
+[Order]
+Animal Behaviour.esp
+MW_Adv_PHW.esp
+
+[Order]
+Cliffracer-FIX.esp
+MW_Adv_PHW.esp
+
+[Order]
+Less Aggressive Critters.esp
+MW_Adv_PHW.esp
+
+[Order]
+Mildlife.esp
+MW_Adv_PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem - Morrowind.ESP
+MW_Adv_PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+MW_Adv_PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem - Tribunal.ESP
+MW_Adv_PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+MW_Adv_PHW.esp
+
+[Order]
+Passive Wildlife Vvardenfell.esp
+MW_Adv_PHW.esp
+
+[Order]
+Rational Wildlife.esp
+MW_Adv_PHW.esp
+
+[Order]
+Real_wildlife_v1.0.esp
+MW_Adv_PHW.esp
+
+[Order]
+SG-MW-ecology-BM-plugin.esp
+MW_Adv_PHW.esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+MW_Adv_PHW.esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+MW_Adv_PHW.esp
+
+[Order]
+wildlife_behaviour.esp
+MW_Adv_PHW.esp
+
 
 [Order]
 Morrowind Advanced.esp
@@ -25043,15 +25253,47 @@ Resources Enhanced.esp
 ;;Dragon32: load animal pacifying mods after Rebirth
 [Order]
 Morrowind Rebirth <VER>.esp
+animalbehave.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
 Animal Behaviour.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
-Passive Wildlife Vvardenfell.esp
+Cliffracer-FIX.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Less Aggressive Critters.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Mildlife.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Non-Homicidal Ecosystem - Morrowind.ESP
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Non-Homicidal Ecosystem - Tribunal.ESP
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Non-Homicidal Ecosystem Trib. & Blood..ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
 Passive_Healthy_Wildlife.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Passive Wildlife Vvardenfell.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
@@ -25063,7 +25305,35 @@ Real_wildlife_2b Complete.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+Real_wildlife_2b.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Real_Wildlife_2b_Bloodmoon.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Real_wildlife_2b_Tribunal.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
 Real_wildlife_v1.0.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+SG-MW-ecology-BM-plugin.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+SG-MW-ecology-carnivore-plugin.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+SG-MW-ecology-WW-plugin.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Super-Hostile Ecosystem (Vanilla Morrowind).ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
@@ -26024,7 +26294,7 @@ Necessities_for_Purists__Real_Wildlife.esp
 
 [Patch]
  [NfP COM addon.esp] offers "COM food compatibility for Children of Morrowind 1.0."
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ http://mw.modhistory.com/download-90-13869
  (Ref: "NfP script addons ReadMe.txt)
 NfP COM addon.esp
 [ALL [ANY Necessities for Purists 2x.esp
@@ -26038,7 +26308,7 @@ NfP COM addon.esp
 
 [Patch]
  [NfP CreaturesX addon.esp] offers "Creatures X (Piratelord) food compatibility."
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ http://mw.modhistory.com/download-90-13869
  (Ref: "NfP script addons ReadMe.txt)
 NfP CreaturesX addon.esp
 [ALL [ANY Necessities for Purists 2x.esp
@@ -26054,7 +26324,7 @@ NfP CreaturesX addon.esp
 
 [Patch]
  [NfP NOM foods addon.esp] offers "NOM food compatibility for NOM 2.13-02 [...] requires a mod that supports all NOM edibles."
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ http://mw.modhistory.com/download-90-13869
  (Ref: "NfP script addons ReadMe.txt)
 NfP NOM foods addon.esp
 [ALL [ANY Necessities for Purists 2x.esp
@@ -26072,7 +26342,7 @@ NfP NOM foods addon.esp
 
 [Patch]
  [NfP The Wilderness Mod addon.esp] offers "The Wilderness Mod (The Puma Man) food compatibility."
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8292
+ http://mw.modhistory.com/download-90-13869
  (Ref: "NfP script addons ReadMe.txt)
 NfP The Wilderness Mod addon.esp
 [ALL [ANY Necessities for Purists 2x.esp
@@ -26093,7 +26363,7 @@ NfP The Wilderness Mod addon.esp
 
 [Patch]
  [Necessities for Purists & Real Wildlife Compatibility Patch] "adds the food items of Real Wildlife to Necessities for Purists"
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9209 )
+ (Ref: http://mw.modhistory.com/download-90-6756 )
 Necessities_for_Purists__Real_Wildlife.esp
 [ALL [ANY Necessities for Purists 2x.esp
           Necessities for Purists.esp]
@@ -26209,11 +26479,65 @@ NoM_Creatures Loot Standard.esp
 ;;Dragon32: Load 'NoM_Creatures Loot PHW.esp' after the various mods that make animals passive
 [Order]
 animalbehave.esp
-Passive_Healthy_Wildlife.esp
-Passive Wildlife Vvardenfell.esp
-Rational Wildlife.esp
-Cliffracer-FIX.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
 Animal Behaviour.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Cliffracer-FIX.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Less Aggressive Critters.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Mildlife.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem - Morrowind.ESP
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem - Tribunal.ESP
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Passive_Healthy_Wildlife.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Passive Wildlife Vvardenfell.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Rational Wildlife.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+SG-MW-ecology-BM-plugin.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
 wildlife_behaviour.esp
 NoM_Creatures Loot PHW.esp
 
@@ -26328,8 +26652,27 @@ NoM 3.0.esp
 
 ;;Dragon32: "So the load order should be: Gluby's [Gluby's Creature Loot Mod v1.11] mod, then NoM creature loot, then NoM"
 ;; http://forums.bethsoft.com/index.php?/topic/1116088-rel-necessities-of-morrowind-30/page__view__findpost__p__16476834
+;;Dragon32: Added in Sendai45's "Animal Loot Mods", same logic applies I reckon
 [Order]
 Gluby's Creature Loot Mod v1.11.esp
+NoM_Creatures Loot PHW.esp
+NoM_Creatures Loot Standard.esp
+NoM 3.0.esp
+
+[Order]
+BloodmoonAnimalLootMod.esp
+NoM_Creatures Loot PHW.esp
+NoM_Creatures Loot Standard.esp
+NoM 3.0.esp
+
+[Order]
+MorrowindAnimalLootMod.esp
+NoM_Creatures Loot PHW.esp
+NoM_Creatures Loot Standard.esp
+NoM 3.0.esp
+
+[Order]
+TribunalAnimalLootMod.esp
 NoM_Creatures Loot PHW.esp
 NoM_Creatures Loot Standard.esp
 NoM 3.0.esp
@@ -26818,12 +27161,20 @@ MW_Children_1_0.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Suran Extended 1.52 [Nicholiathan]
 
+[Note]
+ ! The latest version of New Suran Extended is 1.52:
+ ! http://mw.modhistory.com/download--11112
+[ANY Balanced NSE CoM.esp
+     Balanced NSE.esp
+     New Suran Extended CoM.esp
+     New Suran Extended.esp]
+
 [Conflict]
  Choose ONLY ONE of these plugins. They all include the NSE base.
- "New Suran Extended 1.5.esp", original loot, no childern
- "Balanced NSE 1.5.esp", less loot, no childern
- "New Suran Extended CoM 1.5.esp", original loot & Childern of Morrowind
- "Balanced NSE CoM 1.5.esp", less loot & Childern of Morrowind
+ "New Suran Extended 1.5.esp", original loot, no children
+ "Balanced NSE 1.5.esp", less loot, no children
+ "New Suran Extended CoM 1.5.esp", original loot & Children of Morrowind
+ "Balanced NSE CoM 1.5.esp", less loot & Children of Morrowind
  (Ref: "New Suran Extended - readme.txt")
 New Suran Extended 1.5.esp
 Balanced NSE 1.5.esp
@@ -26933,15 +27284,6 @@ New Suran Extended CoM 1.5.esp
 Balanced NSE CoM 1.5.esp
 Suran Archery Store_v3.0 NSE.esp
 Farmer Mod v4.3 NSE.esp
-
-[Note]
- ! The latest version of New Suran Extended is 1.52:
- ! http://planetelderscrolls.gamespy.com/View.php?view=mods.detail&id=5244
- ! http://mw.modhistory.com/download--11112
-[ANY Balanced NSE CoM.esp
-     Balanced NSE.esp
-     New Suran Extended CoM.esp
-     New Suran Extended.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27092,6 +27434,159 @@ No-Glo_0709.esp
  !! "[If you are using hrnchamd's] MCP, there is no longer any reason to use the [no glow] plugin method."
  !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_MagicItemSpellFX_Mods.htm#FAQ )
 No-Glo_Revisited.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Non-Homicidal Ecosystem [White_Wolf9088]
+
+[Conflict]
+ "Only use ONE of the main files."
+  Non-Homicidal Ecosystem - Morrowind.ESP - If you only have Morrowind.
+  Non-Homicidal Ecosystem - Bloodmoon.ESP - If you have Morrowind and Bloodmoon.
+  Non-Homicidal Ecosystem - Tribunal.ESP - If you have Morrowind and Tribunal.
+  Non-Homicidal Ecosystem Trib. & Blood..ESP - If you have Morrowind, Bloodmoon and Tribunal.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42327/ )
+Non-Homicidal Ecosystem - Morrowind.ESP
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+Non-Homicidal Ecosystem - Tribunal.ESP
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 18386 Non-Homicidal Ecosystem - Bloodmoon.ESP]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 13757 Non-Homicidal Ecosystem - Morrowind.ESP]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 14762 Non-Homicidal Ecosystem - Tribunal.ESP]
+
+;;"You must have this loaded AFTER any mod which alters the vanilla creatures in any way."
+;;Ref: http://www.nexusmods.com/morrowind/mods/42327/
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Morrowind.ESP
+
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Tribunal.ESP
+
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+
+;;Dragon32: Noticed that this seems to edit Creeper and the Mudcrab Merchant
+[Order]
+Non-Homicidal Ecosystem - Morrowind.ESP
+BTB - Equipment.esp
+
+[Order]
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+BTB - Equipment.esp
+
+[Order]
+Non-Homicidal Ecosystem - Tribunal.ESP
+BTB - Equipment.esp
+
+[Order]
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+BTB - Equipment.esp
+
+;;Plugins for specific monster groups
+
+;;"You must have this loaded AFTER any mod which alters the vanilla creatures in any way."
+;;Ref: http://www.nexusmods.com/morrowind/mods/42327/
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Daedra Edition.ESP
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 10754 Non-Homicidal Ecosystem - Daedra Edition.ESP]
+
+;;"You must have this loaded AFTER any mod which alters the vanilla creatures in any way."
+;;Ref: http://www.nexusmods.com/morrowind/mods/42327/
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Dwemer Edition.ESP
+
+;;"You must have this loaded AFTER any mod which alters the vanilla creatures in any way."
+;;Ref: http://www.nexusmods.com/morrowind/mods/42327/
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Sixth House Edition.ESP
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 28799 Non-Homicidal Ecosystem - Sixth House Edition.ESP]
+
+;;"You must have this loaded AFTER any mod which alters the vanilla creatures in any way."
+;;Ref: http://www.nexusmods.com/morrowind/mods/42327/
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Non-Homicidal Ecosystem - Undead Edition (Trib. & Blood.).ESP
+
+;;Super Hostile Edition
+
+[Conflict]
+ White_Wolf9088's "Super Hostile Edition" is not compatible with his own pacification mods or animal pacification mods from other modders.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42327/ )
+Super-Hostile Ecosystem (Vanilla Morrowind).ESP
+[ANY Non-Homicidal Ecosystem - Morrowind.ESP
+     Non-Homicidal Ecosystem - Bloodmoon.ESP
+     Non-Homicidal Ecosystem - Tribunal.ESP
+     Non-Homicidal Ecosystem Trib. & Blood..ESP
+     Non-Homicidal Ecosystem - Daedra Edition.ESP
+     Non-Homicidal Ecosystem - Dwemer Edition.ESP
+     Non-Homicidal Ecosystem - Sixth House Edition.ESP
+     Non-Homicidal Ecosystem - Undead Edition (Trib. & Blood.).ESP
+     animalbehave.esp
+     Animal Behaviour.esp
+     Mildlife.esp
+     Passive Wildlife Vvardenfell.esp
+     Passive_Healthy_Wildlife.esp
+     Rational Wildlife.esp
+     wildlife_behaviour.esp]
+
+;;"You must have this loaded AFTER any mod which alters the vanilla creatures in any way."
+;;Ref: http://www.nexusmods.com/morrowind/mods/42327/
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+Super-Hostile Ecosystem (Vanilla Morrowind).ESP
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 41487 Super-Hostile Ecosystem (Vanilla Morrowind).ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28165,12 +28660,7 @@ Book Jackets - Tribunal.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Passive Wildlife Vvardenfell 1.1 [Lucror]
 
-[Conflict]
- "Passive Wildlife Vvardenfell" is not needed if you use Sabregirl's ecology, as they both do the same thing.
-Passive Wildlife Vvardenfell.esp
-[ANY SG-MW-ecology-BM-plugin.esp
-     SG-MW-ecology-WW-plugin.esp
-     SG-MW-ecology-carnivore-plugin.esp]
+;;See "Animal pacification mods [various]"
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28858,7 +29348,7 @@ CH_PAI_V7BC_patch.ESP
 
 [Note]
  ! There is a new version of "Primary Needs" available, 2.8, with errors fixed by Elthar. You should upgrade!
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6985
+ ! http://mw.modhistory.com/download-53-13012
 Primary Needs 2.7.esp
 
 [Conflict]
@@ -28871,7 +29361,13 @@ Primary Needs 2.8.esp
  "If you have [Bloodmoon], only use [Primary Needs 2.7 (Bloodmoon addon).esp] with the main Primary needs pluging."
  (Ref: "Readme Primary_needs.txt")
 Primary Needs 2.7 (Bloodmoon addon).esp
+[ALL Primary Needs 2.8.esp
+     Bloodmoon.esm]
+
+;;Dragon32: Not actually needed, Bloomoon Addon just adds some wells to Solstheim. Added Order rule for neatness.
+[Order]
 Primary Needs 2.8.esp
+Primary Needs 2.7 (Bloodmoon addon).esp
 
 [Conflict]
  Balor's "Primary Needs" adds bloodlust for vampires which will conflict with zennorious' "Vampiric Hunger"
@@ -29499,21 +29995,7 @@ Bjam_DGL_rt_MWSEpatch_v1.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rational Wildlife [Max]
 
-[Conflict]
- "Rational Wildlife" by Max makes creatures less aggressive, as does another mod you have loaded. Note that "Rational Wildlife" covers Bloodmoon creatures too.
-Rational Wildlife.esp
-[ANY Passive_Healthy_Wildlife.esp
-     Passive Wildlife Vvardenfell.esp
-     animalbehave.esp
-     Animal Behaviour.esp
-     wildlife_behaviour.esp]
-
-[Conflict]
- "Rational Wildlife" is not needed if you use Sabregirl's ecology, as they both do the same thing.
-Rational Wildlife.esp
-[ANY SG-MW-ecology-BM-plugin.esp
-     SG-MW-ecology-WW-plugin.esp
-     SG-MW-ecology-carnivore-plugin.esp]
+;;See "Animal pacification mods [various]"
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29653,6 +30135,13 @@ dxm_metallic_signs.esp
 ;; @Real Wildlife 2b [Nedius]
 
 [Note]
+ ! There is a new version of Nedius' "Real Wildlife", 2b, you should upgrade!
+ ! http://mw.modhistory.com/download-90-11406
+Real_wildlife_v1.0.esp
+Real_Wildlife_Bloodmoon.esp
+Real_wildlife_Tribunal_addon_v2a.esp
+
+[Note]
  !! Nedius' "Real Wildlife" marks the dialogue topic "leaflet" as Deleted. This will break Morrowind's "An Apothecary Slandered" quest.
  !! To fix this open the mod in TESAME, Enchanted Editor or a similar editor and remove the Dialogue entry "leaflet" from the "Real Wildlife" plugin.
  !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=197600 )
@@ -29693,6 +30182,82 @@ Real_wildlife_2b Complete.esp
 [ANY Real_wildlife_2b Complete.esp
      Real_wildlife_2b.esp]
 LN_silt_striders.esp
+
+;;Dragon32 - Real Wildlife ESPs have some dirty CREA entries
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Animal Behaviour.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Creatures (lore).esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Creatures (Semi).esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Creatures.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Less Aggressive Critters.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Mildlife.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Non-Homicidal Ecosystem - Daedra Edition.ESP
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Non-Homicidal Ecosystem - Morrowind.ESP
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Non-Homicidal Ecosystem - Tribunal.ESP
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Passive Wildlife Vvardenfell.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Passive_Healthy_Wildlife.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Rational Wildlife.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+wildlife_behaviour.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30749,6 +31314,15 @@ NoM 3.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sabregirl's Morrowind Ecology 1.6 [Sabregirl]
 
+;;See also "Animal pacification mods [various]"
+
+[Note]
+ ! There is a new version of "Sabregirl's Morrowind Ecology", 1.6, you should upgrade!
+ ! http://mw.modhistory.com/download-53-7082
+SG-MW-ecology-BM.esp
+SG-MW-ecology-carnivore.esp
+SG-MW-ecology-WW.esp
+
 [Conflict]
  Pick ONE of the following: (PICK ONE ESM and select the corresponding esp)
  1. SG-MW-ecology-BM.esm AND SG-MW-ecology-BM-plugin.esp
@@ -30784,19 +31358,6 @@ SG-MW-ecology-carnivore.esm
  (Ref: "readme_mw_ecology.txt")
 SG-MW-ecology-WW-plugin.esp
 SG-MW-ecology-WW.esm
-
-[Conflict]
- There is no need to load a mod to make creatures passive if you use Sabregirl's "Morrowind Ecology", as her mod does this too.
- (Ref: "readme_mw_ecology.txt")
-[ANY Passive_Healthy_Wildlife.esp
-     Passive Wildlife Vvardenfell.esp
-     animalbehave.esp
-     Animal Behaviour.esp
-     wildlife_behaviour.esp
-     Rational Wildlife.esp]
-[ANY SG-MW-ecology-BM-plugin.esp
-     SG-MW-ecology-WW-plugin.esp
-     SG-MW-ecology-carnivore-plugin.esp]
 
 [Order]
 Morrowind Patch *.esm
@@ -31605,7 +32166,7 @@ Ships of the Imperial Navy (Bloodmoon and MQB version).esp
 
 [Conflict]
  tmartin827's "Ships of the Imperial Navy (Bloodmoon and MQB version).esp" is a modified version 1.0 of Neoptolemus' "Ships of the Imperial Navy" and not a patch.
- (Ref: "Changes made for MQB.txt") 
+ (Ref: "Changes made for MQB.txt")
 Ships of the Imperial Navy (Bloodmoon and MQB version).esp
 [ANY Ships of the Imperial Navy.esp
      Ships of the Imperial Navy (Bloodmoon).esp]
@@ -31652,7 +32213,7 @@ WA_Signy_Signposts(!)_TR.ESP
  Kir released a modified version, Silent CharGen v1.001, that eliminates a few more scripted pauses and modifies Sellus Gravius's greeting to further streamline CharGen, and which may be preferable.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharGen_Mods.htm#MinorCharGenMods )
  Kir's mod is downloadable from Nexus:
- http://www.nexusmods.com/morrowind/mods/14890/ 
+ http://www.nexusmods.com/morrowind/mods/14890/
 [SIZE !30881 SilentCharGen.esp]
 
 
@@ -36320,13 +36881,13 @@ Unique Items.esp
 ;; @Unique Maar Gan [basswalker]
 
 [Patch]
- "["unique Maar Gan - extended addon.esp" is an] addon for use with "Maar Gan Extended"." Download it from Planet Elder Scrolls:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8853
+ "["unique Maar Gan - extended addon.esp" is an] addon for use with "Maar Gan Extended"." Download it from Morrowind Modding History:
+ http://mw.modhistory.com/download-21-11884
 unique Maar Gan - extended addon.esp
 [ALL unique Maar Gan.esp
      Maar_Gan_Extended.esp]
 
-;;Ref: "load after "unique Maar Gan" and "Maar Gan Extended"." http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8853
+;;Ref: "load after "unique Maar Gan" and "Maar Gan Extended"." http://mw.modhistory.com/download-21-11884
 [Order]
 unique Maar Gan.esp
 unique Maar Gan - extended addon.esp
