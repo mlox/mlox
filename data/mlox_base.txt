@@ -174,16 +174,17 @@ Merged_Leveled_Lists.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @TESTOOL [ghostwheel]
+;; @TESTool [ghostwheel]
 
 [Note]
  !!! Warning, the merged dialogs feature of TESTOOL is widely considered to be broken, it will cause some mods to stop working, and it is recommended you do not use it.
 Merged_Dialogs.esp
 
 [Note]
- The Merged Leveled Lists feature of TESTOOL does not correctly calculate all merged lists. It is recommended that you also use the "Leveled List Resequencer" tool after creating Merged_Leveled_Lists.esp.
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2726 )
- or better yet, just use "Wrye Mash" to create "Mashed Lists.esp".
+ The Merged Leveled Lists feature of TESTool does not correctly calculate all merged lists. It is recommended that you also use aerelorn's "Leveled List Resequencer" tool after creating Merged_Leveled_Lists.esp.
+ (Ref: http://wiki.theassimilationlab.com/mmw/TESTool#Suggestions_for_use )
+ aerelorn's Leveled List Resequencer: http://mw.modhistory.com/download-37-891
+ Or better yet, just use "Wrye Mash" to create "Mashed Lists.esp".
 Merged_Leveled_Lists.esp
 
 
@@ -1276,8 +1277,8 @@ Ald Redaynia Extended.esp
 
 [Conflict]
  You should use the version of Darkelfguy's "Redaynia Village" that is compatible with Princess Stomper's "Ald Redaynia Extended"
- Redaynia_Village_v11.rar:  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6638
- (Ref: See Planet Elder Scrolls download page.
+ Redaynia Village Compatibility Version:  http://www.nexusmods.com/morrowind/mods/17935/
+ (Ref: http://www.nexusmods.com/morrowind/mods/17935/ ).
 [ANY Ald Redaynia Extended COM.esp
      Ald Redaynia Extended.esp]
 [SIZE 304650 Redaynia Village.esp]
@@ -1326,7 +1327,7 @@ Clean Ald-Ruhn Temple Expansion <VER>.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Ald Vendras v31 [Centurion]
+;; @Ald Vendras 3.1 [Centurion]
 
 ;; Recommended load order for Ald Vendras with popular mods:
 ;; All 3 files of Ald-Vendras V3.1 are compatible to "Illuminated Order"
@@ -1405,8 +1406,8 @@ _Legends_of_Ydumea_v2.esp
 Lucans_Vogar_01.esp
 
 [Note]
- ! An upgraded version (v3.1) of Ald Vendras is available:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3523
+ ! An upgraded version (3.1) of Ald Vendras is available:
+ ! http://mw.modhistory.com/download-44-6991
 Ald-Vendras_V3.esp
 Ald-Vendras_V3-LoKKen.esp
 Ald-Vendras_V3-LoKKen-SC.esp
@@ -1619,8 +1620,8 @@ BC altbegin 2.2.esp
 
 [Note]
  ! You should consider using one of Lthemeow's edited "Alternate Beginnings" plugins from "Alternate_Beginnings_22.zip"
- ! Those versions are "[Necessities of Morrowind], and other start script mods, compatable. It delays the script by five seconds, causing it to be compatable with anything that uses start scripts without making the name/etc menues pop up at once and over one another."
- ! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8816 )
+ ! Those versions are "[Necessities of Morrowind], and other start script mods, compatible. It delays the script by five seconds, causing it to be compatible with anything that uses start scripts without making the name/etc menues pop up at once and over one another."
+ ! (Ref: http://mw.modhistory.com/download-90-6583 )
 [ALL [ANY altbegin 2.1(nioliv).esp
           altbegin 2.1.esp
           BC altbegin 2.1(nioliv).esp
@@ -1665,7 +1666,6 @@ BC altbegin 2.2.esp
           Tenience's Rare Items.esp
           Torgulf's NPC Soultrapping 1.2 No Bloodmoon.esp
           Undress For Me.esp]]
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alternate Leveling (Forgetfulness) [Balor]
@@ -1794,6 +1794,8 @@ Animal Behaviour.esp
 Less Aggressive Critters.esp
 ;;Mildlife by The Vagrant Wolf
 Mildlife.esp
+;;Annoying Creatures Begon by Batwits
+Neutral creatures.esp
 ;;Non-Homicidal Ecosystem by White_Wolf9088
 Non-Homicidal Ecosystem - Morrowind.ESP
 Non-Homicidal Ecosystem - Bloodmoon.ESP
@@ -1815,6 +1817,7 @@ wildlife_behaviour.esp
      Animal Behaviour.esp
      Less Aggressive Critters.esp
      Mildlife.esp
+     Neutral creatures.esp
      Non-Homicidal Ecosystem - Morrowind.ESP
      Non-Homicidal Ecosystem - Bloodmoon.ESP
      Non-Homicidal Ecosystem - Tribunal.ESP
@@ -1826,6 +1829,25 @@ wildlife_behaviour.esp
 [ANY SG-MW-ecology-BM-plugin.esp
      SG-MW-ecology-carnivore-plugin.esp
      SG-MW-ecology-WW-plugin.esp]
+
+;;Dragon32: Load pacification mods after Creatures, whilst Creatures makes animals less aggressive the more of them you kill somone loading a pacification from the start wants less aggressive creatures from the start.
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+animalbehave.esp
+Animal Behaviour.esp
+Less Aggressive Critters.esp
+Mildlife.esp
+Neutral creatures.esp
+Non-Homicidal Ecosystem - Morrowind.ESP
+Non-Homicidal Ecosystem - Bloodmoon.ESP
+Non-Homicidal Ecosystem - Tribunal.ESP
+Non-Homicidal Ecosystem Trib. & Blood..ESP
+Passive_Healthy_Wildlife.esp
+Passive Wildlife Vvardenfell.esp
+Rational Wildlife.esp
+wildlife_behaviour.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1853,8 +1875,8 @@ Animated Morrowind 1.0.esp
 Animated_Morrowind - Expanded.esp
 
 [Conflict]
- "MCA__Animated_Morrowind__Expanded.esp" should be used "if you use also MCA 7"
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8896 )
+ "["MCA__Animated_Morrowind__Expanded.esp" should be used] if you use also MCA 7[, as] some overlapping sitting NPCs moved to be compatible with MCA 7"
+ (Ref: http://mw.modhistory.com/download-64-6629 )
 [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
 Animated_Morrowind - Expanded.esp
 
@@ -1905,6 +1927,18 @@ NOM 2.13.esp
  Download "Annastia V3.3(Fixed) Alernative esp.7z" from Morrowind Modding History and replace the original plugin with this cleaned version by Slartibartfasts.
  (Ref: http://mw.modhistory.com/download-48-6992 )
 [SIZE !4921700 Annastia V3.3.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Annoying Creatures Begone [Batwits]
+
+;;See also "Animal pacification mods [various]"
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 17588 Neutral creatures.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Another Balmora 1.1 [basswalker]
@@ -2113,7 +2147,7 @@ AOF Potions Recolored T+B.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Appoldro's Weaponstore [TommyKhaajit, Dragon32]
+;; @Appoldro's Weaponstore 2.04b [TommyKhaajit, Dragon32]
 
 [Conflict]
  Use only one plugin:
@@ -2134,9 +2168,8 @@ acsAppoldroMW.esp
  !! TommyKhaajit's "Julius and Celine Appoldro's Weaponstore" uses deprecated AddToLev* functions to modify Bethsoft leveled lists. Using this plugin will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one. If you have used one of these plugins, you can clean modified leveled lists from your savegame using the "Repair All" feature of "Wrye Mash". For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see:
  !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
  !! A patched version, by Dragon32, is available here:
- !! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5066
+ !! http://mw.modhistory.com/download-80-11007
 acsAppoldro.esp
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Appropriate Greetings 1.5.2 [Arcimaestro Antares]
@@ -2384,7 +2417,7 @@ Area Effect Projectiles (PAR Edit).esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Area Effect Projectiles [BTB]
 
-;;Dragon32: See also @Area Effect Arrows [Bethesda/etc] and @Particle Arrow Replacer 4.0 [Ghostnull]
+;;Dragon32: See also "Area Effect Arrows [Bethesda/etc]" and "Particle Arrow Replacer 4.0 [Ghostnull]"
 
 [Conflict]
  Use only one plugin:
@@ -2403,7 +2436,7 @@ Area Effect Projectiles (PAR Edit).esp
 
 [Conflict]
  BTB has released an edited version of Ghostnull's "Particle Arrow Replacer". The edited version is compatible with the "BTB - Equipment.esp" plugin from "BTB's Game Improvements"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8919
+ http://mw.modhistory.com/download-53-14181
  (Ref: "Readme - PAR Edit.txt")
 Particle Arrow Replacer.esp
 BTB - Equipment.esp
@@ -6317,6 +6350,10 @@ Mildlife.esp
 
 [Order]
 Blasphemous Revenants.esp
+Neutral creatures.esp
+
+[Order]
+Blasphemous Revenants.esp
 Non-Homicidal Ecosystem - Morrowind.ESP
 
 [Order]
@@ -6674,7 +6711,7 @@ BloodMoon-FIX.esm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon Landscape Overhaul 1.1 [Slartibartfast]
 
-;;Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=947130&view=findpost&p=13694991 
+;;Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=947130&view=findpost&p=13694991
 [Order]
 Bloodmoon.esm
 Bloodmoon Landscape Overhaul <VER>.esm
@@ -6777,7 +6814,13 @@ The Boatmaster.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Boats [abot & Arcimaestro Antares]
+;; @Boats 1.15 [abot & Arcimaestro Antares]
+
+[Note]
+ ! There is a new version of abot & Arcimaestro Antares' "Boats" available, you should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/42270/
+[VER <1.15 abotBoats.esp]
+[VER <1.15 abotBoatsTR.esp]
 
 [Conflict]
  Only use one plugin:
@@ -6788,10 +6831,27 @@ abotBoats.esp
 abotBoatsTR.esp
 
 [Requires]
+ "Normal version [of abot & Arcimaestro Antares' "Boats"] requires Bloodmoon.esm."
+ (Ref: "abotBoats.txt")
+abotBoats.esp
+Bloodmoon.esm
+
+[Requires]
+ "Tamriel Rebuilt version [of abot & Arcimaestro Antares' "Boats"] requires Tribunal.esm, Bloodmoon.esm, TR_Data.esm, TR_Mainland.esm."
+ (Ref: "abotBoats.txt")
+abotBoatsTR.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     TR_Data.esm
+     TR_Mainland.esm]
+
+[Requires]
  "abotRiverStridersTR.esp NEEDS abotBoatsTR.esp"
  (Ref: "abotBoats.txt")
 abotRiverStridersTR.esp
-abotBoatsTR.esp
+[ALL abotBoatsTR.esp
+     TR_Data.esm
+     TR_Mainland.esm]
 
 ;; Ref: "abotBoats.txt"
 [Order]
@@ -7097,6 +7157,71 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 [Order]
 NX9_Guards_Complete.ESP
 Juniper's Twin Lamps (1.1 Tribunal).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BTB Spells - Excellent Magic Sounds Patch (MGSO) 12.2 [imanoobsowhat27]
+
+[Conflict]
+ The sounds from "Excellent Magic Sounds" by Asiron do not work with "BTB - Spells.esp" from "BTB's Game Improvements"
+ imanoobsowhat27 has released a modified version of "BTB - Spells.esp" (version 12.2) so it is compatible with "Excellent Magic Sounds".
+ http://www.nexusmods.com/morrowind/mods/39774/
+ (Ref: "Readme for BTB - Spells - Excellent Magic Sounds Patch (MGSO).txt")
+ExcellentMagicSounds.esp
+BTB - Spells.esp
+
+[Conflict]
+ Do not use imanoobsowhat27's "BTB Spells - EMS MGSO Patch.esp" with BTB's original "BTB - Spells.esp".
+ (Ref: "Readme for BTB - Spells - Excellent Magic Sounds Patch (MGSO).txt")
+BTB Spells - EMS MGSO Patch.esp
+BTB - Spells.esp
+
+;;Dragon32: Checked in TESPCD, lots of MGEF conflicts.
+[Order]
+ExcellentMagicSounds.esp
+BTB Spells - EMS MGSO Patch.esp
+
+;;Dragon32: Duplicate "BTB - Spells.esp" rules
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod, there is no point in running both BTB's and Wakim's mods that alter spell and magic settings.
+ (Ref: "morrowind_btb.zip\Readme.txt")
+BTB Spells - EMS MGSO Patch.esp
+[ANY Balance - Magic Effects.esp
+     Balance - spells.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp]
+
+;; Ref: "morrowind_btb.zip\Readme.txt"
+[Order]
+BTB Spells - EMS MGSO Patch.esp
+BTB - Settings.esp
+
+[Order]
+BTB Spells - EMS MGSO Patch.esp
+BTB - Settings (Alternate).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BTB Spells Fix 1.0 [Kid77]
+
+[Note]
+ !! "The NPC-only spells added by ["BTB - Spells.esp", from "BTB's Game Improvements",] were appearing on some of the NPCs added by [Neoptolemus' "Morrowind Comes Alive" who] would sell the spells that were only meant for NPCs, and not for the player. ["BTB Spells Fix" by Kid77] fixes that issue."
+ !! Download "BTB Spells Fix" by Kid77 from Morrowind Modding History: http://mw.modhistory.com/download-53-6632
+[ALL [ANY BTB - Spells.esp
+          BTB Spells - EMS MGSO Patch.esp]
+     MCA.esm
+     [NOT BTB NPC Spells Fix.ESP]]
+
+
+[Requires]
+ "[Kid77's "BTB Spells Fix 1.0"] require Morrowind, Tribunal, Bloodmoon, BTB - Spells (from BTB's Game Improvements)."
+ (Ref: "BTB_Spells_Fix.7z\BTB Spells Fix\ReadMe.txt")
+BTB NPC Spells Fix.ESP
+[ALL [ANY BTB - Spells.esp
+          BTB Spells - EMS MGSO Patch.esp]
+     Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8247,12 +8372,17 @@ Christmas At Lokken.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Cliffracer-FIX [Misty Moon]
+;; @Cliffracer Fix [Misty Moon]
 
 [Conflict]
  Misty Moon's "Cliffracer-FIX" makes cliffracers not so eager to attack. You are using another mod that makes creatures, including cliffracers, less aggressive. Review whether you need Misty Moon's mod loaded as well.
 Cliffracer-FIX.esp
-[ANY Non-Homicidal Ecosystem - Morrowind.ESP
+[ANY animalbehave.esp
+     Animal Behaviour.esp
+     Less Aggressive Critters.esp
+     Mildlife.esp
+     Neutral creatures.esp
+     Non-Homicidal Ecosystem - Morrowind.ESP
      Non-Homicidal Ecosystem - Bloodmoon.ESP
      Non-Homicidal Ecosystem - Tribunal.ESP
      Non-Homicidal Ecosystem Trib. & Blood..ESP
@@ -8260,9 +8390,6 @@ Cliffracer-FIX.esp
      Non-Homicidal Ecosystem - Dwemer Edition.ESP
      Non-Homicidal Ecosystem - Sixth House Edition.ESP
      Non-Homicidal Ecosystem - Undead Edition (Trib. & Blood.).ESP
-     animalbehave.esp
-     Animal Behaviour.esp
-     Mildlife.esp
      Passive Wildlife Vvardenfell.esp
      Passive_Healthy_Wildlife.esp
      Rational Wildlife.esp
@@ -9393,7 +9520,7 @@ Daggerfall Collection Ver 1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Dagon Fel Mill [Thondur]
+;; @Dagon Fel Mill 1.8 [Thondur]
 
 [Conflict]
  Use only one plugin
@@ -9404,7 +9531,7 @@ DagonFel Mill V-1.7 esp..esp
 DagonFel Mill V-1.8 esp..esp
 
 [Requires]
- v1.8 of Thondur's "Dagon Fel Mill" adds a fast travel option for Emma's "The White Wolf of the Lokken Mountain", there is little point in using this version without Emma's mod. Use v1.7 instead.
+ Version 1.8 of Thondur's "Dagon Fel Mill" adds a fast travel option for Emma's "The White Wolf of the Lokken Mountain", there is little point in using this version without Emma's mod. Use version 1.7 instead.
  (Ref: "Dagon Fell Mill - Read me.txt")
 DagonFel Mill V-1.8 esp..esp
 [ANY BT_Whitewolf_2_0.esp
@@ -9415,6 +9542,29 @@ DagonFel Mill V-1.8 esp..esp
  (Ref: "Dagon Fell Mill - Read me.txt")
 Travel Addon-DagonFelMill-V1.esp
 DagonFel Mill V-1.8 esp..esp
+
+;;Dragon32: Dunno if needed, but, "Dagon Fell Mill - Read me.txt": "if you are running "Ald Redaynia Expanded" by Princess Stomper, and Lokken Island this boat can drop you off at either place and offers return trips"
+[Order]
+BT_Whitewolf_2_0.esp
+DagonFel Mill V-1.8 esp..esp
+
+;;Dragon32: Dunno if needed, but, "Dagon Fell Mill - Read me.txt": "if you are running "Ald Redaynia Expanded" by Princess Stomper, and Lokken Island this boat can drop you off at either place and offers return trips"
+[Order]
+Ald Redaynia Extended COM.esp
+DagonFel Mill V-1.8 esp..esp
+
+[Order]
+Ald Redaynia Extended.esp
+DagonFel Mill V-1.8 esp..esp
+
+;;Dragon32: Assume the boat goes to Ald Redaynia for those using the non-Lokken version
+[Order]
+Ald Redaynia Extended COM.esp
+DagonFel Mill V-1.7 esp..esp
+
+[Order]
+Ald Redaynia Extended.esp
+DagonFel Mill V-1.7 esp..esp
 
 [Requires]
  This is an add-on to Thondur's "Dagon Fel Mill" and not a standalone plugin, it adds a fast travel option for Emma's "The White Wolf of the Lokken Mountain".
@@ -11059,12 +11209,21 @@ Dragons_Breech_Alpha2V1.3.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @DragonSlayer  [PizzasRgooD]
+;; @DragonSlayer [PizzasRgooD]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 22033 TheDragonSlayer.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Drakescale Robe [Vince]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1954 vince_robe_drakescale.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20482,7 +20641,7 @@ LGNPC_SecretMasters_MCA5.esp
 
 [Note]
  ! You appear to have an older version Less Generic Tribunal, you can find the latest here:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7339
+ ! http://www.nexusmods.com/morrowind/mods/23363/
 [VER < 2.0 Less_Generic_Tribunal.esp]
 
 [Conflict]
@@ -21107,7 +21266,7 @@ Clean The Lost Artifacts of Morrowind.esp
 
 [Patch]
  Darknut's "Greater Dwemer Ruins" has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by latendresse76's patch "LAMW_GDRv1_Patch.esp".
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8461
+ http://mw.modhistory.com/download-1-6470
  (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
 LAMW_GDRv1_Patch.esp
 [ALL [ANY DN-GDRv1.esp
@@ -21122,7 +21281,7 @@ LAMW_GDRv1_Patch.esp
 
 [Patch]
  Darknut's "Greater Dwemer Ruins" (NoM version) has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by latendresse76's patch "LAMW_GDRv1_NOM_Patch.esp".
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8461
+ http://mw.modhistory.com/download-1-6470
  (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
 LAMW_GDRv1_NOM_Patch.esp
 [ALL [ANY DN-GDRv1_NOM.esp
@@ -21605,7 +21764,7 @@ Mage Friendly Bloodmoon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MTT (Magical Trinkets of Tamriel) [Chris Woods]
+;; @MTT (Magical Trinkets of Tamriel) IV [Chris Woods]
 
 ; MTT should load after WGI as they both change the MGEF which MTT uses for the floating ioun stone
 [Order]
@@ -21625,6 +21784,7 @@ MTT IV Master.esp
 ;;Also load after BTB's settings plugin, changes same MGEF
 [Order]
 BTB - Spells.esp
+BTB Spells - EMS MGSO Patch.esp
 MTT_IV_Master.esp			; patched version by JMS
 MTT IV v0.79 (LL fixed)_DWS version.esp	; patched version by DWS
 MTT IV Master.esp
@@ -21968,6 +22128,10 @@ newarrows.esp
 BTB - Spells.esp
 
 [Order]
+newarrows.esp
+BTB Spells - EMS MGSO Patch.esp
+
+[Order]
 newarrowsLITE.esp
 BTB - Equipment.esp
 
@@ -21982,6 +22146,10 @@ BTB - Settings (Alternate).esp
 [Order]
 newarrowsLITE.esp
 BTB - Spells.esp
+
+[Order]
+newarrowsLITE.esp
+BTB Spells - EMS MGSO Patch.esp
 
 ;;Dragon32: If someone's loading Wakim's mods then I expect they want its balancing and Marksman mod's additional weapons...
 [Order]
@@ -23329,6 +23497,244 @@ Cali_MormegilManor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Acoustic Overhaul 0.9 [PeterBitt & Logitech]
+
+;;Ref: "MAO_ReadMe.pdf"
+[Order]
+MAO_Base.esm
+MAO_Music.esm
+MAO_InteriorWeather.esm
+MAO_2d.esm
+MAO_3d.esm
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+
+[Note]
+ "[MAO_Voice.esp] is heavily improved by MAO_ScriptExtender and MWSE."
+ (Ref: "MAO_ReadMe.pdf")
+[ALL MAO_Voice.esp
+     [NOT MAO_ScriptExtender.esp]]
+
+[Note]
+ "When you use MAO_Music.esm without [MAO_Base.esm], battle music might not stop properly when you leave the water with slaughterfishes following you."
+ (Ref: "MAO_ReadMe.pdf")
+[ALL MAO_Music.esm
+     [NOT MAO_Base.esm]]
+
+[Note]
+ "[MAO_Base.esm adds] unique and randomized sounds for shield blocking. (requires MAO_ScriptExtender.esp)"
+ (Ref: "MAO_ReadMe.pdf")
+[ALL MAO_Base.esm
+     [NOT MAO_ScriptExtender.esp]]
+
+[Note]
+ "Loading MAO_ScriptExtender after this improves [MAO_Music.esm]"
+ (Ref: "MAO_ReadMe.pdf")
+[ALL MAO_Music.esm
+     [NOT MAO_ScriptExtender.esp]]
+
+[Note]
+ "In order to have the proper wind loops for all weather conditions, you need to change [your] Morrowind.ini"
+ Please review "MAO_ReadMe.pdf" for the required changes.
+ (Ref: "MAO_ReadMe.pdf")
+MAO_Base.esm
+
+[Requires]
+ "[MAO_ScriptExtender.esp] depends on MAO_Base."
+ (Ref: "MAO_ReadMe.pdf")
+MAO_ScriptExtender.esp
+MAO_Base.esm
+
+[Requires]
+ MAO_Voice.esp requires MAO_Base.esm to be loaded
+MAO_Voice.esp
+MAO_Base.esm
+
+;;Add-ons
+
+;;Bitter Coast Sounds
+[Patch]
+ "MAO_PDragon.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Bethesda's "Bitter Coast Sounds".
+ (Ref: "MAO_ReadMe.pdf" and "Addon - official BC Sounds mod-43092-1-0.7z\readme.txt")
+MAO_PDragon.esp
+[ALL [ANY BCsounds.esp
+          OfficialMods_v5.esp
+          Clean Official Plugins v1.1.esp
+          super_adventurers302.esp]
+     MAO_Base.esm]
+
+;;"load the orignial mods before all MAO plugins!"
+;;Ref: "MAO_ReadMe.pdf"
+[Order]
+BCsounds.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_PDragon.esp
+
+[Order]
+OfficialMods_v5.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_PDragon.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_PDragon.esp
+
+[Order]
+super_adventurers302.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_PDragon.esp
+
+;;Graphic Herbalism
+[Patch]
+ "MAO_GHerb.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and ManaUser's "Graphic Herbalism".
+ (Ref: "MAO_ReadMe.pdf" and "Addon - Graphic Herbalsim mod-43092-1-0.7z\readme.txt")
+MAO_GHerb.esp
+[ALL Graphic Herbalism.esp
+     MAO_Base.esm]
+
+;;"load the orignial mods before all MAO plugins!"
+;;Ref: "MAO_ReadMe.pdf"
+[Order]
+Graphic Herbalism.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_GHerb.esp
+
+;;Khajiit Diversity Revamped
+[Patch]
+ "MAO_KhajiitDiversity.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Westly's "Khajiit Diversity Revamped".
+ (Ref: "MAO_ReadMe.pdf" and "Addon - Khajiit Diversity Revamped mod-43092-1-0.7z\readme.txt")
+MAO_KhajiitDiversity.esp
+[ALL [ANY New Khajiit Diversity(BEAST).esp
+          New Khajiit Diversity(BEAST)X.esp
+          New Khajiit Diversity(CIV).esp
+          New Khajiit Diversity(CIV)X.esp]
+     MAO_Base.esm]
+
+;;"load the orignial mods before all MAO plugins!"
+;;Ref: "MAO_ReadMe.pdf"
+[Order]
+New Khajiit Diversity(BEAST).esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_KhajiitDiversity.esp
+
+[Order]
+New Khajiit Diversity(BEAST)X.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_KhajiitDiversity.esp
+
+[Order]
+New Khajiit Diversity(CIV).esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_KhajiitDiversity.esp
+
+[Order]
+New Khajiit Diversity(CIV)X.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_KhajiitDiversity.esp
+
+;;Siege at Firemoth
+[Patch]
+ "MAO_Firemoth.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Bethesda's "Siege at Firemoth". It will not work correctly with mods that move Fort Firemoth.
+ (Ref: "MAO_ReadMe.pdf" and "Addon - official Siege at Firemoth mod-43092-1-0.7z\readme.txt")
+MAO_Firemoth.esp
+[ALL [ANY Siege at Firemoth.esp
+          OfficialMods_v5.esp
+          Clean Official Plugins v1.1.esp
+          super_adventurers302.esp]
+     [ANY MAO_Base.esm
+          MAO_Music.esm
+          MAO_2d.esm
+          MAO_3d.esm
+          MAO_InteriorWeather.esm]]
+
+[Requires]
+ The "MAO_Firemoth.esp" compatibility add-on needs these modules from PeterBitt & Logitech's "Morrowind Acoustic Overhaul" enabled.
+MAO_Firemoth.esp
+[ALL MAO_Music.esm
+     MAO_2d.esm
+     MAO_3d.esm
+     MAO_InteriorWeather.esm]
+
+;;"load the orignial mods before all MAO plugins!"
+;;Ref: "MAO_ReadMe.pdf"
+[Order]
+Siege at Firemoth.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_Firemoth.esp
+
+[Order]
+OfficialMods_v5.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_Firemoth.esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_Firemoth.esp
+
+[Order]
+super_adventurers302.esp
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Voice.esp
+MAO_ScriptExtender.esp
+MAO_Firemoth.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Additions 1.0 [M6n6M6(Derek)]
 
 [Conflict]
@@ -23457,6 +23863,10 @@ MW_Adv_PHW.esp
 
 [Order]
 Mildlife.esp
+MW_Adv_PHW.esp
+
+[Order]
+Neutral creatures.esp
 MW_Adv_PHW.esp
 
 [Order]
@@ -24633,11 +25043,11 @@ Morrowind Crafting 2-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Enhanced [Aerelorn]
+;; @Morrowind Enhanced 1.6 [Aerelorn]
 
 [Note]
- Ensure you are using the latest version of Morrowind Enhanced, v1.6
- http://planetelderscrolls.gamespy.com/View.php?view=Utilities.Detail&id=8
+ Ensure you are using the latest version of Morrowind Enhanced, 1.6
+ http://mw.modhistory.com/download-65-14559
 MWE_Combat.esp
 Enhanced_Stealth.esp
 MWE_Journal.esp
@@ -25513,6 +25923,10 @@ Mildlife.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+Neutral creatures.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
 Non-Homicidal Ecosystem - Morrowind.ESP
 
 [Order]
@@ -25618,10 +26032,18 @@ BTB - Unique Finery Equipment.esp ;Revan's BTB's Unique Finery Equipment
 Morrowind Rebirth <VER>.esp
 BTB - Spells.esp
 
+[Order]
+Morrowind Rebirth <VER>.ESP
+BTB Spells - EMS MGSO Patch.esp
+
 ;;Dragon32: SPEL conflict - "rally beast"
 [Order]
 Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
 BTB - Spells.esp
+
+[Order]
+Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
+BTB Spells - EMS MGSO Patch.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
@@ -25809,6 +26231,7 @@ Werewolf ReEquip.esp
  These mods require Morrowind Script Extender (MWSE) v0.9.4a, or MGE v3.5.6 or later.
 Advanced Alchemy.esp
 BetterMusicSystem_<VER>.esp
+BTB NPC Spells Fix.ESP
 Census and Excise Office.esp
 CE-DepthPerception25+BTB's Character.ESP
 CE-DepthPerception25.esp
@@ -25824,6 +26247,7 @@ Get Fezzed!.esp
 Gravedigger.esp
 Library_Portable.esp
 Library_Portable_Book_Jackets_Compatible.esp
+MAO_ScriptExtender.esp
 mel_teleportPlugin_1_3.esp
 Shut_Up.esp
 UL_3.2_MWSE_Add-on.esp
@@ -26224,7 +26648,7 @@ Muffinwind.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MultiMark (multipleteleportmarking2.2) [Marcel Hesslebarth]
+;; @MultiMark (Multiple Teleport Marking) 2.2 [Marcel Hesslebarth]
 
 ;; (Ref: MultipleTeleportMarking.txt)
 [Order]
@@ -26268,7 +26692,7 @@ MultiMark.esp
 
 [Note]
  "["MultiMark-jms_patch.esp"] makes a small patch to Marcel Hesselbarth's fine "Multiple Teleport Marking Mod v2.2", to fix the problem [...] with missing and duplicate location entries on the Teleport Menu."
- (Ref: https://sites.google.com/site/johnmoonsugar/Home/morrowind-mods )
+ (Ref: http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods/ )
 [ALL MultiMark.esp
      [NOT MultiMark-jms_patch.esp]]
 
@@ -26758,6 +27182,10 @@ NoM_Creatures Loot PHW.esp
 
 [Order]
 Mildlife.esp
+NoM_Creatures Loot PHW.esp
+
+[Order]
+Neutral creatures.esp
 NoM_Creatures Loot PHW.esp
 
 [Order]
@@ -27822,7 +28250,12 @@ Non-Homicidal Ecosystem - Undead Edition (Trib. & Blood.).ESP
  White_Wolf9088's "Super Hostile Edition" is not compatible with his own pacification mods or animal pacification mods from other modders.
  (Ref: http://www.nexusmods.com/morrowind/mods/42327/ )
 Super-Hostile Ecosystem (Vanilla Morrowind).ESP
-[ANY Non-Homicidal Ecosystem - Morrowind.ESP
+[ANY animalbehave.esp
+     Animal Behaviour.esp
+     Less Aggressive Critters.esp
+     Mildlife.esp
+     Neutral creatures.esp
+     Non-Homicidal Ecosystem - Morrowind.ESP
      Non-Homicidal Ecosystem - Bloodmoon.ESP
      Non-Homicidal Ecosystem - Tribunal.ESP
      Non-Homicidal Ecosystem Trib. & Blood..ESP
@@ -27830,9 +28263,6 @@ Super-Hostile Ecosystem (Vanilla Morrowind).ESP
      Non-Homicidal Ecosystem - Dwemer Edition.ESP
      Non-Homicidal Ecosystem - Sixth House Edition.ESP
      Non-Homicidal Ecosystem - Undead Edition (Trib. & Blood.).ESP
-     animalbehave.esp
-     Animal Behaviour.esp
-     Mildlife.esp
      Passive Wildlife Vvardenfell.esp
      Passive_Healthy_Wildlife.esp
      Rational Wildlife.esp
@@ -30453,6 +30883,11 @@ LN_silt_striders.esp
 [Order]
 Real_wildlife_2b.esp
 Real_Wildlife_2b_Bloodmoon.esp
+animalbehave.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
 Animal Behaviour.esp
 
 [Order]
@@ -30479,6 +30914,11 @@ Less Aggressive Critters.esp
 Real_wildlife_2b.esp
 Real_Wildlife_2b_Bloodmoon.esp
 Mildlife.esp
+
+[Order]
+Real_wildlife_2b.esp
+Real_Wildlife_2b_Bloodmoon.esp
+Neutral creatures.esp
 
 [Order]
 Real_wildlife_2b.esp
@@ -34123,6 +34563,19 @@ Stinkers 3.0.esp
 Stinkers 3.0.esp
 Stinkers PBS for v3.esp
 
+;;Dragon32: Duplicated Order rules from Provincial Bath Shoppe 1.0 [Korana]
+[Order]
+Clean Ascadian Styles.esp
+Stinkers PBS for v3.esp
+
+[Order]
+Stinkers PBS for v3.esp
+Suran Waterfront 5.0.esp
+
+[Order]
+Stinkers PBS for v3.esp
+Suran Waterfront V-5.1.esp
+
 [Patch]
  "Stinkers BGMM/BGMF for v3.esp [...] REQUIRES both Stinkers v3 AND Buyable Ghorak Manor v3"
  http://morrowind.nexusmods.com/mods/42294
@@ -34911,8 +35364,9 @@ Tale of the Devious Trader.esp
 [SIZE 55498 Tales of Tel Branora.esp]
 
 [Requires]
- "Tales of Tel Branora" requires "LeFemmArmor.esp" or any compilation that includes it.
+ "Tales of Tel Branora" requires Bethesda's official "LeFemm Armor" or any compilation that includes it.
  (Ref: Tales of Tel Branora Read Me.txt)
+ Bethesda's official plugin can be downloaded here: http://www.elderscrolls.com/morrowind/expansions/
 Tales of Tel Branora.esp
 [ANY LeFemmArmor.esp
      OfficialMods_v5.esp
@@ -35680,6 +36134,10 @@ Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 BTB - Spells.esp
 Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
 
+[Order]
+BTB Spells - EMS MGSO Patch.esp
+Thief Experience Overhaul 1.3b (Tribunal) (Combined).esp
+
 ;;Dragon32: TESPCD shows conficts for MGEF "Index 13"
 [Order]
 Balance - Magic Effects.esp
@@ -35726,6 +36184,10 @@ Improved Open Spell Balance-LD.esp
 ;;Dragon32: TESPCD shows conficts for SPEL "open", "wild open", "strong open", "great open", "ondusi's open door"
 [Order]
 BTB - Spells.esp
+Improved Open Spell Balance-LD.esp
+
+[Order]
+BTB Spells - EMS MGSO Patch.esp
 Improved Open Spell Balance-LD.esp
 
 ;;Dragon32: TESPCD shows conficts for MGEF "Index 13"
