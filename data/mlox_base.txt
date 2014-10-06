@@ -189,6 +189,27 @@ Merged_Leveled_Lists.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @112 Vivec Replacement 1.02 [Szazmyrr3]
+
+[Conflict]
+ Only use one plugin:
+  112_Vivec_Replacement_v_1.02.esp - Molag Mar has a closed topped canton and Vivec has open topped cantons.
+  112_Vivec_Replacement_v_1.02_Vivec_Only.esp - Vivec has open topped cantons. Molag Mar is unchanged.
+  112_Vivec_Replacement_Interiorator_Compatable_Fixed.esp - As "112_Vivec_Replacement_v_1.02.esp", includes Nemon's "Vivec Interiorator"
+ (Ref: "112_Readme-Vivec_Replacement.txt")
+112_Vivec_Replacement_Interiorator_Compatable_Fixed.esp
+112_Vivec_Replacement_v_1.02.esp
+112_Vivec_Replacement_v_1.02_Vivec_Only.esp
+
+[Conflict]
+ Don't run Nemon's "Vivec Interiorator" with any version of Szazmyrr3's "112 Vivec Replacement", rather use "112_Vivec_Replacement_Interiorator_Compatable_Fixed.esp" on its own as that version of Szazmyrr3's mod includes Nemon's "Vivec Interiorator".
+[ANY 112_Vivec_Replacement_Interiorator_Compatable_Fixed.esp
+     112_Vivec_Replacement_v_1.02.esp
+     112_Vivec_Replacement_v_1.02_Vivec_Only.esp]
+Nemon's_Vivec_Interiorator.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The 7 Twisted Dimensions  [A13x H3r3 (A13x for short)]
 
 [Note]
@@ -397,52 +418,6 @@ abotWaterLife.esm
 RealTimeMod.esp
 time.esp
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @abotGuars 1.17 [abot]
-
-[Note]
- ! There is a newer version of abot's Guars available, you may want to upgrade:
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6112
-[VER < 1.17 abotGuars.esp]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- "abotGuars.esp" if you have both Tribunal.esm and Bloodmoon.esm loaded
- "abotGuarsTribunal.esp" if you have Tribunal.esm only loaded
- "abotGuarsBloodmoon.esp" if you have Bloodmoon.esm only loaded.
- (ref: "abotGuars.txt")
-abotGuars.esp
-abotGuarsTribunal.esp
-abotGuarsBloodmoon.esp
-
-[Conflict]
- "abotGuarsTribunal.esp" should be used if you have Tribunal.esm only loaded
- (ref: "abotGuars.txt")
-abotGuarsTribunal.esp
-Bloodmoon.esm
-
-[Conflict]
- "abotGuarsBloodmoon.esp" should be used if you have Bloodmoon.esm only loaded
- (ref: "abotGuars.txt")
-abotGuarsBloodmoon.esp
-Tribunal.esm
-
-[Requires]
- (ref: "abotGuars.txt")
-abotGuars.esp
-[ALL Bloodmoon.esm
-     Tribunal.esm]
-
-[Requires]
- (ref: "abotGuars.txt")
-abotGuarsBloodmoon.esp
-Bloodmoon.esm
-
-[Requires]
- (ref: "abotGuars.txt")
-abotGuarsTribunal.esp
-Tribunal.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Abothiana Updated  [Worm Lord]
@@ -8345,11 +8320,11 @@ Christmas At Lokken.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Class Abilities [Balathustrius]
+;; @Class Abilities 3.1 [Balathustrius]
 
 [Note]
- ! A new version of "Class Abilities" is available, you should upgrade
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6351
+ ! A new version of "Class Abilities" is available, you should upgrade!
+ ! http://mw.modhistory.com/download-71-12566
 [VER < 3.1 Class Abilities <VER>.esp]
 
 
@@ -10825,8 +10800,8 @@ Disturb_The_Dead_ExplorersFull25_SA_BM_Addon.esp
 ;; @Diverse Ore Veins [Craigor]
 
 [Note]
- ! "CR Ore Resource 1.0.esp" adds the "Diverse Ore Veins" meshes to the construction set, but doesn't replace anything in game.
- ! (Ref: "CR Diverse Ore Veins ReadMe.txt")
+ "The .esp "CR Ore Resource 1.0" adds the 105 meshes to the construction set, but doesn't replace anything in game. This .esp is meant for modders who would like to add the newly textured meshes without necessarily replacing all the rest."
+ (Ref: "CR Diverse Ore Veins ReadMe.txt")
 CR Ore Resource 1.0.esp
 
 [Note]
@@ -12056,6 +12031,39 @@ entertainers-NoM fix.esp
 [Order]
 Entertainers_Expanded.esp
 entertainers-NoM fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Epic Ald'Ruhn 1.3 [Mikeandike]
+
+;;MRM version
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 779825 Epic_aldruhn.esp]
+
+[Conflict]
+ The path that leads up Red Mountain towards Rain's Hand [Hall] is right behind Ald Ruhn and Skarr and ["Epic Ald'Ruhn" by Mikeandike] conflicts with (actually removes) the path."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1498323-epic-ald-ruhn/?p=13156463 )
+Epic_aldruhn.esp
+Rain's Hand Hall.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Epic Balmora 1.4 [Mikeandike]
+
+[Conflict]
+ "Vality's Balmora Addon is 100% incompatible with [Mikeandike's] Epic Balmora. It will crash every time you get near balmora if you have both on."
+ (Ref: http://forums.bethsoft.com/topic/1487854-relz-mlox-analyze-and-sort-your-load-order/?p=23678035 )
+BIG_BALMORA.ESP
+Vality's Balmora Addon.esp
+
+[Conflict]
+ "[One has] to decide between using ["Epic Balmora" by Mikeandike] or the domehome house mod by Grumpy."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1340498-epic-balmora/?p=17802254 )
+BIG_BALMORA.ESP
+[ANY MW_Domehome1.esp
+     Trib_Domehome1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14767,7 +14775,13 @@ Golden Gold Patch v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Gondoliers [abot]
+;; @Gondoliers 1.09 [abot]
+
+[Note]
+ ! There is a new version of abot & Arcimaestro Antares' "Gondoliers" available, you should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/43291/
+[VER <1.09 abotGondoliers.esp]
+[VER <1.09 abotGondoliersRV.esp]
 
 [Conflict]
  Only use one plugin:
@@ -15348,25 +15362,55 @@ Riverized Odai.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Graphic Herbalism 1.2 [ManaUser]
+;; @Graphic Herbalism 1.3 [ManaUser, Skrawafunda]
 
 ;;Dragon32: See also - Herbalism mods [Various]
 
 [Note]
- ! A newer version of ManaUser's "Graphic Herbalism", 1.2, is available. You should upgrade!
- ! http://webpages.charter.net/manauser/morrowind/#gherb
-[VER <1.2 Graphic Herbalism.esp]
+ ! A new version of "Graphic Herbalism", 1.3, is available. You should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/43140/
+[VER <1.3 Graphic Herbalism.esp]
+
+[Requires]
+ "Graphic Herbalism Extra requires Graphic Herbalism."
+ (Ref: "Graphic Herbalism Readme.txt")
+Graphic Herbalism Extra.esp
+Graphic Herbalism.esp
+
+[Patch]
+ "Graphic Herbalism TR" patches the plants in "Tamriel Rebuilt" so they are harvestable in a similar way to the other plants affected by ManaUser's "Graphic Herbalism"
+ (Ref: "Graphic Herbalism TR Readme.txt")
+ http://www.nexusmods.com/morrowind/mods/43140/
+Graphic Herbalism TR.esp
+[ALL Graphic Herbalism.esp
+     TR_Data.esm
+     TR_Mainland.esm]
+
+;;Dragon32: Assume that as this mod only alters CONT objects, should load fine with any future TR_Mainland releases.
+[Requires]
+ "Graphic Herbalism TR" requires both "Tamriel Rebuilt" and ManaUser's "Graphic Herbalism".
+ (Ref: Graphic Herbalism TR Readme.txt)
+Graphic Herbalism TR.esp
+[ALL TR_Data.esm
+     TR_Mainland.esm
+     Graphic Herbalism.esp]
+
+[Requires]
+ "Graphic Herbalism TR Extra.esp" requires both "Graphic Herbalism TR.ESP" and "Graphic Herbalism Extra.esp".
+ (Ref: Graphic Herbalism TR Readme.txt)
+Graphic Herbalism TR Extra.esp
+[ALL Graphic Herbalism TR.esp
+     Graphic Herbalism Extra.esp]
 
 ;; (Ref: "Graphic Herbalism Readme.txt")
 [Order]
 Bloated Caves.esp
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
+Graphic Herbalism TR.ESP
+Graphic Herbalism TR Extra.ESP
 
-[Requires]
- (Ref: "Graphic Herbalism Readme.txt")
-Graphic Herbalism Extra.esp
-Graphic Herbalism.esp
+;;Conflict and ordering information
 
 [Conflict]
  These plugins conflict because they modify some of the same objects (e.g.: kollops).
@@ -15379,7 +15423,7 @@ Resources Enhanced.esp
 Bloated Caves.esp
 Bloated Morrowind.esp
 
-;;Morrowind Inhabitants [scruggs]
+;;Morrowind Inhabitants by scruggs
 [Conflict]
  There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
  (Ref: MWInhabitants PATCH.01 README.txt)
@@ -15412,7 +15456,7 @@ Creatures (lore).esp
 Creatures (Semi).esp
 Graphic Herbalism.esp
 
-;;Dragon32 - from Kirel's Interior Weather [Kirel], q.v.
+;;Dragon32 - from "Kirel's Interior Weather" by Kirel, q.v.
 ;; (Ref: "k_weather.txt")
 [Order]
 k_weather.esp
@@ -15421,9 +15465,10 @@ Graphic Herbalism.esp
 
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
-[Order]
-Expanded Sounds.esp
-Graphic Herbalism.esp
+;;But we have a patch! see "Graphic Herbalism Expanded Sounds Patch [Skrawafunda]" and "Graphic Herbalism / Expanded Sounds Patch [philologos]"
+;;[Order]
+;;Expanded Sounds.esp
+;;Graphic Herbalism.esp
 
 ;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
 ; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
@@ -15435,23 +15480,28 @@ Graphic Herbalism.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Graphic Herbalism / Expanded Sounds Patch [philologos]
 
+;;Dragon32: Keeping this for people who use v1.2 of "Graphic Herbalism", users of 1.3 should be directed to "Graphic Herbalism Expanded Sounds Patch" by Skrawafunda
+
 ;;For both 1.2 and 1.3 versions of the patch
+
 [Patch]
- philologos' "GH_ES1.2 Patch.esp" patches "Expanded Sounds" 1.2 by PirateLord and "Graphic Herbalism" by ManaUser; his "GH_ES1.3 Patch.esp" patches "Expanded Sounds" 1.3 by PirateLord and "Graphic Herbalism".
+ philologos' "GH_ES1.2 Patch.esp" patches "Expanded Sounds" 1.2 by PirateLord and "Graphic Herbalism" 1.2 by ManaUser; his "GH_ES1.3 Patch.esp" patches "Expanded Sounds" 1.3 by PirateLord and "Graphic Herbalism" 1.2 by ManaUser.
  Using the patch allows flora to be harvested according to ManaUser's scripts and emit sounds according to PirateLord's.
  Unfortunately there's no reliable way for mlox to distinguish which version of PirateLord's "Expanded Sounds" you are running, ensure you download and install the right patch!
  http://morrowind.nexusmods.com/mods/23108
  (Ref: Ref: GH_ES1.2 Patch.txt)
 [ANY GH_ES1.2 Patch.esp
      GH_ES1.3 Patch.esp]
-[ALL Graphic Herbalism.esp
+[ALL [VER <1.3 Graphic Herbalism.esp]
      Expanded Sounds.esp]
 
 ;;GH_ES1.2 - For Expanded Sounds v1.2
+
 [Requires]
+ "If you choose to use the "Graphic Herbalism Extra" mod, activate and load the "GH_Extra_ES1.2 Patch.esp" plug-in."
  (Ref: Ref: GH_ES1.2 Patch.txt)
 GH_Extra_ES1.2 Patch.esp
-[ALL Graphic Herbalism Extra.esp
+[ALL [VER <1.3 Graphic Herbalism Extra.esp]
      GH_ES1.2 Patch.esp]
 
 ; Ref: GH_ES1.2 Patch.txt
@@ -15463,6 +15513,7 @@ GH_ES1.2 Patch.esp
 GH_Extra_ES1.2 Patch.esp
 
 ;;GH_ES1.3 - For Expanded Sounds v1.3
+
 [Note]
  ! These are older versions of the "Graphic Herbalism / Expanded Sounds Patch", you should upgrade:
  ! http://morrowind.nexusmods.com/mods/23108
@@ -15470,12 +15521,13 @@ Graphic Herbalism ES1.3.esp
 Graphic Herbalism ES1.3 Extra.esp
 
 [Requires]
+ "If you choose to use the "Graphic Herbalism Extra" mod, activate and load the "GH_Extra_ES1.3 Patch.esp" plug-in."
  (Ref: Ref: GH_ES1.3 Patch.txt)
 GH_Extra_ES1.3 Patch.esp
-[ALL Graphic Herbalism Extra.esp
+[ALL [VER <1.3 Graphic Herbalism Extra.esp]
      GH_ES1.3 Patch.esp]
 
-;  GH_ES1.3 Patch.txt
+;;Ref: "GH_ES1.3 Patch.txt"
 [Order]
 Expanded Sounds.esp
 Graphic Herbalism.esp
@@ -15509,40 +15561,178 @@ GH MC Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Graphic Herbalism TR [Spiffyman]
+;; @Graphic Herbalism Expanded Sounds Patch [Skrawafunda]
+
+[Conflict]
+ "There are four patch files and you need only *one* of them! Choose one depending on the mods you use:
+  GH ES (1.2) Patch.esp - for Graphic Herbalism and Expanded Sounds v1.2
+  GHE ES (1.2) Patch.esp - for Graphic Herbalism with Extra module and Expanded Sounds v1.2
+  GH ES (1.3) Patch.esp - for Graphic Herbalism and Expanded Sounds v1.3
+  GHE ES (1.3) Patch.esp - for Graphic Herbalism with Extra module and Expanded Sounds v1.3"
+ (Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt")
+GH ES (1.2) Patch.ESP
+GH ES (1.3) Patch.ESP
+GHE ES (1.2) Patch.ESP
+GHE ES (1.3) Patch.ESP
 
 [Patch]
- Spiffyman's "Graphic Herbalism TR" patches the plants in "Tamriel Rebuilt" so they are harvested in a similar way to the plants affected by ManaUser's "Graphic Herbalism"
- (Ref: Graphic Herbalism TR Readme.txt)
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7211
-Graphic Herbalism TR.esp
-[ALL Graphic Herbalism.esp
-     TR_Data.esm]
+ "GH ES (1.2) Patch.ESP" and "GH ES (1.3) Patch.ESP" are compatibility patches for Graphic Herbalism and Expanded Sounds. They merge the script additions to flora from both mods, allowing for them to be harvestable as per Graphic Herbalism and at the same time makes them correctly update sounds as per Expanded Sounds.
+ These patches are for people *not* running the Extra module of "Graphic Herbalism".
+ "GH ES (1.2) Patch.ESP" is for people running version 1.2 of PirateLord's "Expanded Sounds".
+ "GH ES (1.3) Patch.ESP" is for people running version 1.3 of PirateLord's "Expanded Sounds".
+ Unfortunately there's no reliable way for mlox to distinguish which version of PirateLord's "Expanded Sounds" you are running, ensure you download and install the right patch!
+ (Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt")
+ Download "Graphic Herbalism Expanded Sounds Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43281/
+[ANY GH ES (1.2) Patch.ESP
+     GH ES (1.3) Patch.ESP]
+[ALL Expanded Sounds.esp
+     [VER >1.2 Graphic Herbalism.esp]]
 
-;;Dragon32: Assume that as this mod only alters CONT objects, should load fine with later TR_Mainland releases.
-[Requires]
- Spiffyman's "Graphic Herbalism TR" requires ManaUser's "Graphic Herbalism" and "Tamriel Rebuilt" Maps 1 and 2
- (Ref: Graphic Herbalism TR Readme.txt)
-Graphic Herbalism TR.esp
-[ALL TR_Data.esm
-     [ANY TR_Mainland.esm
-          [ALL TR_Map1.esm
-               TR_Map2.esm]]
-     Graphic Herbalism.esp]
+[Patch]
+ "GHE ES (1.2) Patch.ESP" and "GHE ES (1.3) Patch.ESP" are compatibility patches for Graphic Herbalism and Expanded Sounds. They merge the script additions to flora from both mods, allowing for them to be harvestable as per Graphic Herbalism and at the same time makes them correctly update sounds as per Expanded Sounds.
+ These patches are for people running the Extra module of "Graphic Herbalism".
+ "GHE ES (1.2) Patch.ESP" is for people running version 1.2 of PirateLord's "Expanded Sounds".
+ "GHE ES (1.3) Patch.ESP" is for people running version 1.3 of PirateLord's "Expanded Sounds".
+ Unfortunately there's no reliable way for mlox to distinguish which version of PirateLord's "Expanded Sounds" you are running, ensure you download and install the right patch!
+ (Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt")
+ Download "Graphic Herbalism Expanded Sounds Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43281/
+[ANY GHE ES (1.2) Patch.ESP
+     GHE ES (1.3) Patch.ESP]
+[ALL Expanded Sounds.esp
+     [VER >1.2 Graphic Herbalism.esp]
+     [VER >1.2 Graphic Herbalism Extra.esp]]
 
-[Requires]
- Spiffyman's  'Graphic Herbalism TR Extra.esp' requires both his original 'Graphic Herbalism TR.ESP' and ManaUser's 'Graphic Herbalism Extra.esp'
- (Ref: Graphic Herbalism TR Readme.txt)
-Graphic Herbalism TR Extra.esp
-[ALL Graphic Herbalism TR.esp
-     Graphic Herbalism Extra.esp]
+;;Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt"
+[Order]
+Expanded Sounds.esp
+GH ES (1.2) Patch.ESP
+GH ES (1.3) Patch.ESP
+GHE ES (1.2) Patch.ESP
+GHE ES (1.3) Patch.ESP
 
-;; Load my "Graphic Herbalism TR" mods after the non-TR versions
 [Order]
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
-Graphic Herbalism TR.esp
-Graphic Herbalism TR Extra.esp
+GH ES (1.2) Patch.ESP
+GH ES (1.3) Patch.ESP
+GHE ES (1.2) Patch.ESP
+GHE ES (1.3) Patch.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch [Skrawafunda]
+
+[Patch]
+ "[Skrawafunda's "Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch"] This is a compatibility patch for Graphic Herbalism Extra (mining) and for Correct UV Orce Replacer."
+ (Ref: "Graphic Herbalism Extra (Correct UV).txt")
+ Download "Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43197/
+Graphic Herbalism Extra (Correct UV).esp
+[ALL [VER >1.2 Graphic Herbalism Extra.esp]
+     [ANY correctUV Ore Replacer 1.0.esp
+          CR Ore Replacer 1.0.esp]]
+
+;;Ref: "Graphic Herbalism Extra (Correct UV).txt"
+[Order]
+Graphic Herbalism Extra.esp
+Graphic Herbalism Extra (Correct UV).esp
+
+[Order]
+correctUV Ore Replacer 1.0.esp
+Graphic Herbalism Extra (Correct UV).esp
+
+[Order]
+CR Ore Replacer 1.0.esp
+Graphic Herbalism Extra (Correct UV).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism Pearls Enhanced Patch [Skrawafunda]
+
+;;Dragon32: actual plugin name is "GHE PE Patch.ESP.ESP" but mlox throws a parse error at that, had to correct it to "GHE PE Patch.ESP" and "GHE PE Patch*.ESP"
+
+[Conflict]
+ "There are four patch files and you need only *one* of them! Choose one depending on the mods you use:
+  GH PE Patch.esp - for Graphic Herbalism and Pearls Enhanced
+  GHE PE Patch.esp - for Graphic Herbalism with Extra module and Pearls Enhanced
+  GH PEC Patch.esp - for Graphic Herbalism and Pearls Enhanced - Colored Pearls Add-on
+  GHE PEC Patch.esp - for Graphic Herbalism with Extra module and Pearls Enhanced - Colored Pearls Add-on"
+ (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
+GH PE Patch.ESP
+GH PEC Patch.ESP
+GHE PE Patch*.ESP
+GHE PE Patch.ESP
+GHE PEC Patch.ESP
+
+[Patch]
+ "[Skrawafunda's "Graphic Herbalism Pearls Enhanced Patch"] is a compatibility patch for Graphic Herbalism and Pearls Enhanced. It allows you to collect all the new pearls from collops witout having to "open" them. In other words, this patch updates herbalism scripts to include the precious additions from Pearls Enhanced."
+ (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
+ Download "Graphic Herbalism Pearls Enhanced Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
+GH PE Patch.ESP
+[ALL [VER >1.2 Graphic Herbalism.esp]
+     Pearls Enhanced.esp]
+
+[Patch]
+ "[Skrawafunda's "Graphic Herbalism Pearls Enhanced Patch"] is a compatibility patch for Graphic Herbalism and Pearls Enhanced. It allows you to collect all the new pearls from collops witout having to "open" them. In other words, this patch updates herbalism scripts to include the precious additions from Pearls Enhanced."
+ (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
+ Download "Graphic Herbalism Pearls Enhanced Patch by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
+[ANY GHE PE Patch.ESP
+     GHE PE Patch*.ESP]
+[ALL [VER >1.2 Graphic Herbalism.esp]
+     [VER >1.2 Graphic Herbalism Extra.esp]
+     Pearls Enhanced.esp]
+
+[Patch]
+ "[Skrawafunda's "Graphic Herbalism Pearls Enhanced Patch"] is a compatibility patch for Graphic Herbalism and Pearls Enhanced. It allows you to collect all the new pearls from collops witout having to "open" them. In other words, this patch updates herbalism scripts to include the precious additions from Pearls Enhanced."
+ (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
+ Download "Graphic Herbalism Pearls Enhanced Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
+GH PEC Patch.ESP
+[ALL [VER >1.2 Graphic Herbalism.esp]
+     Pearls Enhanced - Colored Pearls Add-on.esp]
+
+[Patch]
+ "[Skrawafunda's "Graphic Herbalism Pearls Enhanced Patch"] is a compatibility patch for Graphic Herbalism and Pearls Enhanced. It allows you to collect all the new pearls from collops witout having to "open" them. In other words, this patch updates herbalism scripts to include the precious additions from Pearls Enhanced."
+ (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
+ Download "Graphic Herbalism Pearls Enhanced Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
+GHE PEC Patch.ESP
+[ALL [VER >1.2 Graphic Herbalism.esp]
+     [VER >1.2 Graphic Herbalism Extra.esp]
+     Pearls Enhanced - Colored Pearls Add-on.esp]
+
+[Order]
+Pearls Enhanced.esp
+GH PE Patch.ESP
+;
+GHE PE Patch.ESP.ESP
+GHE PE Patch*.ESP
+;
+
+[Order]
+Pearls Enhanced - Colored Pearls Add-on.esp
+GH PEC Patch.ESP
+GHE PEC Patch.ESP
+
+[Order]
+Graphic Herbalism.esp
+Graphic Herbalism Extra.esp
+GH PE Patch.ESP
+;
+GHE PE Patch.ESP.ESP
+GHE PE Patch*.ESP
+;
+GH PEC Patch.ESP
+GHE PEC Patch.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism TR [Spiffyman]
+
+;;Dragon32: See "Graphic Herbalism 1.3 [ManaUser, Skrawafunda]", with 1.3  Skrawafunda's updated Spiffyman's mod
+
+[Note]
+ ! A newer version of "Graphic Herbalism TR" by Skrawafunda is available. You should upgrade!
+ ! http://www.nexusmods.com/morrowind/mods/43140/
+[DESC !/Skrawafunda/ Graphic Herbalism TR.esp]
+[DESC !/Corrected text errors/ Graphic Herbalism TR Extra.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15916,6 +16106,55 @@ abotGuards.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Guars 1.18 [abot]
+
+;;remove abotGuars and replace with this
+
+[Note]
+ ! There is a newer version of abot's Guars available, you may want to upgrade:
+ ! http://www.nexusmods.com/morrowind/mods/43008/
+[VER < 1.18 abotGuars.esp]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "abotGuars.esp" if you have both Tribunal.esm and Bloodmoon.esm loaded
+ "abotGuarsTribunal.esp" if you have Tribunal.esm only loaded
+ "abotGuarsBloodmoon.esp" if you have Bloodmoon.esm only loaded.
+ (ref: "abotGuars.txt")
+abotGuars.esp
+abotGuarsTribunal.esp
+abotGuarsBloodmoon.esp
+
+[Conflict]
+ "abotGuarsTribunal.esp" should be used if you only have Tribunal.esm loaded
+ (ref: "abotGuars.txt")
+abotGuarsTribunal.esp
+Bloodmoon.esm
+
+[Conflict]
+ "abotGuarsBloodmoon.esp" should be used if you only have Bloodmoon.esm loaded
+ (ref: "abotGuars.txt")
+abotGuarsBloodmoon.esp
+Tribunal.esm
+
+[Requires]
+ (ref: "abotGuars.txt")
+abotGuars.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+[Requires]
+ (ref: "abotGuars.txt")
+abotGuarsBloodmoon.esp
+Bloodmoon.esm
+
+[Requires]
+ (ref: "abotGuars.txt")
+abotGuarsTribunal.esp
+Tribunal.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Guide to... replacer [Stalker]
 
 [Conflict]
@@ -15931,6 +16170,15 @@ STA_guides_replacer_NoScript.esp
 STA_guides_replacer.esp
 [ANY Book Rotate - Morrowind v1.1.esp
      Book Rotate.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Haazheel Thorn [Vince]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1950 vince_robe_haazheel.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17381,6 +17629,18 @@ HG Armour Balance.esp
 [Order]
 super_adventurers302.esp
 HG Armour Balance.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @HG Vivec Cantons [Holy_Handgrenade]
+
+[Conflict]
+ Holy_Handgrenade's "HG Vivec Cantons" builds on "112 Vivec Replacement" by Szazmyrr3. There is no need to run Szazmyrr3's original mod with Holy_Handgrenade's "HG Vivec Cantons"
+ (Ref: "HG_Vivec_Cantons.zip\Readme First.txt")
+HG Vivec Cantons.esp
+[ANY 112_Vivec_Replacement_Interiorator_Compatable_Fixed.esp
+     112_Vivec_Replacement_v_1.02.esp
+     112_Vivec_Replacement_v_1.02_Vivec_Only.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21796,7 +22056,7 @@ MTT IV Master.esp
 
 [Note]
  !! Magical Trinkets of Tamriel IV (both Chris Woods' original, "MTT IV Master.esp", and the modified version by habile, "MTT IV Updated v0.79.esp") contains deprecated use of the function AddToLev*. For an explanation of why the functions AddToLev*/RemoveFromLev* are deprecated, please see: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
- !! It is suggested that you get a replacement patch, such as MTT_IV_Master-jms_patch-0.2.7z (from http://sites.google.com/site/johnmoonsugar/Home/morrowind-mods ) or Magical Trinkets of Tamriel IV beta - Dragon32 patch (from http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9392 )
+ !! It is suggested that you get a replacement patch, such as Magical Trinkets of Tamriel IV beta - Dragon32 patch, from http://mw.modhistory.com/download-50-6822
 [ANY [ALL [MTT IV Master.esp
           [SIZE !1629334 MTT IV Master.esp]] ;;Dragon32's edited version
      MTT IV Updated v0.79.esp]
@@ -23511,6 +23771,22 @@ MAO_Regions.esp
 MAO_Creatures.esp
 MAO_Voice.esp
 MAO_ScriptExtender.esp
+
+[Order]
+Morrowind Patch *.esm
+MAO_Base.esm
+MAO_Music.esm
+MAO_InteriorWeather.esm
+MAO_2d.esm
+MAO_3d.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+MAO_Base.esm
+MAO_Music.esm
+MAO_InteriorWeather.esm
+MAO_2d.esm
+MAO_3d.esm
 
 [Note]
  "[MAO_Voice.esp] is heavily improved by MAO_ScriptExtender and MWSE."
@@ -25420,7 +25696,7 @@ Pov_Distant_Activator_Fix_Waterfalls.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Inhabitants [scruggs]
 
-;; Dragon32 - Information about scruggs' "Morrowind Inhabitants" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+;; Dragon32 - Information about scruggs' "Morrowind Inhabitants" use of deprecated levelled lists is under the "Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Note]
  ! There is a new version of "Morrowind Inhabitants" available you should upgrade!
@@ -29429,7 +29705,7 @@ Pax Hlaalu Mod Mediator.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Pearls Enhanced [Melchior]
+;; @Pearls Enhanced 2.80 [Melchior]
 
 [Conflict]
  Use only one of these plugins
@@ -29438,13 +29714,17 @@ Pearls Enhanced.esp
 Pearls Enhanced - Colored Pearls Add-on.esp
 
 [Patch]
+ "[Pearls Enhanced - ResEn patch.esp] is a compatibility patch for Resources Enhanced. It replaces the vanilla Morrowind pearls found in kollops with pearls from Pearls Enhanced, making them available for harvesting."
  (Ref: "Pearls Enhanced - ResEn patch readme.txt")
+ Download "PE Resources Enhanced Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43190/
 Pearls Enhanced - ResEn patch.esp
 [ALL Resources Enhanced.esp
      Pearls Enhanced.esp]
 
 [Patch]
+  "[Pearls Enhanced - ResEn patch v2.esp] is a compatibility patch for Resources Enhanced. It replaces the vanilla Morrowind pearls found in kollops with pearls from Pearls Enhanced, making them available for harvesting."
  (Ref: "Pearls Enhanced - ResEn patch readme.txt")
+ Download "PE Resources Enhanced Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43190/
 Pearls Enhanced - ResEn patch v2.esp
 [ALL Resources Enhanced.esp
      Pearls Enhanced - Colored Pearls Add-on.esp]
@@ -29458,14 +29738,18 @@ Pearls Enhanced - ResEn patch.esp
 Pearls Enhanced - ResEn patch v2.esp
 
 [Patch]
+ "[Pearls Enhanced - HFP patch.esp] is a compatibility patch for HerbalismForPurists. It replaces the vanilla Morrowind pearls found in kollops with pearls from Pearls Enhanced, making them available for harvesting."
  (Ref: "Pearls Enhanced - HFP patch readme.txt")
+ Download "PE Herbalism For Purists Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43190/
 Pearls Enhanced - HFP patch.esp
 [ALL [ANY Syc_HerbalismForPurists.esp
 	  Syc_HerbalismforPurists_TB_ONLY.esp]
      Pearls Enhanced.esp]
 
 [Patch]
+ "[Pearls Enhanced - HFP patch v2.esp] is a compatibility patch for HerbalismForPurists. It replaces the vanilla Morrowind pearls found in kollops with pearls from Pearls Enhanced, making them available for harvesting."
  (Ref: "Pearls Enhanced - HFP patch readme.txt")
+ Download "PE Herbalism For Purists Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43190/
 Pearls Enhanced - HFP patch v2.esp
 [ALL [ANY Syc_HerbalismForPurists.esp
 	  Syc_HerbalismforPurists_TB_ONLY.esp]
@@ -31296,6 +31580,23 @@ Repair Tools.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1820880 Respawns-TribunalBloodmoon.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Restoring Rain's Hand Hall 1.2 [Chesko]
+
+[Requires]
+ "WARNING: You MUST also use the original Rain's Hand Hall mod [with "Restoring Rain's Hand Hall" by Chesko]."
+ (Ref: "Restoring_Rain's_Hand_Hall_readme.txt")
+ Download Atreus' "Rain's Hand Hall" from Morrowind Modding History: http://mw.modhistory.com/download-80-9183
+Restoring Rain's Hand Hall.esp
+Rain's Hand Hall.esp
+
+;;"Restoring Rain's Hand Hall.esp must be loaded AFTER the original mod's .esp."
+;;Ref: "Restoring_Rain's_Hand_Hall_readme.txt"
+[Order]
+Rain's Hand Hall.esp
+Restoring Rain's Hand Hall.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
