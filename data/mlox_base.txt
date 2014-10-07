@@ -8372,7 +8372,7 @@ Cliffracer-FIX.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Clothiers of Vvardenfell Version 1.1 [Korana, BadKarma, and Lady Rae]
+;; @Clothiers of Vvardenfell 1.1 [Korana, BadKarma, and Lady Rae]
 
 ;; "A couple items from NOM (Neccesities of Morrowind) have been included.
 ;; These items will be compatible with NOM if NOM is loaded after the
@@ -14842,11 +14842,11 @@ GS_Tamriel Tribute to The Comunity.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Gothic Attire Alternate ESP [Qarl and Cenobite, Spoon Thief]
+;; @Gothic Attire Alternate ESP 1.1 [Qarl and Cenobite, Spoon Thief]
 
 [Conflict]
  Spoon Thief's "GAC__replacer.esp" is an edit of the original Gothic Attire Complete plugin and should be used instead of Qarl and Cenobite's original plugin.
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9378 )
+ (Ref: http://mw.modhistory.com/download-55-12257 )
 Gothic Attire Complete v1-1.esp
 GAC__replacer.esp
 
@@ -14867,7 +14867,7 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Gothic Attire Complete v1-1 [Qarl and Cenobite]
+;; @Gothic Attire Complete 1.1 [Qarl and Cenobite]
 
 ;; expdep
 [Requires]
@@ -14900,11 +14900,16 @@ Better Bodies.esp
 Gothic Attire Complete Leveled.esp
 GAC__replacer.esp
 
+[Order]
+Gothic Attire Complete Leveled.esp
+KN_Keening_Clothiers.esp
+
 [Note]
  !! "Gothic Attire Complete Leveled" by Crankgorilla "is dependant on the files from Gothic Attire Complete". Whilst you do not need to have the plugin from Qarl and Cenobite's "Gothic Attire Complete" loaded you need to have the meshes and textures installed.
  !! (Ref: "Gothic Attire Complete Readme.txt")
 [ALL Gothic Attire Complete Leveled.esp
-     [NOT Gothic Attire Complete v1-1.esp]]
+     [ANY [NOT Gothic Attire Complete v1-1.esp]
+          [NOT KN_Keening_Clothiers.esp]]]
 
 [Requires]
  "[Gothic Attire Complete] requires Better Bodies."
@@ -14916,10 +14921,10 @@ Gothic Attire Complete Leveled.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Gothic attire in ravenloft closet [matoraan]
+;; @Gothic Attire in Ravenloft Closet [matoraan]
 
 [Requires]
- "Requires Qarl's Gothic Attire I ( http://planetelderscrolls.gamespy.com/View.php?view=mods.Detail&id=2364 ) and II ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2375 ) and Bantari's Ravenloft mod ( http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4482 )."
+ "Requires Qarl's Gothic Attire I [ http://mw.modhistory.com/download-26-5659 ] and II [ http://mw.modhistory.com/download-26-708 ] and Bantari's Ravenloft mod [ http://mw.modhistory.com/download-44-10678 ]."
  (Ref: http://morrowind.nexusmods.com/mods/26014/ )
 qarls gothic atire in ravenloft  mod.ESP
 [ALL Qarls_Gothic_Attire.esp
@@ -16262,13 +16267,17 @@ Anya's Directions.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Havish 1.3 [JOG]
 
+;;Dragon32: "HavishM.esm" is abot's experimental, moved version of Havish. Notgoing to suggest it to people until heard it's proven.
+
 [Order]
 Morrowind Patch *.esm
 Havish.esm
+HavishM.esm
 
 [Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Havish.esm
+HavishM.esm
 
 [Conflict]
  landmass conflict.
@@ -16305,12 +16314,14 @@ Havish - Scimitar Update.esp
 Havish - Scimitar Update + GCD (no MWE).esp
 Havish - Scimitar Update (no MWE).esp
 
-; Rules for "Havish - Scimitar Update.esp"
+;;Rules for "Havish - Scimitar Update.esp"
+
 [Requires]
  If you have Havish and MWE and either Booty Island or GCD (or both), then use "Havish - Scimitar Update.esp" from "havish_scimitar_gcd_update.rar":
  http://mw.modhistory.com/download--7971
  (Ref: "Havish - Scimitar.txt")
-[ALL Havish.esm
+[ALL [ANY Havish.esm
+          HavishM.esm]
      MWE_Base.esp
      [ANY Booty.esp
 	  [ANY Galsiahs Character Development.esp
@@ -16321,15 +16332,18 @@ Havish - Scimitar Update.esp
  "The complete update with the compatibility fixes for Booty Island and GCD as well as improved Akaviri Scimitar scripts. Can be run with or without GCD, works with similar mods as well. REQUIRES MORROWIND ENHANCED (MWE) V1.21+ !!!"
  (Ref: "Havish - Scimitar.txt")
 Havish - Scimitar Update.esp
-[ALL Havish.esm
+[ALL [ANY Havish.esm
+          HavishM.esm]
      MWE_Base.esp]
 
-; Rules for "Havish - Scimitar Update + GCD (no MWE).esp"
+;;Rules for "Havish - Scimitar Update + GCD (no MWE).esp"
+
 [Requires]
  If you have Havish and GCD but not MWE, then use "Havish - Scimitar Update + GCD (no MWE).esp" from "havish_scimitar_gcd_update.rar":
  http://mw.modhistory.com/download--7971
  (Ref: "Havish - Scimitar.txt")
-[ALL Havish.esm
+[ALL [ANY Havish.esm
+          HavishM.esm]
      [NOT MWE_Base.esp]
      [ANY Galsiahs Character Development.esp
           GCD v1.08 with Startscript, fixed [Galsiah].esp]]
@@ -16338,15 +16352,18 @@ Havish - Scimitar Update + GCD (no MWE).esp
 [Requires]
  (Ref: "Havish - Scimitar.txt")
 Havish - Scimitar Update + GCD (no MWE).esp
-[ALL Havish.esm
+[ALL [ANY Havish.esm
+          HavishM.esm]
      [NOT MWE_Base.esp]]
 
-; Rules for "Havish - Scimitar Update (no MWE).esp"
+;;Rules for "Havish - Scimitar Update (no MWE).esp"
+
 [Requires]
  If you have Havish and Booty Island, but neither MWE nor GCD, then use "Havish - Scimitar Update (no MWE).esp" from "havish_scimitar_gcd_update.rar":
  http://mw.modhistory.com/download--7971
  (Ref: "Havish - Scimitar.txt")
-[ALL Havish.esm
+[ALL [ANY Havish.esm
+          HavishM.esm]
      Booty.esp
      [NOT MWE_Base.esp]
      [NOT Galsiahs Character Development.esp]
@@ -16356,29 +16373,38 @@ Havish - Scimitar Update (no MWE).esp
 [Requires]
  (Ref: "Havish - Scimitar.txt")
 Havish - Scimitar Update (no MWE).esp
-[ALL Havish.esm
+[ALL [ANY Havish.esm
+          HavishM.esm]
      [NOT MWE_Base.esp]]
+
+
+;; Havish Mini-Patch by Tyraa Rane
 
 [Requires]
  (Ref: Havish Patch Readme.txt)
 Havish Mini Patch.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
-     [VER = 1.3 Havish.esm]]
+     [ANY [VER = 1.3 Havish.esm]
+          [VER = 1.3 HavishM.esm]]]
 
 [Patch]
  Havish Mini-Patch by Tyraa Rane fixes errors within the "Fighters Guild: A Visitor from Havish" and "Thieves Guild: The Damsel in Distress" quests that would cause Morrowind to crash.
  (Ref: Havish Patch Readme.txt)
  http://mw.modhistory.com/download-48-5835
 Havish Mini Patch.esp
-Havish.esm
+[ANY Havish.esm
+     HavishM.esm]
+
+;; Havish Necessities of Morrowind Patch by CaptainJorge
 
 [Patch]
  CaptainJorge's "Havish Necessities of Morrowind Patch" adds NoM functionality to the normal wells, NoM food to the tavernkeeper's stock and NoM supplies to the trader and pawnbroker in Havish 1.3.
  http://mw.modhistory.com/download-48-13625
  (Ref: Readme - Havish 1-3 NoM Patch.txt)
 havish13_nom_patch.esp
-[ALL [VER = 1.3 Havish.esm]
+[ALL [ANY [VER = 1.3 Havish.esm]
+          [VER = 1.3 HavishM.esm]]
      NOM 2.13.esp]
 
 ; (Ref: Readme - Havish 1-3 NoM Patch.txt)
@@ -16386,6 +16412,17 @@ havish13_nom_patch.esp
 havish13_nom_patch.esp
 NOM 2.13.esp
 NoM 3.0.esp
+
+;;Havish Mage Balance MiniPatch by emptyman/emptythe
+
+[Requires]
+ "REQUIREMENTS: [...] v1.3 of Havish."
+ (Ref: "Havish_Mage_Balance_MiniPatch Readme.txt")
+Havish Mage Balance MiniPatch.esp
+[ANY Havish.esm
+     HavishM.esm]
+
+;;Forested Havish by Lochnarus
 
 [Note]
  Version 1.3 of JOG's Havish mod already includes Lochnarus' "Forested Havish" addon.
@@ -17747,25 +17784,27 @@ HlaaluManorUndergroundv12.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Hold It 1.9 [Danae]
+;; @Hold It 1.91 [Danae]
 
 ;;main mod
+
 [Conflict]
- With 'Hold it - replacer.esp' enabled the "Hold It" items are for sale at the Tel Aruhn trader, there is no need to enable 'Hold it - resource.esp' as well.
- (Ref: Hold it 1pt9 read me.txt)
+ With "Hold it - replacer.esp" enabled the "Hold It" items are for sale at the Tel Aruhn trader, there is no need to enable "Hold it - resource.esp" as well.
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - resource.esp
 Hold it - replacer.esp
 
 ;; Dragon32: I've set the Requires rules to use either the Resource or Replacer ESPs. I'd be surprised if anyone used one of the addons without using the Replacer version but it's possible.
 
 ;;MCA addon
+
 [Requires]
- "Hold it - MCA addon.esp" requires version 6.1 of Neoptolemus' "Morrowind Comes Alive".
- (Ref: Hold it 1pt9 read me.txt)
+ "Hold it - MCA addon.esp" requires version 8.1 of Neoptolemus' "Morrowind Comes Alive".
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - MCA addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
-     [SIZE 2597537 MCA.ESM]]
+     [DESC /v8.1/ MCA.ESM]]
 
 ;; Dragon 32: 'Hold it - MCA addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
 [Order]
@@ -17774,9 +17813,10 @@ Hold it - replacer.esp
 Hold it - MCA addon.esp
 
 ;;NoM addon
+
 [Requires]
  "Hold it - NOM addon.esp" requires version 3.0 or greater of Taddeus' "Necessities of Morrowind".
- (Ref: Hold it 1pt9 read me.txt)
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - NOM addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -17794,8 +17834,10 @@ NoM 3.0.esp
 Hold it - NOM addon.esp
 
 ;;Starfires NPCs addon
+
 [Requires]
- (Ref: Hold it 1pt9 read me.txt)
+ "Randomly gives items to the npc added by Starfire’s mod Starfire’s NPC addition."
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - SF npc addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -17813,8 +17855,10 @@ Starfires NPC Additions ver-1.11.esp
 Hold it - SF npc addon.esp
 
 ;;Children of Morrowind addon
+
 [Requires]
- (Ref: Hold it 1pt9 read me.txt)
+ "Randomly gives items to COM children. When a kid of offered a gift, they will hold it unless they already holding something else. Adds new CoM related items to the Hold it level lists."
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - COM addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -17827,8 +17871,10 @@ Hold it - replacer.esp
 Hold it - COM addon.esp
 
 ;;Tamriel Rebuilt addon
+
 [Requires]
- (Ref: Hold it 1pt9 read me.txt)
+ "Randomely give items to TR npcs. Adds new TR related items to the Hold it level lists."
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - TR addon.ESP
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -17843,15 +17889,17 @@ Hold it - replacer.esp
 Hold it - TR addon.ESP
 
 ;;combined Children of Morrowind and Tamriel Rebuilt addon
+
 [Conflict]
  "Hold it - TR&CoM addon.ESP" combines "Hold it - COM addon" and "Hold it - TR addon" (so these 2 esp shouldn't be activated together)."
- (Ref: Hold it 1pt9 read me.txt)
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - TR&CoM addon.ESP
 [ANY Hold it - TR addon.ESP
      Hold it - COM addon.esp]
 
 [Requires]
- (Ref: Hold it 1pt9 read me.txt)
+ "Randomely give items to TR npcs. Adds new TR related items to the Hold it level lists.[...] Randomly gives items to COM children."
+ (Ref: Hold it 1pt91 read me.txt)
 Hold it - TR&CoM addon.ESP
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -17867,8 +17915,10 @@ Hold it - replacer.esp
 Hold it - TR&CoM addon.ESP
 
 ;;HELLUVA addon
+
 [Requires]
- (Ref: Hold it 1pt9 read me.txt)
+ "Randomely adds the Hold it items to traders. Requires HE.L.L.U.V.A. Merchant containers.esm"
+ (Ref: Hold it 1pt91 read me.txt)
 H.E.L.L.U.V.A. Handy Holdables.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -19576,6 +19626,82 @@ Kahleigh's Retreat v1.1.esp
  ! There is a newer version of Kat's Kastle available, "Kat's Kastle v1.2 Patch" at the bottom of the page:
  ! http://mw.modhistory.com/download--5800
 [SIZE !4448885 KatsKastle.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Keening Chapter 1: Keening City [Dana Nova Darko]
+
+[Requires]
+ Both Neoptolemus' "Morrowind Comes Alive" (version 7) and Psychodog Studios' "Better Bodies" are required to play Dana Nova Darko's "Keening Chapter 1: Keening City"
+ (Ref: http://www.automatichamster.com/keening/downloads.shtml and http://www.automatichamster.com/keening/faq.shtml )
+KN01_KeeningCity.esp
+[ALL [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+     Better Bodies.esp]
+
+[Note]
+ !! Dana Nova Darko's "Keening Chapter 1: Keening City" uses the heads and hairstyles from "Westly's Master Head Pack", which you don't need to have activated but you need to ensure you have its meshes and textures installed.
+ !! (Ref: http://www.automatichamster.com/keening/faq.shtml )
+[ALL KN01_KeeningCity.esp
+     [NOT Westly's Master Headpack X.esp]]
+
+[Conflict]
+ "Keening Clothiers is nothing more than a compilation of two amazing clothing mods:
+  - Clothiers of Vvardenfell by Korana, Lady Rae, and BadKarma
+  - Gothic Attire Complete by Qarl and Cenobite
+ Keening Clothiers includes balancing edits by Spoon Thief, Cleaning and Optimazation by abot, and exterior relocation for compatibility and lore friendliness by Dana Nova Darko."
+ (Ref: http://www.automatichamster.com/keening/downloads.shtml )
+KN_Keening_Clothiers.esp
+[ANY BB_Clothiers_of_Vvardenfell_v1.1.esp
+     GAC__replacer.esp
+     Gothic Attire Complete v1-1.esp]
+
+[Conflict]
+ The original "Gothic Attire Complete" readme warns: "If you are using an item of clothing or armor from ANY of the original 4 mods in your saved game, then installing GAC might cause conflicts and crashes."
+ (Ref: "GAC-readme.txt")
+ "Keening Clothiers" is a compilation of "Clothiers of Vvardenfell" by Korana, Lady Rae, and BadKarma; and "Gothic Attire Complete" by Qarl and Cenobite.
+ (Ref: http://www.automatichamster.com/keening/downloads.shtml )
+KN_Keening_Clothiers.esp
+[ANY Qarls_Gothic_Attire.esp
+     Qarls_Gothic_AttireII.esp
+     THE_UNDERGROUND.esp
+     THE_UNDERGROUND_2.esp]
+
+;;Ref: keening-datafiles.jpg
+[Order]
+KN_Keening_Clothiers.esp
+KN01_KeeningCity.esp
+
+;;Order rule from "Clothiers of Vvardenfell 1.1" by Korana, BadKarma, and Lady Rae (q.v.)
+[Order]
+KN_Keening_Clothiers.esp
+NOM 2.13.esp
+NoM 3.0.esp
+
+;;Mod description:
+;;Optional // For use with Keening // Reduces vendor funds on: // Trader Tristyn in Fazingath // MudCrab Merchant // The Creeper
+[Requires]
+ "KN_Keening_Clothiers.esp" is an optional plugin for use with Dana Nova Darko's "Keening Chapter 1: Keening City". It reduces vendor funds on: Trader Tristyn in Fazingath, MudCrab Merchant, The Creeper.
+ (Ref: Mod Description field)
+KN_Keening_Clothiers.esp
+[ALL MCA.ESM
+     KN01_KeeningCity.esp]
+
+;;Dragon32: Alters one NPC defined in "KN01_KeeningCity.esp"
+[Order]
+KN01_KeeningCity.esp
+KN_Balanced_Vendors.ESP
+
+[Conflict]
+ "The north end of Keening's secret island (aka X-Isle/ Korana) clips over Lothavar's Legacy's ocean, though both mods may be able to be played together if you don't mind a chunk taken out of the beach."
+ (Ref: http://www.automatichamster.com/keening/faq.shtml )
+KN01_KeeningCity.esp
+Lothavor's Legacy.esp
+
+[Conflict]
+ "Uvirith's Legacy (newest) and KEENING (huge mod for morrowind) are incompatible."
+ (Ref: http://forums.bethsoft.com/topic/1487854-relz-mlox-analyze-and-sort-your-load-order/?p=23678206 )
+KN01_KeeningCity.esp
+Uvirith's Legacy_<VER>.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24373,7 +24499,8 @@ MCA - BB Peasant Gowns Addon.esp
  "MCA - COV Addon.esp" is recommended when you have both Neoptolemus'"Morrowind Comes Alive" and Korana, BadKarma and Lady Rae's "Clothiers of Vvardenfell". With it enabled, some NPCs will now be wearing the clothing from "Clothiers of Vvardenfell".
  (Ref: "MCA - Readme.txt")
 MCA - COV Addon.esp
-[ALL BB_Clothiers_of_Vvardenfell_v1.1.esp
+[ALL [ANY BB_Clothiers_of_Vvardenfell_v1.1.esp
+          KN_Keening_Clothiers.esp]
      MCA.ESM]
 
 ;;Dragon32: Not yet confirmed as a problem for v7.0
@@ -24385,6 +24512,10 @@ MCA - COV Addon.esp
 
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
+MCA - COV Addon.esp
+
+[Order]
+KN_Keening_Clothiers.esp
 MCA - COV Addon.esp
 
 ;; Fine Clothiers of Tamriel addon
@@ -27976,7 +28107,8 @@ New Gnaar Mok COM Patch.esp
  (Ref: New Gnaar Mok ReadMe.txt)
 New Gnaar Mok COV Patch.esp
 [ALL New Gnaar Mok.esp
-     BB_Clothiers_of_Vvardenfell_v1.1.esp]
+     [ANY BB_Clothiers_of_Vvardenfell_v1.1.esp
+          KN_Keening_Clothiers.esp]]
 
 ; ordering based on filetimes
 [Order]
@@ -27987,6 +28119,10 @@ New Gnaar Mok COV Patch.esp
 
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
+New Gnaar Mok COV Patch.esp
+
+[Order]
+KN_Keening_Clothiers.esp
 New Gnaar Mok COV Patch.esp
 
 
@@ -30988,7 +31124,7 @@ Bjam_DGL_rt_MWSEpatch_v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Ravenloft [Bantari]
+;; @Ravenloft 5.02d [Bantari]
 
 [Conflict]
  "Ravenloft" uses the alchemy jars and scripts from "Kaleigh's Retreat" by kwshipman, so these mods are not  compatible.
@@ -31030,11 +31166,11 @@ Ravenloft_v0502d.esp
 Ravenloft_v0502d.esp
 Ravenloft Enhanced.ESP
 
-;; Dragon32: Notes about earlier version of Ravenloft, still up on PES.
+;; Dragon32: Notes about earlier version of Ravenloft.
 [Note]
- Bantari: "Cydon et al: Just to clarify - this is an early version of Ravenloft, which I released long time  ago as =Rafael=. This is not an addon, and it is not compatible with the more recent version(s)."
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=593 )
- You should just use the latest version of Ravenloft: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4482
+ !! Bantari: "Cydon et al: Just to clarify - this is an early version of Ravenloft, which I released long time  ago as =Rafael=. This is not an addon, and it is not compatible with the more recent version(s)."
+ !! (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=593 )
+ !! You should download the latest version of "Ravenloft", available from Morrowind Modding History - http://mw.modhistory.com/download-44-10678
 [ANY _rb_Ravenloft_v0143.esp
      _rb_Ravenloft_ChallengePits_v0100.esp
      _rb_Ravenloft_DunDwe_v0102.esp
@@ -31551,11 +31687,11 @@ RKWerewolf-NoTrib.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Reign of Fire [Razhkul, Gluby]
+;; @Reign of Fire 1.1 [Razhkul, Gluby]
 
 [Conflict]
  "If you have the original Reign of Fire plugin checked, uncheck it. They should not be run together."
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8011 )
+ (Ref: http://mw.modhistory.com/download-51-6318 )
 Reign of Fire v1.92BETA [Razhkul, Rev. Gluby].esp
 [ANY ReignOfFire1.1.esp
      Reign of Fire v1.1 [Razhkul].esp]
@@ -33387,6 +33523,15 @@ Bloodmoon.esm
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 112092 Sixth House Base.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sixth House Transportation System [Wogya]
+
+[Conflict]
+ "[Wogya's Sixth House Transportation System"] will conflict with Endrek's Sixth House mod."
+6th house transport.esp
+Sixth House.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37084,12 +37229,12 @@ Treetop Village.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Tribe Unmourned [Von Djangos]
+;; @The Tribe Unmourned 1.2 [Von Djangos]
 
 [Note]
- ! Von Djangos' "Dagoth's Cry" has been updated and incoporated into his "The Tribe Unmourned" mod.
+ ! Von Djangos' "Dagoth's Cry" has been updated and incorporated into his "The Tribe Unmourned" mod.
  ! (Ref: "The Tribe Unmourned.txt")
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7141
+ ! Download "The Tribe Unmourned" from Morrowind Modding History - http://mw.modhistory.com/download-56-13139
 Dagoth's Cry.esp
 
 [Conflict]
@@ -37110,6 +37255,16 @@ Great House Dagoth.esp
 [Order]
 Great House Dagoth.esp
 The Tribe Unmourned (GHD).esp
+
+[Note]
+ !! "It is essential that you use ["The Tribe Unmourned" by Von Djangos] in conjunction with Endreks 'The Sixth House' [...] - IF you want to access the majority of the content."
+ !! (Ref: "The Tribe Unmourned.txt")
+[ALL The Tribe Unmourned.esp
+     [NOT Sixth House.esp]]
+
+[Order]
+Sixth House.esp
+The Tribe Unmourned.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37561,18 +37716,18 @@ Ultra Light Herbalism.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Underground [Qarl]
+;; @The Underground 1.1 [Qarl]
 
 [Note]
- There is a version 1.1 replacement patch for The Underground:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=240
- But The Underground 2 includes version 1 and is recommended:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5865
+ ! There is a version 1.1 replacement patch for Qarl's "The Underground":
+ !  http://mw.modhistory.com/download-44-5048
+ ! But "The Underground" 2.0 is recommended, it includes all the content from version 1.1 and fixes a number of problems:
+ ! Download "The Underground" 2.0 from Morrowind Modding History - http://mw.modhistory.com/download-44-11514
 [SIZE 5935708 THE_UNDERGROUND.esp]
 
 [Note]
- THE_UNDERGROUND is superseded by THE_UNDERGROUND_2, which fixes a number of problems in the first version. You should upgrade!
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5865
+ ! "The Underground" 1.1 is superseded by "The Underground" 2.0, which fixes a number of problems in the first version. You should upgrade!
+ ! Download "The Underground" 2.0 from Morrowind Modding History - http://mw.modhistory.com/download-44-11514
 [SIZE 5936701 THE_UNDERGROUND.esp]
 
 
@@ -40822,9 +40977,10 @@ Japanese_House.esp
 ;; @Vivec Flat 2.0 [Occam]
 
 [Conflict]
- Vivec Flat conflicts with Clothiers of Vvardenfell, since it deletes one of the bedrooms off of the stairs in the Vivec Mages Guild where the merchant "Targin" the sorceress from CoV lives. She ends up embedded in a ceiling/wall.
-BB_Clothiers_of_Vvardenfell_v1.1.esp
+ Occam's "Vivec Flat" conflicts with Korana, BadKarma and Lady Rae's "Clothiers of Vvardenfell". "Vivec Flat" deletes one of the bedrooms off of the stairs in the Vivec Mages Guild where the merchant Targin, the sorceress from "Clothiers of Vvardenfell" lives. She ends up embedded in a ceiling/wall.
 Vivec Flat 2.0.esp
+[ANY BB_Clothiers_of_Vvardenfell_v1.1.esp
+     KN_Keening_Clothiers.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
