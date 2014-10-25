@@ -535,6 +535,68 @@ Drowcity Denizens.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Adjustable Magicka Regen [Glassboy]
+
+[Requires]
+ Fair Magicka Regen uses Startup scripts so it requires one of the expansions.
+[ANY Adj_Magicka Regen (0.10%).esp
+     Adj_Magicka Regen (0.25%).esp
+     Adj_Magicka Regen (0.50%).esp
+     Adj_Magicka Regen (1.00%).esp]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Use only one plugin
+ (Ref: Readme Fair Magicka Regen.txt)
+Adj_Magicka Regen (0.10%).esp
+Adj_Magicka Regen (0.25%).esp
+Adj_Magicka Regen (0.50%).esp
+Adj_Magicka Regen (1.00%).esp
+
+[Note]
+ ! "[Glassboy's "Fair Magicka Regen"] uses its own hard-coded determination of maximum Magicka for purposes of regeneration rate that make it likely to come up with an inaccurate (usually lower) rate when used with mods that change or add birthsigns, races and other factors that grant or modify Magicka multipliers."
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+[ALL [ANY Adj_Magicka Regen (0.10%).esp
+          Adj_Magicka Regen (0.25%).esp
+          Adj_Magicka Regen (0.50%).esp
+          Adj_Magicka Regen (1.00%).esp]
+     [ANY AprogasVampire WakimImprovements.20021210.esp
+          Balance - Character.esp
+          Birthsign1.esp
+          Birthsigns.esp
+          BirthsignsAMFun_BM.esp
+          BirthsignsAMFun_MW.esp
+          BTB - Character.esp
+          BTB - Character (Alternate).esp
+          CE-DepthPerception25+BTB's Character.ESP
+          CE-DepthPerception50+BTB's Character.ESP
+          CE-DepthPerception75+BTB's Character.ESP
+          CE-DepthPerception100+BTB's Character.ESP
+          Clean Races_Update.esp
+          Definitive Birthsigns Redux Patch.esp
+          ExpandedBirthsigns4Purists.esp
+          GCD better balanced birthsigns.esp
+          race_birthsign_remix.esp
+          Races1.esp
+          RAMF_Mer_for_NPCs.esp
+          RAMF.esp
+          RAMF_for_NPCs.esp
+          RAMF_Mer.esp
+          Unique Birthsigns.esp
+          Wakim's Game Improvement 9.esp
+          Wakim's Game Improvements with No-glo v9.esp]]
+
+[Note]
+ ! "Characters born under the Atronach birthsign get a hefty boost to their maximum Magicka, but do not recover Magicka normally by resting. Not all mods take this into account. Those mods that do not are imbalancing in favor of Atronach characters if used with them (in other words, they're effectively cheats when used that way)."
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+[ANY Adj_Magicka Regen (0.10%).esp
+     Adj_Magicka Regen (0.25%).esp
+     Adj_Magicka Regen (0.50%).esp
+     Adj_Magicka Regen (1.00%).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Adul's Leggings [Adul]
 
 [Order]
@@ -846,6 +908,22 @@ Advanced Herbalism - BM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Advanced Magicka Regen Plugin Hybrid 1.2 [LennartSchultz12]
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+AMRP 1.2.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ ! "Characters born under the Atronach birthsign get a hefty boost to their maximum Magicka, but do not recover Magicka normally by resting. Not all mods take this into account. Those mods that do not are imbalancing in favor of Atronach characters if used with them (in other words, they're effectively cheats when used that way)."
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+AMRP 1.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Advanced Persuasion 1.2 [Danjb]
 
 [Note]
@@ -884,6 +962,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Advanced Persuasion.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1643,13 +1728,31 @@ BC altbegin 2.2.esp
           Undress For Me.esp]]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Alternate Leveling (Forgetfulness) [Balor]
+;; @Alternate Leveling (Forgetfulness) 1.4 [Balor]
 
+[Note]
+ ! There is an updated version of Balor's "Alternate Leveling" available, 1.4, you should upgrade!
+ ! http://mw.modhistory.com/download-37-584
+[ANY Levelling.esp
+     Leveling1.3(levels, BM).esp]
+
+;;expdep
 [Requires]
  This plugin uses a Startup script, so it requires either expansion.
 Levelling.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 120854 Leveling1.3(levels, BM).esp]
+
+;;expdep
+[Requires]
+ This plugin uses a Bloodmoon function, getpcinjail.
+Leveling1.3(levels, BM).esp
+Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2147,6 +2250,7 @@ acsAppoldroMW.esp
  !! http://mw.modhistory.com/download-80-11007
 acsAppoldro.esp
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Appropriate Greetings 1.5.2 [Arcimaestro Antares]
 
@@ -2177,6 +2281,22 @@ Appropriate Greetings M - T - 1.5.2.esp
 [ANY Appropriate Greetings M - 1.5.2.esp
      Appropriate Greetings M - T - 1.5.2.esp]
 VGreetings.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Aprogas' Magicka Regenerate [Jasper Jongmans]
+
+[Note]
+ ! "Characters born under the Atronach birthsign get a hefty boost to their maximum Magicka, but do not recover Magicka normally by resting. Not all mods take this into account. Those mods that do not are imbalancing in favor of Atronach characters if used with them (in other words, they're effectively cheats when used that way)."
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+AprogasMagickaRegenerate.20021210.esp
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+AprogasMagickaRegenerate.20021210.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2263,6 +2383,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6116,9 +6243,25 @@ birthsigns.esp
 BTB - Character (Alternate).esp
 birthsigns.esp
 
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+birthsigns.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+birthsigns.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+birthsigns.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
+birthsigns.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Birthsigns Are More Fun [Alaisiagae]
+;; @Birthsigns Are More Fun 1.0 [Alaisiagae]
 
 [Requires]
  (Ref: readme_Birthsigns Are More Fun.txt)
@@ -6138,6 +6281,58 @@ BirthsignsAMFun_MW.esp
 ; So, BAMF needs to load after Merged Objects.
 [Order]
 Merged_Objects.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+;;Load the specific birthsign-affecting mod after WGI
+[Order]
+Balance - Character.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+;;Load the specific birthsign-affecting mod after BTB
+[Order]
+BTB - Character.esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+BTB - Character (Alternate).esp
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+BirthsignsAMFun_BM.esp
+BirthsignsAMFun_MW.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
 BirthsignsAMFun_BM.esp
 BirthsignsAMFun_MW.esp
 
@@ -6845,6 +7040,16 @@ abotBoatsTR.esp
 [Order]
 BTB - Settings.esp
 abotBoatsTR.esp
+
+;;Dragon32: Load Melian's Teleport Mod after abot's real-time travel mods
+;;ref: http://forums.bethsoft.com/topic/1487854-relz-mlox-analyze-and-sort-your-load-order/?p=23797886
+[Order]
+abotBoats.esp
+mel_teleportPlugin_1_3.esp
+
+[Order]
+abotBoatsTR.esp
+mel_teleportPlugin_1_3.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10959,6 +11164,13 @@ LGNPC_SoulSicknessPatch_v?_??.esp
 Lore Fix.esp
 Djangos Dialogue.ESP
 
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Djangos Dialogue.ESP
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dock in Tel Fyr  [Ciriuz]
@@ -11166,6 +11378,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+dracandrosvoice.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11626,7 +11845,111 @@ Dwemer_Cyborgs.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dynamic Leveling 1.1 [Stealaxe]
+
+[Note]
+ !! "The developing modder [of "Dynamic Leveling"] disappeared while the mod was still in beta status, and has not reappeared; use caution, as the mod may still have significant bugs."
+ !! Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltLevelingSystems
+[ANY Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+     Dynamic Leveling 1.1 Beta.esp]
+
+[Note]
+ ! There is a newer version of Stealaxe's "Dynamic Leveling", 1.1, you should upgrade!
+ ! Download from Morrowind Modding History: http://mw.modhistory.com/download-90-12547
+ ! However, note that Gluby warns: "The developing modder [of "Dynamic Leveling"] disappeared while the mod was still in beta status, and has not reappeared; use caution, as the mod may still have significant bugs."
+ ! Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltLevelingSystems
+Dynamic Leveling 1.0.esp
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 78753 Dynamic Leveling 1.0.esp]
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script, so it requires either expansion.
+Dynamic Leveling 1.0.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Conflict]
+ Use only one plugin:
+  Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp - If you have Bloodmoon.
+  Dynamic Leveling 1.1 Beta.esp - If you do not.
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+Dynamic Leveling 1.1 Beta.esp
+
+[Conflict]
+ Use "Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp" instead, it supports characters who are werewolves.
+Dynamic Leveling 1.1 Beta.esp
+Bloodmoon.esm
+
+[Conflict]
+ Stealaxe's "Dynamic Leveling" includes its own method of calculating health. To use it with another health calculation mod you will need to open the console and type "StopScript DL_Health", but note that will also stop vampire and werewolf regeneration.
+ (Ref: "Dynamic_Leveling_11_Beta.rar\Read Me First!.rtf")
+[ANY Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+     Dynamic Leveling 1.1 Beta.esp]
+[ANY Health Fix.esp
+     StateBasedHitPointsv1.1.esp
+     Talrivian's State-Based HP Mod v.2.2.esp]
+
+;;Dragon32: GMST and SKIL conflicts, assume if someone's loaded Stealaxe's mod they want that to take precedence over BTB's or Wakim's changes
+[Order]
+BTB - Settings.esp
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+
+[Order]
+BTB - Settings.esp
+Dynamic Leveling 1.1 Beta.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Dynamic Leveling 1.1 Beta.esp
+
+[Order]
+Balance - Character.esp
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+
+[Order]
+Balance - Character.esp
+Dynamic Leveling 1.1 Beta.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Dynamic Leveling 1.1 Beta.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Dynamic Leveling 1.1 Beta.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Dynamic Leveling 1.1 Beta.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dynamic Magicka Regeneration 2.0 [Duncan]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 10331 DynamicMagickaRegeneration-2.1.esp]
 
 [Conflict]
  Use only one plugin:
@@ -12850,22 +13173,14 @@ GUARD-Remover.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Fair Magicka Regen [Glassboy]
 
-[Requires]
- Fair Magicka Regen uses Startup scripts so it requires one of the expansions.
-[ALL Adj_Magicka Regen (0.10%).esp
-     Adj_Magicka Regen (0.25%).esp
-     Adj_Magicka Regen (0.50%).esp
-     Adj_Magicka Regen (1.00%).esp]
-[ANY Tribunal.esm
-     Bloodmoon.esm]
-
-[Conflict]
- Use only one plugin
- (Ref: Readme Fair Magicka Regen.txt)
-Adj_Magicka Regen (0.10%).esp
-Adj_Magicka Regen (0.25%).esp
-Adj_Magicka Regen (0.50%).esp
-Adj_Magicka Regen (1.00%).esp
+[Note]
+ ! Glassboy's "Fair Magicka Regen" is obsolete and has been superseded by his "Adjustable Magicka Regen" which "eats less cpu time than the original."
+ ! Download "Adjustable Magicka Regen" from Morrowind Modding History - http://mw.modhistory.com/download-37-3887
+ ! (Ref: "Readme Fair Magicka Regen.txt")
+[ANY Fair Magicka Regen (Fourth Percent).esp
+     Fair Magicka Regen (half percent).esp
+     Fair Magicka Regen (one Percent).esp
+     Fair Magicka Regen (Tenth Percent).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13723,9 +14038,9 @@ BAR_Galith Companions v1.0.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Galsiah's Character Development 1.08 (GCD)
 
-;;Dragon 32: See also Magicka regeneration mods [Various]
+;;Dragon 32: See also "Magicka regeneration mods [Various]"
 
-;;Dragon32: also includes rules for "@GCD v1.08 with Startscript, fixed [Gluby]"
+;;Dragon32: also includes rules for "GCD v1.08 with Startscript, fixed [Gluby]"
 ;;[PATCH] rule doesn't seem to accept NOT arguments so couldn't suppress rules when "Galsiahs Character Development.esp" is present.
 
 [Order]
@@ -14648,6 +14963,13 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Give your orders v13.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Gladiator [Endrek]
@@ -14879,6 +15201,16 @@ abotGondoliers.esp
      abotGondoliersRV.esp]
 [ANY Bloodmoon.esm
      Tribunal.esm]
+
+;;Dragon32: Load Melian's Teleport Mod after abot's real-time travel mods
+;;ref: http://forums.bethsoft.com/topic/1487854-relz-mlox-analyze-and-sort-your-load-order/?p=23797886
+[Order]
+abotGondoliers.esp
+mel_teleportPlugin_1_3.esp
+
+[Order]
+abotGondoliersRV.esp
+mel_teleportPlugin_1_3.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16550,6 +16882,18 @@ Health Fix.esp
 StateBasedHitPointsv1.1.esp
 Talrivian's State-Based HP Mod v.2.2.esp
 
+[Conflict]
+ "Kobu's Leveling Mod [includes its] own alternative Health systems, and so players using [Kobu's Leveling Mod] will not require the use of an alternate Health system mod (and, further, they are likely to conflict, unless one manually disables or removes the relevant scripts)."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltHealthSystems )
+Kobu's No Planning.esp
+Health Fix.esp
+
+[Conflict]
+ "Madd Leveler includes an optional example plugin that gives a minor additional Endurance-based boost to Health at every level (on top of that already given in the game), but can be easily forgone in favor of [a mod like "Health Fix" by Kosta Darjania]."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltHealthSystems )
+Madd Leveler - Madd Health.esp
+Health Fix.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Health Indicators [Fliggerty]
@@ -18025,6 +18369,13 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;;Dragon32: Maybe need to do this for Ostar's Less Generics too
+[Order]
+Hold it - replacer.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Holiday Mod 1.1 [Princess Stomper]
@@ -18164,6 +18515,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+k_howareyou.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19671,6 +20029,30 @@ KS_Julan_MRM_Patch_1.0.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Julan Real Time Transport Patch [abot]
+
+[Patch]
+ "[abot's "Julan Real Time Transport Patch"] allows Julan and Shani real time travelling with abot's transport mods."
+ http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=59&Itemid=50&-Julan-Real-Time-Transport-Patch
+ (Ref: "ab01JulanRTTpatch.txt")
+ab01JulanRTTpatch.esp
+[ALL KS_Julan_Ashlander Companion_<VER>.esp
+     [ANY abotBoats.esp
+          abotBoatsTR.esp
+          abotGondoliers.esp
+          abotGondoliersRV.esp
+          abotSiltStriders.esp
+          abotSiltStridersTR.esp]]
+
+;;Dragon32: No conflict in TESPCD with abot's travel mods or Melian's teleport mod
+;;Only thing on load order in readme is to "load it AFTER KS_Julan_Ashlander Companion"
+;;Ref: "ab01JulanRTTpatch.txt"
+[Order]
+KS_Julan_Ashlander Companion_<VER>.esp
+ab01JulanRTTpatch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Jury-rig Wraithguard Replacer 1.1 [Alaisiagae]
 
 [Conflict]
@@ -20329,7 +20711,7 @@ Knight saddle -templar- for ESPversion.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Kobu's Leveling Mod [Kobu]
+;; @Kobu's Leveling Mod 1.0 [Kobu]
 
 ; Order does not seem actually important? - JMS
 ;[Order]
@@ -20344,6 +20726,15 @@ Knight saddle -templar- for ESPversion.esp
  (Ref: kobusleveling_0604.zip/"leveling.txt")
 Kobu's Skills.esp
 Kobu's Hard Skills.esp
+
+;;Dragon32: GMST conflict, assume if someone's loaded Kobu's mod they want that to take precedence over BTB's changes
+[Order]
+BTB - Settings.esp
+Kobu's No Planning.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Kobu's No Planning.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20776,6 +21167,19 @@ Less Annoying Guards - Tribunal and Bloodmoon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Less Lore 0.01 [Wrye]
+
+;;Dragon32: See also "LGNPC [Less Generic NPCs Project]"
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Less Lore.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Level Up Birthsign Remover 1.03 [AzuMite]
 
 [Conflict]
@@ -20813,8 +21217,13 @@ Level Up Birthsign Remover WGI 103.esp
      Level Up Birthsign Remover WGI 103.esp]
 [ANY BirthsignsAMFun_BM.esp
      BirthsignsAMFun_MW.esp
+     Birthsign1.esp
      Birthsigns.esp
-     ExpandedBirthsigns4Purists.esp]
+     Definitive Birthsigns Redux Patch.esp
+     ExpandedBirthsigns4Purists.esp
+     NPC Magicka Regen (Wakim).esp
+     race_birthsign_remix.esp
+     Unique Birthsigns.esp]
 
 [Conflict]
  AzuMite's "Level Up Birthsign Remover" conflicts with attribute limit elimination mods.
@@ -21157,23 +21566,6 @@ LGNPC_NoLore.esp
 ExcuseMe.esp
 LGNPC_NoLore.esp
 
-;; Wakim's Game Improvements
-[Order]
-Gameplay - Dialogue.esp
-LGNPC_NoLore.esp
-
-[Order]
-Wakim's Game Improvement 9.esp
-LGNPC_NoLore.esp
-
-[Order]
-Wakim's Game Improvements with No-glo v9.esp
-LGNPC_NoLore.esp
-
-[Order]
-AprogasVampire WakimImprovements.20021210.esp
-LGNPC_NoLore.esp
-
 [Conflict]
  LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
@@ -21455,6 +21847,42 @@ Liligue island.esp
  http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg
 Liligue island.esp
 Helios_Keep.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Linora's Leveling Mod 2.0 [Linora]
+
+[Conflict]
+ Only use one plugin.
+ (Ref: "llm20.zip/the readme.txt")
+llm-easy.esp
+llm-hard.esp
+llm-medium.esp
+
+;;Dragon32: GMST conflict, assume if someone's loaded Linora's mod they want that to take precedence over BTB's changes
+[Order]
+BTB - Settings.esp
+llm-easy.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+llm-easy.esp
+
+[Order]
+BTB - Settings.esp
+llm-medium.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+llm-medium.esp
+
+[Order]
+BTB - Settings.esp
+llm-hard.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+llm-hard.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21867,6 +22295,13 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Lore Fix.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Lost Artifacts of Morrowind [Rogue Shadow, Case Sterling, Palinurus, Oriphier]
@@ -22097,6 +22532,24 @@ Madd Leveler - Illuminated Order Fix.esp
 Madd Leveler - LichCraft Fix.esp
 Madd Leveler - Illuminated Order And LichCraft Fix.esp
 
+[Requires]
+ "ALL PLUGINS REQUIRE THE MADD LEVELER - BASE.ESP TO BE INSTALLED AND LOADED FIRST!"
+ (Ref: "Madd Leveler Readme.txt")
+[ANY Madd Leveler - Spell Effects.esp
+     Madd Leveler - Cap Remover.esp
+     Madd Leveler - Madd Caps.esp
+     Madd Leveler - Madd Health.esp
+     Madd Leveler - Madd Skills.esp
+     Madd Leveler - Sederien Skills.esp
+     Madd Leveler - Quest Cap Remover.esp
+     Madd Leveler - Vampire Cap Remover.esp
+     Madd Leveler - Werewolf Cap Remover.esp
+     Madd Leveler - Assassin's Armory Fix.esp
+     Madd Leveler - Illuminated Order Fix.esp
+     Madd Leveler - LichCraft Fix.esp
+     Madd Leveler - Illuminated Order And LichCraft Fix.esp]
+Madd Leveler - Base.esp
+
 ;; Madd starts itself from within it's modified version of Sellus Gravius' script: CharGenDialogueMessage
 ;; So it conflicts with a number of other mods that re-define that script, and needs to load afterwards.
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14082825
@@ -22296,6 +22749,48 @@ Madd Leveler - Base.esp
 Madd Leveler - Base.esp
 MWE_Blocking.esp
 
+;;Dragon32: GMST conflict, assume if someone's loaded Madd Mugsy/Sederien's mod they want that to take precedence over BTB's changes
+[Order]
+BTB - Settings.esp
+Madd Leveler - Base.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+Madd Leveler - Base.esp
+
+;;Dragon32: SKIL conflict, assume if someone's loaded Madd Mugsy/Sederien's mod they want that to take precedence over Wakim's changes
+[Order]
+Balance - Character.esp
+Madd Leveler - Madd Skills.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Madd Leveler - Madd Skills.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Madd Leveler - Madd Skills.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Madd Leveler - Madd Skills.esp
+
+[Order]
+Balance - Character.esp
+Madd Leveler - Sederien Skills.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Madd Leveler - Sederien Skills.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Madd Leveler - Sederien Skills.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+Madd Leveler - Sederien Skills.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @mage friendly daedra [Nightblade_Y]
@@ -22387,7 +22882,7 @@ Mage Friendly Bloodmoon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Magic Alembic v1.1 [Crystaltips]
+;; @Magic Alembic 1.1 [Crystaltips]
 
 [Note]
  !! This plugin contains one evil GMST (sEffectSummonFabricant)
@@ -22469,9 +22964,71 @@ MTT4 Necro Tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Magicka Based Skill Progression [HotFusion4]
+;; @Magicka Based Skill Progression 2.1 [HotFusion4]
 
 ;;Dragon32: See "Magicka cost reduction mods [Various]" for conflict information
+
+[Note]
+ ! You are using an old version of HotFusion4's "Magicka Based Skill Progression", you should upgrade!
+ ! http://mw.modhistory.com/download-51-12364
+[ANY MBSP.esp
+     MBSPGCD.esp
+     MBSPMadd.esp
+     MBSPwHoratio.esp
+     MBSPwHoratioGCD.esp
+     MBSPwHoratioMadd.esp]
+
+[Conflict]
+ "Because of the skillbook skill-increase methodology used by [HotFusion4's "Magicka Based Skill Progression"], it is unable to raise magic skills above 100, and therefore will not cooperate well with mods that remove skill caps."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
+MBSPv21.esp
+[ANY CapRemover 1.2 alpha.esp
+     CapRemover 1.1c.esp
+     Galsiahs Character Development.esp
+     GCD v1.08 with Startscript, fixed [Galsiah].esp
+     GCDLean204STD.esp
+     GCDLean204EASY.esp
+     GCDLean204HARD.esp
+     Madd Leveler - Base.esp
+     Morrowind Decapitated.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magicka Based Spell Advancement 1.0a [Azrael]
+
+;;Dragon32: See also "Magicka cost reduction mods [Various]"
+
+[Requires]
+ "[Azrael's "Magicka Based Spell Advancement"] requires Tribunal or Bloodmoon [and] is a Morrowind Enhanced based mod."
+ (Ref: "MWE_MagickaSpells.txt")
+MWE_MagickaSpells.esp
+[ALL MWE_Base.esp
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Order]
+MWE_Base.esp
+MWE_MagickaSpells.esp
+
+[Conflict]
+ "v1.0a [of Azrael's "Magicka Based Spell Advancement"] incorporated Horatio's spellcasting mod"
+ (Ref: "MWE_MagickaSpells.txt")
+MWE_MagickaSpells.esp
+[ANY horatio_casting_trib.esp
+     horatio_casting_trib_2.esp]
+
+[Conflict]
+ "[Azrael's "Magicka Based Spell Advancement"] is incompatible with the spells portion of Morrowind Sound Enhancement, as ["Magicka Based Spell Advancement"] does not check for the new spellcasting sounds"
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
+MWE_MagickaSpells.esp
+Sound Enhancements.esp
+
+[Conflict]
+ Azrael's "Magicka Based Spell Advancement" is incompatible with "Excellent Magic Sounds" by Asiron, as "Magicka Based Spell Advancement" does not check for the new spellcasting sounds.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
+ Note that Gluby warns about another mod which changes spellcasting sounds, "Morrowind Sound Enhancements" by Leon "pancreas" Medado.
+MWE_MagickaSpells.esp
+ExcellentMagicSounds.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22501,6 +23058,10 @@ CastReduce-v30.esp
 
 [Conflict]
  All of these plugins allow the player to regenerate lost magicka, you only need one of these plugins running.
+;;Advanced Magicka Regen Plugin Hybrid 1.2 [LennartSchultz12]
+AMRP 1.2.esp
+;;Aprogas' Magicka Regenerate [Jasper Jongmans]
+AprogasMagickaRegenerate.20021210.esp
 ;;Morrowind Better Gameplay [LegoManIAm94]
 Better Gameplay.esp
 ;;Dynamic Magicka Regeneration 2.0 [Duncan]
@@ -22518,10 +23079,27 @@ Better Gameplay.esp
 Fair Magicka Regen 2.0b.esp
 ;;Magick Oblivion Regeneration [kiasyd]
 kiasyd_magick_regenerator_1.4.esp
+;;Magicka Regen 1.0 (Percentage) [Assman]
+[ANY Clean manaReg 0.1percent.esp
+     Clean manaReg 0.5percent.esp
+     Clean manaReg 1percent.esp
+     Clean manaReg 2percent.esp
+     Clean manaReg 5percent.esp]
+;;Magicka Regen 1.1 (Willpower) [Assman]
+Clean manaReg WillBased.esp
+;;Magicka Regeneration 1.1 [giu1]
+magicka regeneration-8537.esp
 ;;Magicka Regeneration [Aragon]
 MagickaRegen-v20.esp
 ;;Mana Regen v1.3 [Fuku]
 Mana_Regen_v13.esp
+;;Oblivionized Magicka Regeneration 1.22 [andylam222]
+Oblivionized Magicka Regeneration.esp
+;;Regional Mana 2.0 [Wildman]
+[ANY Regional_Mana_Regen-MW+BM.esp
+     Regional_Mana_Regen-MW+T+BM.esp
+     Regional_Mana_Regen-MW+T.esp
+     Regional_Mana_Regen-MW.esp]
 ;;Tyrthyllanos Magicka Regen [Tyrthyllanos]
 [ANY TyrMagickaRegen.ESP
      TyrMagickaRegenSlower.ESP]
@@ -22535,7 +23113,9 @@ Mana_Regen_v13.esp
           GCDLean204STD.esp
           GCDLean204EASY.esp
           GCDLean204HARD.esp]
-     [ANY Better Gameplay.esp
+     [ANY AMRP 1.2.esp
+          AprogasMagickaRegenerate.20021210.esp
+          Better Gameplay.esp
           DynamicMagickaRegeneration-2.0.esp
           DynamicMagickaRegeneration-2.0-Tribunal.esp
           DynamicMagickaRegeneration-2.1.esp
@@ -22546,10 +23126,111 @@ Mana_Regen_v13.esp
           Adj_Magicka Regen (1.00%).esp
           Fair Magicka Regen 2.0b.esp
           kiasyd_magick_regenerator_1.4.esp
+          Clean manaReg 0.1percent.esp
+          Clean manaReg 0.5percent.esp
+          Clean manaReg 1percent.esp
+          Clean manaReg 2percent.esp
+          Clean manaReg 5percent.esp
+          Clean manaReg WillBased.esp
+          magicka regeneration-8537.esp
           MagickaRegen-v20.esp
           Mana_Regen_v13.esp
+          Oblivionized Magicka Regeneration.esp
+          Regional_Mana_Regen-MW+BM.esp
+          Regional_Mana_Regen-MW+T+BM.esp
+          Regional_Mana_Regen-MW+T.esp
+          Regional_Mana_Regen-MW.esp
           TyrMagickaRegen.ESP
           TyrMagickaRegenSlower.ESP]]
+
+[Note]
+ !! "[Stealaxe's "Dynamic Leveling"] will not work well with other magicka regeneration scripts. If you want to use a different magicka regeneration mod make sure you turn of the "Dl_Magicka" script by opening your console and typing "stopscript DL_Magicka"."
+ !! (Ref: "Dynamic_Leveling_11_Beta.rar\Read Me First!.rtf")
+[ALL [ANY Dynamic Leveling 1.1 Beta ( Bloodmoon ).esp
+          Dynamic Leveling 1.1 Beta.esp]
+     [ANY AMRP 1.2.esp
+          AprogasMagickaRegenerate.20021210.esp
+          Better Gameplay.esp
+          DynamicMagickaRegeneration-2.0.esp
+          DynamicMagickaRegeneration-2.0-Tribunal.esp
+          DynamicMagickaRegeneration-2.1.esp
+          DynamicMagickaRegeneration-2.1-Tribunal.esp
+          Adj_Magicka Regen (0.10%).esp
+          Adj_Magicka Regen (0.25%).esp
+          Adj_Magicka Regen (0.50%).esp
+          Adj_Magicka Regen (1.00%).esp
+          Fair Magicka Regen 2.0b.esp
+          kiasyd_magick_regenerator_1.4.esp
+          Clean manaReg 0.1percent.esp
+          Clean manaReg 0.5percent.esp
+          Clean manaReg 1percent.esp
+          Clean manaReg 2percent.esp
+          Clean manaReg 5percent.esp
+          Clean manaReg WillBased.esp
+          magicka regeneration-8537.esp
+          MagickaRegen-v20.esp
+          Mana_Regen_v13.esp
+          Oblivionized Magicka Regeneration.esp
+          Regional_Mana_Regen-MW+BM.esp
+          Regional_Mana_Regen-MW+T+BM.esp
+          Regional_Mana_Regen-MW+T.esp
+          Regional_Mana_Regen-MW.esp
+          TyrMagickaRegen.ESP
+          TyrMagickaRegenSlower.ESP]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magicka Regen 1.0 (Percentage) [Assman]
+
+[Conflict]
+ Only use one plugin:
+  Clean manaReg 0.1percent.esp - 0.1% of max mana regenerated per second
+  Clean manaReg 0.5percent.esp - 0.5% of max mana regenerated per second
+  Clean manaReg 1percent.esp - 1% of max mana regenerated per second
+  Clean manaReg 2percent.esp - 2% of max mana regenerated per second
+  Clean manaReg 5percent.esp - 5% of max mana regenerated per second
+ (Ref: "Clean_manaReg_percent.rar\readme.txt")
+Clean manaReg 0.1percent.esp
+Clean manaReg 0.5percent.esp
+Clean manaReg 1percent.esp
+Clean manaReg 2percent.esp
+Clean manaReg 5percent.esp
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 7363 Clean manaReg 5percent.esp]
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+[ANY Clean manaReg 0.1percent.esp
+     Clean manaReg 0.5percent.esp
+     Clean manaReg 1percent.esp
+     Clean manaReg 2percent.esp
+     Clean manaReg 5percent.esp]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ ! "Characters born under the Atronach birthsign get a hefty boost to their maximum Magicka, but do not recover Magicka normally by resting. Not all mods take this into account. Those mods that do not are imbalancing in favor of Atronach characters if used with them (in other words, they're effectively cheats when used that way)."
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+[ANY Clean manaReg 0.1percent.esp
+     Clean manaReg 0.5percent.esp
+     Clean manaReg 1percent.esp
+     Clean manaReg 2percent.esp
+     Clean manaReg 5percent.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magicka Regen 1.1 (Willpower) [Assman]
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+Clean manaReg WillBased.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22592,6 +23273,48 @@ NPC Magicka Regen (Wakim).esp
 NPC Magicka Regen (Wakim).esp
 Balance - Character.esp
 
+;;Dragon32: K69's mod includes all changes from "Balance - Character.esp", so load after mods which merge that plugin.
+[Order]
+Wakim's Game Improvement 9.esp
+NPC Magicka Regen (Wakim).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+NPC Magicka Regen (Wakim).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+NPC Magicka Regen (Wakim).esp
+
+[Conflict]
+ "BTB's Game Improvements" is derived from "Wakim's Game Improvements" mod. Kalamestari_69's "Clean Wakim's Regen.esp" adds "Wakim's Game Improvement's Balance - Character mod" effects and magicka regen added to all races..
+ (Ref: "morrowind_btb.zip\Readme.txt" and "Magicka Regen for NPC's.txt")
+[ANY BTB - Character.esp
+     BTB - Character (Alternate).esp
+     BTB - Settings.esp
+     BTB - Settings (Alternate).esp
+     CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP]
+NPC Magicka Regen (Wakim).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Magicka Regeneration 1.1 [giu1]
+
+[Note]
+ ! "Characters born under the Atronach birthsign get a hefty boost to their maximum Magicka, but do not recover Magicka normally by resting. Not all mods take this into account. Those mods that do not are imbalancing in favor of Atronach characters if used with them (in other words, they're effectively cheats when used that way)."
+ ! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+magicka regeneration-8537.esp
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+magicka regeneration-8537.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Main Quest Enhancers 1.1 [Trainwiz]
@@ -22629,6 +23352,15 @@ MRM.esm
  !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
 [ANY MQE_BlightedBeasties.ESP
      MQE_MainQuestEnhancers.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Mana Regen 1.3 [Fuku, __c4.ep, LanceVorgin]
+
+[Note]
+ !! "[Fuku's "Mana Regen"] alters the Main game script, which is generally considered a bad practice and poses a high risk of conflict. The Main script is the game's primary script, started automatically every time a game is loaded. The problem with this method, of course, is that this is a likely place of conflict with other mods; if two mods replace the Main script for their own purpose, one will override and effectively erase the other's changes.
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+Mana_Regen_v13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25921,117 +26653,55 @@ Morrowind Crafting 2-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Crafting Patch 1.01 [abot]
+
+[Requires]
+ "Requirements: Latest Morrowind Crafting 2.1 by Toccatta & Drac"
+ (Ref: "Morrowind Crafting Patch.txt")
+Morrowind Crafting Patch.esp
+Morrowind Crafting 2-1.esp
+
+;;"load it after Morrowind Crafting"
+;;Ref: "Morrowind Crafting Patch.txt"
+[Order]
+Morrowind Crafting 2-1.esp
+Morrowind Crafting Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Decapitated 1.2 [Fliggerty]
+
+[Note]
+ !! "This mod is no longer supported or recommended for use by the author due to internal MWE bugs that cause some skills to fail to improve under the mod."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltLevelingSystems )
+[ALL Morrowind Decapitated.esp
+     [NOT MWE_Combat.esp]]
+
+[Note]
+ !!! "This mod is no longer supported or recommended for use by the author due to internal MWE bugs that cause some skills to fail to improve under the mod, and that result in an incompatibility between Morrowind Decapitated and Aerelorn's Combat Enhanced (ACE) that causes the game to crash when the player hits in combat if both mods are used together."
+ !!! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltLevelingSystems )
+[ALL Morrowind Decapitated.esp
+     MWE_Combat.esp]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+Morrowind Decapitated.esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+Morrowind Decapitated.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Enhanced 1.6 [Aerelorn]
 
 [Note]
  Ensure you are using the latest version of Morrowind Enhanced, 1.6
  http://mw.modhistory.com/download-65-14559
-MWE_Combat.esp
-Enhanced_Stealth.esp
-MWE_Journal.esp
-MWE_Blocking.esp
-MWE_Crime - Stealth.esp
-MWE_Crime - Stealing Bugfix.esp
-MWE_Crime - Less Annoying Guards.esp
-MWE_Writing.esp
-Spell Timer MWE Addon.esp
-Morrowind Decapitated.esp
-MWE_SneakEye.esp
-MWE_Base.esp
-MWE_GoldBurden.esp
-MWE_MagickaSpells.esp
-Oblivion-Style Spellcasting.esp
-Dodge_Mod1.11(MWE).esp
-
-[Requires]
-MWE_MagickaSpells.esp
 MWE_Base.esp
 
-[Requires]
- (Ref: "Gold Burden Readme.txt")
-MWE_GoldBurden.esp
-MWE_Base.esp
-
-; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245
-[Order]
-MWE_Base.esp
-Spell Timer.esp
-Spell Timer MWE Addon.esp
-
-[Requires]
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
-Spell Timer MWE Addon.esp
-[ALL Spell Timer.esp
-     MWE_Base.esp]
-
-[Note]
- The Spell Timer mod requires MWE, MGE and MWSE.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
-Spell Timer.esp
-Spell Timer MWE Addon.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht" and "Combat Enhanced.htm")
-MWE_Combat.esp
-[ALL MWE_Base.esp
-     [ANY Tribunal.esm
-	  Bloodmoon.esm]]
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-Enhanced_Stealth.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_Journal.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_Blocking.esp
-[ALL MWE_Base.esp
-     [ANY Tribunal.esm
-	  Bloodmoon.esm]]
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_Crime - Stealth.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_Crime - Stealing Bugfix.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_Crime - Less Annoying Guards.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_Writing.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-Spell Timer MWE Addon.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-Morrowind Decapitated.esp
-MWE_Base.esp
-
-[Requires]
- (Ref: "Morrowind Enhanced Manual.mht")
-MWE_SneakEye.esp
-MWE_Base.esp
-
-[Requires]
-Dodge_Mod1.11(MWE).esp
-MWE_Base.esp
+;;ACE Addons to Combat Enhanced [Hitto]
 
 [Requires]
  Hitto's "ACE Addons" require Aerelorn's "Combat Enhanced" to be loaded
@@ -26066,6 +26736,137 @@ ACE_Charge.esp
 ACE_Subtitles.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Order]
+MWE_Combat.esp
+ACE_Airattack.esp
+
+[Order]
+MWE_Combat.esp
+ACE_Backstab.esp
+
+[Order]
+MWE_Combat.esp
+ACE_Charge.esp
+
+[Order]
+MWE_Combat.esp
+ACE_Subtitles.esp
+
+;;Blocking Enhanced [Aerelorn]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_Blocking.esp
+[ALL MWE_Base.esp
+     [ANY Tribunal.esm
+	  Bloodmoon.esm]]
+
+[Order]
+MWE_Base.esp
+MWE_Blocking.esp
+
+;;Combat Enhanced [Aerelorn]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht" and "Combat Enhanced.htm")
+MWE_Combat.esp
+[ALL MWE_Base.esp
+     [ANY Tribunal.esm
+	  Bloodmoon.esm]]
+
+[Order]
+MWE_Base.esp
+MWE_Combat.esp
+
+;;Crime Enhanced [Tonto]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_Crime - Stealth.esp
+MWE_Base.esp
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_Crime - Stealing Bugfix.esp
+MWE_Base.esp
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_Crime - Less Annoying Guards.esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+MWE_Crime - Stealth.esp
+
+[Order]
+MWE_Base.esp
+MWE_Crime - Stealing Bugfix.esp
+
+[Order]
+MWE_Base.esp
+MWE_Crime - Less Annoying Guards.esp
+
+;;Dodge Mod 1.11 [Tonto]
+
+[Requires]
+Dodge_Mod1.11(MWE).esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+Dodge_Mod1.11(MWE).esp
+
+;;Enhanced Stealth [JOG]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+Enhanced_Stealth.esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+Enhanced_Stealth.esp
+
+;;Gold Burden [Tonto]
+
+[Requires]
+ (Ref: "Gold Burden Readme.txt")
+MWE_GoldBurden.esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+MWE_GoldBurden.esp
+
+;;Journal Enhanced [Aerelorn]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_Journal.esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+MWE_Journal.esp
+
+;;Magicka Based Spell Advancement 1.0a [Azrael] - q.v
+
+;;Morrowind Decapitated [Fliggerty] - q.v.
+
+;;MWE Sneak Eye [Halo]
+
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_SneakEye.esp
+MWE_Base.esp
+
+[Order]
+MWE_Base.esp
+MWE_SneakEye.esp
+
+;;NPC Enhanced 1.2 [Horatio]
 
 [Conflict]
  Use only one version of the mod:
@@ -26104,6 +26905,8 @@ HoratioNPCEnhanced12-VE.esp
 Vampire_Embrace.esp
 HoratioNPCEnhanced12-VE.esp
 
+;;NPC Enhanced MWSE patch [cdcooley]
+
 [Requires]
  The "NPC Enhanced MWSE patch" by cdcooley requires Horatio's NPC Enhanced to be running.
 npce_mwse_patch.esp
@@ -26125,82 +26928,36 @@ HoratioNPCEnhanced12-BM.esp
 HoratioNPCEnhanced12-VE.esp
 npce_mwse_patch.esp
 
-[Order]
-MWE_Base.esp
-MWE_Combat.esp
+;;Spell Timer [BungaDunga]
 
-[Order]
-MWE_Base.esp
-Enhanced_Stealth.esp
+[Requires]
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+Spell Timer MWE Addon.esp
+[ALL Spell Timer.esp
+     MWE_Base.esp]
 
-[Order]
-MWE_Base.esp
-MWE_Journal.esp
+[Note]
+ The Spell Timer mod requires MWE, MGE and MWSE.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245 )
+Spell Timer.esp
+Spell Timer MWE Addon.esp
 
+; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13892245
 [Order]
 MWE_Base.esp
-MWE_Blocking.esp
+Spell Timer.esp
+Spell Timer MWE Addon.esp
 
-[Order]
-MWE_Base.esp
-MWE_Crime - Stealth.esp
+;;Writing Enhanced [Aerelorn]
 
-[Order]
+[Requires]
+ (Ref: "Morrowind Enhanced Manual.mht")
+MWE_Writing.esp
 MWE_Base.esp
-MWE_Crime - Stealing Bugfix.esp
-
-[Order]
-MWE_Base.esp
-MWE_Crime - Less Annoying Guards.esp
 
 [Order]
 MWE_Base.esp
 MWE_Writing.esp
-
-[Order]
-MWE_Base.esp
-Spell Timer MWE Addon.esp
-
-[Order]
-MWE_Base.esp
-Morrowind Decapitated.esp
-
-[Order]
-MWE_Base.esp
-MWE_SneakEye.esp
-
-[Order]
-MWE_Base.esp
-MWE_MagickaSpells.esp
-
-[Order]
-MWE_Base.esp
-Dodge_Mod1.11(MWE).esp
-
-[Order]
-MWE_Combat.esp
-ACE_Subtitles.esp
-
-[Order]
-MWE_Combat.esp
-ACE_Airattack.esp
-
-[Order]
-MWE_Combat.esp
-ACE_Charge.esp
-
-[Order]
-MWE_Combat.esp
-ACE_Backstab.esp
-
-;;Dragon32: See "Magicka cost reduction mods [Various]" for Azrael the Drooling's "Magicka Based Spell Advancement" conflict information
-
-[Conflict]
- Azrael the Drooling's "Magicka Based Spell Advancement", HotFusion4's "Magicka Based Skill Progression" and Piratelord's "Improved Skill Magicka" all change the way spell-based skill progression happens in Morrowind. Choose a mod to use, there is no need to run all of them.
- (Ref: MWE_MagickaSpells.txt)
-MWE_MagickaSpells.esp
-MBSPv21.esp
-Improved Skilled Magicka.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26491,6 +27248,7 @@ Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
 [ANY BTB - Character.esp
      BTB - Character (Alternate).esp
      Balance - Character.esp
+     NPC Magicka Regen (Wakim).esp
      Wakim's Game Improvement 9.esp
      Wakim's Game Improvements with No-glo v9.esp
      AprogasVampire WakimImprovements.20021210.esp
@@ -26561,6 +27319,13 @@ Morrowind Rebirth <VER>.esp
      Gnisis Bridge.ESP
      Clean gnis.esp
      GnisisBridgeFinal.esp]
+
+[Conflict]
+ Trancemaster's "Morrowind Rebirth" includes his "New Seyda Neen"; Trancemaster's "New Seyda Neen" and Saborcoco's "Maximus" both use the same ID, Maximus, for an object. "New Seyda Neen" and so "Morrowind Rebirth" use it for a NPC, "Maximus" for a Weapon.
+ You should edit either "Morrowind Rebirth" or "Maximus" renaming the Maximus ID (to e.g. "MR_Maximus" or "M_Maximus").
+ (Ref: http://forums.nexusmods.com/index.php?/topic/777499-new-seyda-neen/?p=19401164 )
+Morrowind Rebirth <VER>.ESP
+Maximus.esp
 
 ;; mods merged into or equivalents included in Rebirth
 
@@ -26981,6 +27746,10 @@ Wakim's Game Improvements with No-glo v9.esp
 Morrowind Rebirth <VER>.esp
 AprogasVampire WakimImprovements.20021210.esp
 
+[Order]
+Morrowind Rebirth <VER>.esp
+NPC Magicka Regen (Wakim).esp
+
 ;; Order rules for assorted other mods
 
 ;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
@@ -27142,12 +27911,19 @@ MCA_Companions_Enhanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Sound Enhancement Plugin Version 1.5 [Leon "pancreas" Medado]
+;; @Morrowind Sound Enhancements 2.1 [Leon "pancreas" Medado]
 
 [Note]
- !! The "No Tribunal" version of this plugin contains evil GMSTs.
+ !! The "No Tribunal" version of this plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 33373 Sound Enhancements.esp]
+
+[Conflict]
+ "Morrowind Sound Enhancements" by Leon "pancreas" Medado adds new spellcasting sounds. It is incompatible with other mods which rely on the vanilla game's spellcasting sounds.
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
+Sound Enhancements.esp
+[ANY Elemental Magicka II.ESP
+     Scripted_Spells.esp] 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27732,6 +28508,42 @@ NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nasty Camonna Tong 1.2 [Von Djangos]
+
+;; Dragon32 - see also Djangos Dialogue 1.3 [Von Djangos]; What Thieves Guild? 1.2 [Von Djangos]; Lore Fix 1.01 [TheOne&Only]
+;; "I generally put the LGNPC mods after generic dialogue mods, (e.g. django's) and before quest mods. Just play around with the load order, and you'll find a good spot."
+;; http://forums.bethsoft.com/topic/1372329-no-lore-and-dialogue-mods/?p=20739046
+[Order]
+Nasty Camonna Tong.esp
+LGNPC_NoLore.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Nasty Camonna Tong.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NazoX9's Guards 1.0 [NazoX9]
 
 [Conflict]
@@ -28281,18 +29093,18 @@ NOM 2.13.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @NoM_BTB Compatibility Plugins [Stilleas]
+;; @NoM-BTB Compatibility Plugins 1.01 [Stilleas]
 
 [Patch]
  Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
+ http://mw.modhistory.com/download-90-14308
 NoM_BTB-Alchemy Compatibility Plugin.esp
 [ALL BTB - Alchemy.esp
      NoM 3.0.esp]
 
 [Patch]
  Stilleas' "NoM_BTB Compatibility Plugins" ensure compatibility between Taddeus' "Necessities of Morrowind" and "BTB's Game Improvements"
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9166
+ http://mw.modhistory.com/download-90-14308
 NoM_BTB-Settings Compatibility Plugin.esp
 [ALL [ANY BTB - Settings (Alternate).esp
           BTB - Settings.esp]
@@ -28825,7 +29637,7 @@ New Npc Replacer 3.50.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @New Seyda Neen [Trancemaster]
+;; @New Seyda Neen 1.7 [Trancemaster]
 
 ;;Dragon32: Unclear if this was fixed in later versions
 [Note]
@@ -28833,18 +29645,27 @@ New Npc Replacer 3.50.esm
  (Ref http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13492454 )
 New Seyda Neen v 1.4.esp
 
+;;Dragon32: Conflicts with CoM and Seyda Neen Docks not mentioned on Nexus page for 1.7
+
 [Conflict]
  "It doesn't work well with Seyda Neen Docks v7.0"
  (Ref: New_Seyda_Neen_1.6.rar\Readme.doc)
-New Seyda Neen 1.6.esp
+New Seyda Neen <VER>.esp
 [ANY Seyda Neen Docks V7.0 Bloodmoon.esp
      Seyda Neen Docks V7.0 Tribunal.esp]
 
 [Conflict]
  "It doesn't work well with [...] Children Of Morrowind."
  (Ref: New_Seyda_Neen_1.6.rar\Readme.doc)
-New Seyda Neen 1.6.esp
+New Seyda Neen <VER>.esp
 MW_Children_1_0.esm
+
+[Conflict]
+ Trancemaster's "New Seyda Neen" and Saborcoco's "Maximus" both use the same ID, Maximus, for an object. "New Seyda Neen" uses it for a NPC, "Maximus" for a Weapon.
+ You should edit either "New Seyda Neen" or "Maximus" renaming the Maximus ID (to e.g. "NS_Maximus" or "M_Maximus").
+ (Ref: http://forums.nexusmods.com/index.php?/topic/777499-new-seyda-neen/?p=19401164 )
+New Seyda Neen <VER>.esp
+Maximus.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29446,6 +30267,13 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+NPC Functionality.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @NPC Replace 3.0 [Arathrax/Motoki]
@@ -29710,6 +30538,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Nudity Greeting Expansion V1.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30097,6 +30932,27 @@ Vampire Realism II.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Oblivionized Magicka Regeneration 1.22 [andylam222]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 13897 Oblivionized Magicka Regeneration.esp]
+
+[Note]
+ !! "Caution: This mod is not recommended for use in its current state, as it has several problems that, taken together, are fairly serious. Specifically, it alters the game's Main script to start the mod's Magicka_Regeneration script, even though it also uses a StartScript. It replaces the game's Startup script with an apparent unnecessary duplicate, which is effectively a dirty ref that can cause problems with other mods. And, finally, it contains a full slate of dirty GMSTs. These problems should all be fixed before this mod is used."
+ !! (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagickaRegenMods )
+Oblivionized Magicka Regeneration.esp
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+Oblivionized Magicka Regeneration.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Odai Cascade 2.5 [Thondur]
 
 [Conflict]
@@ -30233,6 +31089,22 @@ Birthsign1.esp
 
 [Order]
 BTB - Character (Alternate).esp
+Birthsign1.esp
+
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+Birthsign1.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+Birthsign1.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+Birthsign1.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
 Birthsign1.esp
 
 ;;Load the specific race-affecting mod after WGI
@@ -30644,6 +31516,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+P.R.E. v4.0.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31578,6 +32457,22 @@ race_birthsign_remix.esp
 BTB - Character (Alternate).esp
 race_birthsign_remix.esp
 
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+race_birthsign_remix.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+race_birthsign_remix.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+race_birthsign_remix.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
+race_birthsign_remix.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Race Rebuild 1.41 [Mythos]
@@ -31597,9 +32492,10 @@ race_rebuildv1_41.esp
 ;; @Races Are More Fun 0.5 [Alaisiagae]
 
 [Conflict]
- You don't need Taehl's "Khajiit Eye of Night Toggle" when running "Races Are More Fun" by Alaisiagae.
+ You don't need a toggle for the Khajiit Eye of Night when running "Races Are More Fun" by Alaisiagae.
  (Ref: readme_Races Are More Fun - *.txt)
-Khajiit Eye of Night Toggle.esp
+[ANY Khajiit Eye of Night Toggle.esp
+     Khajiit Night Eye Toggle.ESP]
 [ANY RAMF.esp
      RAMF_Mer_for_NPCs.esp
      RAMF_for_NPCs.esp
@@ -31695,6 +32591,22 @@ Clean Races_Update.esp
 
 [Order]
 BTB - Character (Alternate).esp
+Clean Races_Update.esp
+
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+Clean Races_Update.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+Clean Races_Update.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+Clean Races_Update.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
 Clean Races_Update.esp
 
 
@@ -32265,6 +33177,86 @@ Redoran Guards with Shields.esp
 LadyD_Reduced_Commentary.esp
 [ANY BTB - Settings (Alternate).esp
      BTB - Settings.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Regional Mana 2.0 [Wildman]
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script.
+[ANY Regional_Mana.esp
+     Regional_Mana_Regen-MW.esp]
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW.esp
+[ALL Morrowind.esm
+     Regional_Mana.esp]
+
+[Conflict]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Requires]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW+T.esp
+[ALL Morrowind.esm
+     Tribunal.esm
+     Regional_Mana.esp]
+
+[Conflict]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW+T.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW+BM.esp
+[ALL Morrowind.esm
+     Bloodmoon.esm
+     Regional_Mana-BM.esp]
+
+[Conflict]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW+BM.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW+T+BM.esp
+[ALL Morrowind.esm
+     Bloodmoon.esm
+     Tribunal.esm
+     Regional_Mana-BM.esp]
+
+[Conflict]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana-BM.esp
+Bloodmoon.esm
+
+[Conflict]
+ Only use one plugin
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana-BM.esp
+Regional_Mana.esp
+
+[Conflict]
+ Only use one plugin
+ (Ref: "Regional_Mana_README.txt")
+Regional_Mana_Regen-MW+BM.esp
+Regional_Mana_Regen-MW+T+BM.esp
+Regional_Mana_Regen-MW+T.esp
+Regional_Mana_Regen-MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34137,6 +35129,20 @@ abotSiltStriders.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;;Dragon32: Load Melian's Teleport Mod after abot's real-time travel mods
+;;ref: http://forums.bethsoft.com/topic/1487854-relz-mlox-analyze-and-sort-your-load-order/?p=23797886
+[Order]
+abotSiltStriders.esp
+mel_teleportPlugin_1_3.esp
+
+[Order]
+abotSiltStridersTR.esp
+mel_teleportPlugin_1_3.esp
+
+[Order]
+abotRiverStridersTR.esp
+mel_teleportPlugin_1_3.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silt Striders Are In Vvardenfell [lochnarus]
@@ -35356,6 +36362,18 @@ StateBasedHitPoints1.0.esp
      GCDLean204EASY.esp
      GCDLean204HARD.esp]
 
+[Conflict]
+ "Kobu's Leveling Mod [includes its] own alternative Health systems, and so players using [Kobu's Leveling Mod] will not require the use of an alternate Health system mod (and, further, they are likely to conflict, unless one manually disables or removes the relevant scripts)."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltHealthSystems )
+Kobu's No Planning.esp
+StateBasedHitPointsv1.1.esp
+
+[Conflict]
+ "Madd Leveler includes an optional example plugin that gives a minor additional Endurance-based boost to Health at every level (on top of that already given in the game), but can be easily forgone in favor of [a mod like "State-Based Hit Points" by HotFusion4]."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltHealthSystems )
+Madd Leveler - Madd Health.esp
+StateBasedHitPointsv1.1.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @State-Based HP Mod 2.2 [Talrivian]
@@ -35376,6 +36394,17 @@ Talrivian's State-Based HP Mod v.2.2.esp
 [ANY StateBasedHitPoints1.0.esp
      StateBasedHitPointsv1.1.esp]
 
+[Conflict]
+ "Kobu's Leveling Mod [includes its] own alternative Health systems, and so players using [Kobu's Leveling Mod] will not require the use of an alternate Health system mod (and, further, they are likely to conflict, unless one manually disables or removes the relevant scripts)."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltHealthSystems )
+Kobu's No Planning.esp
+Talrivian's State-Based HP Mod v.2.2.esp
+
+[Conflict]
+ "Madd Leveler includes an optional example plugin that gives a minor additional Endurance-based boost to Health at every level (on top of that already given in the game), but can be easily forgone in favor of [a mod like "State-Based HP Mod 2.2" by Talrivian]."
+ (Ref: http://www.mwmythicmods.com/Gluby/Gluby_CharacterDevelopment_Mods.htm#AltHealthSystems )
+Madd Leveler - Madd Health.esp
+Talrivian's State-Based HP Mod v.2.2.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Steel Broadsword Fix 1.2 [quorn]
@@ -42397,6 +43426,25 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+Gameplay - Dialogue.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Walled City of Balmora [Hargreth]
@@ -43149,6 +44197,13 @@ LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
+[Order]
+What Thieves Guild.ESP
+Less_Generic_Bloodmoon.esp
+Less_Generic_Nerevarine.esp
+Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
