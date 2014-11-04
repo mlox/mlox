@@ -7313,7 +7313,12 @@ The Broken Drum 1.01.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Brother Juniper's Twin Lamps [Brother Juniper]
+;; @Brother Juniper's Twin Lamps 1.1 [Brother Juniper]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1537864 Juniper's Twin Lamps (1.1 Tribunal).esp]
 
 ;; TBD. This needs confirmation, as the wiki is ambiguous
 ;; (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
@@ -7346,6 +7351,16 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 
 [Order]
 NX9_Guards_Complete.ESP
+Juniper's Twin Lamps (1.1 Tribunal).esp
+
+;;Dragon32: Similar problem with Ore Replacer (Hngh?)
+;; http://forums.bethsoft.com/topic/1509447-updating-morrowind-tools-and-mods/?p=23805622n
+[Order]
+CR Ore Replacer 1.0.esp
+Juniper's Twin Lamps (1.1 Tribunal).esp
+
+[Order]
+correctUV Ore Replacer 1.0.esp
 Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
@@ -8186,7 +8201,7 @@ Chalk30-Glow.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Chapels of Vvardenfell v2 [Xanondorf/Zorrodorf]
+;; @Chapels of Vvardenfell 2.1 [Xanondorf/Zorrodorf]
 
 [Note]
  !! This plugin contains evil GMSTs. You could clean it yourself, or use "Clean chapelsv2.esp" instead!
@@ -9854,7 +9869,9 @@ GDR_MasterFile.esm
      DN-GDRv1 (BTB Edit).esp
      DN-GDRv1_NOM.esp
      DN-GDRv1_NOM (BTB Edit).esp]
-GDR_MasterFile.esm
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     GDR_MasterFile.esm]
 
 [Conflict]
  If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp, otherwise, use DN-GDRv1.esp.
@@ -9937,7 +9954,7 @@ DN_AshVampires.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Dark Brotherhood Armor Replacer v1.1 [Dimitri Mazieres]
+;; @Dark Brotherhood Armor Replacer 1.1 [Dimitri Mazieres]
 
 ;;Dragon32: See "Dark Brotherhood Assassins Fix [Fetus X]" for more conflict information
 
@@ -9959,10 +9976,75 @@ DM_DB Armor Replacer-ExpRanksDDBA.esp
      DB_Attack_Mod_Jeoshua.esp
      DB_Attack_Mod3.esp
      db_attack_fixed.esp
+     DBAttack Tweaked <VER>-Easy.esp
+     DBAttack Tweaked <VER>.esp
      ddb.esp
      Murderous Dreams.esp
      Murderous Dreams_Safe.esp
      Increased DB Delayed Attacks Patch.esp]
+
+;; "DM_DB Armor Replacer.esp was placed before Better Morrowind Armor.esp and got overwritten."
+;;Ref: http://forums.bethsoft.com/topic/1509447-updating-morrowind-tools-and-mods/?p=23805549
+;;Dragon32: Checked plugins from Moranor's "Better Morrowind Armor" against "Dark Brotherhood Armor Replacer" plugins in TESPCD
+[Order]
+Better Morrowind Armor.esp
+DM_DB Armor Replacer.esp
+
+[Order]
+Better Morrowind Armor DeFemm(o).ESP
+DM_DB Armor Replacer.esp
+
+[Order]
+Better Morrowind Armor DeFemm(a).ESP
+DM_DB Armor Replacer.esp
+
+[Order]
+Better Morrowind Armor.esp
+DM_DB Armor Replacer-Exp.esp
+
+[Order]
+Better Morrowind Armor DeFemm(o).ESP
+DM_DB Armor Replacer-Exp.esp
+
+[Order]
+Better Morrowind Armor DeFemm(a).ESP
+DM_DB Armor Replacer-Exp.esp
+
+[Order]
+Better Morrowind Armor.esp
+DM_DB Armor Replacer-ExpDDBA.esp
+
+[Order]
+Better Morrowind Armor DeFemm(o).ESP
+DM_DB Armor Replacer-ExpDDBA.esp
+
+[Order]
+Better Morrowind Armor DeFemm(a).ESP
+DM_DB Armor Replacer-ExpDDBA.esp
+
+[Order]
+Better Morrowind Armor.esp
+DM_DB Armor Replacer-ExpRanks.esp
+
+[Order]
+Better Morrowind Armor DeFemm(o).ESP
+DM_DB Armor Replacer-ExpRanks.esp
+
+[Order]
+Better Morrowind Armor DeFemm(a).ESP
+DM_DB Armor Replacer-ExpRanks.esp
+
+[Order]
+Better Morrowind Armor.esp
+DM_DB Armor Replacer-ExpRanksDDBA.esp
+
+[Order]
+Better Morrowind Armor DeFemm(o).ESP
+DM_DB Armor Replacer-ExpRanksDDBA.esp
+
+[Order]
+Better Morrowind Armor DeFemm(a).ESP
+DM_DB Armor Replacer-ExpRanksDDBA.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13625,7 +13707,7 @@ DN_1st_Person_bodies-AS.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Fishing Academy Mod v2.0 [MADMAX]
+;; @Fishing Academy Mod 2.54 [MADMAX]
 
 [Note]
  !! This plugin contains evil GMSTs.
@@ -13634,9 +13716,15 @@ DN_1st_Person_bodies-AS.esp
 [SIZE 772912 Fishing Academy v2.0.esp]
 [SIZE 826518 Fishing Academy v2.53.esp]
 
+[Note]
+ ! There is a new version of MADMAX's "Fishing Academy"
+ ! Download version 2.54 of "Fishing Academy" from Morrowind Moding History - http://mw.modhistory.com/download-20-8614
+[ANY Fishing Academy v2.0.esp
+     Fishing Academy v2.53.esp]
+
 [Conflict]
  It is suggested you use "Fishing Academy v2.54.esp", the other two plugins have dirty GMSTs.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1431
+ http://mw.modhistory.com/download-20-8614
 Fishing Academy v2.0.esp
 Fishing Academy v2.53.esp
 Fishing Academy v2.54.esp
@@ -15254,18 +15342,18 @@ mel_teleportPlugin_1_3.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Goth Shop in Cyrodiil [Gianluca]
+;; @Goth Shop in Cyrodiil 1.1 [Gianluca]
 
 ;;Dragon32: ESM dependency not in plugin header
 [Requires]
  Gianluca's "Goth Shop in Cyrodiil" adds a version of AlienSlof's "Slof's Goth Shop I" to Cyrodiil from Gianluca's "GS_TAMRIEL Tribute to The Community" mod.
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4703 )
+ (Ref: http://mw.modhistory.com/download-44-10798 )
 Goth Shop in Cyrodiil.esp
 GS_Tamriel Tribute to The Comunity.esm
 
 [Note]
  Whilst AlienSlof's .esp files from "Slof's Goth Shop I" are not necessary to run Gianluca's "Goth Shop in Cyrodiil" you should ensure you have downloaded all the required resources listed here:
-  http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4703
+ http://mw.modhistory.com/download-44-10798
 [ALL Goth Shop in Cyrodiil.esp
      [NOT Slof's Goth Shop 1.1.esp]]
 
@@ -15411,6 +15499,76 @@ Immersive Chargen - CM.esp
      Less Annoying Guards - Tribunal.esp
      Less Annoying Guards - Bloodmoon.esp
      Less Annoying Guards - Tribunal and Bloodmoon.esp]
+
+;;Dialogue conflict
+;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=23805687
+[Order]
+indybank-NoHouses.esp
+Go To Jail 3.7.esp
+
+[Order]
+INDYBANK.ESP
+Go To Jail 3.7.esp
+
+[Order]
+indybankWC.esp
+Go To Jail 3.7.esp
+
+[Order]
+Indybank2.4b.ESP
+Go To Jail 3.7.esp
+
+[Order]
+Indy Bank (SW Comp. Patch).ESP
+Go To Jail 3.7.esp
+
+[Order]
+WalledCity_IndyBank.esp
+Go To Jail 3.7.esp
+
+[Order]
+indybank-NoHouses.esp
+Go To Jail 3.7 - NOM.esp
+
+[Order]
+INDYBANK.ESP
+Go To Jail 3.7 - NOM.esp
+
+[Order]
+indybankWC.esp
+Go To Jail 3.7 - NOM.esp
+
+[Order]
+Indybank2.4b.ESP
+Go To Jail 3.7 - NOM.esp
+
+[Order]
+Indy Bank (SW Comp. Patch).ESP
+Go To Jail 3.7 - NOM.esp
+
+[Order]
+WalledCity_IndyBank.esp
+Go To Jail 3.7 - NOM.esp
+
+;;landscape conflict
+;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=23805687
+[Order]
+chapelsv2.esp
+Go To Jail 3.7.esp
+
+[Order]
+Clean chapelsv2.esp
+Go To Jail 3.7 - NOM.esp
+
+;;landscape conflict
+;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=23805687
+[Order]
+Imperial Graveyards of MW.esp
+Go To Jail 3.7.esp
+
+[Order]
+Imperial Graveyards of MW.esp
+Go To Jail 3.7 - NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17397,8 +17555,8 @@ H.E.L.L.U.V.A. Complete Weapons.esp
 	  H.E.L.L.U.V.A. Spears.esp]]
 
 [Note]
- ! You are using an old version of HELLUVA Complete Weapons. Download the latest version.
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=6589
+ ! You are using an old version of HELLUVA Complete Weapons.
+ ! Download the latest version from Morrowind Modding History - http://mw.modhistory.com/download-98-12736
 H.E.L.L.U.V.A. Wicked Weapons Complete.esp
 
 
@@ -17741,7 +17899,7 @@ Herbalism_Lite_+Bloodmoon_v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Herbalism Lite for Tamriel Rebuilt [Tealpanda]
+;; @Herbalism Lite for Tamriel Rebuilt 2.1 [Tealpanda]
 
 ;;Dragon32: See also - Herbalism mods [Various]
 
@@ -17755,7 +17913,7 @@ Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 
 [Note]
  ! There is an update to Tealpanda's "Herbalism Lite for Tamriel Rebuilt" available
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7623
+ ! http://mw.modhistory.com/download-1-13506
 Herbalism_Lite_for_Tamriel_Rebuilt.esp
 Herbalism_Lite_for_Tamriel_Rebuilt 1 and 2.esp
 
@@ -18471,7 +18629,13 @@ Homes To Let - Azrael.esp
 ;; @The Horror Mod [MentalElf]
 
 [Conflict]
- These 2 plugins conflict over the types of objects with names like "bar_cryptbody##" which will cause Morrowind to exit when trying to load them together.
+ MentalElf's "Horror Mod" and Centurion's "Addon 2 for Ald-Vendras, Castle Avalon" both use the same IDs for objects. "Addon 2 for Ald-Vendras, Castle Avalon" uses them as Containers, "Horror Mod" as Activators.
+ The objects:
+  bar_cryptbody01
+  bar_cryptbody02
+  bar_cryptbody03
+  bar_cryptbody04
+ You should edit either "Addon 2 for Ald-Vendras, Castle Avalon" or "Horror Mod" renaming the conflicting object IDs (to e.g. "AV_bar_cryptbody01" or "HM_bar_cryptbody01").
  (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__16053177 )
 Horror Mod.esp
 AV2-moved_Addon2_Castle_Avalon.esp
@@ -19275,6 +19439,48 @@ It's me, you idiot.esp
 [Order]
 Immersive Chargen - CM.esp
 It's me, you idiot.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Imperial Graves of Morrowind 1.2 [Tarius]
+
+[Conflict]
+ Tarius' "Imperial Graves of Morrowind" conflicts with Korana, BadKarma, and Lady Rae's "Clothiers of Vardenfell", the Caldera tavern.
+ (Ref: http://www.nexusmods.com/morrowind/mods/36812/ )
+Imperial Graveyards of MW.esp
+[ANY BB_Clothiers_of_Vvardenfell_v1.1.esp
+     KN_Keening_Clothiers.esp]
+
+[Conflict]
+ Tarius' "Imperial Graves of Morrowind" conflicts with Mr. C. Racer's "Windmill for Pelagiad".
+ (Ref: http://www.nexusmods.com/morrowind/mods/36812/ )
+Imperial Graveyards of MW.esp
+A Windmill for Pelagiad v2_0.ESP
+
+[Conflict]
+ Tarius' "Imperial Graves of Morrowind" conflicts with ayse's "Varieties of N'Dib Trees with a small Forest".
+ (Ref: http://www.nexusmods.com/morrowind/mods/36812/ )
+Imperial Graveyards of MW.esp
+Varieties_of_Ndib_Trees.esp
+
+[Conflict]
+ Tarius' "Imperial Graves of Morrowind" conflicts with Grack, Orph and Regaez's "Pelagiad Expanded", the rich district.
+ (Ref: http://www.nexusmods.com/morrowind/mods/36812/ )
+Imperial Graveyards of MW.esp
+Pelagiad_UNFINISHED.esp
+
+[Conflict]
+ Tarius' "Imperial Graves of Morrowind" and MentalElf's "Horror Mod" both use the same IDs for objects. "Imperial Graves of Morrowind" uses them as Containers, "Horror Mod" as Activators.
+ The objects:
+  bar_cryptbody01
+  bar_cryptbody02
+  bar_cryptbody03
+  bar_cryptbody04
+ "In one person's case the easiest fix was to alter the Horror mod."
+ You should edit either "Imperial Graves of Morrowind" or "Horror Mod" renaming the conflicting object IDs (to e.g. "IGM_bar_cryptbody01" or "HM_bar_cryptbody01").
+ (Ref: http://www.nexusmods.com/morrowind/mods/36812/ )
+Imperial Graveyards of MW.esp
+Horror Mod.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22586,8 +22792,8 @@ Bloodmoon.esm
 ;; @Maar Gan Extended 1.01 [ManualIntelligence]
 
 [Note]
- ! A new version of ManualIntelligence's "Maar Gan Extended" is available, 1.01. You should upgrade!
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5758
+ ! A new version of ManualIntelligence's "Maar Gan Extended" is available, 1.01.
+ ! Download the latest version from Morrowind Modding History - http://mw.modhistory.com/download-80-11437
 Maar Gan Extended.esp
 
 
@@ -31119,7 +31325,7 @@ AscadianRanch-1.0.esp
  Thondur's "Odai Cascade" conflicts slightly with Drac & Toccatta's "Morrowind Crafting" in that a sandbar and clay added by Morrowind Crafting no float in midstream of the Odai.
  This is fixed in Thondur's "Dragon Falls", which is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon".
  (Ref: "Dragon Falls - Read me or else....txt")
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=274898&id=7769
+ http://mw.modhistory.com/download-80-13596
 Odai-Cascade V2.5.esp
 Morrowind Crafting 2-1.esp
 
@@ -31127,7 +31333,7 @@ Morrowind Crafting 2-1.esp
  There are multiple landscape conflicts when running Thondur's "Odai Cascade" and Pluto's "The Sable Dragon" together.
  These are fixed in Thondur's "Dragon Falls", which is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon".
  (Ref: "Dragon Falls - Read me or else....txt")
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=274898&id=7769
+ http://mw.modhistory.com/download-80-13596
 Odai-Cascade V2.5.esp
 The Sable Dragon 1.6.esp
 
@@ -35953,6 +36159,51 @@ DA_Sobitur_YA_Compatibility.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sotha Sil Expanded 2.2 [Team SSE]
+
+;;Dragon32: Duplicating Order rule from "DNGDR - Darknut's Greater Dwemer Ruins [Darknut]" for completeness
+
+[Order]
+Morrowind Patch *.esm
+GDR_MasterFile.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+GDR_MasterFile.esm
+
+[Requires]
+ Sotha Sil Expanded requires Bloodmoon, Tribunal and the "GDR_MasterFile.esm"
+ (Ref: "SothaSilExpanded2_0 Full-42347-2-0.rar\SothaSilExpanded2_0\readme.txt")
+Sotha Sil Expanded.ESP
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     GDR_MasterFile.esm]
+
+;;Dragon32: SSE_NOM.esp built with Activators from NoM 2.13; looks like both 2.13 and 3.0 are compatible as long as load order is OK
+;;Ref: http://forums.bethsoft.com/topic/1481954-relz-sotha-sil-expanded-2/?p=23815294
+
+[Patch]
+ "SSE Necessities of Morrowind Patch [...] makes [Team SSE's "Sotha Sil Expanded"] compatible with ["Necessities of Morrowind" by Taddeus]"
+ http://www.nexusmods.com/morrowind/mods/42347/
+SSE_NOM.ESP
+[ALL Sotha Sil Expanded.ESP
+     [ANY NOM 2.13.esp
+          NoM 3.0.esp]]
+
+[Order]
+Sotha Sil Expanded.ESP
+SSE_NOM.ESP
+
+[Order]
+SSE_NOM.ESP
+NOM 2.13.esp
+
+[Order]
+SSE_NOM.ESP
+NoM 3.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Souly Soulgems(!) 1.1.1 [Earth Wyrm]
 
 [Note]
@@ -40381,9 +40632,9 @@ Psy_UniqueDremora_T.esp
 ;; @Unique Finery Replacer 3.2 [Alaisiagae]
 
 [Note]
- ! You have an old version of Alaisiagae's "Unique Finery Replacer". A new version, 3.2, is available. You should upgrade!
- ! http://www.nexusmods.com/morrowind/mods/25725/
-UniqueFinery.esp
+ ! You have an old version of Alaisiagae's "Unique Finery Replacer". A new version, 3.2, is available.
+ ! Download the latest version from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/25725/
+[SIZE 22585 UniqueFinery.esp] ;;Dragon32: MGSO includes "UFR_v3dot2.esp" renamed to "UniqueFinery.esp"  for some unknown reason. MGSO size is 34529 bytes.
 UniqueFinery_NoRobe.esp
 UFR_v2_base.esp
 UFR_v2_ADDON-Rings.esp
@@ -40398,20 +40649,22 @@ UFR_v3dot1_noRobe.esp
   UFR_v3dot2.esp - If you WANT the changes to the robes
   UFR_v3dot2_noRobe.esp - If you DO NOT want the changes to the robes
  (Ref: "readme_Unique Finery Replacer v3dot2.txt")
-UFR_v3dot2.esp
+[ANY UFR_v3dot2.esp
+     [SIZE !22585 UniqueFinery.esp]]
 UFR_v3dot2_noRobe.esp
 
 [Conflict]
  You do not need to run Alaisiagae's "Soldier Belts Fix" with her "Unique Finery Replacer"
  (Ref: "readme_Unique Finery Replacer v3dot2.txt")
-[ANY UFR_v3dot2.esp
+[ANY [SIZE !22585 UniqueFinery.esp]
      UFR_v3dot2_noRobe.esp]
 SoldierBeltsFix.esp
 
 [Conflict]
  Use "UFR_v3dot2_noRobe.esp" from Alaisiagae's "Unique Finery Replacer" if you are using CanadianIce's Robe Replacer.
  (Ref: "readme_Unique Finery Replacer v3dot2.txt")
-UFR_v3dot2.esp
+[ANY UFR_v3dot2.esp
+     [SIZE !22585 UniqueFinery.esp]]
 [ANY IceBradyHurdyRobeReplacerALL.esp
      IceBradyHurdyRobeReplacerMW.esp
      IceBradyHurdyRobeReplacerTB.esp
@@ -40426,23 +40679,33 @@ UFR_v3dot2.esp
 [Conflict]
  Alaisiagae's "Unique Finery Replacer" conflicts with Alphax's "Imperial, Indoril, Templar Belt Icons" as both mods edit the Indoril, Imperial and Templar belts.
  (Ref: "readme_Unique Finery Replacer v3dot2.txt")
-[ANY UFR_v3dot2.esp
+[ANY [ANY UFR_v3dot2.esp
+          [SIZE !22585 UniqueFinery.esp]]
      UFR_v3dot2_noRobe.esp]
 lfx_faction_belts.esp
 
-;;Alaisiagae's Unique Finery - Female Hortator Robe Add-On by Plangkye
-[Requires]
- "Unique Finery - Female Hortator Robe Add-On" by Plangkye requires Alaisiagae's "Unique Finery"
- (Ref: "UF_HortRobeF.zip\Readme.txt")
-UF_HortRobeF001.esp
-[ANY UFR_v3dot2.esp
-     UFR_v3dot2_noRobe.esp]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Finery Replacer - Female Hortator Robe Add-On [Plangkye]
+
+[Note]
+ ! "[Plangkye's "Unique Finery - Female Hortator Robe Add-On"] is meant to be used with Alaisiagae's Unique Finery."
+ ! (Ref: "UF_HortRobeF.zip\Readme.txt")
+[ALL UF_HortRobeF001.esp
+     [NOT [ANY [ANY UFR_v3dot2.esp
+                    [SIZE !22585 UniqueFinery.esp]]
+               UFR_v3dot2_noRobe.esp]]]
 
 ; (Ref: "UF_HortRobeF.zip\Readme.txt")
 ; "If you use UniqueFinery_NoRobe.esp, you do not need to worry about the load order."
 [Order]
 UFR_v3dot2.esp
 UF_HortRobeF001.esp
+
+[Order]
+UniqueFinery.esp
+UF_HortRobeF001.esp
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40726,8 +40989,8 @@ Ushindra Beach v1.2 Master Headpack X Addon.esp
 
 ;;Dragon32: Text only exists in v1.52's description, not 1.6
 [Note]
- ! There is a new version of The DopeHatMan's "Uvirith Inside" available, 1.6. You should upgrade!
- ! http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=766
+ ! There is a new version of The DopeHatMan's "Uvirith Inside" available, 1.6.
+ ! Download the latest version from Morrowind Modding History - http://mw.modhistory.com/download-87-4926
 [DESC !/Icons in DDS format/ Uvirith Inside.esp]
 
 ;;Dragon32: Only v1.6, not v1.52
@@ -45187,6 +45450,15 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 [Order]
 lfx_rare_merged-uniques.esp
 Ultra Light Herbalism.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @A Windmill for Pelagiad 2.0 [Mr. C. Racer]
+
+[Note]
+ ! There is a new version of Mr. C. Racer's "A Windmill for Pelagiad", 2.0.
+ ! Download the latest version from Morrowind Modding History - http://mw.modhistory.com/download-44-6555
+A Windmill for Pelagiad.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
