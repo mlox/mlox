@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2014-10-12 18:56:36 (UTC)]
+[Version 2014-11-09 14:52:58 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -15992,13 +15992,15 @@ Graphic Herbalism TR.esp
  (Ref: Graphic Herbalism TR Readme.txt)
 Graphic Herbalism TR Extra.esp
 [ALL Graphic Herbalism TR.esp
-     Graphic Herbalism Extra.esp]
+     [ANY Graphic Herbalism Extra.esp
+          Graphic Herbalism Extra (Correct UV).esp]]
 
 ;; (Ref: "Graphic Herbalism Readme.txt")
 [Order]
 Bloated Caves.esp
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
+Graphic Herbalism Extra (Correct UV).esp
 Graphic Herbalism TR.ESP
 Graphic Herbalism TR Extra.ESP
 
@@ -16024,7 +16026,8 @@ Graphic Herbalism.esp
 
 [Conflict]
  Both quorn's "Miner's Pick Use" and "Graphic Herbalism Extra" by ManaUser require the player to have a miner's pick in their possession while harvesting ebony, glass, diamond or adamantium.
-Graphic Herbalism Extra.esp
+[ANY Graphic Herbalism Extra.esp
+     Graphic Herbalism Extra (Correct UV).esp]
 MinerPickUseGOTY.esp
 
 ; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
@@ -16192,7 +16195,8 @@ GHE ES (1.3) Patch.ESP
      GHE ES (1.3) Patch.ESP]
 [ALL Expanded Sounds.esp
      [VER >1.2 Graphic Herbalism.esp]
-     [VER >1.2 Graphic Herbalism Extra.esp]]
+     [ANY [VER >1.2 Graphic Herbalism Extra.esp]
+          Graphic Herbalism Extra (Correct UV).esp]]
 
 ;;Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt"
 [Order]
@@ -16205,6 +16209,7 @@ GHE ES (1.3) Patch.ESP
 [Order]
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
+Graphic Herbalism Extra (Correct UV).esp
 GH ES (1.2) Patch.ESP
 GH ES (1.3) Patch.ESP
 GHE ES (1.2) Patch.ESP
@@ -16215,20 +16220,22 @@ GHE ES (1.3) Patch.ESP
 ;; @Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch [Skrawafunda]
 
 [Patch]
- "[Skrawafunda's "Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch"] This is a compatibility patch for Graphic Herbalism Extra (mining) and for Correct UV Orce Replacer."
+ "[Skrawafunda's "Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch"] is a compatibility patch for Graphic Herbalism Extra (mining) and for Correct UV Orce Replacer."
  (Ref: "Graphic Herbalism Extra (Correct UV).txt")
- Download "Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43197/
+ Download "Graphic Herbalism Extra Correct UV Diverse Ore Veins Compatibility Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43197/
 Graphic Herbalism Extra (Correct UV).esp
-[ALL [VER >1.2 Graphic Herbalism Extra.esp]
+[ALL Graphic Herbalism.esp
      [ANY correctUV Ore Replacer 1.0.esp
           CR Ore Replacer 1.0.esp
           UCNature.esm]]
 
-;;Ref: "Graphic Herbalism Extra (Correct UV).txt"
-[Order]
+[Conflict]
+ "NOTE: Use ["Graphic Herbalism Extra (Correct UV).esp"] instead of Graphic Herbalism Extra.esp"
+ (Ref: http://www.nexusmods.com/morrowind/mods/43197/ )
 Graphic Herbalism Extra.esp
 Graphic Herbalism Extra (Correct UV).esp
 
+;;Ref: "Graphic Herbalism Extra (Correct UV).txt"
 [Order]
 correctUV Ore Replacer 1.0.esp
 Graphic Herbalism Extra (Correct UV).esp
@@ -16271,7 +16278,8 @@ GH PE Patch.ESP
 [ANY GHE PE Patch.ESP
      GHE PE Patch*.ESP]
 [ALL [VER >1.2 Graphic Herbalism.esp]
-     [VER >1.2 Graphic Herbalism Extra.esp]
+     [ANY [VER >1.2 Graphic Herbalism Extra.esp]
+          Graphic Herbalism Extra (Correct UV).esp]
      Pearls Enhanced.esp]
 
 [Patch]
@@ -16288,7 +16296,8 @@ GH PEC Patch.ESP
  Download "Graphic Herbalism Pearls Enhanced Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
 GHE PEC Patch.ESP
 [ALL [VER >1.2 Graphic Herbalism.esp]
-     [VER >1.2 Graphic Herbalism Extra.esp]
+     [ANY [VER >1.2 Graphic Herbalism Extra.esp]
+          Graphic Herbalism Extra (Correct UV).esp]
      Pearls Enhanced - Colored Pearls Add-on.esp]
 
 [Order]
@@ -16307,6 +16316,7 @@ GHE PEC Patch.ESP
 [Order]
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
+Graphic Herbalism Extra (Correct UV).esp
 GH PE Patch.ESP
 ;
 GHE PE Patch.ESP.ESP
@@ -18668,9 +18678,9 @@ AV2-moved_Addon2_Castle_Avalon.esp
 ;; @House of Mannequins 1.0 [Grumblepunk]
 
 [Patch]
- "Fixes the mistform mannequins from 'House of Mannequins' by giving them clothing when you drop them."
+ "[Pantalaimon's "House of Mannequins - Mistform Fix"] fixes the mistform mannequins from 'House of Mannequins' by giving them clothing when you drop them. Clothing of some visible kind (i.e. not a belt or ring) must be in its inventory at all times to remain usable."
  (Ref: "HoMfix.txt")
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=2180
+ Download from Morrowind Modding History - http://mw.modhistory.com/download-80-9291
 House of Mannequins - Mistform fix.esp
 House of Mannequins v1.0.esp
 
@@ -19879,14 +19889,13 @@ Indy Bank (SW Comp. Patch).ESP
 ;; @Infernal Summoning Mod 1.1 [Lap]
 
 [Note]
- There is an update to Infernal Summoning v1.1 available:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1216
- (Ref: "ISPatch1.1.txt")
+ ! There is an update to Infernal Summoning, 1.1, available:
+ ! Download it from Morrowind Modding History - http://mw.modhistory.com/download-45-3888
 Infernal SummoningV1.esp
 
 [Conflict]
- "Infernal SummoningV1.esp" should be replaced by:
- "Infernal SummoningV1.esp". Do not activate them simultaneously.
+ "Infernal SummoningV1.esp" should be replaced by "Infernal SummoningV1.1.esp". Do not activate them simultaneously.
+ (Ref: "ISPatch1.1.txt")
 Infernal SummoningV1.esp
 Infernal SummoningV1.1.esp
 
@@ -20172,49 +20181,67 @@ Josie's Entertainers.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Journey's End [lochnarus]
+;; @Journey's End 1.1 [lochnarus]
+
+[Note]
+ ! There is a new version of lochnarus' "Journey's End" available, 1.1.
+ ! Download it from Morrowind Modding History - http://mw.modhistory.com/download-48-12134
+Journey's End.esp
+
+; "Sris_Alchemy.esp" is from Sri's Homeopathic Alchemy (not Sri's Alchemy, Bloodmoon Edition).
+; JMS - TBD check to see if the bloodmoon edition also works.
+;;Dragon32: Checked "Jounrey's End- Alchemy add-on.esp" plugin, contains Bloodmoon ingredients from Sri's
+[Patch]
+ "Alchemy Add-on: [...] Adds ingredients from Srikandi's Homeopathic Alchemy mod to a side office in the lab. Requires Sri's Homeopathic Alchemy Mod to run."
+ (Ref: "JOURNEY'S END_1.1_README.txt")
+[ANY Jounrey's End- Alchemy add-on.esp
+     Journey's End- Alchemy add-on.esp]
+[ALL [ANY Sris_Alchemy.esp
+          Sris_Alchemy_Trib.esp
+          Sris_Alchemy_BM.esp]
+     Journey's End 1.1.esp]
 
 [Order]
 Journey's End 1.1.esp
 Jounrey's End- Alchemy add-on.esp	;original is misspelled
 Journey's End- Alchemy add-on.esp	;in case someone corrects spelling
 
+[Patch]
+ "House of Mannequins Add-on: [...] Adds 8 wooden armor mannequins to the weapons room. Requires House of Mannequins mod to run."
+ (Ref: "JOURNEY'S END_1.1_README.txt")
+Journey's End- HOM add-on.esp
+[ALL House of Mannequins v1.0.esp
+     Journey's End 1.1.esp]
+
 [Order]
 Journey's End 1.1.esp
 Journey's End- HOM add-on.esp
 
+;;Dragon32: TESPCD shows conflict between HoM and the Joruney's End addon for the mannequin NPC entries. Addon just needs to add the mannequins, stats etc. defined in main HoM plugin
 [Order]
-Journey's End 1.1.esp
-Journey's End- Wilderness Mod add-on.esp
-
-[Requires]
- "Requires Sri's Homeopathic Alchemy Mod to run."
- (Ref: "JOURNEY'S END_1.1_README.txt")
-[ANY Jounrey's End- Alchemy add-on.esp
-     Journey's End- Alchemy add-on.esp]
-Sris_Alchemy.esp			; from Sri's Homeopathic Alchemy (not Sri's Alchemy, Bloodmoon Edition).
-                                        ; JMS - TBD check to see if the bloodmoon edition also works.
-
-[Requires]
- "Requires the Wilderness Mod to run."
- To use the latest version of The Puma Man's "Wilderness Mod" see Tiaganna's update:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=4765
- (Ref: "JOURNEY'S END_1.1_README.txt")
-Journey's End- Wilderness Mod add-on.esp
-Wilderness Mod.esm
-
-[Requires]
- "Requires House of Mannequins mod to run."
- (Ref: "JOURNEY'S END_1.1_README.txt")
 Journey's End- HOM add-on.esp
 House of Mannequins v1.0.esp
 
+[Patch]
+ "Wilderness Add-on: Adds butterflies, fish, and a few turtles to the island, all passive to enhance the look, and to give it life. Requires the Wilderness Mod to run."
+ Note that the "Wilderness Add-on" for lochnarus' "Journey's End" uses version 1.1 of The Puma Man's "Wilderness Mod". To use the latest version of The Puma Man's "Wilderness Mod", version 2.1, see Tiaganna's update on Morrowind Modding History: http://mw.modhistory.com/download-1-10831
+ (Ref: "JOURNEY'S END_1.1_README.txt")
+Journey's End- Wilderness Mod add-on.esp
+[ALL Wilderness Mod.esm
+     Journey's End 1.1.esp]
+
+[Order]
+Journey's End 1.1.esp
+Journey's End- Wilderness Mod add-on.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Updated Journey's End Wilderness Add-On [Lochnarus, Tiaganna]
+;; @Updated Journey's End Wilderness Add-On 1.4 [Lochnarus, Tiaganna]
 
-[Requires]
+[Patch]
  Tiaganna's "Updated Journey's End Wilderness Add-On" requires abot's "Water Life" and the latest version of The Puma Man's "Wilderness Mod"
+ Download it from Morrowind Modding History - http://mw.modhistory.com/download-1-10831
+ (Ref: http://mw.modhistory.com/download-1-10831 )
 Journeys_End_Wilderness_Mod_addon_140.esp
 [ALL Journey's End 1.1.esp
      The Wilderness Mod 2.0 T & B.esm
@@ -20222,6 +20249,7 @@ Journeys_End_Wilderness_Mod_addon_140.esp
 
 [Conflict]
  Tiaganna's "Updated Journey's End Wilderness Add-On" replaces Lochnarus' original add-on.
+ (Ref: http://mw.modhistory.com/download-1-10831 )
 Journeys_End_Wilderness_Mod_addon_140.esp
 Journey's End- Wilderness Mod add-on.esp
 
@@ -20306,7 +20334,7 @@ ab01JulanRTTpatch.esp
 
 [Conflict]
  You should only enable one version of this plugin, consult the readme and download page for the version that suits your needs.
- www.nexusmods.com/morrowind/mods/22024/
+ http://www.nexusmods.com/morrowind/mods/22024/
  (Ref: readme_JWR_Dark_L_Lefty.txt
        readme_JWR_Dark_L.txt
        readme_JWR_Dark_R.txt
@@ -20369,7 +20397,7 @@ JEB_wraithguard.esp
 
 [Note]
  Alaisiagae has released "Armor: Integrative Modifications"-compatible versions of the "Jury-rig Wraithguard Replacer" mod.
- www.nexusmods.com/morrowind/mods/22024/
+ http://www.nexusmods.com/morrowind/mods/22024/
 [ALL [ANY JWR_Dark_L.esp
           JWR_Dark_L_Lefty.esp
           JWR_Dark_R.esp
@@ -21082,7 +21110,7 @@ Laby connection EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Laszlo Manor [latendresse76]
+;; @Laszlo Manor 7.385 [latendresse76]
 
 [Order]
 Lazslo_Manor_v7.385.esp
@@ -21160,8 +21188,8 @@ Lazslo_NOM_v7.385.esp
     NOM 2.13.esp]
 
 [Note]
- A new version of Laszlo Manor is available here:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=8301
+ A new version of Laszlo Manor is available from Morrowind Modding History:
+ http://mw.modhistory.com/download-69-13876
 Laszlo Manor Abot Birds.esp
 Laszlo Manor CMF.esp
 Laszlo Manor CX Containers.esp
@@ -22505,7 +22533,7 @@ Better Bodies.esp
 [Patch]
  With the "Lord Alt Tab" mod the front door to Ghorak Manor stops working. When you activate it the door swings open (like an internal door, not a cell-changing door) to show wall behind it. You could not enter Ghorak Manor through the front door (you had to go round to the backdoor).
  "Lord Altab the Trader Fix" by Ginge13 fixes this:
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5181
+ http://mw.modhistory.com/download-68-11075
 LordAltabTrader Fix v0.1.esp
 Lord Alt Tab.esp
 
@@ -24053,8 +24081,7 @@ DXM_masterindex_journalfix.esp
  # Museum of Artifacts (Tribunal): Included in UMP v1.6.3b. Although uses a different method to Max's Quest Fixes.
  # The Patchwork Airship quest (Bloodmoon): Not completely included in the MPP, which corrects journal entry errors, but does not touch the scripts.
  It is your choice whether you want to continue using this plugin if you also use the MPP.
- http://planetelderscrolls.gamespy.com/View.php?view=mods.detail&id=735
- http://mw.modhistory.com/download--7995
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=mods.detail&id=735 )
 Max's Quest Fixes.esp
 
 
@@ -27214,6 +27241,15 @@ MWE_Base.esp
 MWE_SneakEye.esp
 
 ;;NPC Enhanced 1.2 [Horatio]
+
+[NOTE]
+ Horatio's "NPC Enhanced" requires either Aerelorn's "Morrowind Enhanced" or cdcooley's "NPC Enhanced MWSE patch"
+ (Ref: "readme - NPC Enhanced v12.txt")
+[ALL [ANY HoratioNPCEnhanced12-Trib.esp
+          HoratioNPCEnhanced12-BM.esp
+          HoratioNPCEnhanced12-VE.esp]
+     [ALL [NOT npce_mwse_patch.esp]
+          [NOT MWE_Base.esp]]]
 
 [Conflict]
  Use only one version of the mod:
@@ -45120,6 +45156,24 @@ The Wilderness Mod 2.0 T & B.esm
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 The Wilderness Mod 2.0 T & B.esm
 
+[Note]
+ ! There is a new version of The Puma Man's "Wilderness Mod" available, 2.1.
+ ! Download it from Morrowind Modding History - http://mw.modhistory.com/download-26-10045
+[ANY Wilderness Mod.esm
+     Wilderness Mod-lists.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 474061 Wilderness Mod.esm]
+
+[Conflict]
+ "Wilderness Mod-lists.esp" is for use with version 1.1 of The Puma Man's "The Wilderness Mod". It should not be used with version 2.0 or above.
+ (Ref: "Wilderness  Mod.doc" and "Wilderness Mod 2.1.doc")
+[ANY The Wilderness Mod 2.0.esm
+     The Wilderness Mod 2.0 T & B.esm]
+Wilderness Mod-lists.esp
+
 [Conflict]
  Choose ONLY ONE of these plugins.
  "The Wilderness Mod 2.0.esm" - If you only have Bloodmoon.
@@ -45540,7 +45594,7 @@ Windows Glow.esp
 Windows Glow - Raven Rock Eng.esp
 
 [Note]
- Colt17's "Windows Glow - Bloodmoon" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
+ Colt17's "Windows Glow - Raven Rock" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
 [ALL Windows Glow - Raven Rock Eng.esp
      [NOT Windows Glow.esp]]
 
@@ -45556,7 +45610,7 @@ Windows Glow - Raven Rock Eng.esp
 ;; @Windows Glow - Tribunal [Colt17]
 
 [Note]
- Colt17's "Windows Glow - Bloodmoon" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
+ Colt17's "Windows Glow - Tribunal" can be used alone, but it was designed as an expansion to "Windows Glow" by Max a.k.a. ~NOBODY~
 [ALL Windows Glow - Tribunal Eng.esp
      [NOT Windows Glow.esp]]
 
