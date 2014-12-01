@@ -1936,13 +1936,25 @@ wildlife_behaviour.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 73733 Animal Respawns.esp]
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Animated Morrowind - Expanded [Wikart]
+
+[Note]
+ Spirithawke has created a bugfix release for Wikart's "Animated Morrowind - Expanded" which "fixes some untranslated Russian text, fixes some other names, fixes the chomp bug." 
+ Download it from Morrowind Modding History: http://mw.modhistory.com/download-11-6629 (Additional Files section).
+[DESC !/Spirithawke Edit/ Animated_Morrowind - Expanded.esp]
+
+[Note]
+ Spirithawke has created "a bugfix release for Animated Morrowind - Expanded MCA Patch. It adds the changes from Animated Morrowind - Expanded (Fixed), along with some bugfixing to the MCA Patch data itself."
+ Download it from Morrowind Modding History: http://mw.modhistory.com/download-11-6629 (Additional Files section).
+[DESC !/Spirithawke Edit/ Animated Morrowind - Expanded - MCA_Patch.esp]
 
 [Requires]
  "Animated Morrowind" by Arcimaestro Antares is required to play Wikart's "Animated Morrowind - Expanded"
  (Ref: "Animated Morrowind - Expanded  - README.txt")
-Animated_Morrowind - Expanded.esp
+[ANY Animated_Morrowind - Expanded.esp
+     Animated Morrowind - Expanded - MCA_Patch.esp]
 Animated Morrowind 1.0.esp
 
 ;; Ref:
@@ -1952,10 +1964,15 @@ Animated Morrowind 1.0.esp
 Animated Morrowind 1.0.esp
 Animated_Morrowind - Expanded.esp
 
+[Order]
+Animated Morrowind 1.0.esp
+Animated Morrowind - Expanded - MCA_Patch.esp
+
+;;Dragon32: Spirithawke says "This patch has been verified against MCA v7.1." Hopefully works with later versions too
 [Conflict]
- "["MCA__Animated_Morrowind__Expanded.esp" should be used] if you use also MCA 7[, as] some overlapping sitting NPCs moved to be compatible with MCA 7"
- (Ref: http://mw.modhistory.com/download-64-6629 )
-[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]
+ "["MCA__Animated_Morrowind__Expanded.esp" should be used] if you use also MCA [, as] some overlapping sitting NPCs moved to be compatible with MCA."
+ (Ref: http://mw.modhistory.com/download-11-6629 )
+MCA.ESM
 Animated_Morrowind - Expanded.esp
 
 [Conflict]
@@ -1966,6 +1983,20 @@ Animated_Morrowind - Expanded.esp
  (Ref: http://forums.bethsoft.com/topic/1376740-relz-morrowind-comes-alive-70/page__view__findpost__p__20881423 )
 Animated_Morrowind - Expanded.esp
 MCA__Animated_Morrowind__Expanded.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animated Morrowind Merged [abot]
+
+[Conflict]
+ "[abot's "Animated Morrowind Merged" is] a merge of Animated Morrowind 1, 2; Animated Morrowind - Expanded; and Brigands 1.1"
+ (Ref: "Animated_Morrowind - merged.txt")
+Animated_Morrowind - merged.esp
+[ANY Animated Morrowind 1.0.esp
+     Animated Morrowind II.esp
+     Animated_Morrowind - Expanded.esp
+     Animated Morrowind - Expanded - MCA_Patch.esp
+     Brigands 1.1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4982,7 +5013,7 @@ BalrogRaceOnlyWingless.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Bank Mod [Indestructible, Kir, Havokk and Shadow_unk]
+;; @Bank Mod 2.4b [Indestructible, Kir, Havokk and Shadow_unk]
 
 ;:Dragon32: Walled City of Balmora and No Houses versions not updated to 2.4b, latest plugin name: "Indybank2.4b.ESP"
 [Note]
@@ -5010,11 +5041,12 @@ WalledCity_IndyBank.esp
  Charles J. DeVito/LDones's "Illuminated Order" is not compatible with "Bank Mod", even the No Houses version. There are compatibility versions of "Illuminated Order" available from Morrowind Modding History: http://mw.modhistory.com/download--1203
  (Ref: "readme-bank24.txt")
 Illuminated Order v1.0.esp
-[ANY WalledCity_IndyBank.esp
-     IndybankWC.esp
-     Indybank.esp
+[ANY Indybank.esp
      Indybank2.4b.ESP
-     Indybank-NoHouses.esp]
+     Indybank-NoHouses.esp
+     IndybankWC.esp
+     Indy Bank (SW Comp. Patch).ESP
+     WalledCity_IndyBank.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10782,6 +10814,16 @@ FireHeaven Deora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Detect Humanoid 0.31b [lyobovnik]
+
+[Conflict]
+ "DO NOT run both 'Detect' ESPs at once - instead, pick which method you like better and use only that ESP file."
+ (Ref: "README_DetectHumanoid_v0.31b.txt")
+RMR_DetectHumanoid_v0.31b.esp
+RMR_DetectHumanoid_v0.3b.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Devil's Rock for Vivec's Soul [Illtempered]
 
 ;;Dragon32: Not sure if the one available on MMH is this patch or not... November 2012.
@@ -11423,6 +11465,32 @@ Astarsis_HEM_DonSalus.esm
  (Ref: "Read_Me_Doom_Door.txt")
 Doom_Door_01.esp
 C0N2 v1.01.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Doors - Ald-ruhn 1.3d [WH-Reaper]
+
+[Conflict]
+ Only use one plugin:
+  The Doors - Ald-Ruhn 1.3c.esp - City gate is now opened from 8 a.m. to 8 p.m
+  The Doors - Ald-Ruhn 1.3d.esp - City gate is now opened from 6 a.m. to 10 p.m
+ (Ref: "The Doors - Ald-ruhn 1.3d.txt")
+The Doors - Ald-Ruhn 1.3c.esp
+The Doors - Ald-Ruhn 1.3d.esp
+
+[Note]
+ ! WH-Reaper has updated Arcimaestro Antares and Chaka ZG's "The Doors - Ald-ruhn", you maybe interested in upgrading.
+ ! Download it from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/42512/
+The Doors -  Ald-Ruhn 1.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Doors - Caldera, Walls 1.3 [WH-Reaper]
+
+[Note]
+ ! WH-Reaper has updated Arcimaestro Antares and Chaka ZG's "The Doors - Caldera", you maybe interested in upgrading.
+ ! Download it from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/42511/
+The Doors - Caldera.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12295,6 +12363,23 @@ Bob's Armory 2.esp
 [Order]
 Bob's Armory 2.esp
 Elvenwear.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Elynda's Winter Wear [Elynda]
+
+[Requires]
+ "Elynda's Winter Wear requires Better Bodies 2.2"
+ (Ref: "Elynda'sWinteWear.txt")
+Clean Elynda'sWinterWear.esp
+Better Bodies.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+ !! This plugin suffers from "SignRotate Contamination". It includes the five "dirty" scripts (DagothUrCreature1, EndGame, LorkhanHeart, Float and SignRotate). The ESP needs manual cleaning to remove these "dirty" scripts.
+ !! (Ref: http://wryemusings.com/GMST%20Vaccine.html )
+[SIZE 53847 Clean Elynda'sWinterWear.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13297,6 +13382,33 @@ GUARD-Remover.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Fairytales of Vvardenfell [Princess Stomper]
+
+[Conflict]
+ "Fairytales of Vvardenfell.esp - requires Morrowind
+ Fairytales+Lokken.esp - requires Morrowind, Bloodmoon and White Wolf of Lokken Mountain
+ USE ONLY ONE OF THE ESPs!!!"
+ (Ref: "readme Fairytales of Vvardenfell.txt")
+Fairytales of Vvardenfell1.esp
+Fairytales+Lokken1.esp
+
+[Conflict]
+ "[Princess Stomper's "Fairytales of Vvardenfell"] was included in Children of Morrowind (so users of COM don’t need [it])."
+ (Ref: http://princessstomper.wordpress.com/2009/02/22/fairytales-of-vvardenfell/ )
+[ANY Fairytales of Vvardenfell1.esp
+     Fairytales+Lokken1.esp]
+MW_Children_1_0.esm
+
+[Requires]
+ "Fairytales+Lokken - requires: Morrowind, Bloodmoon, White Wolf of Lokken Mountain"
+ (Ref: "readme Fairytales of Vvardenfell.txt")
+Fairytales+Lokken1.esp
+[ALL [ANY BT_Whitewolf_2_0.esp
+          BT_Whitewolf_2_0.esm]
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Falconer Leather [Korana]
 
 [Note]
@@ -13740,6 +13852,21 @@ Fishing Academy v2.54.esp
  !! "Fishing Academy" uses Mark and Recall spells for teleportation. Please do not use these spells during the course of the game or some of the functions may NOT work properly.
  !! (Ref: sns-readme.html)
 Fishing Academy v2.54.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @FA Door Upgrade 1.1 [AFTERSHOCK_81]
+
+;;Dragon32: Mod description on MMH: "Removes the Fishing Academy 2.0 dependence on Mark and Recall Spell effects". So, unsure if this'll work well with 2.54
+
+[Requires]
+ (Ref: http://mw.modhistory.com/download-44-8975 )
+FA Door Upgrade.esp
+Fishing Academy v<VER>.esp
+
+[Order]
+Fishing Academy v<VER>.esp
+FA Door Upgrade.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22864,6 +22991,11 @@ Madd Leveler - Illuminated Order And LichCraft Fix.esp
      Madd Leveler - Illuminated Order And LichCraft Fix.esp]
 Madd Leveler - Base.esp
 
+[Note] 
+ !! The "Restore/drain attributes fix" in Hrnchamd's highly recommended "Morrowind Code Patch" (MCP) can adversely affect the functioning of Madd Mugsy/Sederien's "MADD Leveler". Madd Mugsy/Sederien's "MADD Leveler" relied on the bug in vanilla Morrowind and fixing it using MCP will break "MADD Leveler".
+ !! (Ref: http://forums.bethsoft.com/topic/1482710-repairing-the-cogs-of-morrowind-30-mcp/?p=23321951 )
+Madd Leveler - Base.esp
+
 ;; Madd starts itself from within it's modified version of Sellus Gravius' script: CharGenDialogueMessage
 ;; So it conflicts with a number of other mods that re-define that script, and needs to load afterwards.
 ;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14082825
@@ -25965,6 +26097,7 @@ Morrowind Code Patch Showcase.esp
      GCD v1.08 with Startscript, fixed [Galsiah].esp]
 
 ;; rules for mods obsoleted by the MCP
+
 [Note]
  ! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of merchants wearing items sold to them (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you will not need "Fashionable Merchants 1.0.esp"
  ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
@@ -25999,6 +26132,22 @@ Unarmored_Corrector_V01_TRIB.esp
  ! Rather than using this mod you should try the "Pickpocket overhaul" in the highly recommended "Morrowind Code Patch" by Hrnchamd.
  ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
 Pickpocket Fix.esp
+
+[Note]
+ ! The highly recommended "Morrowind Code Patch" by Hrnchamd also changes the functionality of the sneak key to a toggle button (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you do not need Yacoby's "Toggle Sneak".
+ ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
+ToggleSneak.esp
+
+[Note]
+ ! The highly recommended "Morrowind Code Patch" by Hrnchamd changes the Detect Animal spell effect to detect both NPCs and creatures, instead of just creatures. The MCP fix is also less likely to conflict with other mods. If you have the MCP, you do not need lyobovnik's "Detect Humanoid".
+ ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
+RMR_DetectHumanoid_v0.3b.esp
+RMR_DetectHumanoid_v0.31b.esp
+
+[Note]
+ ! The highly recommended "Morrowind Code Patch" by Hrnchamd enables NPC AI to select and cast zero cost powers, for example racial powers. The MCP fix is also less likely to conflict with other mods. If you have the MCP, you do not need Knef's "Power to the People".
+ ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
+Kn-PowerToThePeople.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27240,68 +27389,9 @@ MWE_Base.esp
 MWE_Base.esp
 MWE_SneakEye.esp
 
-;;NPC Enhanced 1.2 [Horatio]
+;;NPC Enhanced 1.2 [Horatio] - q.v.
 
-[NOTE]
- Horatio's "NPC Enhanced" requires either Aerelorn's "Morrowind Enhanced" or cdcooley's "NPC Enhanced MWSE patch"
- (Ref: "readme - NPC Enhanced v12.txt")
-[ALL [ANY HoratioNPCEnhanced12-Trib.esp
-          HoratioNPCEnhanced12-BM.esp
-          HoratioNPCEnhanced12-VE.esp]
-     [ALL [NOT npce_mwse_patch.esp]
-          [NOT MWE_Base.esp]]]
-
-[Conflict]
- Use only one version of the mod:
- "HoratioNPCEnhanced12-Trib.esp" if you only have Tribunal.
- "HoratioNPCEnhanced12-BM.esp" if you have Bloodmoon, or Bloodmoon and Tribunal.
- "HoratioNPCEnhanced12-VE.esp" if you have Vampire Embrace.
- (Ref: "readme - NPC Enhanced v12.txt")
-HoratioNPCEnhanced12-Trib.esp
-HoratioNPCEnhanced12-BM.esp
-HoratioNPCEnhanced12-VE.esp
-
-[Conflict]
- Use "HoratioNPCEnhanced12-BM.esp" or use "HoratioNPCEnhanced12-VE.esp" if you have Vampire Embrace.
- (Ref: "readme - NPC Enhanced v12.txt")
-HoratioNPCEnhanced12-Trib.esp
-Bloodmoon.esm
-
-[Requires]
- (Ref: "readme - NPC Enhanced v12.txt")
-HoratioNPCEnhanced12-Trib.esp
-Tribunal.esm
-
-[Requires]
- (Ref: "readme - NPC Enhanced v12.txt")
-HoratioNPCEnhanced12-BM.esp
-Bloodmoon.esm
-
-[Requires]
- (Ref: "readme - NPC Enhanced v12.txt")
-HoratioNPCEnhanced12-VE.esp
-[ALL Vampire_Embrace.esp
-     Bloodmoon.esm
-     Tribunal.esm]
-
-[Order]
-Vampire_Embrace.esp
-HoratioNPCEnhanced12-VE.esp
-
-;;NPC Enhanced MWSE patch [cdcooley]
-
-[Requires]
- The "NPC Enhanced MWSE patch" by cdcooley requires Horatio's NPC Enhanced to be running.
-npce_mwse_patch.esp
-[ANY HoratioNPCEnhanced12-Trib.esp
-     HoratioNPCEnhanced12-BM.esp
-     HoratioNPCEnhanced12-VE.esp]
-
-;;Dragon32: No ref link available, information from Fliggerty. Who should know.
-[Conflict]
- The "NPC Enhanced MWSE patch" by cdcooley replaces Morrowind Enhanced (MWE) script functions with similar ones from Morrowind Script Extender (MWSE). As you have MWE running, and its functions are slightly quicker than the MWSE equivalents, there is no need to run the MWSE patch.
-npce_mwse_patch.esp
-MWE_Base.esp
+;;NPC Enhanced MWSE patch [cdcooley] - q.v.
 
 ; Ref: npce_mwse_patch.txt
 [Order]
@@ -27628,21 +27718,23 @@ Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
  Trancemaster_1988's "Racial Diversity" modifies the abilities of the races in Morrowind. As do other mods from "Wakim's Game Improvements", "BTB's Game Improvements" (emptythe's "Combat Experience - Depth Perception" includes BTB's mod) and Alaisiagae's "Races Are More Fun"
  You should decide which plugin you wish to use.
 Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
-[ANY BTB - Character.esp
-     BTB - Character (Alternate).esp
+[ANY AprogasVampire WakimImprovements.20021210.esp
      Balance - Character.esp
+     BTB - Character.esp
+     BTB - Character (Alternate).esp
+     CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP
+     Clean Races_Update.esp
      NPC Magicka Regen (Wakim).esp
-     Wakim's Game Improvement 9.esp
-     Wakim's Game Improvements with No-glo v9.esp
-     AprogasVampire WakimImprovements.20021210.esp
+     Races1.esp
      RAMF_Mer_for_NPCs.esp
      RAMF.esp
      RAMF_for_NPCs.esp
      RAMF_Mer.esp
-     CE-DepthPerception25+BTB's Character.ESP
-     CE-DepthPerception50+BTB's Character.ESP
-     CE-DepthPerception75+BTB's Character.ESP
-     CE-DepthPerception100+BTB's Character.ESP]
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
 
 [Requires]
  "[The Rebirth edit of the MPP] removes all (or most of them) conflicting changes between the Morrowind Patch Project and Morrowind Rebirth, making it a seamless experience"
@@ -28144,6 +28236,19 @@ JAC_Jasmine.esp
 [Order]
 Morrowind Rebirth <VER>.esp
 The Apartment.esp
+
+;;Dragon32: Rebirth includes Animated Morrowind, duplicate its Order rules
+[Order]
+Morrowind Rebirth <VER>.esp
+Animated_Morrowind - merged.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Animated_Morrowind - Expanded.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+Animated Morrowind - Expanded - MCA_Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30546,16 +30651,180 @@ Super-Hostile Ecosystem (Vanilla Morrowind).ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @NPC Enhanced MWSE add-on [Charles Cooley]
+;; @NPC Enhanced 1.2 [Horatio]
 
-;;Dragon32: See "Morrowind Enhanced [Aerelorn]" section.
+[NOTE]
+ Horatio's "NPC Enhanced" requires either Aerelorn's "Morrowind Enhanced" or cdcooley's "NPC Enhanced MWSE patch"
+ (Ref: "readme - NPC Enhanced v12.txt")
+[ALL [ANY HoratioNPCEnhanced12-Trib.esp
+          HoratioNPCEnhanced12-BM.esp
+          HoratioNPCEnhanced12-VE.esp]
+     [ALL [NOT npce_mwse_patch.esp]
+          [NOT MWE_Base.esp]]]
 
-; This needs further investigation. http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13747955
-;[Note]
-; The NPC Enhanced MWSE add-on was made primarily for those who do not run both MWE and MWSE. There is only one script in the original mod that uses MWE functions, and the MWSE version is the same way. That script is the one that cycles through NPCs searching for those in combat with the player. MWE handles that function a little bit better...it's a bit faster and requires less CPU power. So if you are using MWE anyway, you do not need the MWSE version.
-; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=816189&view=findpost&p=11869393 )
-;[ALL MWE_Base.esp
-;     npce_mwse_patch.esp]
+[Conflict]
+ Use only one version of the mod:
+ "HoratioNPCEnhanced12-Trib.esp" if you only have Tribunal.
+ "HoratioNPCEnhanced12-BM.esp" if you have Bloodmoon, or Bloodmoon and Tribunal.
+ "HoratioNPCEnhanced12-VE.esp" if you have Vampire Embrace.
+ (Ref: "readme - NPC Enhanced v12.txt")
+HoratioNPCEnhanced12-Trib.esp
+HoratioNPCEnhanced12-BM.esp
+HoratioNPCEnhanced12-VE.esp
+
+[Conflict]
+ Use "HoratioNPCEnhanced12-BM.esp" or use "HoratioNPCEnhanced12-VE.esp" if you have Vampire Embrace.
+ (Ref: "readme - NPC Enhanced v12.txt")
+HoratioNPCEnhanced12-Trib.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "readme - NPC Enhanced v12.txt")
+HoratioNPCEnhanced12-Trib.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "readme - NPC Enhanced v12.txt")
+HoratioNPCEnhanced12-BM.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "readme - NPC Enhanced v12.txt")
+HoratioNPCEnhanced12-VE.esp
+[ALL Vampire_Embrace.esp
+     Bloodmoon.esm
+     Tribunal.esm]
+
+[Order]
+MWE_Base.esp
+HoratioNPCEnhanced12-Trib.esp
+
+[Order]
+MWE_Base.esp
+HoratioNPCEnhanced12-BM.esp
+
+[Order]
+MWE_Base.esp
+HoratioNPCEnhanced12-VE.esp
+
+[Order]
+Vampire_Embrace.esp
+HoratioNPCEnhanced12-VE.esp
+
+[Conflict]
+ "Horatio's "NPC Enhanced] contains Wakim's tweaks to NPC Flee AI. These values were taken from Wakim's Game Improvements. A fantastic mod. It will cause NPCs to flee when badly injured."
+ There is no need to run another mod which alters the same settings.
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1095 )
+[ANY horationpcenhanced12-bm.esp
+     horationpcenhanced12-trib.esp
+     horationpcenhanced12-ve.esp]
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, Creatures' is 25. IMO, lower the better for this value
+[Order]
+horationpcenhanced12-bm.esp
+Creatures (lore).esp
+
+[Order]
+horationpcenhanced12-bm.esp
+Creatures (Semi).esp
+
+[Order]
+horationpcenhanced12-bm.esp
+Creatures.esp
+
+[Order]
+horationpcenhanced12-trib.esp
+Creatures (lore).esp
+
+[Order]
+horationpcenhanced12-trib.esp
+Creatures (Semi).esp
+
+[Order]
+horationpcenhanced12-trib.esp
+Creatures.esp
+
+[Order]
+horationpcenhanced12-ve.esp
+Creatures (lore).esp
+
+[Order]
+horationpcenhanced12-ve.esp
+Creatures (Semi).esp
+
+[Order]
+horationpcenhanced12-ve.esp
+Creatures.esp
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, BTB's value for fAIFleeHealthMult is 45. IMO, lower the better for this value
+[Order]
+horationpcenhanced12-bm.esp
+BTB - Settings.esp
+
+[Order]
+horationpcenhanced12-bm.esp
+BTB - Settings (Alternate).esp
+
+[Order]
+horationpcenhanced12-trib.esp
+BTB - Settings.esp
+
+[Order]
+horationpcenhanced12-trib.esp
+BTB - Settings (Alternate).esp
+
+[Order]
+horationpcenhanced12-ve.esp
+BTB - Settings.esp
+
+[Order]
+horationpcenhanced12-ve.esp
+BTB - Settings (Alternate).esp
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, NPC Functionality's is 20. IMO, lower the better for this value
+[Order]
+horationpcenhanced12-bm.esp
+NPC Functionality.esp
+
+[Order]
+horationpcenhanced12-trib.esp
+NPC Functionality.esp
+
+[Order]
+horationpcenhanced12-ve.esp
+NPC Functionality.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @NPC Enhanced MWSE Add-on [Charles Cooley]
+
+[Requires]
+ The "NPC Enhanced MWSE patch" by cdcooley requires Horatio's NPC Enhanced to be running.
+npce_mwse_patch.esp
+[ANY HoratioNPCEnhanced12-Trib.esp
+     HoratioNPCEnhanced12-BM.esp
+     HoratioNPCEnhanced12-VE.esp]
+
+[Conflict]
+ The NPC Enhanced MWSE add-on was made primarily for those who do not run both MWE and MWSE. There is only one script in the original mod that uses MWE functions, and the MWSE version is the same way. That script is the one that cycles through NPCs searching for those in combat with the player. MWE handles that function a little bit better... it's a bit faster and requires less CPU power. So if you are using MWE anyway, you do not need the MWSE version.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=816189&view=findpost&p=11869393 )
+npce_mwse_patch.esp
+MWE_Base.esp
+
+; Ref: npce_mwse_patch.txt
+[Order]
+HoratioNPCEnhanced12-Trib.esp
+npce_mwse_patch.esp
+
+[Order]
+HoratioNPCEnhanced12-BM.esp
+npce_mwse_patch.esp
+
+[Order]
+HoratioNPCEnhanced12-VE.esp
+npce_mwse_patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32499,6 +32768,33 @@ PSsorticon.esp
           Potions.esp
           PSsorticon.esp]
      [NOT Merged_Objects.esp]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Power to the People [Knef]
+
+[Conflict]
+ "[Knef's "Power to the People"] is incompatible with any mod that modifies racial powers."
+ (Ref: "README Kn-PowerToThePeople.txt")
+Kn-PowerToThePeople.esp
+[ANY AprogasVampire WakimImprovements.20021210.esp
+     Balance - Character.esp
+     BTB - Character.esp
+     BTB - Character (Alternate).esp
+     CE-DepthPerception25+BTB's Character.ESP
+     CE-DepthPerception50+BTB's Character.ESP
+     CE-DepthPerception75+BTB's Character.ESP
+     CE-DepthPerception100+BTB's Character.ESP
+     Clean Races_Update.esp
+     Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
+     NPC Magicka Regen (Wakim).esp
+     Races1.esp
+     RAMF_Mer_for_NPCs.esp
+     RAMF.esp
+     RAMF_for_NPCs.esp
+     RAMF_Mer.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37544,6 +37840,13 @@ Stinkers BE + LGNPC Ald Ruhn Patch.ESP
 LGNPC_Aldruhn_v?_??.esp
 Stinkers BE + LGNPC Ald Ruhn Patch.ESP
 
+[Conflict]
+ You should not run aralin's "Stinkers and LGNPC Aldruhn Compatibility Patch" with kid1293's Stinkers 3.0: "If you try to use [aralin's "Stinkers and LGNPC Aldruhn Compatibility Patch"] with [Stinkers] 3.0, it causes door doubling."
+ (Ref: http://forums.bethsoft.com/topic/1510846-warning-for-lgnpc-aldruhn/?p=23836478 )
+Stinkers 3.0.esp
+[ANY Stinkers BE + LGNPC Ald Ruhn Patch.ESP
+     Stinkers + LGNPC Ald Ruhn Patch.ESP]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Stronghold Vaults  [Tenaka]
@@ -39219,7 +39522,7 @@ Better Bodies.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Third Person Crosshair [adul]
 
-;;Dragon32: Seel also "@Morrowind Graphics Extender [Various]"
+;;Dragon32: Seel also "Morrowind Graphics Extender [Various]"
 
 [Conflict]
  "ONLY ENABLE ONE.
@@ -39493,15 +39796,6 @@ TLM - AdjMod - Spuzzum's Interior Daylight.esp
      True_Lights_And_Darkness_1.1.esp
      Lights 300 v5.esp
      Vibrant lights 1.0.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Toggle Sneak 1.1 [Yacoby]
-
-[Note]
- ! The highly recommended "Morrowind Code Patch" by Hrnchamd also changes the functionality of the sneak key to a toggle button (and much more). The MCP fix is also less likely to conflict with other mods. If you have the MCP, you do not need "ToggleSneak.esp"
- ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
-ToggleSneak.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44122,7 +44416,18 @@ Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Walled City of Balmora [Hargreth]
+;; @Walled City of Balmora 1.2 [Hargreth]
+
+[Note]
+ ! WH-Reaper has updated Hargreth's "The Walled City of Balmora" mod. You maybe interested in his update
+ ! Download it from Great House Fliggerty: http://download.fliggerty.com/download-15-940
+Walled_City_v1.2.esp
+
+[Conflict]
+ Arcimaestro Antares and Chaka ZG's "The Doors - Balmora, Suran" conflicts with Hargreth's "The Walled City of Balmora", WH-Reaper made compatiblity versions for his updated  "Walled City of Balmora" but no patches exist for Hargreth's original version.
+ (Ref: "Walled City of Balmora 1.6.txt")
+Walled_City_v1.2.esp
+The Doors - Balmora, Suran 1.2.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -44159,6 +44464,101 @@ Private_Tower_Balmora.esp
 [Order]
 IndybankWC.esp
 Private_Tower_Balmora.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Walled City of Balmora 1.6 [WH-Reaper]
+
+[Note]
+ ! There is a new version of WH-Reaper's "Walled City of Balmora" available.
+ ! Download it from Great House Fliggerty: http://download.fliggerty.com/download-15-940
+Walled City of Balmora 1.3.esp
+Walled City of Balmora 1.31.esp
+Walled City of Balmora 1.32c.esp
+Walled city of Balmora 1.4.esp
+Walled city of Balmora 1.41.esp
+Walled City of Balmora 1.42.esp
+Walled city of Balmora 1.43.esp
+Walled city of Balmora 1.5.esp
+
+;;Dragon32: Adds an Activator to Balmora, no need for Order rule
+[Patch]
+ "Walled City of Balmora AM Patch - Patch for Animated Morrowind. Use in conjuction with [WH-Reaper's "Walled City of Balmora"] and Animated Morrowind + Animated Morrowind Expanded, or Abot's merged version of Animated Morrowind, Animated Morrowind 2 and Animated Morrowind Expanded.
+ Note: You cannot use this patch with Animated Morrowind only, or AM Expanded only."
+ (Ref: "Walled City of Balmora 1.6.txt")
+Walled city of Balmora AM Patch.esp
+[ALL Walled city of Balmora <VER>.esp
+     [ANY [ALL Animated_Morrowind - Expanded.esp
+               Animated Morrowind 1.0.esp]
+          Animated_Morrowind - merged.esp]]
+
+[Patch]
+ "Walled city of Balmora Vurt's WG II patch - Patch for Vurt's Leafy West Gash II replacer (v.2.0). Use together with new Vurt's models."
+ (Ref: "Walled City of Balmora 1.6.txt")
+ Note that both Leafy West Gash I & II use the same name for their plugin: Vurt's Leafy West Gash.esp
+Walled city of Balmora Vurt's WG II patch.ESP
+[ALL Walled city of Balmora <VER>.esp
+     Vurt's Leafy West Gash.esp]
+
+;;Dragon32: Moves some trees around
+[Order]
+Walled city of Balmora <VER>.esp
+Walled city of Balmora Vurt's WG II patch.ESP
+
+[Order]
+Vurt's Leafy West Gash.esp
+Walled city of Balmora Vurt's WG II patch.ESP
+
+[Conflict]
+ Arcimaestro Antares and Chaka ZG's "The Doors - Balmora, Suran" conflicts with WH-Reaper's "Walled City of Balmora". You should use an alternate versions ("The Doors - Balmora, Suran 1.2 WCB.esp" or "The Doors - Balmora, Suran 1.2b WCB.esp") included in WH-Reaper's download.
+ (Ref: "Walled City of Balmora 1.6.txt")
+Walled city of Balmora <VER>.esp
+The Doors - Balmora, Suran 1.2.esp
+
+[Conflict]
+ Use only one plugin:
+  The Doors - Balmora, Suran 1.2 WCB.esp - "The Doors - Balmora, Suran" version which is compatible with Walled City of Balmora mod.
+  The Doors - Balmora, Suran 1.2b WCB.esp - Same as previous, but city gate is opened from 6 a.m. to 10 p.m., instead of from 8 a.m. to 8 p.m.
+ (Ref: "Walled City of Balmora 1.6.txt")
+The Doors - Balmora, Suran 1.2 WCB.esp
+The Doors - Balmora, Suran 1.2b WCB.esp
+
+;;Dragon32: Not sure these are really neeeded
+[Order]
+Walled city of Balmora <VER>.esp
+The Doors - Balmora, Suran 1.2 WCB.esp
+
+[Order]
+Walled city of Balmora <VER>.esp
+The Doors - Balmora, Suran 1.2b WCB.esp
+
+;;Dragon32: For NoM compatibility (adds a well)
+[Order]
+Walled city of Balmora <VER>.esp
+NOM 2.13.esp
+NoM 3.0.esp
+
+[Order]
+Walled city of Balmora <VER>.esp
+NOM 2.13.esp
+NoM 3.0.esp
+
+;;Dragon32: Assume this still applies.
+;;"I just had to change the load order so the Private Tower Balmora mod is loaded after Walled City of Balmora."
+;;Ref: http://forums.bethsoft.com/topic/1415148-best-cityvillage-expansions/?p=21626606
+[Order]
+Walled city of Balmora <VER>.esp
+Private_Tower_Balmora.esp
+
+[Conflict]
+ Indestructible, Kir, Havokk and Shadow_unk's "Bank Mod" included a version of their mod compatible with Hargreth's original "Walled City of Balmora". No such compatible  version of "Bank Mod" exists for WH-Reaper's updated "Walled City of Balmora".
+Walled city of Balmora <VER>.esp
+[ANY Indybank.esp
+     Indybank2.4b.ESP
+     Indybank-NoHouses.esp
+     IndybankWC.esp
+     Indy Bank (SW Comp. Patch).ESP
+     WalledCity_IndyBank.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
