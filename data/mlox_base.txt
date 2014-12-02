@@ -3540,6 +3540,35 @@ NOM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Assassin Ambush 2.2 [hollaajith]
+
+[Conflict]
+ "Activate just one of the ESP, not both."
+ (Ref: "Assassin Ambush Readme.txt")
+Assassin Ambush - Easy.ESP
+Assassin Ambush.ESP
+
+[Conflict]
+ "Conflicts with my other mod 'DBAttack Tweaked' which is incorporated into ["Assassin Ambush"]. Don't use both together."
+ (Ref: "Assassin Ambush Readme.txt")
+[ANY Assassin Ambush - Easy.ESP
+     Assassin Ambush.ESP]
+[ANY DBAttack Tweaked <VER>-Easy.esp
+     DBAttack Tweaked <VER>.esp]
+
+;;Dragon32: "Even BTB's version keeps track of enimies, though less frequently, from what I understood from how BTB's version works. So it might also cause crash, but I hope not."
+[Conflict]
+ !!! Using hollaajith's "Assassin Ambush" with Xiran's "Better Music System" can cause crashes as Xiran's "Better Music System" tracks NPCs / creatures in combat with the player, when the Dark Brotherhood assassin's from hollaajith's mod teleport away this can cause Morrowind to crash.
+ !!! You should disable the Dark Brotherhood assassins teleporting, in the console enter this command:
+ !!!  Set UAH_DBFlee to 0
+ !!! (Ref: http://forums.bethsoft.com/topic/1463732-hollaajiths-tweaks-and-fixes/page-3#entry23418808 )
+[ANY Assassin Ambush - Easy.ESP
+     Assassin Ambush.ESP]
+[ANY BetterMusicSystem_<VER>.esp
+     BetterMusicSystem_<VER>_alt.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Assassin Weaponry  [Skaled]
 
 [Note]
@@ -10083,7 +10112,7 @@ DM_DB Armor Replacer-ExpRanksDDBA.esp
 ;; @Dark Brotherhood Assassins Fix [Fetus X]
 
 [Conflict]
- "Dark Brotherhood Assassins Fix" by Fetux X, the various flavours of Dimitri Mazieres' "Dark Brotherhood Armor Replacer" and hollaajith's "DBAttack Tweaked" change the armor possessed by Dark Brotherhood assassins.
+ "Dark Brotherhood Assassins Fix" by Fetux X, the various flavours of Dimitri Mazieres' "Dark Brotherhood Armor Replacer", hollaajith's "DBAttack Tweaked" and "Assassin Ambush" change the armour possessed by Dark Brotherhood assassins.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
 Dark Brotherhood Assassins Fix.esp
 [ANY DM_DB Armor Replacer.esp
@@ -10093,6 +10122,8 @@ Dark Brotherhood Assassins Fix.esp
      DM_DB Armor Replacer-ExpRanksDDBA.esp]
 [ANY DBAttack Tweaked <VER>-Easy.esp
      DBAttack Tweaked <VER>.esp]
+[ANY Assassin Ambush - Easy.ESP
+     Assassin Ambush.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10206,6 +10237,7 @@ transportMH.esp
 
 [Conflict]
  All these mods perform a similar function: delaying the Dark Brotherhood attacks:
+  Assassin Ambush*.ESP - hollaajith's "Assassin Ambush"
   DB_Attack_Mod.esp - AVENGER's original "Delayed Dark Brotherhood Attack Add-On".
   DB_Attack_Mod.esp - The same plugin name is used by Kir's update to version 2 of Avenger's plugin, optimising its scripts.
   DB_Attack_Mod_Jeoshua.esp - Jeoshua's version of AVENGER'S postponed Dark Brotherhood attack
@@ -10218,6 +10250,8 @@ transportMH.esp
   Increased DB Delayed Attacks Patch.esp - Jac's "Increased Dark Brotherhood Attacks", based on Kir's modification.
  Refer to Gluby's guide, linked below and the plugin's readmes and decide which plugin you wish to use.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
+Assassin Ambush - Easy.ESP
+Assassin Ambush.ESP
 DB_Attack_Mod.esp
 DB_Attack_Mod_Jeoshua.esp
 DB_Attack_Mod3.esp
@@ -10385,6 +10419,7 @@ Dark Uvirith Exterior BuUG 1.0.esp
 dh_furn.esp
 dh_furn_stores.esp
 dh_homes.esp
+BE_dh_homes.esp
 dh_thriftshop.esp
 
 [Requires]
@@ -10399,24 +10434,24 @@ dh_furn.esp
 dh_thriftshop.esp
 dh_furn.esp
 
-;; "in the case of dh_homes dh_homes must load after Vality's
-;; Ascadian Isles Trees or the large castle type house thats placed
-;; in ebonheart is burried in land scape. once its loaded after, its
-;; just a matter of removing a couple trees."
+;; "in the case of dh_homes dh_homes must load after Vality's Ascadian Isles Trees or the large castle type house thats placed in ebonheart is burried in land scape. once its loaded after, its just a matter of removing a couple trees."
 ;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13503499 )
 [Order]
 Vality's Ascadian Isles Addon.esp
 dh_homes.esp
+BE_dh_homes.esp
 
 ;;Marriage of Vality's Ascadian Isles mod with Vurt's trees [Macready]
 [Order]
 ValityAIMod_VurtTrees.esp
 dh_homes.esp
+BE_dh_homes.esp
 
 ;;Vality's AI for Vurt's AI [knots]
 [Order]
 Vality's AI for Vurt's AI.esp
 dh_homes.esp
+BE_dh_homes.esp
 
 [Patch]
  "[dh_furn-jms_patch.esp] is an attempt to fix the bug in dhfurn 2.01 (Dave Humphrey's furniture mod) where returning to a furniture merchant to purchase items previously purchased from them causes an immediate CTD (crash to desktop)."
@@ -10468,10 +10503,10 @@ dh_furn_6th_house_addon.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @DBAttack Tweaked 1.4 [hollaajith]
 
-;; See "@Dark Brotherhood Assassins Fix [Fetus X]" and "@Dark Brotherhood delay mods [Various]" for conflict information
+;; See "Dark Brotherhood Assassins Fix [Fetus X]" and "Dark Brotherhood delay mods [Various]" for conflict information
 
 [Note]
- ! You are using an old version of hollaajith's "DBAttack Tweaked", you should upgrade!
+ ! You are using an old version of hollaajith's "DBAttack Tweaked", you should upgrade.
  ! http://morrowind.nexusmods.com/mods/42299
 [ANY DBAttack Tweaked.esp
      [VER < 1.4 DBAttack Tweaked <VER>-Easy.esp]
@@ -11671,6 +11706,15 @@ Gatanas Markynaz Dremora Companion - Female.esp
  (Ref: "BB Dress Pack Readme.txt")
 BAR_BB_dresspack.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dreugh Armor Completion 1.0 [Timpy]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 24550 Dreugh Armor Completion.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18826,6 +18870,85 @@ House of Mannequins - Mistform fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Houses for Sale [Coleen]
+
+;;Dragon32: "Copy of HousesForSale.esp" is the mod name in the archive.
+
+[Conflict]
+ "dh_Homes conflicts with Houses for Sale in Ebonheart [...]. Both of them place a gigantic castle/mansion south of Ebonheart in almost exactly the same place."
+ (Ref: http://forums.bethsoft.com/topic/1472233-ideapossible-wip-dh-furn-expansion-discussion/?p=23626043 )
+[ANY Copy of HousesForSale.esp
+     HousesForSale.esp
+     BE_HousesForSale.esp]
+[ANY BE_dh_homes.esp
+     dh_homes.esp]
+
+;;Dragon32: From "Dave Humphrey's Furniture mod 2.01 [Dave Humphrey]" 
+;;
+;; "in the case of dh_homes dh_homes must load after Vality's Ascadian Isles Trees or the large castle type house thats placed in ebonheart is burried in land scape. once its loaded after, its just a matter of removing a couple trees."
+;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13503499 )
+;;
+;;Dragon32: As dh_homes and Houses for Sale conflict I assume a similar Order rule is warranted here
+[Order]
+Vality's Ascadian Isles Addon.esp
+Copy of HousesForSale.esp
+HousesForSale.esp
+BE_HousesForSale.esp
+
+;;Marriage of Vality's Ascadian Isles mod with Vurt's trees [Macready]
+[Order]
+ValityAIMod_VurtTrees.esp
+Copy of HousesForSale.esp
+HousesForSale.esp
+BE_HousesForSale.esp
+
+;;Vality's AI for Vurt's AI [knots]
+[Order]
+Vality's AI for Vurt's AI.esp
+Copy of HousesForSale.esp
+HousesForSale.esp
+BE_HousesForSale.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Houses&Apartments [ashworm]
+
+[Conflict]
+ Landscape conflict: "The Gnisis house [from ashworm's "Houses&Apartments"] conflicted with [VagabondAngel's] Violnt Femme Boutique."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3130 )
+VioletFemme.esp
+Houses&Apartments.esp
+
+[Conflict]
+ Landscape conflict: "the Suran house [from ashworm's "Houses&Apartments"] conflicted with all of the Archery Tradehouse, House of Spears, and a house used in Suran Underworld."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3130 )
+Houses&Apartments.esp
+[ANY Suran Archery Store_v3.0.esp
+     Suran Archery Store_v3.0 NSE.esp
+     House of Spears3.0.esp
+     House_spear.esp
+     House_spear_moved.esp
+     Balanced House of Spears.esp
+     Suran_Underworld_2.5.esp
+     SU_SW Comp. Patch.esp
+     Suran_Underworld_v3.ESP]
+
+[Conflict]
+ Landscape conflict: "The Dagon Fel house [from ashworm's "Houses&Apartments"] conflicted with the BathMod"
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3130 )
+Houses&Apartments.esp
+[ANY Stinkers 3.0.esp
+     Stinkers.esm
+     Stinkers.esp]
+
+[Conflict]
+ Landscape conflict: "the Caldera house [from ashworm's "Houses&Apartments"] conflicted with [V8 Man's] The Latest Greatest Housing Mod."
+ (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=3130 )
+Houses&Apartments.esp
+The Latest, Greatest Housing Mod_GOLD.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @How Are You? [Kirel]
 
 ;; expdep
@@ -20360,6 +20483,12 @@ Journey's End- Wilderness Mod add-on.esp
 [Order]
 Journey's End 1.1.esp
 Journey's End- Wilderness Mod add-on.esp
+
+[Conflict]
+ "Be warned that [lochnarus' "Journey's End"] clashes with [...] Baratheon's mod Darkshroud Keep"
+ (Ref: http://forums.bethsoft.com/topic/1495086-journeys-end/?p=23489878 )
+Journey's End 1.1.esp
+BAR_DarkshroudKeep_v1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23513,7 +23642,6 @@ Sound Enhancements.esp
 [Conflict]
  Azrael's "Magicka Based Spell Advancement" is incompatible with "Excellent Magic Sounds" by Asiron, as "Magicka Based Spell Advancement" does not check for the new spellcasting sounds.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
- Note that Gluby warns about another mod which changes spellcasting sounds, "Morrowind Sound Enhancements" by Leon "pancreas" Medado.
 MWE_MagickaSpells.esp
 ExcellentMagicSounds.esp
 
@@ -28411,7 +28539,29 @@ MCA_Companions_Enhanced.esp
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
 Sound Enhancements.esp
 [ANY Elemental Magicka II.ESP
+     MWE_MagickaSpells.esp
      Scripted_Spells.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Toy Shoppe - Figurines! 1.0 [andoreth]
+
+[Conflict]
+ "Use only 1 .esp-
+  Morrowind Toy Shoppe - Figures!.esp if you do not have Tribunal, or you do not have both Tribunal and Bloodmoon.
+  Morrowind Toy Shoppe - Figurines! Trib.esp if you have tribunal, but you do not have Bloodmoon.
+  Morrowind Toy Shoppe - Figurines! Trib & BM.esp if you have both Tribunal and Bloodmoon."
+ (Ref: "Morrowind Toy Shoppe - Figurines!.txt")
+Morrowind Toy Shoppe - Figurines! Trib & BM.esp
+Morrowind Toy Shoppe - Figurines! Trib.esp
+Morrowind Toy Shoppe - Figurines!.esp
+
+;; expdep
+[Requires]
+ "Morrowind Toy Shoppe - Figurines!.esp" uses the Tribunal function setscale.
+Morrowind Toy Shoppe - Figurines!.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30712,7 +30862,7 @@ Vampire_Embrace.esp
 HoratioNPCEnhanced12-VE.esp
 
 [Conflict]
- "Horatio's "NPC Enhanced] contains Wakim's tweaks to NPC Flee AI. These values were taken from Wakim's Game Improvements. A fantastic mod. It will cause NPCs to flee when badly injured."
+ "[Horatio's "NPC Enhanced"] contains Wakim's tweaks to NPC Flee AI. These values were taken from Wakim's Game Improvements. A fantastic mod. It will cause NPCs to flee when badly injured."
  There is no need to run another mod which alters the same settings.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=1095 )
 [ANY horationpcenhanced12-bm.esp
@@ -32771,6 +32921,29 @@ PSsorticon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Potted Plants 2.0 [andoreth]
+
+[Conflict]
+ Only use one plugin:
+  Potted Plants - MO.esp - use if you do not have any expansions
+  Potted Plants - Trib.esp - use if you have Tribunal, but not Bloodmoon
+  Potted Plants - BM.esp - use if you have Bloodmoon, but not Tribunal
+  Potted Plants - Trib & BM.esp - use if you have both
+ (Ref: "Readme - Potted Plants.txt")
+Potted Plants - BM.esp
+Potted Plants - MO.esp
+Potted Plants - Trib & BM.esp
+Potted Plants - Trib.esp
+
+;; expdep
+[Requires]
+ "Morrowind Toy Shoppe - Figurines!.esp" uses the Tribunal functions setscale and setdelete.
+Potted Plants - MO.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Power to the People [Knef]
 
 [Conflict]
@@ -33279,6 +33452,31 @@ TR_Mainland.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Quorn Resource Integration 1.11 [Melchior Dahrk]
+
+[Conflict]
+ "[Melchior Dahrk's "Quorn Resource Integration" hand places] quorn's armor and creature resources throughout the game while also adding them to appropriate leveled lists."
+ You probably do not need to run quorn's original mods whilst running Melchior Dahrk's "Quorn Resource Integration".
+ (Ref: "Quorn Resource Integration.txt")
+Quorn Resource Integration.ESP
+[ANY Argonian_Armor_sets.esp
+     netch_armor_resource.esp
+     chain_armor_set.esp
+     ColovianFurGauntlets-BM.esp
+     chitin_updates.esp
+     dreugh_armor_set.esp
+     trollbone_armor_set.esp
+     newtscale_armor_set.esp
+     studded_armor_set.esp]
+     
+[Conflict]
+ "[Melchior Dahrk's "Quorn Resource Integration"] merged quorn's integration with this mod (don't use DremoraLords.esp)"
+ (Ref: "Quorn Resource Integration.txt")
+Quorn Resource Integration.ESP
+DremoraLords.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Race/Birthsign Remix [paulkdad]
 
 ;;Load the specific race-affecting mod after WGI
@@ -33614,6 +33812,63 @@ RF - Furniture shop.esm
 RF - Furniture shop.esm
 [All Tribunal.esm
      Bloodmoon.esm]
+
+;; expdep
+[Requires]
+ "RF - Furniture shop.esm" uses the Tribunal functions setscale.
+RF - Furniture shop.esm
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Furniture - Dongles Delights 1.0 [Dongle & andoreth]
+
+[Requires]
+ "Requirements: Tribunal, Bloodmoon, Real Furniture"
+ (Ref: "Readme - Real Furniture - Dongle's Delights.txt")
+RF- Dongle's Delights.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     RF - Furniture shop.esm]
+
+;;Dragon32: Global jjsFurnRot is a short in this mod, a float in the Beth furniture one. I think a float is better for something dealing with precise rotations 
+[Order]
+RF- Dongle's Delights.esp
+RF - Bethesda Furniture.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Furniture - Lady E's Extravaganza [Lady E & andoreth]
+
+[Requires]
+ "Requirements: Tribunal, Bloodmoon, Real Furniture"
+ (Ref: "Readme - Lady E's Extravaganza.txt")
+RF - Lady E's Extravaganza.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     RF - Furniture shop.esm]
+
+;;Dragon32: Global jjsFurnRot is a short in Dongle's Delights, a float in this one and the Beth furniture one. I think a float is better for something dealing with precise rotations 
+[Order]
+RF- Dongle's Delights.esp
+RF - Lady E's Extravaganza.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Furniture and House of Mannequins compatibility [andoreth]
+
+[Patch]
+ "Please download and use ["RF and HOM compatibility" by andoreth] if you wish to activate both Real Furniture and GrumblePunk's House Of Mannequins. It will move the Furnisher's Hall downstairs." 
+ Download the patch from andoreth's site: http://home.earthlink.net/~andoreth/
+RF & HOM Compatability.esp
+[ALL RF - Furniture shop.esm
+     House of Mannequins v1.0.esp]
+
+;;Dragon32: Only seems to alter objects from Real Furniture but...
+[Order]
+House of Mannequins v1.0.esp
+RF & HOM Compatability.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34945,25 +35200,20 @@ NoM 3.0.esp
 ;;See also "Animal pacification mods [various]"
 
 [Note]
- ! There is a new version of "Sabregirl's Morrowind Ecology", 1.6, you should upgrade!
+ ! There is a new version of "Sabregirl's Morrowind Ecology" available, 1.6, you should upgrade.
  ! http://mw.modhistory.com/download-53-7082
 SG-MW-ecology-BM.esp
 SG-MW-ecology-carnivore.esp
 SG-MW-ecology-WW.esp
 
 [Conflict]
- Pick ONE of the following: (PICK ONE ESM and select the corresponding esp)
+ "Pick ONE of the following: (PICK ONE ESM and select the corresponding esp)
  1. SG-MW-ecology-BM.esm AND SG-MW-ecology-BM-plugin.esp
- 	This plugin "balances" Morrowind wildlife according to ecological rules.
- 	This is what most people will want to use.
+ 	This plugin "balances" Morrowind wildlife according to ecological rules. This is what most people will want to use.
  2. SG-MW-ecology-carnivore.esm AND SG-MW-ecology-carnivore-plugin.esp
- 	This plugin does the same as the above AND forces the player
- 	to become carnivorous and must hunt creatures to live. It also adds meat
- 	items to all of the creatures. See specific read-me for more info.
+ 	This plugin does the same as the above AND forces the player to become carnivorous and must hunt creatures to live. It also adds meat items to all of the creatures. See specific read-me for more info.
  3. SG-MW-ecology-WW.esm AND SG-MW-ecology-WW-plugin.esp
- 	This plugin does the same thing as the MW ecology mod but adds the ability
- 	for bloodmoon werewolf characters to "feed" on the new creatures.
- 	See specific read-me for more info.
+ 	This plugin does the same thing as the MW ecology mod but adds the ability for bloodmoon werewolf characters to "feed" on the new creatures. See specific read-me for more info."
  (Ref: "readme_mw_ecology.txt")
 [ANY SG-MW-ecology-BM-plugin.esp
      SG-MW-ecology-BM.esm]
@@ -35010,6 +35260,90 @@ SG-MW-ecology-WW.esm
 [Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 SG-MW-ecology-WW.esm
+
+[Conflict]
+ Sabregirl's "Morrowind Ecology" contains tweaks to NPC Flee AI, from Wakim's Game Improvements, and will cause enemies to flee when badly injured.
+ There is no need to run another mod which alters the same settings.
+[ANY SG-MW-ecology-BM.esm
+     SG-MW-ecology-WW.esm
+     SG-MW-ecology-carnivore.esm]
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp]
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, Creatures' is 25. IMO, lower the better for this value
+[Order]
+SG-MW-ecology-BM-plugin.esp
+Creatures (lore).esp
+
+[Order]
+SG-MW-ecology-BM-plugin.esp
+Creatures (Semi).esp
+
+[Order]
+SG-MW-ecology-BM-plugin.esp
+Creatures.esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+Creatures (lore).esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+Creatures (Semi).esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+Creatures.esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+Creatures (lore).esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+Creatures (Semi).esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+Creatures.esp
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, BTB's value for fAIFleeHealthMult is 45. IMO, lower the better for this value
+[Order]
+SG-MW-ecology-BM-plugin.esp
+BTB - Settings.esp
+
+[Order]
+SG-MW-ecology-BM-plugin.esp
+BTB - Settings (Alternate).esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+BTB - Settings.esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+BTB - Settings (Alternate).esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+BTB - Settings.esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+BTB - Settings (Alternate).esp
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, NPC Functionality's is 20. IMO, lower the better for this value
+[Order]
+SG-MW-ecology-BM-plugin.esp
+NPC Functionality.esp
+
+[Order]
+SG-MW-ecology-WW-plugin.esp
+NPC Functionality.esp
+
+[Order]
+SG-MW-ecology-carnivore-plugin.esp
+NPC Functionality.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40167,6 +40501,67 @@ Mudcrab Island.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Turenyulal Redone [Trainwiz]
+
+;;Dragon32: Duplicating Order rule from "DNGDR - Darknut's Greater Dwemer Ruins [Darknut]" for completeness
+
+[Order]
+Morrowind Patch *.esm
+GDR_MasterFile.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+GDR_MasterFile.esm
+
+[Requires]
+TurenyalRedone.ESP
+GDR_MasterFile.esm
+
+;; "this mod modifies the books "The Firmament" and "Brief History of the Empire Volume 4", which prevents the new Book Jackets covers from showing. Not a terribly big deal, as simply having this mod loaded before book jackets prevents this from happening"
+;; Ref: http://forums.bethsoft.com/topic/1487831-relz-turenyulal-redone/#entry23415659
+;;Dragon32: dirty edit, fixed by cleaning
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Morrowind - BookRotate.esp
+
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Morrowind.esp
+
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Tribunal - BookRotate.esp
+
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Tribunal.esp
+
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Bloodmoon - BookRotate.esp
+
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Bloodmoon.esp
+
+[Order]
+TurenyalRedone.ESP
+Librarian with Jackets & Rotate BM Trib.esp
+
+[Order]
+TurenyalRedone.ESP
+Librarian with Jackets BM Trib.esp
+
+[Order]
+TurenyalRedone.ESP
+Jac_Passing time while reading -  BRBJ patch.esp
+
+[Order]
+TurenyalRedone.ESP
+UL_BookJackets_Add-on.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tweaks for Predator: Hunters and Prey [Serpentax]
 
 [Requires]
@@ -41720,6 +42115,9 @@ Uvirith's Legacy_<VER>.esp
 
 ;;Unique Finery (and other replacers for Aryon's gloves)
 
+;;"If you prefer the look of Aryon's Dominator/Helper from other mods, load them after UL."
+;;Dragon32: No Order rule for aesthetic choice like that
+
 ;;House of Mannequins
 
 [Note]
@@ -41774,6 +42172,14 @@ TeaMod_<VER>.esp
 [Order]
 Uvirith's Legacy_<VER>.esp
 Get Fezzed!.esp
+
+;;Real Furniture
+
+[Conflict]
+ "[Andoreth's "Real Furniture" mod adds its shop] right in St. Delyn's Waistworks, which is modified by UL too. With UL loaded, the door to [Andoreth's "Real Furniture"] shop is no longer accessible."
+ (Ref: http://forums.bethsoft.com/topic/1481668-rel-uviriths-legacy-32/?p=23585678 )
+Uvirith's Legacy_<VER>.esp
+RF - Furniture shop.esm
 
 ;; Dragon32: rules removed in updates for beta versions:
 ;;
@@ -43877,6 +44283,16 @@ Viking's.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Violet Femme Boutique 1.0 [VagabondAngel]
+
+[Conflict]
+ "If you have my Amethyst Armour mod, delete the AmethystArmourWeapons.esp as ["Violet Femme Boutique"] contains the Amethyst armour and replaces the older one. There will be conflicts if you don't delete the old esp."
+ (Ref: "VFBReadMe.txt")
+AmethystArmourWeapons.esp
+VioletFemme.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vivec Expansion [Hoghead the Horrible]
 
 ;;Dragon32: Also conflicts with the 'Dwemer Warship' mod, can't find a download
@@ -45505,6 +45921,20 @@ Inn Whisp Wood BM.esp
 BT_Whitewolf_2_0NOMaddon.esp
 [ALL BT_Whitewolf_2_0.esm
      NOM 2.13.esp]
+
+[Note]
+ !! The "NoM-add-on for White Wolf of Lokken" was designed for version 2.13 of Taddeus' "Necessities of Morrowind". The add-on includes object definitions from NoM 2.13 which are different to those in NoM 3.0.
+ !! Using the add-on and a Merged Objects plugin means that a script, "NOM_mix", is added to the miscellaneous object "NOM_mix_bowl", this will cause annoying, repeating message boxes to appear.
+ !! When generating your Merged Objects plugin temporarily deactivate "BT_Whitewolf_2_0NOMaddon.esp" to exclude it from the merge.
+ !! (Ref: http://forums.bethsoft.com/topic/1493664-problem-with-nom3-mix-script-in-tel-mora-branwen-cell/?p=23466953 )
+[ALL BT_Whitewolf_2_0NOMaddon.esp
+     NoM 3.0.esp
+     Merged_Objects.esp]
+
+;;Dragon32: prevent the above problem for those without a Merged Objects plugin
+[Order]
+BT_Whitewolf_2_0NOMaddon.esp
+NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
