@@ -105,12 +105,23 @@ NOM 2.12.esp
 NOM 2.13.esp
 NoM 3.0.esp
 GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
+MW Containers Animated exp.esp ; (Ref: "aceg_readme.txt")
+;;begin lighting mods
+;;  these affect lighting in vanilla cells, so load after most other mods
+Lights 300 v5.esp ; (Ref: "readme_Lights 300 v4.3.txt")
+TLM - Ambient Light + Fog Update.esp ; (Ref: "TLM - ~Readme.htm")
+TLM - Complete.esp ; (Ref: "TLM - ~Readme.htm")
+True_Lights_And_Darkness_0.5.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+True_Lights_And_Darkness_1.0-NoDaylight.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+True_Lights_And_Darkness_1.1.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+;;end lighting mods
 
 [Order]
 Merged_Dialogs.esp
 Merged_Objects.esp
 Merged_Leveled_Lists.esp
 Mashed Lists.esp
+multipatch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1938,10 +1949,26 @@ wildlife_behaviour.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Animated Containers Expansion Generator (ACEG) [abot]
+
+;;see also: [NearEnd]
+
+;; (Ref: "aceg_readme.txt")
+[Order]
+MW Containers Animated.esp
+MW Containers Animated exp.esp
+
+;; (Ref: "aceg_readme.txt")
+[Order]
+MW Containers Animated exp.esp
+Merged_Objects.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Animated Morrowind - Expanded [Wikart]
 
 [Note]
- Spirithawke has created a bugfix release for Wikart's "Animated Morrowind - Expanded" which "fixes some untranslated Russian text, fixes some other names, fixes the chomp bug." 
+ Spirithawke has created a bugfix release for Wikart's "Animated Morrowind - Expanded" which "fixes some untranslated Russian text, fixes some other names, fixes the chomp bug."
  Download it from Morrowind Modding History: http://mw.modhistory.com/download-11-6629 (Additional Files section).
 [DESC !/Spirithawke Edit/ Animated_Morrowind - Expanded.esp]
 
@@ -9148,11 +9175,33 @@ ComprehensiveChargen.esp
 ;; @Contact Hits [???]
 
 [Note]
- !! Note that while the Contact Hits works, it sets your agility to zero,
- !! which will prevent you from advancing in some factions.
- !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl=
- !! and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
+ !! Note that while the Contact Hits works, it sets your agility to zero, which will prevent you from advancing in some factions.
+ !! (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=712712&hl= and http://www.bethsoft.com/bgsforums/index.php?showtopic=889011 )
 Contact hits.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Container Sounds 1.0 [Neoptolemus]
+
+[Conflict]
+ "[Neoptolemus' "Container Sounds"] is NOT compatible with 'MW Containers Animated'"
+ (Ref: "Container Sounds - Readme.txt")
+ Version 1.2 of qqqbbb's "MW Containers Animated" added sounds to containers, so there is no need to run Neoptolemus' "Container Sounds"
+ (Ref: "MW Containers Animated readme.txt")
+Container Sounds.esp
+MW Containers Animated.esp
+
+[Requires]
+ "[Container Sounds - TR.esp] is an addon [to Neoptolemus' "Container Sounds"] for usage with Tamriel Rebuilt"
+ (Ref: "MW Containers Animated readme.txt")
+Container Sounds - TR.esp
+[ALL Container Sounds.esp
+     TR_Data.esm
+     TR_Mainland.esm]
+
+[Order]
+Container Sounds.esp
+Container Sounds - TR.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10890,6 +10939,20 @@ Vampire Embrace MCA Patch.esp
 [Order]
 Vampire_Embrace.esp
 Vampire Embrace MCA Patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dhampir [Yukimura]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 11050 Dhampir.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 4517 Dhampir_RheddHeads req.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14247,6 +14310,16 @@ Freed Slaves.esp
  (Ref: "French Maid Outfit.html")
 French Maid Outfit.esp
 Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Frostmoth 1.2 [Markus H]
+
+[Conflict]
+ The new village added by Markus H's "Frostmoth" render the Moldy Horker inn, from Taddeus' "Necessities of Morrowind", next to Fort Frostmoth pretty much inaccessible.
+ (Ref: http://static-2.nexusmods.com/15/mods/100/images/30236-1-1267397842.jpg )
+Frostmoth.ESP
+NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18883,7 +18956,7 @@ House of Mannequins - Mistform fix.esp
 [ANY BE_dh_homes.esp
      dh_homes.esp]
 
-;;Dragon32: From "Dave Humphrey's Furniture mod 2.01 [Dave Humphrey]" 
+;;Dragon32: From "Dave Humphrey's Furniture mod 2.01 [Dave Humphrey]"
 ;;
 ;; "in the case of dh_homes dh_homes must load after Vality's Ascadian Isles Trees or the large castle type house thats placed in ebonheart is burried in land scape. once its loaded after, its just a matter of removing a couple trees."
 ;; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13503499 )
@@ -22547,11 +22620,19 @@ TLM - Light Sources (Lanterns).esp
 
 [Order]
 Light Sounds.esp
+True_Lights_And_Darkness_0.5.esp
+
+[Order]
+Light Sounds.esp
 True_Lights_And_Darkness_1.0-NoDaylight.esp
 
 [Order]
 Light Sounds.esp
 True_Lights_And_Darkness_1.1.esp
+
+[Order]
+Light Sounds.esp
+Vibrant lights 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22570,6 +22651,8 @@ True_Lights_And_Darkness_1.1.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lights 300 4.3 [Byblos & X-Bahamut]
+
+;;See also "[Near End]"
 
 [Note]
  ! X-Bahamut has updated Byblos' "Lights 300", you should upgrade!
@@ -22599,7 +22682,8 @@ Lights 300 v5.esp
      TLM - NPC Light Sources.esp
      TLM - Sneak Modifiers (Code).esp
      TLM - Sneak Modifiers (Locations).esp
-     TLM - Complete.esp]
+     TLM - Complete.esp
+     Vibrant lights 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23120,7 +23204,7 @@ Madd Leveler - Illuminated Order And LichCraft Fix.esp
      Madd Leveler - Illuminated Order And LichCraft Fix.esp]
 Madd Leveler - Base.esp
 
-[Note] 
+[Note]
  !! The "Restore/drain attributes fix" in Hrnchamd's highly recommended "Morrowind Code Patch" (MCP) can adversely affect the functioning of Madd Mugsy/Sederien's "MADD Leveler". Madd Mugsy/Sederien's "MADD Leveler" relied on the bug in vanilla Morrowind and fixing it using MCP will break "MADD Leveler".
  !! (Ref: http://forums.bethsoft.com/topic/1482710-repairing-the-cogs-of-morrowind-30-mcp/?p=23321951 )
 Madd Leveler - Base.esp
@@ -25480,6 +25564,39 @@ MDP Compilation.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @More Detailed Places 2013 [Ragox & Zaldir]
+
+[Conflict]
+ "More Detailed Places 2013" by Ragox & Zaldir includes Degor's "Vivec Open Cantons"
+ (Ref: "MDP 2013.rtf")
+MDP 2013.esp
+[ANY Vivec Open Cantons WG.esp
+     Vivec Open Cantons.esp]
+
+;;Dragon32: Order rule from "Vivec Open Cantons - Windows Glow version [Degor and abot]"; probably won't do any good with all the other changes MDP makes
+[Order]
+Windows Glow.esp
+MDP 2013.esp
+
+[Conflict]
+ "[Ragox & Zaldir's "More Detailed Places 2013" includes Degor's "Vivec Open Cantons" and so will exhibit] incompatibility with Vivec mods like Vivec Expansion, Redesigned Vivec"
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1037099-more-detailed-places-2013-feedback/?p=8803296 )
+MDP 2013.esp
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp
+     Clean Redesigned Vivec - COM patch.esp
+     Clean Redesigned Vivec - com_mca patch.esp
+     Clean Redesigned Vivec - MCA patch.esp
+     Vivec Expansion 2.0.esp]
+
+[Conflict]
+ "[If you use Ragox & Zaldir's "More Detailed Places 2013" with Slartibartfast's "Texture Fix"] there's a couple of land tears at the West Gash Region (-2,-1)"
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1037099-more-detailed-places-2013-feedback/?p=8722170 )
+MDP 2013.esp
+[ANY Texture Fix <VER>.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More Gems [Gawain & Isabelle]
 
 [Conflict]
@@ -26276,6 +26393,21 @@ RMR_DetectHumanoid_v0.31b.esp
  ! The highly recommended "Morrowind Code Patch" by Hrnchamd enables NPC AI to select and cast zero cost powers, for example racial powers. The MCP fix is also less likely to conflict with other mods. If you have the MCP, you do not need Knef's "Power to the People".
  ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
 Kn-PowerToThePeople.esp
+
+[Note]
+ ! The option "Argonian clothing choice" in the highly recommended "Morrowind Code Patch" by Hrnchamd:
+ ! "Makes Argonian females prefer to wear male versions of armour and clothing. To avoid looking like a mammal.
+ ! This is a convenience such that mods don't have to individually account for Argonian-specific versions of their items."
+ ! Enabling this option removes the need for the complicated sewing kits added by this version of "Better Clothes", you should enable this MCP option and use "Better Clothes_v1.1_nac.esp" instead.
+Better Clothes_v1.1.esp
+
+[Note]
+ !!! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of the red sun damage ring remaining when entering an interior from an exterior.
+ !!! Yacoby himself warns of his mod, : "It is recommened that you do not use this due to it breaking some quests due to a Morrowind bug"
+ !!! (Ref: http://www.mw.yacoby.net/Mods/VampireDoorsBugfix.htm )
+[ANY Vamp Doors Trib & Blood.esp
+     Vamp Doors Trib.esp
+     Vamp Doors.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27282,6 +27414,94 @@ Morrowind Comes Alive.esm
  (Ref: MCANoBaddiesReadme.txt)
 MCA - Zero Town Baddies.esp
 [DESC /over 1200 friendly/ MCA.ESM]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MW Containers Animated 1.2 [qqqbbb]
+
+[Note]
+ ! There is a new version of qqqbbb's "MW Containers Animated", 1.2, you should upgrade.
+ ! Download the latest version from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/42238/
+[ANY MW Containers Animated no SE.esp
+     [VER <1.2 MW Containers Animated.esp]]
+
+[Conflict]
+ "[qqqbbb's "MW Containers Animated"] modifies kollops so it will conflict with herbalism mods."
+ (Ref: "MW Containers Animated readme.txt")
+MW Containers Animated.esp
+[ANY Advanced Herbalism - MO.esp
+     Advanced Herbalism - TR & BM.esp
+     Advanced Herbalism - TR.esp
+     Advanced Herbalism - BM.esp
+     Graphic Herbalism.esp
+     Herbalismv1.3(Tribunal).esp
+     Herbalismv1.1.esp
+     Syc_HerbalismforPurists.esp
+     Syc_HerbalismforPurists_TB_ONLY.esp
+     Herbalism_Lite_v1.0.esp
+     Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
+     Herbalism Redux 1.12a.esp
+     Herbalism Redux 1.12a - Bloated MW.esp
+     HR 1.12a + EW 1.5.esp
+     HR 1.12a BMW + EW 1.5.esp
+     Ultra Light Herbalism.esp]
+
+[Conflict]
+ qqqbbb's "MW Containers Animated" modifies kollops so it will conflict other mods which also modify them.
+ Piratelord's "Creatures" uses kollops to spawn fish.
+ TheLys' "Resources Ehanced" modifies kollops to release a bubble of air when harvested.
+ (Ref: "MW Containers Animated readme.txt")
+MW Containers Animated.esp
+[ANY Creatures.esp
+     Creatures (lore).esp
+     Creatures (Semi).esp
+     Resources Enhanced.esp]
+
+;;Dragon32: "If you wanna use this mod with a lock bash mod download Linora's Locking Bashing Mod"
+;;Ref: "MW Containers Animated readme.txt"
+[Conflict]
+ "[qqqbbb's "MW Containers Animated"] definitely will conflict with lock bash mods."
+ (Ref: "MW Containers Animated readme.txt")
+MW Containers Animated.esp
+[ANY Lock bash enhanced.esp
+     LockBash_Beta.esp
+     Nighttime Locks & Lock Bashing.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MW Containers Animated Sound Patch 1.1 [abot]
+
+[Note]
+ !! Version 1.2 of qqqbbb's "MW Containers Animated" added sounds to containers, so you should use qqqbbb's mod instead of abot's older patch
+ !! (Ref: "MW Containers Animated readme.txt")
+ !! Download the latest version from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/42238/
+[ANY MW Containers Animated Sound Patch.esp
+     MW Containers Animated Sound.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @MW Containers Animated TR 1.02b [abot]
+
+[Note]
+ !! "This mod can be considered obsolete, you should use ACEG instead"
+ !! (Ref: http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&Itemid=50&task=info&id=52&-MW-Containers-Animated-TR-1-02 )
+ !! Download Animated Containers Expansion Generator (ACEG) from abot's site:
+ !! http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=56&Itemid=50&-ACEG-Animated-Containers-Expansion-Generator
+MW Containers Animated TR.esp
+
+[Requires]
+ "Requirements: MW Containers Animated.esp by qqqbbb, Arcimaestro Antares, Phaedrus, v 1.2; Tamriel Rebuilt - Sacred East 1.5"
+ (Ref: "MW Containers Animated TR.txt")
+MW Containers Animated TR.esp
+[ALL MW Containers Animated.esp
+     TR_Data.esm
+     TR_Mainland.esm]
+
+;;"load it after TR_Data.esm. TR_Mainland.esm, MW Containers Animated.esp"
+;;Ref: "MW Containers Animated TR.txt"
+[Order]
+MW Containers Animated.esp
+MW Containers Animated TR.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28681,6 +28901,24 @@ MRM.esm
 
 [Order]
 Poorly Placed Object Fix*<VER>.esm
+MRM.esm
+
+[Conflict]
+ Landscape conflict: "A lot of land tearing if you use [PirateLord's "Mountainous Red Mountain"] along side more detailed places 2013 [by Ragox & Zaldir], areas such as maar gan and ald ruhn have these issues."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/668121-mountainous-red-mountain/?p=13915773 )
+MRM.esm
+MDP 2013.esp
+
+[Conflict]
+ Landscape conflict.
+ (Ref: http://forums.nexusmods.com/index.php?/topic/668121-mountainous-red-mountain/page-2#entry5687706 )
+MRM.esm
+Vurt's Ashlands Overhaul.esp
+
+[Conflict]
+ Landscape conflict: "[Atreus'] "Rain's Hand Hall" is causing A LOT of texture tearing around the area [PirateLord's "Mountainous Red Mountain"] changes."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/668121-mountainous-red-mountain/?p=8390298 )
+Rain's Hand Hall.esp
 MRM.esm
 
 
@@ -33468,7 +33706,7 @@ Quorn Resource Integration.ESP
      trollbone_armor_set.esp
      newtscale_armor_set.esp
      studded_armor_set.esp]
-     
+
 [Conflict]
  "[Melchior Dahrk's "Quorn Resource Integration"] merged quorn's integration with this mod (don't use DremoraLords.esp)"
  (Ref: "Quorn Resource Integration.txt")
@@ -33832,7 +34070,7 @@ RF- Dongle's Delights.esp
      Bloodmoon.esm
      RF - Furniture shop.esm]
 
-;;Dragon32: Global jjsFurnRot is a short in this mod, a float in the Beth furniture one. I think a float is better for something dealing with precise rotations 
+;;Dragon32: Global jjsFurnRot is a short in this mod, a float in the Beth furniture one. I think a float is better for something dealing with precise rotations
 [Order]
 RF- Dongle's Delights.esp
 RF - Bethesda Furniture.esp
@@ -33849,7 +34087,7 @@ RF - Lady E's Extravaganza.esp
      Bloodmoon.esm
      RF - Furniture shop.esm]
 
-;;Dragon32: Global jjsFurnRot is a short in Dongle's Delights, a float in this one and the Beth furniture one. I think a float is better for something dealing with precise rotations 
+;;Dragon32: Global jjsFurnRot is a short in Dongle's Delights, a float in this one and the Beth furniture one. I think a float is better for something dealing with precise rotations
 [Order]
 RF- Dongle's Delights.esp
 RF - Lady E's Extravaganza.esp
@@ -33859,7 +34097,7 @@ RF - Lady E's Extravaganza.esp
 ;; @Real Furniture and House of Mannequins compatibility [andoreth]
 
 [Patch]
- "Please download and use ["RF and HOM compatibility" by andoreth] if you wish to activate both Real Furniture and GrumblePunk's House Of Mannequins. It will move the Furnisher's Hall downstairs." 
+ "Please download and use ["RF and HOM compatibility" by andoreth] if you wish to activate both Real Furniture and GrumblePunk's House Of Mannequins. It will move the Furnisher's Hall downstairs."
  Download the patch from andoreth's site: http://home.earthlink.net/~andoreth/
 RF & HOM Compatability.esp
 [ALL RF - Furniture shop.esm
@@ -36822,6 +37060,81 @@ DA_Sobitur_YA_Compatibility.ESP
           GCDLean204EASY.esp
           GCDLean204HARD.esp]
      bloodmoonchargen<VER>.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Solstheim: Tomb of the Snow Prince 1.2 [Wollibeebee]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+wl_SolstheimOverhaul_v1.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+wl_SolstheimOverhaul_v1.esm
+
+[Patch]
+ http://www.nexusmods.com/morrowind/mods/42979/
+wl_sol_neverhallspatch.ESP
+[ALL wl_SolstheimOverhaul_v1.esm
+     The Neverhalls.esp]
+
+[Order]
+The Neverhalls.esp
+wl_sol_neverhallspatch.ESP
+
+[Patch]
+ http://www.nexusmods.com/morrowind/mods/42979/
+wl_sol_millsofmorrowindpatch.ESP
+[ALL wl_SolstheimOverhaul_v1.esm
+     Mills of Morrowind.esp]
+
+[Order]
+Mills of Morrowind.esp
+wl_sol_millsofmorrowindpatch.ESP
+
+[Conflict]
+ "Windows Glow has been completely integrated into [Wollibeebee's "Solstheim: Tomb of the Snow Prince"]. Be sure not to use any older versions of Windows Glow that affect Solstheim."
+ (Ref: "STOTSP 1 2-42979-1-2.7z\Readme.rtf")
+wl_SolstheimOverhaul_v1.esm
+[ANY Windows Glow - Bloodmoon Eng.esp
+     Windows Glow - Raven Rock Eng.esp]
+
+[Conflict]
+ Landscape conflict: "If you have [Wollibeebee's "Solstheim: Tomb of the Snow Prince"] and Necessities of Morrowind 3.0, the Moldy Horker inn next to Fort Frostmoth is pretty much inaccessible and there are some land height conflicts around the fort."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=16495364 )
+wl_SolstheimOverhaul_v1.esm
+NoM 3.0.esp
+
+[Conflict]
+ Landscape conflict: "The changes to [Solstheim] are so great [by Wollibeebee's "Solstheim: Tomb of the Snow Prince"] that probably every mod that alters anything on Solstheim will be highly incompatible [...] Suran underworld [...] won't work with [Wollibeebee's "Solstheim: Tomb of the Snow Prince"]."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=19428709 )
+wl_SolstheimOverhaul_v1.esm
+[ANY Suran_Underworld_2.5.esp
+     SU_SW Comp. Patch.esp
+     Suran_Underworld_v3.ESP]
+
+[Conflict]
+ Landscape conflict: "The changes to [Solstheim] are so great [by Wollibeebee's "Solstheim: Tomb of the Snow Prince"] that probably every mod that alters anything on Solstheim will be highly incompatible [...] Bloodmoon landscape overhaul won't work with [Wollibeebee's "Solstheim: Tomb of the Snow Prince"]."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=19428709 )
+wl_SolstheimOverhaul_v1.esm
+[ANY Bloodmoon Landscape Overhaul <VER>.esm
+     Texture Fix - Bloodmoon <VER>.esm]
+
+[Conflict]
+ Wollibeebee's "Solstheim: Tomb of the Snow Prince" changes Fort Frostmoth in such a dramatic way that it is incompatible with Talthybius' "Frostmoth Repaired"
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=20299539 )
+wl_SolstheimOverhaul_v1.esm
+frostmoth_repaired_v0_31.esp
+
+[Conflict]
+ The readme for Wollibeebee's "Solstheim: Tomb of the Snow Prince" promises a patch for Emma's "White Wolf of Lokken" but one is not available. It is safe to conclude that the two mods conflict.
+ (Ref: "STOTSP 1 2-42979-1-2.7z\Readme.rtf")
+wl_SolstheimOverhaul_v1.esm
+[ANY BT_Whitewolf_2_0.esm
+     BT_Whitewolf_2_0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39971,6 +40284,8 @@ Tir Thalor Quest.esp
 ;; @TLM - The Lighting Mod (Modular + Complete) [Sensei]
 ;; (Ref: "TLM - ~Readme.htm")
 
+;;See also "[Near End]"
+
 ;Order tweaks From Black Crow King:
 ; (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14292111 )
 [Order]
@@ -40433,6 +40748,8 @@ TriggerDBAttack_v1_00.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @True Lights and Darkness 0.5 [Cool Demon]
 
+;;See also "[Near End]"
+
 [Note]
  ! B00ze has updated Cool Demon's original "True Lights and Darkness" mod, you should upgrade!
  ! http://www.nexusmods.com/morrowind/mods/39605/?
@@ -40454,6 +40771,8 @@ True_Lights_And_Darkness_0.5.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @True Lights and Darkness 1.1 [B00ze]
+
+;;See also "[Near End]"
 
 [Note]
  ! There is an updated version of B00ze's "True Lights and Darkness", you should upgrade!
