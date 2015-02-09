@@ -108,6 +108,12 @@ GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
 MW Containers Animated exp.esp ; (Ref: "aceg_readme.txt")
 ;;begin lighting mods
 ;;  these affect lighting in vanilla cells, so load after most other mods
+LBS_addon_hvy_v1.1.esp ; (Ref: "LBS_addon.txt")
+LBS_addon_Hvy_VD_v1.1.esp ; (Ref: "LBS_addon.txt")
+LBS_addon_lt_v1.1.esp ; (Ref: "LBS_addon.txt")
+LBS_addon_lt_VD_v1.1.esp ; (Ref: "LBS_addon.txt")
+LBS_addon_reg_v1.1.esp ; (Ref: "LBS_addon.txt")
+LBS_addon_reg_VD_v1.1.esp ; (Ref: "LBS_addon.txt")
 Lights 300 v5.esp ; (Ref: "readme_Lights 300 v4.3.txt")
 TLM - Ambient Light + Fog Update.esp ; (Ref: "TLM - ~Readme.htm")
 True_Lights_And_Darkness_0.5.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
@@ -3999,8 +4005,32 @@ silgrad_tower_internal_release_1-4_6.6.esp
 AtmosphericSoundEffects-3.0.esp
 
 [Order]
+silgrad_tower_internal_release_1-4_6.6.esp
+AtmosphericSoundEffects-3.0.esp
+
+[Order]
+silgrad_tower_internal_release_1-4_6.6.esp
+AtmosphericSoundEffects-3.0-Tribunal.esp
+
+[Order]
+silgrad_tower_internal_release_1-4_6.6.esp
+AtmosphericSoundEffects-3.0-TBM.esp
+
+[Order]
 silgrad_tower_1-4_6.6.esp
 AtmosphericSoundEffects-3.0.esp
+
+[Order]
+silgrad_tower_1-4_6.6.esp
+AtmosphericSoundEffects-3.0.esp
+
+[Order]
+silgrad_tower_1-4_6.6.esp
+AtmosphericSoundEffects-3.0-Tribunal.esp
+
+[Order]
+silgrad_tower_1-4_6.6.esp
+AtmosphericSoundEffects-3.0-TBM.esp
 
 ;;Dragon32: ASE alters weather settings, if someone's got a weather mod loaded they they'll want that to take effect
 ;;Ref: http://forums.bethsoft.com/topic/1215570-is-there-an-official-mod-confliction-thread/?p=18215928
@@ -4076,6 +4106,85 @@ SeriousWeather_v1_00.esp
 AtmosphericSoundEffects-3.0.esp
 SeriousWeather_v1_00.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Atmospheric Sound Effects Complete (BTB Edit) [BTB]
+
+[Conflict]
+ "[ASE Complete (BTB Edit).esp] is an edited plugin that merges the non-Tribunal plugin from the original ASE mod with the Tribunal and Bloodmoon ASE addons from Illuminated Windows. [...] This is to be used instead of the original plugin and the two addons"
+ASE Complete (BTB Edit).esp
+[ANY [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
+          AtmosphericSoundEffects-3.0-TBM.esp
+          AtmosphericSoundEffects-3.0.esp]
+     ASE Bloodmoon Expansion.esp
+     ASE Tribunal Expansion.esp
+     ASE Tribunal Expansion v1.2.esp]
+
+;;Dragon32: Edits Firemoth cells
+[Order]
+Siege at Firemoth.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+FireMoth Moved.ESP
+ASE Complete (BTB Edit).esp
+
+[Order]
+OfficialMods_v5.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+Clean Official Plugins v1.1.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+super_adventurers302.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+[Official]Siege at Firemoth.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+SiegeAtFiremoth.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+Official_2002_Mods.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+silgrad_tower_internal_release_1-4_6.6.esp
+ASE Complete (BTB Edit).esp
+
+[Order]
+silgrad_tower_1-4_6.6.esp
+ASE Complete (BTB Edit).esp
+
+;;Dragon32: ASE alters weather settings, if someone's got a weather mod loaded they they'll want that to take effect
+[Order]
+ASE Complete (BTB Edit).esp
+NiceWeather_0617.esp
+
+[Order]
+ASE Complete (BTB Edit).esp
+Realistic Weather v2.0.esp
+
+[Order]
+ASE Complete (BTB Edit).esp
+Isirion_RealisticWeather.esp
+
+[Order]
+ASE Complete (BTB Edit).esp
+Sol-Weather Tweak.esp
+
+[Order]
+ASE Complete (BTB Edit).esp
+SeriousWeather_BM_v1_00.esp
+
+[Order]
+ASE Complete (BTB Edit).esp
+SeriousWeather_v1_00.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5026,6 +5135,27 @@ BE_ghetto_BE.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Market and Ghetto Shacks [ThanMan16]
+
+[Conflict]
+ ThanMan16's "Balmora Market and Ghetto Shacks" is incompatible with Gorg, CanadianIce and Jeremy's "Balmora Expansion" and Lucien Fairfax's "Atmospheric Balmora"
+ (Ref: http://www.nexusmods.com/morrowind/mods/43434/ )
+Balmora Market & Ghetto Shacks.ESP
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp
+     Clean Atmospheric Balmora.ESP
+     Atmospheric Balmora for VBA.ESP
+     Atmospheric Balmora for VBAnIW.ESP]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 39371 Balmora Market & Ghetto Shacks.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Balmora Market Stall  [Aaron Long]
 
 [Note]
@@ -5481,7 +5611,8 @@ Khajiit Night Eye Toggle.ESP
 	  NoM 2.12-03a with BEER!.esp]
      [ALL [NOT AtmosphericSoundEffects-3.0-Tribunal.esp
                AtmosphericSoundEffects-3.0-TBM.esp
-               AtmosphericSoundEffects-3.0.esp]]]
+               AtmosphericSoundEffects-3.0.esp
+               ASE Complete (BTB Edit).esp]]]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -5735,17 +5866,17 @@ BetterClothes_Patch.esp
      Merged_Objects.esp]
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Clothes for Bloodmoon 1.4 [Spirited Treasure]
 
 [Requires]
- "[Spirited Treasure's "Better Clothes for Bloodmoon"] assumes you have Better Clothes, More Better clothes, and Better Clothes for Tribunal."
+ "[Spirited Treasure's "Better Clothes for Bloodmoon"] assumes you have Better Clothes, More Better Clothes, and Better Clothes for Tribunal."
  (Ref: "BetterClothesBloodmoon1.4.txt")
 BetterClothesBloodmoonPlus<VER>.esp
-[ALL [ANY Better Clothes_v1.1.esp
-          Better Clothes_v1.1_nac.esp]
-     More Better Clothes.esp
+[ALL [ANY [ALL [ANY Better Clothes_v1.1.esp
+                    Better Clothes_v1.1_nac.esp]
+               More Better Clothes.esp]
+          Better Clothes Complete (BTB Edit).esp]
      BetterClothesForTB.esp]
 
 ;;"This mod should load below your Better clothes mod as it changes the meshes that were used to point to female but were actually male meshes."
@@ -6234,6 +6365,68 @@ BMS_UPDATE_from1.7(.x)to1.9*.esp
 BMS_UPDATE_from_1.9_to_1.9.1.esp
 BMS_Timers_Patch.esp
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Music System (BTB Edit) [BTB]
+
+;;expdep
+[Requires]
+ This plugin uses a Bloodmoon function, getpctraveling.
+[ANY Better Music System (BTB Edit).esp
+     Better Music System (BTB Edit) (Vanilla).esp]
+Bloodmoon.esm
+
+[Conflict]
+ Only use one plugin:
+  Better Music System (BTB Edit).esp - If you have all the plugins detailed in BTB's readme loaded.
+  Better Music System (BTB Edit) (Vanilla).esp - If you do not.
+ (Ref: "Readme - Better Music System (BTB Edit).txt")
+Better Music System (BTB Edit) (Vanilla).esp
+Better Music System (BTB Edit).esp
+
+[Conflict]
+ "Better Music System (BTB Edit)" is an edited version of Xiran's "Better Music System", which in turn was based on and inspired by EvilGreebo's "Music Mod".
+ You should not run Xiran's or EvilGreebo's mods with BTB's
+ (Ref: "Readme - Better Music System (BTB Edit).txt")
+[ANY Better Music System (BTB Edit) (Vanilla).esp
+     Better Music System (BTB Edit).esp]
+[ANY EG Music Mod V1.1 MW+TB+BM.esp
+     EG Music Mod V1.1 MW+TB.esp
+     EG Music Mod V1.1 MW.esp
+     BetterMusicSystem_<VER>.esp
+     BetterMusicSystem_<VER>_alt.esp]
+
+[Requires]
+ "Better Music System (BTB Edit).esp" requires:
+ -Area Effect Arrows/Projectiles
+ -Darknut's Greater Dwemer Ruins
+ -The Forgottenhalls/Neverhalls
+ -Morrowind Advanced
+ (Ref: "Readme - Better Music System (BTB Edit).txt")
+Better Music System (BTB Edit).esp
+[ALL [ANY AreaEffectArrows.esp
+          AreaEffectArrows XB Edition.esp
+          Area Effect Arrows.esp
+          Area Effect Projectiles.esp
+          Area Effect Projectiles (PAR Edit).esp
+          CleanAreaEffectArrows.esp
+          [Official]Area Effect Arrows.esp
+          Clean Official Plugins v1.1.esp
+          OfficialMods_v5.esp
+          Official_2002_Mods.esp
+          super_adventurers302.esp]
+     [ANY DN-GDRv1_NOM.esp
+          DN-GDRv1_NOM (BTB Edit).esp
+          DN-GDRv1.esp
+          DN-GDRv1 (BTB Edit).esp]
+     The Neverhalls.esp
+     sm_ForgottenHalls.esp
+     [ANY MW_Adv_Required.esp
+          MW_Adv_Required (BTB Edit).esp]]
+
+;;Dragon32: Don't believe there's any need for Order rules as BTB's mod checks for Cell names rather than editing them
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Necromancer Amulet [Michael "HelioS" Bennett]
 
@@ -6303,7 +6496,8 @@ Better_Sounds.esp
 Better_Sounds.esp
 [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
      AtmosphericSoundEffects-3.0-TBM.esp
-     AtmosphericSoundEffects-3.0.esp]
+     AtmosphericSoundEffects-3.0.esp
+     ASE Complete (BTB Edit).esp]
 
 [Note]
  !! "Some sounds are attached to plants via scripts (corcbulb, some hackle-lo, wickwheat, kreshweed). That's why if you use some "herbalism"-type mods, you'll collect the plants the old way."
@@ -7641,6 +7835,12 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 [Order]
 correctUV Ore Replacer 1.0.esp
 Juniper's Twin Lamps (1.1 Tribunal).esp
+
+[Conflict]
+ When these two plugins are loaded together, a landscape tear appears between the cells (-6, -7) and (-5, -7) just west of the little bridge over the Odai. A simple fix is to delete the LAND record (-6, -7) from "Juniper's Twin Lamps (1.1 Tribunal).esp".
+ Note that this was reported by someone running version 1.8 of Slartibartfast's "Texture Fix".
+[SIZE 1536911 Juniper's Twin Lamps (1.1 Tribunal).esp]
+[ANY Texture Fix <VER>.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9017,6 +9217,17 @@ BTB - Character (Alternate).esp
 [Requires]
 Combat Moves.esp
 Tribunal.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Combat Proficiency [josaaku]
+
+;; expdep
+[Requires]
+ This plugin uses a startscript so it requires one of the expansions.
+Combat Proficiency.ESP
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12483,6 +12694,34 @@ DynamicMagickaRegeneration-2.1-Tribunal.esp
      Bloodmoon.esm]
 
 ;;Dragon32: See "Magicka regeneration mods [Various]" for conflict information
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The East Empire Company Expansion 2.0 [TheDrunkenMudcrab]
+
+[Conflict]
+ "[Arcimaestro Antares' "Big Mod"] adds a generic "Greetings %PCRank %PcName." and "What can I do for you, %PCRank?" that any NPC will say to a player who is at the same rank or higher as them. [Which takes] precedent over the entries in Greeting 8, where most of [TheDrunkenMudcrab's "The East Empire Company Expansion"] quests seem to start."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/977575-the-east-empire-company-expansion/?p=12720703 )
+EEC Expansion.ESP
+Antares' Big Mod <VER>.esp
+
+[Conflict]
+ "[Brother Juniper's] Vivec's Fate adds a ton of "Bless you Nerevarine" style lines to Greeting 7, which will [...] override [TheDrunkenMudcrab's "The East Empire Company Expansion"]'s quest greetings."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/977575-the-east-empire-company-expansion/?p=12720703 )
+EEC Expansion.ESP
+Vivec's Fate.esp
+
+[Conflict]
+ "[Trancemaster_1988's "Morrowind Rebirth"] heavily changes Ebonheart, and [TheDrunkenMudcrab's "The East Empire Company Expansion"] questgiver is situated in Ebonheart. [...] Various new places and npc's may be collision-stuck as well."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/977575-the-east-empire-company-expansion/?p=7991572 )
+EEC Expansion.ESP
+Morrowind Rebirth <VER>.ESP
+
+[Note]
+ ! "If you've completed Brother Juniper's Twin Lamps mod, then some of the early ["The East Empire Company Expansion"] quests won't be completable. One of the quests require you talk to a slave who will disappear once slavery is outlawed in Vvardenfell."
+ ! (Ref: http://forums.nexusmods.com/index.php?/topic/977575-the-east-empire-company-expansion/?p=12720703 )
+[ALL EEC Expansion.ESP
+     Juniper's Twin Lamps (1.1 Tribunal).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16552,18 +16791,65 @@ k_weather.esp
 k_weather (louder sounds).esp
 Graphic Herbalism.esp
 
+;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
+; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Graphic Herbalism.esp
+
+;;"the update [to Graphic Herbalism by  Skrawafunda] changed the load order and I noticed that this mod was the one I had that conflicted with true lights and darkness. If it loads after true lights and darkness, the darkness does not show up. I recommend putting that in the readme."
+;;http://forums.nexusmods.com/index.php?/topic/1815935-graphic-herbalism-by-manauser/?p=17579429"
+;;Dragon32: extended to include other lighting mods
+[Order]
+Graphic Herbalism.esp
+LBS_addon_hvy_v1.1.esp
+
+[Order]
+Graphic Herbalism.esp
+LBS_addon_Hvy_VD_v1.1.esp
+
+[Order]
+Graphic Herbalism.esp
+LBS_addon_lt_v1.1.esp
+
+[Order]
+Graphic Herbalism.esp
+LBS_addon_lt_VD_v1.1.esp
+
+[Order]
+Graphic Herbalism.esp
+LBS_addon_reg_v1.1.esp
+
+[Order]
+Graphic Herbalism.esp
+LBS_addon_reg_VD_v1.1.esp
+
+[Order]
+Graphic Herbalism.esp
+Lights 300 v5.esp
+
+[Order]
+Graphic Herbalism.esp
+TLM - Ambient Light + Fog Update.esp
+
+[Order]
+Graphic Herbalism.esp
+True_Lights_And_Darkness_0.5.esp
+
+[Order]
+Graphic Herbalism.esp
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+
+[Order]
+Graphic Herbalism.esp
+True_Lights_And_Darkness_1.1.esp
+
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 ;;But we have a patch! see "Graphic Herbalism Expanded Sounds Patch [Skrawafunda]" and "Graphic Herbalism / Expanded Sounds Patch [philologos]"
 ;;[Order]
 ;;Expanded Sounds.esp
 ;;Graphic Herbalism.esp
-
-;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
-; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
-[Order]
-Castle_Hestatur-V1-TB_addons.esp
-Graphic Herbalism.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21479,6 +21765,47 @@ k_weather.esp
 k_weather (louder sounds).esp
 Lights 300 v5.esp
 
+;;Dragon32: Similar to TLM, Light Based Sneaking and its addons modify light values of and add scripts to light_dae_brazier00, Light_MH_streetlamp_01 and Light_MH_streetlamp_01_550
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_Full v1.4(trib).esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_Lite v1.4(trib).esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_addon_hvy_v1.1.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_addon_Hvy_VD_v1.1.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_addon_lt_v1.1.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_addon_lt_VD_v1.1.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_addon_reg_v1.1.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+LBS_addon_reg_VD_v1.1.esp
+
 ;;Dragon32: Both NoM and Kirel's Interior Weather add a SCRI to light_dae_brazier00
 ;;loading NoM after Interior Weather as player is more likely to notice cooking not working
 [Order]
@@ -22654,6 +22981,51 @@ Less_Generic_Nerevarine.esp
 LGNPC_TelUvirith_v?_??_UI.esp
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Librarian [Nicholiathan]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ "Librarian with Jackets & Rotate BM Trib.esp", if you are using BookRotate.
+ "Librarian with Jackets BM Trib.esp", if not using BookRotate.
+ (Ref: Librarian 104 readme.txt)
+Librarian with Jackets & Rotate BM Trib.esp
+Librarian with Jackets BM Trib.esp
+
+[Requires]
+Librarian with Jackets & Rotate BM Trib.esp
+Book Rotate.esm
+
+[Conflict]
+ "If already installed then uncheck the book jacket .esps."
+ (Ref: Librarian 104 readme.txt)
+Librarian with Jackets & Rotate BM Trib.esp
+[ANY Book Jackets - Morrowind - BookRotate.esp
+     Book Jackets - Morrowind.esp
+     Book Jackets - Bloodmoon - BookRotate.esp
+     Book Jackets - Bloodmoon.esp
+     Book Jackets - Tribunal - BookRotate.esp
+     Book Jackets - Tribunal.esp]
+
+[Conflict]
+ "If already installed then uncheck the book jacket .esps."
+ (Ref: Librarian 104 readme.txt)
+Librarian with Jackets BM Trib.esp
+[ANY Book Jackets - Morrowind - BookRotate.esp
+     Book Jackets - Morrowind.esp
+     Book Jackets - Bloodmoon - BookRotate.esp
+     Book Jackets - Bloodmoon.esp
+     Book Jackets - Tribunal - BookRotate.esp
+     Book Jackets - Tribunal.esp]
+
+[Conflict]
+ The book rotate version of "Librarian" requires that 'Book Rotate - Tribunal v5.3.esp' and 'Book Rotate - Bloodmoon v5.3.esp' be unchecked.
+ (Ref: Librarian 104 readme.txt)
+Librarian with Jackets & Rotate BM Trib.esp
+[ANY Book Rotate - Tribunal v5.3.esp
+     Book Rotate - Bloodmoon v5.3.esp]
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LichCraft 2.03 [VenomByte]
 
@@ -22791,6 +23163,187 @@ lcpatchnohungerorder.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Light Based Sneaking 1.4 [Vanhikes & qwert_44643]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "LBS_Readme.txt")
+LBS_Full v1.4(trib).esp
+LBS_Lite v1.4(trib).esp
+
+[Conflict]
+ "[Vanhikes & qwert_44643's "Light Based Sneaking"] will conflict with any other mods that also alter light settings."
+ (Ref: "LBS_Readme.txt")
+[ANY LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp]
+[ANY Lights 300 v5.esp
+     TLM - Ambient Light + Fog Update.esp
+     TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Natural Water).esp
+     TLM - Light Sources (Lanterns).esp
+     TLM - External Lights Ownership.esp
+     TLM - NPC Light Sources.esp
+     TLM - Sneak Modifiers (Code).esp
+     TLM - Sneak Modifiers (Locations).esp
+     TLM - Complete.esp
+     Vibrant lights 1.0.esp]
+
+;;"this will conflict with any other mods that also alter light settings. The largest know conflict is with WGI and adventurers, the Balance items part. Since he alters all of the carriable lights. To make sure this is not a problem just make sure that this mod comes after his"
+;;Ref: "LBS_Readme.txt"
+[Order]
+Balance - items.esp
+LBS_Full v1.4(trib).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+LBS_Full v1.4(trib).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+LBS_Full v1.4(trib).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+LBS_Full v1.4(trib).esp
+
+[Order]
+Balance - items.esp
+LBS_Lite v1.4(trib).esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+LBS_Lite v1.4(trib).esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+LBS_Lite v1.4(trib).esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+LBS_Lite v1.4(trib).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Light Based Sneaking Add-on 1.1 [Vanhikes]
+
+;;See also "[Near End]"
+
+[Conflict]
+ "NOTE ONLY LOAD ONE OF THEM."
+ (Ref: "LBS_addon.txt")
+LBS_addon_hvy_v1.1.esp
+LBS_addon_Hvy_VD_v1.1.esp
+LBS_addon_lt_v1.1.esp
+LBS_addon_lt_VD_v1.1.esp
+LBS_addon_reg_v1.1.esp
+LBS_addon_reg_VD_v1.1.esp
+
+;;Dragon32: regular version of Light Based Sneaking mentioned in its readme but ESP not present.
+
+[Requires]
+ "You have to use the corresponding file as the version of LBS you use."
+ (Ref: "LBS_addon.txt")
+[ANY LBS_addon_hvy_v1.1.esp
+     LBS_addon_Hvy_VD_v1.1.esp]
+LBS_Full v1.4(trib).esp
+
+[Requires]
+ "You have to use the corresponding file as the version of LBS you use."
+ (Ref: "LBS_addon.txt")
+[ANY LBS_addon_lt_v1.1.esp
+     LBS_addon_lt_VD_v1.1.esp]
+LBS_Lite v1.4(trib).esp
+
+;;"THIS MOD MUST BE LOADED AFTER LBS OR IT WILL NOT WORK AS INTENDED."
+;;Ref: "LBS_addon.txt"
+[Order]
+LBS_Full v1.4(trib).esp
+LBS_addon_hvy_v1.1.esp
+LBS_addon_Hvy_VD_v1.1.esp
+
+[Order]
+LBS_Lite v1.4(trib).esp
+LBS_addon_lt_v1.1.esp
+LBS_addon_lt_VD_v1.1.esp
+
+;;Dragon32: Not sure if this will work or is appropriate
+[Order]
+LBS_Lite v1.4(trib).esp
+LBS_Full v1.4(trib).esp
+LBS_addon_reg_v1.1.esp
+LBS_addon_reg_VD_v1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Light Sounds [Leon "pancreas" Medado]
+
+;;Dragon32: Light Sounds adds sounds to various light sources, the lighting mods change the light values of those lights.
+;;Load lighting mods after Light Sounds and if someone's got a Merged Objects file then both sounds and light value changes should be picked up
+[Order]
+Light Sounds.esp
+Lights 300 v5.esp
+
+[Order]
+Light Sounds.esp
+TLM - Complete.esp
+
+[Order]
+Light Sounds.esp
+TLM - Light Sources (Clearer Lighting).esp
+
+[Order]
+Light Sounds.esp
+TLM - Light Sources (Lanterns).esp
+
+[Order]
+Light Sounds.esp
+True_Lights_And_Darkness_0.5.esp
+
+[Order]
+Light Sounds.esp
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+
+[Order]
+Light Sounds.esp
+True_Lights_And_Darkness_1.1.esp
+
+[Order]
+Light Sounds.esp
+Vibrant lights 1.0.esp
+
+[Order]
+Light Sounds.esp
+LBS_Full v1.4(trib).esp
+
+[Order]
+Light Sounds.esp
+LBS_addon_hvy_v1.1.esp
+
+[Order]
+Light Sounds.esp
+LBS_addon_Hvy_VD_v1.1.esp
+
+[Order]
+Light Sounds.esp
+LBS_Lite v1.4(trib).esp
+
+[Order]
+Light Sounds.esp
+LBS_addon_lt_v1.1.esp
+
+[Order]
+Light Sounds.esp
+LBS_addon_lt_VD_v1.1.esp
+
+[Order]
+Light Sounds.esp
+LBS_addon_reg_v1.1.esp
+
+[Order]
+Light Sounds.esp
+LBS_addon_reg_VD_v1.1.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Light The Way [Enmesharra]
 
 [Note]
@@ -22804,6 +23357,65 @@ lcpatchnohungerorder.esp
  (Ref: LightTheWay_ReadMe.txt)
 LightTheWayBMAddon.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lights 300 [Byblos]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 305902 Lights_300_V4.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 322459 Byb_Lights_300_V4.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lights 300 4.3 [Byblos & X-Bahamut]
+
+;;See also "[Near End]"
+
+[Note]
+ ! X-Bahamut has updated Byblos' "Lights 300", you should upgrade!
+ ! http://mw.modhistory.com/download-4-1163
+[ANY Byb_Lights_300_V4.esp
+     Lights_300_V4.esp]
+
+[Conflict]
+ "[Byblos & X-Bahamut's "Lights 300"] includes True Lights and Darkness already in it and Light Based Sneaking."
+ (Ref: "readme_Lights 300 v4.3.txt")
+Lights 300 v5.esp
+[ANY True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp
+     LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp]
+
+[Conflict]
+ "[Byblos & X-Bahamut's "Lights 300" has] incompatabilities [with] any mod that alters lights"
+  (Ref: "readme_Lights 300 v4.3.txt")
+Lights 300 v5.esp
+[ANY LBS_addon_hvy_v1.1.esp
+     LBS_addon_Hvy_VD_v1.1.esp
+     LBS_addon_lt_v1.1.esp
+     LBS_addon_lt_VD_v1.1.esp
+     LBS_addon_reg_v1.1.esp
+     LBS_addon_reg_VD_v1.1.esp
+     LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp
+     TLM - Ambient Light + Fog Update.esp
+     TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Natural Water).esp
+     TLM - Light Sources (Lanterns).esp
+     TLM - External Lights Ownership.esp
+     TLM - NPC Light Sources.esp
+     TLM - Sneak Modifiers (Code).esp
+     TLM - Sneak Modifiers (Locations).esp
+     TLM - Complete.esp
+     Vibrant lights 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22909,150 +23521,6 @@ Lite Beer! Addon for NOMv3.esp
  !! "The modder's resource plugin can be used to add the drinks from Lite Beer! to your mod [...] Do NOT use this plugin for gameplay!"
  (Ref: Lite Beer! - Readme.txt)
 Lite Beer! Modder's Resource.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Librarian [Nicholiathan]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- "Librarian with Jackets & Rotate BM Trib.esp", if you are using BookRotate.
- "Librarian with Jackets BM Trib.esp", if not using BookRotate.
- (Ref: Librarian 104 readme.txt)
-Librarian with Jackets & Rotate BM Trib.esp
-Librarian with Jackets BM Trib.esp
-
-[Requires]
-Librarian with Jackets & Rotate BM Trib.esp
-Book Rotate.esm
-
-[Conflict]
- "If already installed then uncheck the book jacket .esps."
- (Ref: Librarian 104 readme.txt)
-Librarian with Jackets & Rotate BM Trib.esp
-[ANY Book Jackets - Morrowind - BookRotate.esp
-     Book Jackets - Morrowind.esp
-     Book Jackets - Bloodmoon - BookRotate.esp
-     Book Jackets - Bloodmoon.esp
-     Book Jackets - Tribunal - BookRotate.esp
-     Book Jackets - Tribunal.esp]
-
-[Conflict]
- "If already installed then uncheck the book jacket .esps."
- (Ref: Librarian 104 readme.txt)
-Librarian with Jackets BM Trib.esp
-[ANY Book Jackets - Morrowind - BookRotate.esp
-     Book Jackets - Morrowind.esp
-     Book Jackets - Bloodmoon - BookRotate.esp
-     Book Jackets - Bloodmoon.esp
-     Book Jackets - Tribunal - BookRotate.esp
-     Book Jackets - Tribunal.esp]
-
-[Conflict]
- The book rotate version of "Librarian" requires that 'Book Rotate - Tribunal v5.3.esp' and 'Book Rotate - Bloodmoon v5.3.esp' be unchecked.
- (Ref: Librarian 104 readme.txt)
-Librarian with Jackets & Rotate BM Trib.esp
-[ANY Book Rotate - Tribunal v5.3.esp
-     Book Rotate - Bloodmoon v5.3.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Light Based Sneaking [Vanhikes & qwert_44643]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- (Ref: "LBS_Readme.txt")
-LBS_Full v1.4(trib).esp
-LBS_Lite v1.4(trib).esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Light Sounds [Leon "pancreas" Medado]
-
-;;Dragon32: Light Sounds adds sounds to various light sources, the lighting mods change the light values of those lights.
-;;Load lighting mods after Light Sounds and if someone's got a Merged Objects file then both sounds and light value changes should be picked up
-[Order]
-Light Sounds.esp
-Lights 300 v5.esp
-
-[Order]
-Light Sounds.esp
-TLM - Complete.esp
-
-[Order]
-Light Sounds.esp
-TLM - Light Sources (Clearer Lighting).esp
-
-[Order]
-Light Sounds.esp
-TLM - Light Sources (Lanterns).esp
-
-[Order]
-Light Sounds.esp
-True_Lights_And_Darkness_0.5.esp
-
-[Order]
-Light Sounds.esp
-True_Lights_And_Darkness_1.0-NoDaylight.esp
-
-[Order]
-Light Sounds.esp
-True_Lights_And_Darkness_1.1.esp
-
-[Order]
-Light Sounds.esp
-Vibrant lights 1.0.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Lights 300 [Byblos]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 305902 Lights_300_V4.esp]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 322459 Byb_Lights_300_V4.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Lights 300 4.3 [Byblos & X-Bahamut]
-
-;;See also "[Near End]"
-
-[Note]
- ! X-Bahamut has updated Byblos' "Lights 300", you should upgrade!
- ! http://mw.modhistory.com/download-4-1163
-[ANY Byb_Lights_300_V4.esp
-     Lights_300_V4.esp]
-
-[Conflict]
- "[Byblos & X-Bahamut's "Lights 300"] includes True Lights and Darkness already in it and Light Based Sneaking."
- (Ref: "readme_Lights 300 v4.3.txt")
-Lights 300 v5.esp
-[ANY True_Lights_And_Darkness_0.5.esp
-     True_Lights_And_Darkness_1.0-NoDaylight.esp
-     True_Lights_And_Darkness_1.1.esp
-     LBS_Full v1.4(trib).esp
-     LBS_Lite v1.4(trib).esp]
-
-[Conflict]
- "[Byblos & X-Bahamut's "Lights 300" has] incompatabilities [with] any mod that alters lights"
-  (Ref: "readme_Lights 300 v4.3.txt")
-Lights 300 v5.esp
-[ANY TLM - Ambient Light + Fog Update.esp
-     TLM - Light Sources (Clearer Lighting).esp
-     TLM - Light Sources (Natural Water).esp
-     TLM - Light Sources (Lanterns).esp
-     TLM - External Lights Ownership.esp
-     TLM - NPC Light Sources.esp
-     TLM - Sneak Modifiers (Code).esp
-     TLM - Sneak Modifiers (Locations).esp
-     TLM - Complete.esp
-     Vibrant lights 1.0.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26690,7 +27158,8 @@ Morrowind Advanced.esp
 [Patch]
  (Ref: "readme_mw_advanced.txt")
 MW_Adv_PHW.esp
-[ALL MW_Adv_Required.esp
+[ALL [ANY MW_Adv_Required.esp
+          MW_Adv_Required (BTB Edit).esp]
      Passive_Healthy_Wildlife.esp]
 
 ;;Dragon32: Whilst "MW_Adv_PHW.esp" is designed for Passive Healthy Wildlife (see above Patch rule) it can be used with other animal pacification mods.
@@ -26766,22 +27235,38 @@ MW_Adv_PHW.esp
 wildlife_behaviour.esp
 MW_Adv_PHW.esp
 
-
 [Order]
 Morrowind Advanced.esp
 MW_Adv_PHW.esp
 
-;;BTB's edited version
 [Order]
-Morrowind Advanced.esm
-Morrowind Advanced.esp
+MW_Adv_Required.esp
+MW_Adv_PHW.esp
+
+[Order]
 MW_Adv_Required (BTB Edit).esp
+MW_Adv_PHW.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Advanced (BTB Edit) [BTB]
 
 [Requires]
- (Ref: "readme_mw_advanced.txt" and "Readme - MW_Adv_Required (BTB Edit).txt")
+ "[MW_Adv_Required (BTB Edit).esp] should be used [...] in addition to the .esm master file."
+ (Ref: "Readme - Morrowind Advanced (BTB Edit).txt")
 MW_Adv_Required (BTB Edit).esp
-[ANY Morrowind Advanced.esm
-     Morrowind Advanced.esp]
+Morrowind Advanced.esm
+
+[Conflict]
+ "[MW_Adv_Required (BTB Edit).esp] should be used instead of the original "required" plugin for Morrowind Advanced 1.82."
+ (Ref: "Readme - Morrowind Advanced (BTB Edit).txt")
+MW_Adv_Required (BTB Edit).esp
+MW_Adv_Required.esp
+
+[Conflict]
+ "I do not recommend attempting to use [MW_Adv_Required (BTB Edit).esp] with the alternate "plugin" version of MWA 1.82"
+ (Ref: "Readme - Morrowind Advanced (BTB Edit).txt")
+MW_Adv_Required (BTB Edit).esp
+Morrowind Advanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28280,6 +28765,7 @@ MWE_Writing.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Graphics Extender [Various]
+
 ; Dragon32: Suggest that this section is just used for MGE & MWSE versioning Notes. Specific plugin rules should go in their own section
 ; Some of these MGE plugins (particularly Timeslip's) will work with earlier versions of MGE. However, v3.0.3 of MGE is the effective minimum version.
 
@@ -28312,12 +28798,12 @@ Third_Person_Crosshair.esp
 Third_Person_Crosshair_constant.esp
 Third_Person_Crosshair_spell.esp
 
-
 [Note]
  These mods require Morrowind Graphics Extender (MGE) v3.8.0 or later or MGE XE v0.9.0 or later, with MWSE enabled
 [DESC /updated by Hrnchamd/ Close Inspection.esp]
 [DESC /updated by Hrnchamd/ Companion Health Bars.esp]
 [DESC /or MGE XE/ Ownership Indicator.esp]
+Smart_Crosshair.esp
 Third Person Crosshair.esp
 [DESC /updated by Hrnchamd/ Time Display.esp]
 
@@ -29248,10 +29734,14 @@ Pursuit Enhanced.esp
 Werewolf ReEquip.esp
 
 ;;Dragon32: As I understand things MGE 3.5.6 added the functions from MWSE v0.9.4. *However* there remains one MWSE function that could not be implemented in MGE. At the time of writing there is only one mod that makes use of that function (MCA_Companions_Enhanced.esp). According to the MWSE v0.9.4a release notes "contains no new features over 0.9.4. However, one bug [...] has been fixed."
+
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.4a, or MGE v3.5.6 or later.
 Advanced Alchemy.esp
 BetterMusicSystem_<VER>.esp
+BetterMusicSystem_<VER>_alt.esp
+Better Music System (BTB Edit) (Vanilla).esp
+Better Music System (BTB Edit).esp
 BTB NPC Spells Fix.ESP
 Census and Excise Office.esp
 CE-DepthPerception25+BTB's Character.ESP
@@ -29271,8 +29761,9 @@ Library_Portable_Book_Jackets_Compatible.esp
 MAO_ScriptExtender.esp
 mel_teleportPlugin_1_3.esp
 Shut_Up.esp
-UL_3.2_MWSE_Add-on.esp
+UL_<VER>_MWSE_Add-on.esp
 UL_MWSE_Companions.esp
+UL_MWSE_Companions_v2.esp
 UL_MWSE_patch.esp
 UL_Primus_MWSE.esp
 UL_Upgrader_MWSE.esp
@@ -31781,7 +32272,7 @@ npce_mwse_patch.esp
      HoratioNPCEnhanced12-VE.esp]
 
 [Conflict]
- The NPC Enhanced MWSE add-on was made primarily for those who do not run both MWE and MWSE. There is only one script in the original mod that uses MWE functions, and the MWSE version is the same way. That script is the one that cycles through NPCs searching for those in combat with the player. MWE handles that function a little bit better... it's a bit faster and requires less CPU power. So if you are using MWE anyway, you do not need the MWSE version.
+ The NPC Enhanced MWSE add-on was made primarily for those who do not run both MWE and MWSE. There is only one script in the original mod that uses MWE functions, and the MWSE version is the same way. That script is the one that loops through NPCs searching for those in combat with the player. MWE handles that function a little bit better... it's a bit faster and requires less CPU power. So if you are using MWE anyway, you do not need the MWSE version.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=816189&view=findpost&p=11869393 )
 npce_mwse_patch.esp
 MWE_Base.esp
@@ -37737,6 +38228,27 @@ Slof's Goth Shop II.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Smart Crosshair 1.0 [adul]
+
+[Conflict]
+ "The stealing indicator comes from Yacoby's Ownership Indicator mod, and the autohide feature comes from MGE XE. The third person compatibility was first done by [adul] in [his] Third Person Crosshair mod and then adapted by Hrnchamd for MGE XE."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1910539-smart-crosshair/?p=16577309 )
+Smart_Crosshair.esp     
+[ANY Third_Person_Crosshair.esp
+     Third_Person_Crosshair_constant.esp
+     Third_Person_Crosshair_spell.esp
+     Third Person Crosshair.esp
+     Ownership Indicator.esp]
+
+;; expdep
+[Requires]
+ "Smart_Crosshair.esp " uses a startup script and the Tribunal functions getweapontype, getweapondrawn and getweapontype.
+Smart_Crosshair.esp 
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Smeradon [PCC aka Blockhead]
 
 [Patch]
@@ -38059,9 +38571,10 @@ SW_MCA5.2_Patch.esp
 South Wall.ESP
 SW_MCA5.2_Patch.esp
 
+;;Dragon32: Note that BTB's edit of ASE removes Juju
 [Note]
  !! Balathustrius suggests deleting the changes to the cell 'Balmora, South Wall Cornerclub' made by Duncan's "Atmospheric Sound Effects". Otherwise Juju will appear, and the ambient music from "Atmospheric Sound Effects" will conflict with the ambient music added by "South Wall, Den of Iniquity".
- (Ref: SWReadme.txt)
+ !! (Ref: SWReadme.txt)
 [ALL South Wall.ESP
      [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
           AtmosphericSoundEffects-3.0-TBM.esp
@@ -38073,16 +38586,8 @@ SW_MCA5.2_Patch.esp
 SW_ASE_ADDON.esp
 [ALL [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
           AtmosphericSoundEffects-3.0-TBM.esp
-          AtmosphericSoundEffects-3.0.esp]
-      South Wall.ESP]
-
-[Requires]
- The "Atmospheric Sound Effects" patch for "South Wall, Den of Iniquity" requires that "Atmospheric Sound Effects" by Duncan is loaded.
- (Ref: SWReadme.txt)
-SW_ASE_ADDON.esp
-[ALL [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
-          AtmosphericSoundEffects-3.0-TBM.esp
-          AtmosphericSoundEffects-3.0.esp]
+          AtmosphericSoundEffects-3.0.esp
+          ASE Complete (BTB Edit).esp]
       South Wall.ESP]
 
 ;; Dragon32: Logically, if the addon uses ASE activators then those activators need to be defined first
@@ -38090,6 +38595,7 @@ SW_ASE_ADDON.esp
 AtmosphericSoundEffects-3.0.esp
 AtmosphericSoundEffects-3.0-Tribunal.esp
 AtmosphericSoundEffects-3.0-TBM.esp
+ASE Complete (BTB Edit).esp
 SW_ASE_ADDON.esp
 
 ;; Dragon32: Similarly, the "new areas" included in this mod should be defined before the addon adds activators to them.
@@ -41072,6 +41578,10 @@ AtmosphericSoundEffects-3.0.esp
 SNR_ThievesStep_BS.esp
 
 [Order]
+ASE Complete (BTB Edit).esp
+SNR_ThievesStep_BS.esp
+
+[Order]
 Better_Sounds.esp
 SNR_ThievesStep_Standart.esp
 
@@ -41091,6 +41601,10 @@ SNR_ThievesStep_Standart.esp
 AtmosphericSoundEffects-3.0.esp
 SNR_ThievesStep_Standart.esp
 
+[Order]
+ASE Complete (BTB Edit).esp
+SNR_ThievesStep_Standart.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Thigh-High Boots [Durgoth]
@@ -41102,7 +41616,7 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Third Person Crosshair [adul]
+;; @Third Person Crosshair 1.0 [adul]
 
 ;;Dragon32: Seel also "Morrowind Graphics Extender [Various]"
 
@@ -41126,6 +41640,16 @@ Third Person Crosshair.esp
      Third_Person_Crosshair_constant.esp
      Third_Person_Crosshair_spell.esp
      Third Person Crosshair.esp]
+
+[Conflict]
+ "When using [adul's "Third Person Crosshair" and Yacoby's "Ownership Indicator"] together there were instances when two crosshairs were showing on top of each other."
+ Consider changing to adul's "Smart Crosshair" - http://www.nexusmods.com/morrowind/mods/43191
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1910539-smart-crosshair/?p=16577309 )
+[ANY Third_Person_Crosshair.esp
+     Third_Person_Crosshair_constant.esp
+     Third_Person_Crosshair_spell.esp
+     Third Person Crosshair.esp]
+Ownership Indicator.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41239,12 +41763,18 @@ TLM - Complete.esp
      TLM - AdjMod - Spuzzum's Interior Daylight.esp]
 
 [Note]
- !! "TLM - Ambient Light + Fog Update", from TLM Modular, modifies the ambient lighting in every location in the game. Due to a bug in the Morrowind Construction Set when a mod changes any interior location, regardless of what is changed, the default ambient lighting settings are saved into the mod.
- !! This means that, in order to retain the modified interior light settings of TLM, you should load "TLM - Ambient Light + Fog Update" from TLM Modularand load it later than any mod that might change a pre-existing interior cell.
+ !! "TLM - Ambient Light + Fog Update.esp", from TLM Modular, modifies the ambient lighting in every location in the game. Due to a bug in the Morrowind Construction Set when a mod changes any interior location, regardless of what is changed, the default ambient lighting settings are saved into the mod.
+ !! This means that, in order to retain the modified interior light settings of TLM, you should load "TLM - Ambient Light + Fog Update.esp" from TLM Modular as well as "TLM - Complete.esp" and load "TLM - Ambient Light + Fog Update.esp" later than any mod that might change a pre-existing interior cell.
  !! If you load "TLM - Ambient Light + Fog Update" mlox will load it late in your load order.
  !! (Ref: "TLM - ~Readme.htm")
 [ALL TLM - Complete.esp
      [NOT TLM - Ambient Light + Fog Update.esp]]
+
+;; Order tweaks From Black Crow King, albeit reported for "TLM - Ambient Light + Fog Update.esp":
+;; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14292111
+[Order]
+Piratelords Trade Enhancements.esp
+TLM - Complete.esp
 
 ;; TLM Modular
 
@@ -41820,7 +42350,8 @@ True_Lights_And_Darkness_0.5.esp
 True_Lights_And_Darkness_0.5.esp
 [ANY AtmosphericSoundEffects-3.0-TBM.esp
      AtmosphericSoundEffects-3.0-Tribunal.esp
-     AtmosphericSoundEffects-3.0.esp]
+     AtmosphericSoundEffects-3.0.esp
+     ASE Complete (BTB Edit).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42936,6 +43467,14 @@ Unofficial Morrowind Comes Alive - City Attack Patch 2.ESP
 
 ;;Dragon32: See also [NearStart] section
 
+[Requires]
+ EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes" is an addendum to quorn's "Morrowind Patch Project 1.6.5b" and should not be used with any other version of the Morrowind Patch Project /  Unofficial Morrowind Patch.
+ (Ref: http://forums.bethsoft.com/topic/1503413-mpp-and-umpp/?p=23684859 )
+[ANY Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+[ANY Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm]
+
 [Note]
  ! There is a new version of EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes" available. You should upgrade!
  ! http://morrowind.nexusmods.com/mods/40947/
@@ -43112,20 +43651,12 @@ Uvirith Inside.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Uvirith Inside Patch 1.61 [The Mad God]
+;; @Uvirith's Legacy 3.32 [StuporStar]
 
-[Note]
- ! The Mad God has patched v1.6 of The DopeHatMan's "Uvirith Inside", consider upgrading.
- ! http://mw.modhistory.com/download-87-10871
-[ANY [SIZE 1118342 Uvirith Inside.esp] ;;v6 uncleaned
-     [SIZE 1100376 Uvirith Inside.esp] ;;v6 cleaned with TESTool
-     [SIZE 1110978 Uvirith Inside.esp]] ;;v6 cleaned with tes3cmd
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Uvirith's Legacy 3.2 [StuporStar]
-
+;;;;;;;;;;
 ;;Old versions
+;;;;;;;;;;
+
 [Note]
  A new version of StuporStar's "Uvirith's Legacy" is available, you should upgrade:
  http://download.fliggerty.com/download-35-884
@@ -43135,7 +43666,10 @@ Uvirith Inside.esp
      Uvirith's Legacy_Final_PreRelease.esp
      Uvirith's Legacy_Final_2.0.esp
      Uvirith's Legacy_3.0.esp
-     Uvirith's Legacy_3.1.esp]
+     Uvirith's Legacy_3.1.esp
+     Uvirith's Legacy_3.2.esp
+     Uvirith's Legacy_3.3.esp
+     Uvirith's Legacy_3.31.esp]
 
 ;;;;;;;;;;
 ;;Add-ons
@@ -43143,52 +43677,58 @@ Uvirith Inside.esp
 
 ;;Morrowind Script Extender
 
-[Note]
- !! "UL_MWSE_patch.esp" is for versions of Stuporstar's "Uvirith's Legacy" prior to version 3.2. Version 3.2's MWSE addon is "UL_3.2_MWSE_Add-on.esp" and should be the one used with that version.
-[ALL Uvirith's Legacy_<VER>.esp
-     UL_MWSE_patch.esp]
+[Conflict]
+ "UL_MWSE_patch.esp" is for versions of Stuporstar's "Uvirith's Legacy" prior to version 3.2. Version 3.32's MWSE addon is "UL_3.3_MWSE_Add-on.esp" and should be used instead.
+[VER >3.1 Uvirith's Legacy_<VER>.esp]
+UL_MWSE_patch.esp
 
 [Requires]
- "Adds MWSE scripting to a few things already present in UL."
+ "Adds MWSE scripting to a few things already present in [Stuporstar's "Uvirith's Legacy"]."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_3.2_MWSE_Add-on.esp
+UL_<VER>_MWSE_Add-on.esp
 Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
-UL_3.2_MWSE_Add-on.esp
-UL_TLM_ambiance.esp
+UL_<VER>_MWSE_Add-on.esp
+UL_TLM_Ambiance.esp
 
 [Requires]
  "Adds MWSE scripting to a few [companion-related] things already present in UL."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_MWSE_Companions.esp
+UL_MWSE_Companions_v2.esp
 Uvirith's Legacy_<VER>.esp
 
+[Conflict]
+ The MWSE Companion addon for Stuporstar's "Uvirith's Legacy" has been updated, use "UL_MWSE_Companions_v2.esp" instead.
+UL_MWSE_Companions.esp
+[VER >3.2 Uvirith's Legacy_<VER>.esp]
+
+;;Ref: "Uvirith's Legacy_README.txt"
 [Order]
-; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
-UL_MWSE_Companions.esp
+UL_MWSE_Companions_v2.esp
 
-[Note]
- ! "[Uvirith Legacy's MWSE addon] has been split between the companion scripts and the other stuff, so you have to choice to use Melian's Teleportation Mod instead."
- ! "[StuporStar would] not recommend using the MWSE Companion Addon with Melian's Teleport Mod anymore (there seems to be more conflict between them since MTM was last updated). Just use MTM instead, since it's more advanced."
- ! http://forums.bethsoft.com/topic/1469888-rel-uviriths-legacy-30-and-bov-22/?p=22959871
- ! (Ref: "Uvirith's Legacy_README.txt")
-[ALL UL_MWSE_Companions.esp
-     mel_teleportPlugin_1_3.esp]
+[Conflict]
+ "If you [...] use Melian's Teleportation Mod for UL's companions, DO NOT USE [the MWSE Companion] add-on."
+ (Ref: "UL_MWSE_addons_README.txt")
+UL_MWSE_Companions_v2.esp
+mel_teleportPlugin_1_3.esp
 
+[Conflict]
+ "[In 3.3 and later of Stuporstar's "Uvirith's Legacy"] the companion Primus add-on is no longer a separate file."
+ (Ref: "UL_MWSE_addons_README.txt")
+UL_Primus_MWSE.esp
+UL_MWSE_Companions_v2.esp
+
+;; expdep
 [Requires]
- "Adds improved teleport scripting to Primus."
- (Ref: "Uvirith's Legacy_README.txt")
-UL_Primus_MWSE.esp
-Uvirith's Legacy_<VER>.esp
+ This plugin uses some Tribunal scripting functions: getscale and setdelete
+UL_<VER>_MWSE_Add-on.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
 
-[Order]
-; Ref: "Uvirith's Legacy_README.txt"
-Uvirith's Legacy_<VER>.esp
-UL_Primus_MWSE.esp
 
 ;;Tamriel Rebuilt
 
@@ -43196,7 +43736,7 @@ UL_Primus_MWSE.esp
  "Adds TR ingredients to the tower shipments[...] Adds TR books to the library book sorter[...] Adds new teleportation platforms to most TR towers and quests to build/repair some of them."
  "Check your UL and TR version number before loading this add-on. Make sure you unload older ones."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_3.2_TR_SE1.5_Addon.esp
+UL_<VER>_TR_<VER>_Add-on.esp
 [ALL Uvirith's Legacy_<VER>.esp
      TR_data.esm
      TR_mainland.esm]
@@ -43204,8 +43744,8 @@ UL_3.2_TR_SE1.5_Addon.esp
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
-UL_3.2_TR_SE1.5_Addon.esp
-UL_TLM_ambiance.esp
+UL_<VER>_TR_<VER>_Add-on.esp
+UL_TLM_Ambiance.esp
 
 [Note]
  !! "Check your UL and TR version number before loading this add-on. Make sure you unload older ones."
@@ -43213,6 +43753,7 @@ UL_TLM_ambiance.esp
 [ALL Uvirith's Legacy_<VER>.esp
      [ANY UL_3.0_TR_SE1.5_Addon.esp
           UL_3.1_TR_SE1.5_Addon.esp
+          UL_3.2_TR_SE1.5_Add-on.esp
           UL_TR_Addon.esp]]
 
 ;;Rise of House Telvanni
@@ -43220,15 +43761,15 @@ UL_TLM_ambiance.esp
 [Requires]
  "Adds RoHT books to the library book sorter.[...] Adds teleport platforms to all towers added by RoHT.[...] Adds levitation to the Telvanni Travel Slippers within the RoHT towers."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_3.2_RoHT_1.52_Compatibility.esp
+UL_3.3_RoHT_1.52_Add-on.esp
 [ALL Uvirith's Legacy_<VER>.esp
      [VER=1.52 Rise of House Telvanni.esm]]
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
-UL_3.2_RoHT_1.52_Compatibility.esp
-UL_TLM_ambiance.esp
+UL_<VER>_RoHT_1.52_Compatibility.esp
+UL_TLM_Ambiance.esp
 
 [Note]
  !! "Check your UL and RoHT version number before loading this add-on. Make sure you unload older ones."
@@ -43238,7 +43779,8 @@ UL_TLM_ambiance.esp
           UL_RoHT_1.4_Compatibility.esp
           UL_RoHT_Compatibility.esp
           UL_RoHT_Compatibility_1.3.esp
-          UL_3.0_RoHT_1.52_Compatibility.esp]]
+          UL_3.0_RoHT_1.52_Compatibility.esp
+          UL_3.2_RoHT_1.52_Add-on.esp]]
 
 ;;Chess Add-on
 
@@ -43252,7 +43794,7 @@ Uvirith's Legacy_<VER>.esp
 ; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
 UL_Chess_Add-on.esp
-UL_TLM_ambiance.esp
+UL_TLM_Ambiance.esp
 
 ;;Book Jackets
 
@@ -43309,18 +43851,32 @@ UL_Srikandy_patch.esp
 
 ;;The Lighting Mod
 
-[Patch]
- "[Use "UL_TLM_ambiance.esp" to alter] the ambiance of all the new cells added by UL so that they look good with TLM loaded."
+[Note]
+ "The TLM Ambiance Add-on [for Stuporstar's "Uvirith Legacy"] is safe to add without [Sensei's "The Lighting Mod" or a similar light-affecting mod], but it will make your tower much darker without [the] lighting tweaks [of a lighting mod]."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_TLM_ambiance.esp
-[ALL Uvirith's Legacy_<VER>.esp
-     [ANY TLM - Ambient Light + Fog Update.esp
-          TLM - Complete.esp]]
+[ALL UL_TLM_Ambiance.esp
+     [NOT [ANY TLM - Ambient Light + Fog Update.esp
+               TLM - Complete.esp
+               LBS_addon_hvy_v1.1.esp
+               LBS_addon_Hvy_VD_v1.1.esp
+               LBS_addon_lt_v1.1.esp
+               LBS_addon_lt_VD_v1.1.esp
+               LBS_addon_reg_v1.1.esp
+               LBS_addon_reg_VD_v1.1.esp
+               Lights 300 v5.esp
+               True_Lights_And_Darkness_0.5.esp
+               True_Lights_And_Darkness_1.0-NoDaylight.esp
+               True_Lights_And_Darkness_1.1.esp]]]
+
+[Requires]
+ (Ref: "Uvirith's Legacy_README.txt")
+UL_TLM_Ambiance.esp
+Uvirith's Legacy_<VER>.esp
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
-UL_TLM_ambiance.esp
+UL_TLM_Ambiance.esp
 
 ; Dragon32: This order from Stuporstar forum post (albeit for beta v1.10)
 ; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15273304
@@ -43332,6 +43888,47 @@ TLM - Complete.esp
 [Order]
 Uvirith's Legacy_<VER>.esp
 TLM - Ambient Light + Fog Update.esp
+
+;;Dragon32: And the other light-affecting mods
+[Order]
+Uvirith's Legacy_<VER>.esp
+LBS_addon_hvy_v1.1.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+LBS_addon_Hvy_VD_v1.1.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+LBS_addon_lt_v1.1.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+LBS_addon_lt_VD_v1.1.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+LBS_addon_reg_v1.1.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+LBS_addon_reg_VD_v1.1.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+Lights 300 v5.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+True_Lights_And_Darkness_0.5.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp
+True_Lights_And_Darkness_1.1.esp
 
 ;;Children of Morrowind
 
@@ -43353,7 +43950,7 @@ UL_CoM_Add-on.esp
 ; Ref: "Uvirith's Legacy_README.txt"
 Uvirith's Legacy_<VER>.esp
 UL_CoM_Add-on.esp
-UL_TLM_ambiance.esp
+UL_TLM_Ambiance.esp
 
 ;;Weapon Rotate
 
@@ -43368,7 +43965,7 @@ UL_WeaponRotate_Addon.esp
 [Order]
 Uvirith's Legacy_<VER>.esp
 UL_WeaponRotate_Addon.esp
-UL_TLM_ambiance.esp
+UL_TLM_Ambiance.esp
 
 ;;Ash Armor Divine Domina
 
@@ -43412,8 +44009,8 @@ Uvirith's Legacy_<VER>.esp
 
 [Note]
  ! "[UL_Upgrader_MWSE.esp is] an add-on that will let you stuff everything in the Bag of Holding for safe-keeping if you've already moved into your tower."
- ! It should only be used by people upgrading from "Uvirith's Legacy" 3.0 to 3.1
- ! (Ref: "UL_READMEFIRSTIMEANIT.txt")
+ ! This add-on can be used to upgrade any version of Uvirith's Legacy 3.0 (and up) to newer versions.
+ ! (Ref: "UL_READMEFIRSTIMEANIT.txt" and "UL_UPGRADER.txt")
 UL_Upgrader_MWSE.esp
 
 
@@ -43466,7 +44063,7 @@ Uvirith's Legacy_<VER>.esp
 NOM 3.0.esp
 
 ;;The Bathing Mod 2
-;;See also @Stinkers 2.0 to 3.0 Upgrade Patch [Stuporstar]
+;;See also "Stinkers 2.0 to 3.0 Upgrade Patch [Stuporstar]"
 
 ; "Uvirith's Legacy_README.txt" - "Bathing Mod 2.0 compatible objects have been added to all bathing areas of the tower"
 ; So, load the mod that defines those objects before the mod that uses them.
@@ -43524,7 +44121,7 @@ Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 
 ;;Books of Vvardenfell
 
-;;Dragon32: 4 Book show differences in TESPCD, checking bk_bloat_cultivation shows UV sets SCRI as "BROctavo_Bloat", Books of Vvardenfell 2.4 as "BROctavo_new".
+;;Dragon32: 4 Books show differences in TESPCD, checking bk_bloat_cultivation shows UV sets SCRI as "BROctavo_Bloat", Books of Vvardenfell 2.4 as "BROctavo_new".
 ;; "Actually, Uvirith's Legacy should load after BoV."
 ;;Ref: http://forums.bethsoft.com/topic/1481668-rel-uviriths-legacy-32/?p=23266070
 [Order]
@@ -43813,6 +44410,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
 [ALL [ANY ARJAN_PillowQuest_Fix.esp
           ARJAN_VampireFly_Fix.esp
           acsEbonyGreaves.esp
+          Almalexia_undialog.esp
           ArchMage_Fix_0604.esp
           Ash Ghoul Hearts.esp
           Bal Molagmer Fix.esp
@@ -45704,6 +46302,14 @@ vibrant trees 2.0.esp
 Vibrant lights 1.0.esp
 [ANY Illuminated Windows v1.2.esp
      Illuminated Windows - Bloodmoon v1.2.esp
+     LBS_addon_hvy_v1.1.esp
+     LBS_addon_Hvy_VD_v1.1.esp
+     LBS_addon_lt_v1.1.esp
+     LBS_addon_lt_VD_v1.1.esp
+     LBS_addon_reg_v1.1.esp
+     LBS_addon_reg_VD_v1.1.esp
+     LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp
      Lights 300 v5.esp
      Modman_windowlights_Full_2.esp
      Modman_windowlights_Purist_2.esp
@@ -47635,6 +48241,7 @@ Wilderness Sounds T & B.esp
 AtmosphericSoundEffects-3.0.esp
 AtmosphericSoundEffects-3.0-Tribunal.esp
 AtmosphericSoundEffects-3.0-TBM.esp
+ASE Complete (BTB Edit).esp
 Better_Sounds.esp
 Expanded Sounds.esp
 Sound Enhancements.esp
