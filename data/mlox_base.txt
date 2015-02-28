@@ -1405,6 +1405,17 @@ Clean Ald-Ruhn Temple Expansion <VER>.ESP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ald Vendras 3.1 [Centurion]
 
+[Note]
+ ! An upgraded version (3.1) of Ald Vendras is available:
+ ! http://mw.modhistory.com/download-44-6991
+Ald-Vendras_V3.esp
+Ald-Vendras_V3-LoKKen.esp
+Ald-Vendras_V3-LoKKen-SC.esp
+Ald-Vendras-Vogar_Complete.esp
+Ald-Vendras_V11.esp
+Ald-Vendras_West.esp
+Ald-Vendras_West_Part_2.esp
+
 ;; Recommended load order for Ald Vendras with popular mods:
 ;; All 3 files of Ald-Vendras V3.1 are compatible to "Illuminated Order"
 ;; and "Korobal Island" as long as you keep Ald-Vendras V3.1 loaded last
@@ -1433,27 +1444,53 @@ NOM 2.13.esp
 NoM 3.0.esp
 
 [Requires]
+ "The Tribunal and Bloodmoon expansion packs are REQUIRED for ["Ald Vendras" by Centurion]"
+ "The plug-in files for Weapon Rotate must also be selected (at the very least Weapon Rotate.esm)"
  (Ref: "Ald-Vendras_V3_readme.txt")
 [ALL Ald-Vendras_V31.esp
      Ald-Vendras_V31-LoKKen.esp
      Ald-Vendras_V31-LoKKen-SC.esp]
-[ANY Tribunal.esm
-     Bloodmoon.esm]
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     Weapon Rotate.esm]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
+  Ald-Vendras_V31.esp - The base version
+  Ald-Vendras_V31-LoKKen.esp - ONLY for users who want to run Ald Vendras AND The White Wolf of Lokken mod.
+  Ald-Vendras_V31-LoKKen-SC.esp - Only for users who wish to run Ald Vendras AND The white wolf of Lokken AND Solstheim Castle plug-in
+ (Ref: "Ald-Vendras_V3_readme.txt")
 Ald-Vendras_V31.esp
 Ald-Vendras_V31-LoKKen.esp
 Ald-Vendras_V31-LoKKen-SC.esp
 
 [Requires]
+ "[The plugin "Ald-Vendras_V31-LoKKen-SC.esp" is] for users who wish to run Ald Vendras AND The white wolf of Lokken AND Solstheim Castle plug-in."
+ (Ref: "Ald-Vendras_V3_readme.txt")
 Ald-Vendras_V31-LoKKen-SC.esp
-[ALL Clean Solstheim_Castle_v1.1.esp
-     [ANY BT_Whitewolf_2_0.esp
-	  BT_Whitewolf_2_0.esm]]
+[ALL [ANY BT_Whitewolf_2_0.esp
+	  BT_Whitewolf_2_0.esm]
+     Clean Solstheim_Castle_v1.1.esp]
 
 [Requires]
+ "[The plugin "Ald-Vendras_V31-LoKKen.esp" is] for users who want to run Ald Vendras AND The White Wolf of Lokken mod."
+  (Ref: "Ald-Vendras_V3_readme.txt")
 Ald-Vendras_V31-LoKKen.esp
+[ANY BT_Whitewolf_2_0.esp
+     BT_Whitewolf_2_0.esm]
+
+[Conflict]
+ "[The plugin "Ald-Vendras_V31-LoKKen-SC.esp" is] for users who wish to run Ald Vendras AND [...] Solstheim Castle plug-in."
+ You will also need to load Emma's "The White Wolf of Lokken".
+ (Ref: "Ald-Vendras_V3_readme.txt")
+Clean Solstheim_Castle_v1.1.esp
+[ANY Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31.esp]
+
+[Conflict]
+ "[The plugin "Ald-Vendras_V31-LoKKen.esp" is] for users who want to run Ald Vendras AND The White Wolf of Lokken mod."
+ (Ref: "Ald-Vendras_V3_readme.txt")
+Ald-Vendras_V31.esp
 [ANY BT_Whitewolf_2_0.esp
      BT_Whitewolf_2_0.esm]
 
@@ -1481,39 +1518,12 @@ _Legends_of_Ydumea_v2.esp
      Ald-Vendras_V31-LoKKen-SC.esp]
 Lucans_Vogar_01.esp
 
-[Note]
- ! An upgraded version (3.1) of Ald Vendras is available:
- ! http://mw.modhistory.com/download-44-6991
-Ald-Vendras_V3.esp
-Ald-Vendras_V3-LoKKen.esp
-Ald-Vendras_V3-LoKKen-SC.esp
-
-[Requires]
- (Ref: "Castle_Dragonfall_readme.txt")
-Castle_Dragonfall.esp
-[ANY Ald-Vendras_V31.esp
-     Ald-Vendras_V31-LoKKen.esp
-     Ald-Vendras_V31-LoKKen-SC.esp
-     Ald-Vendras_V3.esp
-     Ald-Vendras_V3-LoKKen.esp
-     Ald-Vendras_V3-LoKKen-SC.esp]
-[Order]
-Ald-Vendras_V31.esp
-Ald-Vendras_V31-LoKKen.esp
-Ald-Vendras_V31-LoKKen-SC.esp
-Ald-Vendras_V3.esp
-Ald-Vendras_V3-LoKKen.esp
-Ald-Vendras_V3-LoKKen-SC.esp
-Castle_Dragonfall.esp
+;;Dragon32: MapOMods also shows a conflict with "Moska", can't find that plugin though
 
 [NOTE]
- !!! Ald-Vendras V30 and V31 erroneously includes three scripts which handle the end of Morrowind's
- !!! main quest: DagothUrCreature1, EndGame, and LorkhanHeart. These scripts are
- !!! taken from a French version of Morrowind, which means that Dagoth Ur will speak
- !!! French, and that he will not be teleported to the endgame location (because the
- !!! script tries to teleport him to the *French* version of that cell, which has a different
- !!! name than the English version). This will also break mods that modify these scripts
- !!! intentionally. Solution: Remove the three scripts from the esp.
+ !!! Ald-Vendras V30 and V31 erroneously includes three scripts which handle the end of Morrowind's main quest: DagothUrCreature1, EndGame, and LorkhanHeart. These scripts are taken from a French version of Morrowind, which means that Dagoth Ur will speak French, and that he will not be teleported to the endgame location (because the script tries to teleport him to the *French* version of that cell, which has a different name than the English version). This will also break mods that modify these scripts intentionally. Solution: Remove the three scripts from the esp.
+ !!! Alternatively, arvisrend has released fixed versions in "Ald Vendras v3.1 bugfix.7z"
+ !!! Download arvisrend's fixed from Morrowind Modding History - http://mw.modhistory.com/download-44-6991
 [ANY [SIZE 10204798 Ald-Vendras_V31.esp]
      [SIZE 9978740 Ald-Vendras_V31-LoKKen.esp]
      [SIZE 9789132 Ald-Vendras_V31-LoKKen-SC.esp]
@@ -2074,6 +2084,18 @@ NOM 2.13.esp
  Download "Annastia V3.3(Fixed) Alernative esp.7z" from Morrowind Modding History and replace the original plugin with this cleaned version by Slartibartfast.
  (Ref: http://mw.modhistory.com/download-48-6992 )
 [SIZE !4921700 Annastia V3.3.esp]
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Annastia V3.3.esp
+Helios_Keep.esp
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Annastia V3.3.esp
+Volcano Island; the Followers V.1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3134,8 +3156,11 @@ arvisrend - fixes - dren plantation.ESP
 Ascadian_Rose_Cottage_ver1.0.esp
 NOM 2.13.esp
 
-;;Dragon32: Might as well as add an equivalent order rule for v3
-[Order]
+[Conflict]
+ Korana's "Ascadian Rose Cottage" is not compatible with Taddeus' "Necessities of Morrowind" 3.0
+ "Ascadian Rose Cottage DX" by Gaius Atrius was designed to work with NoM 3.0.
+ Download "Ascadian Rose Cottage DX" from Morrowind Modding History - http://mw.modhistory.com/download-48-6719
+ (Ref: http://forums.bethsoft.com/topic/1506596-koranas-ascadian-rose-cottagenom-303-conflict/?p=23750317 )
 Ascadian_Rose_Cottage_ver1.0.esp
 NoM 3.0.esp
 
@@ -6636,6 +6661,12 @@ Beyond YsGramor v2.5.esm
 BY_Patch_L1.5.esp
 Beyond YsGramor v2.5.esm
 
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Beyond YsGramor v2.5.esm
+Helios_Keep.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @bigmod/bigmod2 [xereau]
@@ -6807,15 +6838,6 @@ BirthsignsAMFun_MW.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Black Rose and Cedric  [Black Rose]
-
-[Note]
- !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 264800 br_c_and_br.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Black Light [Rodan]
 
 [Note]
@@ -6895,13 +6917,20 @@ TheBlackMill11.esp
 [ANY Seyda Neen Docks and Haldershore Tribunal V1.1.esp
      Seyda Neen Docks and Haldershore Tribunal_Bloodmoon V1.1.esp]
 
-[Conflict] ; reported by Amenophis
- The BlackMill normally conflicts with Tamriel Rebuilt, but abot has created a version that is compatible here:
- http://abot.silgrad.com/guppy/download.php?lng=en&cat=Morrowind%20Mods.%3a%50atches&dn=1
- You must have the BlackMill already installed, then replace TheBlackMill11.esp with TheBlackMill11fixedtransposedNOMified.esp.
+; reported by Amenophis
+[Conflict]
+ The BlackMill normally conflicts with Tamriel Rebuilt, but abot has created a version that is compatible.
+ Download it from Morrowind Modding History - http://mw.modhistory.com/download-4-12317
+ You must have the BlackMill already installed, then replace TheBlackMill11.esp with "TheBlackMill11FMN.esp".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15063847 )
 TR_Mainland.esm
 TheBlackMill11.esp
+
+[Conflict]
+ "The Black Mill Fixed, Moved, Nomified" by abot will conflict with "Wizards' Islands Super Patch" by Danjb et al.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?p=92801#p92801 )
+TheBlackMill11FMN.esp
+[SIZE 14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6954,10 +6983,42 @@ Clean Black Queen Chronicles Ver 2.5.esp
 silgrad_tower_1-4_6.6.esp
 
 [Conflict]
- landmass conflict.
+ Landmass conflict.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 Clean Black Queen Chronicles Ver 2.5.esp
-Castlevania.esp
+[ANY Castlevania.esp
+     Doom_Door_01.esp]
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Clean Black Queen Chronicles Ver 2.5.esp
+elskjiver.esp
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Clean Black Queen Chronicles Ver 2.5.esp
+velayia.esm
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Clean Black Queen Chronicles Ver 2.5.esp
+[SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Clean Black Queen Chronicles Ver 2.5.esp
+Skeleton_Island_V3.00.esp
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+Clean Black Queen Chronicles Ver 2.5.esp
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
 
 [Conflict]
  This mod combines Tenaka's three previous mods ("Morgiah's Destiny", "Savant Armor Quest" and "Prison Ship Escape"). If you have any of those mods running you will need to unload them and start a new game with just "Clean Black Queen Chronicles Ver 2.5.esp" loaded.
@@ -6967,6 +7028,15 @@ Clean Black Queen Chronicles Ver 2.5.esp
      The Prison Ship Escape V2.esp
      The Prison Ship Escape High Level V2.esp
      SavantArmorV4.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Black Rose and Cedric  [Black Rose]
+
+[Note]
+ !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 264800 br_c_and_br.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7340,9 +7410,9 @@ Blood Lines I_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @ Bloodmoon Extras - Fixed levelled lists v0.2 [Dragon32, TheOtherFelix]
+;; @Bloodmoon Extras - Fixed levelled lists v0.2 [Dragon32, TheOtherFelix]
 
-;; Dragon32 - Information about TheOtherFelix's original mod's use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+;; Dragon32 - Information about TheOtherFelix's original mod's use of deprecated levelled lists is under the "Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Conflict]
  Do not enable both plugins, only enable the version with the fixed levelled lists: "BMExtrasFixedLL.esp"
@@ -7444,11 +7514,11 @@ BM_SpellFix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Bloody Oath_v.1.0 [Aquan]
+;; @Bloody Oath 1.0 [Aquan]
 
 [Conflict]
  Bloody Oath has major landmass conflicts with the island of Tusar
- (See: http://fessicsfavorites.files.wordpress.com/2008/07/map-o-mods.jpg )
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=926679&view=findpost&p=13560421 )
 Bloody Oath_v1.0.esp
 tusar_v1.2.1.esp
@@ -7725,7 +7795,31 @@ Book Rotate - Morrowind v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Booty Island [JOG]
+;; @Booty Island 1.1 [JOG]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Booty.esp
+Journey's End 1.1.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Booty.esp
+BAR_DarkshroudKeep_v1.2.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Booty.esp
+GS_Tamriel Part1_Black Marsh.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Booty.esp
+SnakeBitten Island - Alpha.esp
 
 ;;Dragon32: Booty Island modifies an NPC from the Illuminated Order mod, so should load later
 ;;Ref: Booty.txt
@@ -8639,6 +8733,32 @@ Cast On Use B-Gone.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1574745 Castle of Balmora.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Dragonfall [Centurion]
+
+[Requires]
+ "The Tribunal and Bloodmoon expansion packs & any version of Ald-Vendras V3 or V3.1 are REQUIRED for ["Castle Dragonfall" by Centurion]"
+ (Ref: "Castle_Dragonfall_readme.txt")
+Castle_Dragonfall.esp
+[ALL [ANY Ald-Vendras_V31.esp
+          Ald-Vendras_V31-LoKKen.esp
+          Ald-Vendras_V31-LoKKen-SC.esp
+          Ald-Vendras_V3.esp
+          Ald-Vendras_V3-LoKKen.esp
+          Ald-Vendras_V3-LoKKen-SC.esp]
+     Tribunal.esm
+     Bloodmoon.esm]
+
+[Order]
+Ald-Vendras_V31.esp
+Ald-Vendras_V31-LoKKen.esp
+Ald-Vendras_V31-LoKKen-SC.esp
+Ald-Vendras_V3.esp
+Ald-Vendras_V3-LoKKen.esp
+Ald-Vendras_V3-LoKKen-SC.esp
+Castle_Dragonfall.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12029,7 +12149,7 @@ Astarsis_HEM_DonSalus.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Doom_Door (Ver.1.0, 14 February 2004) [Oldie]
+;; @Doom Door 1.0 [Oldie]
 
 ;; However, if you have any of the following five mods installed, it is
 ;; advisable to "uncheck" these under the game data files, to avoid
@@ -12040,7 +12160,25 @@ Astarsis_HEM_DonSalus.esm
 ;; (Ref: "Read_Me_Doom_Door.txt")
 
 [Conflict]
- Playing "Doom Door" and "CON2" together can cause ghosting.
+ Playing Oldie's "Doom Door" and "Ghostpath" by Ascendant together can cause ghosting.
+ (Ref: "Read_Me_Doom_Door.txt")
+Doom_Door_01.esp
+Ghostpath 1.41a.esp
+
+[Conflict]
+ Playing Oldie's "Doom Door" and "Castlevania" by The Dark Man together can cause ghosting.
+ (Ref: "Read_Me_Doom_Door.txt")
+Doom_Door_01.esp
+Castlevania.esp
+
+[Conflict]
+ Playing Oldie's "Doom Door" and "The Magus Unending" by Davion The Mad together can cause ghosting.
+ (Ref: "Read_Me_Doom_Door.txt")
+Doom_Door_01.esp
+The Magus Unending.esp
+
+[Conflict]
+ Playing Oldie's "Doom Door" and "Children of the Night Part 2" by JB together can cause ghosting.
  (Ref: "Read_Me_Doom_Door.txt")
 Doom_Door_01.esp
 C0N2 v1.01.esp
@@ -12297,6 +12435,12 @@ Drowcity Denizens.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 3433936 Dulsya Isle.esp]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Dulsya Isle.esp
+The Aedronicon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14872,10 +15016,17 @@ Better Bodies.esp
 ;; @Frostmoth 1.2 [Markus H]
 
 [Conflict]
- The new village added by Markus H's "Frostmoth" render the Moldy Horker inn, from Taddeus' "Necessities of Morrowind", next to Fort Frostmoth pretty much inaccessible.
+ The new village added by Markus H's "Frostmoth" renders the Moldy Horker inn, also included in Taddeus' "Necessities of Morrowind", next to Fort Frostmoth pretty much inaccessible.
  (Ref: http://static-2.nexusmods.com/15/mods/100/images/30236-1-1267397842.jpg )
 Frostmoth.ESP
-NoM 3.0.esp
+[ANY NoM 3.0.esp
+     BM_S_Inn.esp]
+
+[Conflict]
+ "[Markus H's "Frostmoth"] will conflict with Solstheim Lighthouse"
+ (Ref: https://www.youtube.com/watch?v=iv-wLAPfWAc )
+Frostmoth.ESP
+JMK-Solstheim_Lighthouse.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17591,6 +17742,14 @@ abotGuards.esp
 abotGuardsBM.esp
 abotGuardsTR.esp
 
+[Requires]
+ (Ref: "abotGuards.txt")
+abotGuardsTR.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     TR_Mainland.esm
+     TR_Data.esm]
+
 ;; expdep
 [Requires]
  This plugin uses a startscript and the Tribunal functions: getweapondrawn and getwaterlevel so it requires one of the expansions.
@@ -18028,6 +18187,22 @@ slofheavyfix.esp
  (Ref: http://mw.modhistory.com/download-1-10446 )
 slofheavyfix.esp
 Slof's Goth Shop 1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Helios Keep 1.0.02 [Sauron256]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Helios_Keep.esp
+Liligue island.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Helios_Keep.esp
+Volcano Island; the Followers V.1.2.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21043,6 +21218,41 @@ Inferno's Island Revisited.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Inn of the Whispering Wood 1.4 [Endhome.com staff (project leader: Granarinth)]
+
+;;Dragon32: MapOMods also shows a conflict with "Moska", can't find that plugin though
+
+;;Dragon32: Read me says "THIS MOD IS INCOMPATIBLE WITH THE "KNIGHTS OF DARKNESS" mod", that's "The Knights of Darkness" by Davidevil. Can't find link.
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Inn Whisp Wood BM.esp
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
+
+[Conflict]
+ "[Endhome.com's "Inn of the Whispering Wood"] conflicts with Solstheim Lighthouse"
+ (Ref: https://www.youtube.com/watch?v=iv-wLAPfWAc )
+Inn Whisp Wood BM.esp
+JMK-Solstheim_Lighthouse.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Inner Sea Woods 1.5 [Yali]
+
+[Note]
+ Yali's "Inner Sea Woods" uses the sounds from Duncan's "Atmospheric Sound Effects". You don't need to have an "Atmospheric Sound Effects" plugin active but you do need its sound files installed.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42373/ )
+[ALL Inner Sea Woods.esp
+     [NOT [ANY AtmosphericSoundEffects-3.0-Tribunal.esp
+               AtmosphericSoundEffects-3.0-TBM.esp
+               AtmosphericSoundEffects-3.0.esp
+               ASE Complete (BTB Edit).esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Inscription [Lap]
 
 ;;Dragon32: No ref, info from Plain Paper Fix ckl by claudekennilol, q.v.
@@ -21053,7 +21263,7 @@ dej_plain_paper_fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Inscription v2.0 [The DopeHatMan]
+;; @Inscription 2.0 [The DopeHatMan]
 
 [Conflict]
  The DopeHatMan's "Inscription v2.0" is a revamp and updating of Lap's original "Inscription", there is no need to run both mods.
@@ -21153,17 +21363,47 @@ Tribunal.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Island Of Tusar [Vanhikes]
+;; @The Island Mod 1.3 [lonnie]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 701232 The Island v1.3.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Island Of Tusar 1.2.1 [Vanhikes]
 
 [Requires]
 tusar_v1.2.1(bloodmoon addon).esp
 tusar_v1.2.1.esp
 
+;;Dragon32: Checked with TESPCD, REGN conflict
+[Order]
+tusar_v1.2.1.esp
+tusar_v1.2.1(bloodmoon addon).esp
+
 [Note]
  Some of the following may make one part of the quest in "Island of Tusar" difficult or impossible to complete:
- <hide>Permanent water breathing, Constant Effect Restore Health (such as one of the quest rewards in the mod "Northern Winds".</hide>
+  Permanent water breathing
+  Constant Effect Restore Health (such as one of the quest rewards in the mod "Northern Winds".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=938026&view=findpost&p=13585779 )
 tusar_v1.2.1.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+tusar_v1.2.1.esp
+Nerevarine_castle.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Isle of Elskjiver [Enrall and BlackRaven]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 4348904 elskjiver.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21380,7 +21620,7 @@ Journey's End- Wilderness Mod add-on.esp
 
 [Conflict]
  "Be warned that [lochnarus' "Journey's End"] clashes with [...] Baratheon's mod Darkshroud Keep"
- (Ref: http://forums.bethsoft.com/topic/1495086-journeys-end/?p=23489878 )
+ (Ref: http://forums.bethsoft.com/topic/1495086-journeys-end/?p=23489878 and http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
 Journey's End 1.1.esp
 BAR_DarkshroudKeep_v1.2.esp
 
@@ -22207,7 +22447,7 @@ Kobu's No Planning.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Korobal [Korobal Mod Team]
+;; @Korobal Island 1.2 [Korobal Mod Team]
 
 [Patch]
  As you use The Puma Man's "GIANTS" mod with "Korobal Island" you should install the provided patch plugin
@@ -22238,6 +22478,13 @@ KI-GU-Trib_comp.esp
  (Ref: Readme_Korobal.txt)
 Korobal v1.2.esp
 Moons_Spawn_V1.3.3_Non_Patched.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Korobal v1.2.esp
+Tree_of_Life.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Korsuth [Jake Whiton]
@@ -24460,7 +24707,7 @@ Madd Leveler - Sederien Skills.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @mage friendly daedra [Nightblade_Y]
+;; @Mage Friendly Daedra [Nightblade_Y]
 
 ;;Dragon32: Checked validity of following Order rules using TESPCD
 [Order]
@@ -25040,9 +25287,8 @@ MQE_MainQuestEnhancers.ESP
 
 [Conflict]
  "Known Incompatibilities include:
-  Morrowind Rebirth: With Garrisoned Ghostgate and Crowd Control
-  Mountainous Morrowind: With Garrisoned Ghostgate"
- (Ref: "MainQuestEnhancers11.rar\MainQuestEnhancers\Readme.txt")
+  Morrowind Rebirth: With Garrisoned Ghostgate and Crowd Control"
+ (Ref: "MainQuestEnhancers11.rar\MainQuestEnhancers\Readme.txt" and http://mw.modhistory.com/download-7-6828 )
 [ANY MQE_GarrisonedGhostgate.ESP
      MQE_MainQuestEnhancers.ESP
      MQE_CrowdControl.ESP]
@@ -25051,7 +25297,7 @@ Morrowind Rebirth <VER>.esp
 [Conflict]
  "Known Incompatibilities include:
   Mountainous Morrowind: With Garrisoned Ghostgate"
- (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=9407 )
+ (Ref: http://mw.modhistory.com/download-7-6828 )
 [ANY MQE_GarrisonedGhostgate.ESP
      MQE_MainQuestEnhancers.ESP]
 MRM.esm
@@ -25061,6 +25307,14 @@ MRM.esm
  !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
 [ANY MQE_BlightedBeasties.ESP
      MQE_MainQuestEnhancers.ESP]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Makunde 1.1 [Master Sam]
+
+[Order]
+Makunde.esp
+Makunde_Race_Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25474,9 +25728,9 @@ The Meadow Fae.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Melee Missiles v1.2 [scruggs]
+;; @Melee Missiles 1.2 [scruggs]
 
-;; Dragon32 - Information about scruggs' "Melee Missiles" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+;; Dragon32 - Information about scruggs' "Melee Missiles" use of deprecated levelled lists is under the "Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Requires]
  This plugin uses a Startup script so it requires at least one of the expansions.
@@ -26475,6 +26729,8 @@ Korobal v1.2.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Moldy Horker [Grumpy]
 
+;;Dragon32: See also "NoM (Necessities of Morrowind) 3.03a [Taddeus]"
+
 [Conflict]
  BM_S_Inn.esp is the newer version of the Moldy Horker
 BM_S_Inn.esp
@@ -26506,12 +26762,40 @@ S_Inn_th.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @moon's soulgems ("NelothsMouth's" Soul Gem Replacer Retextured V.1.00) [Infectious Moon]
+;; @Moon's Soulgems ("NelothsMouth's" Soul Gem Replacer Retextured V.1.00) [Infectious Moon]
 
 [Note]
  !! The original version of this plugin contains two GMSTs that should be cleaned: (sEffectSummonFabricant and sMagicFabricantID)
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2476 moons_soulgems.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Moon's Spawn 1.3.3 [Caladan Brood]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Moons_Spawn_V1.3.3_Non_Patched.esp
+Korobal v1.2.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Moons_Spawn_V1.3.3_Non_Patched.esp
+GS_Tamriel Part1_Black Marsh.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Moons_Spawn_V1.3.3_Non_Patched.esp
+SnakeBitten Island - Alpha.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Moons_Spawn_V1.3.3_Non_Patched.esp
+Journey's End 1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27575,6 +27859,11 @@ Better Clothes_v1.1.esp
 [ANY Vamp Doors Trib & Blood.esp
      Vamp Doors Trib.esp
      Vamp Doors.esp]
+
+[Note]
+ ! The highly recommended "Morrowind Code Patch" by Hrnchamd adds "Shortcut key improvements". One of those improvements is that when examining a container, you may take all items by pressing the "Ready Weapon" key. If you have the "Morrowind Code Patch", you do not need Fliggerty's "Take All Button of Pain and Happiness"
+ ! (Ref: http://forums.nexusmods.com/index.php?/topic/2458519-take-all-hotkey-mod/?p=21660169 )
+Take All.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29896,6 +30185,7 @@ Protective Guards.esp
 Raven Wings.esp
 Real Time Updating.esp
 ScentOfBlood_MWSE_AddOn.esp
+Take All.esp
 VampiricIllusion_MWSE_AddOn.esp
 ve_comp_control.esp
 VH_Bloodreport.esp
@@ -30083,6 +30373,48 @@ From Hell To Heaven.esm
 From Hell To Heaven.esm
 [ALL From Hell To Heaven part 2.esp
      From Hell To Heaven part 3.esp]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+From Hell To Heaven.esm
+TheBlackMill11.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+From Hell To Heaven.esm
+Booty.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+From Hell To Heaven.esm
+Korobal v1.2.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+From Hell To Heaven.esm
+Moons_Spawn_V1.3.3_Non_Patched.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+From Hell To Heaven.esm
+GS_Tamriel Part1_Black Marsh.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+From Hell To Heaven.esm
+SnakeBitten Island - Alpha.esp
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=28&t=5764 )
+From Hell To Heaven.esm
+Tel Nechim.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30732,6 +31064,11 @@ LGNPC_PaxRedoran_v?_??_GOTYST.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 NX9_Guard_LGRedoran_Patch.ESP
 
+;;Dragon32: Don't believe this is necessary based on TESPCD check, can be removed if problematic
+[Order]
+NX9_Guards_Complete.ESP
+NX9_Guard_LGRedoran_Patch.ESP
+
 [Patch]
  NazoX9's "NX9_Guard_LGRedoran_Patch.ESP" fixes incompatibilities between ostar's "Less Generic Tribunal" and NazoX9's "Guards"
  http://morrowind.nexusmods.com/mods/27765
@@ -30743,6 +31080,11 @@ NX9_Guard_LGTrib_patch.ESP
 [Order]
 NX9_Guards_Complete.ESP
 NX9_Guard_LGTrib_patch.ESP
+
+;;Dragon32: Don't believe this is necessary based on TESPCD check, can be removed if problematic
+[Order]
+Less_Generic_Tribunal.esp
+NX9_Guard_LGRedoran_Patch.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31341,7 +31683,7 @@ MCA_NSN_Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @NerevarArmor  [armor by Enlightened_Daedroth and Soulshade, quests either by Aragon or by Greevar]
+;; @Nerevar Armor  [armor by Enlightened_Daedroth and Soulshade, quests either by Aragon or by Greevar]
 
 [Requires]
  (Ref: "Readme")  ; Readme of original mod as copied into readmes of expanded mods
@@ -31362,6 +31704,16 @@ Tribunal.esm
 [Note]
  This plugin contains several empty cells and should be cleaned with TESTool.
 [SIZE 387343 St. Nerevar's Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Nerevarine's Castle 0.9 [Zappara]
+
+[Conflict]
+ "[Zappara's "Nerevarine's Castle"] includes also Weapon Wielding Mannequins v1.0 By Stephen Kent (a.k.a. Riiak Shi Nal). If you have that plugin installed you'll probably have to un-check it when you start using ["Nerevarine's Castle" by Zappara]."
+ (Ref: "readme - Nerevarine_castle.txt")
+Nerevarine_castle.esp
+Weapon Wielding Mannequins.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -33129,7 +33481,7 @@ OB_Style Auto Quivers And Bows_CAJ.esp
 OB_Style Quivers And Bows 4$_CAJ.esp
 OB_Style Quivers And Bows_CAJ.esp
 
-;;Spiffyman's merged mods including HELLUVA Awesome Armour Completion Set (see "@HELLUVA Balanced 2.3 [Spiffyman]")
+;;Spiffyman's merged mods including HELLUVA Awesome Armour Completion Set (see "HELLUVA Balanced 2.3 [Spiffyman]")
 [Order]
 HELLUVA Balanced BTB.esp
 OB_Style Auto Quivers And Bows.esp
@@ -37472,6 +37824,36 @@ Sea-of-Destiny.esm
 DaggerSoul-Addon.esp
 Sea-of-Destiny.esm
 
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Sea-of-Destiny.esm
+Dulsya Isle.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Sea-of-Destiny.esm
+FTG.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Sea-of-Destiny.esm
+Tir Thalor Quest.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Sea-of-Destiny.esm
+The Aedronicon.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Sea-of-Destiny.esm
+Great Shoals.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Seamless Morrowind 1.0.14.1 [Kung Fu Sung-Hu]
@@ -37975,6 +38357,52 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Siege at Firemoth 1.1 [Bethesda]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY Siege at Firemoth.esp
+     [Official]Siege at Firemoth.esp
+     SiegeAtFiremoth.esp
+     Clean Official Plugins v1.1.esp
+     Official_2002_Mods.esp
+     OfficialMods_v5.esp
+     super_adventurers302.esp
+     silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+Tir Thalor Quest.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY Siege at Firemoth.esp
+     [Official]Siege at Firemoth.esp
+     SiegeAtFiremoth.esp
+     Clean Official Plugins v1.1.esp
+     Official_2002_Mods.esp
+     OfficialMods_v5.esp
+     super_adventurers302.esp
+     silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+Doom_Door_01.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY Siege at Firemoth.esp
+     [Official]Siege at Firemoth.esp
+     SiegeAtFiremoth.esp
+     Clean Official Plugins v1.1.esp
+     Official_2002_Mods.esp
+     OfficialMods_v5.esp
+     super_adventurers302.esp
+     silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+Castlevania.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Signposts Retextured TR 2.0 [PeterBitt]
 
 [Note]
@@ -38101,6 +38529,50 @@ blacklightv1.34.esp
      silgrad_tower_1-4_6.6.esp]
 Havish.esm
 
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+TheGloryRoad.esm
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+velayia.esm
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+Stanegau Island.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+elskjiver.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+Skeleton_Island_V3.00.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+ You could try abot's moved version of "A Call to Issilar":
+ Download it from Morrowind Modding History: http://mw.modhistory.com/download-48-12374
+[ANY silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+A Call to Issilar.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Silk Dragon Imports 1.0 [Xiamara]
@@ -38198,6 +38670,21 @@ Silt Striders in the Wild.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Simple Balmora House 1.1 [Nyakitty]
+
+[Note]
+ !! This plugin contains evil GMSTs. 
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 178913 Balmora House.esp]
+
+[Conflict]
+ Both Nyakitty's "Simple Balmora House" and Mr.A.A.'s "Seyda Neen House" use the same name for their house interiors: "My House"
+ (Ref: http://forums.nexusmods.com/index.php?/topic/880356-simple-balmora-house/?p=13132893 )
+Balmora House.esp
+MrAA_SeydaNeenHouse_v1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sinking Gondola Fix [Scruggs]
 
 [Note]
@@ -38237,6 +38724,62 @@ Bloodmoon.esm
  "[Wogya's Sixth House Transportation System"] will conflict with Endrek's Sixth House mod."
 6th house transport.esp
 Sixth House.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Skeleton Island 3.00 [soar/soar182]
+
+[Conflict]
+ soar/soar182's "Skeleton Island" conflicts with "Isle of Mistmore" by Wixard2
+ (Ref: "Skeleton_Island_V3.00.doc")
+Skeleton_Island_V3.00.esp
+Isle of Mistmore.esp
+
+[Conflict]
+ soar/soar182's "Skeleton Island" conflicts with "The Island Mod" by lonnie
+ (Ref: "Skeleton_Island_V3.00.doc")
+Skeleton_Island_V3.00.esp
+The Island v1.3.esp
+
+[Note]
+ ! You may notice oddities running soar/soar182's "Skeleton Island" together with Tenaka's "Black Queen Chronicles". soar/soar182 says:
+ ! "I think both plug in function together. A part of my island that is not used is sunk. Where my island is sunk is part of BQC ports. None of BQC land mass is effected. BQC uderwater extension effects Skeleton Island. Both can be played together"
+ ! (Ref: "Skeleton_Island_V3.00.doc")
+[ALL Skeleton_Island_V3.00.esp
+     Clean Black Queen Chronicles Ver 2.5.esp]
+
+;;Dragon32: Above, to me, implies that BQC loads after Skeleton Island
+[Order]
+Skeleton_Island_V3.00.esp
+Clean Black Queen Chronicles Ver 2.5.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+ You could try abot's moved version of "A Call to Issilar":
+ Download it from Morrowind Modding History: http://mw.modhistory.com/download-48-12374
+Skeleton_Island_V3.00.esp
+A Call to Issilar.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Skeleton_Island_V3.00.esp
+Stanegau Island.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Skeleton_Island_V3.00.esp
+velayia.esm
+
+;;Dragon32: WI esm with SIZE of 14993627 is from "Wizards' Islands Super Patch v0.6" (q.v.)
+;;"Both islands have been moved north to make the mod compatible with Tamriel Rebuilt."
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+Skeleton_Island_V3.00.esp
+[SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38558,6 +39101,16 @@ CDR_SmootherBodies_M_OldUWear.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @SnakeBitten's Island [Snakebitten]
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+SnakeBitten Island - Alpha.esp
+RaferSands.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @SnakeBitten's Lair [Snakebitten]
 
 [Note]
@@ -38614,7 +39167,8 @@ DA_Sobitur_Repurposed_1.ESP
 ;;Dragon32: Dependent on TR_Data.esm
 [Requires]
 DA_Sobitur_TRIngred_Compat.ESP
-DA_Sobitur_Facility_Clean.ESP
+[ALL DA_Sobitur_Facility_Clean.ESP
+     TR_Data.esm]
 
 [Order]
 DA_Sobitur_Repurposed_1.ESP
@@ -40109,6 +40663,24 @@ Stinkers 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Stonewood Hall 1.2 [grond]
+
+[Conflict]
+ grond's original version of "Stonewood Hall" conflicts with Endhome.com's "Inn of the Whispering Wood", you should use grond's "Inn-Friendly Stonewood Hall" instead.
+ Download it from Morrowind Modding History - http://mw.modhistory.com/download-70-1253
+SWHv1.1.esp
+Inn Whisp Wood BM.esp
+
+[Conflict]
+ "PLEASE CHOOSE ONLY ONE STONEWOOD HALL AT A TIME!!!!"
+  SWHv1.1.esp - The original mod.
+  West_Stonewood Hall.esp - Compatable with Endhome.com's "Inn of the Whispering Wood", otherwise identical
+ (Ref: "Inn-Friendly Stonewood Hall (ver.1.2).zip\README.txt")
+SWHv1.1.esp
+West_Stonewood Hall.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Stronghold Vaults  [Tenaka]
 
 [Conflict]
@@ -40833,6 +41405,17 @@ Taddeus'BalancedWeapons_Rotate.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Take All Button of Pain and Happiness [Fliggerty]
+
+;;expdep
+[Requires]
+ This plugin uses a Startup script, so it requires either expansion.
+Take All.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tale of the Devious Trader [Xeth-Ban]
 
 [Conflict]
@@ -41058,6 +41641,12 @@ Tel Nechim.esp
 TR_Mainland.esm
 Château de Hadeborg V1.0.esp
 
+[Conflict]
+ Landmass conflict. ChopSlashThrust's "Unique Ocean Landscapes" uses the same cells as Tamriel Rebuilt's Teyn.
+ (Ref: http://tamriel-rebuilt.org/forum/viewtopic.php?p=326603#326603 )
+TR_Mainland.esm
+Unique Ocean Landscapes.ESP
+
 ;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
 ;[Conflict]
 ; Landmass conflict. One of Havish's Mage Guild quests involves a small island that conflicts with Tamriel Rebuilt.
@@ -41068,6 +41657,12 @@ Château de Hadeborg V1.0.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Tamriel Rebuilt: Census and Excise Links [The "Bloodthirsty" Crustacean]
+
+[Requires]
+TR_CensusAndExciseTravel.esp
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm]
 
 ;;Dragon32: See Ref in Note rule below - "This prevents an error message regarding TC_CEGate in TR_CensusAndExciseTravel.esp's TC_CEShipDockScript script when starting a new game."
 [Order]
@@ -41132,7 +41727,9 @@ TR_CensusAndExciseTravel.esp
  http://mw.modhistory.com/download-90-845
  (Ref: "TR1_Herbalism_Readme.txt")
 TR1_Herbalism.esp
-Herbalismv1.3(Tribunal).esp
+[ALL Herbalismv1.3(Tribunal).esp
+     TR_Data.esm
+     TR_Map1.esm]
 
 ;;Dragon32: based on the above
 [Order]
@@ -43713,6 +44310,50 @@ unique Maar Gan - extended addon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Unique Ocean Landscapes [ChopSlashThrust]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 12935993 Unique Ocean Landscapes.ESP]
+
+[Conflict]
+ "Incompatibility [between ChopSlashThrust's "Unique Ocean Landscapes" and] Vurts Corals and Reefs."
+ (Ref: "UOL Beta3 - West Gash-42119-Beta3.zip\Unique Ocean Landscapes\Readme.txt")
+Unique Ocean Landscapes.ESP
+Vurt's Corals.esp
+
+[Conflict]
+ "Incompatibility [between ChopSlashThrust's "Unique Ocean Landscapes" and] Siege on Firemoth."
+ (Ref: "UOL Beta3 - West Gash-42119-Beta3.zip\Unique Ocean Landscapes\Readme.txt")
+Unique Ocean Landscapes.ESP
+[ANY Siege at Firemoth.esp
+     SiegeAtFiremoth.esp
+     [Official]Siege at Firemoth.esp
+     OfficialMods_v5.esp
+     Clean Official Plugins v1.1.esp
+     Official_2002_Mods.esp
+     super_adventurers302.esp
+     silgrad_tower_internal_release_1-4_6.6.esp
+     silgrad_tower_1-4_6.6.esp]
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://static-2.nexusmods.com/15/mods/100/images/42119-1-1336146863.jpg )
+Unique Ocean Landscapes.ESP
+[ANY Ald-Vendras_V3.esp
+     Ald-Vendras_V3-LoKKen.esp
+     Ald-Vendras_V3-LoKKen-SC.esp
+     Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp
+     BT_Whitewolf_2_0.esm
+     BT_Whitewolf_2_0.esp
+     Inn Whisp Wood BM.esp
+     TheGloryRoad.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Unofficial Morrowind Comes Alive - City Attack Patches [businessman332211]
 
 [Requires]
@@ -45806,12 +46447,12 @@ Suran Archery Store_v3.0 NSE.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vality's Balmora Addon [Vality]
 
-[Requires]
- "[Vality's "Balmora Addon"] is an addon to ["Vality's Bitter Coast Tree Replacer & Bitter Coast Addon"]"
- (Ref: "Vality's Balmora Mod.txt")
-Vality's Balmora Addon.esp
-[ANY Vality's Bitter Coast Addon.esp
-     Vality's Bitter Coast Addon (Texture Fix Edit).esp]
+[Note]
+ !! "[Vality's "Balmora Addon"] is an addon to ["Vality's Bitter Coast Tree Replacer & Bitter Coast Addon"]"
+ !! Whilst you do not have to have the plugin from "Vality's Bitter Coast Tree Replacer & Bitter Coast Addon" loaded you need to have the meshes and textures installed.
+ !! (Ref: "Vality's Balmora Mod.txt" and  )
+[ALL Vality's Balmora Addon.esp
+     [NOT Vality's Bitter Coast Addon.esp]]
 
 ;;Dragon32: Landscape confict in TESPCD, logical to load the addon after the main plugin
 [Order]
@@ -46572,6 +47213,30 @@ Varied Vampiric Visages.esp
                MN_WoodElf_Vampires_3v2.esp
                MN_WoodElf_Vampires_4v1.esp
                MN_WoodElf_Vampires_4v2.esp]]]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Velayia 1.7 [Phillip Vaira]
+
+[Order]
+Morrowind Patch *.esm
+velayia.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+velayia.esm
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+velayia.esm
+A Call to Issilar.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+velayia.esm
+elskjiver.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47974,7 +48639,7 @@ Werewolf ReEquip.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Werewolves [McAsmod team]
 
-;; Dragon32 - Information about McAsmod team's "Werewolves" use of deprecated levelled lists is under the "@Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
+;; Dragon32 - Information about McAsmod team's "Werewolves" use of deprecated levelled lists is under the "Plugins using Deprecated Leveled List Functions on Bethsoft lists" section.
 
 [Note]
  !! This plugin contains evil GMSTs.
@@ -48310,6 +48975,8 @@ WhiteSuran2_PPOF_Patch.esp
 ;; ruined. Please note: this problem ONLY exists with the very first
 ;; kiss; after that, you won't need the patch any further.
 ;; (Ref: http://lovkullen.net/Emma/lokken.htm )
+
+;;Dragon32: MapOMods also shows a conflict with "Moska", can't find that plugin though
 
 [Note]
  ! The latest version of White Wolf of Lokken is 2.1, which includes Children of Morrowind 2.0 and the "kiss patch". You may want to upgrade:
@@ -48954,6 +49621,26 @@ Wizards Islands - Scourge of the Frost Bringer.esm
 [Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Wizards Islands - Scourge of the Frost Bringer.esm
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+[SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
+elskjiver.esp
+
+[Conflict]
+ Landmass conflict
+ (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
+ You could try abot's moved version of "A Call to Issilar":
+ Download it from Morrowind Modding History: http://mw.modhistory.com/download-48-12374
+[SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
+A Call to Issilar.esp
+
+[Conflict]
+ Landmass conflict.
+ (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
+[SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
+velayia.esm
 
 ;;Dragon32: Some notes on addons for Wizards Islands:
 
