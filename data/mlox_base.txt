@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2015-01-02 18:35:34 (UTC)]
+[Version 2015-03-01 18:11:18 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -7430,7 +7430,7 @@ BMExtrasFixedLL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @BloodMoon-FIX 1.2 [Misty Moon]
+;; @BloodMoon Fix 1.2 [Misty Moon]
 
 [Note]
  The Morrowind Patch Project (MPP) fixes Wolf Greaves, Ice Female Gauntlets and Snow Bear Boots.
@@ -7485,7 +7485,7 @@ Texture Fix - Bloodmoon <VER>.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @BloodmoonQuickFixes-LD [LDones]
+;; @Bloodmoon Quick Fixes [LDones]
 
 ; Dragon32:
 ; Readme included with the mod says "Updated June 28, 2003 - 6:52pm"
@@ -7501,6 +7501,66 @@ BloodmoonQuickFixes-LITE (Non-Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloodmoon Rhysk 1.6 [LegoManIAm94]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Rhysk.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Rhysk.esm
+
+[Patch]
+ "Make sure you also download the Rhysk Patch."
+ (Ref: http://www.nexusmods.com/morrowind/mods/28889/ )
+Rhysk Patch.ESP
+Rhysk.esm
+
+[Note]
+ "The Rhysk MGE Fix is a file you do not activate in the Data Files when you are playing Morrrowind. Just use it when you are generating Distant Land in MGE."
+ (Ref: http://www.nexusmods.com/morrowind/mods/28889/ )
+Rhysk (MGE Fix).esp
+
+[Patch]
+ "Rhysk Better Heads Fix is if you only use Better Heads and it will make the NPC beards colour match their hair colour."
+ (Ref: http://www.nexusmods.com/morrowind/mods/28889/ )
+Rhysk Better Heads Fix.ESP
+[ALL Rhysk.esm
+     Better Heads.esm]
+
+;;Dragon32: TESPCD shows no actual conflicts between these, Order rule can be removed if it causes problems
+[Order]
+Rhysk Patch.ESP
+Rhysk Better Heads Fix.ESP
+
+[Patch]
+ "There is a mod that requires [LegoManIAm94's] Job mods that will add jobs in Rhysk."
+ Download it from Morrowind Nexus - http://morrowind.nexusmods.com/mods/42725/
+ (Ref: http://www.nexusmods.com/morrowind/mods/28889/ )
+Jobs (Rhysk).ESP
+[ALL Rhysk.esm
+     Jobs.esm]
+
+[Requires]
+Jobs (Rhysk).ESP
+[ALL Rhysk.esm
+     Jobs.esm
+     Tribunal.esm
+     Bloodmoon.esm
+     Better Mining.esm
+     Better Mining (Bloodmoon).esm
+     Jobs (Bloodmoon).esm]
+
+;;Dragon32: TESPCD shows DIAL conflict, although Dialogue text appears the same
+[Order]
+Rhysk Patch.ESP
+Jobs (Rhysk).ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon SpellFix [whiteraider]
 
 [Note]
@@ -7511,6 +7571,53 @@ BloodmoonQuickFixes-LITE (Non-Tribunal).esp
   http://www.fliggerty.com/phpBB3/viewtopic.php?style=5&f=9&t=5734
  (Ref: http://forums.bethsoft.com/topic/1041190-beta-relz-morrowind-patch-project-165-beta/?p=15974266 )
 BM_SpellFix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloodmoon Thirsk 2x 1.4 [LegoManIAm94]
+
+[Note]
+ "The Thirsk 2x MGE Fix is a file you do not activate in the Data Files when you are playing Morrrowind. Just use it when you are generating Distant Land in MGE."
+ (Ref: http://www.nexusmods.com/morrowind/mods/28917 )
+Thirsk 2x (MGE Fix).esp
+
+;;Dragon32: Just deletes a single Flora_tree_BM_snow_05 from Thirsk exterior cell. No, I don't know either
+;;Hrm, maybe it's this ref reported by tes3cmd:
+;; Cleaned duplicate object instance (Flora_tree_BM_snow_05 FRMR: 9576) from CELL: thirsk (-19, 23)
+[Order]
+Thirsk 2x.esp
+Thirsk 2x Patch.esp
+
+[Patch]
+ "There is a mod that requires Job mods that will fix the position of objects added by the Job mods."
+ Download it from Morrowind Nexus - http://morrowind.nexusmods.com/mods/42725/
+ (Ref: http://www.nexusmods.com/morrowind/mods/28917 )
+[ALL Jobs (Thirsk 2x) (Part 1).ESP
+     Jobs (Thirsk 2x) (Part 2).ESP]
+[ALL Thirsk 2x.esp
+     Jobs.esm]
+
+[Requires]
+Jobs (Thirsk 2x) (Part 2).ESP
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     Better Mining.esm
+     Better Mining (Bloodmoon).esm
+     Jobs.esm
+     Jobs (Bloodmoon).esm]
+
+[Requires]
+ "Jobs (Thirsk 2x) (Part 1).ESP" was created with "Thirsk 2x.esm" as a master. Presumably a previous version of LegoManIAm94's "Bloodmoon Thirsk 2x" was distributed as an ESM rather than the current (version 1.4) ESP. Unfortunately LegoManIAm94 has not updated the patch to reflect this change.
+Jobs (Thirsk 2x) (Part 1).ESP
+[ALL Bloodmoon.esm
+     Thirsk 2x.esm]
+
+;;Dragon32: Not needed based on TESPCD check, "Jobs (Thirsk 2x) (Part 2).ESP" alters objects in Jobs.esm from what I can see
+[Order]
+Thirsk 2x.esp
+Thirsk 2x Patch.esp
+Jobs (Thirsk 2x) (Part 1).ESP
+Jobs (Thirsk 2x) (Part 2).ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7921,6 +8028,12 @@ Clean Black Queen Chronicles Ver 2.5.esp
 Juniper's Twin Lamps (1.1 Tribunal).esp
 Nevena's Twin Lamps & Slave Hunters 1.5.esp
 
+[Conflict]
+ When these two plugins are loaded together, a landscape tear appears between the cells (-6, -7) and (-5, -7) just west of the little bridge over the Odai. A simple fix is to delete the LAND record (-6, -7) from "Juniper's Twin Lamps (1.1 Tribunal).esp".
+ Note that this was reported by someone running version 1.8 of Slartibartfast's "Texture Fix".
+[SIZE 1536911 Juniper's Twin Lamps (1.1 Tribunal).esp]
+[ANY Texture Fix <VER>.esm]
+
 ;;Dragon32: Need to load Twin Lamps after Advanced Guard's guard remover otherwise "tl_mineguard"s are removed
 [Order]
 Guard-Remover.esp
@@ -7946,11 +8059,10 @@ Juniper's Twin Lamps (1.1 Tribunal).esp
 correctUV Ore Replacer 1.0.esp
 Juniper's Twin Lamps (1.1 Tribunal).esp
 
-[Conflict]
- When these two plugins are loaded together, a landscape tear appears between the cells (-6, -7) and (-5, -7) just west of the little bridge over the Odai. A simple fix is to delete the LAND record (-6, -7) from "Juniper's Twin Lamps (1.1 Tribunal).esp".
- Note that this was reported by someone running version 1.8 of Slartibartfast's "Texture Fix".
-[SIZE 1536911 Juniper's Twin Lamps (1.1 Tribunal).esp]
-[ANY Texture Fix <VER>.esm]
+;;Dragon32: Mod adds guards Caldera mine and facilities, could cause similar problems
+[Order]
+Caldera Mining Company Gets Reinforcements.esp
+Juniper's Twin Lamps (1.1 Tribunal).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12606,6 +12718,15 @@ Dwarves! MCA addon v2.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer and Daedric Alternatives [Danke]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 8265 Profane_Armor.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dwemer Books 1.1 [Misty Moon]
 
 [Conflict]
@@ -16964,13 +17085,19 @@ Graphic Herbalism.esp
 Resources Enhanced.esp
 
 [Conflict]
+ Both The Lys' "Resources Enhanced" and "Graphic Herbalism Extra" by ManaUser require the player to have a miner's pick in their possession while harvesting ebony, glass, diamond or adamantium.
+[ANY Graphic Herbalism Extra.esp
+     Graphic Herbalism Extra (Correct UV).esp]
+Resources Enhanced.esp
+
+[Conflict]
  Both ManaUser's "Bloated Caves" and MagicNakor's "Bloated Morrowind" add bloatspores to the game world. ManaUser's mod adds them to caves whilst MagicNakor's mod adds them to both caves and the wilderness (primarily the Bitter Coast). Choose which plugin you want to use.
 Bloated Caves.esp
 Bloated Morrowind.esp
 
 ;;Morrowind Inhabitants by scruggs
 [Conflict]
- There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in MWInhabitants.
+ There is a conflict with the Herbalism mods, which prevent users of those mods from being able to harvest ingredients from plants for the Experimental Alchemy quests in Morrowind Inhabitants by scruggs.
  (Ref: MWInhabitants PATCH.01 README.txt)
 MWInhabitants Freeform (Vol 1).esp
 Graphic Herbalism.esp
@@ -16980,6 +17107,13 @@ Graphic Herbalism.esp
 [ANY Graphic Herbalism Extra.esp
      Graphic Herbalism Extra (Correct UV).esp]
 MinerPickUseGOTY.esp
+
+[Conflict]
+ Both evelas' "Minerals" and "Graphic Herbalism Extra" by ManaUser edit the game's ore rocks, these two plugins cannot be used together.
+[ANY Graphic Herbalism Extra.esp
+     Graphic Herbalism Extra (Correct UV).esp]
+[ANY Minerals (Tribunal&Bloodmoon).esp
+     Minerals.esp]
 
 ; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
 [Order]
@@ -18907,30 +19041,30 @@ Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
 [Order]
 DN-GDRv1_NOM.esp
-Syc_HerbalismforPurists (Pearl Bug Edit).esp 
+Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
 ; JMS - to ensure that HFP flora container behavior isn't overridden by Sris Alchemy.
 [Order]
 Sri Alchemy BM List Patch.esp
-Syc_HerbalismforPurists (Pearl Bug Edit).esp 
+Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
 ; JMS - to ensure that HFP flora container behavior isn't overridden by Creatures (Kollop_01).
 [Order]
 Creatures.esp
 Creatures (lore).esp
 Creatures (Semi).esp
-Syc_HerbalismforPurists (Pearl Bug Edit).esp 
+Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
 ;; (Ref: "Readme - Herbalism for Purists.txt")
 [Order]
 Expanded Sounds.esp
-Syc_HerbalismforPurists (Pearl Bug Edit).esp 
+Syc_HerbalismforPurists (Pearl Bug Edit).esp
 Syc_Herbalism ES Patch.esp
 
 [Conflict]
  BTB's "Syc_HerbalismforPurists (Pearl Bug Edit).esp" is a replacement for Syclonix's "Syc_HerbalismforPurists.esp" plugin.
  (Ref: "Readme - Pearl Bug Edit.txt")
-Syc_HerbalismforPurists (Pearl Bug Edit).esp 
+Syc_HerbalismforPurists (Pearl Bug Edit).esp
 [ANY Syc_HerbalismforPurists.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 
@@ -26365,6 +26499,26 @@ Resources Enhanced.esp
 Minerals.esp
 Resources Enhanced.esp
 
+;;Dragon32: Minerals adds a script to mining rocks; load after mods which change their appearance
+
+;;Nich's "Correct UV Ore Replacer"
+[Order]
+correctUV Ore Replacer 1.0.esp
+Minerals (Tribunal&Bloodmoon).esp
+
+[Order]
+correctUV Ore Replacer 1.0.esp
+Minerals.esp
+
+;;CJW-Craigor's "Diverse Ore Veins"
+[Order]
+CR Ore Replacer 1.0.esp
+Minerals (Tribunal&Bloodmoon).esp
+
+[Order]
+CR Ore Replacer 1.0.esp
+Minerals.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Miner's Pick Use [quorn]
@@ -26373,6 +26527,18 @@ Resources Enhanced.esp
  Both quorn's "Miner's Pick Use" and The Lys' "Resources Enhanced" require the player to have a miner's pick in their possession while harvesting ebony, glass, diamond or adamantium.
 MinerPickUseGOTY.esp
 Resources Enhanced.esp
+
+;;Dragon32: Miner's Pick Use  adds a script to mining rocks; load after mods which change their appearance
+
+;;Nich's "Correct UV Ore Replacer"
+[Order]
+correctUV Ore Replacer 1.0.esp
+MinerPickUseGOTY.esp
+
+;;CJW-Craigor's "Diverse Ore Veins"
+[Order]
+CR Ore Replacer 1.0.esp
+MinerPickUseGOTY.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27739,6 +27905,64 @@ Morrowind Advanced.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Adventurers Guild 3.8 [LegoManIAm94]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1174781 Adventurers Guild.esp]
+
+[Note]
+ !! This plugin suffers from "SignRotate Contamination". It includes three "dirty" scripts (DagothUrCreature1, EndGame and LorkhanHeart). The ESP needs cleaning to remove these "dirty" scripts.
+ !! Ref: http://wryemusings.com/GMST%20Vaccine.html
+[SIZE 1174781 Adventurers Guild.esp]
+
+;; expdep
+[Requires]
+ This plugin uses the Tribunal scripting function setwaterlevel and a Startup Script
+Adventurers Guild.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Note]
+ "The Adventurers Guild MGE Fix is a file you do not activate in the Data Files when you are playing Morrrowind. Just use it when you are generating Distant Land in MGE."
+ (Ref: http://www.nexusmods.com/morrowind/mods/28858/ )
+Adventurers Guild (MGE Fix).esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 957055 Adventurers Guild (MGE Fix).esp]
+
+;;Dragon32: *Why* does this have scripts?
+[Note]
+ !! This plugin suffers from "SignRotate Contamination". It includes three "dirty" scripts (DagothUrCreature1, EndGame and LorkhanHeart). The ESP needs cleaning to remove these "dirty" scripts.
+ !! Ref: http://wryemusings.com/GMST%20Vaccine.html
+[SIZE 957055 Adventurers Guild (MGE Fix).esp]
+
+;; expdep
+;;Dragon32: *Why* does this have scripts?
+[Requires]
+ This plugin uses the Tribunal scripting function setwaterlevel and a Startup Script
+Adventurers Guild (MGE Fix).esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+[Patch]
+ "[LegoManIAm94's] Jobs mod will conflict with the Adventurers Guild. Download the patch [from Morrowind Nexus]"
+ (Ref: http://www.nexusmods.com/morrowind/mods/28858/ )
+ Download the patch from Morrowind Nexus - http://morrowind.nexusmods.com/mods/42725/
+Jobs Adventurers Guild Patch.ESP
+[ALL Adventurers Guild.esp
+     Jobs.esm]
+
+;;Dragon32: Don't think this Order rules is really necessary, patch just seems to edit Jobs.esm records
+[Order]
+Adventurers Guild.esp
+Jobs Adventurers Guild Patch.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Animation Replacer [Dirnae & Hrnchamd]
 
 [Note]
@@ -27769,6 +27993,83 @@ Better Gameplay.esp
  (Ref: "Better Gameplay (Tribunal).ESP" mod Description)
 Better Gameplay (Tribunal).ESP
 Better Gameplay.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Better Mining [LegoManIAm94]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Better Mining.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Better Mining.esm
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 15900 Better Mining.esm]
+
+[Requires]
+ "[LegoManIAm94's "Better Mining (Bloodmoon)"] requires:
+ Morrowind
+ Tribunal
+ Bloodmoon
+ Better Mining"
+ (Ref: http://www.nexusmods.com/morrowind/mods/42709/ )
+Better Mining (Bloodmoon).esm
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     Better Mining.esm]
+
+[Patch]
+ Whilst not at all clear from the web page you need to load both "Better Mining (Bloodmoon) Patch.ESP" and "Better Mining (Bloodmoon) Patch.ESP" for LegoManIAm94's "Better Mining (Bloodmoon)" to function.
+Better Mining (Bloodmoon) Patch.ESP
+Better Mining (Bloodmoon).esm
+
+[Patch]
+ Whilst not at all clear from the web page you need to load both "Better Mining Patch.ESP" and "Better Mining.esm"  for LegoManIAm94's "Better Mining" to function.
+Better Mining Patch.ESP
+Better Mining.esm
+
+;;Dragon32: Better Mining adds a script to mining rocks; load after mods which change their appearance
+
+;;Nich's "Correct UV Ore Replacer"
+[Order]
+correctUV Ore Replacer 1.0.esp
+Better Mining Patch.ESP
+
+[Order]
+correctUV Ore Replacer 1.0.esp
+Better Mining (Bloodmoon) Patch.ESP
+
+;;CJW-Craigor's "Diverse Ore Veins"
+[Order]
+CR Ore Replacer 1.0.esp
+Better Mining Patch.ESP
+
+[Order]
+CR Ore Replacer 1.0.esp
+Better Mining (Bloodmoon) Patch.ESP
+
+[Conflict]
+ Both evelas' "Minerals" and LegoManIAm94's "Morrowind Better Mining" edit the game's ore rocks, these two plugins cannot be used together.
+Better Mining.esm
+[ANY Minerals (Tribunal&Bloodmoon).esp
+     Minerals.esp]
+
+[Conflict]
+ "[With LegoManIAm94's "Morrowind Better Mining"] you will need a Miner's Pick to mine diamonds, ebony, glass and a Ancient Nordic Pick Axe to get Stalhrim."
+ A similar mechanic is added by quorn's "Miner's Pick Use", The Lys' "Resources Enhanced" and "Graphic Herbalism Extra" by ManaUser.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42709/ )
+Better Mining.esm
+[ANY MinerPickUseGOTY.esp
+     Resources Enhanced.esp
+     Graphic Herbalism Extra.esp
+     Graphic Herbalism Extra (Correct UV).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28970,14 +29271,27 @@ Morrowind Crafting Equipment.esp
 Morrowind Crafting 2-1.esp
 
 [Conflict]
- Drac & Toccatta's "Morrowind Crafting" adds scripts to the various ore rocks, other mods which also add scripts include ManaUser's "Graphic Herbalism Extra", evelas' "Minerals", quorn's "Miner's Pick Use" and TheLys' "Resources Enhanced". Such mods are not compatible with "Morrowind Crafting".
+ Drac & Toccatta's "Morrowind Crafting" adds scripts to the various ore rocks, other mods which also add scripts include ManaUser's "Graphic Herbalism Extra", evelas' "Minerals", quorn's "Miner's Pick Use", LegoManIAm94's "Morrowind Better Mining" and TheLys' "Resources Enhanced". Such mods are not compatible with "Morrowind Crafting".
  (Ref: http://forums.bethsoft.com/index.php?/topic/1083121-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__15859457 )
 Morrowind Crafting 2-1.esp
 [ANY Resources Enhanced.esp
      Minerals.esp
      Minerals (Tribunal&Bloodmoon).esp
      MinerPickUseGOTY.esp
-     Graphic Herbalism Extra.esp]
+     Graphic Herbalism Extra.esp
+     Better Mining.esm]
+
+;;Dragon32: Morrowind Crafting adds a script to mining rocks; load after mods which change their appearance
+
+;;Nich's "Correct UV Ore Replacer"
+[Order]
+correctUV Ore Replacer 1.0.esp
+Morrowind Crafting 2-1.esp
+
+;;CJW-Craigor's "Diverse Ore Veins"
+[Order]
+CR Ore Replacer 1.0.esp
+Morrowind Crafting 2-1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29392,7 +29706,7 @@ MWInhabitants Freeform (Vol 1).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Inhabitants patches [Gato]
+;; @Morrowind Inhabitants Patches [Gato]
 
 ;;Dragon32: Looks like this is for the beta of Morrowind Inhabitants based on plugin dates and TESPCD
 
@@ -29427,6 +29741,70 @@ Morrowind_Inhabitants.esp
      morrowind inhabitant thief patch- no thieves.esp
      morrowind inhabitant thief patch- reduced spawn chance.esp
      morrowind inhabitants thief path- slower thieves.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Jobs 1.2 [LegoManIAm94]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Jobs.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Jobs.esm
+
+;;Dragon32: From TESPCD check
+[Order]
+Jobs.esm
+Jobs (Bloodmoon).esm
+
+;;Dragon32: Doesn't seem necessary from TESPCD but may as well
+[Order]
+Jobs.esm
+Better Mining.esm
+
+[Order]
+Jobs (Bloodmoon).esm
+Better Mining (Bloodmoon).esm
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1533132 Jobs.esm]
+
+[Requires]
+ "[LegoManIAm94's "Morrowind Jobs"] requires:
+ Morrowind
+ Tribunal
+ Better Mining"
+ (Ref: http://www.nexusmods.com/morrowind/mods/42719/ )
+Jobs.esm
+[ALL Tribunal.esm
+     Better Mining.esm]
+
+[Requires]
+ "[LegoManIAm94's "Morrowind Jobs (Bloodmoon)"] requires:
+ Morrowind
+ Tribunal
+ Bloodmoon
+ Better Mining
+ Better Mining (Bloodmoon)"
+ (Ref: http://www.nexusmods.com/morrowind/mods/42719/ )
+Jobs (Bloodmoon).esm
+[ALL Tribunal.esm
+     Bloodmoon.esm
+     Jobs.esm
+     Better Mining.esm
+     Better Mining (Bloodmoon).esm]
+
+[Conflict]
+ "[LegoManIAm94's "Morrowind Jobs"] is incompatible with the Morrowind Rebirth mod."
+ (Ref: http://forums.nexusmods.com/index.php?/topic/1100701-morrowind-jobs/?p=12067425 )
+Morrowind Rebirth <VER>.ESP
+Jobs.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29515,6 +29893,31 @@ MWlib_NOM_patch_0.1.esp
 [Note]
  This plugin contains dirty references. It is recommended that you clean it with TESTool.
 [SIZE 2479377 MW_Public_Library.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Qaja-kar 3.7 [LegoManIAm94]
+
+[Patch]
+ "[LegoManIAm94's] Jobs mod will conflict with the Qaja-kar."
+ Download the patch from Morrowind Nexus - http://morrowind.nexusmods.com/mods/42725/
+ (Ref: http://www.nexusmods.com/morrowind/mods/28887/ )
+Jobs (Qaja'kar).ESP
+[ALL Qaja'kar.esp
+     Jobs.esm]
+
+[Requires]
+Jobs (Qaja'kar).ESP
+[ALL Qaja'kar.esp
+     Jobs.esm
+     Tribunal.esm
+     Bloodmoon.esm
+     Better Mining.esm]
+
+;;Dragon32: TESPCD check shows a conflict with NPC "ra'tesh"
+[Order]
+Qaja'kar.esp
+Jobs (Qaja'kar).ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36544,6 +36947,22 @@ Repair Tools.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Resources Enhanced [TheLys]
+
+;;Dragon32: Resources Enhanced adds a script to mining rocks; load after mods which change their appearance
+
+;;Nich's "Correct UV Ore Replacer"
+[Order]
+correctUV Ore Replacer 1.0.esp
+Resources Enhanced.esp
+
+;;CJW-Craigor's "Diverse Ore Veins"
+[Order]
+CR Ore Replacer 1.0.esp
+Resources Enhanced.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Respawns [Zenethor]
 
 [Note]
@@ -38673,7 +39092,7 @@ Silt Striders in the Wild.esp
 ;; @Simple Balmora House 1.1 [Nyakitty]
 
 [Note]
- !! This plugin contains evil GMSTs. 
+ !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 178913 Balmora House.esp]
 
@@ -39033,7 +39452,7 @@ Slof's Goth Shop II.esp
 [Conflict]
  "The stealing indicator comes from Yacoby's Ownership Indicator mod, and the autohide feature comes from MGE XE. The third person compatibility was first done by [adul] in [his] Third Person Crosshair mod and then adapted by Hrnchamd for MGE XE."
  (Ref: http://forums.nexusmods.com/index.php?/topic/1910539-smart-crosshair/?p=16577309 )
-Smart_Crosshair.esp     
+Smart_Crosshair.esp
 [ANY Third_Person_Crosshair.esp
      Third_Person_Crosshair_constant.esp
      Third_Person_Crosshair_spell.esp
@@ -39043,7 +39462,7 @@ Smart_Crosshair.esp
 ;; expdep
 [Requires]
  "Smart_Crosshair.esp " uses a startup script and the Tribunal functions getweapontype, getweapondrawn and getweapontype.
-Smart_Crosshair.esp 
+Smart_Crosshair.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
