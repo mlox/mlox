@@ -16985,23 +16985,29 @@ Go To Jail 3.7 - NOM.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @GOTY Script Tidy 2.02 [huskobar]
 
-; Ref: "GOTYST_01 ReadMe.txt"
-[Order]
-Bloodmoon.esm
-GOTYFullTidyZeroMPPv2.01.esm
-Morrowind Patch *.esm
-Morrowind Rebirth <VER> - Morrowind Patch *.esm
-
-; Ref: "GOTYST_01 ReadMe.txt"
-[Order]
-Morrowind Patch *.esm
-Morrowind Rebirth <VER> - Morrowind Patch *.esm
-GOTYMinImpactSomeMPPv2.01.esm
+;;Old versions
 
 [Note]
- "GOTYScriptTidy(CommentsIn).esp is for modders .... It is NOT intended for use in game!"
- (Ref: "GOTYST_01 ReadMe.txt")
+ ! You are using an old version of huskobar's "GOTY Script Tidy", The latest version is 2.02.
+ ! Download version 2.02 of huskobar's "GOTY Script Tidy" from Morrowind Modding History - http://mw.modhistory.com/download-13-6445
+GOTYScriptTidy.esm
+GOTYScriptTidy(MyCommentsIn).esp
+GOTYScriptTidy(MyCommentsOut).esp
+GOTYFullTidySomeMPP.esm
+GOTYFullTidySomeMPP.esp
+GOTYFullTidyZeroMpp.esm
+GOTYSTMPPPatch.esp
+GOTYMinImpactSomeMPP.esm
+GOTYMinImpactSomeMPP.esp
 GOTYScriptTidy(CommentsIn).esp
+
+;;Install 1 - Script Tidy, Full Treatment and are NOT using Morrowind Patch Project (MPP)
+
+[Conflict]
+ "Use either the .esm or the .esp, NOT BOTH."
+ (Ref: "GOTYScriptTidyv202.rar\Install1\ReadMe.txt")
+GOTYFullTidySomeMPPv2.01.esm
+GOTYFullTidySomeMPPv2.01.esp 
 
 [Conflict]
  "GOTYFullTidySomeMPPv2.01" is intended to be used without the MPP.
@@ -17017,6 +17023,24 @@ GOTYScriptTidy(CommentsIn).esp
 [Order]
 Bloodmoon.esm
 GOTYFullTidySomeMPPv2.01.esm
+Morrowind Patch v1.6.4.esm
+
+[Order]
+Bloodmoon.esm
+GOTYFullTidySomeMPPv2.01.esm
+Morrowind Patch v1.6.5-BETA.esm
+
+[Order]
+Bloodmoon.esm
+GOTYFullTidySomeMPPv2.01.esm
+Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+
+[Order]
+Bloodmoon.esm
+GOTYFullTidySomeMPPv2.01.esm
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+
+;;Install 2 - Script Tidy, Full Treatment and ARE using MPP
 
 [Patch]
  "GOTYSTMPPPatchv1.0.esp" is used to make "GOTY Script Tidy Full" and the MPP compatible.
@@ -17033,17 +17057,98 @@ GOTYSTMPPPatchv1.0.esp
 Bloodmoon.esm
 GOTYFullTidyZeroMPPv2.01.esm
 Morrowind Patch v1.6.4.esm
+
+[Order]
+Bloodmoon.esm
+GOTYFullTidyZeroMPPv2.01.esm
 Morrowind Patch v1.6.5-BETA.esm
+
+[Order]
+Bloodmoon.esm
+GOTYFullTidyZeroMPPv2.01.esm
 Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+
+[Order]
+Bloodmoon.esm
+GOTYFullTidyZeroMPPv2.01.esm
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
+
+;;Install 3 - Script Tidy, Minimal Impact and ARE or ARE NOT using MPP
+
+[Conflict]
+ "Use either the .esm or the .esp, NOT BOTH."
+ (Ref: "GOTYScriptTidyv202.rar\Install3\ReadMe.txt")
+GOTYMinImpactSomeMPPv2.01.esm
+GOTYMinImpactSomeMPPv2.01.esp 
 
 ; Ref: "GOTYST_01 ReadMe.txt"
 [Order]
 Morrowind Patch v1.6.4.esm
+GOTYMinImpactSomeMPPv2.01.esm
+
+[Order]
 Morrowind Patch v1.6.5-BETA.esm
+GOTYMinImpactSomeMPPv2.01.esm
+
+[Order]
 Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+GOTYMinImpactSomeMPPv2.01.esm
+
+[Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 GOTYMinImpactSomeMPPv2.01.esm
+
+;;Install 4 - Reference of significant changes made
+
+[Note]
+ "GOTYScriptTidy(CommentsIn).esp is for modders .... It is NOT intended for use in game!"
+ (Ref: "GOTYST_01 ReadMe.txt")
+GOTYScriptTidy(CommentsIn).esp
+
+;;For people using Morrowind Patch 1.6.6
+
+[Conflict]
+ huskobar's "GOTY Script Tidy" includes script fixes from version 1.6.5 of the Morrowind Patch Project (AKA Unofficial Morrowind Patch).
+ You are running a later version, 1.6.6, the changes of which are not incorporated in the version of huskobar's "GOTY Script Tidy" you are running.
+ It's recommended that you use "GOTYMinImpactSomeMPPv2.01.esm" (from GOTY Script Tidy's "Install3" folder) rather than any other GOTY Script Tidy plugin.
+Morrowind Patch v1.6.6_beta.esm
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp 
+     GOTYFullTidyZeroMPPv2.01.esm]     
+
+;;Dragon32: Ensure any changes from MPP 1.6.6 win over GOTY Script Tidy.
+[Order]
+GOTYMinImpactSomeMPPv2.01.esm
+Morrowind Patch v1.6.6_beta.esm
+
+;;Rules for mod conflicts with main Script Tidy mod
+
+[Conflict]
+ "When loading [DrSilent's "Morrowind Public Library"] with GOTY Script Tidy v2.02 I get the following error:
+   Script variable "rent" not found for dialogue type Topic
+   Info "EMPTY""
+ Install3 ("GOTYMinImpactSomeMPPv2.01.esm" or "GOTYMinImpactSomeMPPv2.01.esp") does not change the name of the local variable 'rent' in the official publican script. Other versions of GOTY Script Tidy are likely to break any mod that uses 'rent' as a dialogue filter or otherwise attempts to write to the variable.
+ (Ref: http://forums.bethsoft.com/topic/1086703-goty-script-tidy/?p=16625185 and "GOTYST_01 ReadMe.txt")
+MW_Public_Library.esp
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp
+     GOTYFullTidyZeroMPPv2.01.esm]
+
+[Conflict]
+ "[When running huskobar's "GOTY Script Tidy" with "LGNPC Pelagiad"] I get this error everytime i try and rent a bed for the night:
+  Script Pub_Pelagiad_Halfway
+  Syntax Error Line 2.
+  Could not find variable "rent".
+  ==>CompileAndRun problem was found in Topic "Beds"
+  "Head right up the stairs and a clean, inviting bed awaits you.""
+ Install3 ("GOTYMinImpactSomeMPPv2.01.esm" or "GOTYMinImpactSomeMPPv2.01.esp") does not change the name of the local variable 'rent' in the official publican script. Other versions of GOTY Script Tidy are likely to break any mod that uses 'rent' as a dialogue filter or otherwise attempts to write to the variable.
+ (Ref: http://forums.bethsoft.com/topic/1374445-problem-with-renting-beds/?p=20784637 and "GOTYST_01 ReadMe.txt")
+LGNPC_Pelagiad.esp
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp
+     GOTYFullTidyZeroMPPv2.01.esm]
+
+;;Rules for "LGNPC_PaxRedoran_v1_20_GOTYST.esp". Duplicated some from the main LGNPC section
 
 [Conflict]
  You should replace "LGNPC_PaxRedoran_v1_20.esp" with "LGNPC_PaxRedoran_v1_20_GOTYST.esp" to get compatibility between GOTY Full Tidy and LGNPC Pax Redoran.
@@ -17052,20 +17157,22 @@ GOTYMinImpactSomeMPPv2.01.esm
      GOTYFullTidyZeroMPPv2.01.esm]
 LGNPC_PaxRedoran_v1_20.esp
 
-;;Dragon32: rules for mod conflicts with main Script Tidy mod
-
-[Conflict]
- "When loading [DrSilent's "Morrowind Public Library"] with GOTY Script Tidy v2.02 I get the following error:
-  Script variable "rent" not found for dialogue type Topic
-  Info "EMPTY""
- (Ref: http://forums.bethsoft.com/topic/1086703-goty-script-tidy/?p=16625185 )
-MW_Public_Library.esp
+[Requires]
+ "If you: are using either of the Full Tidy builds along with Less Generic NPCs Pax Redoran, replace LGNPC_PaxRedoran_v1_20.esp with LGNPC_PaxRedoran_v1_20_GOTYST.esp."
+ (Ref: "GOTYST_01 ReadMe.txt")
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
 [ANY GOTYFullTidySomeMPPv2.01.esm
      GOTYFullTidySomeMPPv2.01.esp
-     GOTYFullTidyZeroMPPv2.01.esm
-     GOTYMinImpactSomeMPPv2.01.esm]
+     GOTYFullTidyZeroMPPv2.01.esm]
 
-;;Dragon32: Following rules are for "LGNPC_PaxRedoran_v1_20_GOTYST.esp", duplicating the equivalents from the main LGNPC section
+;;Dragon32: Dunno if this is needed
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+LGNPC_PaxRedoran_v?_??_GOTYST.esp
 
 [Order]
 Less Lore.esp
@@ -17117,13 +17224,25 @@ LGNPC_PaxRedoran_v?_??_GOTYST.esp
 Less_Generic_Nerevarine.esp
 LGNPC_PaxRedoran_v?_??_GOTYST.esp
 
-;;Dragon32: rules for VGreetings replacements
+;;Rules for VGreetings replacements
 
 [Conflict]
  You should replace "VGreetings-Attack.esp" with "VGreetings-AttackGOTYSTSomeMPP.esp" to make VGreetings compatible with GOTY Script Tidy Full (with Some MPP).
  (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Attack/ReadMe.txt")
-GOTYFullTidySomeMPPv2.01.esm
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp]
 VGreetings-Attack.esp
+
+[Requires]
+ (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Attack/ReadMe.txt")
+VGreetings-AttackGOTYSTSomeMPP.esp
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp]
+
+;;Dragon32: Dunno if this is needed
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+VGreetings-AttackGOTYSTSomeMPP.esp
 
 [Conflict]
  You should replace "VGreetings-Attack.esp" with "VGreetings-AttackGOTYSTZeroMPP.esp" to make VGreetings compatible with GOTY Script Tidy Full (with Zero MPP).
@@ -17131,11 +17250,28 @@ VGreetings-Attack.esp
 GOTYFullTidyZeroMPPv2.01.esm
 VGreetings-Attack.esp
 
+[Requires]
+ (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Attack/ReadMe.txt")
+VGreetings-AttackGOTYSTZeroMPP.esp
+GOTYFullTidyZeroMPPv2.01.esm
+
 [Conflict]
  You should replace "VGreetings-Hit.esp" with "VGreetings-HitGOTYSTSomeMPP.esp" to make VGreetings compatible with GOTY Script Tidy Full (with Some MPP).
  (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Hit/ReadMe.txt")
-GOTYFullTidySomeMPPv2.01.esm
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp]
 VGreetings-Hit.esp
+
+[Requires]
+ (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Attack/ReadMe.txt")
+VGreetings-HitGOTYSTSomeMPP.esp
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidySomeMPPv2.01.esp]
+
+;;Dragon32: Dunno if this is needed
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+VGreetings-HitGOTYSTSomeMPP.esp
 
 [Conflict]
  You should replace "VGreetings-Hit.esp" with "VGreetings-HitGOTYSTZeroMPP.esp" to make VGreetings compatible with GOTY Script Tidy Full (with Zero MPP).
@@ -17143,9 +17279,14 @@ VGreetings-Hit.esp
 GOTYFullTidyZeroMPPv2.01.esm
 VGreetings-Hit.esp
 
+[Requires]
+ (Ref: "GOTYScriptTidyv202.rar/VGreetingsPatched/Attack/ReadMe.txt")
+VGreetings-HitGOTYSTZeroMPP.esp
+GOTYFullTidyZeroMPPv2.01.esm
+
 [Note]
  !! These plugins are working versions of huskobar's replacement VGreetings plugins. They are not intended to be loaded for play.
- !! (Ref: http://forums.bethsoft.com/index.php?/topic/1135344-problem-between-some-patch-mods/page__view__findpost__p__16623781 )
+ !! (Ref: http://forums.bethsoft.com/topic/1135344-problem-between-some-patch-mods/#entry16623781 )
 [ANY VGreetings-AttackGOTYSTRawSome.esp
      VGreetings-AttackGOTYSTRawZero.esp
      VGreetingPatchGOTYSTRaw.esp]
