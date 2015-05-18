@@ -684,18 +684,12 @@ Advanced Alchemy - LDA Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Advanced Guards [Marty V. aka "The Puma Man"]
+;; @Advanced Guards IV [Marty V. aka "The Puma Man"]
 
 ;Morrowind version
-[Requires]
- (Ref: "Advanced GUARDS IV.doc")
-[ANY [SIZE 30455 GUARD-Remover.esp] ;uncleaned
-     [SIZE 27647 GUARD-Remover.esp]] ;cleaned
-[ANY [SIZE 137740 ADVANCED GUARDS.esm] ;uncleaned
-     [SIZE 133788 ADVANCED GUARDS.esm]] ;cleaned
 
 [Conflict]
- You are using the Morrowind only version of Advanced Guards, but are using Tribunal and/or Bloodmoon as well. Please change to the appropriate version of Advanced Guards.
+ You are using the Morrowind-only version of Advanced Guards, but are using Tribunal and/or Bloodmoon as well. Please change to the appropriate version of Advanced Guards.
 [ANY [SIZE 137740 ADVANCED GUARDS.esm] ;uncleaned
      [SIZE 133788 ADVANCED GUARDS.esm]] ;cleaned
 [ANY Tribunal.esm
@@ -706,13 +700,7 @@ Advanced Alchemy - LDA Patch.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 137740 ADVANCED GUARDS.esm]
 
-;Bloodmon version
-[Requires]
- (Ref: "Advanced GUARDS IV.doc")
-[ANY [SIZE 30455 GUARD-Remover.esp] ;uncleaned
-     [SIZE 27647 GUARD-Remover.esp]] ;cleaned
-[ANY [SIZE 154780 ADVANCED GUARDS.esm] ;uncleaned
-     [SIZE 149538 ADVANCED GUARDS.esm]] ;cleaned
+;Bloodmoon version
 
 [Conflict]
  You are using the Bloodmoon version of Advanced Guards, but are using Tribunal as well. Please change to the appropriate version of Advanced Guards.
@@ -721,12 +709,6 @@ Advanced Alchemy - LDA Patch.esp
 Tribunal.esm
 
 ;Tribunal version
-[Requires]
- (Ref: "Advanced GUARDS IV.doc")
-[ANY [SIZE 30759 GUARD-Remover.esp] ;uncleaned
-     [SIZE 27915 GUARD-Remover.esp]] ;cleaned
-[ANY [SIZE 132755 ADVANCED GUARDS.esm] ;uncleaned
-     [SIZE 129530 ADVANCED GUARDS.esm]] ;cleaned
 
 [Conflict]
  You are using the Tribunal only version of Advanced Guards, but are using Bloodmoon as well. Please change to the appropriate version of Advanced Guards.
@@ -735,14 +717,14 @@ Tribunal.esm
 Bloodmoon.esm
 
 ;TB+BM version
-[Requires]
- (Ref: "Advanced GUARDS IV.doc")
-[ANY [SIZE 30759 GUARD-Remover.esp] ;uncleaned
-     [SIZE 27915 GUARD-Remover.esp]] ;cleaned
-[ANY [SIZE 158340 ADVANCED GUARDS.esm] ;uncleaned
-     [SIZE 152725 ADVANCED GUARDS.esm]] ;cleaned
 
 ;All versions
+
+[Requires]
+ (Ref: "Advanced GUARDS IV.doc")
+GUARD-Remover.esp
+ADVANCED GUARDS.esm
+
 [Note]
  According to its readme "ADVANCED GUARDS IV DOES NOT affect third party mods. So the guards from the Bank mod, for example, will not be affected. If you are concerned about this, you must check the special GUARDS.esp as well. This will make the low-level spawns of guards just as strong as the high level spawns of guards, however."
 [ALL ADVANCED GUARDS.esm
@@ -1125,6 +1107,15 @@ time_2x.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 10474 Aegirs Armory.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Afura_Mansion 1 [M-7 / morsepone7]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 247417 Afura_Mansion 1.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5845,6 +5836,26 @@ Better_Armor(Tb_pack_FULL).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Balanced Boots of Blinding Speed [Pherim]
+
+[Order]
+BTB - Equipment.esp
+BBBBS_EV.esp
+
+[Order]
+BTB - Unique Finery Equipment.esp
+BBBBS_EV.esp
+
+[Order]
+HELLUVA Balanced BTB.esp
+BBBBS_EV.esp
+
+[Order]
+HELLUVA Balanced BTB CS.esp
+BBBBS_EV.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Better Bodies for Beasts [Sabregirl]
 
 ;; If you want to use BB-argonian-sils-text.esp with better bodies for beasts
@@ -6289,7 +6300,24 @@ Better Morrowind Armor.esp
 ImprovedAdamantiumArmor.esp
 Better Morrowind Armor.esp
 
+;;Dragon32: Load Reavance's Better Daedric Armour after Moranar's. Why would someone use both..?
+[Order]
+Better Morrowind Armor.esp
+Better Morrowind Armor DeFemm(a).ESP
+Clean Better Daedric.esp
+
+[Order]
+Better Morrowind Armor.esp
+Better Morrowind Armor DeFemm(o).ESP
+Clean Better Daedric.esp
+
+[Order]
+Better Morrowind Armor.esp
+Better Morrowind Armor DeFemm(r).ESP
+Clean Better Daedric.esp
+
 ;;Kahkahra's "Complete Armor Joints" patch
+
 [Conflict]
  You should use the version of Kahkahra's "Complete Armor Joints" which comes with Moranar's "Better Morrowind Armor"
  (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
@@ -6302,6 +6330,7 @@ Better Morrowind Armor.esp
 Complete Armor Joints.esp
 
 ;; Bethesda's "LeFemme Armors" patch
+
 [Conflict]
  You should use the version of Bethesda's "LeFemme Armors" which comes with Moranar's "Better Morrowind Armor"
  (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
@@ -6336,6 +6365,7 @@ Official_2002_Mods.esp
 [DESC !/LeFemm(TM) armor/ LeFemmArmor.esp]
 
 ;;Saint_Jiub's "Snow Prince Armor Redux" patch
+
 [Conflict]
  You should use the version of Saint_Jiub's "Snow Prince Armor Redux" which comes with Moranar's "Better Morrowind Armor"
  (Ref: "Better Morrowind Armor ENG-42509-0-5-2RC.7z\ReadMe.txt")
@@ -8515,7 +8545,7 @@ IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
 ;; @BTB's Sorted New Alchemy Potions [Revan]
 
 [Conflict]
- "If you use BTB's alchemy plugin, deactivate it, you only need" [BTB - Sorted Alchemy.esp]
+ "If you use BTB's alchemy plugin, deactivate it, you only need [BTB - Sorted Alchemy.esp]."
 BTB - Alchemy.esp
 BTB - Sorted Alchemy.esp
 
@@ -9035,6 +9065,23 @@ Castle Vianden V2.1.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 20965 Cave Home.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Census and Excise Office Quarters 1.1 [cml33]
+
+[Patch]
+ Download the patch for Taddeus' "Necessities of Morrowind" and cml33's "Census and Excise Office Quarters" from Morrowind Nexus -
+ http://www.nexusmods.com/morrowind/mods/43205/
+ (Ref: "Census and Excise Office Quarters NOM Patch.txt")
+Census and Excise Office Quarters NOM Patch.esp
+[ALL Census and Excise Office Quarters.esp
+     NoM 3.0.esp]
+
+[Order]
+Census and Excise Office Quarters.esp
+Census and Excise Office Quarters NOM Patch.esp
+NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10823,13 +10870,16 @@ DN-GDRv1_NOM (BTB Edit).esp
 [ANY DN-GDRv1 (BTB Edit).esp
      DN-GDRv1_NOM (BTB Edit).esp]
 
+;;"While it hasn't been updated for NOM 3 per se, in my experience it's still worked with NOM 3."
+;;Ref: http://forums.nexusmods.com/index.php?/topic/2703824-darknut-greater-dwemer-ruin-version-11/?p=23745854
 [Patch]
- !! If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
- !! (Ref: DNGDRv1.zip/"readme.htm")
+ If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
+ (Ref: DNGDRv1.zip/"readme.htm")
 [ANY DN-GDRv1_NOM.esp
      DN-GDRv1_NOM (BTB Edit).esp]
 [ALL GDR_MasterFile.esm
-     NOM 2.13.esp]
+     [ANY NOM 2.13.esp
+          NoM 3.0.esp]]
 
 [Conflict]
  Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
@@ -13589,6 +13639,43 @@ Encumbrance Bar.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Endusal and Tureynulal Redone [Trainwiz]
+
+;;Dragon32: Original has nothng in the Description field
+[Note]
+ ! [Trainwiz's "Endusal and Tureynulal Redone"] includes an updated version of Turenyulal Redone."
+ ! Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43399/
+ ! (Ref: "Turenyulal_EndusalRedone-43399-1-0.rar\Turenyulal_EndusalRedone\TurenyulalAndEndusalRedone\Readme.txt")
+[DESC !/Redoes Turenyal to be better than things./ TurenyalRedone.ESP]
+
+[Requires]
+ Both of the "Endusal and Tureynulal Redone" mods by Trainwiz need Tribunal and the GDR Master File to be loaded.
+[ANY EndusalRedone.ESP
+     TurenyalRedone.ESP]
+[ALL Tribunal.esm
+     GDR_MasterFile.esm]
+
+;;"Has the conflict with the Book Jackets plugin been resolved? Back during the first release of Tureynal Redone, I discovered that it overrode changes made to certain books so that the original covers appeared. If the conflict hasn't been fixed, then hopefully a rule can be made in mlox."
+;;Ref - http://forums.bethsoft.com/topic/1512442-relz-endusal-and-tureynulal-redone/?p=23922287
+;;Dragon32: dupl;icate records:  bk_firmament and bk_briefhistoryempire4
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Morrowind - BookRotate.esp
+
+[Order]
+TurenyalRedone.ESP
+Book Jackets - Morrowind.esp
+
+[Order]
+TurenyalRedone.ESP
+Librarian with Jackets & Rotate BM Trib.esp
+
+[Order]
+TurenyalRedone.ESP
+Librarian with Jackets BM Trib.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Enhanced Rethan Manor [Lady_Galadriel]
 
 [Note]
@@ -14653,6 +14740,21 @@ LOCH_Felsaad_Revamped.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 5066 female_argo_fix.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Female Daedric Greaves addon for Reavance's Better Daedric Armor [Kirel]
+
+[Requires]
+ "[Kirel's "Female Daedric Greaves addon for Reavance's Better Daedric Armor"] is dependant on Reavance's Better Daedric mod"
+ (Ref: "k_female_daedric_greaves.txt")
+k_female_daedric_greaves.esp
+Clean Better Daedric.esp
+
+;;Dragon32: From TESPCD check
+[Order]
+Clean Better Daedric.esp
+k_female_daedric_greaves.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18143,6 +18245,51 @@ Guar Followers Fix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Guard Expander [Caine]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 43225 Guard Expander.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 40785 Guard Expander - No Respawn.esp]
+
+[Conflict]
+ "There are 2 ESP's, one simply adds the guards. The second adds the guards with higher stats, but takes away their respawn ability"
+ Only use one plugin.
+ (Ref: "Guard Expander Readme.txt")
+Guard Expander - No Respawn.esp
+Guard Expander.esp
+
+[Patch]
+ There is a Bloodmoon Addon available for Caine's "Guard Expander"
+ Download it from Morrowind Modding History - http://mw.modhistory.com/download-37-2814
+Guard Expander - BM Addon, No Respawn.esp
+[ALL Guard Expander - No Respawn.esp
+     Bloodmoon.esm]
+
+;;Dragon32: Not needed, but someone will whinge
+[Order]
+Guard Expander - No Respawn.esp
+Guard Expander - BM Addon, No Respawn.esp
+
+[Patch]
+ There is a Bloodmoon Addon available for Caine's "Guard Expander"
+ Download it from Morrowind Modding History - http://mw.modhistory.com/download-37-2814
+Guard Expander - BM Addon.esp
+[ALL Guard Expander.esp
+     Bloodmoon.esm]
+
+;;Dragon32: Not needed, but someone will whinge
+[Order]
+Guard Expander.esp
+Guard Expander - BM Addon.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Guards 1.4 [abot]
 
 [Conflict]
@@ -18169,6 +18316,34 @@ abotGuardsTR.esp
 abotGuards.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ ! abot's "Guards" adds a script to the guards defined in Morrowind (including its expansions and Tamriel Rebuilt, depending on the version of abot's mod you use). These mods add their own guards and won't have abot's scripts running on them. If you run one of these mods and abot's *and* use TESTool's Merged Objects plugin then some, and only some, of the new, added guards will respond in the way abot's mod sets them to. The guards unique to the mods listed won't.
+ ! Fliggerty's "Protective Guards" mod doesn't edit guards directly, rather it relies on the magic of MWSE to identify NPCs which are guards and modifies their behaviour accordingly.
+ ! Download Fliggerty's "Protective Guards" from Morrowind Modding History - http://mw.modhistory.com/download-8-11605
+ ! (Ref: http://forums.nexusmods.com/index.php?/topic/1984414-imperial-presence/?p=23715994 )
+[ALL [ANY abotGuards.esp
+          abotGuardsBM.esp
+          abotGuardsTR.esp]
+     [ANY ADVANCED GUARDS.esm
+          FemaleTelMoraGuards.esp
+          Guard Diversity - Morrowind.ESP
+          Guard Expander - No Respawn.esp
+          Guard Expander.esp
+          H.E.L.L.U.V.A. Guards.esp
+          Imperial Guards <VER>.esp
+          Imperial Presence.esp
+          Mixed Guards 2.esp
+          MCA.esm
+          Mournhold Overhaul v2.0 - NPC's.esp
+          Mournhold Overhaul v2.0 - WG + NPC's.esp
+          NX9_Guards_Complete.ESP
+          NX9Guards_Helseth.ESP
+          NX9Guards_Hlaalu.esp
+          NX9Guards_Imperial_1.2.esp
+          NX9guards_ordinators.ESP
+          NX9Guards_Redoran.esp
+          NX9Guards_Telvanni.ESP]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21538,6 +21713,27 @@ Imp Guard anticlone BH add-on.esp
 The Imperial Legion Badge.esp
 Legion Shirt.esp
 ImperialLegionUniform.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Imperial Presence 1.3 [cml33]
+
+[Patch]
+ (Ref: "Imperial Presence.txt")
+Imperial Presence (NOM Patch).esp
+[ALL Imperial Presence.esp
+     NoM 3.0.esp]
+
+[Order]
+Imperial Presence.esp
+Imperial Presence (NOM Patch).esp
+NoM 3.0.esp
+
+[Conflict]
+ "[cml33's "Imperial Presence"] include my Census and Excise Office Quarters mod."
+ (Ref: "Imperial Presence.txt")
+Imperial Presence.esp
+Census and Excise Office Quarters.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31936,6 +32132,12 @@ Vurt's Ashlands Overhaul.esp
 Rain's Hand Hall.esp
 MRM.esm
 
+[Conflict]
+ "[PirateLord's "Mountainous Red Mountain"] isn't compatible with Sixth House [by Endrek]."
+ (Ref: http://tamriel-rebuilt.org/forum/viewtopic.php?p=327744#327744 )
+Sixth House.esp
+MRM.esm
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MRM Puzzle Canal Fix 1.1 [Pherim]
@@ -37022,6 +37224,7 @@ Prosey_female_pants_replace.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Protective Guards [Fliggerty]
+
 [Note]
  ! If you use Protective Guards, it's best not to use MCA Guards Patch, using it may cause problems
  ! (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=918882&view=findpost&p=13377858 )
@@ -37580,6 +37783,15 @@ RealSignposts.esp
 WeatheredSigns.esp
 Textured_Signs.esp
 dxm_metallic_signs.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Real Spear Guards [?]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 6068 Guard one handed shield.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38611,6 +38823,43 @@ Rise of House Telvanni.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RoHT - Tureynulal Redone Patch [DurendalMartyr]
+
+[Patch]
+ "[DurendalMartyr's "RoHT - Tureynulal Redone Patch"] was made to fix a minor conflict that arises if you try to use Rise of House Telvanni and Tureynulal Redone together.
+ Basically, they both alter the same cell with Tureynulal Redone changing the whole thing up and RoHT adding a few items, one of which is needed for one of it's quests.
+
+ The items in question still show up, but float in midair. All this mod does is move the items over to a few nearby tables, still out in the open and easy to find."
+ (Ref: http://www.nexusmods.com/morrowind/mods/43533/ )
+RoHT - Tureynulal Redone Patch.ESP
+[ALL Rise of House Telvanni.esm
+     TurenyalRedone.ESP]
+
+[Order]
+TurenyalRedone.ESP
+RoHT - Tureynulal Redone Patch.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RoHT vs Riptide NPC Fixes [Malik]
+
+;;Dragon32: Malik's plugin made for v1.3 of RoHT, not sure if it works with latest (1.5 at time of writing)
+[Patch]
+ Malik's "ROHTvsRiptideNPCfixes" fixes changes made by Riptides' "Face, Armor, & Clothing Replace" to NPCs from "Rise of House Telvanni" 1.3 by bhl et al.
+ http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7967
+ (Ref: Readme ROHTvsRiptideNPCfixes.txt)
+ROHTvsRiptide_NPCfixes.esp
+[ALL [VER=1.3 Rise of House Telvanni.esm]
+     [ANY Riptides Face & Clothing Replace + X-Jiits.esp
+          Riptides Face & Clothing Replace Final.esp]]
+
+[Order]
+Riptides Face & Clothing Replace Final.esp
+Riptides Face & Clothing Replace + X-Jiits.esp
+ROHTvsRiptide_NPCfixes.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Rise of the Illuminated Lich 1.1 [Psycholex, the Architect]
 
 [Requires]
@@ -38681,25 +38930,6 @@ Morrowind Crafting 2-1.esp
 [Patch]
 Rocky Island v 1.1 Patch.esp
 Rocky Island v 1.1.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @ROHTvsRiptideNPCfixes [Malik]
-
-;;Dragon32: Malik's plugin made for v1.3 of RoHT, not sure if it works with latest (1.5 at time of writing)
-[Patch]
- Malik's "ROHTvsRiptideNPCfixes" fixes changes made by Riptides' "Face, Armor, & Clothing Replace" to NPCs from "Rise of House Telvanni" 1.3 by bhl et al.
- http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=7967
- (Ref: Readme ROHTvsRiptideNPCfixes.txt)
-ROHTvsRiptide_NPCfixes.esp
-[ALL [VER=1.3 Rise of House Telvanni.esm]
-     [ANY Riptides Face & Clothing Replace + X-Jiits.esp
-          Riptides Face & Clothing Replace Final.esp]]
-
-[Order]
-Riptides Face & Clothing Replace Final.esp
-Riptides Face & Clothing Replace + X-Jiits.esp
-ROHTvsRiptide_NPCfixes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45836,6 +46066,7 @@ Neo's Unique Creatures.esp
           Morrowind Advanced.esm
           NewBlood_MW.esp
           NewBlood_MwTbBm1.1.esp
+          NoAOESpellsForSummons.esp
           Non-Homicidal Ecosystem - Daedra Edition.ESP
           Undead arise from death <VER>.esp]
      [NOT Merged_Objects.esp]]
@@ -47186,6 +47417,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
           HasphatsBooks.esp
           heartwood.esp
           Illy's Solsteim Rumour Fix.esp
+          Khajiit Greeting Fix.ESP
           lfx_edwinna_book.esp
           lfx_nerevarine_greetings.esp
           lfx_rare_heartwood.esp
@@ -47226,6 +47458,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
           Tribunal Crimson Plague tweaker.esp
           TribunalQuestFix.esp
           Tribunal - Realistic Ingredient Weights.esp
+          TT Compassion Quest Fix.ESP
           UupseFix.esp
           vampfix.esp
           vampirequestrepair.esp
@@ -47480,6 +47713,15 @@ heartwood.esp
      Illy's Solsteim Rumour Fix.esp]
 
 [Conflict]
+ The MPP obsoletes "Khajiit Greeting Fix" (Salaa)
+ This fix was superseded by Thepal's Unofficial Morrowind Patch v1.6.3b that in turn has been superseded by the MPP.
+ (Ref: http://forums.nexusmods.com/index.php?/topic/2429529-khajiit-greeting-fix/?p=23743974 )
+[ALL [ANY Morrowind Patch *.esm
+          Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+          [NOT Morrowind Patch v1.6.2.esm]]
+Khajiit Greeting Fix.ESP
+
+[Conflict]
  The MPP obsoletes Edwinna Elbert's Book (Alphax).
  (Ref: Morrowind_Patch_v1.6.4\Patch Documentation\Bug Fixes.txt)
 [ALL [ANY Morrowind Patch *.esm
@@ -47706,6 +47948,15 @@ Tribunal Crimson Plague tweaker.esp
                     Morrowind Patch v1.6.3.esm
                     Morrowind Patch v1.6.4 (WIP).esm]]]
 Tribunal - Realistic Ingredient Weights.esp
+
+[Conflict]
+ The MPP obsoletes "Tribunal Temple Compassion Quest Fix" (Salaa)
+ The map marking of Ald Velothi is unique to this mod but the Maelkashishi fix was included in 1.6.4 of the MPP.
+ (Ref: http://forums.nexusmods.com/index.php?/topic/2429559-tribunal-temple-compassion-quest-fix/?p=23743709 )
+[ALL [ANY Morrowind Patch *.esm
+          Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+          [NOT Morrowind Patch v1.6.2.esm]]
+TT Compassion Quest Fix.ESP
 
 [Conflict]
  The MPP obsoletes Vampire Levitation Fix (Kal Choedan).
