@@ -66,27 +66,31 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;Dragon32: Added some fix mods (fixes are not included in MPP 1.6.5b). Try to keep these to the absolute minimum.
+;;Dragon32: Removed - Idea with these rules was to ensure patch plugins load as early as possible.
+;;Dragon32:         - However, seems to break later Order rules including those plugins so removed
+;;Dragon32:         - In main body I've added Order rules so various iterations of UMP load before other ESMs
 
 [NearStart]
 Morrowind.esm
 Tribunal.esm
 Bloodmoon.esm
+;;
 ;;wildcard to pick up all the iterations of the MPP
-Morrowind Patch *.esm
+;;Morrowind Patch *.esm
 ;;MPP from Trancemaster_1988's "Morrowind Rebirth"
-Morrowind Rebirth <VER> - Morrowind Patch *.esm
+;;Morrowind Rebirth <VER> - Morrowind Patch *.esm
 ;;arvisrend's Morrowind fixes 0.5 [arvisrend], q.v.
-arvisrend - fixes - books.ESP
-arvisrend - fixes - dialogue.ESP
-arvisrend - fixes - objects (no shadows).ESP
-arvisrend - fixes - objects.ESP
-arvisrend - fixes - persistent corpses.ESP
-arvisrend - fixes - scripts.ESP
+;;arvisrend - fixes - books.ESP
+;;arvisrend - fixes - dialogue.ESP
+;;arvisrend - fixes - objects (no shadows).ESP
+;;arvisrend - fixes - objects.ESP
+;;arvisrend - fixes - persistent corpses.ESP
+;;arvisrend - fixes - scripts.ESP
 ;;Unofficial Morrowind Patch Project Bug Fixes 2.0 [EnderAndrew], q.v.
-Clean UMPP-fixes-BTB-v2.esp
-Clean UMPP-fixes-v2.esp
+;;Clean UMPP-fixes-BTB-v2.esp
+;;Clean UMPP-fixes-v2.esp
 ;;Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien], q.v.
-Clean_bloodmoonpatch_05.esp
+;;Clean_bloodmoonpatch_05.esp
 
 [Order]
 Morrowind.esm
