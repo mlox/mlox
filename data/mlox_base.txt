@@ -66,31 +66,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;Dragon32: Added some fix mods (fixes are not included in MPP 1.6.5b). Try to keep these to the absolute minimum.
-;;Dragon32: Removed - Idea with these rules was to ensure patch plugins load as early as possible.
-;;Dragon32:         - However, seems to break later Order rules including those plugins so removed
-;;Dragon32:         - In main body I've added Order rules so various iterations of UMP load before other ESMs
 
 [NearStart]
 Morrowind.esm
 Tribunal.esm
 Bloodmoon.esm
-;;
 ;;wildcard to pick up all the iterations of the MPP
-;;Morrowind Patch *.esm
+Morrowind Patch *.esm
 ;;MPP from Trancemaster_1988's "Morrowind Rebirth"
-;;Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
 ;;arvisrend's Morrowind fixes 0.5 [arvisrend], q.v.
-;;arvisrend - fixes - books.ESP
-;;arvisrend - fixes - dialogue.ESP
-;;arvisrend - fixes - objects (no shadows).ESP
-;;arvisrend - fixes - objects.ESP
-;;arvisrend - fixes - persistent corpses.ESP
-;;arvisrend - fixes - scripts.ESP
+arvisrend - fixes - books.ESP
+arvisrend - fixes - dialogue.ESP
+arvisrend - fixes - objects (no shadows).ESP
+arvisrend - fixes - objects.ESP
+arvisrend - fixes - persistent corpses.ESP
+arvisrend - fixes - scripts.ESP
 ;;Unofficial Morrowind Patch Project Bug Fixes 2.0 [EnderAndrew], q.v.
-;;Clean UMPP-fixes-BTB-v2.esp
-;;Clean UMPP-fixes-v2.esp
+Clean UMPP-fixes-BTB-v2.esp
+Clean UMPP-fixes-v2.esp
 ;;Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien], q.v.
-;;Clean_bloodmoonpatch_05.esp
+Clean_bloodmoonpatch_05.esp
 
 [Order]
 Morrowind.esm
@@ -6012,9 +6008,23 @@ BetterClothesBloodmoonPlus<VER>.esp
 
 [Order]
 Morrowind.esm
+Better Heads.esm
+
+[Order]
 Tribunal.esm
+Better Heads Tribunal addon.esm
+
+[Order]
 Bloodmoon.esm
+Better Heads Bloodmoon addon.esm
+
+[Order]
 Morrowind Patch *.esm
+Better Heads.esm
+Better Heads Tribunal addon.esm
+Better Heads Bloodmoon addon.esm
+
+[Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Better Heads.esm
 Better Heads Tribunal addon.esm
@@ -6043,10 +6053,35 @@ Better Heads Tribunal addon.esm
 ;; @Better Heads Modular 2.0 [Gorg, Arathrax aka DarkSharp and Motoki]
 
 [Order]
-Morrowind.esm
-Tribunal.esm
-Bloodmoon.esm
 Morrowind Patch *.esm
+BH_Argonians_F.esm
+BH_Argonians_M.esm
+BH_Barenziah_Replace.esm
+BH_Bretons_F.esm
+BH_Bretons_M.esm
+BH_Bretons_M_BM.esm
+BH_DarkElves_F.esm
+BH_DarkElves_M.esm
+BH_DarkElves_M_BM.esm
+BH_Helseth_Replace.esm
+BH_HighElves_F.esm
+BH_HighElves_M.esm
+BH_Imperials_F.esm
+BH_Imperials_F_BM.esm
+BH_Imperials_M.esm
+BH_Imperials_M_BM.esm
+BH_Nords_F.esm
+BH_Nords_F_BM.esm
+BH_Nords_M.esm
+BH_Nords_M_BM.esm
+BH_Orcs_F.esm
+BH_Orcs_M.esm
+BH_Redguards_F.esm
+BH_Redguards_M.esm
+BH_WoodElves_F.esm
+BH_WoodElves_M.esm
+
+[Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 BH_Argonians_F.esm
 BH_Argonians_M.esm
@@ -16034,10 +16069,10 @@ Clean Ghostgate.esp
 ;; @GIANTS v2.7.1 "Ultimate" [The Puma Man]
 
 [Order]
-Morrowind.esm
-Tribunal.esm
-Bloodmoon.esm
 Morrowind Patch *.esm
+GIANTS.esm
+
+[Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 GIANTS.esm
 
@@ -35197,6 +35232,7 @@ Nymeria's mages'guild fix.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Object Permanence 2.0 [TheOne&Only]
 
+;; Dragon32: Some changes made (see "Object Permanence Full.doc") which fix issues in MPP
 [Order]
 Morrowind Patch *.esm
 Object Permanence v2.esm
@@ -35212,14 +35248,6 @@ Object Permanence Full.esm
 Object Permanence Bloodmoon.esm
 Object Permanence Morrowind.esm
 Object Permanence Tribunal.esm
-
-;; Dragon32: Some changes made (see "Object Permanence Full.doc") which fix issues in MPP
-[Order]
-Morrowind Patch v1.6.4.esm
-Morrowind Patch v1.6.5-BETA.esm
-Morrowind Patch 1.6.5 Beta (BTB Edit).esm
-Morrowind Rebirth <VER> - Morrowind Patch *.esm
-Object Permanence v2.esm
 
 ;;Dragon32: Number of changes made (see "Object Permanence Full.doc") for compatibility with Better Heads so should be OK to load before
 [Order]
@@ -47495,6 +47523,11 @@ Morrowind.esm
 Tribunal.esm
 Bloodmoon.esm
 Morrowind Patch *.esm
+
+[Order]
+Morrowind.esm
+Tribunal.esm
+Bloodmoon.esm
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;
