@@ -593,6 +593,7 @@ Adj_Magicka Regen (1.00%).esp
           Definitive Birthsigns Redux Patch.esp
           ExpandedBirthsigns4Purists.esp
           GCD better balanced birthsigns.esp
+          LadyCBirthsigns.esp
           race_birthsign_remix.esp
           Races1.esp
           RAMF_Mer_for_NPCs.esp
@@ -7290,6 +7291,42 @@ Clean Blight Infections.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Blighted Animals 1.1 [PawPrintExpress Mods]
+
+;;Dragon32: Piratelord's "Creatures" also retextures Blighted animals; if someone running this mod load it after
+;;Ref: TESPCD check and http://forums.nexusmods.com/index.php?/topic/782388-blighted-animals-retextured/?p=24719354
+[Order]
+Creatures.esp
+Clean Blighted Animals.esp
+
+[Order]
+Creatures (lore).esp
+Clean Blighted Animals.esp
+
+[Order]
+Creatures (Semi).esp
+Clean Blighted Animals.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Blighted Animals Retextured 1.2 [PeterBitt]
+
+;;Dragon32: Piratelord's "Creatures" also retextures Blighted animals; if someone running this mod load it after
+;;Ref: TESPCD check and http://forums.nexusmods.com/index.php?/topic/782388-blighted-animals-retextured/?p=24719354
+[Order]
+Creatures.esp
+BlightedAnimalsRetextured.esp
+
+[Order]
+Creatures (lore).esp
+BlightedAnimalsRetextured.esp
+
+[Order]
+Creatures (Semi).esp
+BlightedAnimalsRetextured.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Blood and Gore 2.14 [TheLys]
 
 [Note]
@@ -7794,6 +7831,16 @@ tusar_v1.2.1.esp
  (Ref: "Bloody Oath_v1.0_readme.txt")
 Bloody Oath_v1.0.esp
 blacklightv1.34.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Board Games 2.0 [Danae]
+
+;;expdep
+[Requires]
+ This plugin uses the Bloodmoon function placeatme.
+Clean Board Games.esp
+Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9560,6 +9607,18 @@ Cliffracer-FIX.esp
      Passive_Healthy_Wildlife.esp
      Rational Wildlife.esp
      wildlife_behaviour.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cliffs of Fjalding [Lochnarus]
+
+[Conflict]
+ "[lochnarus's "Cliffs of Fjalding"] DOES *NOT* support Skaal Forest. DO NOT USE THEM TOGETHER!!!!"
+ Lochnarus' "Felsaad Revamped" merges his "Cliffs of Fjalding", "Fortified Thirsk" and "Skaal Forest" plugins together.
+ Download Lochnarus' "Felsaad Revamped" from Morrowind Modding History - http://mw.modhistory.com/download-45-6989
+ (Ref: "COF_README.txt")
+LOCH_Cliffs_Of_Fjalding.esp
+Skaal Forest 1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11987,6 +12046,24 @@ The Request Mod.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 5270 dinkymonsta.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Diseased Animals [PawPrintExpress Mods]
+
+;;Dragon32: Piratelord's "Creatures" also retextures Diseased animals; if someone running this mod load it after
+;;Ref: TESPCD check and http://forums.nexusmods.com/index.php?/topic/782388-blighted-animals-retextured/?p=24719354
+[Order]
+Creatures.esp
+DiseasedAnimals.esp
+
+[Order]
+Creatures (lore).esp
+DiseasedAnimals.esp
+
+[Order]
+Creatures (Semi).esp
+DiseasedAnimals.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14763,8 +14840,7 @@ Fast Travel Health Fix.esp
 ;; @Felsaad Revamped [Lochnarus]
 
 [Conflict]
- "LOCH_Felsaad_Revamped.esp" includes "LOCH_Cliffs_Of_Fjalding.esp",
- "Fortified_Thirsk_1.1.esp" and "Skaal Forest 1.0.esp".
+ "LOCH_Felsaad_Revamped.esp" includes "LOCH_Cliffs_Of_Fjalding.esp", "Fortified_Thirsk_1.1.esp" and "Skaal Forest 1.0.esp".
  (Ref: felsaad_Revamped_README.txt)
 LOCH_Felsaad_Revamped.esp
 [ANY LOCH_Cliffs_Of_Fjalding.esp
@@ -14953,6 +15029,7 @@ FireMoth Moved.ESP
 [Order]
 FireMoth Moved.ESP
 TLM - AdjMod - Siege At Firemoth.esp
+TLM - Complete.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22685,6 +22762,181 @@ J-ninja_v.1.0_m_NoQuest.esp
 Join All Houses.esp
 AllHousesMod.esp
 
+;;"Setting Join All Houses to load after the House expansions would be a wise precaution"
+;;Ref: http://forums.bethsoft.com/topic/1516897-join-all-houses-mod/?p=23946148
+
+;;Dragon32: See also Grandmaster of Hlaalu 1.2 [Lady Galadriel]
+
+;;Hlaalu - Rethan Manor @ Odai Plateau
+
+[Order]
+Enhanced Rethan Manor.esp			;Enhanced Rethan Manor [Lady_Galadriel]
+Join All Houses.esp
+
+[Order]
+Hlaalu Manor Enhancement.esp			;Hlaalu Manor Enhancement [Nikolai Horohov]
+Join All Houses.esp
+
+[Order]
+HlaaluManorUndergroundv12.esp			;Hlaalu Underground [Tequila]
+Join All Houses.esp
+
+[Order]
+Clean HlaaluUndergroundTrib.esp			;Hlaalu Underground [Tequila]
+Join All Houses.esp
+
+[Order]
+New Rethan Manor.esp				;New Rethan Manor [Monica21]
+Join All Houses.esp
+
+[Order]
+Pax Hlaalu (Revision 3.0).esp			;Pax Hlaalu [Dorfmann]
+Join All Houses.esp
+
+[Order]
+BAR_RethanExpansion_v2.2.esp			;Rethan Expansion [Baratheon79]
+Join All Houses.esp
+
+[Order]
+BAR_RethanExpansion_v2.2_NoM.esp		;Rethan Expansion [Baratheon79]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Livingroom_v1.1_BAR.esp		;Rethan Manor Add-on 1: Livingroom & Personnel Bedroom [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Livingroom_v1.3.esp		;Rethan Manor Add-on 1: Livingroom & Personnel Bedroom [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Library_M_v2.0_a_Tribunal.esp	;Rethan Manor Add-on 2: Library [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Library_M_v2.0_Tribunal.esp	;Rethan Manor Add-on 2: Library [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Library_v2.0.esp			;Rethan Manor Add-on 2: Library [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Library_v2.0_a.esp			;Rethan Manor Add-on 2: Library [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Library_v2.0_a_Tribunal.esp	;Rethan Manor Add-on 2: Library [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Library_v2.0_Tribunal.esp		;Rethan Manor Add-on 2: Library [Arjan]
+Join All Houses.esp
+
+[Order]
+ARJAN_Rethan_Defended_v1.0.esp			;Rethan Manor Add-on 3: Rethan Defended 1.0 [Arjan Wardekker]
+Join All Houses.esp
+
+;;Redoran - Indarys Manor @ Bal Isra
+
+[Order]
+cv_indarys_manor_expanded.esp			;CV Indarys Manor [Chron Ventri]
+Join All Houses.esp
+
+[Order]
+Indarys Unleashed.esp				;Indarys Unleashed [Michael "HelioS" Bennett]
+Join All Houses.esp
+
+;;Telvanni - Tel Uvirith @ Uvirith's Grave
+
+[Order]
+Building Up Uvirith's Grave 1.1.esp		;Building Up Uvirith's Grave [Acheron]
+Join All Houses.esp
+
+[Order]
+Building Up Uvirith's Legacy1.1.ESP		;Building Up Uvirith's Legacy [Artimis Fowl the 3rd]
+Join All Houses.esp
+
+[Order]
+Dark Town of Uvirith.esp			;Dark Town of Uvirith [Anonytroll]
+Join All Houses.esp
+
+[Order]
+Dark Town of Uvirith (TL).esp			;Dark Town of Uvirith (Thorn's Lament Version) [Anonytroll]
+Join All Houses.esp
+
+[Order]
+Dark Uvirith Exterior BuUG 1.0.esp		;Dark Uvirith Exterior for BuUG [Stuporstar]
+Join All Houses.esp
+
+[Order]
+Green Uvirith Expansion.esp			;Green Uvirith Expansion  [ThaEgbird, either fixed by Neroli or expanded by krzy5iu]
+Join All Houses.esp
+
+[Order]
+Update 1.0.esp					;Green Uvirith Expansion  [ThaEgbird, either fixed by Neroli or expanded by krzy5iu]
+Join All Houses.esp
+
+[Order]
+Clean tel uvirith expansion fixed.esp		;Green Uvirith Expansion  [ThaEgbird, either fixed by Neroli or expanded by krzy5iu]
+Join All Houses.esp
+
+[Order]
+iD_Telvanni_Tower_v1.esp			;Iorya Dragon's Tel Uvirith Tower  [Iorya Dragon]
+Join All Houses.esp
+
+[Order]
+Magistrate Uvirith Revamped.esp			;Magistrate Uvirith Revamped [Magistrate]
+Join All Houses.esp
+
+[Order]
+Maya Uvirith Expanded 2.0.esp			;Maya Uvirith Expanded  [ThE)MaGISTraTe]
+Join All Houses.esp
+
+[Order]
+Subterranean Tel Uvirith v 1.1.esp		;Subterranean Tel Uvirith 1.1 [morphera]
+Join All Houses.esp
+
+[Order]
+town_of_uvirith.esp				;Town of Uvirith [Tapani_doe]
+Join All Houses.esp
+
+[Order]
+The Towers of Uvirith V1.2.esp	
+Join All Houses.esp
+
+[Order]		;
+Uvirith Inside.esp				;Uvirith Inside [The DopeHatMan]
+Join All Houses.esp
+
+[Order]
+Uvirith's Legacy_<VER>.esp			;Uvirith's Legacy [Stuporstar]
+Join All Houses.esp
+
+[Order]
+Uvirith Outpost v1.6.esp			;Uvirith Outpost [Akura]
+Join All Houses.esp
+
+[Order]
+Uvirith Unleashed v1.2.esp			;Uvirith Unleashed [Grumblepunk]
+Join All Houses.esp
+
+[Order]
+uvirithvaultv10.esp				;Uvirith's Vault [ThaEgbird]
+Join All Houses.esp
+
+;;All
+[Order]
+Clean_Indarys_Manor_Vault.esp			;Stronghold Vaults  [Tenaka]
+Join All Houses.esp
+
+[Order]
+Clean_Rethan_Manor_Vault.esp			;Stronghold Vaults  [Tenaka]
+Join All Houses.esp
+
+[Order]
+Clean_Tel_Ulvirith_Vault.esp			;Stronghold Vaults  [Tenaka]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Josie's Entertainers [Eisoj5]
@@ -23711,6 +23963,52 @@ Laby connection EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @LadyC BirthSigns [LadyCallipyge]
+
+;;Load the specific birthsign-affecting mod after WGI
+[Order]
+Balance - Character.esp
+LadyCBirthsigns.esp
+
+[Order]
+Wakim's Game Improvement 9.esp
+LadyCBirthsigns.esp
+
+[Order]
+Wakim's Game Improvements with No-glo v9.esp
+LadyCBirthsigns.esp
+
+[Order]
+AprogasVampire WakimImprovements.20021210.esp
+LadyCBirthsigns.esp
+
+;;Load the specific birthsign-affecting mod after BTB
+[Order]
+BTB - Character.esp
+LadyCBirthsigns.esp
+
+[Order]
+BTB - Character (Alternate).esp
+LadyCBirthsigns.esp
+
+[Order]
+CE-DepthPerception25+BTB's Character.ESP
+LadyCBirthsigns.esp
+
+[Order]
+CE-DepthPerception50+BTB's Character.ESP
+LadyCBirthsigns.esp
+
+[Order]
+CE-DepthPerception75+BTB's Character.ESP
+LadyCBirthsigns.esp
+
+[Order]
+CE-DepthPerception100+BTB's Character.ESP
+LadyCBirthsigns.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Lance of Longinus [Prophet2004]
 
 [Note]
@@ -24108,6 +24406,7 @@ Level Up Birthsign Remover WGI 103.esp
      Birthsigns.esp
      Definitive Birthsigns Redux Patch.esp
      ExpandedBirthsigns4Purists.esp
+     LadyCBirthsigns.esp
      NPC Magicka Regen (Wakim).esp
      race_birthsign_remix.esp
      Unique Birthsigns.esp]
@@ -29485,6 +29784,13 @@ Better Clothes_v1.1.esp
  ! (Ref: http://forums.nexusmods.com/index.php?/topic/2458519-take-all-hotkey-mod/?p=21660169 )
 Take All.esp
 
+[Note]
+ ! The option "Allow stealing from KOed NPCs" in the highly recommended "Morrowind Code Patch" by Hrnchamd:
+ ! "Allows you to steal from NPCs that have been knocked out. Previously you would get a 'You are in combat' message when you activated them."
+ ! If you have the MCP, you do not need Reznod's "Mugging Fix".
+ ! (Ref: http://morrowind.nexusmods.com/mods/19510 )
+MugFix.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @MCA (Morrowind Comes Alive) 8.1 [Neoptolemus]
@@ -31337,6 +31643,14 @@ Jobs (Qaja'kar).ESP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Rebirth 2.6 [Trancemaster_1988]
 
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].esm
+
+[Order]
+Morrowind Patch *.esm
+Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].esm
+
 ;;version check
 [Note]
  ! There is a new version of Trancemaster_1988's "Morrowind Rebirth" available, you should upgrade!
@@ -31406,6 +31720,19 @@ Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
  (Ref: "Morrowind Rebirth 2.6 - Morrowind Patch 1.6.5 - Readme.txt")
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Morrowind Rebirth <VER>.ESP
+
+[Conflict]
+ "[The Rebirth edit of the MPP] removes all (or most of them) conflicting changes between the Morrowind Patch Project and Morrowind Rebirth, making it a seamless experience"
+ (Ref: "Morrowind Rebirth 2.6 - Morrowind Patch 1.6.5 - Readme.txt")
+Morrowind Rebirth <VER>.ESP
+[ANY Morrowind Patch v1.6.2.esm
+     Morrowind Patch v1.6.3.esm
+     Morrowind Patch v1.6.4 (WIP).esm
+     Morrowind Patch v1.6.4.esm
+     Morrowind Patch v1.6.5-BETA.esm
+     Morrowind Patch 1.6.5 Beta (BTB Edit).esm
+     Morrowind Patch v1.6.5d_beta.esm
+     Morrowind Patch v1.6.6_beta.esm]
 
 [Order]
 Bloodmoon.esm
@@ -31946,6 +32273,26 @@ Windows Glow - Bloodmoon Eng.esp
 Windows Glow - Raven Rock Eng.esp
 abotWindowsGlow.esp
 abotWindowsGlowTR.esp
+Morrowind Rebirth <VER>.ESP
+
+;;"Haven't noticed anything wild with Better Bodies + Better Clothes being adjusted to load after Rebirth 3.0"
+;;Ref: http://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=24325569
+[Order]
+Morrowind Rebirth <VER>.ESP
+Better Bodies.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+Better Clothes_v1.1.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+Better Clothes_v1.1_nac.esp
+
+;;"Cavern Overhaul had to be above [Morrowind] Rebirth in the load order"
+;;Ref: http://forums.nexusmods.com/index.php?/topic/783496-caverns-overhaul/page-12#entry25281759
+[Order]
+Cavernes Overhaul -Eng.ESP
 Morrowind Rebirth <VER>.ESP
 
 
@@ -35938,6 +36285,38 @@ Oriental weapons pack.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Our Lady's Solace 1.11 [Almalexia & green_shade]
+
+[Conflict]
+ "[Almalexia & green_shade's "Our Lady's Solace" is] incompatible [...] with Voiced Almalexia."
+ (Ref: "Our Lady's Solace Readme.txt")
+Our Lady's Solace.esp
+Almalexia_Voicev1.esp
+
+[Patch]
+ "Sotha Sil Expanded add-on included under Optional Files. Use only if you are using SSE."
+ Download "Our Lady's Solace - SSE Add-on" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43501/
+Our Lady's Solace - SSE Add-on.esp
+[ALL Our Lady's Solace.esp
+     Sotha Sil Expanded.ESP]
+
+;;Dragon32: From TESPCD check
+[Order]
+Our Lady's Solace.esp
+Our Lady's Solace - SSE Add-on.esp
+
+[Order]
+Sotha Sil Expanded.ESP
+Our Lady's Solace - SSE Add-on.esp
+
+;;"I looked through all the dialogue entries for [Less Generic Tribunal]. There doesn't appear to be any conflicts. Dialogue changes affect which one you'd want to load first. I'd recommend loading [Our Lady's Solace] last as it will provide a more consistent experience."
+;;Ref: http://forums.nexusmods.com/index.php?/topic/2636899-our-ladys-solace/?p=23860569
+[Order]
+Less_Generic_Tribunal.esp
+Our Lady's Solace.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ozzy's Grass Mods [Ozzy]
 
 [Note]
@@ -39014,7 +39393,6 @@ Rise of House Telvanni.esm
 [Patch]
  "[DurendalMartyr's "RoHT - Tureynulal Redone Patch"] was made to fix a minor conflict that arises if you try to use Rise of House Telvanni and Tureynulal Redone together.
  Basically, they both alter the same cell with Tureynulal Redone changing the whole thing up and RoHT adding a few items, one of which is needed for one of it's quests.
-
  The items in question still show up, but float in midair. All this mod does is move the items over to a few nearby tables, still out in the open and easy to find."
  (Ref: http://www.nexusmods.com/morrowind/mods/43533/ )
 RoHT - Tureynulal Redone Patch.ESP
@@ -40734,6 +41112,16 @@ abotSiltStriders.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+[Conflict]
+ When running "Silt Striders" by abot: "a few [Silt Striders] are added to leveled lists"
+ lochnarus' "Silt Striders Are In Vvardenfell", Lingarn's "Silt Striders" and M6n6M6's "Silt Striders in the Wild" also place Silt Striders around Vvardenfell, either manually or by levelled list. You should consider whether you need to run all these mods.
+ (Ref: http://forums.nexusmods.com/index.php?/topic/806063-silt-striders/?p=25238694 )
+[ANY abotSiltStriders.esp
+     abotSiltStridersTR.esp]
+[ANY Silt_Striders_Are_In_Vvardenfell.esp
+     LN_silt_striders.esp
+     Silt Striders in the Wild.esp]
+
 ;;Dragon32: Load Melian's Teleport Mod after abot's real-time travel mods
 ;;ref: http://forums.bethsoft.com/topic/1487854-relz-mlox-analyze-and-sort-your-load-order/?p=23797886
 [Order]
@@ -41432,11 +41820,20 @@ Sotha Sil Expanded.ESP
 
 [Patch]
  "SSE Necessities of Morrowind Patch [...] makes [Team SSE's "Sotha Sil Expanded"] compatible with ["Necessities of Morrowind" by Taddeus]"
- http://www.nexusmods.com/morrowind/mods/42347/
+ Download "SSE Necessities of Morrowind Patch" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/42347/
 SSE_NOM.ESP
 [ALL Sotha Sil Expanded.ESP
-     [ANY NOM 2.13.esp
-          NoM 3.0.esp]]
+     NOM 2.13.esp]
+
+[Patch]
+ "SSE Necessities of Morrowind Patch [...] makes [Team SSE's "Sotha Sil Expanded"] compatible with ["Necessities of Morrowind" by Taddeus]"
+ Download "SSE Necessities of Morrowind Patch" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/42347/
+ "Using SSE Necessities of Morrowind Patch with Necessities of Morrowind 3.03 causes a missing mesh error. To solve it, copy the files RockWalk.tga, Wood1.tga and midevil_well.nif from [Necessities of Morrowind] 2.13"
+ Download version 2.13 of "Necessities of Morrowind" from Morrowind Modding History - http://mw.modhistory.com/download-44-5583
+ (Ref: http://forums.nexusmods.com/index.php?/topic/867100-sotha-sil-expanded/?p=25110819 )
+SSE_NOM.ESP
+[ALL Sotha Sil Expanded.ESP
+     NoM 3.0.esp]
 
 [Order]
 Sotha Sil Expanded.ESP
@@ -44747,6 +45144,26 @@ Thirsk Expanded Family.esp
 Thirsk Expanded Family.esp
 MW_Children_1_0.esm
 
+;;"Thirsk [Expanded] first, then Lochnarus [Cliffs Of Fjalding], then Skaal [Forest]. It's a load order issue, becaus HRM's Thirsk [Expanded] edits some of the same landscape as Lochnarus' Cliff of Fjalding mod.  If his preceeds, then you get that lovely visual quirk of half the cliffs unidirectionally invisible and cut out."
+;;Ref: http://forums.bethsoft.com/topic/1515844-what-are-the-most-realistic-expansion-mods/?p=23926895
+[Order]
+Thirsk Expanded.esp
+LOCH_Cliffs_Of_Fjalding.esp
+Skaal Forest 1.0.esp
+
+[Order]
+Thirsk Expanded Family.esp
+LOCH_Cliffs_Of_Fjalding.esp
+Skaal Forest 1.0.esp
+
+;;merged version of Lochnarus' mods
+[Order]
+Thirsk Expanded.esp
+LOCH_Felsaad_Revamped.esp
+
+[Order]
+Thirsk Expanded Family.esp
+LOCH_Felsaad_Revamped.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Threads of the Webspinner Completed 2.1 [Curmudgeon]
@@ -45056,6 +45473,7 @@ TLM - Complete.esp
  (Ref: "TLM - ~Readme.htm")
 TLM - AdjMod - Siege At Firemoth.esp
 [ALL TLM - Ambient Light + Fog Update.esp
+     [NOT TLM - Complete.esp]
      [ANY Siege at Firemoth.esp
           SiegeAtFiremoth.esp
           [Official]Siege at Firemoth.esp
@@ -47593,6 +48011,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
           corpusbugfix.esp
           Correct Spell Sounds.esp
           Crusader Class Fix.esp
+          daedricsanctuaryfix.ESP         
           Dome of Serlyn fix.esp
           DrenFactionTweaks.esp
           Ebonheart Warehouse Fix.esp
@@ -47798,6 +48217,17 @@ Clean Devil_Tanto_Bug_Fix.esp
           Morrowind Rebirth <VER> - Morrowind Patch *.esm]
           [NOT Morrowind Patch v1.6.2.esm]]
 Colony Spriggan Fix.esp
+
+[Note]
+ ! The MPP does something similar to Daedric Sanctuary Fix [gaddgadd].
+ ! Using gaddgadd's Daedric Sanctuary Fix means you can use the Daedric Sanctuary amulets an infinite number of times. This is contrary to Bethesda's obvious intentions despite their flawed implementation.
+ ! Ref: (http://forums.nexusmods.com/index.php?/topic/661754-daedric-sanctuary-fix/?p=24982719 and http://www.uesp.net/wiki/Morrowind:Magas_Volar#Notes )
+[ALL [ALL [ANY Morrowind Patch *.esm
+          Morrowind Rebirth <VER> - Morrowind Patch *.esm]
+          [NOT [ANY Morrowind Patch v1.6.2.esm
+                    Morrowind Patch v1.6.3.esm
+                    Morrowind Patch v1.6.4 (WIP).esm]]]
+     daedricsanctuaryfix.ESP]
 
 [Conflict]
  The MPP fixes the fog density parameter in the cell "Sotha Sil, Dome of Serlyn", so you don't also need the plugin "Dome of Serlyn fix.esp".
@@ -49259,6 +49689,58 @@ VampiricIllusion.esp
  (Ref: VampiricIllusion_Readme.txt)
 VampiricIllusion_MWSE_AddOn.esp
 VampiricIllusion.esp
+
+;;FleeAIFixes
+
+[Conflict]
+ "FleeAIFixes.esp has *exactly the same* flee modifications as in Wakims Game Improvements, so if you run WGI [or a mod which includes the same flee settings] you do not need FleeAIFixes."
+ (Ref: "VampiricIllusion_Readme.txt")
+FleeAIFixes.esp
+[ANY Balance - game settings.esp
+     Wakim's Game Improvement 9.esp
+     Wakim's Game Improvements with No-glo v9.esp
+     AprogasVampire WakimImprovements.20021210.esp
+     horationpcenhanced12-bm.esp
+     horationpcenhanced12-trib.esp
+     horationpcenhanced12-ve.esp
+     SG-MW-ecology-BM.esm
+     SG-MW-ecology-WW.esm
+     SG-MW-ecology-carnivore.esm]
+
+[Conflict]
+ "If you have any other mod which changes the flee settings, you also should not install FleeAIFixes.esp."
+ (Ref: "VampiricIllusion_Readme.txt")
+FleeAIFixes.esp
+[ANY MWInhabitants Flee AI Patch.esp
+     Flee AI Tweaks.esp
+     BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, Creatures' is 25. IMO, lower the better for this value
+[Order]
+FleeAIFixes.esp
+Creatures (lore).esp
+
+[Order]
+FleeAIFixes.esp
+Creatures (Semi).esp
+
+[Order]
+FleeAIFixes.esp
+Creatures.esp
+
+;;Dragon32: Arbitrary Order rule, Wakims' value for fAIFleeHealthMult is 56, NPC Functionality's is 20. IMO, lower the better for this value
+[Order]
+FleeAIFixes.esp
+NPC Functionality.esp
+
+[Order]
+FleeAIFixes.esp
+NPC Functionality.esp
+
+[Order]
+FleeAIFixes.esp
+NPC Functionality.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
