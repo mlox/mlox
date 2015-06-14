@@ -3372,6 +3372,89 @@ Asgard Teleport Ring.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ash Vampires Replacer [Aoimevelho]
+
+[Conflict]
+ Only use one plugin:
+  AshVampiresReplacer.ESP - basic version
+  AshVampiresReplacer_GHD.ESP - if you have "Great House Dagoth"
+  AshVampiresReplacer_TTU.ESP -  if you have "The Tribe Unmourned" 
+  AshVampiresReplacer_GHD+TTU.ESP - if you have both "Great House Dagoth" and "The Tribe Unmourned"
+ (Ref: "AshVampiresReplacer_Readme.txt")
+AshVampiresReplacer.ESP
+AshVampiresReplacer_GHD+TTU.ESP
+AshVampiresReplacer_GHD.ESP
+AshVampiresReplacer_TTU.ESP
+
+[Requires]
+ (Ref: "AshVampiresReplacer_Readme.txt")
+AshVampiresReplacer_GHD.ESP
+Great House Dagoth.esp
+
+[Requires]
+ (Ref: "AshVampiresReplacer_Readme.txt")
+AshVampiresReplacer_TTU.ESP
+The Tribe Unmourned.esp
+
+[Requires]
+ (Ref: "AshVampiresReplacer_Readme.txt")
+AshVampiresReplacer_GHD+TTU.ESP
+[ALL Great House Dagoth.esp
+     The Tribe Unmourned (GHD).esp]
+
+;;Dragon32: Order rules from TESPCD checks
+[Order]
+Great House Dagoth.esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+The Tribe Unmourned.esp
+AshVampiresReplacer_TTU.ESP
+
+[Order]
+Great House Dagoth.esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+The Tribe Unmourned (GHD).esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+;;"Ash Vampires Replacer should be loaded after DNGDR." 
+;;Ref: http://forums.nexusmods.com/index.php?/topic/1195204-ashvampiresreplacer/?p=25910199
+[Order]
+DN-GDRv1.1.esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv1.1.esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv1.1.esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv1.1.esp
+AshVampiresReplacer_TTU.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
+AshVampiresReplacer_TTU.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ashinarba [Alex Strada]
 
 [Note]
@@ -6569,10 +6652,8 @@ Better Music System (BTB Edit).esp
           OfficialMods_v5.esp
           Official_2002_Mods.esp
           super_adventurers302.esp]
-     [ANY DN-GDRv1_NOM.esp
-          DN-GDRv1_NOM (BTB Edit).esp
-          DN-GDRv1.esp
-          DN-GDRv1 (BTB Edit).esp]
+     [ANY DN-GDRv1.1.esp
+          DN-GDRv1.1_NOM.esp]
      The Neverhalls.esp
      sm_ForgottenHalls.esp
      [ANY MW_Adv_Required.esp
@@ -6978,10 +7059,11 @@ blacklightv1.34.esp
      silgrad_tower_1-4_6.6.esp]
 
 [Conflict]
- landmass conflict.
+ Landmass conflict.
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 blacklightv1.34.esp
-Havish.esm
+[SIZE 4646696 Havish.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10912,7 +10994,15 @@ DandrasFix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @DNGDR - Darknut's Greater Dwemer Ruins [Darknut]
+;; @DNGDR - Darknut's Greater Dwemer Ruins 1.1 [Darknut]
+
+[Note]
+ Darknut has released a new version of "Darknut's Greater Dwemer Ruins", 1.1
+ Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43544/
+DN-GDRv1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
+DN-GDRv1.esp
+DN-GDRv1 (BTB Edit).esp
 
 [Order]
 Morrowind Patch *.esm
@@ -10928,107 +11018,94 @@ GDR_MasterFile.esm
 Creatures.esp
 Creatures (lore).esp
 Creatures (Semi).esp
-DN-GDRv1_NOM.esp
-DN-GDRv1_NOM (BTB Edit).esp
-DN-GDRv1.esp
-DN-GDRv1 (BTB Edit).esp
+DN-GDRv1.1.esp
+DN-GDRv1.1_NOM.esp
 
 [Requires]
- (Ref: DNGDRv1.zip/"readme.htm")
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
 GDR_MasterFile.esm
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
 [Requires]
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1 (BTB Edit).esp
-     DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 [ALL Bloodmoon.esm
      Tribunal.esm
      GDR_MasterFile.esm]
 
 [Conflict]
- If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp, otherwise, use DN-GDRv1.esp.
- (Ref: DNGDRv1.zip/"readme.htm")
-DN-GDRv1.esp
-DN-GDRv1_NOM.esp
+ "Only use one or the other ESP's not both"
+  DN-GDRv1.1_NOM.esp - if you use "Necessities of Morrowind"
+  DN-GDRv1.1.esp - If you do not.
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm"
+DN-GDRv1.1.esp
+DN-GDRv1.1_NOM.esp
 
-[Conflict]
- "If you use NOM (Necessities of Morrowind), then use "DN-GDRv1_NOM (BTB Edit).esp", otherwise, use "DN-GDRv1 (BTB Edit).esp"."
- (Ref: "Readme - BTB Edit.txt")
-DN-GDRv1 (BTB Edit).esp
-DN-GDRv1_NOM (BTB Edit).esp
+;;[Conflict]
+;; "If you use NOM (Necessities of Morrowind), then use "DN-GDRv1_NOM (BTB Edit).esp", otherwise, use "DN-GDRv1 (BTB Edit).esp"."
+;; (Ref: "Readme - BTB Edit.txt")
+;;DN-GDRv1 (BTB Edit).esp
+;;DN-GDRv1_NOM (BTB Edit).esp
 
-[Conflict]
- "Use one of these [...] in lieu of the original plugin(s)"
- (Ref: "Readme - BTB Edit.txt")
-[ANY DN-GDRv1.esp
-     DN-GDRv1_NOM.esp]
-[ANY DN-GDRv1 (BTB Edit).esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+;;[Conflict]
+;; "Use one of these [...] in lieu of the original plugin(s)"
+;; (Ref: "Readme - BTB Edit.txt")
+;;[ANY DN-GDRv1.esp
+;;     DN-GDRv1_NOM.esp]
+;;[ANY DN-GDRv1 (BTB Edit).esp
+;;     DN-GDRv1_NOM (BTB Edit).esp]
 
 ;;"While it hasn't been updated for NOM 3 per se, in my experience it's still worked with NOM 3."
 ;;Ref: http://forums.nexusmods.com/index.php?/topic/2703824-darknut-greater-dwemer-ruin-version-11/?p=23745854
 [Patch]
- If you use NOM (Necessities of Morrowind), then use DN-GDRv1_NOM.esp
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ If you use NOM (Necessities of Morrowind), then use DN-GDRv1.1_NOM.esp
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+DN-GDRv1.1_NOM.esp
 [ALL GDR_MasterFile.esm
      [ANY NOM 2.13.esp
           NoM 3.0.esp]]
 
 [Conflict]
  Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1 (BTB Edit).esp
-     DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 Clean Ghostgate.esp
 
 [Conflict]
  Darknut's "Greater Dwemer Ruins" is not compatible with Sabregirls' "Tougher Sixth House"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1 (BTB Edit).esp
-     DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 SG-toughersixth.esp
 
 [Conflict]
- The NOM (Necessities of Morrowind) version of Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 Great House Dagoth.esp
 
 [Conflict]
  Darknut's "Greater Dwemer Ruins" includes "Dagoth Ur Voice Addon v1.0"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1 (BTB Edit).esp
-     DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 Dagoth Ur Voice Addon v1.0.esp
 
 [Conflict]
  Darknut's "Greater Dwemer Ruins" includes "Darknut's Unique Ash Vampires"
- (Ref: DNGDRv1.zip/"readme.htm")
-[ANY DN-GDRv1.esp
-     DN-GDRv1 (BTB Edit).esp
-     DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+ (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 DN_AshVampires.esp
 
 [Note]
  !! If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
-[ALL [ANY DN-GDRv1.esp
-          DN-GDRv1 (BTB Edit).esp
-          DN-GDRv1_NOM.esp
-          DN-GDRv1_NOM (BTB Edit).esp]
+[ALL [ANY DN-GDRv1.1.esp
+          DN-GDRv1.1_NOM.esp]
      Merged_Objects.esp]
 
 
@@ -11587,6 +11664,14 @@ DN-GDRv1.esp
 [Order]
 Deadly Dagoths.esp
 DN-GDRv1 (BTB Edit).esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv1.1.esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12777,6 +12862,77 @@ DreamersAwakenedv1.0.esp
      Grandmaster of Hlaalu11NOMpatch.esp
      Grandmaster of Hlaalu1.2-Beta.esp
      Grandmaster of Hlaalu1.2-Beta (Ender Edit).esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dreamers Expansion 3.0 [Aoimevelho]
+
+[Conflict]
+ Aoimevelho has incorporated Petiboy's "House Dagoth Bonemold armor" into "Dreamers Expansion", there is no need to run Petiboy's original mod with Aoimevelho's.
+ (Ref: "DreamersExpansion - Readme.txt")
+DreamersExpansion.ESP
+PB_Dagoth_Bonemold.esp
+
+[Patch]
+ "DreamersExpansion+DNGDR_patch.ESP - patch for Greater Dwemer Ruins by Darknut."
+ (Ref: "DreamersExpansion - Readme.txt")
+DreamersExpansion+DNGDR_patch.ESP
+[ALL DreamersExpansion.ESP
+     [ANY DN-GDRv1.1.esp
+          DN-GDRv1.1_NOM.esp]]
+
+[Order]
+DreamersExpansion.ESP
+DreamersExpansion+DNGDR_patch.ESP
+
+[Order]
+DN-GDRv1.1.esp
+DreamersExpansion+DNGDR_patch.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
+DreamersExpansion+DNGDR_patch.ESP
+
+[Patch]
+ "DreamersExpansion+GHD_patch.ESP - patch for Madgod's Great House Dagoth (contains modified CalmCorprus script)."
+ (Ref: "DreamersExpansion - Readme.txt")
+DreamersExpansion+GHD_patch.ESP
+[ALL DreamersExpansion.ESP
+     Great House Dagoth.esp]
+
+;;Dragon32:According to TESPCD this one isn't actually needed, but someone will whinge...
+[Order]
+DreamersExpansion.ESP
+DreamersExpansion+GHD_patch.ESP
+
+[Order]
+Great House Dagoth.esp
+DreamersExpansion+GHD_patch.ESP
+
+[Patch]
+ "DreamersExpansion+DNGDR+GHD_patch.ESP - patch to use together with Madgod's Great House Dagoth and DNGDR."
+ (Ref: "DreamersExpansion - Readme.txt")
+DreamersExpansion+DNGDR+GHD_patch.ESP
+[ALL DreamersExpansion.ESP
+     Great House Dagoth.esp
+     [ANY DN-GDRv1.1.esp
+          DN-GDRv1.1_NOM.esp]]
+
+[Order]
+DreamersExpansion.ESP
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+DN-GDRv1.1.esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+Great House Dagoth.esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15471,6 +15627,10 @@ md_Forge of Hilbongard.ESP
 Container Sounds.esp
 md_Forge of Hilbongard.ESP
 
+[Order]
+MAO_Containers.esp
+md_Forge of Hilbongard.ESP
+
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
@@ -16671,9 +16831,10 @@ FrontierTradePost.esp
 
 [Conflict]
  The Glory Road conflicts with Havish, you should probably use only one or the other.
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
  (Ref: TheGloryRoad.ace/"readme.html")
 TheGloryRoad.esm
-Havish.esm
+[SIZE 4646696 Havish.esm]
 
 [Conflict]
  The Glory Road conflicts with Illuminated Order, you should probably use only one or the other.
@@ -18251,10 +18412,8 @@ Great House Dagoth ( Master Index Compatibility ).esp
  (Ref: "Readme GHD-DNGDR Patch.txt")
 [ANY DNGDR-GHD Patch.esp
      DNGDR-GHD Patch OV.esp]
-[ALL [ANY DN-GDRv1_NOM.esp
-          DN-GDRv1_NOM (BTB Edit).esp
-          DN-GDRv1.esp
-          DN-GDRv1 (BTB Edit).esp]
+[ALL [ANY DN-GDRv1.1.esp
+          DN-GDRv1.1_NOM.esp]
      Great House Dagoth.esp]
 
 [Conflict]
@@ -18276,29 +18435,56 @@ DNGDR-GHD Patch OV.esp
 
 [Order]
 DN-GDRv1.esp
+DNGDR-GHD Patch.esp
+
+[Order]
 DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch.esp
 
 [Order]
 DN-GDRv1_NOM.esp
+DNGDR-GHD Patch.esp
+
+[Order]
 DN-GDRv1_NOM (BTB Edit).esp
 DNGDR-GHD Patch.esp
 
 [Order]
 DN-GDRv1.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
 DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch OV.esp
 
 [Order]
 DN-GDRv1_NOM.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
 DN-GDRv1_NOM (BTB Edit).esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1.1.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv1.1_NOM.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv1.1.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1.1_NOM.esp
 DNGDR-GHD Patch OV.esp
 
 [Conflict]
  The "DNGDR-GHD Patch.esp" plugin refers to a "DNO_dreamer guard00" that does not exist in "DN-GDRv1_NOM.esp". To make the patch compatible, you may need to edit the patch in the CS to comment out this line of the calmcorprus script: "DNO_dreamer guard00->setfight 10".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=981265&view=findpost&p=14193898 )
-[ANY DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp]
+DN-GDRv1.1_NOM.esp
 DNGDR-GHD Patch.esp
 
 
@@ -18765,27 +18951,32 @@ Anya's Directions.esp
 ;; @Havish 1.3 [JOG]
 
 ;;Dragon32: "HavishM.esm" is abot's experimental, moved version of Havish. Notgoing to suggest it to people until heard it's proven.
+;;Dragon32: "HavishNM.esm" is also by abot, stands for Moved and NoMified
 
 [Order]
 Morrowind Patch *.esm
 Havish.esm
 HavishM.esm
+HavishMN.esm
 
 [Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 Havish.esm
 HavishM.esm
+HavishMN.esm
 
 [Conflict]
- landmass conflict.
+ Landmass conflict.
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
-Havish.esm
+[SIZE 4646696 Havish.esm]
 Silgrad_Tower_internal_build_1-4_3.esp
 
 [Conflict]
- landmass conflict.
+ Landmass conflict.
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
-Havish.esm
+[SIZE 4646696 Havish.esm]
 [ANY silgrad_tower_internal_release_1-4_6.6.esp
      silgrad_tower_1-4_6.6.esp]
 
@@ -18818,7 +19009,8 @@ Havish - Scimitar Update (no MWE).esp
  http://mw.modhistory.com/download--7971
  (Ref: "Havish - Scimitar.txt")
 [ALL [ANY Havish.esm
-          HavishM.esm]
+          HavishM.esm
+          HavishMN.esm]
      MWE_Base.esp
      [ANY Booty.esp
 	  [ANY Galsiahs Character Development.esp
@@ -18830,7 +19022,8 @@ Havish - Scimitar Update.esp
  (Ref: "Havish - Scimitar.txt")
 Havish - Scimitar Update.esp
 [ALL [ANY Havish.esm
-          HavishM.esm]
+          HavishM.esm
+          HavishMN.esm]
      MWE_Base.esp]
 
 ;;Rules for "Havish - Scimitar Update + GCD (no MWE).esp"
@@ -18840,7 +19033,8 @@ Havish - Scimitar Update.esp
  http://mw.modhistory.com/download--7971
  (Ref: "Havish - Scimitar.txt")
 [ALL [ANY Havish.esm
-          HavishM.esm]
+          HavishM.esm
+          HavishMN.esm]
      [NOT MWE_Base.esp]
      [ANY Galsiahs Character Development.esp
           GCD v1.08 with Startscript, fixed [Galsiah].esp]]
@@ -18850,7 +19044,8 @@ Havish - Scimitar Update + GCD (no MWE).esp
  (Ref: "Havish - Scimitar.txt")
 Havish - Scimitar Update + GCD (no MWE).esp
 [ALL [ANY Havish.esm
-          HavishM.esm]
+          HavishM.esm
+          HavishMN.esm]
      [NOT MWE_Base.esp]]
 
 ;;Rules for "Havish - Scimitar Update (no MWE).esp"
@@ -18860,7 +19055,8 @@ Havish - Scimitar Update + GCD (no MWE).esp
  http://mw.modhistory.com/download--7971
  (Ref: "Havish - Scimitar.txt")
 [ALL [ANY Havish.esm
-          HavishM.esm]
+          HavishM.esm
+          HavishMN.esm]
      Booty.esp
      [NOT MWE_Base.esp]
      [NOT Galsiahs Character Development.esp]
@@ -18871,9 +19067,9 @@ Havish - Scimitar Update (no MWE).esp
  (Ref: "Havish - Scimitar.txt")
 Havish - Scimitar Update (no MWE).esp
 [ALL [ANY Havish.esm
-          HavishM.esm]
+          HavishM.esm
+          HavishMN.esm]
      [NOT MWE_Base.esp]]
-
 
 ;; Havish Mini-Patch by Tyraa Rane
 
@@ -18883,7 +19079,8 @@ Havish Mini Patch.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
      [ANY [VER = 1.3 Havish.esm]
-          [VER = 1.3 HavishM.esm]]]
+          [VER = 1.3 HavishM.esm]
+          [VER = 1.3 HavishMN.esm]]]
 
 [Patch]
  "Havish Mini-Patch" by Tyraa Rane fixes errors with the "Fighters Guild: A Visitor from Havish", "Thieves Guild: The Damsel in Distress" and "Mages Guild: Teleporter Crystals" quests.
@@ -18891,7 +19088,8 @@ Havish Mini Patch.esp
  http://mw.modhistory.com/download-13-13281
 Havish Mini Patch.esp
 [ANY Havish.esm
-     HavishM.esm]
+     HavishM.esm
+     HavishMN.esm]
 
 [Note]
  ! The latest version of "Havish Mini-Patch" by Tyraa Rane is 2.0
@@ -18906,7 +19104,8 @@ Havish Mini Patch.esp
  (Ref: Readme - Havish 1-3 NoM Patch.txt)
 havish13_nom_patch.esp
 [ALL [ANY [VER = 1.3 Havish.esm]
-          [VER = 1.3 HavishM.esm]]
+          [VER = 1.3 HavishM.esm]
+          [VER = 1.3 HavishMN.esm]]
      NOM 2.13.esp]
 
 ; (Ref: Readme - Havish 1-3 NoM Patch.txt)
@@ -18922,15 +19121,26 @@ NoM 3.0.esp
  (Ref: "Havish_Mage_Balance_MiniPatch Readme.txt")
 Havish Mage Balance MiniPatch.esp
 [ANY Havish.esm
-     HavishM.esm]
+     HavishM.esm
+     HavishMN.esm]
 
 ;;Forested Havish by Lochnarus
 
 [Note]
  Version 1.3 of JOG's Havish mod already includes Lochnarus' "Forested Havish" addon.
  (Ref: havish.txt)
-[ALL [VER = 1.3 Havish.esm]
+[ALL [ANY [VER = 1.3 Havish.esm]
+          [VER = 1.3 HavishM.esm]
+          [VER = 1.3 HavishMN.esm]]
      Forested_Havish_Add-on.esp]
+
+;;Havish Moved, NoMified by abot
+
+[Requires]
+ "The MN version is NOMified and needs NOM3 or better loaded last."
+ (Ref: "HavishMN.7z\Data Files\Docs\changes.txt")
+HavishMN.esm
+NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -20466,13 +20676,13 @@ HlaaluManorUndergroundv12.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Hold It 1.91 [Danae]
+;; @Hold It 1.92 [Danae]
 
 ;;main mod
 
 [Conflict]
  With "Hold it - replacer.esp" enabled the "Hold It" items are for sale at the Tel Aruhn trader, there is no need to enable "Hold it - resource.esp" as well.
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - resource.esp
 Hold it - replacer.esp
 
@@ -20482,7 +20692,7 @@ Hold it - replacer.esp
 
 [Requires]
  "Hold it - MCA addon.esp" requires version 8.1 of Neoptolemus' "Morrowind Comes Alive".
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - MCA addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -20498,7 +20708,7 @@ Hold it - MCA addon.esp
 
 [Requires]
  "Hold it - NOM addon.esp" requires version 3.0 or greater of Taddeus' "Necessities of Morrowind".
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - NOM addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -20519,7 +20729,7 @@ Hold it - NOM addon.esp
 
 [Requires]
  "Randomly gives items to the npc added by Starfire’s mod Starfire’s NPC addition."
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - SF npc addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -20540,7 +20750,7 @@ Hold it - SF npc addon.esp
 
 [Requires]
  "Randomly gives items to COM children. When a kid of offered a gift, they will hold it unless they already holding something else. Adds new CoM related items to the Hold it level lists."
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - COM addon.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -20556,13 +20766,12 @@ Hold it - COM addon.esp
 
 [Requires]
  "Randomely give items to TR npcs. Adds new TR related items to the Hold it level lists."
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - TR addon.ESP
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
      TR_Data.esm
-     TR_Map1.esm
-     TR_Map2.esm]
+     TR_Mainland.esm]
 
 ;; Dragon 32: 'Hold it - TR addon.esp' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
 [Order]
@@ -20574,20 +20783,19 @@ Hold it - TR addon.ESP
 
 [Conflict]
  "Hold it - TR&CoM addon.ESP" combines "Hold it - COM addon" and "Hold it - TR addon" (so these 2 esp shouldn't be activated together)."
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - TR&CoM addon.ESP
 [ANY Hold it - TR addon.ESP
      Hold it - COM addon.esp]
 
 [Requires]
  "Randomely give items to TR npcs. Adds new TR related items to the Hold it level lists.[...] Randomly gives items to COM children."
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 Hold it - TR&CoM addon.ESP
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
      TR_Data.esm
-     TR_Map1.esm
-     TR_Map2.esm
+     TR_Mainland.esm
      MW_Children_1_0.esm]
 
 ;; Dragon 32: 'Hold it - TR&CoM addon.ESP' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
@@ -20600,7 +20808,7 @@ Hold it - TR&CoM addon.ESP
 
 [Requires]
  "Randomely adds the Hold it items to traders. Requires HE.L.L.U.V.A. Merchant containers.esm"
- (Ref: Hold it 1pt91 read me.txt)
+ (Ref: "Hold it 1pt92 read me.txt")
 H.E.L.L.U.V.A. Handy Holdables.esp
 [ALL [ANY Hold it - replacer.esp
           Hold it - resource.esp]
@@ -20611,6 +20819,28 @@ H.E.L.L.U.V.A. Handy Holdables.esp
 Hold it - resource.esp
 Hold it - replacer.esp
 H.E.L.L.U.V.A. Handy Holdables.esp
+
+;;Dreamers addon
+
+[Requires]
+ "Gives Hold it items to dreamers. Requires Aoimevelho's Dreamer Expension."
+ (Ref: "Hold it 1pt92 read me.txt")
+Hold it - Dreamers.ESP
+[ALL [ANY Hold it - replacer.esp
+          Hold it - resource.esp]
+     DreamersExpansion.ESP]
+
+;; Dragon 32: 'Hold it - Dreamers.ESP' uses items from the main "Hold It" mod (resource or replacer) so those should load first.
+[Order]
+Hold it - resource.esp
+Hold it - replacer.esp
+Hold it - Dreamers.ESP
+
+;; Dragon 32: ''Hold it - Dreamers.ESP' makes changes to Dreamers Expansion's NPCs, for changes to work it needs to load after Aoimevelho's mod
+;;Dragon32: According to TESPCD doesn't affect anything in patches for Dreamers Expansion
+[Order]
+DreamersExpansion.ESP
+Hold it - Dreamers.ESP
 
 ;;conflicts identified and reported elsewhere
 
@@ -23340,17 +23570,32 @@ Keening_Reforged_v2.0.ESP
  "Keening_Reforged_v2.0_GDR.ESP" is for players of Darknut's Greater Dwemer Ruins vol I
  (Ref: http://mw.modhistory.com/download-26-13962 )
 Keening_Reforged_v2.0_GDR.ESP
-[ANY DN-GDRv1_NOM.esp
-     DN-GDRv1_NOM (BTB Edit).esp
-     DN-GDRv1.esp
-     DN-GDRv1 (BTB Edit).esp]
+[ANY DN-GDRv1.1.esp
+     DN-GDRv1.1_NOM.esp]
 
 ;;Dragon32: Checked in TESPCD, SCPT "MrTSLorkhanHeart"
 [Order]
 DN-GDRv1_NOM.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
 DN-GDRv1_NOM (BTB Edit).esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
 DN-GDRv1.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
 DN-GDRv1 (BTB Edit).esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
+DN-GDRv1.1.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
+DN-GDRv1.1_NOM.esp
 Keening_Reforged_v2.0_GDR.ESP
 
 
@@ -25866,14 +26111,20 @@ Clean The Lost Artifacts of Morrowind.esp
  http://mw.modhistory.com/download-1-6470
  (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
 LAMW_GDRv1_Patch.esp
-[ALL [ANY DN-GDRv1.esp
-          DN-GDRv1 (BTB Edit).esp]
+[ALL DN-GDRv1.1.esp
      [ANY Clean The Lost Artifacts of Morrowind.esm
 	  Clean The Lost Artifacts of Morrowind.esp]]
 
 [Order]
 DN-GDRv1.esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
 DN-GDRv1 (BTB Edit).esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
+DN-GDRv1.1.esp
 LAMW_GDRv1_Patch.esp
 
 [Patch]
@@ -25881,14 +26132,20 @@ LAMW_GDRv1_Patch.esp
  http://mw.modhistory.com/download-1-6470
  (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
 LAMW_GDRv1_NOM_Patch.esp
-[ALL [ANY DN-GDRv1_NOM.esp
-          DN-GDRv1_NOM (BTB Edit).esp]
+[ALL DN-GDRv1.1_NOM.esp
      [ANY Clean The Lost Artifacts of Morrowind.esm
 	  Clean The Lost Artifacts of Morrowind.esp]]
 
 [Order]
 DN-GDRv1_NOM.esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
 DN-GDRv1_NOM (BTB Edit).esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
+DN-GDRv1.1_NOM.esp
 LAMW_GDRv1_Patch.esp
 
 
@@ -25981,6 +26238,31 @@ LotsOfRingsPlus.esp
 [Requires]
 Unofficial_Expansion_for_Louis'_BeautyShop.esp
 Louis_BeautyShop_v1.5.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Love in the Time of Daedra 1.01 [HangHimHigher]
+
+[Conflict]
+ Only use one plugin:
+  NON1.LoveintheTimeofDaedra.v1.01.esp - This is the basic mod.  This version will conflict with Tamriel Rebuilt.
+  NON1.LoveintheTimeofDaedra.v1.01_Abot.esp - This version is compatible with Tamriel Rebuilt.
+ (Ref: "Love in the Time of Daedra-43635-1-01.rar\Readme.txt")
+NON1.LoveintheTimeofDaedra.v1.01.esp
+NON1.LoveintheTimeofDaedra.v1.01_Abot.esp
+
+[Conflict]
+ "This version [of HangHimHigher's "Love in the Time of Daedra"] will conflict with Tamriel Rebuilt."
+ (Ref: "Love in the Time of Daedra-43635-1-01.rar\Readme.txt")
+NON1.LoveintheTimeofDaedra.v1.01.esp
+TR_Mainland.esm
+
+[Conflict]
+ "The TR compatible version [of HangHimHigher's "Love in the Time of Daedra" causes] a fatal error when I run it alongside Havish in reference to a "Solitary Island teleporter script" not being found."
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
+ (Ref: http://forums.nexusmods.com/index.php?/topic/2891584-love-in-the-time-of-daedra-v10/?p=25977594 )
+[SIZE 4646696 Havish.esm]
+NON1.LoveintheTimeofDaedra.v1.01_Abot.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28961,86 +29243,35 @@ Cali_MormegilManor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Acoustic Overhaul 0.9 [PeterBitt & Logitech]
+;; @Morrowind Acoustic Overhaul 1.0 [PeterBitt & Logitech]
 
-;;Ref: "MAO_ReadMe.pdf"
-[Order]
+[Conflict]
+ There is a new version of PeterBitt & Logitech's "Morrowind Acoustic Overhaul", 1.0
+ Download it from Great House Fliggerty - http://download.fliggerty.com/download-76-1045
 MAO_Base.esm
-MAO_Music.esm
-MAO_InteriorWeather.esm
-MAO_2d.esm
-MAO_3d.esm
-MAO_Vanilla.esp
-MAO_Regions.esp
-MAO_Creatures.esp
-MAO_Voice.esp
-MAO_ScriptExtender.esp
 
 [Order]
 Morrowind Patch *.esm
-MAO_Base.esm
-MAO_Music.esm
-MAO_InteriorWeather.esm
-MAO_2d.esm
-MAO_3d.esm
+MAO.esm
 
 [Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
-MAO_Base.esm
-MAO_Music.esm
-MAO_InteriorWeather.esm
-MAO_2d.esm
-MAO_3d.esm
-
-[Note]
- "[MAO_Voice.esp] is heavily improved by MAO_ScriptExtender and MWSE."
- (Ref: "MAO_ReadMe.pdf")
-[ALL MAO_Voice.esp
-     [NOT MAO_ScriptExtender.esp]]
-
-[Note]
- "When you use MAO_Music.esm without [MAO_Base.esm], battle music might not stop properly when you leave the water with slaughterfishes following you."
- (Ref: "MAO_ReadMe.pdf")
-[ALL MAO_Music.esm
-     [NOT MAO_Base.esm]]
-
-[Note]
- "[MAO_Base.esm adds] unique and randomized sounds for shield blocking. (requires MAO_ScriptExtender.esp)"
- (Ref: "MAO_ReadMe.pdf")
-[ALL MAO_Base.esm
-     [NOT MAO_ScriptExtender.esp]]
-
-[Note]
- "Loading MAO_ScriptExtender after this improves [MAO_Music.esm]"
- (Ref: "MAO_ReadMe.pdf")
-[ALL MAO_Music.esm
-     [NOT MAO_ScriptExtender.esp]]
+MAO.esm
 
 [Note]
  "In order to have the proper wind loops for all weather conditions, you need to change [your] Morrowind.ini"
- Please review "MAO_ReadMe.pdf" for the required changes.
- (Ref: "MAO_ReadMe.pdf")
-MAO_Base.esm
-
-[Requires]
- "[MAO_ScriptExtender.esp] depends on MAO_Base."
- (Ref: "MAO_ReadMe.pdf")
-MAO_ScriptExtender.esp
-MAO_Base.esm
-
-[Requires]
- MAO_Voice.esp requires MAO_Base.esm to be loaded
-MAO_Voice.esp
-MAO_Base.esm
+ Please review "MAO_Readme.rtf" for the required changes.
+ (Ref: "MAO_Readme.rtf")
+MAO.esm
 
 ;;Add-ons
 
 ;;Bitter Coast Sounds
 
 [Patch]
- "MAO_PDragon.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Bethesda's "Bitter Coast Sounds".
- (Ref: "MAO_ReadMe.pdf" and "Addon - official BC Sounds mod-43092-1-0.7z\readme.txt")
-MAO_PDragon.esp
+ "MAO_BCsounds.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Bethesda's "Bitter Coast Sounds".
+ (Ref: "MAO_Readme.rtf")
+MAO_BCsounds.esp
 [ALL [ANY BCsounds.esp
           [Official]Bitter Coast Sounds.esp
           BitterCoastSounds.esp
@@ -29049,123 +29280,163 @@ MAO_PDragon.esp
           Clean Official Plugins v1.1.esp
           Official_2002_Mods.esp
           super_adventurers302.esp]
-     MAO_Base.esm]
+     MAO.esm]
 
 ;;"load the orignial mods before all MAO plugins!"
-;;Ref: "MAO_ReadMe.pdf"
+;;Ref: "MAO_Readme.rtf"
 [Order]
 BCsounds.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 OfficialMods_v5.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 Clean Official Plugins v1.1.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 super_adventurers302.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 [Official]Bitter Coast Sounds.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 BitterCoastSounds.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 CleanBitterCoastSounds.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 [Order]
 Official_2002_Mods.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
-MAO_PDragon.esp
+MAO_ScriptExtender_alternative.esp
+MAO_BCsounds.esp
 
 ;;Graphic Herbalism
 
 [Patch]
  "MAO_GHerb.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and ManaUser's "Graphic Herbalism".
- (Ref: "MAO_ReadMe.pdf" and "Addon - Graphic Herbalsim mod-43092-1-0.7z\readme.txt")
+ (Ref: "MAO_Readme.rtf")
 MAO_GHerb.esp
 [ALL Graphic Herbalism.esp
-     MAO_Base.esm]
+     MAO.esm]
 
 ;;"load the orignial mods before all MAO plugins!"
-;;Ref: "MAO_ReadMe.pdf"
+;;Ref: "MAO_Readme.rtf"
 [Order]
 Graphic Herbalism.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_GHerb.esp
 
 ;;Khajiit Diversity Revamped
 
 [Patch]
  "MAO_KhajiitDiversity.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Westly's "Khajiit Diversity Revamped".
- (Ref: "MAO_ReadMe.pdf" and "Addon - Khajiit Diversity Revamped mod-43092-1-0.7z\readme.txt")
+ (Ref: "MAO_Readme.rtf")
 MAO_KhajiitDiversity.esp
 [ALL [ANY New Khajiit Diversity(BEAST).esp
           New Khajiit Diversity(BEAST)X.esp
           New Khajiit Diversity(CIV).esp
           New Khajiit Diversity(CIV)X.esp]
-     MAO_Base.esm]
+     MAO.esm]
 
 ;;"load the orignial mods before all MAO plugins!"
-;;Ref: "MAO_ReadMe.pdf"
+;;Ref: "MAO_Readme.rtf"
 [Order]
 New Khajiit Diversity(BEAST).esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_KhajiitDiversity.esp
 
 [Order]
@@ -29173,8 +29444,12 @@ New Khajiit Diversity(BEAST)X.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_KhajiitDiversity.esp
 
 [Order]
@@ -29182,8 +29457,12 @@ New Khajiit Diversity(CIV).esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_KhajiitDiversity.esp
 
 [Order]
@@ -29191,15 +29470,19 @@ New Khajiit Diversity(CIV)X.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_KhajiitDiversity.esp
 
 ;;Siege at Firemoth
 
 [Patch]
  "MAO_Firemoth.esp" is a compatibility add-on for PeterBitt & Logitech's "Morrowind Acoustic Overhaul" and Bethesda's "Siege at Firemoth". It will not work correctly with mods that move Fort Firemoth.
- (Ref: "MAO_ReadMe.pdf" and "Addon - official Siege at Firemoth mod-43092-1-0.7z\readme.txt")
+ (Ref: "MAO_Readme.rtf")
 MAO_Firemoth.esp
 [ALL [ANY Siege at Firemoth.esp
           [Official]Siege at Firemoth.esp
@@ -29210,29 +29493,29 @@ MAO_Firemoth.esp
           super_adventurers302.esp
           silgrad_tower_internal_release_1-4_6.6.esp
           silgrad_tower_1-4_6.6.esp]
-     [ANY MAO_Base.esm
-          MAO_Music.esm
-          MAO_2d.esm
-          MAO_3d.esm
-          MAO_InteriorWeather.esm]]
+     MAO.esm]
 
-[Requires]
- The "MAO_Firemoth.esp" compatibility add-on needs these modules from PeterBitt & Logitech's "Morrowind Acoustic Overhaul" enabled.
-MAO_Firemoth.esp
-[ALL MAO_Music.esm
-     MAO_2d.esm
-     MAO_3d.esm
-     MAO_InteriorWeather.esm]
+;;[Requires]
+;; The "MAO_Firemoth.esp" compatibility add-on needs these modules from PeterBitt & Logitech's "Morrowind Acoustic Overhaul" enabled.
+;;MAO_Firemoth.esp
+;;[ALL MAO_Music.esm
+;;     MAO_2d.esm
+;;     MAO_3d.esm
+;;     MAO_InteriorWeather.esm]
 
 ;;"load the orignial mods before all MAO plugins!"
-;;Ref: "MAO_ReadMe.pdf"
+;;Ref: "MAO_Readme.rtf"
 [Order]
 Siege at Firemoth.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29240,8 +29523,12 @@ OfficialMods_v5.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29249,8 +29536,12 @@ Clean Official Plugins v1.1.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29258,8 +29549,12 @@ super_adventurers302.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29267,8 +29562,12 @@ MAO_Firemoth.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29276,8 +29575,12 @@ SiegeAtFiremoth.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29285,8 +29588,12 @@ Official_2002_Mods.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29294,8 +29601,12 @@ silgrad_tower_internal_release_1-4_6.6.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
 
 [Order]
@@ -29303,9 +29614,96 @@ silgrad_tower_1-4_6.6.esp
 MAO_Vanilla.esp
 MAO_Regions.esp
 MAO_Creatures.esp
+MAO_Containers.esp
 MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 MAO_Firemoth.esp
+
+;;Stand-alone plugins
+
+;;Dragon32, most of this is preserved from the readme for 0.9, "MAO_ReadMe.pdf". Guessed and some renamed plugins (MAO_Config.esm is new MAO_Base.esm; MAO_Weather.esm is new MAO_InteriorWeather.esm; MAO_PCSound.esp and MAO_PCVoice.esp are the new MAO_Voice.esp)
+
+[Order]
+MAO_Config.esm
+MAO_Base.esm
+MAO_Music.esm
+MAO_InteriorWeather.esm
+MAO_Weather.esm
+MAO_2d.esm
+MAO_3d.esm
+MAO_Vanilla.esp
+MAO_Regions.esp
+MAO_Creatures.esp
+MAO_Containers.esp
+MAO_Voice.esp
+MAO_PCSound.esp
+MAO_PCVoice.esp
+MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
+
+[Order]
+Morrowind Patch *.esm
+MAO_Config.esm
+MAO_Base.esm
+MAO_Music.esm
+MAO_InteriorWeather.esm
+MAO_Weather.esm
+MAO_2d.esm
+MAO_3d.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+MAO_Config.esm
+MAO_Base.esm
+MAO_Music.esm
+MAO_InteriorWeather.esm
+MAO_Weather.esm
+MAO_2d.esm
+MAO_3d.esm
+
+[Note]
+ "[MAO_Voice.esp] is heavily improved by MAO_ScriptExtender and MWSE."
+ (Ref: "MAO_ReadMe.pdf")
+[ALL [ANY MAO_Voice.esp
+          MAO_PCSound.esp
+          MAO_PCVoice.esp]
+     [NOT [ANY MAO_ScriptExtender.esp
+               MAO_ScriptExtender_alternative.esp]]]
+
+[Note]
+ "Loading MAO_ScriptExtender after this improves [MAO_Music.esm]"
+ (Ref: "MAO_ReadMe.pdf")
+[ALL MAO_Music.esm
+     [NOT [ANY MAO_ScriptExtender.esp
+               MAO_ScriptExtender_alternative.esp]]]
+
+[Conflict]
+ "[MAO_Containers.esp] is based on the plugin from the Container Sounds mod by Neoptolemus plus our addition of closing sounds and different soundfiles."
+ (Ref: "MAO_Readme.rtf")
+MAO_Containers.esp
+Container Sounds.esp
+
+[Conflict]
+ Version 1.2 of qqqbbb's "MW Containers Animated" added sounds to containers. Loading the "Morrowind Acoustic Overhaul" plugin means you will hear the MAO sounds but miss out on the animations.
+ (Ref: "MAO_Readme.rtf" and "MW Containers Animated readme.txt")
+MAO_Containers.esp
+MW Containers Animated.esp
+
+;;[Note]
+;; "When you use MAO_Music.esm without [MAO_Base.esm], battle music might not stop properly when you leave the water with slaughterfishes following you."
+;; (Ref: "MAO_ReadMe.pdf")
+;;[ALL MAO_Music.esm
+;;     [NOT MAO_Base.esm]]
+
+;;[Note]
+;; "[MAO_Base.esm adds] unique and randomized sounds for shield blocking. (requires MAO_ScriptExtender.esp)"
+;; (Ref: "MAO_ReadMe.pdf")
+;;[ALL MAO_Base.esm
+;;     [NOT [ANY MAO_ScriptExtender.esp
+;;               MAO_ScriptExtender_alternative.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32432,7 +32830,9 @@ Get Fezzed!.esp
 Gravedigger.esp
 Library_Portable.esp
 Library_Portable_Book_Jackets_Compatible.esp
+MAO.esm
 MAO_ScriptExtender.esp
+MAO_ScriptExtender_alternative.esp
 mel_teleportPlugin_1_3.esp
 Shut_Up.esp
 shut up! v2.0.esp
@@ -36182,6 +36582,44 @@ Clean Official Plugins v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Old Dwemer Books [Yar-Yulme]
+
+[Conflict]
+ Only use one plugin:
+  Old_dwemer_books_Better_typography.esp - If you are using the "Morrowind Code Patch" with its "Better Typography" option enabled.
+  Old_dwemer_books.esp - If you do not.
+ (Ref: "Old Dwemer Books.txt")
+Old_dwemer_books.esp
+Old_dwemer_books_Better_typography.esp
+
+;;"Old Dwemer Books needs to load after the Tribunal BookRotate .esp, even if you've used BR Patcher on it."
+;;Ref: http://forums.nexusmods.com/index.php?/topic/1314413-mlox/?p=25695194
+[Order]
+Book Rotate - Tribunal v5.3.esp
+Old_dwemer_books.esp
+
+[Order]
+Librarian with Jackets BM Trib.esp
+Old_dwemer_books.esp
+
+[Order]
+Librarian with Jackets & Rotate BM Trib.esp
+Old_dwemer_books.esp
+
+[Order]
+Book Rotate - Tribunal v5.3.esp
+Old_dwemer_books_Better_typography.esp
+
+[Order]
+Librarian with Jackets BM Trib.esp
+Old_dwemer_books_Better_typography.esp
+
+[Order]
+Librarian with Jackets & Rotate BM Trib.esp
+Old_dwemer_books_Better_typography.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Om'Nartus' Racial/Birthsign Realism Mod 1.0 [Om'Nartus]
 
 [Note]
@@ -36447,6 +36885,23 @@ Jac_Passing time while reading -  BRBJ patch.esp
      Book Jackets - Bloodmoon.esp
      Book Jackets - Tribunal - BookRotate.esp
      Book Jackets - Tribunal.esp]
+
+;;Dragon32: TESPCD check
+[Order]
+Book Rotate - Morrowind v1.1.esp
+Jac_Passing Time While Reading - BR Patch.esp
+
+[Order]
+Book Rotate - Bloodmoon v5.3.esp
+Jac_Passing Time While Reading - BR Patch.esp
+
+[Order]
+Book Rotate - Morrowind v1.1.esp
+Jac_Passing Time While Reading - BRBJ Patch.esp
+
+[Order]
+Book Rotate - Bloodmoon v5.3.esp
+Jac_Passing Time While Reading - BRBJ Patch.esp
 
 ;;Dragon32 - Ref: Eluara "I thought this was already in the rule base, but Jac's passing time while reading basic esp has to load before all Bookjackets mods."
 ;;http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20171121
@@ -39258,7 +39713,9 @@ GDR09_Aleft.ESP
  (Ref: "Rise of House Telvanni v1.5 Readme.txt")
 RoHT Havish Patch.esp
 [ALL Rise of House Telvanni.esm
-     Havish.esm]
+     [ANY Havish.esm
+          HavishM.esm
+          HavishMN.esm]]
 
 [Patch]
   You should use "RoHT TLSH Patch.esp" a patch for Nevena's "Twin Lamps and Slave Hunters" (TLSH). TLSH requires Ilmeni Dren and Duke Dren. During RoHT's questline, Duke Dren will die, and Ilmeni Dren will become Vvardenfell's Duchess. This patch copies Duke Vedam Dren's dialogue over to Duchess Ilmeni Dren in order to restore full compatibility between RoHT and TLSH. It was made for TLSH v1.5.
@@ -40997,10 +41454,11 @@ blacklightv1.34.esp
 
 [Conflict]
  Rodan's "Black Light" is merged into the 1.4.6.6 update of Silgrad Tower. Rodan's "Black Light" conflicts with JOG's "Havish".
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
 [ANY silgrad_tower_internal_release_1-4_6.6.esp
      silgrad_tower_1-4_6.6.esp]
-Havish.esm
+[SIZE 4646696 Havish.esm]
 
 [Conflict]
  Landmass conflict
@@ -41823,7 +42281,8 @@ Sotha Sil Expanded.ESP
  Download "SSE Necessities of Morrowind Patch" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/42347/
 SSE_NOM.ESP
 [ALL Sotha Sil Expanded.ESP
-     NOM 2.13.esp]
+     NOM 2.13.esp
+     [NOT NoM 3.0.esp]]
 
 [Patch]
  "SSE Necessities of Morrowind Patch [...] makes [Team SSE's "Sotha Sil Expanded"] compatible with ["Necessities of Morrowind" by Taddeus]"
@@ -41833,7 +42292,8 @@ SSE_NOM.ESP
  (Ref: http://forums.nexusmods.com/index.php?/topic/867100-sotha-sil-expanded/?p=25110819 )
 SSE_NOM.ESP
 [ALL Sotha Sil Expanded.ESP
-     NoM 3.0.esp]
+     NoM 3.0.esp
+     [NOT NOM 2.13.esp]]
 
 [Order]
 Sotha Sil Expanded.ESP
@@ -44100,8 +44560,7 @@ TR_Alpha.ESP
      Annastia V3.3.esp		     		; Annastia
      Veldion2.0.esm				; Velidon
      Dulsya Isle.esp				; Dulsya
-     FTG.esp					; Five Toes
-     Havish.esm]				; Havish
+     FTG.esp]					; Five Toes
 
 ;; moved the TR/Blackmill conflict to the BlackMill section - JMS
 ;;Dragon32: moved the TR/Wizards Islands conflict to the Wizards Island section
@@ -44202,6 +44661,13 @@ Château de Hadeborg V1.0.esp
  (Ref: http://tamriel-rebuilt.org/forum/viewtopic.php?p=326603#326603 )
 TR_Mainland.esm
 Unique Ocean Landscapes.ESP
+
+[Conflict]
+ Landmass conflict.
+ You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
+ (Ref: "TR_Readme.pdf")
+TR_Alpha.ESP
+[SIZE 4646696 Havish.esm]
 
 ;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
 ;[Conflict]
@@ -50446,7 +50912,7 @@ Skooma Anonymous.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Vvardenfell Libraries [The Wanderer]
+;; @The Vvardenfell Libraries 1.1 [The Wanderer]
 
 [Requires]
  (Ref: "wl_library_quickstart.txt")
@@ -50473,6 +50939,12 @@ The_Vvardenfell_Libraries.esp
 Lazarus_Manor-multiext.esp
 Lazarus_Manor-multiext_TB.esp
 Lazarus_Manor-Caldera.esp
+
+[Conflict]
+ "The library compound [of The Wanderer's "The Vvardenfell Libraries"] occupies the same area south of Ebonheart as the group of houses [from "Mercarryn's New Cities: Ebonheart" by Mercarryn.]"
+ (Ref: http://forums.nexusmods.com/index.php?/topic/2812749-the-vvardenfell-libraries/#entry25760034 )
+The_Vvardenfell_Libraries.esp
+MNC_Ebonheart_v1.0_EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50756,7 +51228,7 @@ Private_Tower_Balmora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Walled City of Balmora 1.6 [WH-Reaper]
+;; @Walled City of Balmora 1.6a [WH-Reaper]
 
 [Note]
  ! There is a new version of WH-Reaper's "Walled City of Balmora" available.
@@ -50769,6 +51241,7 @@ Walled city of Balmora 1.41.esp
 Walled City of Balmora 1.42.esp
 Walled city of Balmora 1.43.esp
 Walled city of Balmora 1.5.esp
+Walled city of Balmora 1.6.esp
 
 ;;Dragon32: Adds an Activator to Balmora, no need for Order rule
 [Patch]
@@ -51264,19 +51737,20 @@ Weather Effects.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Welcome to the Arena! 6.4 [Kalamestari_69]
+;; @Welcome to the Arena! 6.6.1 [Kalamestari_69]
 
 [Requires]
  "REQUIRES TRIBUNAL AND BLOODMOON"
- (Ref: "Welcome to the Arena-22002-6-1.7z\Readme.txt")
+ (Ref: "Welcome to the Arena-22002-6-6-1.7z\Readme.txt")
 Welcome to the Arena! v<VER>.esp
 [ALL Tribunal.esm
      Bloodmoon.esm]
 
+
 ;;Dragon32: Don't have v4 so can't be sure this will get everyone
 [Note]
- ! There is a newer version of "Welcome to the Arena!", you should upgrade!
- ! http://www.nexusmods.com/morrowind/mods/22002
+ ! There is a newer version of Kalamestari_69's "Welcome to the Arena!" available, 6.6.1
+ ! Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/22002
 Clean Welcome to the Arena! ( Hard ).esp
 Clean Welcome to the Arena! ( LoFi ).esp
 Clean Welcome to the Arena! (Hard LoFi).esp
@@ -51291,10 +51765,13 @@ Welcome to the Arena! v6.0.esp
 Welcome to the Arena! v6.1.esp
 Welcome to the Arena! v6.2.esp
 Welcome to the Arena! v6.3.esp
+Welcome to the Arena! v6.4.esp
+Welcome to the Arena! v6.5.esp
+Welcome to the Arena! v6.6.esp
 
 [Conflict]
  "This mod is incombatible with mods like: Gladiator and Morrowind Inhabitants, freeform, and any other mods that add similiar arena fights."
- (Ref: "Welcome to the Arena-22002-6-1.7z\Readme.txt")
+ (Ref: "Welcome to the Arena-22002-6-6-1.7z\Readme.txt")
 Welcome to the Arena! v<VER>.esp
 [ANY Gladiator.esp
      MWInhabitants Freeform (Vol 1).esp]
@@ -52754,19 +53231,19 @@ Wrye Patches C1.esp
 
 ;;Dragon32: dirty ref in DN GDR for common_robe_05_c
 [Order]
-DN-GDRv1.esp
+DN-GDRv1.1.esp
 Wrye Patches C.esp
 
 [Order]
-DN-GDRv1.esp
+DN-GDRv1.1.esp
 Wrye Patches C1.esp
 
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv1.1_NOM.esp
 Wrye Patches C.esp
 
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv1.1_NOM.esp
 Wrye Patches C1.esp
 
 ;;Wrye Patches G
@@ -52845,19 +53322,19 @@ Wrye Patches M1.esp
 
 ;;Dragon32: dirty ref in DN GDR for misc_dwrv_gear00
 [Order]
-DN-GDRv1.esp
+DN-GDRv1.1.esp
 Wrye Patches M.esp
 
 [Order]
-DN-GDRv1.esp
+DN-GDRv1.1.esp
 Wrye Patches M1.esp
 
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv1.1_NOM.esp
 Wrye Patches M.esp
 
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv1.1_NOM.esp
 Wrye Patches M1.esp
 
 ;;Wrye Patches W
@@ -52941,11 +53418,11 @@ Wrye Patches W.esp
 
 ;;Dragon32: dirty ref in DN GDR for dwarven crossbow and bm_ebonyarrow_s
 [Order]
-DN-GDRv1.esp
+DN-GDRv1.1.esp
 Wrye Patches W.esp
 
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv1.1_NOM.esp
 Wrye Patches W.esp
 
 
