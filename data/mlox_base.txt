@@ -1130,7 +1130,7 @@ time_2x.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Airship Mod [qwert and Lingarn]
+;; @Airship [qwert and Lingarn]
 
 ;; Dragon32: The readme's are er... somewhat sparse.
 
@@ -1142,7 +1142,8 @@ Airship5.esp
 [Requires]
  For the "Airship_multi_ support.esp" plugin to work you need to have Marcel Hesslebarth's "Multiple Teleport Marking" mod enabled.
 Airship_multi_ support.esp
-MultiMark.esp
+[ALL MultiMark.esp
+     Airship5.esp]
 
 ;; Plugin ordering as per other MultiMark plugins
 [Order]
@@ -1163,6 +1164,12 @@ Airship5_Holo-Deck.esp
 [Order]
 Airship5.esp
 Airship5_Holo-Deck2.esp
+
+[Conflict]
+ "[qwert and Lingarn's "Airship"] conflicts with: [Jan Heuser's] Seyda Neen Houseboat"
+ (Ref: https://www.youtube.com/watch?v=V4iStbPKdDA )
+Airship5.esp
+Seyda Need Houseboat.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1544,13 +1551,33 @@ Lucans_Vogar_01.esp
 [NOTE]
  !!! Ald-Vendras V30 and V31 erroneously includes three scripts which handle the end of Morrowind's main quest: DagothUrCreature1, EndGame, and LorkhanHeart. These scripts are taken from a French version of Morrowind, which means that Dagoth Ur will speak French, and that he will not be teleported to the endgame location (because the script tries to teleport him to the *French* version of that cell, which has a different name than the English version). This will also break mods that modify these scripts intentionally. Solution: Remove the three scripts from the esp.
  !!! Alternatively, arvisrend has released fixed versions in "Ald Vendras v3.1 bugfix.7z"
- !!! Download arvisrend's fixed from Morrowind Modding History - http://mw.modhistory.com/download-44-6991
+ !!! Download arvisrend's fixed versions from Morrowind Modding History - http://mw.modhistory.com/download-44-6991
 [ANY [SIZE 10204798 Ald-Vendras_V31.esp]
      [SIZE 9978740 Ald-Vendras_V31-LoKKen.esp]
      [SIZE 9789132 Ald-Vendras_V31-LoKKen-SC.esp]
      [SIZE 10053493 Ald-Vendras_V3.esp]
      [SIZE 9827301 Ald-Vendras_V3-LoKKen.esp]
      [SIZE 9630441 Ald-Vendras_V3-LoKKen-SC.esp]]
+
+;;Dragon32: Load before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart. Just in case not using arvisrend's fixed versions
+
+[Order]
+Ald-Vendras_V31.esp
+Ald-Vendras_V31-LoKKen.esp
+Ald-Vendras_V31-LoKKen-SC.esp
+Great House Dagoth.esp
+
+[Order]
+Ald-Vendras_V31.esp
+Ald-Vendras_V31-LoKKen.esp
+Ald-Vendras_V31-LoKKen-SC.esp
+DN-GDRv1.1.esp
+
+[Order]
+Ald-Vendras_V31.esp
+Ald-Vendras_V31-LoKKen.esp
+Ald-Vendras_V31-LoKKen-SC.esp
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1838,6 +1865,23 @@ AltStart_v3.esp
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 18118  Alu'Couatl.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Amaya Lodge 2.0 [Deathbliss]
+
+[Conflict]
+ "[Deathbliss' "Amaya Lodge"] conflicts with: Sauron's Abode"
+ (Ref: https://www.youtube.com/watch?v=c30ITDt9DBo )
+Amaya Lodge_v2.esp
+[ANY SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp]
+
+[Conflict]
+ "[Deathbliss' "Amaya Lodge"] conflicts with: [...] Pelagiad Home Abendgold"
+ (Ref: https://www.youtube.com/watch?v=c30ITDt9DBo )
+Amaya Lodge_v2.esp
+Abendgold.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2818,6 +2862,11 @@ Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 Official_2002_Mods.esp
 Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
 
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Armor Effects Armor Balance-LD 1.0 (Tribunal).esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Armor: Integrative Modifications - Morrowind and Tribunal and Bloodmoon 1.0 [Alaisiagae]
@@ -2989,6 +3038,16 @@ AIM_MW_TB_BM_1dot0.esp
 
 [Order]
 Official_2002_Mods.esp
+AIM_MW_TB_1dot0.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+AIM_MW_TB_BM_1dot0.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 AIM_MW_TB_1dot0.esp
 
 
@@ -3378,7 +3437,7 @@ Asgard Teleport Ring.esp
  Only use one plugin:
   AshVampiresReplacer.ESP - basic version
   AshVampiresReplacer_GHD.ESP - if you have "Great House Dagoth"
-  AshVampiresReplacer_TTU.ESP -  if you have "The Tribe Unmourned" 
+  AshVampiresReplacer_TTU.ESP -  if you have "The Tribe Unmourned"
   AshVampiresReplacer_GHD+TTU.ESP - if you have both "Great House Dagoth" and "The Tribe Unmourned"
  (Ref: "AshVampiresReplacer_Readme.txt")
 AshVampiresReplacer.ESP
@@ -3419,7 +3478,7 @@ AshVampiresReplacer_GHD+TTU.ESP
 The Tribe Unmourned (GHD).esp
 AshVampiresReplacer_GHD+TTU.ESP
 
-;;"Ash Vampires Replacer should be loaded after DNGDR." 
+;;"Ash Vampires Replacer should be loaded after DNGDR."
 ;;Ref: http://forums.nexusmods.com/index.php?/topic/1195204-ashvampiresreplacer/?p=25910199
 [Order]
 DN-GDRv1.1.esp
@@ -4460,7 +4519,7 @@ female_cuirasses_2.0.esp
 AV_fem_Armor_Trib.esp
 Tribunal.esm
 
-;;Dragon32: "OfficialMods_v5.esp", "Official_2002_Mods.esp" and "Clean Official Plugins v1.1.esp" are compilations of all official Bethesda mods. "super_adventurers302.esp" includes LeFemmArmor.esp
+;;Dragon32: "OfficialMods_v5.esp", "Official_2002_Mods.esp" and "Clean Official Plugins v1.1.esp" are compilations of all official Bethesda mods. "super_adventurers302.esp" and "Sauron's Abode" include LeFemmArmor.esp
 [Requires]
  (Ref: AV_female_armor.esp)
 AV_female_armor.esp
@@ -4469,6 +4528,8 @@ AV_female_armor.esp
      OfficialMods_v5.esp
      Clean Official Plugins v1.1.esp
      Official_2002_Mods.esp
+     SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp
      super_adventurers302.esp]
 
 
@@ -4523,6 +4584,20 @@ BS_1.0.1.esp
 [Order]
 BS_1.0.1.esp
 Clean BS_GM_1.esp
+
+;;Dragon32: Load mods suffering from SignRotate contamination before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart
+
+[Order]
+BS_1.0.1.esp
+Great House Dagoth.esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv1.1.esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4621,6 +4696,11 @@ Balanced weapons and armor.esp
 Official_2002_Mods.esp
 Balanced weapons and armor.esp
 
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Balanced weapons and armor.esp
+
 [Note]
  "Balanced Weapons and Armor" by Number One uses a number of resources from Fidel_'s "Blademaster Resource Pack". Whilst you do not need Fidel_'s plugin enabled you will need the resources from his "Blademaster Resource Pack" installed
  Download Fidel_'s "Blademaster Resource Pack" from Morrowind Modding History - http://mw.modhistory.com/download-87-5447
@@ -4645,6 +4725,16 @@ Balanced weapons and armor.esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 69536 baos.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Balmora Balconyhouse [Ravensong]
+
+[Conflict]
+ "[Ravensong's "Balmora Balconyhouse"] conflicts with Balmora Lighthouse [by Joi Ror]."
+ (Ref: https://www.youtube.com/watch?v=0nW8wnvo2pc )
+Balconyhouse.esp
+MO Balmora Lighthouse.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6405,6 +6495,10 @@ Better Morrowind Armor.esp
 
 ;;Dragon32: To ensure Moranar's changes are included, load after Adamantium Armor
 [Order]
+adamantiumarmor.esp
+Better Morrowind Armor.esp
+
+[Order]
 [Official]Adamantium Armor.esp
 Better Morrowind Armor.esp
 
@@ -6422,6 +6516,11 @@ Better Morrowind Armor.esp
 
 [Order]
 ImprovedAdamantiumArmor.esp
+Better Morrowind Armor.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 Better Morrowind Armor.esp
 
 ;;Dragon32: Load Reavance's Better Daedric Armour after Moranar's. Why would someone use both..?
@@ -6818,7 +6917,7 @@ Better_Sounds.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Vivec  [Wisva]
+;; @Better Vivec [Wisva]
 
 [Note]
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
@@ -6837,6 +6936,7 @@ Gladiator.esp
 Expansion to Gladiator.esp
 
 ;;People to streets of Vivec 0.6
+
 ;;Dragon32: Both 0.5 and 0.6 included in the download so worth this Conflict rule
 [Conflict]
  Only load one version of Wisva's "People to streets of Vivec", v0.6 is the most recent.
@@ -6844,10 +6944,25 @@ People to streets of Vivec 0.5.esp
 People to streets of Vivec 0.6.esp
 
 ;;We Sell Houses 0.5.1
+
 [NOTE]
  !! This plugin suffers from "SignRotate Contamination." It includes five "dirty" scripts (DagothUrCreature1, EndGame, Float, LorkhanHeart and SignRotate). The ESP needs editing to remove these "dirty" scripts.
  !! Ref: http://wryemusings.com/GMST%20Vaccine.html
 [SIZE 185437 We sell houses 0.5.1.esp]
+
+;;Dragon32: Load mods suffering from SignRotate contamination before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart
+
+[Order]
+We sell houses 0.5.1.esp
+Great House Dagoth.esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv1.1.esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7926,7 +8041,7 @@ Bloodmoon.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @The Boatmaster [fleck1974]
+;; @The Boatmaster 2.1 [fleck1974]
 
 [Conflict]
  "USE ONLY ONE .ESP, if you use BALMORA EXPANDED use The Boatmaster (BE).ESP
@@ -7936,13 +8051,44 @@ The Boatmaster (BE).esp
 The Boatmaster.esp
 
 [Conflict]
- "if you use BALMORA EXPANDED use The Boatmaster (BE).ESP"
+ "If you use BALMORA EXPANDED use The Boatmaster (BE).ESP"
  (Ref: "boatmaster v.2.1 readme.txt")
 The Boatmaster.esp
 [ANY Balmora Expansion v1.4.esp
      Balmora Expansion v1.4+(1.4).esp
      Balmora Expansion - LITE 1.0.esp
      BE+(1.4) Better Looking Morrowind.esp]
+
+[Order]
+Balmora Expansion v1.4.esp
+The Boatmaster (BE).esp
+
+[Order]
+Balmora Expansion v1.4+(1.4).esp
+The Boatmaster (BE).esp
+
+[Order]
+Balmora Expansion - LITE 1.0.esp
+The Boatmaster (BE).esp
+
+[Order]
+BE+(1.4) Better Looking Morrowind.esp
+The Boatmaster (BE).esp
+
+[Conflict]
+ "[fleck1974's "The Boatmaster"] conflicts with Castle Unreal [by ReflectioN]."
+ (Ref: https://www.youtube.com/watch?v=KEA-IRuj1Io )
+[ANY The Boatmaster (BE).esp
+     The Boatmaster.esp]
+[ANY Castle Unreal BB V1.0.esp
+     Castle Unreal V1.0.esp]
+
+[Conflict]
+ "[fleck1974's "The Boatmaster"] is completely incompatible with [his] first mod Fleck Homes."
+ (Ref: "boatmaster v.2.1 readme.txt")
+[ANY The Boatmaster (BE).esp
+     The Boatmaster.esp]
+fleck_homes.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8188,28 +8334,37 @@ Book Rotate - Morrowind v1.1.esp
 ;; @Booty Island 1.1 [JOG]
 
 [Conflict]
- Landmass conflict
+ Landmass conflict.
+ You may wish to try Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
 Booty.esp
 Journey's End 1.1.esp
 
 [Conflict]
- Landmass conflict
+ Landmass conflict.
+ You may wish to try Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
 Booty.esp
 BAR_DarkshroudKeep_v1.2.esp
 
 [Conflict]
- Landmass conflict
+ Landmass conflict.
+ You may wish to try Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
 Booty.esp
 GS_Tamriel Part1_Black Marsh.esp
 
 [Conflict]
- Landmass conflict
+ Landmass conflict.
+ You may wish to try Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
 Booty.esp
 SnakeBitten Island - Alpha.esp
+
+[Conflict]
+ Do not run JOG's original "Booty Island" and Spiffyman's moved version at the same time.
+Booty.esp
+Booty Island.esp
 
 ;;Dragon32: Booty Island modifies an NPC from the Illuminated Order mod, so should load later
 ;;Ref: Booty.txt
@@ -8218,20 +8373,40 @@ Illuminated Order v1.0.esp
 Booty.esp
 
 [Order]
+Illuminated Order v1.0.esp
+Booty Island.esp
+
+[Order]
 Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
 Booty.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp
+Booty Island.esp
 
 [Order]
 Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
 Booty.esp
 
 [Order]
+Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp
+Booty Island.esp
+
+[Order]
 Illuminated Order v1.0 (IndyBank WC Compatible).esp
 Booty.esp
 
 [Order]
+Illuminated Order v1.0 (IndyBank WC Compatible).esp
+Booty Island.esp
+
+[Order]
 Illuminated Order v1.0 (IndyBank Compatible).esp
 Booty.esp
+
+[Order]
+Illuminated Order v1.0 (IndyBank Compatible).esp
+Booty Island.esp
 
 ;;"Booty Island is designed to put a NPC to Haldenshore, if the Plugin is installed."
 ;;Ref: Booty.txt
@@ -8239,6 +8414,10 @@ Booty.esp
 [Order]
 Haldenshore_1.2.esp
 Booty.esp
+
+[Order]
+Haldenshore_1.2.esp
+Booty Island.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8561,6 +8740,11 @@ BTB - Equipment.esp
 
 [Order]
 Official_2002_Mods.esp
+BTB - Equipment.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 BTB - Equipment.esp
 
 ;;"BTB - Settings.esp"
@@ -9219,7 +9403,61 @@ Syc_HerbalismforPurists.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Castle Vianden Mod VERSION 2.1 [ReflectioN]
+;; @Castle Hvitkald 1.1 [Psycholex, the Architect]
+
+[Patch]
+ "If you are running Vampire Embrance [with "Castle Hvitkald" by Psycholex, the Architect], make sure to put in the Vampire-Embrace Patch too."
+ (Ref: "Castle Hvitkald Readme.txt")
+Castle Hvitkald-Vampire Emprace Patch.esp
+[ALL Castle Hvitkald.esp
+     Vampire_Embrace.esp]
+
+;;"What this fix-it patch does is changes "Hvitkald Peak" in one of the Vampire Embrance scripts to "Castle Hvitkald"."
+;;Ref: "Castle Hvitkald Readme.txt"
+[Order]
+Vampire_Embrace.esp
+Castle Hvitkald-Vampire Emprace Patch.esp
+
+[Conflict]
+ "The entrance to [Castle Hvitkald] is basically covers up the entrance to the Neverhalls."
+ (Ref: "Castle Hvitkald Readme.txt")
+Castle Hvitkald.esp
+The Neverhalls.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Unreal 1.0 [ReflectioN]
+
+[Conflict]
+ "Castle Unreal V1.0.esp. This is the regular version with wooden mannequins based on the original Bethesda bodies.
+ Castle Unreal BB V1.0.esp. This one contains wooden armor mannequins based on the Better Bodies mod.
+ Please note: ONLY ACTIVATE ONE ESP FILE! DO NOT USE THEM BOTH!"
+ (Ref: "ReadMe Castle Unreal V1.0.txt")
+Castle Unreal BB V1.0.esp
+Castle Unreal V1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Veldoril 1.4 [Geonox]
+
+[Conflict]
+ Geonox's "Castle Veldoril" conflicts with Centurion's "Ald Vendras". Centurion has released a version of Geonox's mod which moves Castle Veldoril to a compatible location.
+ Download "Castle Veldoril Moved" from Morrowind Modding History - http://mw.modhistory.com/download-56-13200
+Geonox_Castle_Veldoril_V1.4.esp
+[ANY Ald-Vendras_V31.esp
+     Ald-Vendras_V31-LoKKen.esp
+     Ald-Vendras_V31-LoKKen-SC.esp]
+
+[Conflict]
+ Only use one plugin.
+  Geonox_Castle_Veldoril_V1.4.esp - Geonox's original plugin.
+  CleanGeonox_Castle_Veldoril_V1.4r.ESP - Centurion's moved version.
+Geonox_Castle_Veldoril_V1.4.esp
+CleanGeonox_Castle_Veldoril_V1.4r.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Castle Vianden 2.1 [ReflectioN]
 
 [Conflict]
  (Ref: "ReadMe Castle Vianden V2.1.txt")
@@ -10069,6 +10307,11 @@ C&BArmors.esp
 
 [Order]
 Official_2002_Mods.esp
+C&BArmors.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 C&BArmors.esp
 
 
@@ -12415,12 +12658,17 @@ Divine_domina_part_3_Tribunal.esp
 Official_2002_Mods.esp
 Divine_domina_part_3_Tribunal.esp
 
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Divine_domina_part_3_Tribunal.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Divine Domina Compatibility Patches [iamnone]
 
 [Patch]
- "Divine Domina Compatibility Patches" by iamnone provides compatability patches for Jeremy McGuinn's "Divine Domina" and iamnone's "Improved Adamantium Armor"
+ "Divine Domina Compatibility Patches" by iamnone provides compatability patches for Jeremy McGuinn's "Divine Domina" and Cjad the Nord's "Imperial Chain Boots n Gauntlets".
  Download iamnone's "Divine Domina Compatibility Patches" from Morrowind Modding History - http://mw.modhistory.com/download-44-6220
  (Ref: "DivDomCompatibility.txt")
 DivDom_ImperialChain.esp
@@ -12428,7 +12676,7 @@ DivDom_ImperialChain.esp
      Imperial Chain Boots n Gauntlets.ESP]
 
 [Patch]
- "Divine Domina Compatibility Patches" by iamnone provides compatability patches for Jeremy McGuinn's "Divine Domina" and Cjad the Nord's "Imperial Chain Boots n Gauntlets"
+ "Divine Domina Compatibility Patches" by iamnone provides compatability patches for Jeremy McGuinn's "Divine Domina" and iamnone's "Improved Adamantium Armor".
  Download iamnone's "Divine Domina Compatibility Patches" from Morrowind Modding History - http://mw.modhistory.com/download-44-6220
  (Ref: "DivDomCompatibility.txt")
 DivDom_ImprovedAdamantium.esp
@@ -13759,6 +14007,20 @@ Better Bodies.esp
  !! This plugin suffers from "SignRotate Contamination". It includes the five "dirty" scripts (DagothUrCreature1, EndGame, LorkhanHeart, Float and SignRotate). The ESP needs manual cleaning to remove these "dirty" scripts.
  !! (Ref: http://wryemusings.com/GMST%20Vaccine.html )
 [SIZE 53847 Clean Elynda'sWinterWear.esp]
+
+;;Dragon32: Load mods suffering from SignRotate contamination before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart
+
+[Order]
+Clean Elynda'sWinterWear.esp
+Great House Dagoth.esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv1.1.esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15294,9 +15556,11 @@ DN_1st_Person_bodies-AS.esp
 
 [Note]
  ! There is a new version of MADMAX's "Fishing Academy"
- ! Download version 2.54 of "Fishing Academy" from Morrowind Moding History - http://mw.modhistory.com/download-20-8614
+ ! Download version 2.54 of "Fishing Academy" from Morrowind Modding History - http://mw.modhistory.com/download-20-8614
+ ! Download version 2.54 of "Fishing Academy" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/3909/
 [ANY Fishing Academy v2.0.esp
-     Fishing Academy v2.53.esp]
+     Fishing Academy v2.53.esp
+     [VER <2.54 Fishing Academy v<VER>.esp]]
 
 [Conflict]
  It is suggested you use "Fishing Academy v2.54.esp", the other two plugins have dirty GMSTs.
@@ -15307,7 +15571,7 @@ Fishing Academy v2.54.esp
 
 ;; expdep
 [Requires]
- This plugin uses a Startup script and some Tribunal functions.
+ This plugin uses a Startup script and the Tribunal functions: disablelevitation, enablelevitation, explodespell, getcollidingactor, getpcrunning, getpcsneaking, getsquareroot, getweapondrawn, modwaterlevel, placeitem, placeitemcell, setdelete, setscale and setwaterlevel.
 Fishing Academy v2.54.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
@@ -15483,6 +15747,20 @@ Flora Glow 1.0.esp
  !! Or download the updated version:
  !! http://www.nexusmods.com/morrowind/mods/43038/
 [SIZE 11951 MWFoeburner Fix.ESP]
+
+;;Dragon32: Load mods suffering from SignRotate contamination before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart
+
+[Order]
+MWFoeburner Fix.ESP
+Great House Dagoth.esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv1.1.esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16991,14 +17269,20 @@ abotGondoliersRV.esp
  (Ref: "abotGondoliers.txt")
 abotGondoliersRV.esp
 [ANY Redesigned Vivec.esp
-     PW_Redesigned Vivec-Vivec_Expansion.esp]
+     PW_Redesigned Vivec-Vivec_Expansion.esp
+     Clean Redesigned Vivec - COM patch.esp
+     Clean Redesigned Vivec - com_mca patch.esp
+     Clean Redesigned Vivec - MCA patch.esp]
 
 [Conflict]
  "If you are using Redesigned Vivec.esp or PW_Redesigned Vivec-Vivec_Expansion.esp load abotGondoliersRV.esp"
  (Ref: "abotGondoliers.txt")
 abotGondoliers.esp
 [ANY Redesigned Vivec.esp
-     PW_Redesigned Vivec-Vivec_Expansion.esp]
+     PW_Redesigned Vivec-Vivec_Expansion.esp
+     Clean Redesigned Vivec - COM patch.esp
+     Clean Redesigned Vivec - com_mca patch.esp
+     Clean Redesigned Vivec - MCA patch.esp]
 
 ;;Dragon32: Neither plugin has an expansion dependency in the header
 [Requires]
@@ -19012,7 +19296,8 @@ Havish - Scimitar Update (no MWE).esp
           HavishM.esm
           HavishMN.esm]
      MWE_Base.esp
-     [ANY Booty.esp
+     [ANY [ANY Booty.esp
+               Booty Island.esp]
 	  [ANY Galsiahs Character Development.esp
                GCD v1.08 with Startscript, fixed [Galsiah].esp]]]
 Havish - Scimitar Update.esp
@@ -19057,7 +19342,8 @@ Havish - Scimitar Update + GCD (no MWE).esp
 [ALL [ANY Havish.esm
           HavishM.esm
           HavishMN.esm]
-     Booty.esp
+     [ANY Booty.esp
+          Booty Island.esp]
      [NOT MWE_Base.esp]
      [NOT Galsiahs Character Development.esp]
      [NOT GCD v1.08 with Startscript, fixed [Galsiah].esp]]
@@ -20559,6 +20845,11 @@ HG Armour Balance.esp
 Official_2002_Mods.esp
 HG Armour Balance.esp
 
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+HG Armour Balance.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @HG Vivec Cantons [Holy_Handgrenade]
@@ -20986,6 +21277,16 @@ hollaajith's Armor Overhaul.ESP
 
 [Order]
 Official_2002_Mods.esp
+hollaajith's Armor Overhaul - Lefty.ESP
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+hollaajith's Armor Overhaul.ESP
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 hollaajith's Armor Overhaul - Lefty.ESP
 
 ;;"BTB's equipment module (only ESP which conflict with mine) does more than just balance armor. It also changes other items. Mine just changes armor. Also, in armor changes I change more things than BTB. I believe he reduced the values a bit too much and I've increased weight of Medium and Heavy armor quite a bit.
@@ -22260,6 +22561,19 @@ Imperial Uniforms (v1.1).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Improved Adamantium Armor [iamnone]
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+ImprovedAdamantiumArmor.esp
+
+[Order]
+super_adventurers302.esp
+ImprovedAdamantiumArmor.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Improved Followers 1.3 BETA [lurlock]
 
 [Requires]
@@ -23132,7 +23446,7 @@ town_of_uvirith.esp				;Town of Uvirith [Tapani_doe]
 Join All Houses.esp
 
 [Order]
-The Towers of Uvirith V1.2.esp	
+The Towers of Uvirith V1.2.esp
 Join All Houses.esp
 
 [Order]		;
@@ -25658,6 +25972,16 @@ NoM 3.0.esp
  (Ref: LightTheWay_ReadMe.txt)
 LightTheWayBMAddon.esp
 Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Lighthouses Of Vvardenfell [John Kahler aka JMK]
+
+[Conflict]
+ "Minor Landscape Conflict [when running "Lighthouses Of Vvardenfell" by John Kahler aka JMK] with ["Mercarryn's New Cities: Ebonheart" by Mercarryn]. Use Enchanted Editor to delete land alteration to cell (1, -14) [from "Lighthouses Of Vvardenfell" by John Kahler aka JMK] for compatibility."
+ (Ref: https://www.youtube.com/watch?v=DDswXCJC7Qs )
+JMK - Lighthouses Of Vvardenfell.esp
+MNC_Ebonheart_v1.0_EV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28533,26 +28857,29 @@ Minions of House Dagoth - No Undead.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Mistletoe Manor 1.3 [Crankgorilla]
+;; @Mistletoe Manor 1.5 [Crankgorilla]
 
 [Conflict]
  "[Crankgorilla's "Mistletoe Manor"] is in the exact same spot as Provincial Bath Shoppe by Korana so those who use that mod will have to choose between them or move one of them."
  (Ref: http://forums.bethsoft.com/topic/1486753-relz-mistletoe-manor-13/?p=23316204 )
-Provincial_Bath _Shoppe_v1.esp
-Mistletoe Manor 1.3.esp
+Mistletoe Manor <VER>.esp
+[ANY Provincial_Bath _Shoppe_v1.esp
+     Provincial_Bath _Shoppe_for_Stinkers.esp
+     Stinkers v2 - Provincial Bath Shoppe Alt Plugin.esp
+     Stinkers PBS for v3.esp]
 
 ;;Dragon32: Order rules taken from Provincial Bath Shoppe 1.0 [Korana], q.v., dunno if they'll work...
 ;;"Mistletoe Manor" and both "Clean Ascadian Styles.esp" and "Suran-Waterfront-v-4.4.esp" modify Pelagiad 0,-8
 [Order]
 Clean Ascadian Styles.esp
-Mistletoe Manor 1.3.esp
+Mistletoe Manor <VER>.esp
 
 [Order]
-Mistletoe Manor 1.3.esp
+Mistletoe Manor <VER>.esp
 Suran Waterfront 5.0.esp
 
 [Order]
-Mistletoe Manor 1.3.esp
+Mistletoe Manor <VER>.esp
 Suran Waterfront V-5.1.esp
 
 
@@ -29001,6 +29328,17 @@ MDP 2013.esp
 MDP 2013.esp
 [ANY Texture Fix <VER>.esm]
 
+[Conflict]
+ "[Ragox & Zaldir's "More Detailed Places 2013"] conflicts with: Balmora Lighthouse [by Joi Ror], Balmora Balconyhouse [by Ravensong], New Suran [by The Wanderer], Suran Extended [by Princess Stomper], The Farmer Mod [by Josh aka Xeon]."
+ (Ref: https://www.youtube.com/watch?v=V4iStbPKdDA )
+MDP 2013.esp
+[ANY MO Balmora Lighthouse.esp
+     Balconyhouse.esp
+     New Suran.esp
+     Clean Suran Extended.esp
+     Suran Extended Family.esp
+     Farmer Mod v4.3.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More Gems [Gawain & Isabelle]
@@ -29245,9 +29583,9 @@ Cali_MormegilManor.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Acoustic Overhaul 1.0 [PeterBitt & Logitech]
 
-[Conflict]
- There is a new version of PeterBitt & Logitech's "Morrowind Acoustic Overhaul", 1.0
- Download it from Great House Fliggerty - http://download.fliggerty.com/download-76-1045
+[Note]
+ ! There is a new version of PeterBitt & Logitech's "Morrowind Acoustic Overhaul", 1.0
+ ! Download it from Great House Fliggerty - http://download.fliggerty.com/download-76-1045
 MAO_Base.esm
 
 [Order]
@@ -29624,7 +29962,26 @@ MAO_Firemoth.esp
 
 ;;Stand-alone plugins
 
+[Conflict]
+ "If you are using MAO.esm (merged version) than you don't need any of the stand-alone files."
+ (Ref: http://forums.bethsoft.com/topic/1520674-errors-mao-help/?p=24038178 )
+MAO.esm
+[ANY MAO_2d.esm
+     MAO_3d.esm
+     MAO_Config.esm
+     MAO_Containers.esp
+     MAO_Creatures.esp
+     MAO_Music.esm
+     MAO_PCSound.esp
+     MAO_PCVoice.esp
+     MAO_Regions.esp
+     MAO_ScriptExtender.esp
+     MAO_Vanilla.esp
+     MAO_Weather.esm]
+
 ;;Dragon32, most of this is preserved from the readme for 0.9, "MAO_ReadMe.pdf". Guessed and some renamed plugins (MAO_Config.esm is new MAO_Base.esm; MAO_Weather.esm is new MAO_InteriorWeather.esm; MAO_PCSound.esp and MAO_PCVoice.esp are the new MAO_Voice.esp)
+;;"MAO_Base.esm [...] is no longer used (it's content is now in MAO_PCSound.esp)"
+;; http://forums.bethsoft.com/topic/1520674-errors-mao-help/?p=24038178
 
 [Order]
 MAO_Config.esm
@@ -29976,6 +30333,32 @@ Jobs Adventurers Guild Patch.ESP
 [Order]
 Adventurers Guild.esp
 Jobs Adventurers Guild Patch.ESP
+
+;;Dragon32: Load mods suffering from SignRotate contamination before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart
+
+[Order]
+Adventurers Guild.esp
+Great House Dagoth.esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv1.1.esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv1.1_NOM.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+Great House Dagoth.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv1.1.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31941,6 +32324,17 @@ Jobs.esm
 
 ;;Adamantium Armor - [Official]Adamantium Armor.esp
 
+;;Dragon32: Adamantium Armor plugin included in Sauron's Abode
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+[Official]Adamantium Armor.esp
+
+;;Dragon32: Adamantium Armor plugin included in Super Adventurers
+[Order]
+super_adventurers302.esp
+[Official]Adamantium Armor.esp
+
 ;;Area Effect Arrows - [Official]Area Effect Arrows.esp
 
 ;;Bitter Coast Sounds - [Official]Bitter Coast Sounds.esp
@@ -32979,7 +33373,8 @@ From Hell To Heaven.esm
 TheBlackMill11.esp
 
 [Conflict]
- Landmass conflict
+ Landmass conflict.
+ You may wish to try Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
 From Hell To Heaven.esm
 Booty.esp
@@ -33209,7 +33604,7 @@ MournholdTransport.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Mournhold Overhaul 2.1 [Bob Smolders]
+;; @Mournhold Overhaul 2.1 [TRJTA / Bob Smolders]
 
 [Conflict]
  Choose only one plugin:
@@ -33247,6 +33642,15 @@ Windows Glow - Tribunal Eng.esp
 [Order]
 Mournhold Overhaul v2.0 - WG + NPC's.esp
 Windows Glow - Tribunal Eng.esp
+
+[Conflict]
+ "[TRJTA/Bob Smolders' "Mournhold Overhaul"] causes a conflict with Eomando's ["Mournhold Manor"]."
+ (Ref: https://www.youtube.com/watch?v=rGDXOPi7nPE )
+[ANY Mournhold Overhaul v2.0 - no NPC's.esp
+     Mournhold Overhaul v2.0 - NPC's.esp
+     Mournhold Overhaul v2.0 - WG + no NPC's.esp
+     Mournhold Overhaul v2.0 - WG + NPC's.esp]
+IntEomandoHouse.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34870,6 +35274,19 @@ New Netch-Adamantium Icons 1.01.esp
 New Suran.esp
 C&BArmors.esp
 
+[Conflict]
+ "[The Wanderer's "New Suran"] conflicts with [Josh aka Xeon's] The Farmer Mod"
+ (Ref: https://www.youtube.com/watch?v=V4iStbPKdDA )
+Farmer Mod v4.3.esp
+New Suran.esp
+
+[Conflict]
+ "[The Wanderer's "New Suran"] conflicts with [Thondur's] Suran Waterfront"
+ (Ref: https://www.youtube.com/watch?v=V4iStbPKdDA )
+[ANY Suran Waterfront V-5.1.esp
+     Suran Waterfront 5.0.esp]
+New Suran.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @New Suran Extended 1.52 [Nicholiathan]
@@ -36318,6 +36735,16 @@ OB_Style Auto Quivers And Bows_CAJ.esp
 OB_Style Quivers And Bows 4$_CAJ.esp
 OB_Style Quivers And Bows_CAJ.esp
 
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+OB_Style Auto Quivers And Bows.esp
+OB_Style Quivers And Bows 4$.esp
+OB_Style Quivers And Bows.esp
+OB_Style Auto Quivers And Bows_CAJ.esp
+OB_Style Quivers And Bows 4$_CAJ.esp
+OB_Style Quivers And Bows_CAJ.esp
+
 ;;Complete Armor Joints patch
 [Conflict]
  "DO NOT USE MORE THAN 1 OF THE ESP'S"
@@ -36700,6 +37127,25 @@ Races1.esp
 [Order]
 BTB - Character (Alternate).esp
 Races1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Order of Ascadia 2.1 [SkyShadowing]
+
+[Conflict]
+ "[SkyShadowing's "The Order of Ascadia"] conflicts with Balmora Expansion."
+ (Ref: http://www.youtube.com/watch?v=c30ITDt9DBo )
+SoT_Order of Ascadia_V2.1.esp
+[ANY Balmora Expansion v1.4.esp
+     Balmora Expansion v1.4+(1.4).esp
+     Balmora Expansion - LITE 1.0.esp
+     BE+(1.4) Better Looking Morrowind.esp]
+
+[Conflict]
+ "[SkyShadowing's "The Order of Ascadia"] conflicts with [...] Epic Ald-Ruhn."
+ (Ref: http://www.youtube.com/watch?v=c30ITDt9DBo )
+SoT_Order of Ascadia_V2.1.esp
+Epic_aldruhn.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37198,7 +37644,7 @@ Less_Generic_Tribunal.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @PC Clothier_Balmora [AimeeKae]
+;; @PC Clothier - Balmora 1.67 [AimeeKae]
 
 [Note]
  !! This plugin contains evil GMSTs.
@@ -37207,15 +37653,27 @@ Less_Generic_Tribunal.esp
 
 [Conflict]
  Choose ONLY ONE of these plugins.
+  AK_PCClothier_Balmora.esp is the dialog version of this mod.
+  AK_PCClothier_Balmora_CS.esp is the companion share version of this mod.
  (Ref: "ak_pcclothier_balmora-readme.txt")
 AK_PCClothier_Balmora.esp
 AK_PCClothier_Balmora_CS.esp
 
 [Patch]
+ "Clean_AK_PCClothier_patch_v1.67.esp" is a patch for AimeeKae's "PC Clothier - Balmora"
+ Download it from Morrowind Modding History - http://mw.modhistory.com/download-44-10227
  (Ref: "ak_pcc_v1.67.txt")
 Clean_AK_PCClothier_patch_v1.67.esp
 [ANY AK_PCClothier_Balmora.esp
      AK_PCClothier_Balmora_CS.esp]
+
+[Order]
+AK_PCClothier_Balmora.esp
+Clean_AK_PCClothier_patch_v1.67.esp
+
+[Order]
+AK_PCClothier_Balmora_CS.esp
+Clean_AK_PCClothier_patch_v1.67.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38330,12 +38788,43 @@ Qarls_Gothic_AttireII.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @QuarraClan v1.1 [Jonathan Nash]
+;; @Quarra Clan 1.1 [Jonathan Nash]
 
 [Note]
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 266531 quarraclan.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Quest Tweaks and Alternatives [Stuporstar]
+
+;;"Loading Trainwiz's [Main Quest Enhancers] after QTA should make anything he did override anything minor I did, so it shouldn't be a problem."
+;; Ref: http://forums.bethsoft.com/topic/1510730-rel-quest-tweaks-and-alternatives/?p=24055530
+;;Dragon32: TESPCD shows no conflicts
+[Order]
+QTA_1.0.esp
+MQE_MainQuestEnhancers.ESP
+
+[Order]
+QTA_1.0.esp
+MQE_BlightedBeasties.ESP
+
+[Order]
+QTA_1.0.esp
+MQE_CrowdControl.ESP
+
+[Order]
+QTA_1.0.esp
+MQE_GarrisonedGhostgate.ESP
+
+[Order]
+QTA_1.0.esp
+MQE_ImperialIntolerance.ESP
+
+[Order]
+QTA_1.0.esp
+MQE_SixthHouseShrines.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38583,6 +39072,31 @@ MWE_Combat.esp
  (Ref: Readme - Rage Indicator.esp)
 Rage Indicator.esp
 [VER<0.3 Encumbrance Bar.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rahj 2.51 [Inari]
+
+;;wildcard to pick up all the iterations of the MPP
+[Order]
+Morrowind Patch *.esm
+Rahj.esm
+
+;;MPP from Trancemaster_1988's "Morrowind Rebirth"
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Rahj.esm
+
+[Note]
+ !! "Minor incompatibility with Tribunal [and "Rahj" by Inari]: If you do Pespharha's quests, you will create a "task" topic. This options used with Almalexia will make a quest jump if used at an incorrect moment. Avoid using it while she doesn't."
+ !! (Ref: "Readme Rahj I v2.51.txt")
+[ALL Rahj.esm
+     Tribunal.esm]
+
+[Note]
+ Do not enable this ESP if you are using MGE or MGE XE to render the grass.
+ (Ref: "Rahj_I_Grass_v2-0-41371-2-0.7z\Readme v2.0.txt")
+Grass_Elnagor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39559,7 +40073,9 @@ New Rethan Manor.esp
      [NOT Official_2002_Mods.esp]
      [NOT Taddeus'BalancedArmors.esp]
      [NOT Taddeus'BalancedArmors_Rotate.esp]
-     [NOT super_adventurers302.esp]]
+     [NOT super_adventurers302.esp]
+     [NOT SauronsAbode252.esp]
+     [NOT SauronsAbode252_Tribunal.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40115,7 +40631,35 @@ ReclamationsInHolamayan.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @RTS-HealingFaeries [redwoodtreesprite]
+;; @RTS BB2 Argonian Mods 1 - Female Replacers and New Races [redwoodtreesprite]
+
+[Conflict]
+ "Be careful to only select one esp from a set"
+ (Ref: "RTS BB2 Argonian Female Retexture - Readme.rtf")
+RTS_BB2ArgnBeast.esp
+RTS_BB2ArgnUpright.esp
+
+[Conflict]
+ "Be careful to only select one esp from a set"
+ (Ref: "RTS BB2 Argonian Female Retexture - Readme.rtf")
+RTS_BB2ArgnBst_Rplc.esp
+RTS_BB2ArgnUpr_Rplc.esp
+
+[Conflict]
+ "Be careful to only select one esp from a set"
+ (Ref: "RTS BB2 Argonian Female Retexture Version B - Readme.rtf")
+RTS_BB2ArgnB_Beast.esp
+RTS_BB2ArgnB_Upright.esp
+
+[Conflict]
+ "Be careful to only select one esp from a set"
+ (Ref: "RTS BB2 Argonian Female Retexture Version B - Readme.rtf")
+RTS_BB2ArgnB_Bst_Rplc.esp
+RTS_BB2ArgnB_Upr_Rplc.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @RTS Healing Faeries [redwoodtreesprite]
 
 [Order]
 RTS_HealingFaeries.esp
@@ -40462,13 +41006,47 @@ Sanity Globe for TU2_v1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Sauron's Abode 2.5.2 [Doan]
+;; @Sauron's Abode 2.5.2 [H. Doan (A.K.A. ~Sauron)]
+
+[Conflict]
+ Use only one plugin:
+  SauronsAbode252_Tribunal.esp - If you have Tribunal.
+  SauronsAbode252.esp - If you do not.
+ (Ref: "SauronsAbode252.txt")
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 
 [Requires]
- "Please note that the SauronsEnchantments252.esp plugin does *require* that the SauronsAbode252.esp plugin be used as they were designed to work together."
+ "The SauronsEnchantments252.esp plugin does *require* that the SauronsAbode252 plugin."
  (Ref: "SauronsAbode252.txt")
 SauronsEnchantments252.esp
-SauronsAbode252.esp
+[ANY SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp]
+
+[Conflict]
+ "[H. Doan (A.K.A. ~Sauron)] incorporated the following mods into Sauron's Abode [...] A modified version of the Warrior Slave Mod [by UlfGeir]."
+ You should not run UlfGeir's "SlaveWarrior Jessica" or Drake Elvin's updated version with H. Doan (A.K.A. ~Sauron)'s "Sauron's Abode".
+ (Ref: "SauronsAbode252.txt")
+[ANY Jessica.esp
+     3LV_Jessica_v2.2.esp]
+[ANY SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp]
+
+[Conflict]
+ "[H. Doan (A.K.A. ~Sauron)] incorporated the following mods into Sauron's Abode [...] Adamantium Armor."
+ There is no need to run Bethesda's original "Adamantium Armor" with H. Doan (A.K.A. ~Sauron)'s "Sauron's Abode".
+ (Ref: "SauronsAbode252.txt")
+[ANY SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp]
+adamantiumarmor.esp
+
+[Conflict]
+ "[H. Doan (A.K.A. ~Sauron)] incorporated the following mods into Sauron's Abode [...] Le Femme Armor."
+ There is no need to run Bethesda's original "Le Femme Armor" with H. Doan (A.K.A. ~Sauron)'s "Sauron's Abode".
+ (Ref: "SauronsAbode252.txt")
+[ANY SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp]
+LeFemmArmor.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41823,6 +42401,22 @@ Slashes' Argonian Water Breathing.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Slave Warrior Jessica (TRIBUNAL Version) 2.2.2 [UlfGeir, Drake Elvin]
+
+[Note]
+ ! Drake Elvin has released an updated version of Ulfgeir's "Slave Warrior Jessica", 2.2.2
+ ! Download Drake Elvin's "Slave Warrior Jessica - Tribunal" from Morrowind Modding History - http://mw.modhistory.com/download-24-10661
+[ALL Jessica.esp
+     Tribunal.esm]
+
+[Conflict]
+ Do not use Drake Elvin's updated version of "Slave Warrior Jessica" with Ulfgeir's original.
+ (Ref: "3LV_Jessica_v2.2_Readme.txt")
+Jessica.esp
+3LV_Jessica_v2.2.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Slavers 1.01 [Ghostwalker71]
 
 [Order]
@@ -42976,7 +43570,7 @@ LGNPC Gowns.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Starfires NPC Additions 1.11 [Starfire]
+;; @Starfire's NPC Additions 1.11 [Starfire]
 
 [Requires]
  (Ref: Starfires NPC Additions Readme.txt)
@@ -42999,6 +43593,20 @@ Starfires NPC Additions VR patch.esp
 [Order]
 Vampire Realism II.esp
 Starfires NPC Additions VR patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Starfire's NPC Additions 1.11 - Redesigned Vivec Compatibility Patch [Adul]
+
+[Conflict]
+ Adul has created a modified version of Starfire's NPC Additions that's compatible with Piratelord's "Redesigned Vivec". Adul's mod is also compatible with Pseron Wyrd's merge of Piratelord's mod with Hoghead the Horrible's "Vivec Expansion", and Jac's "Redesigned Vivec Updates".
+ Download Adul's "Starfire's NPC Additions 1.11 - Redesigned Vivec Compatibility Patch" from Morrowind Moddng History - http://mw.modhistory.com/download-90-6712
+[DESC !/Redesigned Vivec compatible version/ Starfires NPC Additions ver-1.11.esp]
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp
+     Clean Redesigned Vivec - COM patch.esp
+     Clean Redesigned Vivec - com_mca patch.esp
+     Clean Redesigned Vivec - MCA patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -43916,6 +44524,21 @@ Clean Suran Extended.esp
 Suran Extended Family.esp
 Suran Waterfront V-5.1.esp
 
+[Conflict]
+ "[Princess Stomper's "Suran Extended"] conflicts with [Josh aka Xeon's] The Farmer Mod"
+ (Ref: https://www.youtube.com/watch?v=V4iStbPKdDA )
+Farmer Mod v4.3.esp
+[ANY Clean Suran Extended.esp
+     Suran Extended Family.esp]
+
+[Conflict]
+ "[Princess Stomper's "Suran Extended"] conflicts with [Thondur's] Suran Waterfront"
+ (Ref: https://www.youtube.com/watch?v=V4iStbPKdDA )
+[ANY Suran Waterfront V-5.1.esp
+     Suran Waterfront 5.0.esp]
+[ANY Clean Suran Extended.esp
+     Suran Extended Family.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Suran Underworld 2.5 [Matthew]
@@ -44189,7 +44812,6 @@ Sri Alchemy BM List Patch.esp
      OfficialMods_v5.esp
      Clean Official Plugins v1.1.esp
      Official_2002_Mods.esp
-     super_adventurers302.esp
      bm_wolf_greaves_fix.esp
      AV_female_armor.esp
      AV_fem_armor_Trib.esp
@@ -44259,6 +44881,25 @@ female_cuirasses_2.0.esp
      [ANY Taddeus'BalancedArmors.esp
           Taddeus'BalancedArmors_Rotate.esp]]
 
+;;Dragon32: includes Adamantium armour
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Taddeus'BalancedArmors.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Taddeus'BalancedArmors_Rotate.esp
+
+[Order]
+super_adventurers302.esp
+Taddeus'BalancedArmors.esp
+
+[Order]
+super_adventurers302.esp
+Taddeus'BalancedArmors_Rotate.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Taddeus' Balanced Armor (light) 1.2 [Taddeus]
@@ -44282,8 +44923,7 @@ Taddeus'BalancedArmors(light).esp
      [Official]Helm of Tohan.esp
      OfficialMods_v5.esp
      Clean Official Plugins v1.1.esp
-     Official_2002_Mods.esp
-     super_adventurers302.esp]
+     Official_2002_Mods.esp]
 
 ;;"DON'T remove Dongle's and venymora plugins if you run them!"
 ;;Dragon32: So Order rules so they load before this stat-adjusting mod.
@@ -44312,6 +44952,16 @@ Taddeus'BalancedArmors(light).esp
           Wakim's Game Improvement 9.esp
           Wakim's Game Improvements with No-glo v9.esp
           AprogasVampire WakimImprovements.20021210.esp]]
+
+;;Dragon32: includes Adamantium armour
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Taddeus'BalancedArmors(light).esp
+
+[Order]
+super_adventurers302.esp
+Taddeus'BalancedArmors(light).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44459,6 +45109,8 @@ Tales of Tel Branora.esp
      Official_2002_Mods.esp
      Taddeus'BalancedArmors.esp
      Taddeus'BalancedArmors_Rotate.esp
+     SauronsAbode252.esp
+     SauronsAbode252_Tribunal.esp
      super_adventurers302.esp]
 
 
@@ -44533,7 +45185,6 @@ TR_Mainland.esm
  (Ref: "TR_Readme.pdf")
 TR_Mainland.esm
 [ANY Bloody Oath_v1.0.esp		; Bloody Oath
-     Booty.esp				; Booty Island
      BAR_DarkshroudKeep_v1.2.esp	; Darkshroud Keep
      Clean hawkfir_island.esp		; Hawkfir Island
      The Goblin Lab v1.1.esp		; The Goblin Lab
@@ -44668,6 +45319,25 @@ Unique Ocean Landscapes.ESP
  (Ref: "TR_Readme.pdf")
 TR_Alpha.ESP
 [SIZE 4646696 Havish.esm]
+
+[Conflict]
+ "[MADMAX's "Fishing Academy"] conflicts with Tamriel Rebuilt".
+ (Ref: https://www.youtube.com/watch?v=v7o8R_2u17g )
+TR_Alpha.ESP
+Fishing Academy v<VER>.esp
+
+[Conflict]
+ Landmass conflict.
+ You may wish to use Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
+ (Ref: "TR_Readme.pdf")
+TR_Mainland.esm
+Booty.esp
+
+[Conflict]
+ Landmass conflict. The Tamriel Rebuilt and Rahj landmasses overlap.
+ (Ref: "Readme Rahj I v2.51.txt")
+Rahj.esm
+TR_Mainland.esm
 
 ;JMS - Apparently not a conflict: http://forums.bethsoft.com/index.php?/topic/1091974-tr-havish-comp-patch/
 ;[Conflict]
@@ -46532,7 +47202,7 @@ Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Ultimate Galleon [Madmax]
+;; @Ultimate Galleon 2.2 [Madmax]
 
 [Patch]
  (Ref: "UG readme.txt")
@@ -46561,10 +47231,27 @@ Ultimate Galleon ( Pegas ESP Addon ).esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+[Order]
+Ultimate Galleon v2.2.esp
+Ultimate Galleon ( Pegas ESP Addon ).esp
+
+[Order]
+Ultimate Galleon v2.2.esp
+Ultimate Galleon ( Pegas ESM Addon ).esp
+
+[Order]
+Pegas Horse Ranch v<VER>.esp
+Ultimate Galleon ( Pegas ESP Addon ).esp
+
+[Order]
+Pegas Horse Ranch v<VER>.esp
+Ultimate Galleon ( Pegas ESM Addon ).esp
+
 [Requires]
  (Ref: "Ultimate Galleon Purchase Patch Readme.txt")
 Ultimate Galleon Purchase Patch.esp
 Ultimate Galleon v2.2.esp
+
 ;; (Ref: "Ultimate Galleon Purchase Patch Readme.txt")
 [Order]
 Ultimate Galleon v2.2.esp
@@ -47665,6 +48352,20 @@ Uvirith Inside.esp
 [ANY Uvirith Unleashed v1.2.esp
      uvirithvaultv10.esp]
 
+;;Dragon32: Load mods suffering from SignRotate contamination before mods intentionally altering these scripts: DagothUrCreature1, EndGame and LorkhanHeart
+
+[Order]
+Uvirith Inside.esp
+Great House Dagoth.esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv1.1.esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv1.1_NOM.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Uvirith Inside Patch 1.61 [The Mad God]
@@ -48477,7 +49178,7 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
           corpusbugfix.esp
           Correct Spell Sounds.esp
           Crusader Class Fix.esp
-          daedricsanctuaryfix.ESP         
+          daedricsanctuaryfix.ESP
           Dome of Serlyn fix.esp
           DrenFactionTweaks.esp
           Ebonheart Warehouse Fix.esp
@@ -53084,6 +53785,16 @@ Wrye Patches A1.esp
 
 [Order]
 Official_2002_Mods.esp
+Wrye Patches A1.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
+Wrye Patches A.esp
+
+[Order]
+SauronsAbode252.esp
+SauronsAbode252_Tribunal.esp
 Wrye Patches A1.esp
 
 [Conflict]
