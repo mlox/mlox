@@ -1669,6 +1669,259 @@ All Destinations.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Almilia's Daughters 4.2 [Raidorn, The Troll, fiSh, Kir]
+
+;;expdep
+[Requires]
+ This plugin uses the Tribunal function: hasitemequipped
+Almilia's daughters 4.0.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;;Dragon32: Unsure if this will work with "LGNPC Lite - Dialogue Only Edition / Open Morrowind Edition" so not including LGNPC plugins in the Requires rule.
+[Requires]
+ (Ref: "almilia's daughters 4.0.txt")
+LGNPC_Detect.esp
+Almilia's daughters 4.0.esp
+
+;;"[LGNPC_Detect.esp] is supposed to load prior to any other LGNPC mod"
+;;Ref: "almilia's daughters 4.0.txt"
+;;Dragon32: Seems to set Global variables used by main Almilia's plugin
+[Order]
+LGNPC_Detect.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith_v?_??.esp
+LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 38206 LGNPC_Detect.esp]
+
+[Patch]
+ "[Using the Clothing Mod Detector plugin allows "Almilia's Daughters" to] take advantage of some clothing mods,[...] currently following clothing mods are supported:
+    * Aleanne's clothes and armor, part 1 only or both 1 and 2
+    * Ascadian styles by Thinalphiel and Rickrod, with or without Ladies gowns and robes addon
+    * Hilgya the Seamstress by Plangkye, with or without Expansion One
+    * Clothiers of Vvardenfell by Korana"
+ (Ref: "almilia's daughters 4.0.txt")
+Clothing Mod Detector.ESP
+[ALL Almilia's daughters 4.0.esp
+     [ANY ale_clothing_v0.esp
+          Clean Ascadian Styles.esp
+          Hilgya the Seamstress.esm
+          BB_Clothiers_of_Vvardenfell_v1.1.esp
+          KN_Keening_Clothiers.esp]]
+
+;;"the [Clothing Mod Detector] plugin would be above all possible clothing mods in the playlist."
+;;Ref: Clothing Mod Detector.txt
+;;Dragon32: Supports lots more than those used by "Almilia's Daughters"
+[Order]
+Clothing Mod Detector.ESP
+ale_clothing_v0.esp
+
+[Order]
+Clothing Mod Detector.ESP
+ale_clothing_v1.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Clean Ascadian Styles.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Ladies gowns and robes add on.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Bosmer Armor Add-On.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Hilgya the Seamstress Expansion 1.esp
+
+[Order]
+Clothing Mod Detector.ESP
+BB_Clothiers_of_Vvardenfell_v1.1.esp
+
+[Order]
+Clothing Mod Detector.ESP
+KN_Keening_Clothiers.esp
+
+[Order]
+Clothing Mod Detector.ESP
+BadKarma's Anjurin Chest.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Clean Aradia's Needle.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Clean BadKarma Clothing Vendor.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Clean BadKarma Dresses V1.0.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Cali's_BB_V.2_Tight_Dresses.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Gothic Attire Complete v1-1.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Myrabell's Clothing Emporium.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Scissors & Thimbles.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Scissors & Thimbles II.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Scissors & Thimbles III.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Scissors & Thimbles Merge.esp
+
+[Order]
+Clothing Mod Detector.ESP
+AOF_Undies.esp
+
+[Order]
+Clothing Mod Detector.ESP
+House of Earthly Delights, Harem Style.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Slof's Goth Shop.esp
+
+[Order]
+Clothing Mod Detector.ESP
+Slof's Goth Shop 1.1.esp
+
+[Order]
+Clothing Mod Detector.ESP
+The Crimson Wire by Mandamus-EV1.0.esp
+
+[Patch]
+ (Ref: "almilia's daughters 4.0.txt")
+Almilia - Beryl's_Head_Replacer.esp
+[ALL Almilia's daughters 4.0.esp
+     Beryl's_Head_Replacer_v1.0.esm]
+
+[Order]
+Almilia's daughters 4.0.esp
+Almilia - Beryl's_Head_Replacer.esp
+
+[Patch]
+ (Ref: "almilia's daughters 4.0.txt")
+Almilia - Leeloo Changing Faces.esp
+[ALL Almilia's daughters 4.0.esp
+     Changing Faces Replacer.esp]
+
+[Order]
+Almilia's daughters 4.0.esp
+Almilia - Leeloo Changing Faces.esp
+
+[Order]
+Changing Faces Replacer.esp
+Almilia - Leeloo Changing Faces.esp
+
+[Patch]
+ "[The "Almilia - THE Facepack Compilation.esp" patch allows you to use "Almilia's Daughters" with] THE Facepack Compilation by Tarnsman (you can use individual .esp's from Tarnsman's mods rather than the master pack, but you need to have all three humanoid ones for the patch to work)"
+ (Ref: "almilia's daughters 4.0.txt")
+Almilia - THE Facepack Compilation.esp
+[ALL Almilia's daughters 4.0.esp
+     [ANY [ANY THE Facepack Compilation.esm
+               THE Facepack Compilation.esp]
+          [ALL [ANY THE BrImRg Facepack.esm
+                    THE BrImRg Facepack.esp]
+               [ANY THE Elven Facepack.esm
+                    THE Elven Facepack.esp]
+               [ANY THE Nord & Orc Facepack.esm
+                    THE Nord & Orc Facepack.esp]]]]
+
+[Order]
+Almilia's daughters 4.0.esp
+Almilia - THE Facepack Compilation.esp
+
+[Patch]
+ (Ref: "almilia's daughters 4.0.txt")
+Almilia - Westly Master Headpack.esp
+[ALL Almilia's daughters 4.0.esp
+     Westly's Master Headpack X.esp]
+
+[Order]
+Almilia's daughters 4.0.esp
+Almilia - Westly Master Headpack.esp
+
+[Conflict]
+ "[Raidorn, The Troll, fiSh, Kir's "Almilia's Daughters"] makes Ahnassi receptive to the same-sex romance, so Smooth Moves mod by Curmudgeon (which is made to do the same) is redundant and must not be checked."
+ (Ref: "almilia's daughters 4.0.txt")
+Almilia's daughters 4.0.esp
+[ANY Smooth Moves Ahnassi.esp
+     Smooth Moves v1.esp]
+
+[Conflict]
+ "[Raidorn, The Troll, fiSh, Kir's "Almilia's Daughters"] has its own way to resolve Sottilde's codebook quest without killing or antagonizing Sottilde. There are mods that do the same task [...] and Almilia's Daughters is most probably incompatible with them."
+ (Ref: "almilia's daughters 4.0.txt")
+Almilia's daughters 4.0.esp
+[ANY Sottilde'sCodeBookFix.esp
+     SOLcodebook.esp]
+
+[Patch]
+ "Some of MCA companions are given customized reactions - to activate them use the "MCA - Mod Friendly Companions 6.0.esp""
+ (Ref: "almilia's daughters 4.0.txt")
+MCA - Mod Friendly Companions 6.0.esp
+[ALL Almilia's daughters 4.0.esp
+     [DESC /Adds 1000 types of NPCs to over 400/ MCA.ESM]]
+
+[Patch]
+ "Some of MCA companions are given customized reactions - to activate them use the [...] "MCA - Mod Friendly Companions 7.0.esp""
+ (Ref: "almilia's daughters 4.0.txt")
+MCA - Mod Friendly Companions 7.0.esp
+[ALL Almilia's daughters 4.0.esp
+     [DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM]]
+
+;;"The mod does its own version of Guard Sex (not based on funky's plugin, nor compatible with it)"
+;;Ref: "almilia's daughters 4.0.txt"
+;;Dragon32: Can't find that plugin
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Alternate Beginnings [evermoon]
 
 [Note]
@@ -2127,6 +2380,15 @@ ACD_PracticeDummy.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Anjurin Chest [BadKarma]
+
+[Requires]
+ (Ref: "BadKarma's Anjurin Chest readme.txt")
+BadKarma's Anjurin Chest.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Annastia 3.3 [patrograd]
 
 ;; Load before Balmora Expansion to prevent cell conflict.
@@ -2172,6 +2434,15 @@ Volcano Island; the Followers V.1.2.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 17588 Neutral creatures.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @AnOldFriend's Corsets and Bustiers [AnOldFriend3 and Plangkye]
+
+[Requires]
+ (Ref: "AOF Undies Readme.txt")
+AOF_Undies.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3295,6 +3566,15 @@ ARCDX - NOMv3 Compatible.esp
 [Order]
 ARCDX - NOMv3 Compatible.esp
 NoM 3.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ascadian Styles [Thinalphiel and Rickrod]
+
+[Requires]
+ (Ref: "Ascadian Styles Readme.txt")
+Clean Ascadian Styles.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4559,6 +4839,24 @@ Grass_TR_TI&M.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 5644 Baby Packguar At Suran..esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BadKarma Clothing Vendor [BadKarma]
+
+[Requires]
+ (Ref: "BadKarma Clothing Vendor.txt")
+Clean BadKarma Clothing Vendor.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BadKarma Dresses [BadKarma]
+
+[Requires]
+ (Ref: "BadKarma Dresses readme.txt")
+Clean BadKarma Dresses V1.0.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8421,6 +8719,20 @@ Booty Island.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bosmer Armor Add-On for Ascadian Styles [Thinalphiel]
+
+[Requires]
+ (Ref: "Bosmer Armor Add-On Readme.txt")
+Bosmer Armor Add-On.esp
+Clean Ascadian Styles.esp
+
+;;Dragon32: TESPCD shows a CONT conflict
+[Order]
+Clean Ascadian Styles.esp
+Bosmer Armor Add-On.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bound Armor Bugfix [Tizzo]
 
 [Conflict]
@@ -9895,6 +10207,17 @@ Christmas At Lokken.esp
 [SIZE 118862 Classic Stories by Eric Carle.esp]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Clean Potions&Scrolls [kir]
+
+[Conflict]
+ Erasmus' "Potions" and Srikandi's "Potion Sorter" both change the ingame potions. One changes their icons and the other their names.
+ kir has created a version of Erasmus' mod with the new icons and the potions renamed to  match the names in Srikanid's mod.
+ Download the mod from kir's website - http://www.angelfire.com/rpg2/mad_weather/potions.htm
+PotionSorter.esp
+Potions.esp
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Clear Glass Equipment [millinghordesman]
 
@@ -10832,6 +11155,15 @@ Creatures (Semi).esp
  !! This plugin contains evil GMSTs.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2087 CreeperPlugin.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @The Crimson Wire [Mandamus]
+
+[Requires]
+ (Ref: "The Crimson Wire, by Mandamus.txt")
+The Crimson Wire by Mandamus-EV1.0.esp
+Better Bodies.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14834,6 +15166,7 @@ THE Facepack Compilation.esm
 THE Morrowind NPC Makeover.esm
 
 ;; THE Argonian & Khajiit Facepack
+
 [Requires]
  (Ref: THE A & K Facepack_readme.doc)
 [ANY THE Argonian & Khajiit Facepack.esm
@@ -14889,6 +15222,7 @@ Slof's Better Beasts b.esp
 Shadow Argonians Final.esp
 
 ;; THE Breton, Imperial & Redguard Facepack
+
 [Requires]
  (Ref: THE B,I & R Facepack_readme.doc)
 [ANY THE BrImRg Facepack.esm
@@ -14903,6 +15237,7 @@ THE BrImRg Facepack.esm
 THE BrImRg Facepack.esp
 
 ;;THE Elven Facepack
+
 [Requires]
  (Ref: THE Elven Facepack_readme.doc)
 [ANY THE Elven Facepack.esm
@@ -14917,6 +15252,7 @@ THE Elven Facepack.esm
 THE Elven Facepack.esp
 
 ;;THE Nord & Orc Facepack
+
 [Requires]
  (Ref: THE N & O Facepack_readme.doc)
 [ANY THE Nord & Orc Facepack.esm
@@ -14938,6 +15274,7 @@ MCA Goblin-Men Addon.esp
      THE Nord & Orc Face Collection.esm]
 
 ;;THE Facepack Compilation
+
 [Requires]
  (Ref: THE Facepack Compilation_readme.doc)
 [ANY THE Facepack Compilation.esp
@@ -14966,6 +15303,7 @@ THE Facepack Compilation.esm
      THE Nord & Orc Facepack.esp]
 
 ;;THE Morrowind NPC Makeover
+
 [Requires]
  Tarnsman's "THE Morrowind NPC Makeover" requires that both expansions and Tarnsman's "THE Facepack Compilation" are loaded.
  (Ref: THE Morrowind NPC Makeover_readme.doc)
@@ -14978,13 +15316,13 @@ THE Facepack Compilation.esm
 [Conflict]
  You should only use one of the ESM or the ESP version of "THE Morrowind NPC Makeover", not both.
  (Ref: THE Morrowind NPC Makeover_readme.doc)
-THE Facepack Compilation.esp
-THE Facepack Compilation.esm
+THE Morrowind NPC Makeover.esp
+THE Morrowind NPC Makeover.esm
 
 [Note]
  ! Tarnsman recommends you use the ESM of the "THE Morrowind NPC Makeover" to minimise potential conflicts.
- (Ref: THE Morrowind NPC Makeover_readme.doc)
-THE Facepack Compilation.esp
+ ! (Ref: THE Morrowind NPC Makeover_readme.doc)
+THE Morrowind NPC Makeover.esp
 
 [Conflict]
  Tarnsman's "THE Morrowind NPC Makeover" includes aerelorn's "Less Annoying Guards", there is no need to run aerelorn's mod and "THE Morrowind NPC Makeover."
@@ -24302,23 +24640,20 @@ Knights of Tamriel.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Knight saddle for Pegas Horse Ranch [Gawain]
 
+
 ;;Dragon32: While readme says it needs 2.4 of Pegas it looks, to me, like it'll work with any version as it only replaces a single item of clothing
 
 [Requires]
  (Ref: Knight saddle - readme.txt)
 Knight saddle -steel- for ESMversion.esp
-[ANY Pegas Horse Ranch v2.4.esm
-     Pegas Horse Ranch v2.4.esp
-     Pegas Horse Ranch v3.1.esm
-     Pegas Horse Ranch v3.1.esp]
+[ANY Pegas Horse Ranch <VER>.esm
+     Pegas Horse Ranch <VER>.esp]
 
 [Requires]
  (Ref: Knight saddle - readme.txt)
 Knight saddle -steel- for ESPversion.esp
-[ANY Pegas Horse Ranch v2.4.esm
-     Pegas Horse Ranch v2.4.esp
-     Pegas Horse Ranch v3.1.esm
-     Pegas Horse Ranch v3.1.esp]
+[ANY Pegas Horse Ranch <VER>.esm
+     Pegas Horse Ranch <VER>.esp]
 
 [Conflict]
  Do not use both plugins
@@ -24327,21 +24662,18 @@ Knight saddle -steel- for ESMversion.esp
 Knight saddle -steel- for ESPversion.esp
 
 [Order]
-Pegas Horse Ranch v2.4.esp
-Pegas Horse Ranch v3.1.esp
+Pegas Horse Ranch <VER>.esp
 Knight saddle -steel- for ESPversion.esp
 
 [Requires]
  (Ref: Knight saddle - ebony - readme.txt)
 Knight saddle -ebony- for ESMversion.esp
-[ANY Pegas Horse Ranch v2.4.esm
-     Pegas Horse Ranch v3.1.esm]
+Pegas Horse Ranch <VER>.esm
 
 [Requires]
  (Ref: Knight saddle - ebony - readme.txt)
 Knight saddle -ebony- for ESPversion.esp
-[ANY Pegas Horse Ranch v2.4.esp
-     Pegas Horse Ranch v3.1.esp]
+Pegas Horse Ranch <VER>.esp
 
 [Conflict]
  Do not use both plugins
@@ -24350,21 +24682,18 @@ Knight saddle -ebony- for ESMversion.esp
 Knight saddle -ebony- for ESPversion.esp
 
 [Order]
-Pegas Horse Ranch v2.4.esp
-Pegas Horse Ranch v3.1.esp
+Pegas Horse Ranch <VER>.esp
 Knight saddle -ebony- for ESPversion.esp
 
 [Requires]
  (Ref: Knight saddle - imperial steel - readme.txt)
 Knight saddle -imperial steel- for ESMversion.esp
-[ANY Pegas Horse Ranch v2.4.esm
-     Pegas Horse Ranch v3.1.esm]
+Pegas Horse Ranch <VER>.esm
 
 [Requires]
  (Ref: Knight saddle - imperial steel - readme.txt)
 Knight saddle -imperial steel- for ESPversion.esp
-[ANY Pegas Horse Ranch v2.4.esp
-     Pegas Horse Ranch v3.1.esp]
+Pegas Horse Ranch <VER>.esp
 
 [Conflict]
  Do not use both plugins
@@ -24373,21 +24702,18 @@ Knight saddle -imperial steel- for ESMversion.esp
 Knight saddle -imperial steel- for ESPversion.esp
 
 [Order]
-Pegas Horse Ranch v2.4.esp
-Pegas Horse Ranch v3.1.esp
+Pegas Horse Ranch <VER>.esp
 Knight saddle -imperial steel- for ESPversion.esp
 
 [Requires]
  (Ref: Knight saddle - templar - readme.txt)
 Knight saddle -templar- for ESMversion.esp
-[ANY Pegas Horse Ranch v2.4.esm
-     Pegas Horse Ranch v3.1.esm]
+Pegas Horse Ranch <VER>.esm
 
 [Requires]
  (Ref: Knight saddle - templar - readme.txt)
 Knight saddle -templar- for ESPversion.esp
-[ANY Pegas Horse Ranch v2.4.esp
-     Pegas Horse Ranch v3.1.esp]
+Pegas Horse Ranch <VER>.esp
 
 [Conflict]
  Do not use both plugins
@@ -24396,8 +24722,7 @@ Knight saddle -templar- for ESMversion.esp
 Knight saddle -templar- for ESPversion.esp
 
 [Order]
-Pegas Horse Ranch v2.4.esp
-Pegas Horse Ranch v3.1.esp
+Pegas Horse Ranch <VER>.esp
 Knight saddle -templar- for ESPversion.esp
 
 
@@ -24519,6 +24844,20 @@ MultiMark_KwernerPlugin.esp
 Laby connection EV.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ladies Gowns and Robes Add-On for Ascadian Styles [Thinalphiel]
+
+[Requires]
+ (Ref: "Ladies gowns and robes read me.txt")
+Ladies gowns and robes add on.esp
+Clean Ascadian Styles.esp
+
+;;Dragon32: TESPCD shows a CONT conflict
+[Order]
+Clean Ascadian Styles.esp
+Ladies gowns and robes add on.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -33965,6 +34304,15 @@ My Favorites Compatible and Combine ver 1.4.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Myrabell's Clothing Emporium [Myrabell]
+
+[Requires]
+ (Ref: "MCE readme.txt")
+Myrabell's Clothing Emporium.esp
+Better Bodies.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Mysthaven Manor [William The Taffer]
 
 [Conflict]
@@ -38204,7 +38552,10 @@ Library_Portable_Book_Jackets_Compatible.esp
 PSsorticon.esp
 [ANY PotionSorter.esp
      Potions.esp
-     Scrollsv1.1.esp]
+     Scrollsv1.1.esp
+     Clean Potions.esp
+     Clean Potions1.esp
+     Clean Scrolls.esp]
 
 [Note]
  !! "Potion/Scroll Icons and Potion Sort" by rmrfstar accidentally removes the summoning enchantment from the Golden Saint summoning scrolls.
@@ -38216,7 +38567,10 @@ PSsorticon.esp
  BTB's Alchemy and Equipment plugins from "BTB's Game Improvements" mod alter scrolls and potions whilst retaining the default icons. Erasmus' "Potions" and "Scrolls" change the icons used by potions and scrolls whilst keeping their default names and other values. To use BTB's and Erasmus' mods together you will need to run TESTool's Merge Objects function and enable the Merged_Objects.esp.
 [ANY PSsorticon.esp
      Potions.esp
-     Scrollsv1.1.esp]
+     Scrollsv1.1.esp
+     Clean Potions.esp
+     Clean Potions1.esp
+     Clean Scrolls.esp]
 [ALL [ANY BTB - Alchemy.esp
           BTB - Equipment.esp]
      [NOT Merged_Objects.esp]]
@@ -38231,7 +38585,10 @@ PSsorticon.esp
 [ALL K_Potion_Upgrade_1.2.esp
      [ANY PotionSorter.esp
           Potions.esp
-          PSsorticon.esp]
+          PSsorticon.esp
+          Clean Potions.esp
+          Clean Potions1.esp
+          Clean Scrolls.esp]
      [NOT Merged_Objects.esp]]
 
 
@@ -42576,6 +42933,72 @@ Slof's Goth Shop II.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Slof's Morrowind Pillow Book [AlienSlof]
+
+[Note]
+ ! Kir has released a replacement plugin for "Slof's Morrowind Pillow Book", which:
+ ! "Fixed: an extra long line was causing pictures' captions to be carried to the next page (not that many people are fluent reading Daedric and it'd be this important, but it's still sloppy) - extra linefeed removed.
+ ! Also changed: captions' font color is set to concord with pictures' color. A dirty entry (Seyda Neen cell) cleaned out."
+ ! Download the replacement plugin from Kir's webpage - http://www.angelfire.com/rpg2/mad_weather/smallimp.htm
+[SIZE 1815 Slof's Pillow Book.esp]
+
+[Conflict]
+ Kir has released a Book Rotate-compatible version of "Slof's Morrowind Pillow Book"
+ Download the plugin from Kir's webpage - http://www.angelfire.com/rpg2/mad_weather/smallimp.htm
+[ALL [SIZE 1815 Slof's Pillow Book.esp]
+     [ANY Book Rotate.esm
+          Book Rotate - Morrowind v1.1.esp]]
+
+[Conflict]
+ Only use one plugin:
+  Slof's Pillow Book_BR.esp - If you have Book Rotate
+  Slof's Pillow Book.esp - If you do not
+ (Ref: "PillowBookReadme.txt")
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Requires]
+ (Ref: "PillowBookReadme.txt")
+Slof's Pillow Book_BR.esp
+Book Rotate.esm
+
+[Order]
+Librarian with Jackets & Rotate BM Trib.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Order]
+Librarian with Jackets BM Trib.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Order]
+Book Jackets - Morrowind - BookRotate.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Order]
+Book Jackets - Morrowind.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Order]
+Jac_Passing time while reading -  BRBJ patch.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Order]
+Jac_Passing time while reading - BR patch.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+[Order]
+Book Rotate - Morrowind v1.1.esp
+Slof's Pillow Book.esp
+Slof's Pillow Book_BR.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Smart Crosshair 1.0 [adul]
 
 [Conflict]
@@ -42630,6 +43053,25 @@ pcc_smeradon2DT_07.esp
 [Order]
 Dwemer Tunnels and Coprusarium Cavern.esp
 pcc_smeradon2DT_07.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Smooth Moves [Curmudgeon]
+
+[Note]
+ !! TheOne&Only has updated Curmudgeon's "Smooth Moves"
+ !! Download TheOne&Only's "Smooth Moves Ahnassi" from Morrowind Modding History - http://mw.modhistory.com/download-49-14798
+Smooth Moves v1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Smooth Moves Ahnassi 1.03 [TheOne&Only]
+
+[Conflict]
+ "[TheOne&Only's "Smooth Moves Ahnassi" is] incompatible with Curmudgeon's Smooth Moves"
+ (Ref: "Smooth Moves Ahnassi v1.03.txt")
+Smooth Moves Ahnassi.esp
+Smooth Moves v1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44986,7 +45428,10 @@ Taddeus'BalancedEnchanting.esp
 [ANY PotionSorter.esp
      Potions.esp
      Scrollsv1.1.esp
-     PSsorticon.esp]
+     PSsorticon.esp
+     Clean Potions.esp
+     Clean Potions1.esp
+     Clean Scrolls.esp]
 
 [Conflict]
  Use only one of these two .esps
@@ -45015,7 +45460,10 @@ Taddeus'BalancedObjects_Rotate.esp
      [ANY PotionSorter.esp
           Potions.esp
           Scrollsv1.1.esp
-          PSsorticon.esp]]
+          PSsorticon.esp
+          Clean Potions.esp
+          Clean Potions1.esp
+          Clean Scrolls.esp]]
 
 [Note]
  Taddeus' Balanced Objects (light) is compatible with Wakin's Game Improvements, but it is recommended to use the modular version of Wakin's Game Improvements and to exclude the "Items" file.
@@ -53884,7 +54332,8 @@ Wrye Patches B.esp
           Librarian with Jackets & Rotate BM Trib.esp
           Librarian with Jackets BM Trib.esp
           PSsorticon.esp
-          Scrollsv1.1.esp]
+          Scrollsv1.1.esp
+          Clean Scrolls.esp]
      [NOT Merged_Objects.esp]]
 
 ;;Wrye Patches C
