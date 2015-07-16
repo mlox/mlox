@@ -477,5 +477,28 @@ This means that glue-patch.esp will patch together either:
 or
   original-X.esp AND original-Y-TB+BM.esp
 
+The [Patch] rule does not recognise the NOT Boolean expression.
+
+You cannot write a [Patch] rule like this:
+
+[Patch message]
+original-X-patch.esp
+[ALL original-X.esp
+     [NOT original-Y.esp]]
+
+I.e. that original-X-patch.esp should be used when original-X.esp is 
+loaded but should not be used when original-Y.esp is loaded.
+
+Rather than using the [Patch] rule you need to create equivalent pairs 
+of [Conflict] and [Requires] rules instead. Like:
+
+[Conflict message]
+original-X-patch.esp
+original-Y.esp
+
+[Requires message]
+original-X-patch.esp
+original-X.esp
+
 ----------------------------------------------------------------------
 
