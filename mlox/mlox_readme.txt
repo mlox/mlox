@@ -1,5 +1,5 @@
 Name: mlox
-Version: 0.60
+Version: 0.61
 Copyright 2014 John Moonsugar <john.moonsugar@gmail.com>
 License: MIT License (see the file: License.txt)
 ----------------------------------------------------------------------
@@ -455,6 +455,9 @@ o Known Issues
 ==================================================
 o ChangeLog
 
+Version 0.61 - 2015/08/01
+	* URI for checking and downloading new rule-base changed from Google
+	  Code to SourceForge [Dragon32]
 Version 0.60 - 2014/09/07
 	* mlox will now skip reporting an error if it fails to make a 
 	  connection when downloading the rule-base [abot]
