@@ -3,10 +3,10 @@
 # mlox - the elder scrolls Mod Load Order eXpert
 # Copyright 2014 by John Moonsugar
 # Distributed as part of the mlox project:
-#   http://code.google.com/p/mlox/
+#   http://sourceforge.net/p/mlox/
 # under the MIT License:
-#   http://code.google.com/p/mlox/source/browse/trunk/License.txt
-Version = "0.60"
+#   http://sourceforge.net/p/mlox/code/HEAD/tree/trunk/License.txt
+Version = "0.61"
 
 import locale
 import os
@@ -1336,7 +1336,7 @@ class loadorder:
 
         # last rules from mlox_base.txt
         if not parser.read_rules("mlox_base.txt", progress):
-            Msg.add(_["Error: unable to open mlox_base.txt database. You must run mlox in the directory where mlox_base.txt lives. If you have not already done so, please download it from http://code.google.com/p/mlox/downloads/list and install mlox_base.txt in your mlox directory."])
+            Msg.add(_["Error: unable to open mlox_base.txt database. You must run mlox in the directory where mlox_base.txt lives. If you have not already done so, please download it from http://sourceforge.net/projects/mlox/files/mlox/ and install mlox_base.txt in your mlox directory."])
             progress.Destroy()
             return(self)
         if progress != None:
@@ -1748,7 +1748,7 @@ def print_version():
 
 def update_mloxdata():
     fname = 'mlox-data.7z'
-    durl = 'https://mlox.googlecode.com/svn/trunk/downloads/%s' % fname
+    durl = 'https://svn.code.sf.net/p/mlox/code/trunk/downloads/%s' % fname
     ok = True
     try:
         d = urllib.urlopen(durl)
