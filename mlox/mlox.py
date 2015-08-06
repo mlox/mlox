@@ -1817,15 +1817,6 @@ if __name__ == "__main__":
     if float(pyversion) < 2.5:
         print _["This program requires Python version 2.5."]
         sys.exit(1)
-    # run under psyco if available
-    do_psyco = False
-    try:
-        import psyco
-        psyco.full()
-        do_psyco = True
-        Dbg.add("Running under Pysco!")
-    except:
-        pass
     # process command line arguments
     Dbg.add("Command line: %s" % " ".join(sys.argv))
     try:
