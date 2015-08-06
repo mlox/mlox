@@ -1063,13 +1063,13 @@ class loadorder:
 
     def find_game_dirs(self):
         cwd = caseless_dirlist() # start our search in our current directory
-        self.gamedir = cwd.find_parent_dir("Morrowind.exe")
+        self.gamedir = cwd.find_parent_dir("Morrowind.ini")
         if self.gamedir != None:
-            Opt._Game = "Morrowind" # we found Morrowind.exe
+            Opt._Game = "Morrowind"
             self.datadir = caseless_dirlist(self.gamedir.find_path("Data Files"))
         else:
-            self.gamedir = cwd.find_parent_dir("Oblivion.exe")
-            if self.gamedir != None: # we found Oblivion.exe
+            self.gamedir = cwd.find_parent_dir("Oblivion.ini")
+            if self.gamedir != None:
                 Opt._Game = "Oblivion"
                 self.datadir = caseless_dirlist(self.gamedir.find_path("Data"))
             else:
