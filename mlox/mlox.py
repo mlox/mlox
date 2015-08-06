@@ -1775,9 +1775,14 @@ def update_mloxdata():
 
             if ok:
                 print 'File %s downloaded' % fname
-                #print('7za.exe e "%s" -aoa' % fname)
-                cmd = '7za.exe e "%s" -aoa' % fname
-                if subprocess.call(cmd) == 0:
+                cmd = '7za e "%s" -aoa' % fname
+                runcmd = -1
+                try:
+                    runcmd = subprocess.call(cmd,shell=True)
+                except:
+                    print("Exception while trying to execute command:  %s" % cmd)
+
+                if runcmd == 0:
                     print("mlox_base.txt updated from %s" % fname)
                 else:
                     print("Error while extracting from %s" % fname)
