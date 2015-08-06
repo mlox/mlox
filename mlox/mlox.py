@@ -264,8 +264,7 @@ _ = load_translations(Lang)
 def unify(s):
     """For GUI text areas that may contain filenames, we guess at the encoding."""
     #using melchor's workaround:
-    #return(s.decode("ascii", "replace").encode("ascii", "replace"))
-    return s
+    return(s.decode("ascii", "replace").encode("ascii", "replace"))
 
 def format_version(ver):
     """convert something we think is a version number into a canonical form that can be used for comparison"""
