@@ -1757,7 +1757,6 @@ def update_mloxdata():
         print 'Error connecting to %s, skipping mlox data update.' % durl
  
     if ok:
-        print d.info()
         if os.path.isfile(fname):
             fsize = os.stat(fname).st_size
             print 'Current %s size: %d' % (fname,fsize)
@@ -1766,7 +1765,8 @@ def update_mloxdata():
             update = int(dsize) != int(fsize)
         else:
             update = 1
-        if update: 
+        if update:
+            print 'Updating %s' % fname
             try:
                 d = urllib.urlretrieve(durl,fname)
             except:
