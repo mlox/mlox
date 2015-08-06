@@ -1780,6 +1780,7 @@ def update_mloxdata():
             if ok:
                 print 'File %s downloaded' % UPDATE_FILE
                 cmd = '7za e "%s" -aoa' % UPDATE_FILE
+                cmd += ' > /dev/null'
                 runcmd = -1
                 try:
                     runcmd = subprocess.call(cmd,shell=True)
