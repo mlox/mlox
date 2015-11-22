@@ -23044,7 +23044,21 @@ ImperialLegionUniform.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Imperial Presence 1.3 [cml33]
+;; @Imperial Presence 1.14 [cml33]
+
+[Conflict]
+ Only use one version of the plugin:
+  Imperial Presence.esp - The normal version
+  Imperial Presence (No SN).esp - Version without the new Census and Excise Quarters.
+ (Ref: "Imperial Presence.txt" and "Imperial Presence (No SN).txt")
+Imperial Presence.esp
+Imperial Presence (No SN).esp
+
+[Conflict]
+ "[Imperial Presence (No SN).esp] won't work [with] the the NOM patch."
+ (Ref: "Imperial Presence (No SN).txt")
+Imperial Presence (No SN).esp
+Imperial Presence (NOM Patch).esp
 
 [Patch]
  (Ref: "Imperial Presence.txt")
@@ -23055,10 +23069,15 @@ Imperial Presence (NOM Patch).esp
 [Order]
 Imperial Presence.esp
 Imperial Presence (NOM Patch).esp
+
+;;"the Imperial Presence NOM patch should load after NOM 3.0 not before."
+;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24071688
+[Order]
 NoM 3.0.esp
+Imperial Presence (NOM Patch).esp
 
 [Conflict]
- "[cml33's "Imperial Presence"] include my Census and Excise Office Quarters mod."
+ "[cml33's "Imperial Presence"] include[s his] Census and Excise Office Quarters mod."
  (Ref: "Imperial Presence.txt")
 Imperial Presence.esp
 Census and Excise Office Quarters.esp
