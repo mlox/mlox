@@ -75,6 +75,9 @@ Bloodmoon.esm
 Morrowind Patch *.esm
 ;;MPP from Trancemaster_1988's "Morrowind Rebirth"
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
+;;Script Improvements 1.14 [Grond1911], q.v.
+gr_ScriptImprovements.esm
+gr_ScriptImprovements.esp
 ;;arvisrend's Morrowind fixes 0.5 [arvisrend], q.v.
 arvisrend - fixes - books.ESP
 arvisrend - fixes - dialogue.ESP
@@ -965,6 +968,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Advanced Persuasion.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -977,14 +981,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -1702,6 +1705,7 @@ Almilia's daughters 4.0.esp
 LGNPC_Detect.esp
 LGNPC_NoLore.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -1714,14 +1718,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -2809,6 +2812,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 AprogasVampire WakimImprovements.20021210.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -2821,19 +2825,19 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
 
 ;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
 [Order]
@@ -4373,6 +4377,142 @@ Atmospheric Balmora for VBA.ESP
 [Order]
 Vality's Balmora Addon.esp
 Atmospheric Balmora for VBAnIW.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Atmospheric Plazas 1.1 [hollaajith]
+
+[Conflict]
+ "Activate one of the following ESPs:
+   Atmospheric Plazas - WG.esp -- For those use Windows Glow
+   Atmospheric Plazas - IlluWind.esp -- For those who use Illuminated Windows
+   Atmospheric Plaza.esp -- For those who use neither"
+ (Ref: "Atmospheric Plazas - Readme.txt")
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Requires]
+ "For those who use Illuminated Windows"
+ (Ref: "Atmospheric Plazas - Readme.txt")
+Atmospheric Plazas - IlluWind.ESP
+Illuminated Windows v1.2.esp
+
+[Requires]
+ "For those use Windows Glow"
+ (Ref: "Atmospheric Plazas - Readme.txt")
+Atmospheric Plazas - WG.ESP
+[ANY Windows Glow.esp
+     abotWindowsGlow.esp]
+
+[Conflict]
+ "[hollaajith's "Atmospheric Plazas"] is currently incompatible with both MCA, RoHT and anything else that add to the plazas."
+ (Ref: https://forums.nexusmods.com/index.php?/topic/1834440-atmospheric-plazas/?p=34491075 )
+[ANY Rise of House Telvanni.esm
+     MCA.esm]
+[ANY Atmospheric Plazas - IlluWind.ESP
+     Atmospheric Plazas - WG.ESP
+     Atmospheric Plazas.ESP]
+
+;;"My mod should load after both of those mods" - Windows Glow and TLM
+;;Ref: https://forums.nexusmods.com/index.php?/topic/1834440-atmospheric-plazas/?p=27856154
+[Order]
+Illuminated Windows v1.2.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+Windows Glow.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+abotWindowsGlow.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+;;My Atmospheric Plaza mod needs to load after lighing mods like True Lights and darkness which alter cell lighting or any mod that do changes the cell of the vivec plazas.
+;;http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24165104
+[Order]
+LBS_addon_hvy_v1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+LBS_addon_Hvy_VD_v1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+LBS_addon_lt_v1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+LBS_addon_lt_VD_v1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+LBS_addon_reg_v1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+LBS_addon_reg_VD_v1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+Lights 300 v5.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+True_Lights_And_Darkness_0.5.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+True_Lights_And_Darkness_1.1.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+TLM - Ambient Light + Fog Update.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+TLM - Complete.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
+
+[Order]
+Nemon's_Vivec_Interiorator.esp
+Atmospheric Plazas - IlluWind.ESP
+Atmospheric Plazas - WG.ESP
+Atmospheric Plazas.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7180,6 +7320,116 @@ BPC_MWSE_1.2.esp
  ! http://web.archive.org/web/20080308192235/http://home1.gte.net/cdcooley/BPC_MWSE_1.2.zip
  ! http://mw.modhistory.com/download--5598
 BPC_MWSE_1.1.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Robes 0.3.1 [Moranar]
+
+[Requires]
+ "Requirements: [...] Better Bodies 2.2 or later."
+ (Ref: "Better Robes ENG-42773-0-3-1.7z\ReadMe.txt")
+Better Robes.ESP
+Better Bodies.esp
+
+[Conflict]
+ "If you want to use [Moranar's "Better Robes"] with Ice NioLiv Robe Replacer or CanadianIce Robe Replacer just don't activate esp in launcher."
+ (Ref: "Better Robes ENG-42773-0-3-1.7z\ReadMe.txt")
+Better Robes.ESP
+[ANY IceNioLivRobeReplacerALL.esp
+     IceNioLivRobeReplacerMW.esp
+     IceNioLivRobeReplacerTB.esp
+     IceNioLivRobeReplacerBM.esp
+     IceNioLivRobeReplacerPLUS.esp
+     IceBradyHurdyRobeReplacerALL.esp
+     IceBradyHurdyRobeReplacerMW.esp
+     IceBradyHurdyRobeReplacerTB.esp
+     IceBradyHurdyRobeReplacerBM.esp
+     IceBradyHurdyRobeReplacerPLUS.esp]
+
+;;Tamriel Rebuilt add-on
+
+[Patch]
+ "If you use Tamriel Rebuilt [...] there is patch for this plugin."
+ (Ref: "Better Robes ENG-42773-0-3-1.7z\ReadMe.txt")
+Better Robes TR.esp
+[ALL Better Robes.ESP
+     TR_Data.esm
+     TR_Mainland.esm]
+
+;;Unique Finery add-on
+
+[Conflict]
+ You should be using Moranar's version of Alaisiagae's "Unique Finery Replacer", it is bundled in the "Better Robes" archive.
+ (Ref: "Better Robes ENG-42773-0-3-1.7z\ReadMe.txt")
+[ANY [DESC !/This version is compatible with Better Robes and Better Clothes./ UFR_v3dot2.esp]
+     UniqueFinery.esp]
+Better Robes.ESP
+
+[Requires]
+ "This patch [of "Unique Finery Replacer"] also adopts shoes from UFR to Better bodies and requires Better Clothes too."
+ (Ref: "Better Robes ENG-42773-0-3-1.7z\ReadMe.txt")
+[DESC /This version is compatible with Better Robes and Better Clothes./ UFR_v3dot2.esp]
+[ALL Better Bodies.esp
+     [ANY Better Clothes_v1.1.esp
+          Better Clothes_v1.1_nac.esp]]
+
+;;"[Moranar's] Better Robes should load before Unique Finery"
+;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24092866
+
+[Order]
+Better Robes.ESP
+UFR_v3dot2.esp
+
+;; patch for Animated Morrowind by Spirithawke
+
+[Patch]
+ "Better Robes [...] changes the slot assignments and in some cases the slot sequence of most of the robes it affects from the GOTY slot assignments and slot sequence.  This causes compatibility problems with other mods such as Animated Morrowind.  ["Better Robes Patch" by Spirithawke] resets all affected robes back to their GOTY slot assignments and sequence."
+ (Ref: "Better Robes_v0.3.1 Patch Readme.txt")
+ Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/42773/
+Better Robes_v0.3.1 Patch.esp
+[ALL Better Robes.ESP
+     [ANY Animated_Morrowind - merged.esp
+          Animated Morrowind 1.0.esp
+          Animated Morrowind II.esp]]
+
+[Patch]
+ "Better Robes [...] changes the slot assignments and in some cases the slot sequence of most of the robes it affects from the GOTY slot assignments and slot sequence.  This causes compatibility problems with other mods such as Animated Morrowind.  ["Better Robes Patch" by Spirithawke] resets all affected robes back to their GOTY slot assignments and sequence."
+ (Ref: "Better Robes_v0.3.1 Patch Readme.txt")
+ Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/42773/
+Better Robes TR_Patch.esp
+[ALL Better Robes.ESP
+     Better Robes TR.esp
+     TR_Data.esm
+     TR_Mainland.esm
+     [ANY Animated_Morrowind - merged.esp
+          Animated Morrowind 1.0.esp
+          Animated Morrowind II.esp]]
+
+[Patch]
+ "Better Robes [...] changes the slot assignments and in some cases the slot sequence of most of the robes it affects from the GOTY slot assignments and slot sequence.  This causes compatibility problems with other mods such as Animated Morrowind.  ["Better Robes Patch" by Spirithawke] resets all affected robes back to their GOTY slot assignments and sequence."
+ (Ref: "Better Robes_v0.3.1 Patch Readme.txt")
+ Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/42773/
+UFR_v3dot2_Patch.esp
+[ALL Better Robes.ESP
+     [DESC /This version is compatible with Better Robes and Better Clothes./ UFR_v3dot2.esp]
+     [ANY Animated_Morrowind - merged.esp
+          Animated Morrowind 1.0.esp
+          Animated Morrowind II.esp]]
+
+;;"All three patch esps are set to one hour after the esp they are meant to modify, so this should minimize Load Order issues."
+;;Ref: Better Robes_v0.3.1 Patch Readme.txt
+;;Dragon32: TESPCD shows no conflicts between Better Robes itself and Animated Morrowind
+[Order]
+Better Robes.ESP
+Better Robes_v0.3.1 Patch.esp
+
+[Order]
+Better Robes TR.esp
+Better Robes TR_Patch.esp
+
+[Order]
+UFR_v3dot2.esp
+UFR_v3dot2_Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11314,6 +11564,16 @@ Crusaders_of_Tamriel_NO_NPCs.esp
 TC_PuzzleCanal.esp
 TC_PuzzleCanal_PLV.esp
 
+[Conflict]
+ You should use "TC_PuzzleCanal_PLV.esp", a version of "The Crustacean's Puzzle Canal" compatible with PirateLord's "Redesigned Vivec".
+ (Ref: "TCPuzzleCanal Readme.txt")
+TC_PuzzleCanal.esp
+[ANY Redesigned Vivec.esp
+     PW_Redesigned Vivec-Vivec_Expansion.esp
+     Clean Redesigned Vivec - com_mca patch.esp
+     Clean Redesigned Vivec - MCA patch.esp
+     Clean Redesigned Vivec - COM patch.esp]
+
 [Requires]
  "TC_PuzzleCanal_PLV.esp" is a version of "The Crustacean's Puzzle Canal" compatible with PirateLord's "Redesigned Vivec".
  (Ref: "TCPuzzleCanal Readme.txt")
@@ -12216,9 +12476,64 @@ Dark Uvirith Exterior BuUG 1.0.esp
 [Order]
 dh_furn.esp
 dh_furn_stores.esp
+BE_dh_furn_stores .esp
 dh_homes.esp
 BE_dh_homes.esp
 dh_thriftshop.esp
+
+[Order]
+BE_dh_furn_stores .esp
+dh_furn-jms_patch.esp
+
+;;Dragon32: Not sure if these are needed
+;;Ref: http://forums.nexusmods.com/index.php?/topic/1314413-mlox/?p=35755870
+[Order]
+Balmora Expansion v1.4.esp
+BE_dh_furn_stores .esp
+
+[Order]
+Balmora Expansion v1.4+(1.4).esp
+BE_dh_furn_stores .esp
+
+[Order]
+Balmora Expansion - LITE 1.0.esp
+BE_dh_furn_stores .esp
+
+[Order]
+BE+(1.4) Better Looking Morrowind.esp
+BE_dh_furn_stores .esp
+
+[Order]
+Balmora Expansion v1.4.esp
+BE_dh_homes.esp
+
+[Order]
+Balmora Expansion v1.4+(1.4).esp
+BE_dh_homes.esp
+
+[Order]
+Balmora Expansion - LITE 1.0.esp
+BE_dh_homes.esp
+
+[Order]
+BE+(1.4) Better Looking Morrowind.esp
+BE_dh_homes.esp
+
+[Order]
+BE_dh_furn_stores .esp
+Bob's Banners.esp
+
+[Order]
+dh_furn_stores.esp
+Bob's Banners.esp
+
+[Order]
+BE_dh_furn_stores .esp
+NG_New_Carnithus'_Armamentarium.esp 
+
+[Order]
+dh_furn_stores.esp
+NG_New_Carnithus'_Armamentarium.esp
 
 [Requires]
  "[DH_FURN.ESP is] needed for the dh_furn_stores.esp and dh_thriftshop.esp to work."
@@ -13160,6 +13475,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Djangos Dialogue.ESP
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -13172,14 +13488,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -13433,6 +13748,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 dracandrosvoice.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -13445,14 +13761,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -16256,7 +16571,7 @@ Eldar Plug In.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Follow Me! v1.0 [Shade the Bandit]
+;; @Follow Me! 1.0 [Shade the Bandit]
 
 [Conflict]
  Choose ONLY ONE of these plugins.
@@ -16274,6 +16589,7 @@ LGNPC_NoLore.esp
 FollowMe.esp
 FollowMeMWOnly.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -16286,14 +16602,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -17488,6 +17803,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Give your orders v13.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -17500,14 +17816,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -18224,14 +18539,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -18768,6 +19082,27 @@ True_Lights_And_Darkness_1.1.esp
 ;;[Order]
 ;;Expanded Sounds.esp
 ;;Graphic Herbalism.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Graphic Herbalism Addons 1.0a [ManaUser, Spiffyman, Skrawafunda, Anonytroll]
+
+;;Tamriel Rebuilt
+
+;;Dragon32: rules from "Graphic Herbalism 1.3 [ManaUser, Skrawafunda]" cover off current release. Will need changing if this gets updated for latest TR.
+
+;;Tomb of the Snow Prince
+[Patch]
+ "Graphic Herbalism TotSP" adds Graphic Herbalism functionality to the Tomb of the Snow Prince mod.
+ Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43829/
+ (Ref: "README - Graphic Herbalism - TotSP Addon.txt")
+Graphic Herbalism TotSP.esp
+[ALL Graphic Herbalism.esp
+     wl_SolstheimOverhaul_v1.esm]
+
+[Order]
+Graphic Herbalism.esp
+Graphic Herbalism TotSP.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21675,6 +22010,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Hold it - replacer.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -21687,14 +22023,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -22201,6 +22536,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 k_howareyou.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -22213,19 +22549,19 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
 
 ;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
 [Order]
@@ -24061,6 +24397,7 @@ Josie's Entertainers.esp
  (Ref: "josie_entertainers_readme.txt")
 Josie's Entertainers.esp
 [ANY LGNPC_Aldruhn_v<VER>.esp
+     LGNPC_Aldruhn.esp
      LGNPC_MaarGan.esp
      LGNPC_Pelagiad.esp
      LGNPC_TelMora_v<VER>.esp]
@@ -25612,6 +25949,10 @@ LeveledMagicka.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LGNPC [Less Generic NPCs Project]
 
+;;;
+;; Rules for all LGNPC mods
+;;;
+
 ;; "...regarding the load order of Less Lore and LGNPC NoLore relative to
 ;; each other, I would recommend having Less Lore load first." (cyrano)
 ;; (Ref: http://escf.rethan-manor.net/index.php?topic=1909.msg20857;msg20857 )
@@ -25632,19 +25973,108 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Note]
+ !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
+ !! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_HlaOad_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_MaarGan_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_Pelagiad_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_SeydaNeen_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
+ !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0 )
+[ALL Vampire_Embrace.esp
+     [ANY LGNPC_Aldruhn_suppl.esp
+          LGNPC_HlaOad.esp
+          LGNPC_IndarysManor_v?_??.esp
+          LGNPC_Khuul_v?_??.esp
+          LGNPC_MaarGan.esp
+          LGNPC_PaxRedoran_v?_??.esp
+          LGNPC_Pelagiad.esp
+          LGNPC_SecretMasters_v?_??.esp
+          LGNPC_SeydaNeen.esp
+          LGNPC_TelUvirith.esp
+          LGNPC_VivecFQ.esp
+          LGNPC_VivecRedoran_v?_??.esp]]
+
+[Note]
+ !! "[There is] an unreconciled conflict between most LGNPC mods and Advanced NPCs [by qqqbbb]. Both mods alter the greeting distance for NPCs for use as a dialogue filter potentially breaking the functionality of one mod or the other."
+ !! (Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24254590 )
+[ALL ANPC.esp
+     [ANY LGNPC_NoLore.esp
+          LGNPC_Merged_OM.esp
+          LGNPC_Merged_Lt.esp
+          LGNPC_HlaOad_OM.esp
+          LGNPC_Khuul_OM.esp
+          LGNPC_MaarGan_OM.esp
+          LGNPC_Pelagiad_OM.esp
+          LGNPC_SeydaNeen_OM.esp
+          LGNPC_VivecFQ_OM.esp
+          LGNPC_VivecRedoran_OM.esp
+          LGNPC_SeydaNeen.esp
+          LGNPC_GnaarMok_v?_??.esp
+          LGNPC_AldVelothi_v?_??.esp
+          LGNPC_MaarGan.esp
+          LGNPC_HlaOad.esp
+          LGNPC_Aldruhn.esp
+          LGNPC_Aldruhn_suppl.esp
+          LGNPC_Pelagiad.esp
+          LGNPC_TelMora_v?_??.esp
+          LGNPC_Khuul_v?_??.esp
+          LGNPC_VivecFQ.esp
+          LGNPC_TelUvirith.esp
+          LGNPC_SecretMasters_v?_??.esp
+          LGNPC_IndarysManor_v?_??.esp
+          LGNPC_VivecRedoran.esp
+          LGNPC_PaxRedoran_v?_??.esp
+          LGNPC_SoulSicknessPatch_v?_??.esp]]
+
+;;;
+;;LGNPC Ald Velothi
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_AldVelothi_v<VER>.esp]
+
+;;;
+;;LGNPC Ald'Ruhn and Supplement
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.30 LGNPC_Aldruhn_v<VER>.esp]
+[VER < 1.30 LGNPC_Aldruhn.esp]
+
+;; Dragon32: Designed to be used alongside LGNPC Aldruhn, but it will stand on its own.
+;; (Ref: LGNPC_Aldruhn_Suppl_Readme.txt)
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.30 LGNPC_Aldruhn_v<VER>_suppl.esp]
+[VER < 1.30 LGNPC_Aldruhn_suppl.esp]
+
+;;;
+;;LGNPC Gnaar Mok
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_GnaarMok_v<VER>.esp]
+
+;;;
+;;LGNPC Hla Oad
+;;;
 
 ;;expdep
 [Requires]
@@ -25653,12 +26083,107 @@ LGNPC_HlaOad.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.40 LGNPC_HlaOad_v<VER>.esp]
+[VER < 1.40 LGNPC_HlaOad.esp]
+
+;;;
+;;LGNPC Indarys Manor
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.51 LGNPC_Indarys*Manor_v<VER>.esp]
+
+;; Dragon32: Recommended to load after HotFusion's "Dreamers Awakened".
+;; (Ref: LGNPC_IndarysManor_Readme.txt)
+[Order]
+DreamersAwakenedv1.0.esp
+LGNPC_IndarysManor_v?_??.esp
+
+;;;
+;;LGNPC Khuul
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 2.21 LGNPC_Khuul_v<VER>.esp]
+
+;;;
+;;LGNPC Maar Gan
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.30 LGNPC_MaarGan_v<VER>.esp]
+[VER < 1.30 LGNPC_MaarGan.esp]
+
+;;;
+;;LGNPC No Lore
+;;;
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.02 LGNPC_NoLore_v<VER>.esp]
+[VER < 1.02 LGNPC_NoLore.esp]
+
+;;Theoretical conflict with other plugins that fix the Nerevarine greeting. While the method may be different from other mods, the result is pretty much the same. LGNPC's early date stamp will allow the changes by other mods to prevail
+;; (Ref: LGNPC_NoLore_Readme.txt)
+;; Dragon32: Load order here is following the general rule that we load generic dialogue mods (i.e. Nerevarine greeting tweaks) before specific dialogue mods (i.e. the LGNPC series).
+
+;; lfx_nerevarine_greetings by Alphax
+[Order]
+lfx_nerevarine_greetings.esp
+LGNPC_NoLore.esp
+
+;; Nerevarine Greeting tweaks by Glassboy
+[Order]
+Nerevarine Greeting tweaks.esp
+LGNPC_NoLore.esp
+
+;; No More 'Excuse Me Nerevarine' by Raptormeat
+[Order]
+ExcuseMe.esp
+LGNPC_NoLore.esp
+
+;;;
+;;LGNPC Pax Redoran
+;;;
+
 ;; expdep
 [Requires]
  Uses Tribunal function: forcerun.
 LGNPC_PaxRedoran_v1_20.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
+
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.20 LGNPC_PaxRedoran_v<VER>.esp]
+
+[Conflict]
+ "Join All Houses" by Heph will break some Pax Redoran quests, and likely create other odd results.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC_PaxRedoran_v?_??.esp
+Join All Houses.esp
+
+[Conflict]
+ "Marandus Abode" by Princess Stomper will break the 'Marandus' quests.
+ (Ref: LGNPC_PaxRedoran_Readme.txt)
+LGNPC_PaxRedoran_v?_??.esp
+[ANY Marandus Abode.esp
+     Marandus Abode MCA Patch.esp]
+
+;;;
+;;LGNPC Pelagiad
+;;;
 
 ;;expdep
 [Requires]
@@ -25670,69 +26195,40 @@ LGNPC_Pelagiad.esp
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_Aldruhn_v<VER>.esp]
-
-;; Dragon32: Designed to be used alongside LGNPC_Aldruhn_v1_20, but it will stand on its own.
-;; (Ref: LGNPC_Aldruhn_Suppl_Readme.txt)
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.23 LGNPC_Aldruhn_v<VER>_suppl.esp]
-[VER < 1.23 LGNPC_Aldruhn_suppl.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_AldVelothi_v<VER>.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_GnaarMok_v<VER>.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.40 LGNPC_HlaOad_v<VER>.esp]
-[VER < 1.40 LGNPC_HlaOad.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.51 LGNPC_Indarys*Manor_v<VER>.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 2.21 LGNPC_Khuul_v<VER>.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.30 LGNPC_MaarGan_v<VER>.esp]
-[VER < 1.30 LGNPC_MaarGan.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.02 LGNPC_NoLore_v<VER>.esp]
-[VER < 1.02 LGNPC_NoLore.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_PaxRedoran_v<VER>.esp]
-
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
 [VER < 1.32 LGNPC_Pelagiad_v<VER>.esp]
 [VER < 1.32 LGNPC_Pelagiad.esp]
+
+;;;
+;;LGNPC Secret Masters
+;;;
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
 [VER < 1.30 LGNPC_Secret*Masters_v<VER>.esp]
+
+;;There is a possible conflict with other mods that add the medium Armor master trainer. Compatibility may be restored if LGNPC Secret Masters loads after them. A script disables all but one of her.
+;; Ref: LGNPC_SecretMasters_Readme.txt
+;;Cyran0: "LGNPC Secret Masters places Cinia Urtius at the docks of Tel Fyr. Since other mods also restore this missing master trainer (not limited to the Unofficial Morrowind Patch/Morrowind Patch Project), we added a script to her that would disable all but one of her. Which copy of Cinia Urtius survives the purge depends upon the order in which they are encountered. The UMP placed her at the docks of Tel Fyr so that is where LGNPC placed her. However I have heard of another mod, [Elders of Vvardenfell], that places a copy of Cinia Urtius in Seyda Neen."
+;; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1067011&view=findpost&p=15505958
+;;Dragon32: Thought about a Note, couldn't word it (*if* you are starting a new game you should be ok, *if* you are in the middle of a game you may not be...) too complex.
+[Order]
+Elders 0 Count NPC add-on (Trib & BM).esp
+Elders 0 Count NPC add-on.esp
+LGNPC_Secret_Masters_v?_??.esp
+
+;Dragon32: Unsure if this works with v6.x or v7.x of MCA
+[Patch]
+ "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
+ (Ref: "LGNPC_SecretMasters_Readme.txt")
+LGNPC_SecretMasters_MCA5.esp
+[ALL LGNPC_SecretMasters_v?_??.esp
+     [ANY [DESC /over 1000 friendly/ MCA.ESM]
+          [DESC /over 1200 friendly/ MCA.ESM]]]
+
+;;;
+;;LGNPC Seyda Neen
+;;;
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
@@ -25740,39 +26236,64 @@ LGNPC_Pelagiad.esp
 [VER < 2.00 Lgnpc_SN.esp]
 [VER < 2.00 LGNPC_SeydaNeen.esp]
 
+[Conflict]
+ LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
+ (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
+[VER < 0.32 Lgnpc_SN.esp]
+[ANY Alternate Beginnings 2.esp
+     CharGen_Revamped_v14.esp]
+
+;;;
+;;LGNPC Tel Mora
+;;;
+
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
 [VER < 1.30 LGNPC_TelMora_v<VER>.esp]
 
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_TelUvirith_v<VER>.esp]
-
-;;Dragon32: Old naming convention
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_TelUvirith_UI_v<VER>.esp]
-
-;;Dragon32: New naming convention
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.20 LGNPC_TelUvirith_v<VER>_UI.esp]
+;;;
+;;LGNPC Tel Uvirith
+;;;
 
 [Note]
  ! A newer version is available, check the LGNPC download site:
  ! http://www.lgnpc.org/downloads
-[VER < 2.21 LGNPC_VivecFQ_v<VER>.esp]
-[VER < 2.21 LGNPC_VivecFQ.esp]
+[VER < 1.31 LGNPC_TelUvirith_v<VER>.esp]
+[VER < 1.31 LGNPC_TelUvirith.esp]
+[VER < 1.31 LGNPC_TelUvirith_UI_v<VER>.esp]
+[VER < 1.31 LGNPC_TelUvirith_v<VER>_UI.esp]
 
-[Note]
- ! A newer version is available, check the LGNPC download site:
- ! http://www.lgnpc.org/downloads
-[VER < 1.62 LGNPC_VivecRedoran_v<VER>.esp]
-[VER < 1.62 LGNPC_VivecRedoran.esp]
+;;"Minor conflict with Less Generic Nerevarine that overwrites some of Master Aryon's and Edd Theman's dialogue. This can be mostly resolved by having LGNPC Tel Uvirith load after Less Generic Nerevarine."
+;;Ref: "LGNPC_TelUvirith_Readme.txt"
+[Order]
+Less_Generic_Nerevarine.esp
+LGNPC_TelUvirith.esp
+
+;;"Minor conflict with Uvirith's Legacy that overwrites the content of the book "Future House Telvanni Expansion"."
+;;Ref: "LGNPC_TelUvirith_Readme.txt"
+;;Dragon32: Think the UL changes should be kept for those running that mod.
+[Order]
+LGNPC_TelUvirith.esp
+Uvirith's Legacy_<VER>.esp
+
+;; Assumed that LGNPC Tel Uvirith UI needs to load after Uvirith Inside
+;; See Order notes for other LGNPC mods
+[Order]
+Uvirith Inside.esp
+LGNPC_TelUvirith.esp
+
+;;"Minor conflict with Building up Uvirith's Legacy that overwrites some of Hlendrisa Seleth's dialogue resulting in nconsistencies in her personality."
+;;Ref: "LGNPC_TelUvirith_Readme.txt"
+;;Dragon32: Meh
+
+;;"Mods other than Uvirith Inside may alter the interior of Tel Uvirith to a degree that may render new NPCs and objects inaccessible. Some quests may be broken."
+;;Ref: "LGNPC_TelUvirith_Readme.txt"
+;;Dragon32: Wait for something more concrete
+
+;rules for old, separate Tel Uvirith plugin.
+;"We have discontinued the Uvirith Inside compatible version of LGNPC Tel Uvirith."
+;http://forums.bethsoft.com/topic/1603498-relz-lgnpc-updates-and-news/?p=25168980
 
 [Conflict]
  Use only one plugin:
@@ -25811,88 +26332,25 @@ LGNPC_NoLore.esp
 Uvirith Inside.esp
 LGNPC_TelUvirith_v<VER>_UI.esp
 
+;;;
+;;LGNPC Vivec Foreign Quarter
+;;;
+
 [Note]
- !! "Vampire Embrace" by Cortex shares a dialog filter with many LGNPC mods that could result in problems in both mods, like broken quests and other unexpected outcomes. Some players have reported using these mods together without any perceived problems, but that may be a matter of either not recognizing them or not having encountered situation where a conflict might be triggered.
- !! (Ref: LGNPC_Aldruhn_Suppl_Readme.txt, LGNPC_HlaOad_Readme.txt, LGNPC_IndarysManor_Readme.txt, LGNPC_Khuul_Readme.txt, LGNPC_MaarGan_Readme.txt, LGNPC_PaxRedoran_Readme.txt, LGNPC_Pelagiad_Readme.txt, LGNPC_SecretMasters_Readme.txt, LGNPC_SeydaNeen_Readme.txt, LGNPC_TelUvirith_Readme.txt, LGNPC_VivecFQ_Readme.txt, LGNPC_VivecRedoran_Readme.txt)
- !! (Ref: http://escf.rethan-manor.net/index.php?topic=2333.0 )
-[ALL Vampire_Embrace.esp
-     [ANY LGNPC_Aldruhn_suppl.esp
-          LGNPC_HlaOad.esp
-          LGNPC_IndarysManor_v?_??.esp
-          LGNPC_Khuul_v?_??.esp
-          LGNPC_MaarGan.esp
-          LGNPC_PaxRedoran_v?_??.esp
-          LGNPC_Pelagiad.esp
-          LGNPC_SecretMasters_v?_??.esp
-          LGNPC_SeydaNeen.esp
-          LGNPC_TelUvirith_v?_??.esp
-          LGNPC_TelUvirith_v?_??_UI.esp
-          LGNPC_VivecFQ.esp
-          LGNPC_VivecRedoran_v?_??.esp]]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 2.21 LGNPC_VivecFQ_v<VER>.esp]
+[VER < 2.21 LGNPC_VivecFQ.esp]
 
-;; Dragon32: Recommended to load after HotFusion's "Dreamers Awakened".
-;; (Ref: LGNPC_IndarysManor_Readme.txt)
-[Order]
-DreamersAwakenedv1.0.esp
-LGNPC_IndarysManor_v?_??.esp
+;;;
+;;LGNPC Vivec Redoran Quarter
+;;;
 
-[Conflict]
- "Join All Houses" by Heph will break some Pax Redoran quests, and likely create other odd results.
- (Ref: LGNPC_PaxRedoran_Readme.txt)
-LGNPC_PaxRedoran_v?_??.esp
-Join All Houses.esp
-
-[Conflict]
- "Marandus Abode" by Princess Stomper will break the 'Marandus' quests.
- (Ref: LGNPC_PaxRedoran_Readme.txt)
-LGNPC_PaxRedoran_v?_??.esp
-[ANY Marandus Abode.esp
-     Marandus Abode MCA Patch.esp]
-
-;;There is a possible conflict with other mods that add the medium Armor master trainer. Compatibility may be restored if LGNPC Secret Masters loads after them. A script disables all but one of her.
-;; Ref: LGNPC_SecretMasters_Readme.txt
-;;Cyran0: "LGNPC Secret Masters places Cinia Urtius at the docks of Tel Fyr. Since other mods also restore this missing master trainer (not limited to the Unofficial Morrowind Patch/Morrowind Patch Project), we added a script to her that would disable all but one of her. Which copy of Cinia Urtius survives the purge depends upon the order in which they are encountered. The UMP placed her at the docks of Tel Fyr so that is where LGNPC placed her. However I have heard of another mod, [Elders of Vvardenfell], that places a copy of Cinia Urtius in Seyda Neen."
-;; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=1067011&view=findpost&p=15505958
-;;Dragon32: Thought about a Note, couldn't word it (*if* you are starting a new game you should be ok, *if* you are in the middle of a game you may not be...) too complex.
-[Order]
-Elders 0 Count NPC add-on (Trib & BM).esp
-Elders 0 Count NPC add-on.esp
-LGNPC_Secret_Masters_v?_??.esp
-
-;;Theoretical conflict with other plugins that fix the Nerevarine greeting. While the method may be different from other mods, the result is pretty much the same. LGNPC's early date stamp will allow the changes by other mods to prevail
-;; (Ref: LGNPC_NoLore_Readme.txt)
-;; Dragon32: Load order here is following the general rule that we load generic dialogue mods (i.e. Nerevarine greeting tweaks) before specific dialogue mods (i.e. the LGNPC series).
-
-;; lfx_nerevarine_greetings by Alphax
-[Order]
-lfx_nerevarine_greetings.esp
-LGNPC_NoLore.esp
-
-;; Nerevarine Greeting tweaks by Glassboy
-[Order]
-Nerevarine Greeting tweaks.esp
-LGNPC_NoLore.esp
-
-;; No More 'Excuse Me Nerevarine' by Raptormeat
-[Order]
-ExcuseMe.esp
-LGNPC_NoLore.esp
-
-[Conflict]
- LGNPC Seyda Neen 0.31 conflicts with some mods that change chargen, specifically when the NPC Socucius Ergalla is no longer nolore the dialog for the quest about the murdered taxman gets broken.
- (Ref: http://www.bethsoft.com/bgsforums/index.php?showtopic=937789 )
-[VER < 0.32 Lgnpc_SN.esp]
-[ANY Alternate Beginnings 2.esp
-     CharGen_Revamped_v14.esp]
-
-;Dragon32: Unsure if this works with v6.x or v7.x of MCA
-[Patch]
- "For users of MCA 5.*, using LGNPC_SM_MCA5 will fix a hostile spawn point that will conflict with the location of one of the Secret Masters."
- (Ref: "LGNPC_SecretMasters_Readme.txt")
-LGNPC_SecretMasters_MCA5.esp
-[ALL LGNPC_SecretMasters_v?_??.esp
-     [ANY [DESC /over 1000 friendly/ MCA.ESM]
-          [DESC /over 1200 friendly/ MCA.ESM]]]
+[Note]
+ ! A newer version is available, check the LGNPC download site:
+ ! http://www.lgnpc.org/downloads
+[VER < 1.62 LGNPC_VivecRedoran_v<VER>.esp]
+[VER < 1.62 LGNPC_VivecRedoran.esp]
 
 ;;;
 ;; The "unofficial" Less Generics:
@@ -25974,22 +26432,6 @@ Antares' Tribunal Main QUest.esp
      [ANY Less_Generic_Nerevarine.esp
           Less_Generic_Tribunal.esp]]
 
-;;Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=969677&view=findpost&p=14015832
-[Order]
-Less_Generic_Nerevarine.esp
-LGNPC_PaxRedoran_v?_??.esp
-
-;;Ref: http://escf.rethan-manor.net/index.php?topic=2023.msg23913#msg23913
-[Order]
-Less_Generic_Nerevarine.esp
-LGNPC_TelUvirith_v?_??.esp
-
-;;Ref: http://escf.rethan-manor.net/index.php?topic=2023.msg23913#msg23913
-;;Dragon32: Whilst above post isn't explicit I assume that the Uvirith Inside version of LGNPC Tel Uvirith would benefit from this load order as well
-[Order]
-Less_Generic_Nerevarine.esp
-LGNPC_TelUvirith_v?_??_UI.esp
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @LGNPC Lite - Dialogue Only Edition / Open Morrowind Edition [Less Generic NPCs Project]
@@ -26012,10 +26454,12 @@ LGNPC_TelUvirith_v?_??_UI.esp
 ;;Ref: http://forums.bethsoft.com/topic/1514482-relz-lgnpc-dialogue-only-edition/?p=23901793
 ;;
 ;;Dragon32: Duplicated load order from plugin's Last Modified Dates
+;;Dragon32: "LGNPC_Merged_OM.esp" and "LGNPC_Merged_Lt.esp" have same CRC32 checksum
 [Order]
 Less Lore.esp
 LGNPC_NoLore.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -26028,14 +26472,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -26055,8 +26498,9 @@ LGNPC_SoulSicknessPatch_v?_??.esp
 [Conflict]
  "CONFLICTS:
    - Any other version of LGNPC Hla Oad, Khuul, Maar Gan, Pelagiad, Seyda Neen, Vivec Foreign Quarter and Vivec Redoran."
- (Ref: "LGNPC_Merged_OM_Readme.txt")
-LGNPC_Merged_OM.esp
+ (Ref: "LGNPC_Merged_OM_Readme.txt", "LGNPC_Merged_Lt_Readme.txt")
+[ANY LGNPC_Merged_OM.esp
+     LGNPC_Merged_Lt.esp]
 [ANY LGNPC Gowns.esp
      LGNPC_HlaOad_OM.esp
      LGNPC_HlaOad.esp
@@ -26935,6 +27379,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Lore Fix.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -26947,19 +27392,19 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
+
 
 ;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
 [Order]
@@ -34792,6 +35237,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Nasty Camonna Tong.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -34804,14 +35250,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -36837,6 +37282,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 NPC Functionality.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -36849,14 +37295,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -37188,6 +37633,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Nudity Greeting Expansion V1.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -37200,14 +37646,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -38478,6 +38923,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 P.R.E. v4.0.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -38490,14 +38936,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -42099,6 +42544,62 @@ SotLF Female Shadow Cuirass v1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Script Improvements 1.14 [Grond1911]
+
+;; See also [NearStart]
+
+;;"so it should load after Bloodmoon (and Morrowind Patch Project, ideally)"
+;; ref: "gr_ScriptImprovements.txt"
+[Order]
+Morrowind Patch *.esm
+gr_ScriptImprovements.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+gr_ScriptImprovements.esm
+
+[Conflict]
+ Use only one version of "Script Improvements" by Grond1911.
+ (Ref: "gr_ScriptImprovements.txt")
+gr_ScriptImprovements.esm
+gr_ScriptImprovements.esp
+
+[Conflict]
+ "Huskobar's "GotY Script Tidy" will undo all of ["Script Improvements'"] script improvements (which defeats the whole purpose) if you use an .esp version of ["GotY Script Tidy"]. If you feel the need to use [Huskobar's "GotY Script Tidy"] at all, use an .esm version [..] and the .esp version of ["Script Improvements" by Grond1911], to make sure ["Script Improvements"] loads later."
+ (Ref: "gr_ScriptImprovements.txt")
+[ANY GOTYFullTidySomeMPPv2.01.esp
+     GOTYMinImpactSomeMPPv2.01.esp
+     GOTYScriptTidy(CommentsIn).esp
+     GOTYSTMPPPatchv1.0.esp]
+gr_ScriptImprovements.esm
+
+;Dragon32: Just in case
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+gr_ScriptImprovements.esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+gr_ScriptImprovements.esp
+
+[Order]
+GOTYScriptTidy(CommentsIn).esp
+gr_ScriptImprovements.esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+gr_ScriptImprovements.esp
+
+[Conflict]
+ "If you feel the need to use [Huskobar's "GotY Script Tidy"] at all, use an .esm version [..] and the .esp version of ["Script Improvements" by Grond1911], to make sure ["Script Improvements"] loads later."
+ (Ref: "gr_ScriptImprovements.txt")
+[ANY GOTYFullTidySomeMPPv2.01.esm
+     GOTYFullTidyZeroMPPv2.01.esm
+     GOTYMinImpactSomeMPPv2.01.esm]
+gr_ScriptImprovements.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Scripted Spells 1.5 [Cortex]
 
 [Conflict]
@@ -44570,14 +45071,13 @@ LGNPC Gowns.esp
      LGNPC_AldVelothi_v?_??.esp
      LGNPC_MaarGan.esp
      LGNPC_HlaOad.esp
-     LGNPC_Aldruhn_v?_??.esp
+     LGNPC_Aldruhn.esp
      LGNPC_Aldruhn_suppl.esp
      LGNPC_Pelagiad.esp
      LGNPC_TelMora_v?_??.esp
      LGNPC_Khuul_v?_??.esp
      LGNPC_VivecFQ.esp
-     LGNPC_TelUvirith_v?_??.esp
-     LGNPC_TelUvirith_v?_??_UI.esp
+     LGNPC_TelUvirith.esp
      LGNPC_SecretMasters_v?_??.esp
      LGNPC_IndarysManor_v?_??.esp
      LGNPC_VivecRedoran.esp
@@ -45133,6 +45633,12 @@ LGNPC_Aldruhn_v?_??.esp
 Stinkers.esp
 StinkersBE.esp
 
+;;Dragon32: Assume still relevant for later versions of LGNPC Ald'Ruhn
+[Order]
+LGNPC_Aldruhn.esp
+Stinkers.esp
+StinkersBE.esp
+
 [Patch]
  "[Stinkers v2 - Mod Compatibility.esp] is to be used with mods designed to be compatible with The Bathing Mod v2. It resets the scripts for activators from the Modder's Resource, to insure that they work as intended."
  Download "Stinkersv2__Mod_Compatibility.7z" from Morrowind Modding History:
@@ -45316,11 +45822,16 @@ Stinkers + LGNPC Ald Ruhn Patch.ESP
  http://morrowind.nexusmods.com/mods/42536
 Stinkers + LGNPC Ald Ruhn Patch.ESP
 [ALL Stinkers.esm
-     LGNPC_Aldruhn_v?_??.esp]
+     [ANY LGNPC_Aldruhn_v?_??.esp
+          LGNPC_Aldruhn.esp]]
 
 ;;Ref: http://morrowind.nexusmods.com/mods/42536
 [Order]
 LGNPC_Aldruhn_v?_??.esp
+Stinkers + LGNPC Ald Ruhn Patch.ESP
+
+[Order]
+LGNPC_Aldruhn.esp
 Stinkers + LGNPC Ald Ruhn Patch.ESP
 
 [Patch]
@@ -45328,11 +45839,16 @@ Stinkers + LGNPC Ald Ruhn Patch.ESP
  http://morrowind.nexusmods.com/mods/42536
 Stinkers BE + LGNPC Ald Ruhn Patch.ESP
 [ALL StinkersBE.esm
-     LGNPC_Aldruhn_v?_??.esp]
+     [ANY LGNPC_Aldruhn_v?_??.esp
+          LGNPC_Aldruhn.esp]]
 
 ;;Ref: http://morrowind.nexusmods.com/mods/42536
 [Order]
 LGNPC_Aldruhn_v?_??.esp
+Stinkers BE + LGNPC Ald Ruhn Patch.ESP
+
+[Order]
+LGNPC_Aldruhn.esp
 Stinkers BE + LGNPC Ald Ruhn Patch.ESP
 
 [Conflict]
@@ -46191,24 +46707,33 @@ Tales of Tel Branora.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @TR (Tamriel Rebuilt) 14.08 [Tamriel Rebuilt team]
+;; @Tamriel_Data 1.0 [Cross-Project Coordination]
+
+[Order]
+Morrowind Patch *.esm
+Tamriel_Data.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Tamriel_Data.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @TR (Tamriel Rebuilt) 16.09 [Tamriel Rebuilt team]
+
+;;Dragon32: Removed version check as nothing in Description field of 16.09
+;[Note]
+; ! There is a new version of "Tamriel Rebuilt" available. You should upgrade!
+; ! http://www.nexusmods.com/morrowind/mods/42145/
+;[ANY [DESC !/v. / TR_Data.esm]
+;     [VER <14.08 TR_Data.esm]]
+;[ANY [DESC !/v. / TR_Mainland.esm]
+;     [VER <14.08 TR_Mainland.esm]]
+;[ANY [DESC !/v. / TR_Alpha.ESP]
+;     [VER <14.08 TR_Alpha.ESP]]
 
 [Note]
- ! There is a new version of "Tamriel Rebuilt" available. You should upgrade!
- ! http://www.nexusmods.com/morrowind/mods/42145/
-[ANY [DESC !/v. / TR_Data.esm]
-     [VER <14.08 TR_Data.esm]]
-[ANY [DESC !/v. / TR_Mainland.esm]
-     [VER <14.08 TR_Mainland.esm]]
-[ANY [DESC !/v. / TR_Alpha.ESP]
-     [VER <14.08 TR_Alpha.ESP]]
-
-[Order]
-Morrowind Patch *.esm
-TR_Data.esm
-
-[Order]
-Morrowind Rebirth <VER> - Morrowind Patch *.esm
+ !! You do not need to use the old "TR_Data.esm" master file with releases of Tamriel Rebuilt after 16.09
 TR_Data.esm
 
 [Order]
@@ -46219,27 +46744,38 @@ TR_Mainland.esm
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 TR_Mainland.esm
 
-;;Dragon32: Removed Bloodmoon.esm from Order rule as [NearStart] section ensures Bethesda ESMs load first
+;;Dragon32: Neatness really
 [Order]
-TR_Data.esm
+Tamriel_Data.esm
 TR_Mainland.esm
 
-[Requires]
-TR_Mainland.esm
-TR_Data.esm
+;;Dragon32: Checked with TESPCD
+[Order]
+TR_Preview.esp
+TR_Travels.esp
 
 [Requires]
-TR_Alpha.ESP
-TR_Data.esm
+ "Before installing Tamriel Rebuilt, please ensure that you have [...] Tamriel_Data version 01 or later"
+ Download "Tamriel_Data" by Cross-Project Coordination from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/44537/
+ (Ref: "TR_Readme.txt")
+[ANY TR_Mainland.esm
+     TR_Preview.esp]
+Tamriel_Data.esm
+
+[Requires]
+ (Ref: "TR_Readme.txt")
+TR_Travels.esp
+[ALL Tamriel_Data.esm
+     TR_Mainland.esm
+     TR_Preview.esp]
 
 [Note]
  !! The Tamriel Rebuilt readme says:
  !! "Users who fail to register the BSA correctly will often find that loading Tamriel Rebuilt will result in a lot of "missing meshes/animation" error dialog messages popping up on load, some even fatal. Please double-check your Morrowind.ini file to ensure our Data Archive is registered properly, otherwise the game won’t load."
- !! mlox cannot check if you have made the change to your morrowind.ini
- !! (Ref: "TR_Readme.pdf")
-[ANY TR_Data.esm
-     TR_Mainland.esm
-     TR_Alpha.ESP]
+ !! mlox cannot check if you have made this change to your morrowind.ini
+ !! (Ref: "TR_Readme.txt")
+[ANY TR_Mainland.esm
+     TR_Preview.esp]
 
 [Conflict]
  Do not load Tamriel Rebuilt's old maps ("Map 1 - Telvannis" or "Map 2 - Antediluvian Secrets") with "TR_Mainland.esm", which contains all previously released Tamriel Rebuilt maps.
@@ -46248,8 +46784,8 @@ TR_Mainland.esm
      TR_Map1.esm]
 
 [Conflict]
- "[These are] landmasses that conflict with the [Tamriel Rebuilt] Main Release".
- (Ref: "TR_Readme.pdf")
+ "[These are] landmasses that conflict with the [Tamriel Rebuilt] Mainland".
+ (Ref: "TR_Readme.txt")
 TR_Mainland.esm
 [ANY Bloody Oath_v1.0.esp		; Bloody Oath
      BAR_DarkshroudKeep_v1.2.esp	; Darkshroud Keep
@@ -46270,9 +46806,9 @@ TR_Mainland.esm
      tusar_v1.2.1.esp]			; Island of Tusar
 
 [Conflict]
- "[These are] landmasses that conflict with the [Tamriel Rebuilt] Alpha."
- (Ref: "TR_Readme.pdf")
-TR_Alpha.ESP
+ "[These are] landmasses that conflict with the [Tamriel Rebuilt] Preview."
+ (Ref: "TR_Readme.txt")
+TR_Preview.esp
 [ANY silgrad_tower_internal_release_1-4_6.6.esp	; Silgrad Tower
      silgrad_tower_1-4_6.6.esp			; Silgrad Tower
      Annastia V3.3.esp		     		; Annastia
@@ -46281,13 +46817,14 @@ TR_Alpha.ESP
      FTG.esp]					; Five Toes
 
 ;; moved the TR/Blackmill conflict to the BlackMill section - JMS
+
 ;;Dragon32: moved the TR/Wizards Islands conflict to the Wizards Island section
 
 ;Dragon32: Verified in TESPCD
 [Conflict]
  Gianluca Sabbatini's "GS_Tamriel Part 1: Black Marsh" mod has a landmass conflict with Tamriel Rebuilt.
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
- (Ref: "TR_Readme.pdf")
+ (Ref: "TR_Readme.txt")
 TR_Mainland.esm
 GS_Tamriel Part1_Black Marsh.esp
 
@@ -46295,14 +46832,14 @@ GS_Tamriel Part1_Black Marsh.esp
 [Conflict]
  Gianluca Sabbatini's "GS_Tamriel: Tribute to the Community" includes his "GS_Tamriel Part 1: Black Marsh" mod, which has a landmass conflict with Tamriel Rebuilt.
  (Ref: http://www.mwmythicmods.com/MAPoMODSbyCyronaut.jpg )
- (Ref: "TR_Readme.pdf")
+ (Ref: "TR_Readme.txt")
 TR_Mainland.esm
 GS_Tamriel Tribute to The Comunity.esm
 
 [Conflict]
  Landmass conflict. MJY's "Roman City of Theopolis" uses the same cells as Tamriel Rebuilt's Tel Muthada.
  (Ref: http://forums.bethsoft.com/topic/1379566-relz-tamriel-rebuilt-sacred-east-10/page__view__findpost__p__20899639 )
- (Ref: "TR_Readme.pdf")
+ (Ref: "TR_Readme.txt")
 TR_Mainland.esm
 [ANY Clean Roman city v.4 expansion added #4.esp
      Clean Roman city v.4 MORROWIND ONLY.esp]
@@ -46310,24 +46847,25 @@ TR_Mainland.esm
 [Conflict]
  Landmass conflict.
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=925400&view=findpost&p=13558636 )
- (Ref: "TR_Readme.pdf")
+ (Ref: "TR_Readme.txt")
 [ANY TR_Mainland.esm
-     TR_Alpha.ESP]
+     TR_Preview.esp]
 Beyond YsGramor v2.5.esm
 
 [Conflict]
  "Mountainous Red Mountain replacer which also causes major placement issues [with "Tamriel Rebuilt"], especially in the Velothi Mountains."
  "A workaround can be found here: http://tamriel-rebuilt.org/forum/viewtopic.php?p=323469#323469 "
- (Ref: "TR_Readme.pdf")
-TR_Alpha.ESP
+ (Ref: "TR_Readme.txt")
+[ANY TR_Mainland.esm
+     TR_Preview.esp]
 MRM.esm
 
 [Conflict]
  "The On The Rocks modification, which is known to cause severe placement issues in ["Tamriel Rebuilt"] areas, often blocking cave entrances and roads."
- (Ref: "TR_Readme.pdf")
+ (Ref: "TR_Readme.txt")
  Note that this is due to the use of replacement meshes in "On The Rocks" and not just caused by the "OTR_Coast_Variety.esp" plugin.
 [ANY TR_Mainland.esm
-     TR_Alpha.ESP]
+     TR_Preview.esp]
 OTR_Coast_Variety.esp
 
 [Conflict]
@@ -46383,20 +46921,20 @@ Unique Ocean Landscapes.ESP
 [Conflict]
  Landmass conflict.
  You may wish to use DagothBob's moved version of Havish, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43408/
- (Ref: "TR_Readme.pdf")
-TR_Alpha.ESP
+ (Ref: "TR_Readme.txt")
+TR_Preview.esp
 [SIZE 4646696 Havish.esm]
 
 [Conflict]
  "[MADMAX's "Fishing Academy"] conflicts with Tamriel Rebuilt".
  (Ref: https://www.youtube.com/watch?v=v7o8R_2u17g )
-TR_Alpha.ESP
+TR_Preview.esp
 Fishing Academy v<VER>.esp
 
 [Conflict]
  Landmass conflict.
  You may wish to use Spiffyman's moved version of Booty Island, available from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/39308/
- (Ref: "TR_Readme.pdf")
+ (Ref: "TR_Readme.txt")
 TR_Mainland.esm
 Booty.esp
 
@@ -46536,6 +47074,143 @@ TR1_Herbalism.esp
 [Order]
 Herbalismv1.3(Tribunal).esp
 TR1_Herbalism.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tamriel Rebuilt Transport Links 2.0 [HowlingSnail]
+
+[Requires]
+ (Ref: "TR_TransportReadme.txt")
+TR_TransportLinks.ESP
+[ALL TR_Data.esm
+     TR_Mainland.esm]
+
+;Dragon32: v1.0 just because
+[Requires]
+ (Ref: "TR_TransportReadme.txt")
+TR_Transport.ESP
+[ALL TR_Data.esm
+     TR_Map1.esm
+     TR_Map2.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Tamrielic Lore 2.1 [PikachunoTM]
+
+[Order]
+Morrowind Patch *.esm
+Tamrielic Lore.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Tamrielic Lore.esm
+
+[Conflict]
+ Use only one version of "Tamrielic Lore" by PikachunoTM.
+Tamrielic Lore.esm
+Tamrielic Lore.esp
+
+[Requires]
+ "All [these add-ons] require the base "Tamrielic Lore.esm."" 
+ (Ref: "Tamrielic Lore.docx")
+[ANY TamLore -- AddOn 1-MuseumAdditions.esp
+     TamLore -- AddOn 2-Museum Donations Anytime.esp
+     TamLore -- AddOn 3-Museum Donations Normal.esp
+     TamLore -- AddOn 4-Princess Stomper Museum of Artifacts ImprovedExpanded Compatibility..ESP
+     TamLore -- Script Insurance.esp]
+[ANY Tamrielic Lore.esm
+     Tamrielic Lore.esp]
+
+[Conflict]
+ "["TamLore -- Wings of the Queen of Bats.esp"] allows you to find the Wings of the Queen of Bats [...] and any mod which adds the WotQoB to Morrowind works as well (Like TheOne&Only's mod of the same name)."
+ (Ref: "Tamrielic Lore.docx")
+TamLore -- Wings of the Queen of Bats.esp
+[ANY Wings of the Queen of Bats.esp
+     Clean UMPP-fixes-BTB-v2.esp
+     Clean UMPP-fixes-v2.esp]
+
+[Patch]
+ (Ref: "Tamrielic Lore.docx")
+TamLore -- Script Insurance.esp
+[ALL [ANY Tamrielic Lore.esm
+          Tamrielic Lore.esp]
+     [ANY GOTYFullTidySomeMPPv2.01.esm
+          GOTYFullTidySomeMPPv2.01.esp
+          GOTYFullTidyZeroMPPv2.01.esm
+          GOTYMinImpactSomeMPPv2.01.esm
+          GOTYMinImpactSomeMPPv2.01.esp
+          GOTYScriptTidy(CommentsIn).esp]]
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+TamLore -- Script Insurance.esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+TamLore -- Script Insurance.esp
+
+[Order]
+GOTYScriptTidy(CommentsIn).esp
+TamLore -- Script Insurance.esp
+
+[Conflict]
+ No need to run "TamLore -- Script Insurance.esp" with the plugin version of "Tamrielic Lore"
+Tamrielic Lore.esp
+TamLore -- Script Insurance.esp
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+Tamrielic Lore.esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+Tamrielic Lore.esp
+
+[Order]
+GOTYScriptTidy(CommentsIn).esp
+Tamrielic Lore.esp
+
+;;"The main .esm only touches one script present in the original Tribunal. This is a rarely touched script, the "MuseumScript", though if you believed it is touched in one of your mods, I've included a "PK_MuseumScript.esp" to return it to "Tamrielic Lore.esm's" script change. This is unlikely to happen except with mods like gr1911's "Script Improvements", or Huskobar's "Script Tidy""
+;;Ref: "Tamrielic Lore.docx"
+;;Dragon32: No conflict reported in TESPCD between "gr_ScriptImprovements.esm"/"gr_ScriptImprovements.esp" and "Tamrielic Lore.esm"
+
+[Patch]
+ (Ref: "Tamrielic Lore.docx")
+TamLore -- AddOn 4-Princess Stomper Museum of Artifacts ImprovedExpanded Compatibility..ESP
+[ALL [ANY Tamrielic Lore.esm
+          Tamrielic Lore.esp]
+     Museum of Artifacts Improved Expanded.esp]
+
+[Order]
+Museum of Artifacts Improved Expanded.esp
+TamLore -- AddOn 4-Princess Stomper Museum of Artifacts ImprovedExpanded Compatibility..ESP
+
+;;DRagon32: TESPCD check
+[Order]
+Tamrielic Lore.esp
+TamLore -- AddOn 4-Princess Stomper Museum of Artifacts ImprovedExpanded Compatibility..ESP
+
+;;Plugin Description: "["TamLore -- AddOn 2-Museum Donations Anytime.esp"] Allows donations to happen any time. Must be loaded BEFORE the Museum Donations Difficulty add-ons."
+[Order]
+Tamrielic Lore.esp
+TamLore -- AddOn 2-Museum Donations Anytime.esp
+TamLore -- AddOn 3-Museum Donations Easy.esp
+TamLore -- AddOn 3-Museum Donations Hard.esp
+TamLore -- AddOn 3-Museum Donations Lots of Donations.esp
+TamLore -- AddOn 3-Museum Donations No Donations.esp
+TamLore -- AddOn 3-Museum Donations Normal.esp
+TamLore -- AddOn 3-Museum Donations Very Easy (Default).esp
+TamLore -- AddOn 3-Museum Donations Very Hard.esp
+
+[Conflict]
+ Although not explicit in the read me you should only load one of these Museum Donations mods.
+TamLore -- AddOn 3-Museum Donations Easy.esp
+TamLore -- AddOn 3-Museum Donations Hard.esp
+TamLore -- AddOn 3-Museum Donations Lots of Donations.esp
+TamLore -- AddOn 3-Museum Donations No Donations.esp
+TamLore -- AddOn 3-Museum Donations Normal.esp
+TamLore -- AddOn 3-Museum Donations Very Easy (Default).esp
+TamLore -- AddOn 3-Museum Donations Very Hard.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47925,7 +48600,8 @@ The Towers of Uvirith V1.2.esp
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
 Clean To Serve Sithis_.esp
 [ANY LGNPC_TelUvirith_v?_??.esp
-     LGNPC_TelUvirith_UI_v?_??.esp]
+     LGNPC_TelUvirith_UI_v?_??.esp
+     LGNPC_TelUvirith.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -48132,6 +48808,65 @@ TriggerDBAttack_v1_00.esp
      DM_DB Armor Replacer-Exp.esp
      DM_DB Armor Replacer-ExpRanks.esp
      Increased DB Delayed Attacks Patch.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @True Skyrimized Torches [Uploader]
+
+;;"True Skyrimized Torches should load after TLM"
+;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24092866
+;;Dragon32: Expanded to other light-affecting mods after a TESPCD check
+[Order]
+LBS_addon_hvy_v1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+LBS_addon_Hvy_VD_v1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+LBS_addon_lt_v1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+LBS_addon_lt_VD_v1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+LBS_addon_reg_v1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+LBS_addon_reg_VD_v1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+Lights 300 v5.esp
+True Skyrimized Torches.esp
+
+[Order]
+True_Lights_And_Darkness_0.5.esp
+True Skyrimized Torches.esp
+
+[Order]
+True_Lights_And_Darkness_1.0-NoDaylight.esp
+True Skyrimized Torches.esp
+
+[Order]
+True_Lights_And_Darkness_1.1.esp
+True Skyrimized Torches.esp
+
+[Order]
+TLM - Light Sources (Clearer Lighting).esp
+True Skyrimized Torches.esp
+
+[Order]
+TLM - Light Sources (Lanterns).esp
+True Skyrimized Torches.esp
+
+[Order]
+TLM - Complete.esp
+True Skyrimized Torches.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49367,7 +50102,9 @@ UMPP-fixes.esp
 
 [Note]
  !! "The Umbra script of "Clean UMPP-fixes-BTB-v2.esp" (UMPP 1.6.5 fixes) seems to bugged. As soon as i have killed Umbra i get an never ending stream of Journal Updates and my inventory gets glitched up."
+ !! As well as the above Journal spam this mod implements a fix which is likely to be broken if you are running another mod which affects NPCs at the Dren Plantation.
  !! (Ref: http://www.fliggerty.com/phpBB3/viewtopic.php?f=32&t=5902 )
+ !! (Ref: http://forums.bethsoft.com/topic/1464045-unofficial-morrowind-patch-thread-2/?p=22869629 )
 Clean UMPP-fixes-BTB-v2.esp
 
 [Conflict]
@@ -49378,21 +50115,22 @@ Clean UMPP-fixes-BTB-v2.esp
 Clean UMPP-fixes-BTB-v2.esp
 Clean UMPP-fixes-v2.esp
 
-[Note]
- ! All of these plugins are either included in, or the problems they address are also addressed by EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes". It is recommended that you replace them with the "Unofficial Morrowind Patch Project Bug Fixes":
- ! http://morrowind.nexusmods.com/mods/40947/
-arvisrend - fixes - books.ESP
-arvisrend - fixes - dialogue.ESP
-arvisrend - fixes - objects (no shadows).ESP
-arvisrend - fixes - objects.ESP
-arvisrend - fixes - persistent corpses.ESP
-arvisrend - fixes - scripts.ESP
-Bloodmoon_East Empire Essential Npcs.esp
-Clean_Foeburner_Fix.esp
-lfx_foeburner.esp
-MWFoeburner Fix.ESP
-shvEquityFix.esp
-Wings of the Queen of Bats.esp
+;;Dragon32: Commenting this out due to problems with v2.0 of this mod (see above)
+;[Note]
+; ! All of these plugins are either included in, or the problems they address are also addressed by EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes". It is recommended that you replace them with the "Unofficial Morrowind Patch Project Bug Fixes":
+; ! http://morrowind.nexusmods.com/mods/40947/
+;arvisrend - fixes - books.ESP
+;arvisrend - fixes - dialogue.ESP
+;arvisrend - fixes - objects (no shadows).ESP
+;arvisrend - fixes - objects.ESP
+;arvisrend - fixes - persistent corpses.ESP
+;arvisrend - fixes - scripts.ESP
+;Bloodmoon_East Empire Essential Npcs.esp
+;Clean_Foeburner_Fix.esp
+;lfx_foeburner.esp
+;MWFoeburner Fix.ESP
+;shvEquityFix.esp
+;Wings of the Queen of Bats.esp
 
 [Conflict]
  arvisrend's "arvisrend's Morrowind fixes" are included in EnderAndrew's "Unofficial Morrowind Patch Project Bug Fixes"
@@ -49937,9 +50675,13 @@ UL_Upgrader_MWSE.esp
 ;; LGNPC Tel Uvirith
 
 ; Dragon32: See "Uvirith's Legacy_README.txt", refers to being compatible with v1.20 of "Less Generic NPCs (LGNPC) Tel Uvirith"
-[Order]
 ; Ref: "Uvirith's Legacy_README.txt"
+[Order]
 LGNPC_TelUvirith_v?_??.esp
+Uvirith's Legacy_<VER>.esp
+
+[Order]
+LGNPC_TelUvirith.esp
 Uvirith's Legacy_<VER>.esp
 
 [Conflict]
@@ -53006,6 +53748,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Gameplay - Dialogue.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -53018,14 +53761,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -53037,6 +53779,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Wakim's Game Improvement 9.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -53049,14 +53792,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -53068,6 +53810,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 Wakim's Game Improvements with No-glo v9.esp
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -53080,14 +53823,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -53703,6 +54445,7 @@ Welcome to the Arena! v<VER>.esp
 
 
 ;;Dragon32: Don't have v4 so can't be sure this will get everyone
+;;Dragon32: v6.6.1 is called "Welcome to the Arena! v6.6.esp" too
 [Note]
  ! There is a newer version of Kalamestari_69's "Welcome to the Arena!" available, 6.6.1
  ! Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/22002
@@ -53722,7 +54465,6 @@ Welcome to the Arena! v6.2.esp
 Welcome to the Arena! v6.3.esp
 Welcome to the Arena! v6.4.esp
 Welcome to the Arena! v6.5.esp
-Welcome to the Arena! v6.6.esp
 
 [Conflict]
  "This mod is incombatible with mods like: Gladiator and Morrowind Inhabitants, freeform, and any other mods that add similiar arena fights."
@@ -53733,6 +54475,10 @@ Welcome to the Arena! v<VER>.esp
 
 ;;Kalamestari_69: "I'd suggest loading WttA after LGNPC Tel Uvirith."
 ;;http://forums.bethsoft.com/topic/1474975-k-69s-creations/?p=23401774
+[Order]
+LGNPC_TelUvirith.esp
+Welcome to the Arena! v<VER>.esp
+
 [Order]
 LGNPC_TelUvirith_v?_??.esp
 Welcome to the Arena! v<VER>.esp
@@ -53988,6 +54734,7 @@ Less Lore.esp
 LGNPC_NoLore.esp
 What Thieves Guild.ESP
 LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
 LGNPC_HlaOad_OM.esp
 LGNPC_Khuul_OM.esp
 LGNPC_MaarGan_OM.esp
@@ -54000,14 +54747,13 @@ LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
-LGNPC_Aldruhn_v?_??.esp
+LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
-LGNPC_TelUvirith_v?_??.esp
-LGNPC_TelUvirith_v?_??_UI.esp
+LGNPC_TelUvirith.esp
 LGNPC_SecretMasters_v?_??.esp
 LGNPC_IndarysManor_v?_??.esp
 LGNPC_VivecRedoran.esp
@@ -54819,7 +55565,9 @@ Sea_of_Solstheim.esp
  Landmass conflict.
  Danjb and others have created "Wizards' Islands Super Patch" which offers a version where "Both islands have been moved north to make the mod compatible with Tamriel Rebuilt."
  http://mw.modhistory.com/download-37-14254
-TR_Mainland.esm
+ (Ref: "TR_Readme.txt")
+[ANY TR_Mainland.esm
+     TR_Preview.esp]
 [SIZE !14993627 Wizards Islands - Scourge of the Frost Bringer.esm]
 
 ;;Dragon32: Version from Super Patch seems to work with Silgrad Tower too. At least no LAND conflicts in TESPCD.
