@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2016-11-06 15:55:34 (UTC)]
+[Version 2016-12-14 23:56:45 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -109,6 +109,7 @@ NOM 2.13.esp
 NoM 3.0.esp
 GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
 MW Containers Animated exp.esp ; (Ref: "aceg_readme.txt")
+German Text Patch.esp
 ;;begin lighting mods
 ;;  these affect lighting in vanilla cells, so load after most other mods
 LBS_addon_hvy_v1.1.esp ; (Ref: "LBS_addon.txt")
@@ -56570,3 +56571,62 @@ The Zone (Tribunal).esp
  !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 3900 Zyndaar's Bows.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @German Text Patch [Vrakyas]
+
+[Requires]
+ Requires Tribunal and Bloodmoon expansion packs.
+ (Ref: "german text patch readme.txt")
+German Text Patch.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Landscapes Stonewood Pass [Mag1cWind0w - Melchior Dahrk]
+;; Fix Mesh conflict
+
+[Order]
+BIG_BALMORA.ESP
+Better Landscapes Stonewood Pass (MD Edit).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @ Sycs Herbalism for Purists (DV) [Translation: Trr Kah / Original: Syclonix]
+
+[Requires]
+ Requires any Expanded Sounds Version to patch.
+[ANY Expanded Sounds DV.esp
+	 Expanded Sounds.esp]
+Syc_Herbalism ES Patch DV.esp
+
+[Requires]
+Tribunal.esm
+Syc_HerbalismforPurists_TB_DV.esp
+
+[Requires]
+Bloodmoon.esm
+Syc_HerbalismforPurists_BM_DV.esp
+
+[Patch]
+Syc_Herbalism ES Patch DV.esp
+[ALL [ANY Expanded Sounds.esp
+		  Expanded Sounds DV.esp]
+	 [ANY Syc_HerbalismforPurists.esp
+		  Syc_HerbalismforPurists_DV.esp]]
+
+[Order]
+Vurt's Ashlands Overhaul.esp
+Vurt's BC Tree Replacer II.esp
+Vurt's Grazelands Unique Trees.ESP
+Ozzy's Grass - Ascadian Isles.esp
+Ozzy's Grass - Bitter Coast.esp
+Ozzy's Grass - Grazelands.esp
+Ozzy's Grass - Solstheim.esp
+Ozzy's Grass - West Gash.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_TB_DV.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_Herbalism ES Patch DV.esp
+
