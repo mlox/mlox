@@ -68,11 +68,11 @@ re_base_version = re.compile(r'^\[version\s+([^\]]*)\]', re.IGNORECASE)
 # line for multiline messages
 re_message = re.compile(r'^\s')
 # pattern matching a plugin in Morrowind.ini
-re_gamefile = re.compile(r'GameFile\d+=([^\r\n]*)', re.IGNORECASE)
+re_gamefile = re.compile(r'(?:GameFile\d|content)+=(.*)', re.IGNORECASE)
 # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
 # this may be too sloppy, we could also look for the same prefix pattern,
 # and remove that if present on all lines.
-re_sloppy_plugin = re.compile(r'^(?:(?:DBG:\s+)?[_\*]\d\d\d[_\*]\s+|GameFile\d+=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
+re_sloppy_plugin = re.compile(r'^(?:(?:DBG:\s+)?[_\*]\d\d\d[_\*]\s+|GameFile\d+=|content=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
 re_plugin = re.compile(r'^(\S.*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
@@ -1086,8 +1086,8 @@ class loadorder:
         self.active and self.order and sorts in load order."""
         files = []
         # we look for the list of currently active plugins
-        source = "Morrowind.ini"
         if Opt._Game == "Morrowind":
+            source = "Morrowind.ini"
             # find Morrowind.ini for Morrowind
             ini_path = self.gamedir.find_path(source)
             if ini_path == None:
@@ -1097,14 +1097,15 @@ class loadorder:
             if ini == None:
                 return
             for line in ini:
-                line.rstrip()
+                line.strip()
+                line.strip('\r\n')
                 gamefile = re_gamefile.match(line)
                 if gamefile:
                     # we use caseless_dirlist.find_file(), so that the
                     # stored name of the plugin does not have to
                     # match the actual capitalization of the
                     # plugin name
-                    f = self.datadir.find_file(gamefile.group(1))
+                    f = self.datadir.find_file(gamefile.group(1).strip())
                     # f will be None if the file has been removed from
                     # Data Files but still exists in the Morrowind.ini
                     # [Game Files] section
