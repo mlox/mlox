@@ -8,6 +8,9 @@
 #   http://sourceforge.net/p/mlox/code/HEAD/tree/trunk/License.txt
 Version = "0.61"
 
+UPDATE_FILE = 'mlox-data.7z'
+UPDATE_URL = 'https://svn.code.sf.net/p/mlox/code/trunk/downloads/' + UPDATE_FILE
+
 import locale
 import os
 import sys
@@ -1747,35 +1750,33 @@ def print_version():
     print version_info()
 
 def update_mloxdata():
-    fname = 'mlox-data.7z'
-    durl = 'https://svn.code.sf.net/p/mlox/code/trunk/downloads/%s' % fname
     ok = True
     try:
-        d = urllib.urlopen(durl)
+        d = urllib.urlopen(UPDATE_URL)
     except:
         ok = False
-        print 'Error connecting to %s, skipping mlox data update.' % durl
+        print 'Error connecting to %s, skipping mlox data update.' % UPDATE_URL
  
     if ok:
-        if os.path.isfile(fname):
-            fsize = os.stat(fname).st_size
-            print 'Current %s size: %d' % (fname,fsize)
+        if os.path.isfile(UPDATE_FILE):
+            fsize = os.stat(UPDATE_FILE).st_size
+            print 'Current %s size: %d' % (UPDATE_FILE,fsize)
             dsize = d.info()['Content-Length']
-            print 'Downloadable %s size: %s' % (fname,dsize)
+            print 'Downloadable %s size: %s' % (UPDATE_FILE,dsize)
             update = int(dsize) != int(fsize)
         else:
             update = 1
         if update:
-            print 'Updating %s' % fname
+            print 'Updating %s' % UPDATE_FILE
             try:
-                d = urllib.urlretrieve(durl,fname)
+                d = urllib.urlretrieve(UPDATE_URL,UPDATE_FILE)
             except:
                 ok = False
-                print 'Error downloading %s, skipping mlox data update' % durl
+                print 'Error downloading %s, skipping mlox data update' % UPDATE_URL
 
             if ok:
-                print 'File %s downloaded' % fname
-                cmd = '7za e "%s" -aoa' % fname
+                print 'File %s downloaded' % UPDATE_FILE
+                cmd = '7za e "%s" -aoa' % UPDATE_FILE
                 runcmd = -1
                 try:
                     runcmd = subprocess.call(cmd,shell=True)
@@ -1783,11 +1784,11 @@ def update_mloxdata():
                     print("Exception while trying to execute command:  %s" % cmd)
 
                 if runcmd == 0:
-                    print("mlox_base.txt updated from %s" % fname)
+                    print("mlox_base.txt updated from %s" % UPDATE_FILE)
                 else:
-                    print("Error while extracting from %s" % fname)
+                    print("Error while extracting from %s" % UPDATE_FILE)
         else:
-            print 'No update necessary for file %s' % fname
+            print 'No update necessary for file %s' % UPDATE_FILE
 
 def main():
     if Opt.FromFile:
