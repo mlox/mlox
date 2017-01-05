@@ -12,7 +12,7 @@
 Version = "0.61"
 
 UPDATE_FILE = 'mlox-data.7z'
-UPDATE_URL = 'https://svn.code.sf.net/p/mlox/code/trunk/downloads/' + UPDATE_FILE
+UPDATE_URL = 'https://sourceforge.net/projects/mlox/files/mlox/' + UPDATE_FILE
 
 import locale
 import os
