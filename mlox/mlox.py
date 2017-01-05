@@ -1,11 +1,14 @@
 #!/usr/bin/python
 # -*- mode: python -*-
 # mlox - the elder scrolls Mod Load Order eXpert
-# Copyright 2014 by John Moonsugar
+#Copyright (c) 2009-2017
+#    John Moonsugar, an alias
+#    dragon32
+#    Arthur Moore
 # Distributed as part of the mlox project:
 #   http://sourceforge.net/p/mlox/
 # under the MIT License:
-#   http://sourceforge.net/p/mlox/code/HEAD/tree/trunk/License.txt
+#   https://sourceforge.net/projects/mlox/files/License.txt
 Version = "0.61"
 
 UPDATE_FILE = 'mlox-data.7z'
