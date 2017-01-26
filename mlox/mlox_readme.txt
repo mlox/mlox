@@ -11,6 +11,13 @@ See mlox_rules_guide.txt for a description of the rules and rule-base.
 See mlox_guts.txt for a discussion of mlox's inner workings.
 ----------------------------------------------------------------------
 
+#About
+mlox is designed to help people manage large collections of plugins for the popular Elder Scrolls games from Bethesda Softworks.
+
+mlox sorts plugins based on a very simple set of ordering rules that comprise a partial order over the set of plugins using a standard topological sort.
+
+mlox also provides advice on plugin conflicts, missing pre-requisites, and general information of interest based on the user's particular set of plugins. 
+
 Contents
 o Features
 o Installation and quick start
