@@ -950,10 +950,31 @@ class loadorder:
                 esm_files.append(filename)
         return(esm_files, esp_files)
 
+    # Get all the plugins from a list file
+    def _read_plugin_list_file(self,plugin_file,regex):
+        files = []
+        config_file = myopen_file(plugin_file, 'r')
+        if config_file == None:
+            logger.error("Unable to open config file: {0}".format(plugin_file))
+            return []
+        for line in config_file:
+            line.strip()
+            line.strip('\r\n')
+            gamefile = regex.match(line)
+            if gamefile:
+                f = gamefile.group(1).strip()
+                files.append(f)
+        config_file.close()
+
+        # Deal with duplicates
+        (files, dups) = fileFinder.filter_dup_files(files)
+        for f in dups:
+            Dbg.add("Config File: dup plugin: %s" % f)
+        return files
+
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates
         self.active and self.order and sorts in load order."""
-        files = []
         source = ""
         regex = None
         if Opt._Game == "Morrowind":
@@ -969,24 +990,9 @@ class loadorder:
         if self.plugin_file == None:
             Msg.add(_["{0} not found, assuming running outside {1} directory"].format(source,Opt._Game))
             return
-        # Look for the list of currently active plugins
-        config_file = myopen_file(self.plugin_file, 'r')
-        if config_file == None:
-            logger.error("Unable to open config file")
-            return
-        for line in config_file:
-            line.strip()
-            line.strip('\r\n')
-            gamefile = regex.match(line)
-            if gamefile:
-                f = gamefile.group(1).strip()
-                files.append(f)
-        config_file.close()
 
-        # Deal with duplicates
-        (files, dups) = fileFinder.filter_dup_files(files)
-        for f in dups:
-            Dbg.add("get_active_plugins: dup plugin: %s" % f)
+        # Look for the list of currently active plugins
+        files = self._read_plugin_list_file(self.plugin_file,regex)
 
         # Remove plugins not in the data directory (and correct capitalization)
         files = map(self.datadir.find_file,files)
@@ -1033,20 +1039,10 @@ class loadorder:
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
         others debug their load order."""
-        file = myopen_file(fromfile, 'r')
-        if file == None:
-            Dbg.add("Failed to open input file: %s" % fromfile)
-            return
-        files = []
-        for line in file:
-            plugin_match = re_sloppy_plugin.match(line)
-            if plugin_match:
-                p = plugin_match.group(1)
-                cname = C.cname(p)
-                files.append(cname)
+        files = self._read_plugin_list_file(fromfile,re_sloppy_plugin)
+        #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
+        files = map(C.cname,files)
         (self.order, dups) = fileFinder.filter_dup_files(files)
-        for f in dups:
-            Dbg.add("read_from_file: dup plugin: %s" % f)
         Stats.add("%-50s (%3d plugins)" % (_["Reading plugins from file: \"%s\""] % fromfile, len(self.order)))
         for p in self.order:
             self.active[p] = True
