@@ -24,6 +24,7 @@ import cPickle
 import logging
 import modules.update as update
 import modules.fileFinder as fileFinder
+import modules.pluggraph as pluggraph
 
 #Resource files
 program_path = os.path.realpath(sys.path[0])
@@ -791,144 +792,6 @@ class rule_parser:
         loadup_msg(_["Read rules from: \"%s\""] % self.rule_file, n_rules, "rules")
         return True
 
-
-class pluggraph:
-    """A graph structure built from ordering rules which specify plugin load (partial) order"""
-    def __init__(self):
-        # nodes is a dictionary of lists, where each key is a plugin, and each
-        # value is a list of the children of that plugin in the graph
-        # that is, if we have "foo.esp" -> "bar.esp" and "foo.esp" -> "baz.esp"
-        # where "->" is read "is a parent of" and means "preceeds in load order"
-        # the data structure will contain: {"foo.esp": ["bar.esp", "baz.esp"]}
-        self.nodes = {}
-        # incoming_count is a dictionary of that keeps track of the count of
-        # how many incoming edges a plugin node in the graph has.
-        # incoming_count["bar.esp"] == 1 means that bar.esp only has one parent
-        # incoming_count["foo.esp"] == 0 means that foo.esp is a root node
-        self.incoming_count = {}
-        # nodes (plugins) that should be pulled nearest to top of load order,
-        # if possible.
-        self.nearstart = []
-        # nodes (plugins) that should be pushed nearest to bottom of load order,
-        # if possible.
-        self.nearend = []
-
-    def can_reach(self, startnode, plugin):
-        """Return True if startnode can reach plugin in the graph, False otherwise."""
-        stack = [startnode]
-        seen = {}
-        while stack != []:
-            p = stack.pop()
-            if p == plugin:
-                return(True)
-            seen[p] = True
-            if p in self.nodes:
-                stack.extend([child for child in self.nodes[p] if not child in seen])
-        return(False)
-
-    def add_edge(self, where, plug1, plug2):
-        """Add an edge to our graph connecting plug1 to plug2, which means
-        that plug2 follows plug1 in the load order. Since we check every new
-        edge to see if it will make a cycle, the process of adding all edges
-        will be O(square(n)/2) in the worst case of a totally ordered
-        set. This could mean a long run-time for the Oblivion data, which
-        is currently a total order of a set of about 5000 plugins."""
-        # before adding edge from plug1 to plug2 (meaning plug1 is parent of plug2),
-        # we look to see if plug2 is already a parent of plug1, if so, we have
-        # detected a cycle, which we disallow.
-        if self.can_reach(plug2, plug1):
-            # (where == "") when adding edges from psuedo-rules we
-            # create from our current plugin list, We ignore cycles in
-            # this case because they do not matter.
-            # (where != "") when it is an edge from a rules file, and in
-            # that case we do want to see cycle errors.
-            cycle_detected = _["%s: Cycle detected, not adding: \"%s\" -> \"%s\""] % (where, plug1, plug2)
-            if where == "":
-                logging.debug(cycle_detected)
-            else:
-                logging.warning(cycle_detected)
-            return False
-        self.nodes.setdefault(plug1, [])
-        if plug2 in self.nodes[plug1]: # edge already exists
-            logging.debug("%s: Dup Edge: \"%s\" -> \"%s\"" % (where, plug1, plug2))
-            return True
-        # add plug2 to the graph as a child of plug1
-        self.nodes[plug1].append(plug2)
-        self.incoming_count[plug2] = self.incoming_count.setdefault(plug2, 0) + 1
-        logging.debug("adding edge: %s -> %s" % (plug1, plug2))
-        return(True)
-
-    def explain(self, what, active):
-        seen = {}
-        print _["Ordering_Explanation"] % what
-        print what
-        def explain_rec(indent, n):
-            if n in seen:
-                return
-            seen[n] = True
-            if n in self.nodes:
-                for child in self.nodes[n]:
-                    prefix = indent.replace(" ", "+") if child in active else indent.replace(" ", "=")
-                    print "%s%s" % (prefix, child)
-                    explain_rec(" " + indent, child)
-        explain_rec(" ", what.lower())
-
-    def topo_sort(self):
-        """topological sort"""
-
-        def remove_roots(roots, which):
-            """This function is used to yank roots out of the main list of graph roots to
-            support the NearStart and NearEnd rules."""
-            removed = []
-            for p in which:
-                leftover = []
-                while len(roots) > 0:
-                    r = roots.pop(0)
-                    if self.can_reach(r, p):
-                        removed.append(r)
-                    else:
-                        leftover.append(r)
-                roots = leftover
-            return(removed, roots)
-
-        # find the roots of the graph
-        roots = [node for node in self.nodes if self.incoming_count.get(node, 0) == 0]
-        logging.debug("========== BEGIN TOPOLOGICAL SORT DEBUG INFO ==========")
-        logging.debug("graph before sort (node: children)")
-        logging.debug(PrettyPrinter(indent=4).pformat(self.nodes))
-        logging.debug("roots:\n  %s" % ("\n  ".join(roots)))
-        if len(roots) > 0:
-            # use the nearstart information to pull preferred plugins to top of load order
-            (top_roots, roots) = remove_roots(roots, self.nearstart)
-            bottom_roots = roots        # any leftovers go at the end
-            roots = top_roots + bottom_roots
-            logging.debug("nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
-            logging.debug("top roots:\n  %s" % ("\n  ".join(top_roots)))
-            logging.debug("nearend:\n  %s" % ("\n  ".join(self.nearend)))
-            logging.debug("bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
-            logging.debug("newroots:\n  %s" % ("\n  ".join(roots)))
-        logging.debug("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
-        # now do the actual topological sort
-        # based on http://www.bitformation.com/art/python_toposort.html
-        roots.reverse()
-        sorted = []
-        while len(roots) != 0:
-            root = roots.pop()
-            sorted.append(root)
-            if not root in self.nodes:
-                continue
-            for child in self.nodes[root]:
-                self.incoming_count[child] -= 1
-                if self.incoming_count[child] == 0:
-                    roots.append(child)
-            del self.nodes[root]
-        if len(self.nodes.items()) != 0:
-            logging.error(_["Topological Sort Failed!"])
-            logging.debug(PrettyPrinter(indent=4).pformat(self.nodes.items()))
-            return None
-        return sorted
-
-
 class loadorder:
     """Class for reading plugin mod times (load order), and updating them based on rules"""
     def __init__(self):
@@ -938,7 +801,7 @@ class loadorder:
         self.gamedir = None                # where game is installed
         self.datadir = None                # where plugins live
         self.plugin_file = None            # Path to the file containing the plugin list
-        self.graph = pluggraph()
+        self.graph = pluggraph.pluggraph()
         self.sorted = False
         self.origin = None      # where plugins came from (active, installed, file)
 

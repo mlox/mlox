@@ -115,13 +115,6 @@ update your load order, you need to run Mash first and turn it off.
 Otherwise, the next time you run Mash, it will undo all the changes in
 your load order made by mlox.
 
-[[Ordering_Explanation]]
-`en`Ordering Explanation:
-This is a picture of all the plugins mlox thinks should follow %s
-Child plugins are indented with respect to their parents
-Lines beginning with '=' are plugins you don't have.
-Lines beginning with '+' are plugins you do have.
-
 [[Statistics]]
 `ja`スタティスティックス
 `de`Statistiken
