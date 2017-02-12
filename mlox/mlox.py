@@ -68,7 +68,7 @@ re_base_version = re.compile(r'^\[version\s+([^\]]*)\]', re.IGNORECASE)
 # line for multiline messages
 re_message = re.compile(r'^\s')
 # pattern matching a plugin in Morrowind.ini
-re_gamefile = re.compile(r'(?:GameFile\d|content)+=(.*)', re.IGNORECASE)
+re_gamefile = re.compile(r'(?:GameFile\d*|content)+=(.*)', re.IGNORECASE)
 # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
 # this may be too sloppy, we could also look for the same prefix pattern,
 # and remove that if present on all lines.
