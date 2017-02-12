@@ -941,7 +941,7 @@ class pluggraph:
             # this case because they do not matter.
             # (where != "") when it is an edge from a rules file, and in
             # that case we do want to see cycle errors.
-            cycle_detected = _["Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\""] % (where, C.truename(plug1), C.truename(plug2))
+            cycle_detected = _["Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\""] % (where, plug1, plug2)
             if where == "":
                 Dbg.add(cycle_detected)
             else:
@@ -949,7 +949,7 @@ class pluggraph:
             return False
         self.nodes.setdefault(plug1, [])
         if plug2 in self.nodes[plug1]: # edge already exists
-            Dbg.add("%s: Dup Edge: \"%s\" -> \"%s\"" % (where, C.truename(plug1), C.truename(plug2)))
+            Dbg.add("%s: Dup Edge: \"%s\" -> \"%s\"" % (where, plug1, plug2))
             return True
         # add plug2 to the graph as a child of plug1
         self.nodes[plug1].append(plug2)
@@ -968,7 +968,7 @@ class pluggraph:
             if n in self.nodes:
                 for child in self.nodes[n]:
                     prefix = indent.replace(" ", "+") if child in active else indent.replace(" ", "=")
-                    print "%s%s" % (prefix, C.truename(child))
+                    print "%s%s" % (prefix, child)
                     explain_rec(" " + indent, child)
         explain_rec(" ", what.lower())
 
