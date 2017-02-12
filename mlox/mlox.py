@@ -25,9 +25,6 @@ import logging
 import modules.update as update
 import modules.fileFinder as fileFinder
 
-logging.basicConfig(level=logging.INFO)
-#logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-
 #Resource files
 program_path = os.path.realpath(sys.path[0])
 translation_file = os.path.join(program_path,"mlox.msg")
@@ -132,6 +129,12 @@ class logger:
         self.prints = prints
         self.cohort = cohort
 
+    # These two allow the use of python's default logging
+    def write(self, message):
+        self.add(message)
+    def flush(self):
+        pass
+
     def add(self, message):
         self.log.append(message)
         for c in self.cohort:
@@ -152,7 +155,7 @@ class logger:
     def get_u(self):
         return("\n".join(self.log) + "\n")
 
-    def flush(self):
+    def clear(self):
         self.log = []
 
 class debug_logger(logger):
@@ -184,6 +187,13 @@ New = logger(True, Dbg)         # new sorted loadorder
 Old = logger(False)             # old original loadorder
 Stats = logger(True, Dbg)       # stats output
 Msg = logger(True, Dbg)         # messages output
+
+#Configure logging from python module
+formatter = logging.Formatter('%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO)
+gui_log_stream = logging.StreamHandler(stream=Dbg)
+gui_log_stream.setFormatter(formatter)
+logging.getLogger('').addHandler(gui_log_stream)
 
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
@@ -1143,10 +1153,10 @@ class loadorder:
 
     def update(self, fromfile):
         """Update the load order based on input rules."""
-        Msg.flush()
-        Stats.flush()
-        New.flush()
-        Old.flush()
+        Msg.clear()
+        Stats.clear()
+        New.clear()
+        Old.clear()
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
             Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
