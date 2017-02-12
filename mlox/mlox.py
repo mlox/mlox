@@ -946,46 +946,42 @@ class loadorder:
         """Get the active list of plugins from the game configuration. Updates
         self.active and self.order and sorts in load order."""
         files = []
-        # we look for the list of currently active plugins
+        source = ""
+        regex = None
         if Opt._Game == "Morrowind":
-            if self.plugin_file == None:
-                Msg.add(_["Morrowind.ini not found, assuming running outside Morrowind directory"])
-                return
-            ini = myopen_file(self.plugin_file, 'r')
-            if ini == None:
-                return
-            for line in ini:
-                line.strip()
-                line.strip('\r\n')
-                gamefile = re_gamefile.match(line)
-                if gamefile:
-                    # we use caseless_dirlist.find_file(), so that the
-                    # stored name of the plugin does not have to
-                    # match the actual capitalization of the
-                    # plugin name
-                    f = self.datadir.find_file(gamefile.group(1).strip())
-                    # f will be None if the file has been removed from
-                    # Data Files but still exists in the Morrowind.ini
-                    # [Game Files] section
-                    if f != None:
-                        files.append(f)
-            ini.close()
+            regex = re_gamefile
+            source = "Morrowind.ini"
         elif Opt._Game == "Oblivion":
-            if self.plugin_file == None:
-                Msg.add(_["Oblivion/Plugins.txt not found, assuming running outside Oblivion directory"])
-                return
-            inp = myopen_file(self.plugin_file, 'r')
-            for line in inp:
-                line.strip()
-                plugin = re_plugin.match(line)
-                if plugin:
-                    f = self.datadir.find_file(plugin.group(1))
-                    if f != None:
-                        files.append(f)
-            inp.close()
+            regex = re_plugin
+            source = "Oblivion/Plugins.txt"
         else:
             # not running under a game directory (e.g.: doing testing)
             return
+
+        if self.plugin_file == None:
+            Msg.add(_["{0} not found, assuming running outside {1} directory"].format(source,Opt._Game))
+            return
+        config_file = myopen_file(self.plugin_file, 'r')
+        if config_file == None:
+            logger.error("Unable to open config file")
+            return
+        # we look for the list of currently active plugins
+        for line in config_file:
+            line.strip()
+            line.strip('\r\n')
+            gamefile = regex.match(line)
+            if gamefile:
+                # we use caseless_dirlist.find_file(), so that the
+                # stored name of the plugin does not have to
+                # match the actual capitalization of the
+                # plugin name
+                f = self.datadir.find_file(gamefile.group(1).strip())
+                # f will be None if the file has been removed from
+                # Data Files but still exists in the Morrowind.ini
+                # [Game Files] section
+                if f != None:
+                    files.append(f)
+        config_file.close()
         (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
             Dbg.add("get_active_plugins: dup plugin: %s" % f)
