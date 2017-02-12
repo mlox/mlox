@@ -136,16 +136,16 @@ class logger:
         pass
 
     def add(self, message):
-        self.log.append(message)
+        self.log.append(message.strip())
         for c in self.cohort:
-            c.add(message)
+            c.add(message.strip())
         if self.prints and Opt.GUI == False:
             print message
 
     def insert(self, message):
-        self.log.insert(0, message)
+        self.log.insert(0, message.strip())
         for c in self.cohort:
-            c.insert(message)
+            c.insert(message.strip())
         if self.prints and Opt.GUI == False:
             print message
 
@@ -163,12 +163,9 @@ class debug_logger(logger):
         logger.__init__(self, False)
 
     def add(self, message):
-        if Opt.DBG:
-            msg = "DBG: " + message
-            if Opt.GUI:
-                self.log.append(msg)
-            else:
-                print >> sys.stderr, msg
+        if Opt.GUI:
+            self.log.append(message.strip())
+
 
 class parse_debug_logger(logger):
     def __init__(self):
@@ -189,11 +186,20 @@ Stats = logger(True, Dbg)       # stats output
 Msg = logger(True, Dbg)         # messages output
 
 #Configure logging from python module
+logging.getLogger('').setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(levelname)s: %(message)s')
-logging.basicConfig(level=logging.INFO)
-gui_log_stream = logging.StreamHandler(stream=Dbg)
-gui_log_stream.setFormatter(formatter)
-logging.getLogger('').addHandler(gui_log_stream)
+console_log_stream = logging.StreamHandler()
+console_log_stream.setLevel(logging.INFO)
+console_log_stream.setFormatter(formatter)
+logging.getLogger('').addHandler(console_log_stream)
+gui_dbg_log_stream = logging.StreamHandler(stream=Dbg)
+gui_dbg_log_stream.setFormatter(formatter)
+gui_dbg_log_stream.setLevel(logging.DEBUG)
+logging.getLogger('').addHandler(gui_dbg_log_stream)
+gui_msg_log_stream = logging.StreamHandler(stream=Msg)
+gui_msg_log_stream.setFormatter(formatter)
+gui_msg_log_stream.setLevel(logging.INFO)
+logging.getLogger('').addHandler(gui_msg_log_stream)
 
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
@@ -1660,7 +1666,7 @@ if __name__ == "__main__":
             Opt.BaseOnly = True
         elif opt in ("-d", "--debug"):
             Opt.DBG = True
-            logging.basicConfig(level=logging.DEBUG)
+            console_log_stream.setLevel(logging.DEBUG)
         elif opt in ("-e", "--explain"):
             Opt.Explain = arg
             Msg.prints = False
