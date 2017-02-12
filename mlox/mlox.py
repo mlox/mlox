@@ -28,6 +28,14 @@ import modules.fileFinder as fileFinder
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
+#Resource files
+program_path = os.path.realpath(sys.path[0])
+translation_file = os.path.join(program_path,"mlox.msg")
+base_file = os.path.join(program_path,"mlox_base.txt")
+user_file = os.path.join(program_path,"mlox_user.txt")
+gif_file = os.path.join(program_path,"mlox.gif")
+
+
 #HACK
 C = fileFinder.caseless_filenames()
 
@@ -193,7 +201,7 @@ def load_translations(lang):
         (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
         trans = dict(map(lambda y: y.split('`'), val.split("\n`"))[1:])
         return(key, trans[lang].rstrip() if lang in trans else key)
-    return(dyndict(map(splitter, codecs.open("mlox.msg", 'r', "utf-8").read().split("\n[["))[1:]))
+    return(dyndict(map(splitter, codecs.open(translation_file, 'r', "utf-8").read().split("\n[["))[1:]))
 
 _ = load_translations(Lang)
 
@@ -988,7 +996,7 @@ class loadorder:
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
-        loadup_msg(_["Getting active plugins from file"], len(plugins), "plugins")
+        loadup_msg(_["Getting active plugins from: {0}".format(self.plugin_file)], len(plugins), "plugins")
         self.order = plugins
         for p in self.order:
             self.active[p] = True
@@ -1172,7 +1180,7 @@ class loadorder:
         if Opt.GUI:
             progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
-        parser.read_rules("mlox_user.txt", progress)
+        parser.read_rules(user_file, progress)
 
         # for reading mod-specific rules from "Data Files/mlox/*.txt"
         # possible problems:
@@ -1186,8 +1194,8 @@ class loadorder:
 #            parser.read_rules(mod_rules_dir.find_path(f), progress)
 
         # last rules from mlox_base.txt
-        if not parser.read_rules("mlox_base.txt", progress):
-            Msg.add(_["Error: unable to open mlox_base.txt database. You must run mlox in the directory where mlox_base.txt lives. If you have not already done so, please download it from http://sourceforge.net/projects/mlox/files/mlox/ and install mlox_base.txt in your mlox directory."])
+        if not parser.read_rules(base_file, progress):
+            Msg.add(_["Error: unable to open mlox_base.txt database."])
             progress.Destroy()
             return(self)
         if progress != None:
@@ -1277,7 +1285,7 @@ class mlox_gui():
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         # logo doubles as a "reload" button
-        img = wx.Image("mlox.gif", wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+        img = wx.Image(gif_file, wx.BITMAP_TYPE_GIF).ConvertToBitmap()
         self.logo = wx.BitmapButton(self.frame, -1, img, (0,0), (img.GetWidth()+5, img.GetHeight()+5))
         self.logo.Bind(wx.EVT_BUTTON, self.on_reload)
         self.logo.SetToolTip(wx.ToolTip(_["Click to Reload"]))
@@ -1579,7 +1587,7 @@ class mlox_gui():
 
 
 def get_mlox_base_version():
-    base = myopen_file("mlox_base.txt", 'r')
+    base = myopen_file(base_file, 'r')
     if base != None:
         for line in base:
             m = re_base_version.match(line)
