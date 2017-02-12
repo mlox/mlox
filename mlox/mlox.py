@@ -47,7 +47,6 @@ Opt = dynopt()
 # command line options
 Opt.AutoFocus = True
 Opt.BaseOnly = False
-Opt.DBG = False
 Opt.Explain = None
 Opt.FromFile = False
 Opt.GUI = False
@@ -248,9 +247,8 @@ def myopen_file(filename, mode, encoding=None):
     try:
         return(codecs.open(filename, mode, encoding))
     except IOError, (errno, strerror):
-        if Opt.DBG:
-            mode_str = _["input"] if mode == 'r' else _["output"]
-            Dbg.add(_["Error opening \"%s\" for %s (%s)"] % (filename, mode_str, strerror))
+        mode_str = _["input"] if mode == 'r' else _["output"]
+        logging.debug(_["Problem opening \"%s\" for %s (%s)"] % (filename, mode_str, strerror))
     return(None)
 
 def plugin_description(plugin):
@@ -261,7 +259,7 @@ def plugin_description(plugin):
     inp.close()
     if block[0:4] == "TES3":    # Morrowind
         if len(block) < tes3_min_plugin_size:
-            Dbg.add("plugin_description(%s): file too short, returning NULL string" % plugin)
+            logging.debug("plugin_description(%s): file too short, returning NULL string" % plugin)
             return("")
         desc = block[64:block.find("\x00", 64)]
         return(desc)
@@ -844,20 +842,20 @@ class pluggraph:
             # this case because they do not matter.
             # (where != "") when it is an edge from a rules file, and in
             # that case we do want to see cycle errors.
-            cycle_detected = _["Warning: %s: Cycle detected, not adding: \"%s\" -> \"%s\""] % (where, plug1, plug2)
+            cycle_detected = _["%s: Cycle detected, not adding: \"%s\" -> \"%s\""] % (where, plug1, plug2)
             if where == "":
-                Dbg.add(cycle_detected)
+                logging.debug(cycle_detected)
             else:
-                Msg.add(cycle_detected)
+                logging.warning(cycle_detected)
             return False
         self.nodes.setdefault(plug1, [])
         if plug2 in self.nodes[plug1]: # edge already exists
-            Dbg.add("%s: Dup Edge: \"%s\" -> \"%s\"" % (where, plug1, plug2))
+            logging.debug("%s: Dup Edge: \"%s\" -> \"%s\"" % (where, plug1, plug2))
             return True
         # add plug2 to the graph as a child of plug1
         self.nodes[plug1].append(plug2)
         self.incoming_count[plug2] = self.incoming_count.setdefault(plug2, 0) + 1
-        Dbg.add("adding edge: %s -> %s" % (plug1, plug2))
+        logging.debug("adding edge: %s -> %s" % (plug1, plug2))
         return(True)
 
     def explain(self, what, active):
@@ -895,23 +893,21 @@ class pluggraph:
 
         # find the roots of the graph
         roots = [node for node in self.nodes if self.incoming_count.get(node, 0) == 0]
-        if Opt.DBG:
-            Dbg.add("\n========== BEGIN TOPOLOGICAL SORT DEBUG INFO ==========")
-            Dbg.add("graph before sort (node: children)")
-            Dbg.add(PrettyPrinter(indent=4).pformat(self.nodes))
-            Dbg.add("\nDBG: roots:\n  %s" % ("\n  ".join(roots)))
+        logging.debug("========== BEGIN TOPOLOGICAL SORT DEBUG INFO ==========")
+        logging.debug("graph before sort (node: children)")
+        logging.debug(PrettyPrinter(indent=4).pformat(self.nodes))
+        logging.debug("roots:\n  %s" % ("\n  ".join(roots)))
         if len(roots) > 0:
             # use the nearstart information to pull preferred plugins to top of load order
             (top_roots, roots) = remove_roots(roots, self.nearstart)
             bottom_roots = roots        # any leftovers go at the end
             roots = top_roots + bottom_roots
-            if Opt.DBG:
-                Dbg.add("nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
-                Dbg.add("top roots:\n  %s" % ("\n  ".join(top_roots)))
-                Dbg.add("nearend:\n  %s" % ("\n  ".join(self.nearend)))
-                Dbg.add("bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
-                Dbg.add("newroots:\n  %s" % ("\n  ".join(roots)))
-        Dbg.add("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
+            logging.debug("nearstart:\n  %s" % ("\n  ".join(self.nearstart)))
+            logging.debug("top roots:\n  %s" % ("\n  ".join(top_roots)))
+            logging.debug("nearend:\n  %s" % ("\n  ".join(self.nearend)))
+            logging.debug("bottom roots:\n  %s" % ("\n  ".join(bottom_roots)))
+            logging.debug("newroots:\n  %s" % ("\n  ".join(roots)))
+        logging.debug("========== END TOPOLOGICAL SORT DEBUG INFO ==========\n")
         # now do the actual topological sort
         # based on http://www.bitformation.com/art/python_toposort.html
         roots.reverse()
@@ -927,8 +923,8 @@ class pluggraph:
                     roots.append(child)
             del self.nodes[root]
         if len(self.nodes.items()) != 0:
-            Msg.add(_["Error: Topological Sort Failed!"])
-            Dbg.add(PrettyPrinter(indent=4).pformat(self.nodes.items()))
+            logging.error(_["Topological Sort Failed!"])
+            logging.debug(PrettyPrinter(indent=4).pformat(self.nodes.items()))
             return None
         return sorted
 
@@ -985,7 +981,7 @@ class loadorder:
         # Deal with duplicates
         (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
-            Dbg.add("Config File: dup plugin: %s" % f)
+            logging.debug("Config File: dup plugin: %s" % f)
         return files
 
     def get_active_plugins(self):
@@ -1030,7 +1026,7 @@ class loadorder:
         files = [f for f in self.datadir.filelist() if os.path.isfile(self.datadir.find_path(f))]
         (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
-            Dbg.add("get_data_files: dup plugin: %s" % f)
+            logging.debug("get_data_files: dup plugin: %s" % f)
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         self.order = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
@@ -1050,7 +1046,6 @@ class loadorder:
             match = re_header_version.search(desc)
             desc_ver = match.group(1) if match else None
             print "%10s %10s    %s" % (file_ver, desc_ver, C.truename(p))
-        if Opt.DBG: print Dbg.get()
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. This is mostly to help
@@ -1075,7 +1070,7 @@ class loadorder:
         respectively"""
         if len(self.order) < 2:
             return
-        Dbg.add("adding edges from CURRENT ORDER")
+        logging.debug("adding edges from CURRENT ORDER")
         # make ordering pseudo-rules for esms to follow official .esms
         if Opt._Game == "Morrowind":
             self.graph.add_edge("", "morrowind.esm", "tribunal.esm")
@@ -1180,10 +1175,9 @@ class loadorder:
             if self.order == []:
                 Msg.add(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
                 return(self)
-        if Opt.DBG:
-            Dbg.add("initial load order")
-            for p in self.order:
-                Dbg.add(p)
+        logging.debug("Initial load order:")
+        for p in self.order:
+            logging.debug("  " + p)
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
@@ -1628,25 +1622,24 @@ def main():
         if Opt.NoUpdate == False:
             update.update_mloxdata()
         # run with gui
-        Opt.DBG = True
         mlox_gui().start()
     else:
         # run with command line arguments
         loadorder().update(None)
 
 if __name__ == "__main__":
-    Dbg.add("\nmlox DEBUG DUMP:\n")
+    logging.debug("\nmlox DEBUG DUMP:\n")
     def usage(status):
         print _["Usage"]
         sys.exit(status)
     # Check Python version
     pyversion = sys.version[:3]
-    Dbg.add("Python Version: %s" % pyversion)
+    logging.debug("Python Version: %s" % pyversion)
     if float(pyversion) < 2.5:
         print _["This program requires Python version 2.5."]
         sys.exit(1)
     # process command line arguments
-    Dbg.add("Command line: %s" % " ".join(sys.argv))
+    logging.debug("Command line: %s" % " ".join(sys.argv))
     try:
         opts, args = getopt(sys.argv[1:], "acde:fhlnpquvw",
                             ["all", "base-only", "check", "debug", "explain=", "fromfile", "gui", "help",
@@ -1665,7 +1658,6 @@ if __name__ == "__main__":
         elif opt in ("--base-only"):
             Opt.BaseOnly = True
         elif opt in ("-d", "--debug"):
-            Opt.DBG = True
             console_log_stream.setLevel(logging.DEBUG)
         elif opt in ("-e", "--explain"):
             Opt.Explain = arg
