@@ -23,8 +23,13 @@ from getopt import getopt, GetoptError
 import cPickle
 import logging
 import modules.update as update
+import modules.fileFinder as fileFinder
 
 logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+
+#HACK
+C = fileFinder.caseless_filenames()
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -172,73 +177,6 @@ Old = logger(False)             # old original loadorder
 Stats = logger(True, Dbg)       # stats output
 Msg = logger(True, Dbg)         # messages output
 
-# Utility classes For doing caseless filename processing:
-# caseless_filename uses a dictionary that stores the truename of a
-# plugin by its canonical lowercased form (cname). We only use the
-# truename for output, in all other processing, we use the cname so
-# that all processing of filenames is caseless.
-
-# Note that the first function to call cname() is get_data_files()
-# this ensures that the proper truename of the actual file in the
-# filesystem is stored in our dictionary. cname() is subsequently
-# called for all filenames mentioned in rules, which may differ by
-# case, since human input is inherently sloppy.
-
-class caseless_filenames:
-
-    def __init__(self):
-        self.truenames = {}
-
-    def cname(self, truename):
-        the_cname = truename.lower()
-        if not the_cname in self.truenames:
-            self.truenames[the_cname] = truename
-        return(the_cname)
-
-    def truename(self, cname):
-        return(self.truenames[cname])
-
-C = caseless_filenames()
-
-class caseless_dirlist:
-
-    def __init__(self, dir=os.getcwd()):
-        self.files = {}
-        if dir == None:
-            return
-        self.dir = os.path.normpath(os.path.abspath(dir))
-        for f in [p for p in os.listdir(dir)]:
-            self.files[f.lower()] = f
-
-    def find_file(self, file):
-        return(self.files.get(file.lower(), None))
-
-    def find_path(self, file):
-        f = file.lower()
-        if f in self.files:
-            return(os.path.join(self.dir, self.files[f]))
-        return(None)
-
-    def find_parent_dir(self, file):
-        """return the caseless_dirlist of the directory that contains file,
-        starting from self.dir and working back towards root."""
-        path = self.dir
-        prev = None
-        while path != prev:
-            dl = caseless_dirlist(path)
-            if dl.find_file(file):
-                return(dl)
-            prev = path
-            path = os.path.split(path)[0]
-        return(None)
-
-    def dirpath(self):
-        return(self.dir)
-
-    def filelist(self):
-        return(self.files.values())
-
-
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
 Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
@@ -326,7 +264,7 @@ def find_appdata():
         # then grovel around in system.reg until we find the localappdata path
         # and then fake it like a Republican
         re_appdata = re.compile(r'"LOCALAPPDATA"="([^"]+)"', re.IGNORECASE)
-        regdir = caseless_dirlist().find_parent_dir("system.reg")
+        regdir = fileFinder.caseless_dirlist().find_parent_dir("system.reg")
         regpath = regdir.find_path("system.reg")
         if regpath == None:
             return(None)
@@ -360,20 +298,6 @@ def find_appdata():
         return(os.path.expandvars(appdata))
     except ImportError:
         return None
-
-# given a list of files, return a new list without dups (caseless), plus a list of any dups
-def filter_dup_files(files):
-    tmpfiles = []               # new list
-    filtered = []               # any filtered dups from original list
-    seen = {}
-    for f in files:
-        c = C.cname(f)
-        if c in seen:
-            filtered.append(f)
-        else:
-            tmpfiles.append(f)
-        seen[c] = True
-    return(tmpfiles, filtered)
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
@@ -1061,22 +985,22 @@ class loadorder:
         return(esm_files, esp_files)
 
     def find_game_dirs(self):
-        cwd = caseless_dirlist() # start our search in our current directory
+        cwd = fileFinder.caseless_dirlist() # start our search in our current directory
         self.gamedir = cwd.find_parent_dir("Morrowind.ini")
         if self.gamedir != None:
             Opt._Game = "Morrowind"
-            self.datadir = caseless_dirlist(self.gamedir.find_path("Data Files"))
+            self.datadir = fileFinder.caseless_dirlist(self.gamedir.find_path("Data Files"))
         else:
             self.gamedir = cwd.find_parent_dir("Oblivion.ini")
             if self.gamedir != None:
                 Opt._Game = "Oblivion"
-                self.datadir = caseless_dirlist(self.gamedir.find_path("Data"))
+                self.datadir = fileFinder.caseless_dirlist(self.gamedir.find_path("Data"))
             else:
                 # Not running under a game directory, so we're probably testing
                 # assume plugins live in current directory.
                 Opt._Game = "None"
                 self.datadir = cwd
-                self.gamedir = caseless_dirlist("..")
+                self.gamedir = fileFinder.caseless_dirlist("..")
         Dbg.add("Data directory: \"%s\"" % self.datadir.dirpath())
         #Stats.add("Data Directory: \"%s\"" % self.datadir.dirpath())
 
@@ -1134,7 +1058,7 @@ class loadorder:
         else:
             # not running under a game directory (e.g.: doing testing)
             return
-        (files, dups) = filter_dup_files(files)
+        (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
             Dbg.add("get_active_plugins: dup plugin: %s" % f)
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
@@ -1150,7 +1074,7 @@ class loadorder:
         """Get the list of plugins from the data files directory. Updates self.active.
         If called,"""
         files = [f for f in self.datadir.filelist() if os.path.isfile(self.datadir.find_path(f))]
-        (files, dups) = filter_dup_files(files)
+        (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
             Dbg.add("get_data_files: dup plugin: %s" % f)
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
@@ -1189,7 +1113,7 @@ class loadorder:
                 p = plugin_match.group(1)
                 cname = C.cname(p)
                 files.append(cname)
-        (self.order, dups) = filter_dup_files(files)
+        (self.order, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
             Dbg.add("read_from_file: dup plugin: %s" % f)
         Stats.add("%-50s (%3d plugins)" % (_["Reading plugins from file: \"%s\""] % fromfile, len(self.order)))
