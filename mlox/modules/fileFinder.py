@@ -13,6 +13,10 @@
 # case, since human input is inherently sloppy.
 
 import os
+import re
+import logging
+
+file_logger = logging.getLogger('mlox.fileFinder')
 
 class caseless_filenames:
 
@@ -82,3 +86,86 @@ def filter_dup_files(files):
             tmpfiles.append(f)
         seen[c] = True
     return(tmpfiles, filtered)
+
+
+def _find_appdata():
+    """a somewhat hacky function for finding where Oblivion's Application Data lives.
+    Hopefully works under Windows, Wine, and native Linux."""
+    if os.name == "posix":
+        # Linux - total hack for finding plugins.txt
+        # we assume we're running under a wine tree somewhere. so we
+        # find where we are now, then walk the tree upwards to find system.reg
+        # then grovel around in system.reg until we find the localappdata path
+        # and then fake it like a Republican
+        re_appdata = re.compile(r'"LOCALAPPDATA"="([^"]+)"', re.IGNORECASE)
+        regdir = caseless_dirlist().find_parent_dir("system.reg")
+        if regdir == None:
+            return(None)
+        regpath = regdir.find_path("system.reg")
+        if regpath == None:
+            return(None)
+        inp = myopen_file(regpath, 'r')
+        if inp != None:
+            for line in inp:
+                match = re_appdata.match(line)
+                if match:
+                    path = match.group(1)
+                    path = path.split(r'\\')
+                    drive = "drive_" + path.pop(0).lower()[0]
+                    appdata = "/".join([regdir.dirpath(), drive, "/".join(path)])
+                    inp.close()
+                    return(appdata)
+            inp.close()
+            return(None)
+        return(None)
+    # Windows
+    try:
+        import _winreg
+        try:
+            key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
+                                  r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders')
+            vals = _winreg.QueryValueEx(key, 'Local AppData')
+        except WindowsError:
+            return None
+        else:
+            key.Close()
+        re_env = re.compile(r'%([^|<>=^%]+)%')
+        appdata = re_env.sub(lambda m: os.environ.get(m.group(1), m.group(0)), vals[0])
+        return(os.path.expandvars(appdata))
+    except ImportError:
+        return None
+
+def _get_Oblivion_plugins_file():
+    appdata = _find_appdata()
+    if appdata == None:
+        file_logger.warn("Application data directory not found")
+        return(None)
+    return os.path.join(appdata, "Oblivion", "Plugins.txt")
+
+# Attempt to find the plugin file and directory for Morrowind and Oblivion
+# This will attempt to find Morrowind's files first
+def find_game_dirs():
+    game = "None"
+    datadir = None
+    list_file = None
+
+    cwd = caseless_dirlist() # start our search in our current directory
+    gamedir = cwd.find_parent_dir("Morrowind.ini")
+    if gamedir != None:
+        game = "Morrowind"
+        list_file = gamedir.find_path("Morrowind.ini")
+        datadir = caseless_dirlist(gamedir.find_path("Data Files"))
+    else:
+        gamedir = cwd.find_parent_dir("Oblivion.ini")
+        if gamedir != None:
+            game = "Oblivion"
+            list_file = _get_Oblivion_plugins_file()
+            datadir = caseless_dirlist(gamedir.find_path("Data"))
+        else:
+            # Not running under a game directory, so we're probably testing
+            # assume plugins live in current directory.
+            datadir = caseless_dirlist("..")
+    file_logger.debug("Found Game:  {0}".format(game))
+    file_logger.debug("Plugins file at:  {0}".format(list_file))
+    file_logger.debug("Data Files at: {0}".format(datadir.dirpath()))
+    return (game,list_file,datadir)

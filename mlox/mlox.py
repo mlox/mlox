@@ -254,51 +254,6 @@ def plugin_description(plugin):
     else:
         return("")
 
-def find_appdata():
-    """a somewhat hacky function for finding where Oblivion's Application Data lives.
-    Hopefully works under Windows, Wine, and native Linux."""
-    if os.name == "posix":
-        # Linux - total hack for finding plugins.txt
-        # we assume we're running under a wine tree somewhere. so we
-        # find where we are now, then walk the tree upwards to find system.reg
-        # then grovel around in system.reg until we find the localappdata path
-        # and then fake it like a Republican
-        re_appdata = re.compile(r'"LOCALAPPDATA"="([^"]+)"', re.IGNORECASE)
-        regdir = fileFinder.caseless_dirlist().find_parent_dir("system.reg")
-        regpath = regdir.find_path("system.reg")
-        if regpath == None:
-            return(None)
-        inp = myopen_file(regpath, 'r')
-        if inp != None:
-            for line in inp:
-                match = re_appdata.match(line)
-                if match:
-                    path = match.group(1)
-                    path = path.split(r'\\')
-                    drive = "drive_" + path.pop(0).lower()[0]
-                    appdata = "/".join([regdir.dirpath(), drive, "/".join(path)])
-                    inp.close()
-                    return(appdata)
-            inp.close()
-            return(None)
-        return(None)
-    # Windows
-    try:
-        import _winreg
-        try:
-            key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
-                                  r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders')
-            vals = _winreg.QueryValueEx(key, 'Local AppData')
-        except WindowsError:
-            return None
-        else:
-            key.Close()
-        re_env = re.compile(r'%([^|<>=^%]+)%')
-        appdata = re_env.sub(lambda m: os.environ.get(m.group(1), m.group(0)), vals[0])
-        return(os.path.expandvars(appdata))
-    except ImportError:
-        return None
-
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
     def __init__(self, active, graph, datadir):
@@ -379,7 +334,7 @@ class rule_parser:
                 matches.append(p)
                 if Opt.ParseDBG: self.pdbg("expand_filename: %s expands to: %s" % (plugin, p))
         return(matches)
-                
+
     def parse_plugin_name(self):
         self.parse_dbg_indent += "  "
         buff = self.buffer.strip()
@@ -776,7 +731,7 @@ class rule_parser:
         inputsize = 0
         try:
             inputsize = os.path.getsize(rule_file)
-        except: 
+        except:
             pass
         pmsg = "Loading: %s" % rule_file
 
@@ -962,9 +917,12 @@ class loadorder:
         self.order = []                    # the load order
         self.gamedir = None                # where game is installed
         self.datadir = None                # where plugins live
+        self.plugin_file = None            # Path to the file containing the plugin list
         self.graph = pluggraph()
         self.sorted = False
         self.origin = None      # where plugins came from (active, installed, file)
+
+        Opt._Game, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
     def sort_by_date(self, plugin_files):
         """Sort input list of plugin files by modification date."""
@@ -984,39 +942,16 @@ class loadorder:
                 esm_files.append(filename)
         return(esm_files, esp_files)
 
-    def find_game_dirs(self):
-        cwd = fileFinder.caseless_dirlist() # start our search in our current directory
-        self.gamedir = cwd.find_parent_dir("Morrowind.ini")
-        if self.gamedir != None:
-            Opt._Game = "Morrowind"
-            self.datadir = fileFinder.caseless_dirlist(self.gamedir.find_path("Data Files"))
-        else:
-            self.gamedir = cwd.find_parent_dir("Oblivion.ini")
-            if self.gamedir != None:
-                Opt._Game = "Oblivion"
-                self.datadir = fileFinder.caseless_dirlist(self.gamedir.find_path("Data"))
-            else:
-                # Not running under a game directory, so we're probably testing
-                # assume plugins live in current directory.
-                Opt._Game = "None"
-                self.datadir = cwd
-                self.gamedir = fileFinder.caseless_dirlist("..")
-        Dbg.add("Data directory: \"%s\"" % self.datadir.dirpath())
-        #Stats.add("Data Directory: \"%s\"" % self.datadir.dirpath())
-
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates
         self.active and self.order and sorts in load order."""
         files = []
         # we look for the list of currently active plugins
         if Opt._Game == "Morrowind":
-            source = "Morrowind.ini"
-            # find Morrowind.ini for Morrowind
-            ini_path = self.gamedir.find_path(source)
-            if ini_path == None:
-                Msg.add(_["[%s not found, assuming running outside Morrowind directory]"] % source)
+            if self.plugin_file == None:
+                Msg.add(_["Morrowind.ini not found, assuming running outside Morrowind directory"])
                 return
-            ini = myopen_file(ini_path, 'r')
+            ini = myopen_file(self.plugin_file, 'r')
             if ini == None:
                 return
             for line in ini:
@@ -1036,17 +971,10 @@ class loadorder:
                         files.append(f)
             ini.close()
         elif Opt._Game == "Oblivion":
-            source = "Oblivion/Plugins.txt"
-            appdata = find_appdata()
-            if appdata == None:
-                Dbg.add("Application data directory not found")
+            if self.plugin_file == None:
+                Msg.add(_["Oblivion/Plugins.txt not found, assuming running outside Oblivion directory"])
                 return
-            plugins_txt_path = os.path.join(appdata, "Oblivion", "Plugins.txt")
-            Msg.add("plugins.txt = %s" % plugins_txt_path)
-            inp = myopen_file(plugins_txt_path, 'r')
-            if inp == None:
-                Msg.add("Plugins.txt not found")
-                return
+            inp = myopen_file(self.plugin_file, 'r')
             for line in inp:
                 line.strip()
                 plugin = re_plugin.match(line)
@@ -1064,7 +992,7 @@ class loadorder:
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
-        loadup_msg(_["Getting active plugins from: \"%s\""] % source, len(plugins), "plugins")
+        loadup_msg(_["Getting active plugins from file"], len(plugins), "plugins")
         self.order = plugins
         for p in self.order:
             self.active[p] = True
@@ -1086,7 +1014,6 @@ class loadorder:
         self.origin = _["Installed Plugins"]
 
     def listversions(self):
-        self.find_game_dirs()
         self.get_data_files()
         for p in self.order:
             match = re_filename_version.search(p)
@@ -1221,7 +1148,6 @@ class loadorder:
         New.flush()
         Old.flush()
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
-        self.find_game_dirs()
         if Opt.FromFile:
             Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
             self.read_from_file(fromfile)
