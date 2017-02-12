@@ -969,30 +969,30 @@ class loadorder:
         if self.plugin_file == None:
             Msg.add(_["{0} not found, assuming running outside {1} directory"].format(source,Opt._Game))
             return
+        # Look for the list of currently active plugins
         config_file = myopen_file(self.plugin_file, 'r')
         if config_file == None:
             logger.error("Unable to open config file")
             return
-        # we look for the list of currently active plugins
         for line in config_file:
             line.strip()
             line.strip('\r\n')
             gamefile = regex.match(line)
             if gamefile:
-                # we use caseless_dirlist.find_file(), so that the
-                # stored name of the plugin does not have to
-                # match the actual capitalization of the
-                # plugin name
-                f = self.datadir.find_file(gamefile.group(1).strip())
-                # f will be None if the file has been removed from
-                # Data Files but still exists in the Morrowind.ini
-                # [Game Files] section
-                if f != None:
-                    files.append(f)
+                f = gamefile.group(1).strip()
+                files.append(f)
         config_file.close()
+
+        # Deal with duplicates
         (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
             Dbg.add("get_active_plugins: dup plugin: %s" % f)
+
+        # Remove plugins not in the data directory (and correct capitalization)
+        files = map(self.datadir.find_file,files)
+        # This is needed because the map function leaves all the files not found as "None"
+        files = filter(lambda x: False if x == None else True, files)
+
         (esm_files, esp_files) = self.partition_esps_and_esms(files)
         # sort the plugins into load order by modification date
         plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
