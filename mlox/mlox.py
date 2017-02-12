@@ -11,9 +11,6 @@
 #   https://sourceforge.net/projects/mlox/files/License.txt
 Version = "0.61"
 
-UPDATE_FILE = 'mlox-data.7z'
-UPDATE_URL = 'https://sourceforge.net/projects/mlox/files/mlox/' + UPDATE_FILE
-
 import locale
 import os
 import sys
@@ -24,8 +21,10 @@ import traceback
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 import cPickle
-import urllib
-import subprocess
+import logging
+import modules.update as update
+
+logging.basicConfig(level=logging.INFO)
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -1752,48 +1751,6 @@ def version_info():
 def print_version():
     print version_info()
 
-def update_mloxdata():
-    ok = True
-    try:
-        d = urllib.urlopen(UPDATE_URL)
-    except:
-        ok = False
-        print 'Error connecting to %s, skipping mlox data update.' % UPDATE_URL
- 
-    if ok:
-        if os.path.isfile(UPDATE_FILE):
-            fsize = os.stat(UPDATE_FILE).st_size
-            print 'Current %s size: %d' % (UPDATE_FILE,fsize)
-            dsize = d.info()['Content-Length']
-            print 'Downloadable %s size: %s' % (UPDATE_FILE,dsize)
-            update = int(dsize) != int(fsize)
-        else:
-            update = 1
-        if update:
-            print 'Updating %s' % UPDATE_FILE
-            try:
-                d = urllib.urlretrieve(UPDATE_URL,UPDATE_FILE)
-            except:
-                ok = False
-                print 'Error downloading %s, skipping mlox data update' % UPDATE_URL
-
-            if ok:
-                print 'File %s downloaded' % UPDATE_FILE
-                cmd = '7za e "%s" -aoa' % UPDATE_FILE
-                cmd += ' > /dev/null'
-                runcmd = -1
-                try:
-                    runcmd = subprocess.call(cmd,shell=True)
-                except:
-                    print("Exception while trying to execute command:  %s" % cmd)
-
-                if runcmd == 0:
-                    print("mlox_base.txt updated from %s" % UPDATE_FILE)
-                else:
-                    print("Error while extracting from %s" % UPDATE_FILE)
-        else:
-            print 'No update necessary for file %s' % UPDATE_FILE
-
 def main():
     if Opt.FromFile:
         if len(args) == 0:
@@ -1803,7 +1760,7 @@ def main():
             loadorder().update(file)
     elif Opt.GUI == True:
         if Opt.NoUpdate == False:
-            update_mloxdata()
+            update.update_mloxdata()
         # run with gui
         Opt.DBG = True
         mlox_gui().start()
@@ -1843,6 +1800,7 @@ if __name__ == "__main__":
             Opt.BaseOnly = True
         elif opt in ("-d", "--debug"):
             Opt.DBG = True
+            logging.basicConfig(level=logging.DEBUG)
         elif opt in ("-e", "--explain"):
             Opt.Explain = arg
             Msg.prints = False
