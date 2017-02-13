@@ -186,11 +186,26 @@ Stats = logger(True, Dbg)       # stats output
 Msg = logger(True, Dbg)         # messages output
 
 #Configure logging from python module
+class colorFormatConsole(logging.Formatter):
+    levels = {
+        'DEBUG'    : '',
+        'INFO'     : '',
+        'WARNING'  : '\x1b[0;30;43m',  #Yellow (ish)
+        'ERROR'    : '\x1b[0;30;41m',  #Red (ish)
+        'CRITICAL' : '\x1b[0;30;41m'   #Red (ish)
+    }
+
+    def __init__(self,msg):
+        logging.Formatter.__init__(self, msg)
+    def format(self,record):
+        return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
+
 logging.getLogger('').setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(levelname)s: %(message)s')
+color_formatter = colorFormatConsole('%(levelname)s: %(message)s')
 console_log_stream = logging.StreamHandler()
 console_log_stream.setLevel(logging.INFO)
-console_log_stream.setFormatter(formatter)
+console_log_stream.setFormatter(color_formatter)
 logging.getLogger('').addHandler(console_log_stream)
 gui_dbg_log_stream = logging.StreamHandler(stream=Dbg)
 gui_dbg_log_stream.setFormatter(formatter)
@@ -1293,6 +1308,8 @@ class mlox_gui():
             happy = rt.RichTextAttr()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
             hide = rt.RichTextAttr()   ; hide.SetBackgroundColour(wx.BLACK)
             url = rt.RichTextAttr()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
+            warning = rt.RichTextAttr(); warning.SetBackgroundColour('YELLOW')
+            error = rt.RichTextAttr()  ; error.SetBackgroundColour('RED')
         except:
             low = rt.TextAttrEx()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
             medium = rt.TextAttrEx() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
@@ -1300,10 +1317,14 @@ class mlox_gui():
             happy = rt.TextAttrEx()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
             hide = rt.TextAttrEx()   ; hide.SetBackgroundColour(wx.BLACK)
             url = rt.TextAttrEx()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
+            warning = rt.TextAttrEx(); warning.SetBackgroundColour('YELLOW')
+            error = rt.TextAttrEx()  ; error.SetBackgroundColour('RED')
         highlighters = {
             re.compile(r'http://\S+', re.IGNORECASE): url,
             re.compile(r'^\[conflict\]', re.IGNORECASE): medium,
-            re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy }
+            re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy,
+            re.compile(r'^WARNING:.*', re.MULTILINE): warning,
+            re.compile(r'^ERROR:.*', re.MULTILINE): error }
         text = Msg.get()
         # for hiding spoilers
         hidden = []
