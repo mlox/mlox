@@ -1321,8 +1321,11 @@ class mlox_gui():
             error = rt.TextAttrEx()  ; error.SetBackgroundColour('RED')
         highlighters = {
             re.compile(r'http://\S+', re.IGNORECASE): url,
-            re.compile(r'^\[conflict\]', re.IGNORECASE): medium,
+            re.compile(r'^\[CONFLICT\]', re.MULTILINE): medium,
             re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy,
+            re.compile("^ (?:\\| )?(!.*)$", re.MULTILINE): low,             #Handle '!' in mlox_base.txt
+            re.compile("^ (?:\\| )?(!!.*)$", re.MULTILINE): medium,         #Handle '!!' in mlox_base.txt
+            re.compile("^ (?:\\| )?(!!!.*)$", re.MULTILINE): high,          #Handle '!!!' in mlox_base.txt
             re.compile(r'^WARNING:.*', re.MULTILINE): warning,
             re.compile(r'^ERROR:.*', re.MULTILINE): error }
         text = Msg.get()
@@ -1346,12 +1349,6 @@ class mlox_gui():
                 (start, end) = match.span()
                 if style == url:
                     url.SetURL(text[start:end])
-                txt.SetStyle((start, end), style)
-        # for leveled highlighting
-        for (level, style) in (('!', low), ('!!', medium), ('!!!', high)):
-            re_pat = re.compile("^ (?:\\| )?(%s.*)$" % level, re.MULTILINE)
-            for match in re.finditer(re_pat, text):
-                (start, end) = match.span()
                 txt.SetStyle((start, end), style)
         happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
 
