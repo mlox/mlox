@@ -655,6 +655,19 @@ class rule_parser:
         formatted = re_allstr.sub("ALL", formatted)
         return(re_indented.sub(prefix, formatted))
 
+    #Remove the missing plugins from the 'ANY' expression
+    def _prune_any(self,item):
+        #Don't operate on simple strings
+        if isinstance(item,list) == False:
+            return item
+        #Recursive search to make sure we get any nested expressions
+        for i in range(0,len(item)):
+            item[i] = self._prune_any(item[i])
+        #Prune all the missing plugins
+        if item[0] == 'ANY':
+            return filter(lambda x: x.find('MISSING(') == -1, item)
+        return item
+
     def parse_statement(self, rule, msg, expr):
         self.parse_dbg_indent += "  "
         parse_logger.debug("parse_statement(%s, %s, %s)" % (rule, msg, expr))
@@ -685,7 +698,7 @@ class rule_parser:
             if len(exprs) > 1:
                 Msg.add("[CONFLICT]")
                 for e in exprs:
-                    Msg.add(self.pprint(e, " > "))
+                    Msg.add(self.pprint(self._prune_any(e), " > "))
                 if msg != "": Msg.add(msg)
         elif rule == "NOTE":    # takes any number of exprs
             parse_logger.debug("function NOTE: %s" % msg)
