@@ -17,6 +17,7 @@ update.update_mloxdata()
 import modules.fileFinder as fileFinder
 file_names = fileFinder.caseless_filenames()
 dir_list = fileFinder.caseless_dirlist()
+fileFinder.caseless_dirlist(dir_list)       #Make sure copy constructor works
 print dir_list.find_file("module_TEST.PY")
 print dir_list.find_path("module_TEST.PY")
 print dir_list.find_parent_dir("reaDme.mD").dirpath()
