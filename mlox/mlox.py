@@ -25,6 +25,7 @@ import logging
 import modules.update as update
 import modules.fileFinder as fileFinder
 import modules.pluggraph as pluggraph
+import modules.configHandler as configHandler
 
 #Resource files
 program_path = os.path.realpath(sys.path[0])
@@ -76,12 +77,6 @@ re_rule = re.compile(r'^\[(version|order|nearend|nearstart|conflict|note|patch|r
 re_base_version = re.compile(r'^\[version\s+([^\]]*)\]', re.IGNORECASE)
 # line for multiline messages
 re_message = re.compile(r'^\s')
-# pattern matching a plugin in Morrowind.ini
-re_gamefile = re.compile(r'(?:GameFile\d*|content)+=(.*)', re.IGNORECASE)
-# pattern to match plugins in FromFile (somewhat looser than re_gamefile)
-# this may be too sloppy, we could also look for the same prefix pattern,
-# and remove that if present on all lines.
-re_sloppy_plugin = re.compile(r'^(?:(?:DBG:\s+)?[_\*]\d\d\d[_\*]\s+|GameFile\d+=|content=|\d{1,3} {1,2}|Plugin\d+\s*=\s*)?(.+\.es[mp]\b)', re.IGNORECASE)
 # pattern used to match a string that should only contain a plugin name, no slop
 re_plugin = re.compile(r'^(\S.*?\.es[mp]\b)([\s]*)', re.IGNORECASE)
 # set of characters that are not allowed to occur in plugin names.
@@ -813,7 +808,6 @@ class loadorder:
         # order is the list of plugins in Data Files, ordered by mtime
         self.active = {}                   # current active plugins
         self.order = []                    # the load order
-        self.gamedir = None                # where game is installed
         self.datadir = None                # where plugins live
         self.plugin_file = None            # Path to the file containing the plugin list
         self.graph = pluggraph.pluggraph()
@@ -822,92 +816,35 @@ class loadorder:
 
         Opt._Game, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
-    def sort_by_date(self, plugin_files):
-        """Sort input list of plugin files by modification date."""
-        dated_plugins = [[os.path.getmtime(self.datadir.find_path(file)), file] for file in plugin_files]
-        dated_plugins.sort()
-        return([x[1] for x in dated_plugins])
-
-    def partition_esps_and_esms(self, filelist):
-        """Split filelist into separate lists for esms and esps, retaining order."""
-        esm_files = []
-        esp_files = []
-        for filename in filelist:
-            ext = filename[-4:].lower()
-            if ext == ".esp":
-                esp_files.append(filename)
-            elif ext == ".esm":
-                esm_files.append(filename)
-        return(esm_files, esp_files)
-
-    # Get all the plugins from a list file
-    def _read_plugin_list_file(self,plugin_file,regex):
-        files = []
-        config_file = myopen_file(plugin_file, 'r')
-        if config_file == None:
-            logger.error("Unable to open config file: {0}".format(plugin_file))
-            return []
-        for line in config_file:
-            line.strip()
-            line.strip('\r\n')
-            gamefile = regex.match(line)
-            if gamefile:
-                f = gamefile.group(1).strip()
-                files.append(f)
-        config_file.close()
-
-        # Deal with duplicates
-        (files, dups) = fileFinder.filter_dup_files(files)
-        for f in dups:
-            logging.debug("Config File: dup plugin: %s" % f)
-        return files
-
     def get_active_plugins(self):
-        """Get the active list of plugins from the game configuration. Updates
-        self.active and self.order and sorts in load order."""
-        source = ""
-        regex = None
-        if Opt._Game == "Morrowind":
-            regex = re_gamefile
-            source = "Morrowind.ini"
-        elif Opt._Game == "Oblivion":
-            regex = re_plugin
-            source = "Oblivion/Plugins.txt"
-        else:
-            # not running under a game directory (e.g.: doing testing)
-            return
-
+        """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
         if self.plugin_file == None:
-            Msg.add(_["{0} not found, assuming running outside {1} directory"].format(source,Opt._Game))
+            Msg.add(_["{0} config file not found!"].format(Opt._Game))
             return
 
-        # Look for the list of currently active plugins
-        files = self._read_plugin_list_file(self.plugin_file,regex)
+        # Get all the plugins
+        configFiles = configHandler.configHandler(self.plugin_file,Opt._Game).read()
+        dirFiles = configHandler.dataDirHandler(self.datadir).read()
 
         # Remove plugins not in the data directory (and correct capitalization)
-        files = map(self.datadir.find_file,files)
-        # This is needed because the map function leaves all the files not found as "None"
-        files = filter(lambda x: False if x == None else True, files)
+        configFiles = map(str.lower, configFiles)
+        self.order = filter(lambda x: x.lower() in configFiles, dirFiles)
 
-        (esm_files, esp_files) = self.partition_esps_and_esms(files)
-        # sort the plugins into load order by modification date
-        plugins = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
-        loadup_msg(_["Getting active plugins from: {0}".format(self.plugin_file)], len(plugins), "plugins")
-        self.order = plugins
+        #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
+        self.order = map(C.cname,self.order)
+
+        loadup_msg(_["Getting active plugins from: {0}".format(self.plugin_file)], len(self.order), "plugins")
         for p in self.order:
             self.active[p] = True
         self.origin = _["Active Plugins"]
 
     def get_data_files(self):
-        """Get the list of plugins from the data files directory. Updates self.active.
-        If called,"""
-        files = [f for f in self.datadir.filelist() if os.path.isfile(self.datadir.find_path(f))]
-        (files, dups) = fileFinder.filter_dup_files(files)
-        for f in dups:
-            logging.debug("get_data_files: dup plugin: %s" % f)
-        (esm_files, esp_files) = self.partition_esps_and_esms(files)
-        # sort the plugins into load order by modification date
-        self.order = [C.cname(f) for f in self.sort_by_date(esm_files) + self.sort_by_date(esp_files)]
+        """Get the load order from the data files directory. Updates self.active and self.order."""
+        self.order = configHandler.dataDirHandler(self.datadir).read()
+
+        #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
+        self.order = map(C.cname,self.order)
+
         loadup_msg(_["Getting list of plugins from plugin directory"], len(self.order), "plugins")
         for p in self.order:
             self.active[p] = True
@@ -926,12 +863,12 @@ class loadorder:
             print "%10s %10s    %s" % (file_ver, desc_ver, C.truename(p))
 
     def read_from_file(self, fromfile):
-        """Get the load order by reading an input file. This is mostly to help
-        others debug their load order."""
-        files = self._read_plugin_list_file(fromfile,re_sloppy_plugin)
+        """Get the load order by reading an input file. Updates self.active and self.order."""
+        self.order = configHandler.configHandler(fromfile).read()
+
         #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
-        files = map(C.cname,files)
-        (self.order, dups) = fileFinder.filter_dup_files(files)
+        self.order = map(C.cname,self.order)
+
         Stats.add("%-50s (%3d plugins)" % (_["Reading plugins from file: \"%s\""] % fromfile, len(self.order)))
         for p in self.order:
             self.active[p] = True
@@ -978,48 +915,6 @@ class loadorder:
                         if self.graph.add_edge("", self.order[i], self.order[curr_i]):
                             break
             prev_i = curr_i
-
-    def update_mod_times(self, files):
-        """change the modification times of files to be in order of file list,
-        oldest to newest"""
-        if Opt._Game == "Morrowind":
-            mtime_first = 1024695106 # Fri Jun 21 17:31:46 2002 # Morrowind.esm, made compatible with tes3cmd resetdates
-        else: # Opt._Game == Oblivion
-            mtime_first = 1165600070 # Oblivion.esm
-        if len(files) > 1:
-            mtime_last = int(time()) # today
-            # sanity check
-            if mtime_last < 1228683562: # Sun Dec  7 14:59:56 CST 2008
-                mtime_last = 1228683562
-            loadorder_mtime_increment = (mtime_last - mtime_first) / len(files)
-
-            tes3cmd_resetdates_morrowind_mtime = 1024695106 # Fri Jun 21 17:31:46 2002
-            tes3cmd_resetdates_tribunal_mtime  = 1035940926 # Tue Oct 29 20:22:06 2002
-            tes3cmd_resetdates_bloodmoon_mtime = 1051807050 # Thu May  1 12:37:30 2003
-
-            lastmtime = tes3cmd_resetdates_morrowind_mtime
-            for p in files:
-                change = False
-                if p == "morrowind.esm":
-                    mtime = tes3cmd_resetdates_morrowind_mtime
-                    change = True
-                    os.utime(self.datadir.find_path("morrowind.bsa"), (-1, mtime))
-                elif p == "tribunal.esm":
-                    mtime = tes3cmd_resetdates_tribunal_mtime
-                    change = True
-                    os.utime(self.datadir.find_path("tribunal.bsa"), (-1, mtime))
-                elif p == "bloodmoon.esm":
-                    mtime = tes3cmd_resetdates_bloodmoon_mtime
-                    change = True
-                    os.utime(self.datadir.find_path("bloodmoon.bsa"), (-1, mtime))
-                else:
-                    mtime = os.path.getmtime(self.datadir.find_path(p))
-                    if mtime <= lastmtime:
-                        mtime = lastmtime + 5 # fraction of standard 1 minute Mash step, hopefully avoid redating some mods
-                        change = True
-                if change:
-                    os.utime(self.datadir.find_path(p), (-1, mtime))
-                lastmtime = mtime
 
     def save_order(self, filename, order, what):
         out = myopen_file(filename, 'w')
@@ -1104,7 +999,7 @@ class loadorder:
             Old.add("_%03d_ %s" % (n, C.truename(p)))
             n += 1
         sorted_datafiles = [f for f in sorted if f in self.active]
-        (esm_files, esp_files) = self.partition_esps_and_esms(sorted_datafiles)
+        (esm_files, esp_files) = configHandler.partition_esps_and_esms(sorted_datafiles)
         new_order_cname = [p for p in esm_files + esp_files]
         new_order_truename = [C.truename(p) for p in new_order_cname]
 
@@ -1119,9 +1014,9 @@ class loadorder:
             # these are things we do not want to do if just testing a load
             # order from a file (FromFile)
             if Opt.Update:
-                self.update_mod_times(new_order_truename)
-                Msg.add(_["[LOAD ORDER UPDATED!]"])
-                self.sorted = True
+                if configHandler.dataDirHandler(self.datadir).write(new_order_truename):
+                    Msg.add(_["[LOAD ORDER UPDATED!]"])
+                    self.sorted = True
             else:
                 if not Opt.GUI:
                     Msg.add(_["[Load Order NOT updated.]"])
