@@ -39,8 +39,11 @@ class caseless_dirlist:
         self.files = {}
         if dir == None:
             return
-        self.dir = os.path.normpath(os.path.abspath(dir))
-        for f in [p for p in os.listdir(dir)]:
+        if isinstance(dir,caseless_dirlist):
+            self.dir = dir.dirpath()
+        else:
+            self.dir = os.path.normpath(os.path.abspath(dir))
+        for f in [p for p in os.listdir(self.dir)]:
             self.files[f.lower()] = f
 
     def find_file(self, file):
