@@ -196,8 +196,8 @@ class colorFormatConsole(logging.Formatter):
         return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
 
 logging.getLogger('').setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(levelname)s: %(message)s')
-color_formatter = colorFormatConsole('%(levelname)s: %(message)s')
+formatter = logging.Formatter('%(levelname)s (%(name)s): %(message)s')
+color_formatter = colorFormatConsole('%(levelname)s (%(name)s): %(message)s')
 console_log_stream = logging.StreamHandler()
 console_log_stream.setLevel(logging.INFO)
 console_log_stream.setFormatter(color_formatter)
@@ -1221,8 +1221,8 @@ class mlox_gui():
             re.compile("^ (?:\\| )?(!.*)$", re.MULTILINE): low,             #Handle '!' in mlox_base.txt
             re.compile("^ (?:\\| )?(!!.*)$", re.MULTILINE): medium,         #Handle '!!' in mlox_base.txt
             re.compile("^ (?:\\| )?(!!!.*)$", re.MULTILINE): high,          #Handle '!!!' in mlox_base.txt
-            re.compile(r'^WARNING:.*', re.MULTILINE): warning,
-            re.compile(r'^ERROR:.*', re.MULTILINE): error }
+            re.compile(r'^WARNING \(.*\):.*', re.MULTILINE): warning,
+            re.compile(r'^ERROR \(.*\):.*', re.MULTILINE): error }
         text = Msg.get()
         # for hiding spoilers
         hidden = []
