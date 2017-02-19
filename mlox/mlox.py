@@ -321,7 +321,7 @@ class rule_parser:
     def parse_error(self, what):
         """print a message about current parsing error, and blow away the
         current parse buffer so next parse starts on next input line."""
-        Msg.add(_["%s: Parse Error(%s), %s [Buffer=%s]"] % (self.where(), self.curr_rule, what, self.buffer))
+        parse_logger("%s: Parse Error(%s), %s [Buffer=%s]" % (self.where(), self.curr_rule, what, self.buffer))
         self.buffer = ""
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
 
@@ -404,9 +404,9 @@ class rule_parser:
                 self.graph.nodes.setdefault(p, [])
         if rule == "ORDER":
             if n_order == 0:
-                Msg.add(_["Warning: %s: ORDER rule has no entries"] % (self.where()))
+                parse_logger.warning("%s: ORDER rule has no entries" % (self.where()))
             elif n_order == 1:
-                Msg.add(_["Warning: %s: ORDER rule skipped because it only has one entry: %s"] % (self.where(), C.truename(prev)))
+                parse_logger.warning("%s: ORDER rule skipped because it only has one entry: %s" % (self.where(), C.truename(prev)))
 
     def parse_ver(self):
         self.parse_dbg_indent += "  "
@@ -703,12 +703,12 @@ class rule_parser:
         elif rule == "PATCH":   # takes 2 exprs
             (bool1, expr1) = self.parse_expression()
             if bool1 == None:
-                Msg.add(_["Warning: %s: PATCH rule invalid first expression"] % (self.where()))
+                parse_logger.warning("%s: PATCH rule invalid first expression" % (self.where()))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             (bool2, expr2) = self.parse_expression()
             if bool2 == None:
-                Msg.add(_["Warning: %s: PATCH rule invalid second expression"] % (self.where()))
+                parse_logger.warning("%s: PATCH rule invalid second expression" % (self.where()))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             if bool1 and not bool2:
@@ -724,12 +724,12 @@ class rule_parser:
         elif rule == "REQUIRES": # takes 2 exprs
             (bool1, expr1) = self.parse_expression(prune=True)
             if bool1 == None:
-                Msg.add(_["Warning: %s: REQUIRES rule invalid first expression"] % (self.where()))
+                parse_logger.warning("%s: REQUIRES rule invalid first expression" % (self.where()))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             (bool2, expr2) = self.parse_expression()
             if bool2 == None:
-                Msg.add(_["Warning: %s: REQUIRES rule invalid second expression"] % (self.where()))
+                parse_logger.warning("%s: REQUIRES rule invalid second expression" % (self.where()))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return
             if bool1 and not bool2:
