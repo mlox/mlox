@@ -92,6 +92,7 @@
  -p|--parsedebug
 	Turn on debugging for the rules parser. (This can generate a
 	fair amount of output).
+	Implies --debug.
  -q|--quiet
 	Run more quietly (does not print out NOTEs).
  -u|--update
