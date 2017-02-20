@@ -253,13 +253,16 @@ def myopen_file(filename, mode, encoding=None):
 
 def plugin_description(plugin):
     """Read the description field of a TES3/TES4 plugin file header"""
-    inp = myopen_file(plugin, 'rb')
-    if inp == None: return("")
+    try:
+        inp = open(plugin, 'rb')
+    except IOError:
+        logging.warn("Unable to open plugin file:  {0}".format(plugin))
+        return("")
     block = inp.read(4096)
     inp.close()
     if block[0:4] == "TES3":    # Morrowind
         if len(block) < tes3_min_plugin_size:
-            logging.debug("plugin_description(%s): file too short, returning NULL string" % plugin)
+            logging.warn("Cannot read plugin description(%s): file too short, returning NULL string" % plugin)
             return("")
         desc = block[64:block.find("\x00", 64)]
         return(desc)
@@ -770,8 +773,11 @@ class rule_parser:
         pmsg = "Loading: %s" % rule_file
 
         parse_logger.debug("READING RULES FROM: \"%s\"" % self.rule_file)
-        self.input_handle = myopen_file(self.rule_file, 'r')
-        if self.input_handle == None:
+        try:
+            self.input_handle = open(self.rule_file, 'r')
+        except IOError:
+            #This can't be too important, because we try to read the user rules file, and it doesn't exist for most people (TODO:  Move file existance checking somewhere else, and change this from info to error)
+            parse_logger.info("Unable to open rules file:  {0}".format(self.rule_file))
             return False
         self.line_num = 0
         while True:
