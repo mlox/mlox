@@ -283,7 +283,7 @@ parse_logger = logging.getLogger('mlox.parser')
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
-    def __init__(self, active, graph, datadir):
+    def __init__(self, active, graph, datadir,out_stream):
         self.active = active
         self.graph = graph
         self.datadir = datadir
@@ -295,6 +295,7 @@ class rule_parser:
         self.message = []       # the comment for the current rule
         self.curr_rule = ""     # name of the current rule we are parsing
         self.parse_dbg_indent = ""
+        self.out_stream = out_stream
 
     def readline(self):
         """reads a line into the current parsing buffer"""
@@ -699,10 +700,10 @@ class rule_parser:
                 (bool, expr) = self.parse_expression()
                 parse_logger.debug("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
-                Msg.add("[CONFLICT]")
+                self.out_stream.write("[CONFLICT]")
                 for e in exprs:
-                    Msg.add(self.pprint(self._prune_any(e), " > "))
-                if msg != "": Msg.add(msg)
+                    self.out_stream.write(self.pprint(self._prune_any(e), " > "))
+                if msg != "": self.out_stream.write(msg)
         elif rule == "NOTE":    # takes any number of exprs
             parse_logger.debug("function NOTE: %s" % msg)
             exprs = []
@@ -712,10 +713,10 @@ class rule_parser:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression(prune=True)
             if not Opt.Quiet and len(exprs) > 0:
-                Msg.add("[NOTE]")
+                self.out_stream.write("[NOTE]")
                 for e in exprs:
-                    Msg.add(self.pprint(e, " > "))
-                if msg != "": Msg.add(msg)
+                    self.out_stream.write(self.pprint(e, " > "))
+                if msg != "": self.out_stream.write(msg)
         elif rule == "PATCH":   # takes 2 exprs
             (bool1, expr1) = self.parse_expression()
             if bool1 == None:
@@ -729,14 +730,14 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
-                Msg.add(_["[PATCH]\n%s is missing some pre-requisites:\n%s"] %
+                self.out_stream.write(_["[PATCH]\n%s is missing some pre-requisites:\n%s"] %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
-                if msg != "": Msg.add(msg)
+                if msg != "": self.out_stream.write(msg)
             if bool2 and not bool1:
                 # case where the patch is missing for the thing to be patched
-                Msg.add(_["[PATCH]\n%s for:\n%s"] %
+                self.out_stream.write(_["[PATCH]\n%s for:\n%s"] %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
-                if msg != "": Msg.add(msg)
+                if msg != "": self.out_stream.write(msg)
         elif rule == "REQUIRES": # takes 2 exprs
             (bool1, expr1) = self.parse_expression(prune=True)
             if bool1 == None:
@@ -750,12 +751,12 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 expr2_str = self.pprint(expr2, " > ")
-                Msg.add(_["[REQUIRES]\n%s Requires:\n%s"] %
+                self.out_stream.write(_["[REQUIRES]\n%s Requires:\n%s"] %
                         (self.pprint(expr1, " !!!"), expr2_str))
-                if msg != "": Msg.add(msg)
+                if msg != "": self.out_stream.write(msg)
                 match = re_filename_version.search(expr2_str)
                 if match:
-                    Msg.add(_[" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version]."])
+                    self.out_stream.write(_[" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version]."])
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         parse_logger.debug("parse_statement RETURNING")
 
@@ -961,7 +962,7 @@ class loadorder:
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
-        parser = rule_parser(self.active, self.graph, self.datadir)
+        parser = rule_parser(self.active, self.graph, self.datadir,Msg)
         progress = None
         if Opt.GUI:
             progress = wx.ProgressDialog("Progress", "", 100, None,
