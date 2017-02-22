@@ -767,26 +767,23 @@ class rule_parser:
         n_rules = 0
         self.rule_file = rule_file
 
-        inputsize = 0
-        try:
-            inputsize = os.path.getsize(rule_file)
-        except:
-            pass
         pmsg = "Loading: %s" % rule_file
 
         parse_logger.debug("READING RULES FROM: \"%s\"" % self.rule_file)
         try:
             self.input_handle = open(self.rule_file, 'r')
-        except IOError:
+            inputsize = os.path.getsize(self.rule_file)
+        except IOError, OSError:
             #This can't be too important, because we try to read the user rules file, and it doesn't exist for most people (TODO:  Move file existance checking somewhere else, and change this from info to error)
             parse_logger.info("Unable to open rules file:  {0}".format(self.rule_file))
             return False
+
         self.line_num = 0
         while True:
             if self.buffer == "":
                 if not self.readline():
                     break
-            if progress != None:
+            if progress != None and inputsize > 0:
                 pct = int(100*self.bytesread/inputsize)
                 if pct % 3 == 0 and pct < 100:
                     progress.Update(pct, pmsg)
