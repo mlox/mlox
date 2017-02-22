@@ -769,7 +769,7 @@ class rule_parser:
 
         pmsg = "Loading: %s" % rule_file
 
-        parse_logger.debug("READING RULES FROM: \"%s\"" % self.rule_file)
+        parse_logger.debug("Reading rules from: \"{0}\"".format(self.rule_file))
         try:
             self.input_handle = open(self.rule_file, 'r')
             inputsize = os.path.getsize(self.rule_file)
@@ -805,7 +805,7 @@ class rule_parser:
                     self.parse_error(_["read_rules failed sanity check, unknown rule"])
             else:
                 self.parse_error(_["expected start of rule"])
-        parse_logger.info("Reading rules from: \"{0}\" ({1} rules)".format(self.rule_file, n_rules))
+        parse_logger.info("Read {0} rules from: \"{1}\"".format(n_rules, self.rule_file))
         return True
 
 class loadorder:
