@@ -283,7 +283,7 @@ parse_logger = logging.getLogger('mlox.parser')
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
-    def __init__(self, active, graph, datadir,out_stream):
+    def __init__(self, active, graph, datadir,out_stream,name_converter):
         self.active = active
         self.graph = graph
         self.datadir = datadir
@@ -296,6 +296,7 @@ class rule_parser:
         self.curr_rule = ""     # name of the current rule we are parsing
         self.parse_dbg_indent = ""
         self.out_stream = out_stream
+        self.name_converter = name_converter
 
     def readline(self):
         """reads a line into the current parsing buffer"""
@@ -366,7 +367,7 @@ class rule_parser:
         parse_logger.debug("parse_plugin_name buff=%s" % buff)
         plugin_match = re_plugin.match(buff)
         if plugin_match:
-            plugin_name = C.cname(plugin_match.group(1))
+            plugin_name = self.name_converter.cname(plugin_match.group(1))
             parse_logger.debug("parse_plugin_name name=%s" % plugin_name)
             pos = plugin_match.span(2)[1]
             self.buffer = buff[pos:].lstrip()
@@ -410,7 +411,7 @@ class rule_parser:
             if n_order == 0:
                 parse_logger.warning("%s: ORDER rule has no entries" % (self.where()))
             elif n_order == 1:
-                parse_logger.warning("%s: ORDER rule skipped because it only has one entry: %s" % (self.where(), C.truename(prev)))
+                parse_logger.warning("%s: ORDER rule skipped because it only has one entry: %s" % (self.where(), self.name_converter.truename(prev)))
 
     def parse_ver(self):
         self.parse_dbg_indent += "  "
@@ -446,8 +447,8 @@ class rule_parser:
                     self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                     return(False, expr)
             for xp in expanded:
-                plugin = C.cname(xp)
-                plugin_t = C.truename(plugin)
+                plugin = self.name_converter.cname(xp)
+                plugin_t = self.name_converter.truename(plugin)
                 desc = plugin_description(self.datadir.find_path(plugin))
                 match = re_header_version.search(desc)
                 if match:
@@ -508,8 +509,8 @@ class rule_parser:
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(True, expr)
             for xp in expanded:
-                plugin = C.cname(xp)
-                plugin_t = C.truename(plugin)
+                plugin = self.name_converter.cname(xp)
+                plugin_t = self.name_converter.truename(plugin)
                 re_pat = re.compile(pat)
                 desc = plugin_description(self.datadir.find_path(plugin))
                 bool = (re_pat.search(desc) != None)
@@ -552,8 +553,8 @@ class rule_parser:
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(True, expr)
             for xp in expanded:
-                plugin = C.cname(xp)
-                plugin_t = C.truename(plugin)
+                plugin = self.name_converter.cname(xp)
+                plugin_t = self.name_converter.truename(plugin)
                 actual_size = os.path.getsize(self.datadir.find_path(plugin))
                 bool = (actual_size == wanted_size)
                 if bang == "!": bool = not bool
@@ -646,7 +647,7 @@ class rule_parser:
             parse_logger.debug("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
             if exists != None and p != None:
-                p = C.truename(p) if exists else ("MISSING(%s)" % C.truename(p))
+                p = self.name_converter.truename(p) if exists else ("MISSING(%s)" % self.name_converter.truename(p))
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(exists, p)
         parse_logger.debug("parse_expression NOTREACHED(2)")
@@ -760,7 +761,7 @@ class rule_parser:
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         parse_logger.debug("parse_statement RETURNING")
 
-    def read_rules(self, rule_file, progress):
+    def read_rules(self, rule_file, progress = None):
         """Read rules from rule files (e.g., mlox_user.txt or mlox_base.txt),
         add order rules to graph, and print warnings."""
         n_rules = 0
@@ -807,7 +808,7 @@ class rule_parser:
                     self.parse_error(_["read_rules failed sanity check, unknown rule"])
             else:
                 self.parse_error(_["expected start of rule"])
-        loadup_msg(_["Read rules from: \"%s\""] % self.rule_file, n_rules, "rules")
+        parse_logger.info("Reading rules from: \"{0}\" ({1} rules)".format(self.rule_file, n_rules))
         return True
 
 class loadorder:
@@ -962,7 +963,7 @@ class loadorder:
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
-        parser = rule_parser(self.active, self.graph, self.datadir,Msg)
+        parser = rule_parser(self.active, self.graph, self.datadir,Msg,C)
         progress = None
         if Opt.GUI:
             progress = wx.ProgressDialog("Progress", "", 100, None,
