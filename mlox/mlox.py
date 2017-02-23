@@ -22,6 +22,7 @@ from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 import cPickle
 import logging
+import StringIO
 import modules.update as update
 import modules.fileFinder as fileFinder
 import modules.pluggraph as pluggraph
@@ -713,7 +714,7 @@ class rule_parser:
                 if bool:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression(prune=True)
-            if not Opt.Quiet and len(exprs) > 0:
+            if len(exprs) > 0:
                 self.out_stream.write("[NOTE]")
                 for e in exprs:
                     self.out_stream.write(self.pprint(e, " > "))
@@ -961,7 +962,12 @@ class loadorder:
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         # primary rules are from mlox_user.txt
-        parser = rule_parser(self.active, self.graph, self.datadir,Msg,C)
+        parser = None
+        if Opt.Quiet:
+            #Print output to an unused buffer
+            parser = rule_parser(self.active, self.graph, self.datadir,StringIO.StringIO(),C)
+        else:
+            parser = rule_parser(self.active, self.graph, self.datadir,Msg,C)
         progress = None
         if Opt.GUI:
             progress = wx.ProgressDialog("Progress", "", 100, None,

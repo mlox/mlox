@@ -94,7 +94,7 @@
 	fair amount of output).
 	Implies --debug.
  -q|--quiet
-	Run more quietly (does not print out NOTEs).
+	Run more quietly (only re-order plugins, ignoring all notes, warnings, etc).
  -u|--update
 	Update mode, updates the load order.
  -v|--version
