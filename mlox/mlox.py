@@ -382,7 +382,7 @@ class rule_parser:
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(False, plugin_name)
         else:
-            self.parse_error(_["expected a plugin name"])
+            self.parse_error("expected a plugin name")
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(None, None)
 
@@ -423,7 +423,7 @@ class rule_parser:
             parse_logger.debug("parse_ver new buffer = %s" % self.buffer)
             op = match.group(1)
             if op not in version_operators:
-                self.parse_error(_["Invalid [VER] operator"])
+                self.parse_error("Invalid [VER] operator")
                 return(None, None)
             orig_ver = match.group(2)
             ver = format_version(orig_ver)
@@ -479,7 +479,7 @@ class rule_parser:
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(False, expr)
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-        self.parse_error(_["Invalid [VER] function"])
+        self.parse_error("Invalid [VER] function")
         return(None, None)
 
     def parse_desc(self):
@@ -523,7 +523,7 @@ class rule_parser:
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(False, expr)
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-        self.parse_error(_["Invalid [DESC] function"])
+        self.parse_error("Invalid [DESC] function")
         return(None, None)
 
     def parse_size(self):
@@ -567,7 +567,7 @@ class rule_parser:
             self.parse_dbg_indent = self.parse_dbg_indent[:-2]
             return(False, expr)
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-        self.parse_error(_["Invalid [SIZE] function"])
+        self.parse_error("Invalid [SIZE] function")
         return(None, None)
 
     def parse_expression(self, prune=False):
@@ -612,7 +612,7 @@ class rule_parser:
             while not bool_end:
                 (bool, expr) = self.parse_expression(prune)
                 if bool == None:
-                    self.parse_error(_["[%s] Invalid boolean arguments"] % fun)
+                    self.parse_error("[%s] Invalid boolean arguments" % fun)
                     return(None, None)
                 exprs.append(expr)
                 vals.append(bool)
@@ -638,12 +638,12 @@ class rule_parser:
                 return(not(all(vals)), ["NOT"] + exprs)
             else:
                 # should not be reached due to match on re_fun
-                self.parse_error(_["Expected Boolean function (ALL, ANY, NOT)"])
+                self.parse_error("Expected Boolean function (ALL, ANY, NOT)")
                 return(None, None)
             parse_logger.debug("parse_expression NOTREACHED")
         else:
             if re_fun.match(self.buffer):
-                self.parse_error(_["Invalid function expression"])
+                self.parse_error("Invalid function expression")
                 return(None, None)
             parse_logger.debug("parse_expression parsing plugin: \"%s\"" % self.buffer)
             (exists, p) = self.parse_plugin_name()
@@ -732,12 +732,12 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
-                self.out_stream.write(_["[PATCH]\n%s is missing some pre-requisites:\n%s"] %
+                self.out_stream.write("[PATCH]\n%s is missing some pre-requisites:\n%s" %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": self.out_stream.write(msg)
             if bool2 and not bool1:
                 # case where the patch is missing for the thing to be patched
-                self.out_stream.write(_["[PATCH]\n%s for:\n%s"] %
+                self.out_stream.write("[PATCH]\n%s for:\n%s" %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
                 if msg != "": self.out_stream.write(msg)
         elif rule == "REQUIRES": # takes 2 exprs
@@ -753,12 +753,12 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 expr2_str = self.pprint(expr2, " > ")
-                self.out_stream.write(_["[REQUIRES]\n%s Requires:\n%s"] %
+                self.out_stream.write("[REQUIRES]\n%s Requires:\n%s" %
                         (self.pprint(expr1, " !!!"), expr2_str))
                 if msg != "": self.out_stream.write(msg)
                 match = re_filename_version.search(expr2_str)
                 if match:
-                    self.out_stream.write(_[" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version]."])
+                    self.out_stream.write(" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version].")
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         parse_logger.debug("parse_statement RETURNING")
 
@@ -803,9 +803,9 @@ class rule_parser:
                     self.parse_statement(self.curr_rule, new_rule.group(2), new_rule.group(3))
                 else:
                     # we should never reach here, since re_rule only matches known rules
-                    self.parse_error(_["read_rules failed sanity check, unknown rule"])
+                    self.parse_error("read_rules failed sanity check, unknown rule")
             else:
-                self.parse_error(_["expected start of rule"])
+                self.parse_error("expected start of rule")
         parse_logger.info("Read {0} rules from: \"{1}\"".format(n_rules, self.rule_file))
         return True
 
