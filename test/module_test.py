@@ -48,3 +48,12 @@ plugins = dirHandler.read()
 print plugins
 print "\x1b[0;30;41m" + "Writing dirHandler" + '\x1b[0m'
 dirHandler.write(plugins)
+
+#Parser, ang pluggraph
+import modules.ruleParser as ruleParser
+import modules.pluggraph as pluggraph
+print "\x1b[0;30;41m" + "Testing parser on dirHandler plugins" + '\x1b[0m'
+graph = pluggraph.pluggraph()
+myParser = ruleParser.rule_parser(plugins,graph,"./test1.data/",sys.stdout,file_names)
+myParser.read_rules("./test1.data/mlox_base.txt")
+print graph.topo_sort()
