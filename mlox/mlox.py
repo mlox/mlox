@@ -448,6 +448,68 @@ class loadorder:
         return(self)
 
 
+def display_colored_text(in_text, out_RichTextCtrl):
+    # Apply coloring to text, then display it on a wx.RichTextCtrl
+    try:
+        # try coping with python changing function names between versions /abot
+        low = rt.RichTextAttr()
+        medium = rt.RichTextAttr()
+        high = rt.RichTextAttr()
+        happy = rt.RichTextAttr()
+        hide = rt.RichTextAttr()
+        url = rt.RichTextAttr()
+        warning = rt.RichTextAttr()
+        error = rt.RichTextAttr()
+    except:
+        low = rt.TextAttrEx()
+        medium = rt.TextAttrEx()
+        high = rt.TextAttrEx()
+        happy = rt.TextAttrEx()
+        hide = rt.TextAttrEx()
+        url = rt.TextAttrEx()
+        warning = rt.TextAttrEx()
+        error = rt.TextAttrEx()
+    low.SetBackgroundColour(wx.Colour(125,220,240))
+    medium.SetBackgroundColour(wx.Colour(255,255,180))
+    high.SetBackgroundColour(wx.Colour(255,180,180))
+    happy.SetBackgroundColour('GREEN')
+    hide.SetBackgroundColour('BLACK'); hide.SetTextColour('BLACK')
+    url.SetTextColour('BLUE') ; url.SetFontUnderlined(True)
+    warning.SetBackgroundColour('YELLOW')
+    error.SetBackgroundColour('RED')
+    highlighters = {
+        #Only highlights the text inside group 1
+        re.compile(r'Version[^\]]+\]\t+(.+)', re.MULTILINE): happy,
+        re.compile(r'(http://\S+)', re.IGNORECASE): url,
+        re.compile(r'^(\[CONFLICT\])', re.MULTILINE): medium,
+        re.compile(r'(\[Plugins already in sorted order. No sorting needed!\])', re.IGNORECASE): happy,
+        re.compile(r"^(\s*\|?\s*!{1}[^!].*)$", re.MULTILINE): low,           #Handle '!' in mlox_base.txt
+        re.compile(r"^(\s*\|?\s*!{2}[^!].*)$", re.MULTILINE): medium,        #Handle '!!' in mlox_base.txt
+        re.compile(r"^(\s*\|?\s*!{3}.*)$", re.MULTILINE): high,              #Handle '!!!' in mlox_base.txt
+        re.compile(r'^(WARNING \(.*\):.*)', re.MULTILINE): warning,
+        re.compile(r'^(ERROR \(.*\):.*)', re.MULTILINE): error }
+    # for hiding spoilers
+    hidden = []
+    adjust = [0]            # use a mutable entity for closure "hider"
+    def hider(match):
+        (p1, p2) = match.span(0)
+        delta = len(match.group(0)) - len(match.group(1))
+        hidden.append((p1 - adjust[0], p2 - delta - adjust[0]))
+        adjust[0] += delta
+        return(match.group(1))
+    re_hide = re.compile(r'<hide>(.*)</hide>', re.IGNORECASE)
+    in_text = re_hide.sub(hider, in_text)
+    out_RichTextCtrl.SetValue(in_text)
+    # for special highlighting
+    for (re_pat, style) in highlighters.items():
+        for match in re.finditer(re_pat, in_text):
+            (start, end) = match.span(1)
+            if style == url:
+                url.SetURL(in_text[start:end])
+            out_RichTextCtrl.SetStyle((start, end), style)
+    for where in hidden:
+        out_RichTextCtrl.SetStyle(where, hide)
+
 class mlox_gui():
     def __init__(self):
         wx.Locale(wx.LOCALE_LOAD_DEFAULT)
@@ -472,7 +534,7 @@ class mlox_gui():
         self.logo.SetToolTip(wx.ToolTip(_["Click to Reload"]))
         self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
         self.label_stats.SetFont(self.label_font)
-        self.txt_stats = wx.TextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
+        self.txt_stats = rt.RichTextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
         self.txt_stats.SetFont(default_font)
         if Opt.AutoFocus:
             self.txt_stats.Bind(wx.EVT_ENTER_WINDOW, lambda e: self.txt_stats.SetFocus())
@@ -581,73 +643,9 @@ class mlox_gui():
         err_frame.Show(True)
         self.app.MainLoop()
 
-    def highlight_hello(self, txt):
-        happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
-        highlighters = { re.compile(r'Version[^\]]+\]\t+(.+)', re.IGNORECASE): happy }
-        text = Stats.get_u()
-        for (re_pat, style) in highlighters.items():
-            for match in re.finditer(re_pat, text):
-                (start, end) = match.span(1)
-                txt.SetStyle(start, end, style)
-
     def click_url(self, e):
         the_url = e.GetString()
         webbrowser.open(the_url)
-
-    def highlight_warnings(self, txt):
-        # highlight warnings in message window to help convey urgency
-        # highlight styles:
-	# try coping with python changing function names between versions /abot
-        try:
-            low = rt.RichTextAttr()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
-            medium = rt.RichTextAttr() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
-            high = rt.RichTextAttr()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
-            happy = rt.RichTextAttr()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
-            hide = rt.RichTextAttr()   ; hide.SetBackgroundColour(wx.BLACK)
-            url = rt.RichTextAttr()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
-            warning = rt.RichTextAttr(); warning.SetBackgroundColour('YELLOW')
-            error = rt.RichTextAttr()  ; error.SetBackgroundColour('RED')
-        except:
-            low = rt.TextAttrEx()    ; low.SetBackgroundColour(wx.Colour(125,220,240))
-            medium = rt.TextAttrEx() ; medium.SetBackgroundColour(wx.Colour(255,255,180))
-            high = rt.TextAttrEx()   ; high.SetBackgroundColour(wx.Colour(255,180,180))
-            happy = rt.TextAttrEx()  ; happy.SetBackgroundColour(wx.Colour(145,240,180))
-            hide = rt.TextAttrEx()   ; hide.SetBackgroundColour(wx.BLACK)
-            url = rt.TextAttrEx()    ; url.SetTextColour(wx.BLUE) ; url.SetFontUnderlined(True)
-            warning = rt.TextAttrEx(); warning.SetBackgroundColour('YELLOW')
-            error = rt.TextAttrEx()  ; error.SetBackgroundColour('RED')
-        highlighters = {
-            re.compile(r'http://\S+', re.IGNORECASE): url,
-            re.compile(r'^\[CONFLICT\]', re.MULTILINE): medium,
-            re.compile(r'\[Plugins already in sorted order. No sorting needed!\]', re.IGNORECASE): happy,
-            re.compile("^ (?:\\| )?(!.*)$", re.MULTILINE): low,             #Handle '!' in mlox_base.txt
-            re.compile("^ (?:\\| )?(!!.*)$", re.MULTILINE): medium,         #Handle '!!' in mlox_base.txt
-            re.compile("^ (?:\\| )?(!!!.*)$", re.MULTILINE): high,          #Handle '!!!' in mlox_base.txt
-            re.compile(r'^WARNING \(.*\):.*', re.MULTILINE): warning,
-            re.compile(r'^ERROR \(.*\):.*', re.MULTILINE): error }
-        text = Msg.get()
-        # for hiding spoilers
-        hidden = []
-        adjust = [0]            # use a mutable entity for closure "hider"
-        def hider(match):
-            (p1, p2) = match.span(0)
-            delta = len(match.group(0)) - len(match.group(1))
-            hidden.append((p1 - adjust[0], p2 - delta - adjust[0]))
-            adjust[0] += delta
-            return(match.group(1))
-        re_hide = re.compile(r'<hide>(.*)</hide>', re.IGNORECASE)
-        text = re_hide.sub(hider, text)
-        txt.SetValue(text)
-        for where in hidden:
-            txt.SetStyle(where, hide)
-        # for special highlighting
-        for (re_pat, style) in highlighters.items():
-            for match in re.finditer(re_pat, text):
-                (start, end) = match.span()
-                if style == url:
-                    url.SetURL(text[start:end])
-                txt.SetStyle((start, end), style)
-        happy = wx.TextAttr(colBack=wx.Colour(145,240,180))
 
     def highlight_moved(self, txt):
         # highlight background color for changed items in txt widget
@@ -664,10 +662,8 @@ class mlox_gui():
             self.can_update = False
         if not self.can_update:
             self.btn_update.Disable()
-        self.txt_stats.SetValue(Stats.get_u())
-        self.highlight_hello(self.txt_stats)
-        self.txt_msg.SetValue(Msg.get())
-        self.highlight_warnings(self.txt_msg)
+        display_colored_text(Stats.get_u(),self.txt_stats)
+        display_colored_text(Msg.get(),self.txt_msg)
         self.txt_cur.SetValue(Old.get())
         self.txt_new.SetValue(New.get())
         self.label_cur.SetLabel(lo.origin)
