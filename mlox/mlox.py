@@ -113,15 +113,7 @@ class logger:
     def clear(self):
         self.log = []
 
-class debug_logger(logger):
-    def __init__(self):
-        logger.__init__(self, False)
-
-    def add(self, message):
-        if Opt.GUI:
-            self.log.append(message.strip())
-
-Dbg = debug_logger()            # debug output
+Dbg = logger(False)             # debug output
 New = logger(True, Dbg)         # new sorted loadorder
 Old = logger(False)             # old original loadorder
 Stats = logger(True, Dbg)       # stats output
@@ -143,20 +135,32 @@ class colorFormatConsole(logging.Formatter):
         return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
 
 logging.getLogger('').setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(levelname)s (%(name)s): %(message)s')
 color_formatter = colorFormatConsole('%(levelname)s (%(name)s): %(message)s')
 console_log_stream = logging.StreamHandler()
 console_log_stream.setLevel(logging.INFO)
 console_log_stream.setFormatter(color_formatter)
 logging.getLogger('').addHandler(console_log_stream)
-gui_dbg_log_stream = logging.StreamHandler(stream=Dbg)
-gui_dbg_log_stream.setFormatter(formatter)
-gui_dbg_log_stream.setLevel(logging.DEBUG)
-logging.getLogger('').addHandler(gui_dbg_log_stream)
-gui_msg_log_stream = logging.StreamHandler(stream=Msg)
-gui_msg_log_stream.setFormatter(formatter)
-gui_msg_log_stream.setLevel(logging.INFO)
-logging.getLogger('').addHandler(gui_msg_log_stream)
+dbg_formatter = logging.Formatter('%(levelname)s (%(name)s): %(message)s')
+dbg_log_stream = logging.StreamHandler(stream=Dbg)
+dbg_log_stream.setFormatter(dbg_formatter)
+dbg_log_stream.setLevel(logging.DEBUG)
+logging.getLogger('').addHandler(dbg_log_stream)
+gui_formatter = logging.Formatter('%(levelname)s: %(message)s')
+gui_log_stream = logging.StreamHandler(stream=Stats)
+gui_log_stream.setFormatter(gui_formatter)
+gui_log_stream.setLevel(logging.WARNING)
+logging.getLogger('').addHandler(gui_log_stream)
+
+#This is a little cheat so the INFO messages still display, but without the tag
+class filterInfo():
+    def filter(self,record):
+        return record.levelno == logging.INFO
+info_formatter = logging.Formatter('%(message)s')
+gui_info_stream = logging.StreamHandler(stream=Stats)
+gui_info_stream.setFormatter(info_formatter)
+gui_info_stream.setLevel(logging.INFO)
+gui_info_stream.addFilter(filterInfo())
+logging.getLogger('').addHandler(gui_info_stream)
 
 #Disable parse debug logging unless the user asks for it (It's so much it actually slows the program down)
 logging.getLogger('mlox.parser').setLevel(logging.INFO)
@@ -486,8 +490,8 @@ def display_colored_text(in_text, out_RichTextCtrl):
         re.compile(r"^(\s*\|?\s*!{1}[^!].*)$", re.MULTILINE): low,           #Handle '!' in mlox_base.txt
         re.compile(r"^(\s*\|?\s*!{2}[^!].*)$", re.MULTILINE): medium,        #Handle '!!' in mlox_base.txt
         re.compile(r"^(\s*\|?\s*!{3}.*)$", re.MULTILINE): high,              #Handle '!!!' in mlox_base.txt
-        re.compile(r'^(WARNING \(.*\):.*)', re.MULTILINE): warning,
-        re.compile(r'^(ERROR \(.*\):.*)', re.MULTILINE): error }
+        re.compile(r'^(WARNING:.*)', re.MULTILINE): warning,
+        re.compile(r'^(ERROR:.*)', re.MULTILINE): error }
     # for hiding spoilers
     hidden = []
     adjust = [0]            # use a mutable entity for closure "hider"
