@@ -436,7 +436,7 @@ class rule_parser:
                 parse_logger.debug("parse_ver [VER] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
-            if Opt.FromFile:
+            if self.datadir == None:
                 # this case is reached when doing fromfile checks
                 # and we do not have the actual plugin to check, so
                 # we assume that the plugin matches the given version
@@ -501,7 +501,7 @@ class rule_parser:
                 parse_logger.debug("parse_desc [DESC] \"%s\" not active" % plugin_name)
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
-            if Opt.FromFile:
+            if self.datadir == None:
                 # this case is reached when doing fromfile checks,
                 # which do not have access to the actual plugin, so we
                 # always assume the test is merely for file existence,
@@ -545,7 +545,7 @@ class rule_parser:
                 parse_logger.debug("parse_size [SIZE] \"%s\" not active" % match.group(3))
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(False, expr) # file does not exist
-            if Opt.FromFile:
+            if self.datadir == None:
                 # this case is reached when doing fromfile checks,
                 # which do not have access to the actual plugin, so we
                 # always assume the test is merely for file existence,
@@ -939,6 +939,7 @@ class loadorder:
         Old.clear()
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
+            self.datadir = None #This tells the parser to not worry about things like [SIZE] checks
             Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
             self.read_from_file(fromfile)
             if len(self.order) == 0:
