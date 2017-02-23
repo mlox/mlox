@@ -49,7 +49,6 @@ class dynopt(dict):
 Opt = dynopt()
 
 # command line options
-Opt.AutoFocus = True
 Opt.BaseOnly = False
 Opt.Explain = None
 Opt.FromFile = False
@@ -540,8 +539,6 @@ class mlox_gui():
         self.label_stats.SetFont(self.label_font)
         self.txt_stats = rt.RichTextCtrl(self.frame, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH2)
         self.txt_stats.SetFont(default_font)
-        if Opt.AutoFocus:
-            self.txt_stats.Bind(wx.EVT_ENTER_WINDOW, lambda e: self.txt_stats.SetFocus())
 
         self.splitter = wx.SplitterWindow(self.frame, -1)
 
@@ -551,24 +548,18 @@ class mlox_gui():
         self.txt_msg = rt.RichTextCtrl(self.split1, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_msg.SetFont(default_font)
         self.txt_msg.Bind(wx.EVT_TEXT_URL, self.click_url)
-        if Opt.AutoFocus:
-            self.txt_msg.Bind(wx.EVT_ENTER_WINDOW, lambda e: self.txt_msg.SetFocus())
 
         self.split2 = wx.Panel(self.splitter, -1)
         self.label_cur = wx.StaticText(self.split2, -1, _["Current Load Order"])
         self.label_cur.SetFont(self.label_font)
         self.txt_cur = wx.TextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_cur.SetFont(default_font)
-        if Opt.AutoFocus:
-            self.txt_cur.Bind(wx.EVT_ENTER_WINDOW, lambda e: self.txt_cur.SetFocus())
         self.label_cur_bottom = wx.StaticText(self.frame, -1, _["(Right click in this pane for options)"])
         self.label_new = wx.StaticText(self.split2, -1, _["Proposed Load Order Sorted by mlox"])
         self.label_new.SetFont(self.label_font)
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
         self.txt_new = wx.TextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_new.SetFont(default_font)
-        if Opt.AutoFocus:
-            self.txt_new.Bind(wx.EVT_ENTER_WINDOW, lambda e: self.txt_new.SetFocus())
 
         self.btn_update = wx.Button(self.frame, -1, _["Update Load Order"], size=(90,60))
         self.btn_update.SetFont(self.button_font)
