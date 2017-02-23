@@ -148,7 +148,7 @@ def _get_Oblivion_plugins_file():
 # Attempt to find the plugin file and directory for Morrowind and Oblivion
 # This will attempt to find Morrowind's files first
 def find_game_dirs():
-    game = "None"
+    game = None
     datadir = None
     list_file = None
 

@@ -59,7 +59,6 @@ Opt.Profile = False
 Opt.Quiet = False
 Opt.Update = False
 Opt.WarningsOnly = False
-Opt._Game = None
 Opt.NoUpdate = False
 
 if __name__ == "__main__":
@@ -213,17 +212,18 @@ class loadorder:
         self.graph = pluggraph.pluggraph()
         self.sorted = False
         self.origin = None      # where plugins came from (active, installed, file)
+        self.game_type = None   # 'Morrowind', 'Oblivion', or None for unknown
 
-        Opt._Game, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
+        self.game_type, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
         if self.plugin_file == None:
-            Msg.add(_["{0} config file not found!"].format(Opt._Game))
+            Msg.add(_["{0} config file not found!"].format(self.game_type))
             return
 
         # Get all the plugins
-        configFiles = configHandler.configHandler(self.plugin_file,Opt._Game).read()
+        configFiles = configHandler.configHandler(self.plugin_file,self.game_type).read()
         dirFiles = configHandler.dataDirHandler(self.datadir).read()
 
         # Remove plugins not in the data directory (and correct capitalization)
@@ -287,7 +287,7 @@ class loadorder:
             return
         logging.debug("adding edges from CURRENT ORDER")
         # make ordering pseudo-rules for esms to follow official .esms
-        if Opt._Game == "Morrowind":
+        if self.game_type == "Morrowind":
             self.graph.add_edge("", "morrowind.esm", "tribunal.esm")
             self.graph.add_edge("", "tribunal.esm", "bloodmoon.esm")
             for p in self.active: # foreach of the user's .esms
