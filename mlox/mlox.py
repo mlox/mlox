@@ -320,13 +320,15 @@ class loadorder:
             prev_i = curr_i
 
     def save_order(self, filename, order, what):
-        out = myopen_file(filename, 'w')
-        if out == None:
+        try:
+            out = open(filename, 'w')
+        except IOError:
+            logging.error("Unable to write to {0} file:  {1}".format(what,filename))
             return
         for p in order:
             print >> out, p
         out.close()
-        Msg.add(_["%s saved to: %s"] % (what, filename))
+        Msg.write(_["%s saved to: %s"] % (what, filename))
 
     def update(self, fromfile):
         """Update the load order based on input rules."""
