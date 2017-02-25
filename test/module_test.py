@@ -57,3 +57,6 @@ graph = pluggraph.pluggraph()
 myParser = ruleParser.rule_parser(plugins,graph,"./test1.data/",sys.stdout,file_names)
 myParser.read_rules("./test1.data/mlox_base.txt")
 print graph.topo_sort()
+print "\x1b[0;30;41m" + "Testing filename version" + '\x1b[0m'
+(f_ver,d_ver) = ruleParser.get_version("BB_Clothiers_of_Vvardenfell_v1.1.esp","./test1.data/")
+print (f_ver,d_ver)
