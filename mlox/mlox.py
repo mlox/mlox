@@ -330,29 +330,12 @@ class loadorder:
         out.close()
         Msg.write(_["%s saved to: %s"] % (what, filename))
 
-    def update(self, fromfile):
+    def update(self):
         """Update the load order based on input rules."""
-        Msg.clear()
-        Stats.clear()
-        New.clear()
-        Old.clear()
-        Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
-        if Opt.FromFile:
-            self.datadir = None #This tells the parser to not worry about things like [SIZE] checks
-            self.read_from_file(fromfile)
-            if len(self.order) == 0:
-                Msg.add(_["No plugins detected. mlox.py understands lists of plugins in the format\nused by Morrowind.ini or Wrye Mash. Is that what you used for input?"])
-                return(self)
-        else:
-            if Opt.GetAll:
-                self.get_data_files()
-            else:
-                self.get_active_plugins()
-                if self.order == []:
-                    self.get_data_files()
-            if self.order == []:
-                Msg.add(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
-                return(self)
+        logging.info("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
+        if self.order == []:
+            logging.error(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
+            return
         logging.debug("Initial load order:")
         for p in self.order:
             logging.debug("  " + p)
@@ -419,10 +402,9 @@ class loadorder:
 
         # print out the new load order
         if len(new_order_cname) != len(self.order):
-            Msg.add(_["Program Error: sanity check: len(new_order_truename %d) != len(self.order %d)"] % (len(new_order_truename), len(self.order)))
-        if not Opt.FromFile:
-            # these are things we do not want to do if just testing a load
-            # order from a file (FromFile)
+            logging.error("sanity check: len(new_order_truename %d) != len(self.order %d)" % (len(new_order_truename), len(self.order)))
+        if self.datadir != None:
+            # these are things we do not want to do if just testing a load order from a file
             if Opt.Update:
                 if configHandler.dataDirHandler(self.datadir).write(new_order_truename):
                     Msg.add(_["[LOAD ORDER UPDATED!]"])
@@ -657,7 +639,21 @@ class mlox_gui():
             if text[start] == '*': txt.SetStyle(start, end, highlight)
 
     def analyze_loadorder(self, fromfile):
-        lo = loadorder().update(fromfile)
+        Msg.clear()
+        Stats.clear()
+        New.clear()
+        Old.clear()
+        lo = loadorder()
+        if fromfile != None:
+            lo.read_from_file(fromfile)
+        else:
+            if Opt.GetAll:
+                lo.get_data_files()
+            else:
+                lo.get_active_plugins()
+                if lo.order == []:
+                    lo.get_data_files()
+        lo.update()
         if lo.sorted:
             self.can_update = False
         if not self.can_update:
@@ -682,7 +678,6 @@ class mlox_gui():
 
     def on_reload(self, e):
         self.can_update = True
-        Opt.FromFile = False
         self.analyze_loadorder(None)
 
     def on_update(self, e):
@@ -732,7 +727,6 @@ class mlox_gui():
                         # TBD, this needs review as pasting some encodings will dump
                         out.write(data.GetText().encode("utf-8"))
                         out.close()
-                        Opt.FromFile = True
                         self.analyze_loadorder(clip_file)
             wx.TheClipboard.Close()
 
@@ -741,7 +735,6 @@ class mlox_gui():
         dialog = wx.FileDialog(self.frame, message=_["Input Plugin List from File"], defaultDir=self.dir, defaultFile="", style=wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             self.dir = dialog.GetDirectory()
-            Opt.FromFile = True
             self.analyze_loadorder(dialog.GetPath())
 
     def menu_debug_handler(self, e):
@@ -786,20 +779,29 @@ def print_version():
     print version_info()
 
 def main():
-    if Opt.FromFile:
+    if Opt.NoUpdate == False:
+            update.update_mloxdata()
+    if Opt.GUI == True:
+        # run with gui
+        mlox_gui().start()
+    elif Opt.FromFile:
         if len(args) == 0:
             print _["Error: -f specified, but no files on command line."]
             usage(2)            # exits
-        for file in args:
-            loadorder().update(file)
-    elif Opt.GUI == True:
-        if Opt.NoUpdate == False:
-            update.update_mloxdata()
-        # run with gui
-        mlox_gui().start()
+        for fromfile in args:
+            l = loadorder()
+            l.read_from_file(fromfile)
+            l.update()
     else:
         # run with command line arguments
-        loadorder().update(None)
+        l = loadorder()
+        if Opt.GetAll:
+                l.get_data_files()
+        else:
+            l.get_active_plugins()
+            if l.order == []:
+                l.get_data_files()
+        l.update()
 
 if __name__ == "__main__":
     logging.debug("\nmlox DEBUG DUMP:\n")
