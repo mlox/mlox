@@ -72,6 +72,7 @@
 	Print an explanation of the dependency graph for plugin
 	this can help you understand why a plugin was moved in your
 	load order.
+	Implies --quiet.
  -f|--fromfile file1... fileN
 	File processing mode, at least one input file must follow on
 	command line, each file contains a list of plugins which is
@@ -95,6 +96,7 @@
 	Implies --debug.
  -q|--quiet
 	Run more quietly (only re-order plugins, ignoring all notes, warnings, etc).
+	Do not print out anything less than warning messages.
  -u|--update
 	Update mode, updates the load order.
  -v|--version
