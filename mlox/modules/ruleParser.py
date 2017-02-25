@@ -610,7 +610,7 @@ class rule_parser:
             inputsize = os.path.getsize(self.rule_file)
         except IOError, OSError:
             #This can't be too important, because we try to read the user rules file, and it doesn't exist for most people (TODO:  Move file existance checking somewhere else, and change this from info to error)
-            parse_logger.info("Unable to open rules file:  {0}".format(self.rule_file))
+            parse_logger.error("Unable to open rules file:  {0}".format(self.rule_file))
             return False
 
         self.line_num = 0
