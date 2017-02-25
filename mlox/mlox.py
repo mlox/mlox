@@ -434,18 +434,9 @@ class loadorder:
                 if configHandler.dataDirHandler(self.datadir).write(self.new_order):
                     Msg.add(_["[LOAD ORDER UPDATED!]"])
                     self.is_sorted = True
-            else:
-                if not Opt.GUI:
-                    Msg.add(_["[Load Order NOT updated.]"])
             # save the load orders to file for future reference
             self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], _["current"])
             self.save_order(new_loadorder_output, self.new_order, _["mlox sorted"])
-        if not Opt.WarningsOnly:
-            if Opt.GUI == False:
-                if Opt.Update:
-                    Msg.add(_["\n[UPDATED] New Load Order:\n---------------"])
-                else:
-                    Msg.add(_["\n[Proposed] New Load Order:\n---------------"])
         return(self)
 
 
@@ -807,6 +798,9 @@ def main():
             l = loadorder()
             l.read_from_file(fromfile)
             l.update()
+            #We never actually write anything if reading from file(s)
+            if not Opt.WarningsOnly:
+                print "[Proposed] New Load Order:\n---------------"
             for p in l.get_new_order():
                 print p
     else:
@@ -819,6 +813,11 @@ def main():
             if l.order == []:
                 l.get_data_files()
         l.update()
+        if not Opt.WarningsOnly:
+            if Opt.Update:
+                print "[UPDATED] New Load Order:\n---------------"
+            else:
+                print "[Proposed] New Load Order:\n---------------"
         for p in l.get_new_order():
             print p
 
