@@ -112,7 +112,7 @@ class logger:
         self.log = []
 
 Dbg = logger(False)     # debug output
-New = logger(True,Dbg)     # new sorted loadorder
+New = logger(False)     # new sorted loadorder
 Old = logger(False)     # old original loadorder
 Stats = logger(False)   # stats output
 Msg = logger(True)     # messages output
@@ -203,12 +203,13 @@ class loadorder:
         # order is the list of plugins in Data Files, ordered by mtime
         self.active = {}                   # current active plugins
         self.order = []                    # the load order
+        self.new_order = []                # the new load order
         self.datadir = None                # where plugins live
         self.plugin_file = None            # Path to the file containing the plugin list
         self.graph = pluggraph.pluggraph()
-        self.sorted = False
-        self.origin = None      # where plugins came from (active, installed, file)
-        self.game_type = None   # 'Morrowind', 'Oblivion', or None for unknown
+        self.is_sorted = False
+        self.origin = None                 # where plugins came from (active, installed, file)
+        self.game_type = None              # 'Morrowind', 'Oblivion', or None for unknown
 
         self.game_type, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
@@ -327,6 +328,33 @@ class loadorder:
         out.close()
         Msg.write(_["%s saved to: %s"] % (what, filename))
 
+    def get_original_order(self):
+        """Get the original plugin order in a nice printable format"""
+        formatted = []
+        for n in range(1,len(self.order)+1):
+            formatted.append("{0:0>3} {1}".format(n, C.truename(self.order[n-1])))
+        return formatted
+
+    def get_new_order(self):
+        """Get the new plugin order in a nice printable format.
+        Also, highlight mods that have moved up in the load order."""
+        formatted = []
+        orig_index = {}
+        for n in range(1,len(self.order)+1):
+            orig_index[self.order[n-1]] = n
+        highlight = "_"
+        for i in range(0, len(self.new_order)):
+            p = self.new_order[i]
+            curr = p.lower()
+            if (orig_index[curr] - 1) > i: highlight = "*"
+            formatted.append("%s%03d%s %s" % (highlight, orig_index[curr], highlight, p))
+            if highlight == "*":
+                if i < len(self.new_order) - 1:
+                    next = self.new_order[i+1].lower()
+                if (orig_index[curr] > orig_index[next]):
+                    highlight = "_"
+        return formatted
+
     def update(self):
         """Update the load order based on input rules."""
         logging.info("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
@@ -334,7 +362,7 @@ class loadorder:
             logging.error(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
             return
         logging.debug("Initial load order:")
-        for p in self.order:
+        for p in self.get_original_order():
             logging.debug("  " + p)
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
@@ -382,56 +410,42 @@ class loadorder:
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
         # but we only want to update plugins that are in our current "Data Files"
-        n = 1
-        orig_index = {}
-        for p in self.order:
-            orig_index[p] = n
-            Old.add("_%03d_ %s" % (n, C.truename(p)))
-            n += 1
         sorted_datafiles = [f for f in sorted if f in self.active]
         (esm_files, esp_files) = configHandler.partition_esps_and_esms(sorted_datafiles)
         new_order_cname = [p for p in esm_files + esp_files]
-        new_order_truename = [C.truename(p) for p in new_order_cname]
+        self.new_order = [C.truename(p) for p in new_order_cname]
+
+        logging.debug("New load order:")
+        for p in self.get_new_order():
+            logging.debug("  " + p)
+
+        if len(self.new_order) != len(self.order):
+            logging.error("sanity check: len(self.new_order %d) != len(self.order %d)" % (len(self.new_order), len(self.order)))
+            self.new_order = []
+            return
 
         if self.order == new_order_cname:
             Msg.add(_["[Plugins already in sorted order. No sorting needed!]"])
-            self.sorted = True
+            self.is_sorted = True
 
-        # print out the new load order
-        if len(new_order_cname) != len(self.order):
-            logging.error("sanity check: len(new_order_truename %d) != len(self.order %d)" % (len(new_order_truename), len(self.order)))
         if self.datadir != None:
             # these are things we do not want to do if just testing a load order from a file
             if Opt.Update:
-                if configHandler.dataDirHandler(self.datadir).write(new_order_truename):
+                if configHandler.dataDirHandler(self.datadir).write(self.new_order):
                     Msg.add(_["[LOAD ORDER UPDATED!]"])
-                    self.sorted = True
+                    self.is_sorted = True
             else:
                 if not Opt.GUI:
                     Msg.add(_["[Load Order NOT updated.]"])
             # save the load orders to file for future reference
             self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], _["current"])
-            self.save_order(new_loadorder_output, new_order_truename, _["mlox sorted"])
+            self.save_order(new_loadorder_output, self.new_order, _["mlox sorted"])
         if not Opt.WarningsOnly:
             if Opt.GUI == False:
                 if Opt.Update:
                     Msg.add(_["\n[UPDATED] New Load Order:\n---------------"])
                 else:
                     Msg.add(_["\n[Proposed] New Load Order:\n---------------"])
-            # highlight mods that have moved up in the load order
-            highlight = "_"
-            for i in range(0, len(new_order_truename)):
-                p = new_order_truename[i]
-                curr = p.lower()
-                if (orig_index[curr] - 1) > i: highlight = "*"
-                New.add("%s%03d%s %s" % (highlight, orig_index[curr], highlight, p))
-                if highlight == "*":
-                    if i < len(new_order_truename) - 1:
-                        next = new_order_truename[i+1].lower()
-                    if (orig_index[curr] > orig_index[next]):
-                        highlight = "_"
-        if Opt.GUI == False:
-            Msg.add("")
         return(self)
 
 
@@ -651,7 +665,11 @@ class mlox_gui():
                 if lo.order == []:
                     lo.get_data_files()
         lo.update()
-        if lo.sorted:
+        for p in lo.get_original_order():
+            Old.write(p)
+        for p in lo.get_new_order():
+            New.write(p)
+        if lo.is_sorted:
             self.can_update = False
         if not self.can_update:
             self.btn_update.Disable()
@@ -789,6 +807,8 @@ def main():
             l = loadorder()
             l.read_from_file(fromfile)
             l.update()
+            for p in l.get_new_order():
+                print p
     else:
         # run with command line arguments
         l = loadorder()
@@ -799,6 +819,8 @@ def main():
             if l.order == []:
                 l.get_data_files()
         l.update()
+        for p in l.get_new_order():
+            print p
 
 if __name__ == "__main__":
     logging.debug("\nmlox DEBUG DUMP:\n")
