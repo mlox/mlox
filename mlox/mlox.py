@@ -257,16 +257,25 @@ class loadorder:
             print "{0:20} {1:20} {2}".format(file_ver, desc_ver, C.truename(p))
 
     def read_from_file(self, fromfile):
-        """Get the load order by reading an input file. Updates self.active and self.order."""
+        """Get the load order by reading an input file.
+        Clears self.game_type and self.datadir.
+        Updates self.plugin_file, self.active, and self.order."""
+        self.game_type = None
+        self.datadir = None         #This tells the parser to not worry about things like [SIZE] checks, or trying to read the plugin descriptions
+        self.plugin_file = fromfile
+
         self.order = configHandler.configHandler(fromfile).read()
+        if len(self.order) == 0:
+            logging.warning("No plugins detected.\nmlox understands lists of plugins in the format used by Morrowind.ini or Wrye Mash.\nIs that what you used for input?")
 
         #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
         self.order = map(C.cname,self.order)
 
-        Stats.add("%-50s (%3d plugins)" % (_["Reading plugins from file: \"%s\""] % fromfile, len(self.order)))
+        logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
             self.active[p] = True
         self.origin = "Plugin List from %s" % os.path.basename(fromfile)
+        Msg.write("(Note: When the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
 
     def add_current_order(self):
         """We treat the current load order as a sort of preferred order in
@@ -328,7 +337,6 @@ class loadorder:
         Stats.add("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         if Opt.FromFile:
             self.datadir = None #This tells the parser to not worry about things like [SIZE] checks
-            Msg.add("(Note that when the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
             self.read_from_file(fromfile)
             if len(self.order) == 0:
                 Msg.add(_["No plugins detected. mlox.py understands lists of plugins in the format\nused by Morrowind.ini or Wrye Mash. Is that what you used for input?"])
