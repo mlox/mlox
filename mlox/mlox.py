@@ -111,11 +111,11 @@ class logger:
     def clear(self):
         self.log = []
 
-Dbg = logger(False)             # debug output
-New = logger(True, Dbg)         # new sorted loadorder
-Old = logger(False)             # old original loadorder
-Stats = logger(True, Dbg)       # stats output
-Msg = logger(True, Dbg)         # messages output
+Dbg = logger(False)     # debug output
+New = logger(True,Dbg)     # new sorted loadorder
+Old = logger(False)     # old original loadorder
+Stats = logger(False)   # stats output
+Msg = logger(True)     # messages output
 
 #Configure logging from python module
 class colorFormatConsole(logging.Formatter):
@@ -188,9 +188,6 @@ def unify(s):
     """For GUI text areas that may contain filenames, we guess at the encoding."""
     #using melchor's workaround:
     return(s.decode("ascii", "replace").encode("ascii", "replace"))
-
-def loadup_msg(msg, count, what):
-    Stats.add("%-50s (%3d %s)" % (msg, count, what))
 
 def myopen_file(filename, mode, encoding=None):
     try:
@@ -838,7 +835,8 @@ if __name__ == "__main__":
         elif opt in ("-e", "--explain"):
             Opt.Explain = arg
             Msg.prints = False
-            Stats.prints = False
+            Opt.Quiet = True
+            console_log_stream.setLevel(logging.WARNING)
         elif opt in ("-f", "--fromfile"):
             Opt.FromFile = True
         elif opt in ("--gui"):
@@ -857,6 +855,7 @@ if __name__ == "__main__":
             Opt.Profile = True
         elif opt in ("-q", "--quiet"):
             Opt.Quiet = True
+            console_log_stream.setLevel(logging.WARNING)
         elif opt in ("--translations"):
             # dump the translation dictionary
             print "Languages translations for: %s" % arg
