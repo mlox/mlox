@@ -218,7 +218,7 @@ class loadorder:
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
         if self.plugin_file == None:
-            Msg.add(_["{0} config file not found!"].format(self.game_type))
+            logging.warning(_["{0} config file not found!"].format(self.game_type))
             return
 
         # Get all the plugins
@@ -232,7 +232,7 @@ class loadorder:
         #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
         self.order = map(C.cname,self.order)
 
-        loadup_msg(_["Getting active plugins from: {0}".format(self.plugin_file)], len(self.order), "plugins")
+        logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
             self.active[p] = True
         self.origin = _["Active Plugins"]
@@ -244,7 +244,7 @@ class loadorder:
         #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
         self.order = map(C.cname,self.order)
 
-        loadup_msg(_["Getting list of plugins from plugin directory"], len(self.order), "plugins")
+        logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
         for p in self.order:
             self.active[p] = True
         self.origin = _["Installed Plugins"]
