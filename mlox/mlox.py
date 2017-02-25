@@ -349,7 +349,8 @@ class loadorder:
         if Opt.GUI:
             progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
-        parser.read_rules(user_file, progress)
+        if os.path.exists(user_file):
+            parser.read_rules(user_file, progress)
 
         # for reading mod-specific rules from "Data Files/mlox/*.txt"
         # possible problems:
@@ -364,7 +365,6 @@ class loadorder:
 
         # last rules from mlox_base.txt
         if not parser.read_rules(base_file, progress):
-            Msg.add(_["Error: unable to open mlox_base.txt database."])
             progress.Destroy()
             return(self)
         if progress != None:
