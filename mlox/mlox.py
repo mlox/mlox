@@ -249,17 +249,12 @@ class loadorder:
             self.active[p] = True
         self.origin = _["Installed Plugins"]
 
+    #List the versions of all plugins in the current load order
     def listversions(self):
-        self.get_data_files()
+        print "{0:20} {1:20} {2}".format("Name", "Description", "Plugin Name")
         for p in self.order:
-            match = re_filename_version.search(p)
-            file_ver = match.group(1) if match else None
-            desc = ruleParser.plugin_description(self.datadir.find_path(p))
-            if desc == None:
-                desc == ""
-            match = re_header_version.search(desc)
-            desc_ver = match.group(1) if match else None
-            print "%10s %10s    %s" % (file_ver, desc_ver, C.truename(p))
+            (file_ver, desc_ver) = ruleParser.get_version(p,self.datadir)
+            print "{0:20} {1:20} {2}".format(file_ver, desc_ver, C.truename(p))
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file. Updates self.active and self.order."""
@@ -839,7 +834,9 @@ if __name__ == "__main__":
         elif opt in ("-h", "--help"):
             usage(0)            # exits
         elif opt in ("-l", "--listversions"):
-            loadorder().listversions()
+            l = loadorder()
+            l.get_data_files()
+            l.listversions()
             sys.exit(0)
         elif opt in ("-p", "--parsedebug"):
             logging.getLogger('mlox.parser').setLevel(logging.DEBUG)

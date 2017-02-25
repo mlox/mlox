@@ -27,6 +27,7 @@ re_end_fun = re.compile(r'^\]\s*')
 re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s+([^\]]+)\]', re.IGNORECASE)
 # for parsing a size predicate
 re_size_fun = re.compile(r'\[SIZE\s*(!?)(\d+)\s+(\S.*?\.es[mp]\b)\s*\]', re.IGNORECASE)
+
 # for parsing a version number
 ver_delim = r'[_.-]'
 re_ver_delim = re.compile(ver_delim)
@@ -54,6 +55,24 @@ version_operators = {'=': True, '<': True, '>': True}
 tes3_min_plugin_size = 362
 
 parse_logger = logging.getLogger('mlox.parser')
+
+#Get the version information from a plugin
+def get_version(plugin,data_dir = None):
+    match = re_filename_version.search(plugin)
+    file_ver = match.group(1) if match else None
+    desc_ver = None
+    if isinstance(data_dir,str):
+        data_dir = fileFinder.caseless_dirlist(data_dir)
+    if isinstance(data_dir,fileFinder.caseless_dirlist) != False:
+        desc = plugin_description(data_dir.find_path(plugin))
+        if desc != None:
+            match = re_header_version.search(desc)
+            desc_ver = match.group(1) if match else None
+    if file_ver != None:
+        file_ver = format_version(file_ver)
+    if desc_ver != None:
+        desc_ver = format_version(desc_ver)
+    return (file_ver, desc_ver)
 
 def format_version(ver):
     """convert something we think is a version number into a canonical form that can be used for comparison"""
