@@ -536,10 +536,10 @@ class rule_parser:
                 (bool, expr) = self.parse_expression()
                 parse_logger.debug("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
-                self.out_stream.write("[CONFLICT]")
+                self.out_stream.write("[CONFLICT]\n")
                 for e in exprs:
-                    self.out_stream.write(self.pprint(self._prune_any(e), " > "))
-                if msg != "": self.out_stream.write(msg)
+                    self.out_stream.write(self.pprint(self._prune_any(e), " > ")+'\n')
+                if msg != "": self.out_stream.write(msg+'\n')
         elif rule == "NOTE":    # takes any number of exprs
             parse_logger.debug("function NOTE: %s" % msg)
             exprs = []
@@ -549,10 +549,10 @@ class rule_parser:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression(prune=True)
             if len(exprs) > 0:
-                self.out_stream.write("[NOTE]")
+                self.out_stream.write("[NOTE]\n")
                 for e in exprs:
-                    self.out_stream.write(self.pprint(e, " > "))
-                if msg != "": self.out_stream.write(msg)
+                    self.out_stream.write(self.pprint(e, " > ")+'\n')
+                if msg != "": self.out_stream.write(msg+'\n')
         elif rule == "PATCH":   # takes 2 exprs
             (bool1, expr1) = self.parse_expression()
             if bool1 == None:
@@ -566,14 +566,14 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
-                self.out_stream.write("[PATCH]\n%s is missing some pre-requisites:\n%s" %
+                self.out_stream.write("[PATCH]\n%s is missing some pre-requisites:\n%s\n" %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
-                if msg != "": self.out_stream.write(msg)
+                if msg != "": self.out_stream.write(msg+'\n')
             if bool2 and not bool1:
                 # case where the patch is missing for the thing to be patched
-                self.out_stream.write("[PATCH]\n%s for:\n%s" %
+                self.out_stream.write("[PATCH]\n%s for:\n%s\n" %
                         (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
-                if msg != "": self.out_stream.write(msg)
+                if msg != "": self.out_stream.write(msg+'\n')
         elif rule == "REQUIRES": # takes 2 exprs
             (bool1, expr1) = self.parse_expression(prune=True)
             if bool1 == None:
@@ -587,12 +587,12 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 expr2_str = self.pprint(expr2, " > ")
-                self.out_stream.write("[REQUIRES]\n%s Requires:\n%s" %
+                self.out_stream.write("[REQUIRES]\n%s Requires:\n%s\n" %
                         (self.pprint(expr1, " !!!"), expr2_str))
-                if msg != "": self.out_stream.write(msg)
+                if msg != "": self.out_stream.write(msg+'\n')
                 match = re_filename_version.search(expr2_str)
                 if match:
-                    self.out_stream.write(" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version].")
+                    self.out_stream.write(" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version].\n")
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         parse_logger.debug("parse_statement RETURNING")
 
