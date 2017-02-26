@@ -349,12 +349,9 @@ class mlox_gui():
         if fromfile != None:
             self.lo.read_from_file(fromfile)
         else:
-            if Opt.GetAll:
+            self.lo.get_active_plugins()
+            if self.lo.order == []:
                 self.lo.get_data_files()
-            else:
-                self.lo.get_active_plugins()
-                if self.lo.order == []:
-                    self.lo.get_data_files()
         progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
         self.lo.update(self.Msg,progress)
