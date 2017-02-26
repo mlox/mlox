@@ -49,6 +49,9 @@ print plugins
 print "\x1b[0;30;41m" + "Writing dirHandler" + '\x1b[0m'
 dirHandler.write(plugins)
 
+
+logging.getLogger('').setLevel(logging.INFO)
+
 #Parser, ang pluggraph
 import modules.ruleParser as ruleParser
 import modules.pluggraph as pluggraph
@@ -59,4 +62,29 @@ myParser.read_rules("./test1.data/mlox_base.txt")
 print graph.topo_sort()
 print "\x1b[0;30;41m" + "Testing filename version" + '\x1b[0m'
 (f_ver,d_ver) = ruleParser.get_version("BB_Clothiers_of_Vvardenfell_v1.1.esp","./test1.data/")
-print (f_ver,d_ver)
+print (f_ver,d_ver,"BB_Clothiers_of_Vvardenfell_v1.1.esp")
+
+#Load order
+from modules.loadOrder import loadorder
+print "\x1b[0;30;41m" + "Testing loadorder 1" + '\x1b[0m'
+l1 = loadorder()
+l1.datadir = fileFinder.caseless_dirlist("./test1.data/")
+l1.plugin_file = "./userfiles/abot.txt"
+l1.game_type = None
+l1.get_active_plugins()
+l1.update()
+print l1.listversions()
+print "\x1b[0;30;41m" + "Testing loadorder 2" + '\x1b[0m'
+l2 = loadorder()
+l2.datadir = fileFinder.caseless_dirlist("./test1.data/")
+l2.get_data_files()
+l2.update()
+print "\x1b[0;30;41m" + "Testing loadorder 3" + '\x1b[0m'
+l3 = loadorder()
+l3.read_from_file("./userfiles/abot.txt")
+l3.update()
+print l3.explain("Morrowind.esm")
+print l3.explain("Morrowind.esm",True)
+
+
+logging.getLogger('').setLevel(logging.DEBUG)
