@@ -63,47 +63,6 @@ full_version = ""
 clip_file = "mlox_clipboard.out"
 debug_output = "mlox_debug.out"
 
-class logger:
-    def __init__(self, prints, *cohort):
-        self.log = []
-        self.prints = prints
-        self.cohort = cohort
-
-    # These two allow the use of python's default logging
-    def write(self, message):
-        self.add(message)
-    def flush(self):
-        pass
-
-    def add(self, message):
-        self.log.append(message.strip())
-        for c in self.cohort:
-            c.add(message.strip())
-        if self.prints and Opt.GUI == False:
-            print message
-
-    def insert(self, message):
-        self.log.insert(0, message.strip())
-        for c in self.cohort:
-            c.insert(message.strip())
-        if self.prints and Opt.GUI == False:
-            print message
-
-    def get(self):
-        return("\n".join(map(unify, self.log)) + "\n")
-
-    def get_u(self):
-        return("\n".join(self.log) + "\n")
-
-    def clear(self):
-        self.log = []
-
-Dbg = logger(False)     # debug output
-New = logger(False)     # new sorted loadorder
-Old = logger(False)     # old original loadorder
-Stats = logger(False)   # stats output
-Msg = logger(True)     # messages output
-
 #Configure logging from python module
 class colorFormatConsole(logging.Formatter):
     levels = {
@@ -125,27 +84,6 @@ console_log_stream = logging.StreamHandler()
 console_log_stream.setLevel(logging.INFO)
 console_log_stream.setFormatter(color_formatter)
 logging.getLogger('').addHandler(console_log_stream)
-dbg_formatter = logging.Formatter('%(levelname)s (%(name)s): %(message)s')
-dbg_log_stream = logging.StreamHandler(stream=Dbg)
-dbg_log_stream.setFormatter(dbg_formatter)
-dbg_log_stream.setLevel(logging.DEBUG)
-logging.getLogger('').addHandler(dbg_log_stream)
-gui_formatter = logging.Formatter('%(levelname)s: %(message)s')
-gui_log_stream = logging.StreamHandler(stream=Stats)
-gui_log_stream.setFormatter(gui_formatter)
-gui_log_stream.setLevel(logging.WARNING)
-logging.getLogger('').addHandler(gui_log_stream)
-
-#This is a little cheat so the INFO messages still display, but without the tag
-class filterInfo():
-    def filter(self,record):
-        return record.levelno == logging.INFO
-info_formatter = logging.Formatter('%(message)s')
-gui_info_stream = logging.StreamHandler(stream=Stats)
-gui_info_stream.setFormatter(info_formatter)
-gui_info_stream.setLevel(logging.INFO)
-gui_info_stream.addFilter(filterInfo())
-logging.getLogger('').addHandler(gui_info_stream)
 
 #Disable parse debug logging unless the user asks for it (It's so much it actually slows the program down)
 logging.getLogger('mlox.parser').setLevel(logging.INFO)
@@ -244,6 +182,34 @@ class mlox_gui():
     lo = None     #Load order
 
     def __init__(self):
+        self.Dbg = StringIO.StringIO()     # debug output
+        self.New = StringIO.StringIO()     # new sorted loadorder
+        self.Old = StringIO.StringIO()     # old original loadorder
+        self.Stats = StringIO.StringIO()   # stats output
+        self.Msg = StringIO.StringIO()     # messages output
+
+        #Set up logging
+        dbg_formatter = logging.Formatter('%(levelname)s (%(name)s): %(message)s')
+        dbg_log_stream = logging.StreamHandler(stream=self.Dbg)
+        dbg_log_stream.setFormatter(dbg_formatter)
+        dbg_log_stream.setLevel(logging.DEBUG)
+        logging.getLogger('').addHandler(dbg_log_stream)
+        gui_formatter = logging.Formatter('%(levelname)s: %(message)s')
+        gui_log_stream = logging.StreamHandler(stream=self.Stats)
+        gui_log_stream.setFormatter(gui_formatter)
+        gui_log_stream.setLevel(logging.WARNING)
+        logging.getLogger('').addHandler(gui_log_stream)
+        #This is a little cheat so the INFO messages still display, but without the tag
+        class filterInfo():
+            def filter(self,record):
+                return record.levelno == logging.INFO
+        info_formatter = logging.Formatter('%(message)s')
+        gui_info_stream = logging.StreamHandler(stream=self.Stats)
+        gui_info_stream.setFormatter(info_formatter)
+        gui_info_stream.setLevel(logging.INFO)
+        gui_info_stream.addFilter(filterInfo())
+        logging.getLogger('').addHandler(gui_info_stream)
+
         wx.Locale(wx.LOCALE_LOAD_DEFAULT)
         self.app = wx.App(True, None)
         sys.excepthook = lambda typ, val, tb: self.error_handler(typ, val, tb)
@@ -372,10 +338,12 @@ class mlox_gui():
         webbrowser.open(the_url)
 
     def analyze_loadorder(self, fromfile):
-        Msg.clear()
-        Stats.clear()
-        New.clear()
-        Old.clear()
+        #Clear all the outputs (except Dbg)
+        self.New.truncate(0)
+        self.Old.truncate(0)
+        self.Stats.truncate(0)
+        self.Msg.truncate(0)
+
         logging.info("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
         self.lo = loadorder()
         if fromfile != None:
@@ -389,22 +357,22 @@ class mlox_gui():
                     self.lo.get_data_files()
         progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
-        self.lo.update(Msg,progress)
+        self.lo.update(self.Msg,progress)
         progress.Destroy()
         for p in self.lo.get_original_order():
-            Old.write(p)
+            self.Old.write(p+'\n')
         for p in self.lo.get_new_order():
-            New.write(p)
+            self.New.write(p+'\n')
         if self.lo.is_sorted:
             self.can_update = False
 
         #Go ahead and display everything
         if not self.can_update:
             self.btn_update.Disable()
-        display_colored_text(Stats.get_u(),self.txt_stats)
-        display_colored_text(Msg.get(),self.txt_msg)
-        display_colored_text(New.get(),self.txt_new)
-        self.txt_cur.SetValue(Old.get())
+        display_colored_text(self.Stats.getvalue(),self.txt_stats)
+        display_colored_text(self.Msg.getvalue(),self.txt_msg)
+        display_colored_text(self.New.getvalue(),self.txt_new)
+        self.txt_cur.SetValue(self.Old.getvalue())
         self.label_cur.SetLabel(self.lo.origin)
         self.cur_vbox.Layout()
 
@@ -426,7 +394,7 @@ class mlox_gui():
         if not self.can_update:
             return
         self.lo.write_new_order()
-        Msg.add("[LOAD ORDER UPDATED!]")
+        logging.info("[LOAD ORDER UPDATED!]")
         self.can_update = False
         self.btn_update.Disable()
 
@@ -438,7 +406,7 @@ class mlox_gui():
             out = open(debug_output, 'w')
         except IOError:
             logging.error("Unable to write to debug output file:  {0}".format(debug_output))
-        print >> out, Dbg.get().encode("utf-8")
+        print >> out, self.Dbg.getvalue().encode("utf-8")
         out.close()
 
     def right_click_handler(self, e):
@@ -499,7 +467,7 @@ class mlox_gui():
         dbg_frame_vbox.Add(dbg_txt, 1, wx.EXPAND)
         dbg_frame_vbox.Add(dbg_btn_close, 0, wx.EXPAND)
         dbg_frame.Bind(wx.EVT_CLOSE, lambda x: dbg_frame.Destroy())
-        dbg_txt.SetValue(Dbg.get())
+        dbg_txt.SetValue(self.Dbg.getvalue())
         dbg_frame.SetSizer(dbg_frame_vbox)
         dbg_frame_vbox.Fit(dbg_frame)
         dbg_frame.Show(True)
@@ -615,7 +583,6 @@ if __name__ == "__main__":
             console_log_stream.setLevel(logging.DEBUG)
         elif opt in ("-e", "--explain"):
             Opt.Explain = arg
-            Msg.prints = False
             Opt.Quiet = True
             console_log_stream.setLevel(logging.WARNING)
         elif opt in ("-f", "--fromfile"):
