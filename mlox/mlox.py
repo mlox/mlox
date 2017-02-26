@@ -176,14 +176,6 @@ def unify(s):
     #using melchor's workaround:
     return(s.decode("ascii", "replace").encode("ascii", "replace"))
 
-def myopen_file(filename, mode, encoding=None):
-    try:
-        return(codecs.open(filename, mode, encoding))
-    except IOError, (errno, strerror):
-        mode_str = _["input"] if mode == 'r' else _["output"]
-        logging.debug(_["Problem opening \"%s\" for %s (%s)"] % (filename, mode_str, strerror))
-    return(None)
-
 def display_colored_text(in_text, out_RichTextCtrl):
     # Apply coloring to text, then display it on a wx.RichTextCtrl
     try:
@@ -442,9 +434,10 @@ class mlox_gui():
         self.on_quit(e)
 
     def bugdump(self):
-        out = myopen_file(debug_output, 'w')
-        if out == None:
-            return
+        try:
+            out = open(debug_output, 'w')
+        except IOError:
+            logging.error("Unable to write to debug output file:  {0}".format(debug_output))
         print >> out, Dbg.get().encode("utf-8")
         out.close()
 
@@ -471,13 +464,17 @@ class mlox_gui():
             if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
                 data = wx.TextDataObject()
                 if wx.TheClipboard.GetData(data):
-                    out = myopen_file(clip_file, 'w')
-                    if out != None:
-                        # sometimes some unicode muck can get in there, as when pasting from web pages.
-                        # TBD, this needs review as pasting some encodings will dump
-                        out.write(data.GetText().encode("utf-8"))
-                        out.close()
-                        self.analyze_loadorder(clip_file)
+                    try:
+                        out = open(clip_file, 'w')
+                    except IOError:
+                        logging.error("Unable to open temporary clipboard file:  {0}".format(clip_file))
+                        wx.TheClipboard.Close()
+                        return
+                    # sometimes some unicode muck can get in there, as when pasting from web pages.
+                    # TBD, this needs review as pasting some encodings will dump
+                    out.write(data.GetText().encode("utf-8"))
+                    out.close()
+                    self.analyze_loadorder(clip_file)
             wx.TheClipboard.Close()
 
     def menu_open_file_handler(self, e):
@@ -510,14 +507,16 @@ class mlox_gui():
 
 
 def get_mlox_base_version():
-    base = myopen_file(base_file, 'r')
-    if base != None:
-        for line in base:
-            m = re_base_version.match(line)
-            if m:
-                base.close()
-                return(m.group(1))
-        base.close()
+    try:
+        base = open(base_file, 'r')
+    except IOError:
+        logging.error("Unable to get rules file version from:  {0}".format(base_file))
+    for line in base:
+        m = re_base_version.match(line)
+        if m:
+            base.close()
+            return(m.group(1))
+    base.close()
     return(_["(Not Found)"])
 
 
