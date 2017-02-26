@@ -193,6 +193,8 @@ def myopen_file(filename, mode, encoding=None):
         logging.debug(_["Problem opening \"%s\" for %s (%s)"] % (filename, mode_str, strerror))
     return(None)
 
+order_logger = logging.getLogger('mlox.loadorder')
+
 class loadorder:
     """Class for reading plugin mod times (load order), and updating them based on rules"""
     def __init__(self):
@@ -213,7 +215,7 @@ class loadorder:
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
         if self.plugin_file == None:
-            logging.warning("{0} config file not found!".format(self.game_type))
+            order_logger.warning("{0} config file not found!".format(self.game_type))
             return
 
         # Get all the plugins
@@ -227,7 +229,7 @@ class loadorder:
         #Convert the files to lowercase, while storing them in a dict
         self.order = map(self.caseless.cname,self.order)
 
-        logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
+        order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
             self.active[p] = True
         self.origin = "Active Plugins"
@@ -239,7 +241,7 @@ class loadorder:
         #Convert the files to lowercase, while storing them in a dict
         self.order = map(self.caseless.cname,self.order)
 
-        logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
+        order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
         for p in self.order:
             self.active[p] = True
         self.origin = "Installed Plugins"
@@ -262,16 +264,16 @@ class loadorder:
 
         self.order = configHandler.configHandler(fromfile).read()
         if len(self.order) == 0:
-            logging.warning("No plugins detected.\nmlox understands lists of plugins in the format used by Morrowind.ini or Wrye Mash.\nIs that what you used for input?")
+            order_logger.warning("No plugins detected.\nmlox understands lists of plugins in the format used by Morrowind.ini or Wrye Mash.\nIs that what you used for input?")
 
         #Convert the files to lowercase, while storing them in a dict
         self.order = map(self.caseless.cname,self.order)
 
-        logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
+        order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
             self.active[p] = True
         self.origin = "Plugin List from %s" % os.path.basename(fromfile)
-        logging.info("(Note: When the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
+        order_logger.info("(Note: When the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
 
     def add_current_order(self):
         """We treat the current load order as a sort of preferred order in
@@ -284,7 +286,7 @@ class loadorder:
         respectively"""
         if len(self.order) < 2:
             return
-        logging.debug("adding edges from CURRENT ORDER")
+        order_logger.debug("adding edges from CURRENT ORDER")
         # make ordering pseudo-rules for esms to follow official .esms
         if self.game_type == "Morrowind":
             self.graph.add_edge("", "morrowind.esm", "tribunal.esm")
@@ -319,12 +321,12 @@ class loadorder:
         try:
             out = open(filename, 'w')
         except IOError:
-            logging.error("Unable to write to {0} file:  {1}".format(what,filename))
+            order_logger.error("Unable to write to {0} file:  {1}".format(what,filename))
             return
         for p in order:
             print >> out, p
         out.close()
-        logging.info("%s saved to: %s" % (what, filename))
+        order_logger.info("%s saved to: %s" % (what, filename))
 
     def get_original_order(self):
         """Get the original plugin order in a nice printable format"""
@@ -375,11 +377,11 @@ class loadorder:
         self.is_sorted = False
         self.graph = pluggraph.pluggraph()
         if self.order == []:
-            logging.error("No plugins detected! mlox needs to run somewhere under where the game is installed.")
+            order_logger.error("No plugins detected! mlox needs to run somewhere under where the game is installed.")
             return
-        logging.debug("Initial load order:")
+        order_logger.debug("Initial load order:")
         for p in self.get_original_order():
-            logging.debug("  " + p)
+            order_logger.debug("  " + p)
 
 
         # read rules from various sources, and add orderings to graph
@@ -388,7 +390,7 @@ class loadorder:
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
-            logging.error("Unable to parse 'mlox_base.txt', load order NOT sorted!")
+            order_logger.error("Unable to parse 'mlox_base.txt', load order NOT sorted!")
             self.new_order = []
             return
 
@@ -404,17 +406,17 @@ class loadorder:
         new_order_cname = [p for p in esm_files + esp_files]
         self.new_order = [self.caseless.truename(p) for p in new_order_cname]
 
-        logging.debug("New load order:")
+        order_logger.debug("New load order:")
         for p in self.get_new_order():
-            logging.debug("  " + p)
+            order_logger.debug("  " + p)
 
         if len(self.new_order) != len(self.order):
-            logging.error("sanity check: len(self.new_order %d) != len(self.order %d)" % (len(self.new_order), len(self.order)))
+            order_logger.error("sanity check: len(self.new_order %d) != len(self.order %d)" % (len(self.new_order), len(self.order)))
             self.new_order = []
             return
 
         if self.order == new_order_cname:
-            logging.info("[Plugins already in sorted order. No sorting needed!]")
+            order_logger.info("[Plugins already in sorted order. No sorting needed!]")
             self.is_sorted = True
 
         if self.datadir != None:
@@ -426,12 +428,12 @@ class loadorder:
 
     def write_new_order(self):
         if self.new_order == [] or not isinstance(self.new_order,list):
-            logging.error("Unable to save new load order.")
+            order_logger.error("Unable to save new load order.")
             return
         if configHandler.dataDirHandler(self.datadir).write(self.new_order):
             self.is_sorted = True
         else:
-            logging.error("Unable to save new load order.")
+            order_logger.error("Unable to save new load order.")
 
 def display_colored_text(in_text, out_RichTextCtrl):
     # Apply coloring to text, then display it on a wx.RichTextCtrl
