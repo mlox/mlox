@@ -163,8 +163,6 @@ your load order made by mlox.
 
 [[Error: -f specified, but no files on command line.]]
 
-[[This program requires Python version 2.5.]]
-
 [[Current Load Order]]
 
 [[(Right click in this pane for options)]]

@@ -88,3 +88,9 @@ print l3.explain("Morrowind.esm",True)
 
 
 logging.getLogger('').setLevel(logging.DEBUG)
+
+#Version
+import modules.version as version
+print "\x1b[0;30;41m" + "Testing Version" + '\x1b[0m'
+print version.Version
+print version.version_info()
