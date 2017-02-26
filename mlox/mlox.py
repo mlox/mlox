@@ -356,7 +356,7 @@ class loadorder:
                     highlight = "_"
         return formatted
 
-    def update(self,progress = None):
+    def update(self,parser_out_stream = sys.stdout,progress = None):
         """Update the load order based on input rules."""
         self.is_sorted = False
         if self.order == []:
@@ -365,35 +365,18 @@ class loadorder:
         logging.debug("Initial load order:")
         for p in self.get_original_order():
             logging.debug("  " + p)
+
+
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        # primary rules are from mlox_user.txt
-        parser = None
-        if Opt.Quiet:
-            #Print output to an unused buffer
-            parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,StringIO.StringIO(),C)
-        else:
-            parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,Msg,C)
-
+        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,parser_out_stream,C)
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
-
-        # for reading mod-specific rules from "Data Files/mlox/*.txt"
-        # possible problems:
-        # mod author includes rules about other mods for which they should not publish rules
-        # mod author gratuitously forces their mod to load last.
-#        mod_rules_dir = caseless_dirlist(self.datadir.find_path("mlox"))
-#        mod_rules_files = [f for f in mod_rules_dir.filelist()
-#                           if os.path.isfile(mod_rules_dir.find_path(f)) and
-#                           os.path.splitext(f)[1] == '.txt']
-#        for f in mod_rules_files:
-#            parser.read_rules(mod_rules_dir.find_path(f), progress)
-
-        # last rules from mlox_base.txt
         if not parser.read_rules(base_file, progress):
             logging.error("Unable to parse 'mlox_base.txt', load order NOT sorted!")
             self.new_order = []
             return
+
         # now do the topological sort of all known plugins (rules + load order)
         if Opt.Explain == None:
             self.add_current_order() # tertiary order "pseudo-rules" from current load order
@@ -404,6 +387,7 @@ class loadorder:
                 self.add_current_order() # tertiary order "pseudo-rules" from current load order
             self.graph.explain(Opt.Explain, self.active)
             sys.exit(0)
+
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
         # but we only want to update plugins that are in our current "Data Files"
@@ -661,7 +645,7 @@ class mlox_gui():
                     self.lo.get_data_files()
         progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
-        self.lo.update(progress)
+        self.lo.update(Msg,progress)
         progress.Destroy()
         for p in self.lo.get_original_order():
             Old.write(p)
@@ -806,7 +790,10 @@ def main():
         for fromfile in args:
             l = loadorder()
             l.read_from_file(fromfile)
-            l.update()
+            if Opt.Quiet:
+                l.update(StringIO.StringIO())
+            else:
+                l.update()
             #We never actually write anything if reading from file(s)
             if not Opt.WarningsOnly:
                 print "[Proposed] New Load Order:\n---------------"
@@ -821,7 +808,10 @@ def main():
             l.get_active_plugins()
             if l.order == []:
                 l.get_data_files()
-        l.update()
+        if Opt.Quiet:
+            l.update(StringIO.StringIO())
+        else:
+            l.update()
         if not Opt.WarningsOnly:
             if Opt.Update:
                 print "[UPDATED] New Load Order:\n---------------"
