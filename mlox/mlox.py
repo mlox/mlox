@@ -326,7 +326,7 @@ class loadorder:
         for p in order:
             print >> out, p
         out.close()
-        Msg.write(_["%s saved to: %s"] % (what, filename))
+        logging.info(_["%s saved to: %s"] % (what, filename))
 
     def get_original_order(self):
         """Get the original plugin order in a nice printable format"""
@@ -421,7 +421,7 @@ class loadorder:
             return
 
         if self.order == new_order_cname:
-            Msg.add(_["[Plugins already in sorted order. No sorting needed!]"])
+            logging.info("[Plugins already in sorted order. No sorting needed!]")
             self.is_sorted = True
 
         if self.datadir != None:
