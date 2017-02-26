@@ -271,7 +271,7 @@ class loadorder:
         for p in self.order:
             self.active[p] = True
         self.origin = "Plugin List from %s" % os.path.basename(fromfile)
-        Msg.write("(Note: When the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
+        logging.info("(Note: When the load order input is from an external source, the [SIZE] predicate cannot check the plugin filesizes, so it defaults to True).")
 
     def add_current_order(self):
         """We treat the current load order as a sort of preferred order in
