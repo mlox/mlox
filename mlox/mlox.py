@@ -249,10 +249,11 @@ class loadorder:
 
     #List the versions of all plugins in the current load order
     def listversions(self):
-        print "{0:20} {1:20} {2}".format("Name", "Description", "Plugin Name")
+        out = "{0:20} {1:20} {2}\n".format("Name", "Description", "Plugin Name")
         for p in self.order:
             (file_ver, desc_ver) = ruleParser.get_version(p,self.datadir)
-            print "{0:20} {1:20} {2}".format(file_ver, desc_ver, C.truename(p))
+            out += "{0:20} {1:20} {2}\n".format(file_ver, desc_ver, C.truename(p))
+        return out
 
     def read_from_file(self, fromfile):
         """Get the load order by reading an input file.
@@ -877,7 +878,7 @@ if __name__ == "__main__":
         elif opt in ("-l", "--listversions"):
             l = loadorder()
             l.get_data_files()
-            l.listversions()
+            print l.listversions()
             sys.exit(0)
         elif opt in ("-p", "--parsedebug"):
             logging.getLogger('mlox.parser').setLevel(logging.DEBUG)
