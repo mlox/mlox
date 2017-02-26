@@ -161,8 +161,6 @@ your load order made by mlox.
 
 [[Input Plugin List from File]]
 
-[[(Debug Output Saved to "%s")]]
-
 [[Error: -f specified, but no files on command line.]]
 
 [[This program requires Python version 2.5.]]

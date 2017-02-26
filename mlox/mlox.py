@@ -213,7 +213,7 @@ class loadorder:
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
         if self.plugin_file == None:
-            logging.warning(_["{0} config file not found!"].format(self.game_type))
+            logging.warning("{0} config file not found!".format(self.game_type))
             return
 
         # Get all the plugins
@@ -230,7 +230,7 @@ class loadorder:
         logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
             self.active[p] = True
-        self.origin = _["Active Plugins"]
+        self.origin = "Active Plugins"
 
     def get_data_files(self):
         """Get the load order from the data files directory. Updates self.active and self.order."""
@@ -242,7 +242,7 @@ class loadorder:
         logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
         for p in self.order:
             self.active[p] = True
-        self.origin = _["Installed Plugins"]
+        self.origin = "Installed Plugins"
 
     #List the versions of all plugins in the current load order
     def listversions(self):
@@ -324,7 +324,7 @@ class loadorder:
         for p in order:
             print >> out, p
         out.close()
-        logging.info(_["%s saved to: %s"] % (what, filename))
+        logging.info("%s saved to: %s" % (what, filename))
 
     def get_original_order(self):
         """Get the original plugin order in a nice printable format"""
@@ -375,7 +375,7 @@ class loadorder:
         self.is_sorted = False
         self.graph = pluggraph.pluggraph()
         if self.order == []:
-            logging.error(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
+            logging.error("No plugins detected! mlox needs to run somewhere under where the game is installed.")
             return
         logging.debug("Initial load order:")
         for p in self.get_original_order():
@@ -420,8 +420,8 @@ class loadorder:
         if self.datadir != None:
             # these are things we do not want to do if just testing a load order from a file
             # save the load orders to file for future reference
-            self.save_order(old_loadorder_output, [self.caseless.truename(p) for p in self.order], _["current"])
-            self.save_order(new_loadorder_output, self.new_order, _["mlox sorted"])
+            self.save_order(old_loadorder_output, [self.caseless.truename(p) for p in self.order], "current")
+            self.save_order(new_loadorder_output, self.new_order, "mlox sorted")
         return
 
     def write_new_order(self):
