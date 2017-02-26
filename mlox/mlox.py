@@ -353,9 +353,27 @@ class loadorder:
                     highlight = "_"
         return formatted
 
+    def explain(self,plugin_name,base_only = False):
+        """Expalin why a mod is in it's current position"""
+        original_graph = self.graph
+        self.graph = pluggraph.pluggraph()
+
+        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,StringIO.StringIO(),self.caseless)
+        if os.path.exists(user_file):
+            parser.read_rules(user_file)
+        parser.read_rules(base_file)
+
+        if not base_only:
+            self.add_current_order() # tertiary order "pseudo-rules" from current load order
+        output = self.graph.explain(plugin_name, self.active)
+
+        self.graph = original_graph
+        return output
+
     def update(self,parser_out_stream = sys.stdout,progress = None):
         """Update the load order based on input rules."""
         self.is_sorted = False
+        self.graph = pluggraph.pluggraph()
         if self.order == []:
             logging.error(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
             return
@@ -375,15 +393,8 @@ class loadorder:
             return
 
         # now do the topological sort of all known plugins (rules + load order)
-        if Opt.Explain == None:
-            self.add_current_order() # tertiary order "pseudo-rules" from current load order
-            sorted = self.graph.topo_sort()
-        else:
-            # print an explanation of where the given plugin is in the graph and exit
-            if not Opt.BaseOnly:
-                self.add_current_order() # tertiary order "pseudo-rules" from current load order
-            self.graph.explain(Opt.Explain, self.active)
-            sys.exit(0)
+        self.add_current_order() # tertiary order "pseudo-rules" from current load order
+        sorted = self.graph.topo_sort()
 
         # the "sorted" list will be a superset of all known plugin files,
         # inluding those in our Data Files directory.
@@ -787,6 +798,10 @@ def main():
         for fromfile in args:
             l = loadorder()
             l.read_from_file(fromfile)
+            if Opt.Explain != None:
+                print l.explain(Opt.Explain,Opt.BaseOnly)
+                #Only expain for first input file
+                sys.exit(0)
             if Opt.Quiet:
                 l.update(StringIO.StringIO())
             else:
@@ -805,6 +820,9 @@ def main():
             l.get_active_plugins()
             if l.order == []:
                 l.get_data_files()
+        if Opt.Explain != None:
+            print l.explain(Opt.Explain,Opt.BaseOnly)
+            sys.exit(0)
         if Opt.Quiet:
             l.update(StringIO.StringIO())
         else:

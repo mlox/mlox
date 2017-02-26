@@ -71,20 +71,24 @@ class pluggraph:
 
     def explain(self, what, active):
         seen = {}
-        print "This is a picture of all the plugins mlox thinks should follow {0}".format(what)
-        print "Child plugins are indented with respect to their parents"
-        print "Lines beginning with '=' are plugins you don't have."
-        print "Lines beginning with '+' are plugins you do have."
+        output = ""
+        output += "This is a picture of all the plugins mlox thinks should follow {0}\n".format(what)
+        output += "Child plugins are indented with respect to their parents\n"
+        output += "Lines beginning with '=' are plugins you don't have.\n"
+        output += "Lines beginning with '+' are plugins you do have.\n"
         def explain_rec(indent, n):
+            output = ""
             if n in seen:
                 return
             seen[n] = True
             if n in self.nodes:
                 for child in self.nodes[n]:
                     prefix = indent.replace(" ", "+") if child in active else indent.replace(" ", "=")
-                    print "%s%s" % (prefix, child)
+                    output += "%s%s\n" % (prefix, child)
                     explain_rec(" " + indent, child)
-        explain_rec(" ", what.lower())
+            return output
+        output += explain_rec(" ", what.lower())
+        return output
 
     def topo_sort(self):
         """topological sort"""
