@@ -355,9 +355,9 @@ class loadorder:
                     highlight = "_"
         return formatted
 
-    def update(self):
+    def update(self,progress = None):
         """Update the load order based on input rules."""
-        logging.info("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
+        self.is_sorted = False
         if self.order == []:
             logging.error(_["No plugins detected! mlox needs to run somewhere under where the game is installed."])
             return
@@ -373,10 +373,7 @@ class loadorder:
             parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,StringIO.StringIO(),C)
         else:
             parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,Msg,C)
-        progress = None
-        if Opt.GUI:
-            progress = wx.ProgressDialog("Progress", "", 100, None,
-                                         wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
 
@@ -393,10 +390,9 @@ class loadorder:
 
         # last rules from mlox_base.txt
         if not parser.read_rules(base_file, progress):
-            progress.Destroy()
-            return(self)
-        if progress != None:
-            progress.Destroy()
+            logging.error("Unable to parse 'mlox_base.txt', load order NOT sorted!")
+            self.new_order = []
+            return
         # now do the topological sort of all known plugins (rules + load order)
         if Opt.Explain == None:
             self.add_current_order() # tertiary order "pseudo-rules" from current load order
@@ -430,15 +426,19 @@ class loadorder:
 
         if self.datadir != None:
             # these are things we do not want to do if just testing a load order from a file
-            if Opt.Update:
-                if configHandler.dataDirHandler(self.datadir).write(self.new_order):
-                    Msg.add(_["[LOAD ORDER UPDATED!]"])
-                    self.is_sorted = True
             # save the load orders to file for future reference
             self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], _["current"])
             self.save_order(new_loadorder_output, self.new_order, _["mlox sorted"])
-        return(self)
+        return
 
+    def write_new_order(self):
+        if self.new_order == [] or not isinstance(self.new_order,list):
+            logging.error("Unable to save new load order.")
+            return
+        if configHandler.dataDirHandler(self.datadir).write(self.new_order):
+            self.is_sorted = True
+        else:
+            logging.error("Unable to save new load order.")
 
 def display_colored_text(in_text, out_RichTextCtrl):
     # Apply coloring to text, then display it on a wx.RichTextCtrl
@@ -503,6 +503,8 @@ def display_colored_text(in_text, out_RichTextCtrl):
         out_RichTextCtrl.SetStyle(where, hide)
 
 class mlox_gui():
+    lo = None     #Load order
+
     def __init__(self):
         wx.Locale(wx.LOCALE_LOAD_DEFAULT)
         self.app = wx.App(True, None)
@@ -645,22 +647,26 @@ class mlox_gui():
         Stats.clear()
         New.clear()
         Old.clear()
-        lo = loadorder()
+        logging.info("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
+        self.lo = loadorder()
         if fromfile != None:
-            lo.read_from_file(fromfile)
+            self.lo.read_from_file(fromfile)
         else:
             if Opt.GetAll:
-                lo.get_data_files()
+                self.lo.get_data_files()
             else:
-                lo.get_active_plugins()
-                if lo.order == []:
-                    lo.get_data_files()
-        lo.update()
-        for p in lo.get_original_order():
+                self.lo.get_active_plugins()
+                if self.lo.order == []:
+                    self.lo.get_data_files()
+        progress = wx.ProgressDialog("Progress", "", 100, None,
+                                         wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+        self.lo.update(progress)
+        progress.Destroy()
+        for p in self.lo.get_original_order():
             Old.write(p)
-        for p in lo.get_new_order():
+        for p in self.lo.get_new_order():
             New.write(p)
-        if lo.is_sorted:
+        if self.lo.is_sorted:
             self.can_update = False
         if not self.can_update:
             self.btn_update.Disable()
@@ -668,7 +674,7 @@ class mlox_gui():
         display_colored_text(Msg.get(),self.txt_msg)
         self.txt_cur.SetValue(Old.get())
         self.txt_new.SetValue(New.get())
-        self.label_cur.SetLabel(lo.origin)
+        self.label_cur.SetLabel(self.lo.origin)
         self.cur_vbox.Layout()
         self.highlight_moved(self.txt_new)
 
@@ -689,8 +695,8 @@ class mlox_gui():
     def on_update(self, e):
         if not self.can_update:
             return
-        Opt.Update = True
-        self.analyze_loadorder(None)
+        self.lo.write_new_order()
+        Msg.add("[LOAD ORDER UPDATED!]")
         self.can_update = False
         self.btn_update.Disable()
 
@@ -790,7 +796,9 @@ def main():
     if Opt.GUI == True:
         # run with gui
         mlox_gui().start()
-    elif Opt.FromFile:
+    #Running in command line mode
+    logging.info("Version: %s\t\t\t\t %s " % (full_version, _["Hello!"]))
+    if Opt.FromFile:
         if len(args) == 0:
             print _["Error: -f specified, but no files on command line."]
             usage(2)            # exits
@@ -816,6 +824,8 @@ def main():
         if not Opt.WarningsOnly:
             if Opt.Update:
                 print "[UPDATED] New Load Order:\n---------------"
+                l.write_new_order()
+                print "[LOAD ORDER UPDATED!]"
             else:
                 print "[Proposed] New Load Order:\n---------------"
         for p in l.get_new_order():
