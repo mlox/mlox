@@ -223,7 +223,9 @@ def display_colored_text(in_text, out_RichTextCtrl):
         re.compile(r"^(\s*\|?\s*!{2}[^!].*)$", re.MULTILINE): medium,        #Handle '!!' in mlox_base.txt
         re.compile(r"^(\s*\|?\s*!{3}.*)$", re.MULTILINE): high,              #Handle '!!!' in mlox_base.txt
         re.compile(r'^(WARNING:.*)', re.MULTILINE): warning,
-        re.compile(r'^(ERROR:.*)', re.MULTILINE): error }
+        re.compile(r'^(ERROR:.*)', re.MULTILINE): error,
+        re.compile(r'^(\*\d+\*\s\S*\.es[mp])', re.MULTILINE): medium         #Changed mod order
+        }
     # for hiding spoilers
     hidden = []
     adjust = [0]            # use a mutable entity for closure "hider"
@@ -293,7 +295,7 @@ class mlox_gui():
         self.label_new = wx.StaticText(self.split2, -1, _["Proposed Load Order Sorted by mlox"])
         self.label_new.SetFont(self.label_font)
         self.label_new_bottom = wx.StaticText(self.frame, -1, "")
-        self.txt_new = wx.TextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
+        self.txt_new = rt.RichTextCtrl(self.split2, -1, "", style=wx.TE_READONLY|wx.TE_MULTILINE|wx.HSCROLL|wx.TE_RICH2)
         self.txt_new.SetFont(default_font)
 
         self.btn_update = wx.Button(self.frame, -1, _["Update Load Order"], size=(90,60))
@@ -377,15 +379,6 @@ class mlox_gui():
         the_url = e.GetString()
         webbrowser.open(the_url)
 
-    def highlight_moved(self, txt):
-        # highlight background color for changed items in txt widget
-        highlight = wx.TextAttr(colBack=wx.Colour(255,255,180))
-        re_start = re.compile(r'[^_]\d+[^_][^\n]+')
-        text = New.get()
-        for match in re.finditer(re_start, text):
-            (start, end) = match.span()
-            if text[start] == '*': txt.SetStyle(start, end, highlight)
-
     def analyze_loadorder(self, fromfile):
         Msg.clear()
         Stats.clear()
@@ -412,15 +405,16 @@ class mlox_gui():
             New.write(p)
         if self.lo.is_sorted:
             self.can_update = False
+
+        #Go ahead and display everything
         if not self.can_update:
             self.btn_update.Disable()
         display_colored_text(Stats.get_u(),self.txt_stats)
         display_colored_text(Msg.get(),self.txt_msg)
+        display_colored_text(New.get(),self.txt_new)
         self.txt_cur.SetValue(Old.get())
-        self.txt_new.SetValue(New.get())
         self.label_cur.SetLabel(self.lo.origin)
         self.cur_vbox.Layout()
-        self.highlight_moved(self.txt_new)
 
     def start(self):
         self.frame.Show(True)
