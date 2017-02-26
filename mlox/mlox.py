@@ -36,10 +36,6 @@ base_file = os.path.join(program_path,"mlox_base.txt")
 user_file = os.path.join(program_path,"mlox_user.txt")
 gif_file = os.path.join(program_path,"mlox.gif")
 
-
-#HACK
-C = fileFinder.caseless_filenames()
-
 class dynopt(dict):
     def __getattr__(self, item):
         return self.__getitem__(item)
@@ -210,6 +206,7 @@ class loadorder:
         self.is_sorted = False
         self.origin = None                 # where plugins came from (active, installed, file)
         self.game_type = None              # 'Morrowind', 'Oblivion', or None for unknown
+        self.caseless = fileFinder.caseless_filenames()
 
         self.game_type, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
@@ -227,8 +224,8 @@ class loadorder:
         configFiles = map(str.lower, configFiles)
         self.order = filter(lambda x: x.lower() in configFiles, dirFiles)
 
-        #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
-        self.order = map(C.cname,self.order)
+        #Convert the files to lowercase, while storing them in a dict
+        self.order = map(self.caseless.cname,self.order)
 
         logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
@@ -239,8 +236,8 @@ class loadorder:
         """Get the load order from the data files directory. Updates self.active and self.order."""
         self.order = configHandler.dataDirHandler(self.datadir).read()
 
-        #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
-        self.order = map(C.cname,self.order)
+        #Convert the files to lowercase, while storing them in a dict
+        self.order = map(self.caseless.cname,self.order)
 
         logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
         for p in self.order:
@@ -252,7 +249,7 @@ class loadorder:
         out = "{0:20} {1:20} {2}\n".format("Name", "Description", "Plugin Name")
         for p in self.order:
             (file_ver, desc_ver) = ruleParser.get_version(p,self.datadir)
-            out += "{0:20} {1:20} {2}\n".format(file_ver, desc_ver, C.truename(p))
+            out += "{0:20} {1:20} {2}\n".format(file_ver, desc_ver, self.caseless.truename(p))
         return out
 
     def read_from_file(self, fromfile):
@@ -267,8 +264,8 @@ class loadorder:
         if len(self.order) == 0:
             logging.warning("No plugins detected.\nmlox understands lists of plugins in the format used by Morrowind.ini or Wrye Mash.\nIs that what you used for input?")
 
-        #Convert the files to lowercase, while storing them in a global (WARNING:  Use a global here)
-        self.order = map(C.cname,self.order)
+        #Convert the files to lowercase, while storing them in a dict
+        self.order = map(self.caseless.cname,self.order)
 
         logging.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
@@ -333,7 +330,7 @@ class loadorder:
         """Get the original plugin order in a nice printable format"""
         formatted = []
         for n in range(1,len(self.order)+1):
-            formatted.append("{0:0>3} {1}".format(n, C.truename(self.order[n-1])))
+            formatted.append("{0:0>3} {1}".format(n, self.caseless.truename(self.order[n-1])))
         return formatted
 
     def get_new_order(self):
@@ -369,7 +366,7 @@ class loadorder:
 
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,parser_out_stream,C)
+        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,parser_out_stream,self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
@@ -394,7 +391,7 @@ class loadorder:
         sorted_datafiles = [f for f in sorted if f in self.active]
         (esm_files, esp_files) = configHandler.partition_esps_and_esms(sorted_datafiles)
         new_order_cname = [p for p in esm_files + esp_files]
-        self.new_order = [C.truename(p) for p in new_order_cname]
+        self.new_order = [self.caseless.truename(p) for p in new_order_cname]
 
         logging.debug("New load order:")
         for p in self.get_new_order():
@@ -412,7 +409,7 @@ class loadorder:
         if self.datadir != None:
             # these are things we do not want to do if just testing a load order from a file
             # save the load orders to file for future reference
-            self.save_order(old_loadorder_output, [C.truename(p) for p in self.order], _["current"])
+            self.save_order(old_loadorder_output, [self.caseless.truename(p) for p in self.order], _["current"])
             self.save_order(new_loadorder_output, self.new_order, _["mlox sorted"])
         return
 
