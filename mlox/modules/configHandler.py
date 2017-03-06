@@ -73,8 +73,7 @@ class configHandler():
 
     #Remove all plugins from the config file
     def clear(self):
-        section_re = re.compile("^\[.*\]\s*$", re.MULTILINE);
-        config_section_re = re.compile("^\[Game Files\]\s*$", re.MULTILINE);
+        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE);
 
         config_logger.debug("Clearing config file: {0}".format(self.configFile))
 
@@ -92,19 +91,16 @@ class configHandler():
         file_buffer = file_handle.read()
         file_handle.close()
 
-        sections = section_re.findall(file_buffer)
-        sections = map(lambda x: x.strip(),sections)
+        #Remove the data from '[Game Files]'
+        sections = section_re.split(file_buffer)
         try:
             config_index = sections.index('[Game Files]')
-            (config_start, config_end) = config_section_re.search(file_buffer).span()
         except:
             config_logger.error("Config file does not have a '[Game Files]' section!")
             return False
+        sections[config_index+1] = '\n'
+        file_buffer =  reduce(lambda x,y: x+y,sections)
 
-        #if the config section is at the end of the file
-        if (len(sections)-1 == config_index):
-            #Trim the games off of it
-            file_buffer = file_buffer[0:config_end+1]
 
         #Write the buffer to the file
         try:
