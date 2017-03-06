@@ -41,10 +41,14 @@ print handler2.read()
 print "\x1b[0;30;41m" + "Reading handler3" + '\x1b[0m'
 handler3 = configHandler.configHandler("./userfiles/zinx.txt","Oblivion")
 print handler3.read()
-print "\x1b[0;30;41m" + "Reading/clearing handlerM" + '\x1b[0m'
+print "\x1b[0;30;41m" + "Reading/clearing/writing handlerM" + '\x1b[0m'
 handlerM = configHandler.configHandler("./testM/Morrowind.ini","Morrowind")
+plugins = handlerM.read()
+print plugins
+handlerM.clear()
 print handlerM.read()
-#handlerM.clear()
+handlerM.write(plugins)
+print handlerM.read()
 dirHandler = configHandler.dataDirHandler("./test1.data/")
 print "\x1b[0;30;41m" + "Reading dirHandler" + '\x1b[0m'
 plugins = dirHandler.read()
