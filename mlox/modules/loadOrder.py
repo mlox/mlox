@@ -36,6 +36,7 @@ class loadorder:
 
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
+        self.is_sorted = False
         if self.plugin_file == None:
             order_logger.warning("{0} config file not found!".format(self.game_type))
             return
@@ -58,6 +59,7 @@ class loadorder:
 
     def get_data_files(self):
         """Get the load order from the data files directory. Updates self.active and self.order."""
+        self.is_sorted = False
         self.order = configHandler.dataDirHandler(self.datadir).read()
 
         #Convert the files to lowercase, while storing them in a dict
@@ -80,6 +82,7 @@ class loadorder:
         """Get the load order by reading an input file.
         Clears self.game_type and self.datadir.
         Updates self.plugin_file, self.active, and self.order."""
+        self.is_sorted = False
         self.game_type = None
         self.datadir = None         #This tells the parser to not worry about things like [SIZE] checks, or trying to read the plugin descriptions
         self.plugin_file = fromfile
@@ -249,10 +252,17 @@ class loadorder:
         return
 
     def write_new_order(self):
-        if self.new_order == [] or not isinstance(self.new_order,list):
+        if not isinstance(self.new_order,list) or self.new_order == []:
+            order_logger.error("Not saving blank load order.")
+            return False
+        if isinstance(self.datadir,fileFinder.caseless_dirlist):
+            if configHandler.dataDirHandler(self.datadir).write(self.new_order):
+                self.is_sorted = True
+        if isinstance(self.plugin_file,str):
+            if configHandler.configHandler(self.plugin_file,self.game_type).write(self.new_order):
+                self.is_sorted = True
+
+        if self.is_sorted != True:
             order_logger.error("Unable to save new load order.")
-            return
-        if configHandler.dataDirHandler(self.datadir).write(self.new_order):
-            self.is_sorted = True
-        else:
-            order_logger.error("Unable to save new load order.")
+            return False
+        return True
