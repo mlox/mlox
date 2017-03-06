@@ -16,6 +16,8 @@ webbrowser.PROCESS_CREATION_DELAY = 0
 import modules.version as version
 from modules.loadOrder import loadorder
 
+gui_logger = logging.getLogger('mlox.gui')
+
 #Resource files
 program_path = os.path.realpath(sys.path[0])
 translation_file = os.path.join(program_path,"mlox.msg")
@@ -273,6 +275,19 @@ class mlox_gui():
         the_url = e.GetString()
         webbrowser.open(the_url)
 
+    #Display output messages on the gui panels (and disable/enable btn_update if appropriate)
+    def display(self):
+        if self.can_update:
+            self.btn_update.Enable()
+        else:
+            self.btn_update.Disable()
+        display_colored_text(self.Stats.getvalue(),self.txt_stats)
+        display_colored_text(self.Msg.getvalue(),self.txt_msg)
+        display_colored_text(self.New.getvalue(),self.txt_new)
+        self.txt_cur.SetValue(self.Old.getvalue())
+        self.label_cur.SetLabel(self.lo.origin)
+        self.cur_vbox.Layout()
+
     def analyze_loadorder(self, fromfile):
         #Clear all the outputs (except Dbg)
         self.New.truncate(0)
@@ -280,7 +295,7 @@ class mlox_gui():
         self.Stats.truncate(0)
         self.Msg.truncate(0)
 
-        logging.info("Version: %s\t\t\t\t %s " % (version.full_version(), _["Hello!"]))
+        gui_logger.info("Version: %s\t\t\t\t %s " % (version.full_version(), _["Hello!"]))
         self.lo = loadorder()
         if fromfile != None:
             self.lo.read_from_file(fromfile)
@@ -300,14 +315,7 @@ class mlox_gui():
             self.can_update = False
 
         #Go ahead and display everything
-        if not self.can_update:
-            self.btn_update.Disable()
-        display_colored_text(self.Stats.getvalue(),self.txt_stats)
-        display_colored_text(self.Msg.getvalue(),self.txt_msg)
-        display_colored_text(self.New.getvalue(),self.txt_new)
-        self.txt_cur.SetValue(self.Old.getvalue())
-        self.label_cur.SetLabel(self.lo.origin)
-        self.cur_vbox.Layout()
+        self.display()
 
     def start(self):
         self.frame.Show(True)
@@ -327,9 +335,9 @@ class mlox_gui():
         if not self.can_update:
             return
         self.lo.write_new_order()
-        logging.info("[LOAD ORDER UPDATED!]")
+        gui_logger.info("[LOAD ORDER UPDATED!]")
         self.can_update = False
-        self.btn_update.Disable()
+        self.display()
 
     def on_close(self, e):
         self.on_quit(e)
@@ -338,7 +346,7 @@ class mlox_gui():
         try:
             out = open(debug_output, 'w')
         except IOError:
-            logging.error("Unable to write to debug output file:  {0}".format(debug_output))
+            gui_logger.error("Unable to write to debug output file:  {0}".format(debug_output))
         print >> out, self.Dbg.getvalue().encode("utf-8")
         out.close()
 
@@ -368,7 +376,7 @@ class mlox_gui():
                     try:
                         out = open(clip_file, 'w')
                     except IOError:
-                        logging.error("Unable to open temporary clipboard file:  {0}".format(clip_file))
+                        gui_logger.error("Unable to open temporary clipboard file:  {0}".format(clip_file))
                         wx.TheClipboard.Close()
                         return
                     # sometimes some unicode muck can get in there, as when pasting from web pages.
