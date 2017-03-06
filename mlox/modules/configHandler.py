@@ -68,8 +68,54 @@ class configHandler():
         # Deal with duplicates
         (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
-            logging.debug("Config File: Duplicate plugin found in config file: {0}".format(f))
+            config_logger.debug("Duplicate plugin found in config file: {0}".format(f))
         return files
+
+    #Remove all plugins from the config file
+    def clear(self):
+        section_re = re.compile("^\[.*\]\s*$", re.MULTILINE);
+        config_section_re = re.compile("^\[Game Files\]\s*$", re.MULTILINE);
+
+        config_logger.debug("Clearing config file: {0}".format(self.configFile))
+
+        #Only handling Morrowind.ini right now
+        if (self.fileType != "Morrowind"):
+            config_logger.error("Can not clear non Morrowind.ini config files.")
+            return False
+
+        #Read the file to a buffer
+        try:
+            file_handle = open(self.configFile, 'r')
+        except IOError:
+            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            return False
+        file_buffer = file_handle.read()
+        file_handle.close()
+
+        sections = section_re.findall(file_buffer)
+        sections = map(lambda x: x.strip(),sections)
+        try:
+            config_index = sections.index('[Game Files]')
+            (config_start, config_end) = config_section_re.search(file_buffer).span()
+        except:
+            config_logger.error("Config file does not have a '[Game Files]' section!")
+            return False
+
+        #if the config section is at the end of the file
+        if (len(sections)-1 == config_index):
+            #Trim the games off of it
+            file_buffer = file_buffer[0:config_end+1]
+
+        #Write the buffer to the file
+        try:
+            file_handle = open(self.configFile, 'w')
+        except IOError:
+            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            return False
+        file_handle.write(file_buffer)
+        file_handle.close()
+
+        return True
 
 # Handle reading and updating the load order for the plugins in the data directory
 class dataDirHandler:

@@ -26,22 +26,25 @@ print fileFinder.find_game_dirs()
 
 #Config Handler
 import modules.configHandler as configHandler
-handleri = configHandler.configHandler("No File")
-handler0 = configHandler.configHandler("./userfiles/zinx.txt","Morrowind")
-handler1 = configHandler.configHandler("./userfiles/zinx.txt","Invalid")
-handler2 = configHandler.configHandler("./userfiles/zinx.txt")
-handler3 = configHandler.configHandler("./userfiles/zinx.txt","Oblivion")
 print "\x1b[0;30;41m" + "Reading handleri" + '\x1b[0m'
+handleri = configHandler.configHandler("No File")
 print handleri.read()
 print "\x1b[0;30;41m" + "Reading handler0" + '\x1b[0m'
+handler0 = configHandler.configHandler("./userfiles/zinx.txt","Morrowind")
 print handler0.read()
 print "\x1b[0;30;41m" + "Reading handler1" + '\x1b[0m'
+handler1 = configHandler.configHandler("./userfiles/zinx.txt","Invalid")
 print handler1.read()
 print "\x1b[0;30;41m" + "Reading handler2" + '\x1b[0m'
+handler2 = configHandler.configHandler("./userfiles/zinx.txt")
 print handler2.read()
 print "\x1b[0;30;41m" + "Reading handler3" + '\x1b[0m'
+handler3 = configHandler.configHandler("./userfiles/zinx.txt","Oblivion")
 print handler3.read()
-
+print "\x1b[0;30;41m" + "Reading/clearing handlerM" + '\x1b[0m'
+handlerM = configHandler.configHandler("./testM/Morrowind.ini","Morrowind")
+print handlerM.read()
+#handlerM.clear()
 dirHandler = configHandler.dataDirHandler("./test1.data/")
 print "\x1b[0;30;41m" + "Reading dirHandler" + '\x1b[0m'
 plugins = dirHandler.read()
