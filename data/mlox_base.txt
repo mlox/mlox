@@ -16481,7 +16481,7 @@ Fliggerty's Armor Project (Rebalanced by jeclxohko).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Flora Glow [Nigedo & Max_aka_NOBODY]
+;; @Flora Glow 1.0 [Nigedo & Max_aka_NOBODY]
 
 ;;Dragon32: Darknut's GDR changes flora_bc_mushroom_04 / 08
 ;;See also same Order rules for the Herbalism mods
@@ -56720,7 +56720,6 @@ Syc_Herbalism ES Patch DV.esp
 Syc_HerbalismforPurists_TB_DV.esp
 Tribunal.esm
 
-
 [Requires]
 Syc_HerbalismforPurists_BM_DV.esp
 Bloodmoon.esm
@@ -56856,47 +56855,69 @@ Sky_Main.esp
 Sky_Main_Grass.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Original Faces by ARHIZ 
-;; rep. by Jaiysaun #10
+;; @Original Faces 1.3 [ARHIZ]
 
 [Conflict]
-[ANY Original Faces 1.3.esp
-     Original Faces 1.3 PL.esp
-     Oryginal Faces 1.3 Morrowind only.esp
-     Oryginal Faces 1.3 PL Morrowind only.esp]
-[ANY Original Faces 1.3.esp
-     Original Faces 1.3 PL.esp
-     Oryginal Faces 1.3 Morrowind only.esp
-     Oryginal Faces 1.3 PL Morrowind only.esp]
+ Only use one plugin:
+  Original Faces 1.3.esp - Adds unique faces to Vvardenfell, Solshteim and Mournhold NPCs 
+  Oryginal Faces 1.3 Morrowind only.esp - Adds unique faces to Vvardenfell NPCs
+  Oryginal Faces 1.3 PL.esp - Adds unique faces to Vvardenfell, Solshteim and Mournhold NPCs. Polish version.
+  Oryginal Faces 1.3 PL Morrowind only.esp - Adds unique faces to Vvardenfell NPCs. Polish version.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
+Original Faces 1.3.esp
+Oryginal Faces 1.3 Morrowind only.esp
+Oryginal Faces 1.3 PL Morrowind only.esp
+Oryginal Faces 1.3 PL.esp
 
+;; Ref: "Original Faces by ARHIZ [...] cause a syntax error if loaded after LGNPC Gnaar Mok"
+;; https://github.com/mlox/mlox/issues/10
+;; Dragon32: Checked other LGNPC mods (and Less Generics and LGNPC Lite) in TESPCD. All show NPC_ conflicts.
 [Order]
-[ANY Original Faces 1.3.esp
-     Original Faces 1.3 PL.esp
-     Oryginal Faces 1.3 Morrowind only.esp
-     Oryginal Faces 1.3 PL Morrowind only.esp]
-;; LGNPC_Merged_OM.esp
-;; LGNPC_Merged_Lt.esp
-;; LGNPC_HlaOad_OM.esp
-;; LGNPC_Khuul_OM.esp
-;; LGNPC_MaarGan_OM.esp
-;; LGNPC_Pelagiad_OM.esp
-;; LGNPC_SeydaNeen_OM.esp
-;; LGNPC_VivecFQ_OM.esp
-;; LGNPC_VivecRedoran_OM.esp
-;; LGNPC_SeydaNeen.esp
+Original Faces 1.3.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
-;; LGNPC_AldVelothi_v?_??.esp
-;; LGNPC_MaarGan.esp
-;; LGNPC_HlaOad.esp
-;; LGNPC_Aldruhn.esp
-;; LGNPC_Aldruhn_suppl.esp
-;; LGNPC_Pelagiad.esp
-;; LGNPC_TelMora_v?_??.esp
-;; LGNPC_Khuul_v?_??.esp
-;; LGNPC_VivecFQ.esp
-;; LGNPC_TelUvirith.esp
-;; LGNPC_SecretMasters_v?_??.esp
-;; LGNPC_IndarysManor_v?_??.esp
-;; LGNPC_VivecRedoran.esp
-;; LGNPC_PaxRedoran_v?_??.esp
-;; LGNPC_SoulSicknessPatch_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1518406 Oryginal Faces 1.3 Morrowind only.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1518496 Oryginal Faces 1.3 PL Morrowind only.esp]
+
+[Note]
+ !! "[ARHIZ's "Original Faces"] is based on Westly's models and textures - it needs "Westly's Maste Headpack X" for proper working."
+ !! Download "Westly's Master Head Pack X" from Morrowind Modding History - http://mw.modhistory.com/download--12454
+ !! (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
+[ALL [ANY Original Faces 1.3.esp
+        Oryginal Faces 1.3 Morrowind only.esp
+        Oryginal Faces 1.3 PL Morrowind only.esp
+        Oryginal Faces 1.3 PL.esp]]
+     [NOT Westly's Master Headpack X.esp]]
