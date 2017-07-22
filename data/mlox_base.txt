@@ -15524,18 +15524,22 @@ SeriousWeather_v1_00.esp
 ;;Dragon32: Compared with a TESPCD check
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 Expanded Sounds.esp
 
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 Expanded Sounds DV.esp
 
 [Order]
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 Expanded Sounds.esp
 
 [Order]
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 Expanded Sounds DV.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19303,6 +19307,7 @@ LBS_addon_reg_VD_v1.1.esp
 [Order]
 Graphic Herbalism.esp
 Lights 300 v5.esp
+Lights 300 v5 + DBL.esp
 
 [Order]
 Graphic Herbalism.esp
@@ -19310,15 +19315,23 @@ TLM - Ambient Light + Fog Update.esp
 
 [Order]
 Graphic Herbalism.esp
+TLM - Complete.esp
+TLM - Complete + DBL.esp
+
+[Order]
+Graphic Herbalism.esp
 True_Lights_And_Darkness_0.5.esp
+True_Lights_And_Darkness_0.5 + DBL.esp
 
 [Order]
 Graphic Herbalism.esp
 True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
 
 [Order]
 Graphic Herbalism.esp
 True_Lights_And_Darkness_1.1.esp
+True_Lights_And_Darkness_1.1 + DBL.esp
 
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
@@ -19366,7 +19379,7 @@ Graphic Herbalism TotSP.esp
      GH_ES1.3 Patch.esp]
 [ALL [VER <1.3 Graphic Herbalism.esp]
      [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]]
+          Expanded Sounds DV.esp]]
 
 ;;GH_ES1.2 - For Expanded Sounds v1.2
 
@@ -19381,8 +19394,13 @@ GH_Extra_ES1.2 Patch.esp
 [Order]
 Expanded Sounds.esp
 Expanded Sounds DV.esp
+GH_ES1.2 Patch.esp
+GH_Extra_ES1.2 Patch.esp
+
+[Order]
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
+Graphic Herbalism Extra (Correct UV).esp
 GH_ES1.2 Patch.esp
 GH_Extra_ES1.2 Patch.esp
 
@@ -19405,8 +19423,13 @@ GH_Extra_ES1.3 Patch.esp
 [Order]
 Expanded Sounds.esp
 Expanded Sounds DV.esp
+GH_ES1.3 Patch.esp
+GH_Extra_ES1.3 Patch.esp
+
+[Order]
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
+Graphic Herbalism Extra (Correct UV).esp
 GH_ES1.3 Patch.esp
 GH_Extra_ES1.3 Patch.esp
 
@@ -19461,8 +19484,8 @@ GHE ES (1.3) Patch.ESP
 [ANY GH ES (1.2) Patch.ESP
      GH ES (1.3) Patch.ESP]
 [ALL [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]
-		  [VER >1.2 Graphic Herbalism.esp]]
+          Expanded Sounds DV.esp]
+     [VER >1.2 Graphic Herbalism.esp]]
 
 [Patch]
  "GHE ES (1.2) Patch.ESP" and "GHE ES (1.3) Patch.ESP" are compatibility patches for Graphic Herbalism and Expanded Sounds. They merge the script additions to flora from both mods, allowing for them to be harvestable as per Graphic Herbalism and at the same time makes them correctly update sounds as per Expanded Sounds.
@@ -19475,10 +19498,10 @@ GHE ES (1.3) Patch.ESP
 [ANY GHE ES (1.2) Patch.ESP
      GHE ES (1.3) Patch.ESP]
 [ALL [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]
-		  [VER >1.2 Graphic Herbalism.esp]
-		  [ANY [VER >1.2 Graphic Herbalism Extra.esp]
-			   Graphic Herbalism Extra (Correct UV).esp]]
+          Expanded Sounds DV.esp]
+     [VER >1.2 Graphic Herbalism.esp]
+     [ANY [VER >1.2 Graphic Herbalism Extra.esp]
+          Graphic Herbalism Extra (Correct UV).esp]]
 
 ;;Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt"
 [Order]
@@ -21397,6 +21420,61 @@ Syc_HerbalismforPurists_DV.esp
 k_weather.esp
 k_weather (louder sounds).esp
 Syc_HerbalismforPurists_TB_ONLY.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Herbalism for Purists (DV) [Syclonix; Translation: Trr Kah]
+
+[Requires]
+ (Ref: "Herbalism for Purists - Readme DV.txt")
+Syc_HerbalismforPurists_TB_DV.esp
+Tribunal.esm
+
+[Requires]
+ (Ref: "Herbalism for Purists - Readme DV.txt")
+Syc_HerbalismforPurists_BM_DV.esp
+Bloodmoon.esm
+
+[Patch]
+ (Ref: "Syc_Herbalism ES Patch DV.esp" plugin Description)
+Syc_Herbalism ES Patch DV.esp
+[ALL [ANY Expanded Sounds.esp
+          Expanded Sounds DV.esp]
+     [ANY Syc_HerbalismforPurists.esp
+          Syc_HerbalismforPurists_DV.esp]]
+
+;;Dragon32: I *assume* Translator 5 added these to preserve German cell names. Re-structured so as not a monolithic Order list
+[Order]
+Vurt's Ashlands Overhaul.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB_DV.esp
+Syc_Herbalism ES Patch DV.esp
+
+[Order]
+Vurt's BC Tree Replacer II.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB_DV.esp
+Syc_Herbalism ES Patch DV.esp
+
+[Order]
+Vurt's Grazelands Unique Trees.ESP
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB_DV.esp
+Syc_Herbalism ES Patch DV.esp
+
+[Order]
+Ozzy's Grass - Ascadian Isles.esp
+Ozzy's Grass - Bitter Coast.esp
+Ozzy's Grass - Grazelands.esp
+Ozzy's Grass - Solstheim.esp
+Ozzy's Grass - West Gash.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB_DV.esp
+Syc_Herbalism ES Patch DV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -33237,7 +33315,9 @@ TLM + Expanded Sounds.esp
 [ALL [ANY Expanded Sounds.esp
           Expanded Sounds DV.esp]
      [ANY TLM - Complete.esp
-          TLM - Light Sources (Clearer Lighting).esp]]
+          TLM - Complete + DBL.esp
+          TLM - Light Sources (Clearer Lighting).esp
+          TLM - Light Sources (Clearer Lighting) + DBL.esp]]
 
 ;;Ref: DNO MW Patches Readme.txt
 [Order]
@@ -33247,10 +33327,12 @@ TLM + Expanded Sounds.esp
 
 [Order]
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 TLM + Expanded Sounds.esp
 
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 TLM + Expanded Sounds.esp
 
 
@@ -36467,7 +36549,7 @@ New Khajiit Bodies - Clean.esp
 New Khajiit Bodies (Slof Textures) - Mature.esp
 New Khajiit Bodies (Slof Textures) - Clean.esp
 
-;;Dragon32: Translator5 (I think) has duplicated the above rule and added in "MK_Khajiit.esp" without explanation. Removed.
+;;Dragon32: Added by Translator 5; "MK_Khajiit.esp" is from MacKom's "MacKoms Khajiit". No idea why added in here. If someone is going to load two Khajiit replacer mods then mlox isn't going to help them. That way lies madness, already wishing I hadn't done it for the Herbalism mods et al. Removed rule.
 ;;[Conflict]
 ;; Choose ONLY ONE of these plugins. "Mature" is for anatomically correct, "Clean" is for a more asexual look.
 ;;[ANY New Khajiit Bodies - Mature.esp
@@ -40507,7 +40589,7 @@ Pursuit Enhanced -Go To Jail Patch.esp
           Vivec Expansion.DV.esp]]
 
 [Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! This plugin contains evil GMSTs
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 2056524 PW_Redesigned Vivec-Vivec_Expansion.esp]
 
