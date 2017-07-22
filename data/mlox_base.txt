@@ -19,6 +19,41 @@
 ;; Generally speaking, you do not want to edit this file. Instead, use
 ;; mlox_user.txt, which will override this file, if present.
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note for Editors (read this if you will be making changes in svn):
+;;
+;; URLs:
+;; Please make sure URLs are surrounded with whitespace:
+;; Good:
+;; (Ref: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists )
+;; Bad:
+;; (Ref: http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists)
+;; sometimes rules are quoted on web pages that automatically link
+;; URLs, and without whitespace it can make a broken link.
+;;
+;; Sections:
+;; most rules are grouped into "sections", which begin with "@"
+;; followed by the section name, and each section corresponds more or
+;; less to one "Mod". This is only a convention to help keep order in
+;; the file, and to generate some happy statistics.
+;;
+;; Highlighting:
+;; When a warning message on a rule begins with exclamation points,
+;; that comment will be highlighted in the GUI Messages pane.
+;; ! - one bang is highlighted blue for low priority
+;;     use low priority for stuff that should be "noticed", but probably
+;;     have low to nil impact on playing.
+;; !! - yellow, for medium priority
+;;     use medium priority for stuff that could possibly impact the
+;;     game but is probably not too serious.
+;; !!! - red, for most urgent priority
+;;     use urgent priority for stuff that could break the mod or game.
+;; the [Requires] rule will automatically highlight in red.
+;; the [Conflict] and [Patch] rules will automatically highlight in yellow.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ordering Preferences
 ;; Put all the NearStart/NearEnd rules here to keep track of them.
@@ -74,7 +109,7 @@ NOM 2.13.esp
 NoM 3.0.esp
 GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
 MW Containers Animated exp.esp ; (Ref: "aceg_readme.txt")
-German Text Patch.esp
+;German Text Patch.esp ; Dragon32 - removed, see "German Text Patch [Vrakyas]"
 ;;begin lighting mods
 ;;  these affect lighting in vanilla cells, so load after most other mods
 LBS_addon_hvy_v1.1.esp ; (Ref: "LBS_addon.txt")
@@ -84,10 +119,14 @@ LBS_addon_lt_VD_v1.1.esp ; (Ref: "LBS_addon.txt")
 LBS_addon_reg_v1.1.esp ; (Ref: "LBS_addon.txt")
 LBS_addon_reg_VD_v1.1.esp ; (Ref: "LBS_addon.txt")
 Lights 300 v5.esp ; (Ref: "readme_Lights 300 v4.3.txt")
+Lights 300 v5 + DBL.esp ; Dwemer Blinking Lights (q.v.) version
 TLM - Ambient Light + Fog Update.esp ; (Ref: "TLM - ~Readme.htm")
 True_Lights_And_Darkness_0.5.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+True_Lights_And_Darkness_0.5 + DBL.esp ; Dwemer Blinking Lights (q.v.) version
 True_Lights_And_Darkness_1.0-NoDaylight.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp ; Dwemer Blinking Lights (q.v.) version
 True_Lights_And_Darkness_1.1.esp ; (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
+True_Lights_And_Darkness_1.1 + DBL.esp ; Dwemer Blinking Lights (q.v.) version
 ;;end lighting mods
 
 [Order]
@@ -831,23 +870,23 @@ Advanced Herbalism - BM.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Advanced Herbalism - MO.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Advanced Herbalism - TR & BM.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Advanced Herbalism - TR.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+ Expanded Sounds DV.esp
 Advanced Herbalism - BM.esp
 
 ;;Morrowind Inhabitants [scruggs]
@@ -3782,9 +3821,11 @@ AshVampiresReplacer_TTU.ESP
 DN-GDRv1.1_NOM.esp
 AshVampiresReplacer_TTU.ESP
 
-[Order]
-Neo's Unique Creatures.esp
-AshVampiresReplacer.ESP
+;;Dragon32: This Order rule add by (I think) Translator5. No explanation given.
+;;Dragon32: Checked Neo's Unique Creatures against all Ash Vampires Replacer plugins. No conflicts. Removed Order rule.
+;;[Order]
+;;Neo's Unique Creatures.esp
+;;AshVampiresReplacer.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4448,24 +4489,28 @@ Atmospheric Plazas.ESP
 
 [Order]
 Lights 300 v5.esp
+Lights 300 v5 + DBL.esp
 Atmospheric Plazas - IlluWind.ESP
 Atmospheric Plazas - WG.ESP
 Atmospheric Plazas.ESP
 
 [Order]
 True_Lights_And_Darkness_0.5.esp
+True_Lights_And_Darkness_0.5 + DBL.esp
 Atmospheric Plazas - IlluWind.ESP
 Atmospheric Plazas - WG.ESP
 Atmospheric Plazas.ESP
 
 [Order]
 True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
 Atmospheric Plazas - IlluWind.ESP
 Atmospheric Plazas - WG.ESP
 Atmospheric Plazas.ESP
 
 [Order]
 True_Lights_And_Darkness_1.1.esp
+True_Lights_And_Darkness_1.1 + DBL.esp
 Atmospheric Plazas - IlluWind.ESP
 Atmospheric Plazas - WG.ESP
 Atmospheric Plazas.ESP
@@ -4478,6 +4523,7 @@ Atmospheric Plazas.ESP
 
 [Order]
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 Atmospheric Plazas - IlluWind.ESP
 Atmospheric Plazas - WG.ESP
 Atmospheric Plazas.ESP
@@ -6704,24 +6750,26 @@ Better Heads.esm
 Better Heads Tribunal addon.esm
 Better Heads Bloodmoon addon.esm
 
-[Order]
-Tamriel_Data.esm
-TR_Mainland.esm
-Better Heads.esm
+;;Dragon32: Added by (I think) Translator5 without explanation
+;;Dragon32: Checked Better Heads.esm against both ESMs in TESPCD, no conflict. Order rule removed.
+;;[Order]
+;;Tamriel_Data.esm
+;;TR_Mainland.esm
+;;Better Heads.esm
 
 [Requires]
 [ANY Better Heads Bloodmoon addon.esm
-	 Better Heads Bloodmoon addon.esp]
+     Better Heads Bloodmoon addon.esp]
 [ALL Bloodmoon.esm
      [ANY Better Heads.esm
-		  Better Heads.esp]]
+	  Better Heads.esp]]
 
 [Requires]
 [ANY Better Heads Tribunal addon.esm
-	 Better Heads Tribunal addon.esp]
+     Better Heads Tribunal addon.esp]
 [ALL Tribunal.esm
      [ANY Better Heads.esm
-		  Better Heads.esp]]
+          Better Heads.esp]]
 
 [Note]
  These files are "the esp version of the esm for modders use"
@@ -6865,6 +6913,36 @@ BH_Imperials_M_BM.esm
      BH_Redguards_F.esp
      BH_Redguards_M.esp
      BH_WoodElves_F.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Landscapes Stonewood Pass 1.0.1 [Mag1cWind0w, Melchior Dahrk]
+
+;;Ref: https://forums.nexusmods.com/index.php?/topic/505626-better-landscapes-stonewood-pass/?p=45634785
+[Order]
+BIG_BALMORA.ESP
+Better Landscapes Stonewood Pass (MD Edit).esp
+
+[Note]
+ "Only activate this .esp in the distant land creation wizard of [MGE or] MGE XE!"
+ (Ref: "Better Landscapes - Stonewood Pass 1.0.1-41298-1-0-1.zip\Read Me, I am a cute text file!.txt")
+Vurt's Groundcover - BC, AI, WG, GL (Stonewood Pass Patched).esp
+
+;;Dragon32: Vurt used the same plugin name for his Leafy West Gash I and II. Shouldn't affect us here though
+[Note]
+ !! "This mod is designed to be used with Vurts Leafy West Gash II and On The Rocks!
+ !! Misplacements/gaps and minor graphics issues may happens without the two mentioned mods above."
+ !! (Ref: "Better Landscapes - Stonewood Pass 1.0.1-41298-1-0-1.zip\Read Me, I am a cute text file!.txt")
+ !! Note that as "OTR_Coast_Variety.esp" is an optional plugin, you may be running the "On The Rocks!" replacer mod without it and mlox cannot determine that.
+[ALL Better Landscapes Stonewood Pass (MD Edit).esp
+     [NOT Vurt's Leafy West Gash.esp]
+     [NOT OTR_Coast_Variety.esp]]
+
+;;Dragon32: Removed this as otherwise, to be consistent, we'd need to start adding a similar note for *every* landscape-affecting mod and *every* grass mod.
+;;[Note]
+;; "Using both cause not nice view in the Stonewood Pass!"
+;;[All Better Landscapes Stonewood Pass (MD Edit).esp
+;;     Ozzy's Grass - West Gash.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8217,11 +8295,13 @@ Blood and Gore TEMPLATE add-on.esp
 Blood and Gore Wilderness add-on.esp
 Blood and Gore patch for GIANTS Trib.esp
 
-[Order]
-[ANY Cait's Critters Unleashed 2.0.esp
-	 Cait's Critters Unleashed 2.0 (Tribunal).esp
-	 Cait's Critters Unleashed 2.0 DV.esp]
-	 Blood and Gore Cait Critters add-on.esp
+;;Dragon32: Added by (I think) Translator6 without explanation
+;;Dragon32: Checked the mods in TESPCD, no conflict. The way the B&G Add-ons work is by dialogue so there're no conflicts. Remoed the Order rule.
+;;[Order]
+;;[ANY Cait's Critters Unleashed 2.0.esp
+;;	 Cait's Critters Unleashed 2.0 (Tribunal).esp
+;;	 Cait's Critters Unleashed 2.0 DV.esp]
+;;	 Blood and Gore Cait Critters add-on.esp
 
 [Conflict]
  Use "Blood and Gore Morrowind alone add-on.esp" only if you do NOT have Tribunal, otherwise use "Blood and Gore Morrowind-Tribunal add-on.esp"
@@ -8288,9 +8368,9 @@ Blood and Gore Adventurer's TC add-on.esp
 Blood and Gore Cait Critters add-on.esp
 [ALL Blood and Gore.esp
      [ANY Cait's Critters Unleashed 2.0.esp
-	  Cait's Critters Unleashed 2.0 (Tribunal).esp
-	  Cait's Critters Unleashed 2.0 DV.esp
-	  Cait's Critters Unleashed 2.0 DV (ohne Tribunal).esp]]
+          Cait's Critters Unleashed 2.0 (Tribunal).esp
+          Cait's Critters Unleashed 2.0 DV.esp
+          Cait's Critters Unleashed 2.0 DV (ohne Tribunal).esp]]
 
 [Patch]
  for Children of the Night part 2 by J. Barbosa (V)
@@ -8423,6 +8503,22 @@ Blood Lines I_Tribunal.esp
 [ALL Vampire_Embrace.esp
      Tribunal.esm]
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloodmoon Creatures 1.1 [Yar-Yulme]
+
+[Requires]
+Bloodmoon_Creatures.esp
+Bloodmoon.esm
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Bloodmoon Dwemer Ruin aka. Nchrdurmz  [Executor Zurg]
+
+[Note]
+ !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1351052 Nchrdurmz.esp]
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Bloodmoon Extras - Fixed levelled lists v0.2 [Dragon32, TheOtherFelix]
@@ -8433,15 +8529,6 @@ Blood Lines I_Tribunal.esp
  Do not enable both plugins, only enable the version with the fixed levelled lists: "BMExtrasFixedLL.esp"
 BMExtras.esp
 BMExtrasFixedLL.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Bloodmoon Dwemer Ruin aka. Nchrdurmz  [Executor Zurg]
-
-[Note]
- !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 1351052 Nchrdurmz.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10042,8 +10129,11 @@ Castle_Hestatur-V1-TB_addons.esp
 ; JMS - Castle Hestatur defines some of the flora container objects, so to get HFP behavior, it must come later.
 [Order]
 Castle_Hestatur-V1-TB_addons.esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+
+[Order]
+Castle_Hestatur-V1-TB_addons.esp
+Syc_HerbalismforPurists_DV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12979,6 +13069,26 @@ RMR_DetectHumanoid_v0.3b.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Deutsch - Morrowind Enhanced [Emanuel]
+
+[Requires]
+ (Ref: http://www.nexusmods.com/morrowind/mods/44267/ - File requirements tab)
+Enhanced Morrowind.ESP
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+;;Dragon32: Really don't think this is needed. From Translator5
+[Requires]
+Enhanced Morrowind - NPCs.ESP
+Enhanced Morrowind.ESP
+
+;;Dragon32: TESPCD doesn't show any conflicts but hey-ho. From Translator5
+[Order]
+Enhanced Morrowind.ESP
+Enhanced Morrowind - NPCs.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Devil's Rock for Vivec's Soul [Illtempered]
 
 ;;Dragon32: Not sure if the one available on MMH is this patch or not... November 2012.
@@ -14209,6 +14319,79 @@ Dwarves! MCA addon v2.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Dwemer Blinking Lights 1.2 [qqqbbb]
+
+;;expdep
+[Requires]
+ This plugin uses the Bloodmoon function placeatme
+Dwemer blinking lights.esp
+Bloodmoon.esm
+
+;;Dragon32 - Needs to load after Darknut's GDR, modifies some of its LIGH records. Also Tamriel Rebuilt, but that's an ESM
+[Order]
+DN-GDRv1.1.esp
+Dwemer blinking lights.esp
+
+[Order]
+DN-GDRv1.1_NOM.esp
+Dwemer blinking lights.esp
+
+;;Dragon32: Running TESPCD against the lighting mods I have shows conflicts with these mods, therefore these are ones which will be affected by the batch script and be re-named
+;LBS_Full v1.4(trib).esp
+;LBS_Lite v1.4(trib).esp
+;Lights 300 v5.esp
+;TLM - Complete.esp
+;TLM - Light Sources (Clearer Lighting).esp
+;True_Lights_And_Darkness_0.5.esp
+;True_Lights_And_Darkness_1.0-NoDaylight.esp
+;True_Lights_And_Darkness_1.1.esp
+
+[Conflict]
+ All of these lighting mods modify Dwemer lights. qqqbbb's "Dwemer Blinking Lights" also modifies these same Dwemer lights to blink occassionally.
+ You should run qqqbbb's "Merge DBL and light mod.bat" batch file to add this blinking to your lighting mod.
+ (Ref: "Merge DBL and light mod.bat")
+Dwemer blinking lights.esp
+[ANY LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp
+     Lights 300 v5.esp
+     TLM - Complete.esp
+     TLM - Light Sources (Clearer Lighting).esp
+     True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.1.esp]
+
+[Conflict]
+ The lighting mods created by qqqbbb's "Merge DBL and light mod.bat" batch file include the changes in his "Dwemer Blinking Lights" plugin, there is no need to run qqqbbb's plugin as well.
+ (Ref: "Merge DBL and light mod.bat")
+Dwemer blinking lights.esp
+[ANY LBS_Full v1.4(trib) + DBL.esp
+     LBS_Lite v1.4(trib) + DBL.esp
+     Lights 300 v5 + DBL.esp
+     TLM - Complete + DBL.esp
+     TLM - Light Sources (Clearer Lighting) + DBL.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
+
+;;Dragon32: Added other lighting mods to [NearEnd], q.v.
+[Order]
+DN-GDRv1.1.esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1.1_NOM.esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1.1.esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1.1_NOM.esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Dwemer Books 1.1 [Misty Moon]
 
 [Conflict]
@@ -15288,33 +15471,51 @@ RAH Expanded Entertainers.esp
 
 ;;Dragon32: Expanded Sounds makes some small changes to weather settings (a few % points according to readme). If player's loaded a weather-changing mod then they'll really want those changes loaded instead.
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
 NiceWeather_0617.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds DV.esp
+NiceWeather_0617.esp
+
+[Order]
+Expanded Sounds.esp
 Realistic Weather v2.0.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]sp
+Expanded Sounds DV.esp
+Realistic Weather v2.0.esp
+
+[Order]
+Expanded Sounds.esp
 Isirion_RealisticWeather.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds DV.esp
+Isirion_RealisticWeather.esp
+
+[Order]
+Expanded Sounds.esp
 Sol-Weather Tweak.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds DV.esp
+Sol-Weather Tweak.esp
+
+[Order]
+Expanded Sounds.esp
 SeriousWeather_BM_v1_00.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds DV.esp
+SeriousWeather_BM_v1_00.esp
+
+[Order]
+Expanded Sounds.esp
+SeriousWeather_v1_00.esp
+
+[Order]
+Expanded Sounds DV.esp
 SeriousWeather_v1_00.esp
 
 ;;"I start a new game with [Expanded Sounds] loaded early and those noises happen. If it is loaded late, the noises do not happen. This is with [Expanded Sounds 1.2 and] 1.3
@@ -15323,13 +15524,19 @@ SeriousWeather_v1_00.esp
 ;;Dragon32: Compared with a TESPCD check
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+
+[Order]
+TLM - Light Sources (Clearer Lighting).esp
+Expanded Sounds DV.esp
 
 [Order]
 TLM - Complete.esp
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+
+[Order]
+TLM - Complete.esp
+Expanded Sounds DV.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Expansion Integration [Dragon32]
@@ -15458,18 +15665,27 @@ Disturb_the_dead.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
 Explorers25Full.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds DV.esp
+Explorers25Full.esp
+
+[Order]
+Expanded Sounds.esp
 Explorers25NoTombs.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds DV.esp
+Explorers25NoTombs.esp
+
+[Order]
+Expanded Sounds.esp
+Explorers25TombCompatibility.esp
+
+[Order]
+Expanded Sounds DV.esp
 Explorers25TombCompatibility.esp
 
 
@@ -16246,6 +16462,7 @@ FireMoth Moved.ESP
 FireMoth Moved.ESP
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17345,6 +17562,26 @@ Gartheka update.esp
 [Note]
  Please ensure that you have copied the contents of the Forest Elf Meshes and Textures folders into the respective Morrowind Folders.
 Frozen Forest Plug-in.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @German Text Patch [Vrakyas]
+
+;;Dragon32: Added by Translator 5. Who also added it to [NearEnd]. I've removed it from there
+;;This mod alters a number of DIAL, INFO, GMST, MISC and RACE records. Readme (Bing translate):
+;;"This modification adapts some texts in the German version of Morrowind:
+;;* Drake to gold (including the abbreviation DR g)
+;;* Dealer menu: money/trader to trader gold
+;;* Elf races: Dark Elf to Dunmer, Waldeld to Bosmer, high elf to Altmer
+;;* all words written entirely in capital letters in the menu and UI in correct spelling, for example click to click"
+;;Someone maybe be running other mods which make dialogue changes, race changes etc. Having this mod load last would break those.
+
+[Requires]
+ Requires Tribunal and Bloodmoon expansion packs.
+ (Ref: "german text patch readme.txt")
+German Text Patch.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19142,8 +19379,8 @@ GH_Extra_ES1.2 Patch.esp
 
 ; Ref: GH_ES1.2 Patch.txt
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
 GH_ES1.2 Patch.esp
@@ -19166,8 +19403,8 @@ GH_Extra_ES1.3 Patch.esp
 
 ;;Ref: "GH_ES1.3 Patch.txt"
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Graphic Herbalism.esp
 Graphic Herbalism Extra.esp
 GH_ES1.3 Patch.esp
@@ -19245,8 +19482,8 @@ GHE ES (1.3) Patch.ESP
 
 ;;Ref: "Graphic Herbalism Expanded Sounds Patch Readme.txt"
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 GH ES (1.2) Patch.ESP
 GH ES (1.3) Patch.ESP
 GHE ES (1.2) Patch.ESP
@@ -20906,8 +21143,8 @@ Herbalismv1.3(Tribunal).esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Herbalismv1.3(Tribunal).esp
 
 ;;Dragon32: Copied from "Castle Hestatur [Srdjan Pokorni a.k.a. Spok]"
@@ -20960,8 +21197,8 @@ Herbalismv1.1.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Herbalismv1.1.esp
 
 ;;Morrowind Inhabitants [scruggs]
@@ -20992,13 +21229,13 @@ Resources Enhanced.esp
 ; JMS - to ensure that HFP flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08)
 [Order]
 DN-GDRv1.esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 DN-GDRv1_NOM.esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 DN-GDRv1.esp
@@ -21011,8 +21248,8 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 ; JMS - to ensure that HFP flora container behavior isn't overridden by Sris Alchemy.
 [Order]
 Sri Alchemy BM List Patch.esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 Sri Alchemy BM List Patch.esp
@@ -21023,8 +21260,8 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 Creatures.esp
 Creatures (lore).esp
 Creatures (Semi).esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 Creatures.esp
@@ -21034,17 +21271,17 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 
 ;; (Ref: "Readme - Herbalism for Purists.txt")
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
-[ANY Syc_HerbalismforPurists_BM.esp
-	 Syc_HerbalismforPurists_BM_DV.esp]
-[ANY Syc_HerbalismforPurists_TB.esp
-	 Syc_HerbalismforPurists_TB_DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB.esp
+Syc_HerbalismforPurists_TB_DV.esp
 Syc_HerbalismforPurists_TB_ONLY.esp
-[ANY Syc_Herbalism ES Patch.esp
-	 Syc_Herbalism ES Patch DV.esp]
+Syc_Herbalism ES Patch.esp
+Syc_Herbalism ES Patch DV.esp
 
 [Conflict]
  Syc_HerbalismforPurists_TB_ONLY.esp should only be loaded when you have Tribunal, but not Bloodmoon. You have Bloodmoon, so you should use "Syc_HerbalismforPurists.esp" instead.
@@ -21056,7 +21293,7 @@ Bloodmoon.esm
  Choose ONLY ONE of these plugins.
  (Ref: "Readme - Herbalism for Purists.txt")
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+     Syc_HerbalismforPurists_DV.esp]
 Syc_HerbalismforPurists_TB_ONLY.esp
 
 [Requires]
@@ -21067,19 +21304,19 @@ Tribunal.esm
 [Requires]
  (Ref: "Readme - Herbalism for Purists.txt")
 [ANY Syc_HerbalismforPurists_BM.esp
-	 Syc_HerbalismforPurists_BM_DV.esp]
+     Syc_HerbalismforPurists_BM_DV.esp]
 [ALL Bloodmoon.esm
      [ANY Syc_HerbalismforPurists.esp
-		  Syc_HerbalismforPurists_DV.esp
+          Syc_HerbalismforPurists_DV.esp
           Syc_HerbalismforPurists (Pearl Bug Edit).esp]]
 
 [Requires]
  (Ref: "Readme - Herbalism for Purists.txt")
 [ANY Syc_HerbalismforPurists_TB.esp
-	 Syc_HerbalismforPurists_TB_DV.esp]
+     Syc_HerbalismforPurists_TB_DV.esp]
 [ALL Tribunal.esm
      [ANY Syc_HerbalismforPurists.esp
-		  Syc_HerbalismforPurists_DV.esp
+          Syc_HerbalismforPurists_DV.esp
           Syc_HerbalismforPurists (Pearl Bug Edit).esp]]
 
 ;; Note Expanded Sounds requires BM+TB so we only check for Syc_HerbalismforPurists.esp - JMS
@@ -21088,18 +21325,18 @@ Tribunal.esm
  "Syc_Herbalism ES Patch.esp" is required to make Herbalism for Purists work with Expanded Sounds.
  (Ref: "Readme - Herbalism for Purists.txt")
 [ANY Syc_Herbalism ES Patch.esp
-	 Syc_Herbalism ES Patch DV.esp]
+     Syc_Herbalism ES Patch DV.esp]
 [ALL [ANY Syc_HerbalismforPurists.esp
-		  Syc_HerbalismforPurists_DV.esp
+          Syc_HerbalismforPurists_DV.esp
           Syc_HerbalismforPurists (Pearl Bug Edit).esp]
      [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]]
+          Expanded Sounds DV.esp]]
 
 [Conflict]
  "Syc_HerbalismforPurists.esp" includes "Bloated Morrowind.esp", so you do not need to load both.
  (Ref: "Readme - Herbalism for Purists.txt")
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 Bloated Morrowind.esp
 
@@ -21107,7 +21344,7 @@ Bloated Morrowind.esp
  "Syc_HerbalismforPurists.esp" includes "Flora Glow 1.0.esp", you do not need to load both.
  (Ref: "Readme - Herbalism for Purists.txt")
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 Flora Glow 1.0.esp
 
@@ -21127,14 +21364,14 @@ Flora Glow 1.0.esp
  (Ref: MWInhabitants PATCH.01 README.txt)
 MWInhabitants Freeform (Vol 1).esp
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 
 [Conflict]
  These plugins conflict because they modify some of the same objects (kollops and Kwama eggs).
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=970900&view=findpost&p=14395738 )
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 Resources Enhanced.esp
 
@@ -21149,8 +21386,12 @@ Syc_HerbalismforPurists_TB_ONLY.esp
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 k_weather.esp
@@ -21192,18 +21433,18 @@ Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
 ;; (Ref: "Readme - Herbalism for Purists.txt")
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Syc_HerbalismforPurists (Pearl Bug Edit).esp
-[ANY Syc_Herbalism ES Patch.esp
-	 Syc_Herbalism ES Patch DV.esp]
+Syc_Herbalism ES Patch.esp
+Syc_Herbalism ES Patch DV.esp
 
 [Conflict]
  BTB's "Syc_HerbalismforPurists (Pearl Bug Edit).esp" is a replacement for Syclonix's "Syc_HerbalismforPurists.esp" plugin.
  (Ref: "Readme - Pearl Bug Edit.txt")
 Syc_HerbalismforPurists (Pearl Bug Edit).esp
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp]
 
 [Conflict]
@@ -21304,8 +21545,8 @@ Herbalism_Lite_+Bloodmoon_v1.0.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Herbalism_Lite_v1.0.esp
 Herbalism_Lite_+Tribunal_v1.0.esp
 Herbalism_Lite_+Bloodmoon_v1.0.esp
@@ -21382,8 +21623,8 @@ Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 
 ;;Morrowind Inhabitants [scruggs]
@@ -21424,7 +21665,7 @@ Herbalismv1.3(Tribunal).esp
 Herbalismv1.1.esp
 ;;Herbalism for Purists [Syclonix]
 [ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp
      Syc_HerbalismforPurists (Pearl Bug Edit).esp]
 ;;Herbalism Lite [Shakeidas]
@@ -21481,11 +21722,11 @@ Herbalism Redux ES Patch.esp
 [ALL [ANY Herbalism Redux 1.12a.esp
 	  Herbalism Redux 1.12a - Bloated MW.esp]
      [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]]
+          Expanded Sounds DV.esp]]
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Herbalism Redux 1.12a - Bloated MW.esp
 Herbalism Redux 1.12a.esp
 Herbalism Redux ES Patch.esp
@@ -21620,13 +21861,13 @@ HR 1.12a BMW + EW 1.5.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 HR 1.12a + EW 1.5.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 HR 1.12a BMW + EW 1.5.esp
 
 ; Dragon32 - to ensure that flora container behavior isn't overridden by DN-GDR (flora_bc_mushroom_08 and 04), from Herbalism for Purists' rules
@@ -23262,13 +23503,18 @@ Illy's Oh my Goddess.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Illy's Solsteim Rumour Fix [Illuminiel]
+;; @Illy's Solstheim Rumour Fix [Illuminiel]
 
 ;;Ref: http://forums.bethsoft.com/topic/1094671-relz-illys-solsteim-rumour-fix/?p=18160887
 [Order]
 Less_Generic_Bloodmoon.esp
 Illy's Solsteim Rumour Fix.esp
 
+;;"Something I have noticed, Illy's Solsteim Rumor Fix needs to load after White Wolf of Lokken Mountain (.esp version), as Lokken overwrites the latest rumor topic that reverts it back to non-agent class npcs."
+;;Ref - http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24162382
+[Order]
+BT_Whitewolf_2_0.esp
+Illy's Solsteim Rumour Fix.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Immersive Chargen 1.25 [Qebehsenuf]
@@ -23397,14 +23643,14 @@ Imp Guard anticlone.esm
 Imp Guard anticlone BH add-on.esp
 [ALL Imp Guard anticlone.esm
      [ANY Better Heads.esm
-		  Better Heads.esp]]
+          Better Heads.esp]]
 
 [Note]
  As you have "Better Heads" loaded TheLys recommends using the AntiClone addon.
  (Ref: ImpGuardsAnticlone.txt)
 [ALL Imp Guard anticlone.esm
      [ANY Better Heads.esm
-		  Better Heads.esp]
+          Better Heads.esp]
      [NOT Imp Guard anticlone BH add-on.esp]]
 
 
@@ -24001,6 +24247,26 @@ Inscription.esp
  (Ref: "Plain Paper Fix.txt" - from "Plain Paper Fix ckl 1.0" by claudekennilol
 Clean Inscription 2.0.esp
 dej_plain_paper_fix.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Intervention Improved 1.2a [hollaajith]
+
+[Conflict]
+ "Copy over ONLY ONE of the ESPs into 'Data Files' folder and activate it.
+  Intervention Improved.esp - Basic version.
+  Intervention Improved - NoScript.esp - Use this version if you don't want to teleport directly infront of altar.
+  Intervention Improved - Ghostgate Pull.esp - Use this version if you want to teleport to Ghostgate instead of other temples when casting ALMSIVI Intervention inside Ghostfence.
+  Intervention Improved - NoScript - Ghostgate.esp - Use this version if you don't want to teleport directly infront of altar but want to teleport to Ghostgate when casting ALMSIVI Intervention inside Ghostfence.
+  Intervention Improved - MG.esp - Adds a spell which allows you to telport to nearest Mages guild. Doesn't include Ghostgate Pull version.
+  Intervention Improved - Ghostgate - MG.esp - Adds a spell which allows you to telport to nearest Mages guild. Includes Ghostgate Pull version."
+ (Ref: "Intervention Improved Readme.txt")
+Intervention Improved - Ghostgate - MG.ESP
+Intervention Improved - Ghostgate Pull.ESP
+Intervention Improved - MG.ESP
+Intervention Improved - NoScript - Ghostgate.ESP
+Intervention Improved - NoScript.ESP
+Intervention Improved.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25065,12 +25331,12 @@ k_weather (louder sounds).esp
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
-[ANY Syc_HerbalismforPurists_BM.esp
-	 Syc_HerbalismforPurists_BM_DV.esp]
-[ANY Syc_HerbalismforPurists_TB.esp
-	 Syc_HerbalismforPurists_TB_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB.esp
+Syc_HerbalismforPurists_TB_DV.esp
 Syc_HerbalismforPurists_TB-ONLY.esp
 Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
@@ -25087,39 +25353,52 @@ Resources Enhanced.esp
 k_weather.esp
 k_weather (louder sounds).esp
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 ;;Dragon32: Similar to TLM, True Lights and Darkness modifies light values (only) of light_dae_brazier00, Light_MH_streetlamp_01 and Light_MH_streetlamp_01_550
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
+True_Lights_And_Darkness_0.5.esp
+True_Lights_And_Darkness_0.5 + DBL.esp
+
+[Order]
+k_weather.esp
+k_weather (louder sounds).esp
 True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
 
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
 True_Lights_And_Darkness_1.1.esp
+True_Lights_And_Darkness_1.1 + DBL.esp
 
 ;;Dragon32: Again, checking Lights 300 it alters the light_dae_brazier00 but doesn't add a script
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
 Lights 300 v5.esp
+Lights 300 v5 + DBL.esp
 
 ;;Dragon32: Similar to TLM, Light Based Sneaking and its addons modify light values of and add scripts to light_dae_brazier00, Light_MH_streetlamp_01 and Light_MH_streetlamp_01_550
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
 k_weather.esp
 k_weather (louder sounds).esp
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 
 [Order]
 k_weather.esp
@@ -26058,19 +26337,11 @@ LGNPC_SoulSicknessPatch_v?_??.esp
           LGNPC_VivecRedoran_v?_??.esp]]
 
 [Note]
- !! "[There is] an unreconciled conflict between most LGNPC mods and Advanced NPCs [by qqqbbb]. Both mods alter the greeting distance for NPCs for use as a dialogue filter potentially breaking the functionality of one mod or the other."
+ !! "[There is] an unreconciled conflict between most LGNPC mods and Advanced NPCs [by qqqbbb]. Both mods alter the greeting distance for NPCs for use as a dialogue filter potentially breaking the functionality of one mod or the other.
+ !! This is an issue only with the 'full' versions of our mods. The LGNPC Dialogue-Only versions do not alter NPC greet distance."
  !! (Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24254590 )
 [ALL ANPC.esp
      [ANY LGNPC_NoLore.esp
-          LGNPC_Merged_OM.esp
-          LGNPC_Merged_Lt.esp
-          LGNPC_HlaOad_OM.esp
-          LGNPC_Khuul_OM.esp
-          LGNPC_MaarGan_OM.esp
-          LGNPC_Pelagiad_OM.esp
-          LGNPC_SeydaNeen_OM.esp
-          LGNPC_VivecFQ_OM.esp
-          LGNPC_VivecRedoran_OM.esp
           LGNPC_SeydaNeen.esp
           LGNPC_GnaarMok_v?_??.esp
           LGNPC_AldVelothi_v?_??.esp
@@ -26840,10 +27111,14 @@ LBS_Lite v1.4(trib).esp
  "[Vanhikes & qwert_44643's "Light Based Sneaking"] will conflict with any other mods that also alter light settings."
  (Ref: "LBS_Readme.txt")
 [ANY LBS_Full v1.4(trib).esp
-     LBS_Lite v1.4(trib).esp]
+     LBS_Full v1.4(trib) + DBL.esp
+     LBS_Lite v1.4(trib).esp
+     LBS_Lite v1.4(trib) + DBL.esp]
 [ANY Lights 300 v5.esp
+     Lights 300 v5 + DBL.esp
      TLM - Ambient Light + Fog Update.esp
      TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Clearer Lighting) + DBL.esp
      TLM - Light Sources (Natural Water).esp
      TLM - Light Sources (Lanterns).esp
      TLM - External Lights Ownership.esp
@@ -26851,6 +27126,13 @@ LBS_Lite v1.4(trib).esp
      TLM - Sneak Modifiers (Code).esp
      TLM - Sneak Modifiers (Locations).esp
      TLM - Complete.esp
+     TLM - Complete + DBL.esp
+     True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp
      Vibrant lights 1.0.esp]
 
 ;;"this will conflict with any other mods that also alter light settings. The largest know conflict is with WGI and adventurers, the Balance items part. Since he alters all of the carriable lights. To make sure this is not a problem just make sure that this mod comes after his"
@@ -26858,34 +27140,42 @@ LBS_Lite v1.4(trib).esp
 [Order]
 Balance - items.esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
 Wakim's Game Improvement 9.esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
 AprogasVampire WakimImprovements.20021210.esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
 Balance - items.esp
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 
 [Order]
 Wakim's Game Improvement 9.esp
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 
 [Order]
 AprogasVampire WakimImprovements.20021210.esp
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26910,31 +27200,37 @@ LBS_addon_reg_VD_v1.1.esp
  (Ref: "LBS_addon.txt")
 [ANY LBS_addon_hvy_v1.1.esp
      LBS_addon_Hvy_VD_v1.1.esp]
-LBS_Full v1.4(trib).esp
+[ANY LBS_Full v1.4(trib).esp
+     LBS_Full v1.4(trib) + DBL.esp]
 
 [Requires]
  "You have to use the corresponding file as the version of LBS you use."
  (Ref: "LBS_addon.txt")
 [ANY LBS_addon_lt_v1.1.esp
      LBS_addon_lt_VD_v1.1.esp]
-LBS_Lite v1.4(trib).esp
+[ANY LBS_Lite v1.4(trib).esp
+     LBS_Lite v1.4(trib) + DBL.esp]
 
 ;;"THIS MOD MUST BE LOADED AFTER LBS OR IT WILL NOT WORK AS INTENDED."
 ;;Ref: "LBS_addon.txt"
 [Order]
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 LBS_addon_hvy_v1.1.esp
 LBS_addon_Hvy_VD_v1.1.esp
 
 [Order]
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 LBS_addon_lt_v1.1.esp
 LBS_addon_lt_VD_v1.1.esp
 
 ;;Dragon32: Not sure if this will work or is appropriate
 [Order]
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 LBS_addon_reg_v1.1.esp
 LBS_addon_reg_VD_v1.1.esp
 
@@ -26947,14 +27243,17 @@ LBS_addon_reg_VD_v1.1.esp
 [Order]
 Light Sounds.esp
 Lights 300 v5.esp
+Lights 300 v5 + DBL.esp
 
 [Order]
 Light Sounds.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 Light Sounds.esp
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 
 [Order]
 Light Sounds.esp
@@ -26963,14 +27262,17 @@ TLM - Light Sources (Lanterns).esp
 [Order]
 Light Sounds.esp
 True_Lights_And_Darkness_0.5.esp
+True_Lights_And_Darkness_0.5 + DBL.esp
 
 [Order]
 Light Sounds.esp
 True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
 
 [Order]
 Light Sounds.esp
 True_Lights_And_Darkness_1.1.esp
+True_Lights_And_Darkness_1.1 + DBL.esp
 
 [Order]
 Light Sounds.esp
@@ -26979,6 +27281,7 @@ Vibrant lights 1.0.esp
 [Order]
 Light Sounds.esp
 LBS_Full v1.4(trib).esp
+LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
 Light Sounds.esp
@@ -26991,6 +27294,7 @@ LBS_addon_Hvy_VD_v1.1.esp
 [Order]
 Light Sounds.esp
 LBS_Lite v1.4(trib).esp
+LBS_Lite v1.4(trib) + DBL.esp
 
 [Order]
 Light Sounds.esp
@@ -27086,7 +27390,8 @@ Lights 300 v5.esp
 [Conflict]
  "[Byblos & X-Bahamut's "Lights 300" has] incompatabilities [with] any mod that alters lights"
   (Ref: "readme_Lights 300 v4.3.txt")
-Lights 300 v5.esp
+[ANY Lights 300 v5.esp
+     Lights 300 v5 + DBL.esp]
 [ANY LBS_addon_hvy_v1.1.esp
      LBS_addon_Hvy_VD_v1.1.esp
      LBS_addon_lt_v1.1.esp
@@ -27094,9 +27399,12 @@ Lights 300 v5.esp
      LBS_addon_reg_v1.1.esp
      LBS_addon_reg_VD_v1.1.esp
      LBS_Full v1.4(trib).esp
+     LBS_Full v1.4(trib) + DBL.esp
      LBS_Lite v1.4(trib).esp
+     LBS_Lite v1.4(trib) + DBL.esp
      TLM - Ambient Light + Fog Update.esp
      TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Clearer Lighting) + DBL.esp
      TLM - Light Sources (Natural Water).esp
      TLM - Light Sources (Lanterns).esp
      TLM - External Lights Ownership.esp
@@ -27104,6 +27412,13 @@ Lights 300 v5.esp
      TLM - Sneak Modifiers (Code).esp
      TLM - Sneak Modifiers (Locations).esp
      TLM - Complete.esp
+     TLM - Complete + DBL.esp
+     True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp
+     True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp
      Vibrant lights 1.0.esp]
 
 
@@ -28129,21 +28444,21 @@ Mage Friendly Bloodmoon.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Magic Diversity 1.0 [Arkann]
 
+;;Dragon32: The entries for a "1.1" version added by Translator 5. No link for the 1.1 version, Nexus still shows 1.0. Changed to <VER>
+
 [Conflict]
  Use only one plugin
   "Magic Diversity 1.0.ESP" - The standard mod which modifies spell sounds.
   "Magic Diversity NO  SOUND.ESP" - Uses vanilla sounds instead.
  (Ref: http://www.nexusmods.com/morrowind/mods/43380/ )
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 [Conflict]
- Arkann's standard plugin, "Magic Diversity 1.0.ESP", changes the sound effects used by spells so it will conflict with any mod which uses Morrowind's Getsoundplaying function to detect spells being cast.
+ Arkann's standard plugin, "Magic Diversity 1.0.ESP", changes the sound effects used by spells so it will conflict with any mod which uses Morrowind's GetSoundPlaying function to detect spells being cast.
  You should use Arkann's alternate plugin "Magic Diversity NO  SOUND.ESP" instead.
- Download "Magic Diversity NO  SOUND.ESP" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+ Download "Vanilla sounds for Magic Diversity" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
+Magic Diversity <VER>.ESP
 [ANY Elemental Magicka II.ESP
      MWE_MagickaSpells.esp
      Scripted_Spells.esp
@@ -28153,55 +28468,47 @@ Magic Diversity NO  SOUND.ESP
 [Conflict]
  Arkann's "Magic Diversity 1.0.ESP" changes the sounds and visuals of magic effects. Asiron's "Excellent Magic Sounds" also modifies magic sound effects.
  If you wish to have the sounds from Asiron's mod and the visuals from Arkann's mod in your game then load Arkann's alternate plugin "Magic Diversity NO  SOUND.ESP" instead and ensure you create a Merged Objects plugin using TESTool.
- Download "Magic Diversity NO  SOUND.ESP" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+ Download "Vanilla sounds for Magic Diversity" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
+Magic Diversity <VER>.ESP
 ExcellentMagicSounds.esp
 
 ;;Dragon32: Ensure visuals win over sounds
 [Order]
 ExcellentMagicSounds.esp
 BTB Spells - EMS MGSO Patch.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 ;;Dragon32: Arkann's mod will be the most apparent as it changes the visuals
 [Order]
 BTB - Spells.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 Balance - Magic Effects.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 Wakim's Game Improvement 9.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 AprogasVampire WakimImprovements.20021210.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 ;;Dragon32: "Morrowind Sound Enhancements" by Leon "pancreas" Medado adds new spell casting sounds.
 [Order]
 Sound Enhancements.esp
-[ANY Magic Diversity 1.0.ESP
-	 Magic Diversity 1.1.ESP]
+Magic Diversity <VER>.ESP
 Magic Diversity NO  SOUND.ESP
 
 
@@ -29687,11 +29994,11 @@ Mildlife - Creatures X.esp
  Although not mentioned in the readme, RubberMan's "Mills of Morrowind" is dependent on "Better Heads"
 [DESC !/abot/ Mills of Morrowind.esp]
 [ALL [ANY Better Heads.esm
-		  Better Heads.esp]
+          Better Heads.esp]
      [ANY Better Heads Tribunal addon.esm
-		  Better Heads Tribunal addon.esp]
+          Better Heads Tribunal addon.esp]
      [ANY Better Heads Bloodmoon addon.esm
-		  Better Heads Bloodmoon addon.esp]]
+          Better Heads Bloodmoon addon.esp]]
 
 [Note]
  ! "If you are using Pluto's The Sable Dragon [with RubberMan and abot's "Mills of Morrowind"] and have land seams, there is a patched replacer version [of Pluto's mod, The Sable Dragon 1.6 mmc.esp]"
@@ -32740,7 +33047,7 @@ mca_5.2_vivec_redux.esp
 [ALL [DESC /over 1200 friendly/ MCA.ESM]
      [ANY PW_Redesigned Vivec-Vivec_Expansion.esp ;Pseron Wyrd's merged mod
           [ALL [ANY Vivec Expansion 2.0.esp
-					Vivec Expansion.DV.esp]
+                    Vivec Expansion.DV.esp]
                Redesigned Vivec.esp]]]
 
 
@@ -32798,7 +33105,7 @@ MCA - Zero Town Baddies.esp
 Better Banner Signs + Expanded Sounds.esp
 [ALL aru_signs_en.esp
      [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]]
+          Expanded Sounds DV.esp]]
 
 ;;Ref: DNO MW Patches Readme.txt
 [Order]
@@ -32806,8 +33113,8 @@ aru_signs_en.esp
 Better Banner Signs + Expanded Sounds.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Better Banner Signs + Expanded Sounds.esp
 
 [Patch]
@@ -32928,14 +33235,14 @@ MW Containers Animated + LeFemmArmor.esp
  (Ref: "DNO MW Patches Readme.txt")
 TLM + Expanded Sounds.esp
 [ALL [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]
+          Expanded Sounds DV.esp]
      [ANY TLM - Complete.esp
           TLM - Light Sources (Clearer Lighting).esp]]
 
 ;;Ref: DNO MW Patches Readme.txt
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 TLM + Expanded Sounds.esp
 
 [Order]
@@ -32945,6 +33252,15 @@ TLM + Expanded Sounds.esp
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
 TLM + Expanded Sounds.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Morrowind Creatures Flying Tweaks [Amenophis]
+
+;;Dragon32: No idea where this plugin is from. One from Translator 5.
+[Order]
+Neo's Unique Creatures.esp
+Morrowind Creatures Flying tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32968,7 +33284,7 @@ MW Containers Animated.esp
      Herbalismv1.3(Tribunal).esp
      Herbalismv1.1.esp
      Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp
      Syc_HerbalismforPurists (Pearl Bug Edit).esp
      Herbalism_Lite_v1.0.esp
@@ -34034,8 +34350,8 @@ Herbalismv1.1.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
@@ -35014,7 +35330,7 @@ MuckShovelUse.esp
      Herbalismv1.3(Tribunal).esp
      Herbalismv1.1.esp
      Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp
      Syc_HerbalismforPurists (Pearl Bug Edit).esp
      Herbalism_Lite_v1.0.esp
@@ -36151,13 +36467,14 @@ New Khajiit Bodies - Clean.esp
 New Khajiit Bodies (Slof Textures) - Mature.esp
 New Khajiit Bodies (Slof Textures) - Clean.esp
 
-[Conflict]
- Choose ONLY ONE of these plugins. "Mature" is for anatomically correct, "Clean" is for a more asexual look.
-[ANY New Khajiit Bodies - Mature.esp
-	 New Khajiit Bodies - Clean.esp
-	 New Khajiit Bodies (Slof Textures) - Mature.esp
-	 New Khajiit Bodies (Slof Textures) - Clean.esp]
-	 MK_Khajiit.esp
+;;Dragon32: Translator5 (I think) has duplicated the above rule and added in "MK_Khajiit.esp" without explanation. Removed.
+;;[Conflict]
+;; Choose ONLY ONE of these plugins. "Mature" is for anatomically correct, "Clean" is for a more asexual look.
+;;[ANY New Khajiit Bodies - Mature.esp
+;;	 New Khajiit Bodies - Clean.esp
+;;	 New Khajiit Bodies (Slof Textures) - Mature.esp
+;;	 New Khajiit Bodies (Slof Textures) - Clean.esp]
+;;	 MK_Khajiit.esp
 
 [Conflict]
  To use this mod, you must have both Slof's "Better Beasts (reptile version)" and "New Beast Bodies" installed, however "New Beast Bodies" no longer reqires that Slof's "Better Beasts" plugins be active.
@@ -37782,7 +38099,7 @@ Nymeria's mages'guild fix.esp
      Herbalismv1.3(Tribunal).esp
      Herbalismv1.1.esp
      Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp
+     Syc_HerbalismforPurists_DV.esp
      Syc_HerbalismforPurists_TB_ONLY.esp
      Syc_HerbalismforPurists (Pearl Bug Edit).esp
      Herbalism_Lite_v1.0.esp
@@ -38560,6 +38877,9 @@ Oriental weapons pack.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Our Lady's Solace 1.11 [Almalexia & green_shade]
 
+;;"Load this mod after the MPP to overwrite with this mod's changes."
+;;Dragon32: MPP is an ESM, this is an ESP
+
 [Conflict]
  "[Almalexia & green_shade's "Our Lady's Solace" is] incompatible [...] with Voiced Almalexia."
  (Ref: "Our Lady's Solace Readme.txt")
@@ -38582,6 +38902,18 @@ Our Lady's Solace - SSE Add-on.esp
 Sotha Sil Expanded.ESP
 Our Lady's Solace - SSE Add-on.esp
 
+[Patch]
+ You should use "Royal Chargen Compatibility Patch", a "plugin for Royal Chargen to fix minor compatibility issue [with "Our Lady's Solace" by Almalexia & green_shade]"
+ Download "Royal Chargen Compatibility Patch" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43501/
+OLS - Royal Chargen Patch.ESP
+[ALL Our Lady's Solace.esp
+     Clean Royal Chargen.esp]
+
+;;Dragon32: patch just includes "1jw_newchargen_dscript"
+[Order]
+Clean Royal Chargen.esp
+OLS - Royal Chargen Patch.ESP
+
 ;;"I looked through all the dialogue entries for [Less Generic Tribunal]. There doesn't appear to be any conflicts. Dialogue changes affect which one you'd want to load first. I'd recommend loading [Our Lady's Solace] last as it will provide a more consistent experience."
 ;;Ref: http://forums.nexusmods.com/index.php?/topic/2636899-our-ladys-solace/?p=23860569
 [Order]
@@ -38600,7 +38932,6 @@ Ozzy's Grass - Bitter Coast.esp
 Ozzy's Grass - Grazelands.esp
 Ozzy's Grass - Solstheim.esp
 Ozzy's Grass - West Gash.esp
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38892,7 +39223,7 @@ Pearls Enhanced - ResEn patch v2.esp
  Download "PE Herbalism For Purists Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43190/
 Pearls Enhanced - HFP patch.esp
 [ALL [ANY Syc_HerbalismforPurists.esp
-		  Syc_HerbalismforPurists_DV.esp
+          Syc_HerbalismforPurists_DV.esp
 	  Syc_HerbalismforPurists_TB_ONLY.esp
           Syc_HerbalismforPurists (Pearl Bug Edit).esp]
      Pearls Enhanced.esp]
@@ -38903,15 +39234,15 @@ Pearls Enhanced - HFP patch.esp
  Download "PE Herbalism For Purists Patch" from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43190/
 Pearls Enhanced - HFP patch v2.esp
 [ALL [ANY Syc_HerbalismforPurists.esp
-		  Syc_HerbalismforPurists_DV.esp
+          Syc_HerbalismforPurists_DV.esp
 	  Syc_HerbalismforPurists_TB_ONLY.esp
           Syc_HerbalismforPurists (Pearl Bug Edit).esp]
      Pearls Enhanced - Colored Pearls Add-on.esp]
 
 ;; (Ref: "Pearls Enhanced - HFP patch readme.txt")
 [Order]
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 Syc_HerbalismforPurists_TB_ONLY.esp
 Syc_HerbalismforPurists (Pearl Bug Edit).esp
 Pearls Enhanced.esp
@@ -40173,7 +40504,7 @@ Pursuit Enhanced -Go To Jail Patch.esp
  ( http://www.morrowind4kids.com/pseronwyrd/PW_Redesigned_Vivec-Vivec_Expansion.zip )
 [ALL Redesigned Vivec.esp
      [ANY Vivec Expansion 2.0.esp
-		  Vivec Expansion.DV.esp]]
+          Vivec Expansion.DV.esp]]
 
 [Note]
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
@@ -40185,7 +40516,7 @@ Pursuit Enhanced -Go To Jail Patch.esp
 PW_Redesigned Vivec-Vivec_Expansion.esp
 [ANY Redesigned Vivec.esp
      [ANY Vivec Expansion 2.0.esp
-		  Vivec Expansion.DV.esp]]
+          Vivec Expansion.DV.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40566,6 +40897,48 @@ Bjam_DGL_rt_MWSEpatch_v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Rats Galore [The Wanderer]
+
+[Conflict]
+ Only use one plugin:
+  wl_rats.esp - Adds the new rats to Vvardenfell
+  wl_rats_bm.esp - Adds the new rats to Vvardenfell and also Solstheim
+  wl_rats_tr.esp - Adds the new rats to Vvardenfell, Solstheim and Mournhold.
+ (Ref: "wl_rats.txt")
+wl_rats.esp
+wl_rats_bm.esp
+wl_rats_tr.esp
+
+[Requires]
+ (Ref: "wl_rats.txt")
+wl_rats_bm.esp
+Bloodmoon.esm
+
+[Requires]
+ (Ref: "wl_rats.txt")
+wl_rats_tr.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm]
+
+;;Removed rules added by Translator 5 as they're wrong.
+
+;;[Requires]
+;;wl_rats_bm.esp
+;;[ALL wl_rats.esp
+;;     Bloodmoon.esm]
+
+;;[Requires]
+;;wl_rats_tr.esp
+;;[ALL wl_rats.esp
+;;     Tribunal.esm]
+
+;;[Order]
+;;wl_rats.esp
+;;wl_rats_bm.esp
+;;wl_rats_tr.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ravenhorn  [STH]
 
 [Note]
@@ -40734,13 +41107,18 @@ ktx_real_katana_1.2.esp
 ;; @RealSignposts [ElBundeee]
 
 [Conflict]
- These mods all do the same thing: replace the signposts in Morrowind with readable signs. You probably only want to enable one of them at a time.
-RealSignposts.esp
-WeatheredSigns.esp
-Textured_Signs.esp
+ These mods all do the same thing: replace the signposts in Morrowind with alternative signs. You probably only want to enable one of them at a time.
+aru_signs.esp
+DaedricSignposts.esp
 dxm_metallic_signs.esp
 jsc_mod_Wegweiser_DV.esp
-aru_signs.esp
+MixedSignposts.esp
+RealSignposts.esp
+SignPosts.esp
+SignpostsRetextured.esp
+Textured_Signs.esp
+WA_Signy_Signposts(!).ESP
+WeatheredSigns.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41584,11 +41962,11 @@ Riptides Face & Clothing Replace Final.esp
  (Ref: renamed_RiptidesFace_ClothingReplaceFinal.ace\Please Read Me.txt)
 Riptides Face & Clothing Replace + X-Jiits.esp
 [ALL [ANY Better Heads.esm
-		  Better Heads.esp]
+          Better Heads.esp]
      [ANY Better Heads Tribunal addon.esm
-		  Better Heads Tribunal addon.esp]
+          Better Heads Tribunal addon.esp]
      [ANY Better Heads Bloodmoon addon.esm
-		  Better Heads Bloodmoon addon.esp]
+          Better Heads Bloodmoon addon.esp]
      Tribunal.esm
      Bloodmoon.esm
      X-jiit.esp]
@@ -41597,11 +41975,11 @@ Riptides Face & Clothing Replace + X-Jiits.esp
  (Ref: renamed_RiptidesFace_ClothingReplaceFinal.ace\Please Read Me.txt)
 Riptides Face & Clothing Replace Final.esp
 [ALL [ANY Better Heads.esm
-		  Better Heads.esp]
+          Better Heads.esp]
      [ANY Better Heads Tribunal addon.esm
-		  Better Heads Tribunal addon.esp]
+          Better Heads Tribunal addon.esp]
      [ANY Better Heads Bloodmoon addon.esm
-		  Better Heads Bloodmoon addon.esp]
+          Better Heads Bloodmoon addon.esp]
      Tribunal.esm
      Bloodmoon.esm]
 
@@ -42352,6 +42730,21 @@ NPC Functionality.esp
 [Order]
 SG-MW-ecology-carnivore-plugin.esp
 NPC Functionality.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sabregirl's Pretty Kitties [Sabregirl]
+
+[Conflict]
+ "Sabregirl's Pretty Kitties" by Sabregirl and "Hübsche Katzen" by Sharesoft are the same mod for different languages using different meshes and textures. But with the same in-game IDs.
+ (Ref: http://www.sabregirl.com/mods/creature.html and https://www.elderscrollsportal.de/ressourcen/huebsche-katzen.36/ )
+sg_prettykitties.esp
+Hübsche Katzen.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 34429 Hübsche Katzen.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -43621,8 +44014,8 @@ Better Bodies.esp
 ;;"I have installed Silt Strider Animator, too, and this only works when loaded after Expanded Sounds"
 ;;Ref: http://forums.bethsoft.com/topic/1484920-voiceless-silt-strider-after-mod-addition/?p=23273826
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Silt Strder Animator.esp
 
 ;;Also load SSA after Creatures
@@ -43640,7 +44033,7 @@ Creatures.esp
 Silt Strder Animator.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Silt Striders 1.14 [abot]
+;; @Silt Striders 1.16 [abot]
 
 [Conflict]
  Only use one plugin:
@@ -43650,19 +44043,31 @@ Silt Strder Animator.esp
 abotSiltStriders.esp
 abotSiltStridersTR.esp
 
-[Note]
+;;Dragon32: Translator 5 changed from Conflict rule to Note rule without explanation. Can't see a reason. Reverting
+;;[Note]
+;; "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
+;; (Ref: "abotSiltStriders.txt")
+;;[ALL abotSiltStriders.esp
+;;     [ANY TR_Mainland.esm
+;;          TR_Data.esm]]
+
+[Conflict]
  "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
  (Ref: "abotSiltStriders.txt")
-[All abotSiltStriders.esp
-	 [ANY TR_Mainland.esm
-		  TR_Data.esm]]
+abotSiltStriders.esp
+TR_Mainland.esm
 
 [Requires]
  "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD [...] abotSiltStridersTR.esp"
  (Ref: "abotSiltStriders.txt")
 abotSiltStridersTR.esp
-[ALL TR_Mainland.esm
-     TR_Data.esm]
+TR_Mainland.esm
+
+[Note]
+ !! "TR_Travels.esp currently sort of ruins my silt strider routes to and from Bal Oyra as it deletes the Bal Oyra silt strider port, and changes standard Bethesda / previously established travel destinations routes. [However,] you can use TR_Travels.esp [...] if you really want."
+ !! (Ref: "abotSiltStriders.txt")
+[ALL abotSiltStridersTR.esp
+     TR_Travels.esp]
 
 ;; expdep
 [Requires]
@@ -43865,6 +44270,28 @@ osiris' Skeleton Shield Replacer - MW v1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Sklaven Und Packtier PlugIn 1.50 (DV) [ReneMiner]
+
+;;Couple of add-on files in the download, Translator 5 didn't add rules for them.
+;;Looks like a pretty extensive mod which (I think) duplicates functionality of other mods.
+;;Also looks like it uses the deprecated Levelled List functions.
+;;Not adding rules as I'm not battling Bing Translate for this.
+
+;;Dragon32: Changed "Magic Diversity.ESP" to "Magic Diversity <VER>.ESP"
+[Order]
+SklavenUndPacktierPlugIn.esp
+Magic Diversity <VER>.ESP
+
+[Order]
+SklavenUndPacktierPlugIn.esp
+Magic Diversity NO  SOUND.ESP
+
+[Order]
+SklavenUndPacktierPlugIn.esp
+YAPHM.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Skulls Improved [razorfett147]
 
 [Conflict]
@@ -44010,7 +44437,7 @@ Slof's Civilised Beasts.esp
  (Ref: "BetterBeasts.txt")
 Slof's BB neck fix.esp
 [ALL [ANY Better Heads.esm
-		  Better Heads.esp]
+          Better Heads.esp]
      [ANY Slof's Better Beasts a.esp
 	  Slof's Better Beasts b.esp
 	  Slof's Civilised Beasts.esp]]
@@ -44467,6 +44894,23 @@ wl_SolstheimOverhaul_v1.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Solstheim Undialog [SeekerVI]
+
+;;"Something I have noticed, Illy's Solsteim Rumor Fix needs to load after White Wolf of Lokken Mountain (.esp version), as Lokken overwrites the latest rumor topic that reverts it back to non-agent class npcs."
+;;Ref - http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24162382
+;;Dragon32 - Assume something similar for this mod too
+[Order]
+BT_Whitewolf_2_0.esp
+Solstien_undialog.esp
+
+;;Ref: http://forums.bethsoft.com/topic/1094671-relz-illys-solsteim-rumour-fix/?p=18160887
+;;Dragon32 - Assume something similar for this mod too
+[Order]
+Less_Generic_Bloodmoon.esp
+Solstien_undialog.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Sotha Sil Expanded 2.2 [Team SSE]
 
 ;;Dragon32: Duplicating Order rule from "DNGDR - Darknut's Greater Dwemer Ruins [Darknut]" for completeness
@@ -44860,6 +45304,19 @@ Spok_Paintings_Pack_1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Spriggans and Twiggans [Melchior Dahrk]
+
+[Requires]
+Spriggans and Twiggans.ESP
+Bloodmoon.esm
+
+;;Dragon32: Removed rule added by Translator 5. These mods don't conflict.
+;;[Order]
+;;Bloodmoon_Creatures.esp
+;;Spriggans and Twiggans.ESP
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Spuzzum's Interior Daylight [Spuzzum]
 
 [Requires]
@@ -44938,8 +45395,8 @@ Herbalismv1.1.esp
 
 [Order]
 Sris_Alchemy_BM.esp
-[ANY Syc_HerbalismforPurists.esp
-	 Syc_HerbalismforPurists_DV.esp]
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
 
 [Order]
 Sris_Alchemy_BM.esp
@@ -48060,8 +48517,8 @@ Better_Sounds.esp
 SNR_ThievesStep_BS.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 SNR_ThievesStep_BS.esp
 
 [Order]
@@ -48085,8 +48542,8 @@ Better_Sounds.esp
 SNR_ThievesStep_Standart.esp
 
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 SNR_ThievesStep_Standart.esp
 
 [Order]
@@ -48269,7 +48726,8 @@ Tir Thalor Quest.esp
 [Conflict]
  "TLM - Complete.esp" includes all the modules of TLM Modular. You only need "TLM - Complete.esp" by itself.
  (Ref: "TLM - ~Readme.htm")
-TLM - Complete.esp
+[ANY TLM - Complete.esp
+     TLM - Complete + DBL.esp]
 [ANY TLM - Light Sources (Natural Water).esp
      TLM - NPC Light Sources.esp
      TLM - External Lights Ownership.esp
@@ -48287,7 +48745,8 @@ TLM - Complete.esp
  !! This means that, in order to retain the modified interior light settings of TLM, you should load "TLM - Ambient Light + Fog Update.esp" from TLM Modular as well as "TLM - Complete.esp" and load "TLM - Ambient Light + Fog Update.esp" later than any mod that might change a pre-existing interior cell.
  !! If you load "TLM - Ambient Light + Fog Update" mlox will load it late in your load order.
  !! (Ref: "TLM - ~Readme.htm")
-[ALL TLM - Complete.esp
+[ALL [ANY TLM - Complete.esp
+          TLM - Complete + DBL.esp]
      [NOT TLM - Ambient Light + Fog Update.esp]]
 
 ;; Order tweaks From Black Crow King, albeit reported for "TLM - Ambient Light + Fog Update.esp":
@@ -48295,6 +48754,7 @@ TLM - Complete.esp
 [Order]
 Piratelords Trade Enhancements.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 ;; TLM Modular
 
@@ -48304,6 +48764,7 @@ TLM - Complete.esp
 ;;Load "TLM - Ambient Light + Fog Update.esp" last as we use [Near End] block to load this mod late in load order and override mod-made changes to AMBI settings
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 TLM - Light Sources (Natural Water).esp
 TLM - Light Sources (Lanterns).esp
 TLM - External Lights Ownership.esp
@@ -48340,7 +48801,9 @@ TLM - Light Sources (Lanterns).esp
  "Any mod that changes lights in any way, be it [...] camp fires, braziers, or any other light source will also be incompatible with TLM - Clearer Lighting"
  (Ref: "TLM - ~Readme.htm")
 [ANY TLM - Complete.esp
-     TLM - Light Sources (Clearer Lighting).esp]
+     TLM - Complete + DBL.esp
+     TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Clearer Lighting) + DBL.esp]
 [ANY Fire_Hurt_All.esp
      Fire_Hurt_bloodmoon.esp
      Fire_Hurt_morrowind.esp
@@ -48349,6 +48812,7 @@ TLM - Light Sources (Lanterns).esp
 ;;Dragon32: Think NoM people would want fires to cook stuff.
 [Order]
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 Necessities of Morrowind 2.0.esp
 Necessities of Morrowind 2.1.esp
 NOM 2.12.esp
@@ -48357,6 +48821,7 @@ NoM 3.0.esp
 
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 Necessities of Morrowind 2.0.esp
 Necessities of Morrowind 2.1.esp
 NOM 2.12.esp
@@ -48367,7 +48832,9 @@ NoM 3.0.esp
  "Any mod that changes lights in any way, be it candles, torches, lanterns, fireplaces, camp fires, braziers, or any other light source will also be incompatible with TLM - Clearer Lighting"
  (Ref: "TLM - ~Readme.htm")
 [ANY TLM - Complete.esp
+     TLM - Complete + DBL.esp
      TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Clearer Lighting) + DBL.esp
      TLM - Light Sources (Lanterns).esp]
 Light Sounds.esp
 
@@ -48389,7 +48856,8 @@ TLM - Sneak Modifiers (Locations).esp
  "Any mod that provides armor or weather penalties and bonuses will be duplicated by the TLM - Sneak Modifiers part of this mod. This applies to mods such as LDones & WDog's Armor Effects-LD"
  (Ref: "TLM - ~Readme.htm")
 [ANY TLM - Sneak Modifiers (Code).esp
-     TLM - Complete.esp]
+     TLM - Complete.esp
+     TLM - Complete + DBL.esp]
 [ANY Armor Effects-LD 2.0-WD.esp
      Armor Effects-LD 2.0-WD (No Agility Penalty).esp]
 
@@ -48397,7 +48865,8 @@ TLM - Sneak Modifiers (Locations).esp
  "Any mod that provides armor or weather penalties and bonuses will be duplicated by the TLM - Sneak Modifiers part of this mod. This applies to mods such as Vanhikes' Light Based Sneaking"
  (Ref: "TLM - ~Readme.htm")
 [ANY TLM - Sneak Modifiers (Code).esp
-     TLM - Complete.esp]
+     TLM - Complete.esp
+     TLM - Complete + DBL.esp]
 [ANY LBS_Full v1.4(trib).esp
      LBS_Lite v1.4(trib).esp]
 
@@ -48405,7 +48874,8 @@ TLM - Sneak Modifiers (Locations).esp
  "Any mod that provides [...] weather penalties and bonuses will be duplicated by the TLM - Sneak Modifiers part of this mod."
  (Ref: "TLM - ~Readme.htm")
 [ANY TLM - Sneak Modifiers (Code).esp
-     TLM - Complete.esp]
+     TLM - Complete.esp
+     TLM - Complete + DBL.esp]
 [ANY SeriousWeather_BM_v1_00.esp
      SeriousWeather_v1_00.esp
      Weather Effects.esp]
@@ -48414,12 +48884,21 @@ TLM - Sneak Modifiers (Locations).esp
  "Any other lighting alteration mod will be made impotent by installing TLM. This includes such mods as CoolDemon's True Lights And Darkness"
  (Ref: "TLM - ~Readme.htm")
 [ANY TLM - Sneak Modifiers (Code).esp
-     TLM - Complete.esp]
+     TLM - Complete.esp
+     TLM - Complete + DBL.esp]
 [ANY True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp
      True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
      True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp
      Lights 300 v5.esp
-     Vibrant lights 1.0.esp]
+     Lights 300 v5 + DBL.esp
+     Vibrant lights 1.0.esp
+     LBS_Full v1.4(trib).esp
+     LBS_Lite v1.4(trib).esp
+     LBS_Full v1.4(trib) + DBL.esp
+     LBS_Lite v1.4(trib) + DBL.esp]
 
 ;;TLM - Sneak Modifiers (Locations)
 
@@ -48442,7 +48921,8 @@ TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
 [Conflict]
  The changes made by the individual "The Lighting Mod" addons are included in "TLM - Complete.esp"
   (Ref: "TLM - ~Readme.htm")
-TLM - Complete.esp
+[ANY TLM - Complete.esp
+     TLM - Complete + DBL.esp]
 [ANY TLM - AdjMod - Siege At Firemoth.esp
      TLM - AdjMod - Gladiator.esp
      TLM - AdjMod - Bank 2.2.esp
@@ -48454,13 +48934,15 @@ TLM - Complete.esp
 TLM - AdjMod - Gladiator.esp
 [ALL TLM - Ambient Light + Fog Update.esp
      Gladiator.esp
-     [NOT TLM - Complete.esp]]
+     [NOT [ANY TLM - Complete.esp
+               TLM - Complete + DBL.esp]]]
 
 [Conflict]
  "[TLM - AdjMod - Gladiator.esp] contain the relevant light settings for [...] Gladiator 5 by Endrek"
  (Ref: "TLM - ~Readme.htm")
 [ALL [NOT TLM - AdjMod - Gladiator.esp]
-     [NOT TLM - Complete.esp]]
+     [NOT TLM - Complete.esp
+     [NOT TLM - Complete + DBL.esp]]]
 [ALL TLM - Ambient Light + Fog Update.esp
      Gladiator.esp]
 
@@ -48469,6 +48951,7 @@ TLM - Sneak Modifiers (Locations).esp
 Gladiator.esp
 TLM - AdjMod - Gladiator.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
 
 [Note]
@@ -48482,25 +48965,27 @@ TLM - Sneak Modifiers (Locations) - Adjust - Gladiator.esp
 TLM - AdjMod - Bank 2.2.esp
 [ALL TLM - Ambient Light + Fog Update.esp
      [ANY Indybank.esp
-	  Indybank2.4b.ESP
-	  Indybank-NoHouses.esp
-	  IndybankWC.esp
+          Indybank2.4b.ESP
+          Indybank-NoHouses.esp
+          IndybankWC.esp
           Indy Bank (SW Comp. Patch).ESP
-	  WalledCity_IndyBank.esp]
-     [NOT TLM - Complete.esp]]
+          WalledCity_IndyBank.esp]
+     [NOT TLM - Complete.esp]
+     [NOT TLM - Complete + DBL.esp]]
 
 [Conflict]
  "[TLM - AdjMod - Bank 2.2.esp] contain the relevant light settings for [...] Bank 2.2 by Indestructible (+ Kir) (though all versions should be okay including the later ones)"
  (Ref: "TLM - ~Readme.htm")
 [ALL [NOT TLM - AdjMod - Bank 2.2.esp]
-     [NOT TLM - Complete.esp]]
+     [NOT TLM - Complete.esp]
+     [NOT TLM - Complete + DBL.esp]]
 [ALL TLM - Ambient Light + Fog Update.esp
      [ANY Indybank.esp
-	  Indybank2.4b.ESP
-	  Indybank-NoHouses.esp
-	  IndybankWC.esp
+          Indybank2.4b.ESP
+          Indybank-NoHouses.esp
+          IndybankWC.esp
           Indy Bank (SW Comp. Patch).ESP
-	  WalledCity_IndyBank.esp]]
+          WalledCity_IndyBank.esp]]
 
 [Order]
 Indybank.esp
@@ -48511,6 +48996,7 @@ Indy Bank (SW Comp. Patch).ESP
 WalledCity_IndyBank.esp
 TLM - AdjMod - Bank 2.2.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Requires]
  "[TLM - AdjMod - Spuzzum's Interior Daylight.esp] contain the relevant light settings for [...] Spuzzam's Interior Daylight 1.0 by (funnily enough) Spuzzam"
@@ -48518,13 +49004,15 @@ TLM - Complete.esp
 TLM - AdjMod - Spuzzum's Interior Daylight.esp
 [ALL TLM - Ambient Light + Fog Update.esp
      SpzInteriorDaylight.esp
-     [NOT TLM - Complete.esp]]
+     [NOT TLM - Complete.esp]
+     [NOT TLM - Complete + DBL.esp]]
 
 [Conflict]
  "[TLM - AdjMod - Spuzzum's Interior Daylight.esp] contain the relevant light settings for [...] Spuzzam's Interior Daylight 1.0 by (funnily enough) Spuzzam"
  (Ref: "TLM - ~Readme.htm")
 [ALL [NOT TLM - AdjMod - Spuzzum's Interior Daylight.esp]
-     [NOT TLM - Complete.esp]]
+     [NOT TLM - Complete.esp]
+     [NOT TLM - Complete + DBL.esp]]
 [ALL TLM - Ambient Light + Fog Update.esp
      SpzInteriorDaylight.esp]
 
@@ -48532,6 +49020,7 @@ TLM - AdjMod - Spuzzum's Interior Daylight.esp
 SpzInteriorDaylight.esp
 TLM - AdjMod - Spuzzum's Interior Daylight.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 ;;[Requires]
 ;;TLM - AdjMod - Marksman 1.43.b2.esp ???
@@ -48551,13 +49040,15 @@ TLM - AdjMod - Siege At Firemoth.esp
           super_adventurers302.esp
           silgrad_tower_internal_release_1-4_6.6.esp
           silgrad_tower_1-4_6.6.esp]
-     [NOT TLM - Complete.esp]]
+     [NOT TLM - Complete.esp]
+     [NOT TLM - Complete + DBL.esp]]
 
 [Conflict]
  "[TLM - AdjMod - Siege At Firemoth.esp] contain the relevant light settings for [...] Siege At Firemoth by the Official Morrowind Team"
  (Ref: "TLM - ~Readme.htm")
 [ALL [NOT TLM - AdjMod - Siege At Firemoth.esp]
-     [NOT TLM - Complete.esp]]
+     [NOT TLM - Complete.esp]
+     [NOT TLM - Complete + DBL.esp]]
 [ALL TLM - Ambient Light + Fog Update.esp
      [ANY Siege at Firemoth.esp
           SiegeAtFiremoth.esp
@@ -48573,46 +49064,55 @@ TLM - AdjMod - Siege At Firemoth.esp
 Siege at Firemoth.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 [Official]Siege at Firemoth.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 SiegeAtFiremoth.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 OfficialMods_v5.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 Clean Official Plugins v1.1.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 Official_2002_Mods.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 super_adventurers302.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 silgrad_tower_internal_release_1-4_6.6.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 [Order]
 silgrad_tower_1-4_6.6.esp
 TLM - AdjMod - Siege At Firemoth.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -48945,22 +49445,27 @@ True Skyrimized Torches.esp
 
 [Order]
 Lights 300 v5.esp
+Lights 300 v5 + DBL.esp
 True Skyrimized Torches.esp
 
 [Order]
 True_Lights_And_Darkness_0.5.esp
+True_Lights_And_Darkness_0.5 + DBL.esp
 True Skyrimized Torches.esp
 
 [Order]
 True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
 True Skyrimized Torches.esp
 
 [Order]
 True_Lights_And_Darkness_1.1.esp
+True_Lights_And_Darkness_1.1 + DBL.esp
 True Skyrimized Torches.esp
 
 [Order]
 TLM - Light Sources (Clearer Lighting).esp
+TLM - Light Sources (Clearer Lighting) + DBL.esp
 True Skyrimized Torches.esp
 
 [Order]
@@ -48969,6 +49474,7 @@ True Skyrimized Torches.esp
 
 [Order]
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 True Skyrimized Torches.esp
 
 
@@ -48980,7 +49486,8 @@ True Skyrimized Torches.esp
 [Note]
  ! B00ze has updated Cool Demon's original "True Lights and Darkness" mod, you should upgrade!
  ! http://www.nexusmods.com/morrowind/mods/39605/?
-True_Lights_And_Darkness_0.5.esp
+[ANY True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp]
 
 [Note]
  !! This plugin contains evil GMSTs.
@@ -48990,7 +49497,8 @@ True_Lights_And_Darkness_0.5.esp
 [Conflict]
  According to B00ze, who has updated Cool Demon's original "True Lights and Darkness", the scripted sunlight in the original "True Lights and Darkness" didn't take weather into account and so interfered with the lightning effects in "Atmospheric Sound Effects".
  (Ref: "True_Lights_And_Darkness_1.0_Readme.txt")
-True_Lights_And_Darkness_0.5.esp
+[ANY True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp]
 [ANY AtmosphericSoundEffects-3.0-TBM.esp
      AtmosphericSoundEffects-3.0-Tribunal.esp
      AtmosphericSoundEffects-3.0.esp
@@ -49011,30 +49519,38 @@ True_Lights_And_Darkness_1.0.esp
  B00ze recommends editing the Light Attenuation settings in your morrowind.ini
  (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
 [ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
-     True_Lights_And_Darkness_1.1.esp]
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
 
 [Conflict]
  "Copy one of the ESP's to your Morrowind installation's Data Files folder:
    Copy "True_Lights_And_Darkness_1.1.esp" for the version with the scripted sunlight.
    Copy "True_Lights_And_Darkness_1.0-NoDaylight.esp" for the version without any scripts."
  (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
-True_Lights_And_Darkness_1.0-NoDaylight.esp
-True_Lights_And_Darkness_1.1.esp
+[ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp]
+[ANY True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
 
 [Conflict]
  "I've also included the excellent color enhancements of the Byblos Lights 300 mod into ["True Lights and Darkness"]."
  (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
 [ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
-     True_Lights_And_Darkness_1.1.esp]
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
 [ANY Byb_Lights_300_V4.esp
      Lights_300_V4.esp
-     Lights 300 v5.esp]
+     Lights 300 v5.esp
+     Lights 300 v5 + DBL.esp]
 
 [Conflict]
  "[B00ze] made a version [of "True Lights and Darkness", True_Lights_And_Darkness_1.0-NoDaylight.esp,] without the sunlights too, in case you're using another mod that does the same thing."
  abot's "Windows Glow Expansion", Spuzzum's "Interior Daylight" and Dark Angel's "Illuminated Windows" add daylight to interior windows.
  (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
-True_Lights_And_Darkness_1.1.esp
+[ANY True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
 [ANY SpzInteriorDaylight.esp
      abotWindowsGlow.esp
      Illuminated Windows v1.2.esp]
@@ -49044,7 +49560,9 @@ True_Lights_And_Darkness_1.1.esp
  (Ref: "True_Lights_And_Darkness_1.1_Readme.txt")
 Mudcrab Island.esp
 [ANY True_Lights_And_Darkness_1.0-NoDaylight.esp
-     True_Lights_And_Darkness_1.1.esp]
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49454,8 +49972,8 @@ Ultra Light Herbalism.esp
 ;;Dragon32: PirateLord's Expanded Sounds adds scripts to plants for playing sounds.
 ;;Ref: http://www.mwmythicmods.com/Gluby/Gluby_Herbalism_Mods.htm#FAQ
 [Order]
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Ultra Light Herbalism.esp
 
 ;;Morrowind Inhabitants [scruggs]
@@ -50402,7 +50920,6 @@ DN-GDRv1.1_NOM.esp
      [SIZE 1110978 Uvirith Inside.esp]] ;;v6 cleaned with tes3cmd
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Uvirith's Legacy 3.32 [StuporStar]
 
@@ -50610,6 +51127,7 @@ UL_Srikandy_patch.esp
 [ALL UL_TLM_Ambiance.esp
      [NOT [ANY TLM - Ambient Light + Fog Update.esp
                TLM - Complete.esp
+               TLM - Complete + DBL.esp
                LBS_addon_hvy_v1.1.esp
                LBS_addon_Hvy_VD_v1.1.esp
                LBS_addon_lt_v1.1.esp
@@ -50617,9 +51135,13 @@ UL_Srikandy_patch.esp
                LBS_addon_reg_v1.1.esp
                LBS_addon_reg_VD_v1.1.esp
                Lights 300 v5.esp
+               Lights 300 v5 + DBL.esp
                True_Lights_And_Darkness_0.5.esp
+               True_Lights_And_Darkness_0.5 + DBL.esp
                True_Lights_And_Darkness_1.0-NoDaylight.esp
-               True_Lights_And_Darkness_1.1.esp]]]
+               True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+               True_Lights_And_Darkness_1.1.esp
+               True_Lights_And_Darkness_1.1 + DBL.esp]]]
 
 [Requires]
  (Ref: "Uvirith's Legacy_README.txt")
@@ -50631,11 +51153,12 @@ Uvirith's Legacy_<VER>.esp
 Uvirith's Legacy_<VER>.esp
 UL_TLM_Ambiance.esp
 
-; Dragon32: This order from Stuporstar forum post (albeit for beta v1.10)
-; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15273304
+;;Dragon32: This order from Stuporstar forum post (albeit for beta v1.10)
+;; http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15273304
 [Order]
 Uvirith's Legacy_<VER>.esp
 TLM - Complete.esp
+TLM - Complete + DBL.esp
 
 ; Dragon32: Based on above Order rule, enforce same load order for this module of TLM too
 [Order]
@@ -50670,18 +51193,22 @@ LBS_addon_reg_VD_v1.1.esp
 [Order]
 Uvirith's Legacy_<VER>.esp
 Lights 300 v5.esp
+Lights 300 v5 + DBL.esp
 
 [Order]
 Uvirith's Legacy_<VER>.esp
 True_Lights_And_Darkness_0.5.esp
+True_Lights_And_Darkness_0.5 + DBL.esp
 
 [Order]
 Uvirith's Legacy_<VER>.esp
 True_Lights_And_Darkness_1.0-NoDaylight.esp
+True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
 
 [Order]
 Uvirith's Legacy_<VER>.esp
 True_Lights_And_Darkness_1.1.esp
+True_Lights_And_Darkness_1.1 + DBL.esp
 
 ;;Children of Morrowind
 
@@ -53318,13 +53845,17 @@ Vibrant lights 1.0.esp
      LBS_addon_reg_v1.1.esp
      LBS_addon_reg_VD_v1.1.esp
      LBS_Full v1.4(trib).esp
+     LBS_Full v1.4(trib) + DBL.esp
      LBS_Lite v1.4(trib).esp
+     LBS_Lite v1.4(trib) + DBL.esp
      Lights 300 v5.esp
+     Lights 300 v5 + DBL.esp
      Modman_windowlights_Full_2.esp
      Modman_windowlights_Purist_2.esp
      SpzInteriorDaylight.esp
      TLM - Ambient Light + Fog Update.esp
      TLM - Light Sources (Clearer Lighting).esp
+     TLM - Light Sources (Clearer Lighting) + DBL.esp
      TLM - Light Sources (Natural Water).esp
      TLM - Light Sources (Lanterns).esp
      TLM - External Lights Ownership.esp
@@ -53332,9 +53863,13 @@ Vibrant lights 1.0.esp
      TLM - Sneak Modifiers (Code).esp
      TLM - Sneak Modifiers (Locations).esp
      TLM - Complete.esp
+     TLM - Complete + DBL.esp
      True_Lights_And_Darkness_0.5.esp
+     True_Lights_And_Darkness_0.5 + DBL.esp
      True_Lights_And_Darkness_1.0-NoDaylight.esp
-     True_Lights_And_Darkness_1.1.esp]
+     True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
+     True_Lights_And_Darkness_1.1.esp
+     True_Lights_And_Darkness_1.1 + DBL.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53346,12 +53881,12 @@ Viking's.esp
 [ALL Bloodmoon.esm
      Tribunal.esm
      Better Bodies.esp
-	 [ANY Better Heads.esm
-		  Better Heads.esp]
+     [ANY Better Heads.esm
+          Better Heads.esp]
      [ANY Better Heads Tribunal addon.esm
-		  Better Heads Tribunal addon.esp]
+          Better Heads Tribunal addon.esp]
      [ANY Better Heads Bloodmoon addon.esm
-		  Better Heads Bloodmoon addon.esp]]
+          Better Heads Bloodmoon addon.esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53482,7 +54017,7 @@ Lotus Moon - Ascadian Isles.esp
  (Ref: https://www.youtube.com/watch?v=H59W_ayT5Qo )
 Domus foraminis.ESP
 [ANY Vivec Expansion 2.0.esp
-	 Vivec Expansion.DV.esp
+     Vivec Expansion.DV.esp
      PW_Redesigned Vivec-Vivec_Expansion.esp]
 
 
@@ -54458,6 +54993,31 @@ farrp_WeaponCompilationMod_V2.esp
 weaponFix177.esp
 WeaponFix164_WCM_addon.esp
 
+[Order]
+SauronsAbode252.esp
+weaponFix177.esp
+
+[Order]
+SauronsAbode252_Tribunal.esp
+weaponFix177.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Weapons Overhaul 1.1 [hollaajith]
+
+[Conflict]
+ Use only one plugin:
+  Weapons Overhaul.esp - Normal version
+  Weapons Overhaul Resistance.esp - Makes even enchanted iron/steel/chitin etc. weapons ineffective against enemies with Resist Normal Weapons.
+ (Ref: "Weapons Overhaul Readme.txt")
+Weapons Overhaul Resistance.esp
+Weapons Overhaul.esp
+
+[Note]
+ !! Requires Morrowind Code Patch's "Weapon Resistance Change" option enabled.
+ !! (Ref: "Weapons Overhaul Readme.txt")
+Weapons Overhaul Resistance.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Weapon Rotate 1.1 [Cydine, Maboroshi Daikon, and Erstam]
@@ -55049,13 +55609,6 @@ WhiteSuran2_PPOF_Patch.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @White Wolf of Lokken 2.1 [Emma]
 
-;; For the older 2.0 Version:
-;; If you play with a female char, you should use the KISS-patch
-;; (BT_WWLokpatch1.esp) else the first kiss with your hero might be
-;; ruined. Please note: this problem ONLY exists with the very first
-;; kiss; after that, you won't need the patch any further.
-;; (Ref: http://lovkullen.net/Emma/lokken.htm )
-
 ;;Dragon32: MapOMods also shows a conflict with "Moska", can't find that plugin though
 
 [Note]
@@ -55063,6 +55616,12 @@ WhiteSuran2_PPOF_Patch.esp
  ! http://lovkullen.net/Emma/lokken.htm
 [ANY [SIZE !3829352 BT_Whitewolf_2_0.esm]
      [SIZE !3829352 BT_Whitewolf_2_0.esp]]
+
+[Conflict]
+ Choose ONLY ONE of these plugins.
+ (Ref: "WhiteWolfofLokken-readme.txt")
+BT_Whitewolf_2_0.esp
+BT_Whitewolf_2_0.esm
 
 ;;wildcard to pick up all the iterations of the MPP
 [Order]
@@ -55074,21 +55633,6 @@ BT_Whitewolf_2_0.esm
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 BT_Whitewolf_2_0.esm
 
-[Order]
-BT_Whitewolf_2_0.esp
-BT_WWLokpatch1.esp
-
-[Requires]
-BT_WWLokpatch1.esp
-[ANY BT_Whitewolf_2_0.esp
-     BT_Whitewolf_2_0.esm]
-
-[Conflict]
- Choose ONLY ONE of these plugins.
- (Ref: "WhiteWolfofLokken-readme.txt")
-BT_Whitewolf_2_0.esp
-BT_Whitewolf_2_0.esm
-
 [Conflict]
  White Wolf of Lokken conflicts with Inn of the Whispering Wood.
  (Ref: http://gmml.pbwiki.com/Mod+Conflicts )
@@ -55096,9 +55640,28 @@ Inn Whisp Wood BM.esp
 [ANY BT_Whitewolf_2_0.esm
      BT_Whitewolf_2_0.esp]
 
+;;Teleport ring addon - see Teleport Ring - Add-on for The White Wolf of Lokken Mountain
+
+;;Temperature mod addon - see Zappara's Temperature mod
+
+;;See also White Wolf of Lokken and Srikandi's Solstheim Transport mod compatibility patch
+
+;;Child add-on
+
+[Requires]
+ "[Emma's] Child Add-On For The White Wolf Of The Lokken Mountain requires: Bloodmoon, Tribunal and The White Wolf of the Lokken Mountain.esm."
+ (Ref: "LokkenChildAddon1_1-readme.txt")
+BT_Lokken_child1.esp
+[ALL Bloodmoon.esm
+     Tribunal.esm
+     BT_Whitewolf_2_0.esm]
+
+;;NoM Patch
+
 [Patch]
  The "NoM-add-on for White Wolf of Lokken" allows users of "Necessities of Morrowind" by Taddeus to buy NoM-food and equipment in Lokken, to cook and to get water.
  (Ref: NOM-add-on_Lokken-readme.txt)
+ Download "NoM-add-on for White Wolf of Lokken" from Emma's site - http://lovkullen.net/Emma/lokken.htm#Add-ons
 BT_Whitewolf_2_0NOMaddon.esp
 [ALL BT_Whitewolf_2_0.esm
      NOM 2.13.esp]
@@ -55116,6 +55679,20 @@ BT_Whitewolf_2_0NOMaddon.esp
 [Order]
 BT_Whitewolf_2_0NOMaddon.esp
 NoM 3.0.esp
+
+;; For the older 2.0 Version
+
+;; If you play with a female char, you should use the KISS-patch (BT_WWLokpatch1.esp) else the first kiss with your hero might be ruined. Please note: this problem ONLY exists with the very first kiss; after that, you won't need the patch any further.
+;; (Ref: http://lovkullen.net/Emma/lokken.htm )
+
+[Order]
+BT_Whitewolf_2_0.esp
+BT_WWLokpatch1.esp
+
+[Requires]
+BT_WWLokpatch1.esp
+[ANY BT_Whitewolf_2_0.esp
+     BT_Whitewolf_2_0.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -55364,8 +55941,8 @@ AtmosphericSoundEffects-3.0-Tribunal.esp
 AtmosphericSoundEffects-3.0-TBM.esp
 ASE Complete (BTB Edit).esp
 Better_Sounds.esp
-[ANY Expanded Sounds.esp
-	 Expanded Sounds DV.esp]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
 Sound Enhancements.esp
 Wilderness Sounds Bloodmoon.esp
 Wilderness Sounds T & B.esp
@@ -56236,6 +56813,8 @@ Wrye Patches W.esp
           Weapon Range Balance.esp
           weaponFix177.esp
           WeaponFix144basic.esp
+          Weapons Overhaul Resistance.esp
+          Weapons Overhaul.esp
           Xenn's Marksman Overhaul.ESP]
      [NOT Merged_Objects.esp]]
 
@@ -56679,156 +57258,3 @@ The Zone (Tribunal).esp
  !! This plugin contains evil GMSTs, and a few dirty references. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 3900 Zyndaar's Bows.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @German Text Patch [Vrakyas]
-
-[Requires]
- Requires Tribunal and Bloodmoon expansion packs.
- (Ref: "german text patch readme.txt")
-German Text Patch.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Landscapes Stonewood Pass [Mag1cWind0w - Melchior Dahrk]
-;; Fix Mesh conflict
-;; Ozzys Grass West Gash and BLSP conflict, but playable!
-
-[Order]
-BIG_BALMORA.ESP
-Better Landscapes Stonewood Pass (MD Edit).esp
-
-[Note]
- "Using both cause not nice view in the Stonewood Pass!"
-[All Better Landscapes Stonewood Pass (MD Edit).esp
-	 Ozzy's Grass - West Gash.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @ Sycs Herbalism for Purists (DV) [Translation: Trr Kah / Original: Syclonix]
-
-[Requires]
- Requires any Expanded Sounds Version to patch.
-Syc_Herbalism ES Patch DV.esp
-[ANY Expanded Sounds DV.esp
-	 Expanded Sounds.esp]
-
-[Requires]
-Syc_HerbalismforPurists_TB_DV.esp
-Tribunal.esm
-
-
-[Requires]
-Syc_HerbalismforPurists_BM_DV.esp
-Bloodmoon.esm
-
-[Patch]
-Syc_Herbalism ES Patch DV.esp
-[ALL [ANY Expanded Sounds.esp
-		  Expanded Sounds DV.esp]
-	 [ANY Syc_HerbalismforPurists.esp
-		  Syc_HerbalismforPurists_DV.esp]]
-
-[Order]
-Vurt's Ashlands Overhaul.esp
-Vurt's BC Tree Replacer II.esp
-Vurt's Grazelands Unique Trees.ESP
-Ozzy's Grass - Ascadian Isles.esp
-Ozzy's Grass - Bitter Coast.esp
-Ozzy's Grass - Grazelands.esp
-Ozzy's Grass - Solstheim.esp
-Ozzy's Grass - West Gash.esp
-Syc_HerbalismforPurists_DV.esp
-Syc_HerbalismforPurists_TB_DV.esp
-Syc_HerbalismforPurists_BM_DV.esp
-Syc_Herbalism ES Patch DV.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @ Deutsch - Morrowind Enhanced by Emanuel
-
-[Requires]
-Enhanced Morrowind.ESP
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-[Requires]
-Enhanced Morrowind - NPCs.ESP
-Enhanced Morrowind.ESP
-
-[Order]
-Enhanced Morrowind.ESP
-Enhanced Morrowind - NPCs.ESP
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @ Sabregirl's Pretty Kitties // Silent Pretty Kitties // Hübsche Katzen by Sharesoft
-;; Same mod, different meshes, different languages and textures; same IDs!
-
-[Conflict]
-sg_prettykitties.esp
-Hübsche Katzen.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Bloodmoon creatures by Yar-Yulme
-
-[Requires]
-Bloodmoon_Creatures.esp
-Bloodmoon.esm
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Rats Galore by The Wanderer
-
-[Requires]
-wl_rats_bm.esp
-[ALL wl_rats.esp
-     Bloodmoon.esm]
-
-[Requires]
-wl_rats_tr.esp
-[ALL wl_rats.esp
-     Tribunal.esm]
-
-[Order]
-wl_rats.esp
-wl_rats_bm.esp
-wl_rats_tr.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Spriggans and Twiggans by Melchior Dahrk
-
-[Requires]
-Spriggans and Twiggans.ESP
-Bloodmoon.esm
-
-[Order]
-Bloodmoon_Creatures.esp
-Spriggans and Twiggans.ESP
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Morrowind Creatures Flying tweaks by Amenophis
-
-[Order]
-Neo's Unique Creatures.esp
-Morrowind Creatures Flying tweaks.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Sklaven Und Packtier PlugIn 1.50 (DV)
-
-[Order]
-SklavenUndPacktierPlugIn.esp
-Magic Diversity.ESP
-Magic Diversity NO  SOUND.ESP
-
-[Order]
-SklavenUndPacktierPlugIn.esp
-YAPHM.ESP
-
