@@ -35030,7 +35030,11 @@ Jobs (Qaja'kar).ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Rebirth 2.6 [Trancemaster_1988]
+;; @Morrowind Rebirth 4.13 [Trancemaster_1988]
+
+[Order]
+Bloodmoon.esm
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
 
 [Order]
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
@@ -35040,46 +35044,42 @@ Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].esm
 Morrowind Patch *.esm
 Morrowind Rebirth <VER> - Racial Diversity <VER> [Addon].esm
 
-;;version check
-[Note]
- ! There is a new version of Trancemaster_1988's "Morrowind Rebirth" available, you should upgrade!
- ! http://www.nexusmods.com/morrowind/mods/37795
-Morrowind Rebirth 1.5.esp
-Morrowind Rebirth 1.6.esp
-Morrowind Rebirth 1.7.esp
-Morrowind Rebirth 1.8.esp
-Morrowind Rebirth 1.9.esp
-Morrowind Rebirth 2.0.esp
-Morrowind Rebirth 2.1.esp
-Morrowind Rebirth 2.11.ESP
-Morrowind Rebirth 2.2.esp
-Morrowind Rebirth 2.3.esp
-Morrowind Rebirth 2.4.ESP
-Morrowind Rebirth 2.5.esp
-
-;; plugins included in Morrowind Rebirth
+;; plugins bundled with Morrowind Rebirth
 
 [Requires]
  Fulgore's "Balmora's underworld" is "an add-on for [Trancemaster_1988's] Morrowind Rebirth."
  (Ref: "Morrowind Rebirth 2.6 - Balmora Underworld  - Readme.txt")
 Morrowind Rebirth <VER> - Balmora Underworld <VER>*.ESP
-Morrowind Rebirth <VER>.ESP
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 
 ;;Dragon32: checked in TESPCD, PGRD conflict in Balmora
 [Order]
 Morrowind Rebirth <VER>.ESP
 Morrowind Rebirth <VER> - Balmora Underworld <VER>*.ESP
 
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Morrowind Rebirth <VER> - Balmora Underworld <VER>*.ESP
+
 [Requires]
  Trancemaster_1988's "Racial Diversity" is "an add-on for [his] Morrowind Rebirth."
  (Ref: "Morrowind Rebirth 2.6 - Racial Diversity - Readme.txt")
 Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
-Morrowind Rebirth <VER>.ESP
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 
 ;;Dragon32: checked in TESPCD, SPEL conflict
 [Order]
 Morrowind Rebirth <VER>.ESP
 Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
+
+;;Dragon32: Not adding - causes these Cycle errors.
+;;Warning: mlox_base.txt:35545: Cycle detected, not adding: "Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP" -> "BTB - Spells.esp"
+;;Warning: mlox_base.txt:35549: Cycle detected, not adding: "Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP" -> "BTB Spells - EMS MGSO Patch.esp"
+;;[Order]
+;;DN-GDRv<VER>-Rebirth.esp
+;;Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
 
 [Conflict]
  Trancemaster_1988's "Racial Diversity" modifies the abilities of the races in Morrowind. As do other mods from "Wakim's Game Improvements", "BTB's Game Improvements" (emptythe's "Combat Experience - Depth Perception" includes BTB's mod) and Alaisiagae's "Races Are More Fun"
@@ -35108,7 +35108,8 @@ Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
  You should only use this with Trancemaster_1988's "Morrowind Rebirth".
  (Ref: "Morrowind Rebirth 2.6 - Morrowind Patch 1.6.5 - Readme.txt")
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
-Morrowind Rebirth <VER>.ESP
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 
 [Conflict]
  "[The Rebirth edit of the MPP] removes all (or most of them) conflicting changes between the Morrowind Patch Project and Morrowind Rebirth, making it a seamless experience"
@@ -35123,21 +35124,36 @@ Morrowind Rebirth <VER>.ESP
      Morrowind Patch v1.6.5d_beta.esm
      Morrowind Patch v1.6.6_beta.esm]
 
-[Order]
-Bloodmoon.esm
-Morrowind Rebirth <VER> - Morrowind Patch *.esm
-
 ;; mod conflicts
 
 [Conflict]
- "[Morrowind Rebirth is] incompatible with Poorly Placed Object Fix"
- (Ref: http://forums.bethsoft.com/topic/1323171-relz-morrowind-rebirth-15/page__view__findpost__p__20134567 )
-Morrowind Rebirth <VER>.esp
+ "Note that [...] "Poorly Placed Object Fix" [is] not compatible with Morrowind Rebirth."
+ (Ref: Morrowind Rebirth Readme.odt )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 Poorly Placed Object Fix*<VER>.esm
+
+[Conflict]
+ "Note that "Texture Fix" [is] not compatible with Morrowind Rebirth."
+ (Ref: Morrowind Rebirth Readme.odt )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
+Texture Fix <VER>.esm
+
+;;Dragon32: Not 100% about abot's "Windows Glow Expansion" but it modifies CELL records like Rebirth does.
+[Conflict]
+ "Note that "Windows Glow" [is] not compatible with Morrowind Rebirth."
+ (Ref: Morrowind Rebirth Readme.odt )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
+[ANY Windows Glow.esp
+     abotWindowsGlow.esp]
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" adds an enchantment to the named Dwemer claymore, Foeburner. There is no need to run other mods which also add an enchantment.
  (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY Clean_Foeburner_Fix.esp
      lfx_foeburner.esp
      MWFoeburner Fix.ESP]
@@ -35145,7 +35161,8 @@ Poorly Placed Object Fix*<VER>.esm
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" changes Redoran guards in a similar way to Xeth-Ban's "Redoran Guards - Katanas and Shields"
  (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY Redoran Guards with Katanas and Shields.esp
      Redoran Guards with Katanas.esp
      Redoran Guards with Shields.esp]
@@ -35153,7 +35170,8 @@ Morrowind Rebirth <VER>.esp
 [Conflict]
  "[More Detailed Places] won't work at all with Rebirth, no matter what you do with your loadorder."
  (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21680865 )
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY MDP Compilation.ESP
      MDP - Dagon Fel.ESP
      MDP - Dagon Fel 1.0.ESP
@@ -35169,7 +35187,8 @@ Morrowind Rebirth <VER>.esp
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" adds a stone bridge to Gnisis. Other mods which add bridges to Gnisis include ddfield's "Gnisis Imperial Bridge", Matt a.k.a mjr162006's "Gnisis Bridge", Chestnut Stallion's "Gnisis Bridge" and Untot's "Gnisis Enhanced v1.0"
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY Complete Gnisis Bridge.esp
      Gnisis Bridge.ESP
      Clean gnis.esp
@@ -35179,7 +35198,8 @@ Morrowind Rebirth <VER>.esp
  Trancemaster's "Morrowind Rebirth" includes his "New Seyda Neen"; Trancemaster's "New Seyda Neen" and Saborcoco's "Maximus" both use the same ID, Maximus, for an object. "New Seyda Neen" and so "Morrowind Rebirth" use it for a NPC, "Maximus" for a Weapon.
  You should edit either "Morrowind Rebirth" or "Maximus" renaming the Maximus ID (to e.g. "MR_Maximus" or "M_Maximus").
  (Ref: http://forums.nexusmods.com/index.php?/topic/777499-new-seyda-neen/?p=19401164 )
-Morrowind Rebirth <VER>.ESP
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 Maximus.esp
 
 ;; mods merged into or equivalents included in Rebirth
@@ -35189,14 +35209,16 @@ Maximus.esp
   Vurt's Ascadian Isles Tree Replacer II
   Vurt's Bitter Coast Trees II
  (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY Vurt's BC Tree Replacer II.ESP
      Vurt's Leafy West Gash.esp]
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" includes Loki the Grouch's "Better Caldera"
  (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY Clean Better Caldera.esp
      New Better Caldera (Trancemaster Edit).esp]
 
@@ -35204,29 +35226,75 @@ Morrowind Rebirth <VER>.esp
  Trancemaster_1988's "Morrowind Rebirth" includes Xeth-Ban's "Ald-Ruhn Temple Expansion"
  (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
  (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 Clean Ald-Ruhn Temple Expansion <VER>.ESP
 
 [Conflict]
  Trancemaster_1988's "Morrowind Rebirth" includes his Gnisis and Seyda Neen expansion mods.
  (Ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20955404 )
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY New Gnisis 1.2.ESP
      New Seyda Neen 1.6.esp]
 
 [Conflict]
  Trancemaster_1988's "New Seyda Neen", which is included in his "Morrowind Rebirth", conflicts with Emma's "Children of Morrowind" and lonnie's "Seyda Neen Docks"
  (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY Seyda Neen Docks V7.0 Bloodmoon.esp
      Seyda Neen Docks V7.0 Tribunal.esp
      MW_Children_1_0.esm]
 
 [Conflict]
+ "[The "Detailed_Imperial_forts.esp"] included with ["Imperial Forts Retexture" by Mikeandike] will cause floating arrowslit towers in ebonheart and probably other locations altered by morrowind rebirth." 
+ (Ref: http://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=25645554 )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
+Detailed_Imperial_forts.esp
+
+[Conflict]
+ "Piratelord's "Mountainous Red Mountain" is] incompatible with Morrowind Rebirth." 
+ (Ref: http://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=27348969 )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
+MRM.esm
+
+[Conflict]
+ "[Trancemaster_1988's "Morrowind Rebirth"] conflicts with Vampire Realism II [as] Seyda Neen's landscape was screwed up near the shacks by the lighthouse, along the coast. [Also,] Vampire Realism adds various crypts outside of each town, and that can mess with the landscape."
+ (Ref: https://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=44021700 and https://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=44031575 )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
+Vampire Realism II.esp
+
+;;Dragon32: Suggestion in second post there to load VR before Rebirth and do some reference disabling or deleting. But...
+;;Warning: mlox_base.txt:54167: Cycle detected, not adding: "Blood Lines I_Tribunal.esp" -> "Vampire Realism II.esp"
+;;Warning: mlox_base.txt:54334: Cycle detected, not adding: "Blood Lines I_Tribunal.esp" -> "Vampire Realism II.esp"
+;;Warning: mlox_base.txt:54358: Cycle detected, not adding: "WalledCity_IndyBank.esp" -> "Vampire Realism II.esp"
+;;[Order]
+;;Vampire Realism II.esp
+;;Morrowind Rebirth <VER>.ESP
+
+;;[Order]
+;;Vampire Realism II.esp
+;;DN-GDRv<VER>-Rebirth.esp
+
+;;Dragon32: For conflict with "The Witchgirl Adventure" by Emma, see that entry.
+
+[Conflict]
+ "[Morrowind Community and Resdayn Revival Team's "RR Mod Series - Holamayan Monastery Replacer"] conflicts with Morrowind Rebirth.
+ (Ref: http://forums.nexusmods.com/index.php?/topic/2672199-rr-mod-series-holamayan-monastery-replacer/?p=29470707 )
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
+RR_Holamayan_Eng.esp
+
+[Conflict]
  Trancemaster_1988 has merged these mods into his "Morrowind Rebirth", there is no need to run the plugins separately.
  (Ref: "Morrowind Rebirth 2.6 - Readme.doc")
  (Ref: http://forums.bethsoft.com/topic/1398805-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__21680865 )
-Morrowind Rebirth <VER>.esp
+[ANY Morrowind Rebirth <VER>.ESP
+     DN-GDRv<VER>-Rebirth.esp]
 [ANY ;;Dongle's Adamantium Shields
      Adamantium Roundshield.esp
      Adamantium Towershield.esp
@@ -35242,6 +35310,7 @@ Morrowind Rebirth <VER>.esp
      Golden Saint Armor.esp
      ;;Animated Morrowind by Arcimaestro Antares
      Animated Morrowind 1.0.esp
+     Animated_Morrowind - merged.esp
      ;;various monsters by Arcimaestro Antares
      Antares' Creatures - Beholder.esp
      Antares' Creatures - Frost Giant.esp
@@ -35302,71 +35371,92 @@ Morrowind Rebirth <VER>.esp
 ;;Dragon32: Hordane only suggested Graphic Herbalism, added in the other herbalism mods. People should only be running one of these so this mega-Order rule should be OK
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Advanced Herbalism - MO.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Advanced Herbalism - TR & BM.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Advanced Herbalism - TR.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Advanced Herbalism - BM.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Graphic Herbalism.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Herbalismv1.3(Tribunal).esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Herbalismv1.1.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Syc_HerbalismforPurists.esp
+
+[Order]
+Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Syc_HerbalismforPurists_DV.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Syc_HerbalismforPurists_TB_ONLY.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Syc_HerbalismforPurists (Pearl Bug Edit).esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Herbalism_Lite_v1.0.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Herbalism_Lite_for_Tamriel_Rebuilt_Mainland.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Herbalism Redux 1.12a - Bloated MW.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Herbalism Redux 1.12a.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 HR 1.12a + EW 1.5.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 HR 1.12a BMW + EW 1.5.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Ultra Light Herbalism.esp
 
 ;;Order rules for quorn's Muck Shovel Use and similar mods
@@ -35374,31 +35464,37 @@ Ultra Light Herbalism.esp
 ;;Dragon32: Rebirth includes quorn's Muck Shovel Use.
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Muck Shovel of Vivec v1.1.esp
 
 ;;Dragon32: Rebirth includes quorn's Miner's Pick Use
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Resources Enhanced.esp
 
 ;;Dragon32: Rebirth includes quorn's Miner's Pick Use
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Minerals (Tribunal&Bloodmoon).esp
 
 ;;Dragon32: Rebirth includes quorn's Miner's Pick Use.
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Minerals.esp
 
 ;;Dragon32: Rebirth includes quorn's Miner's Pick Use
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Morrowind Crafting 2-1.esp
 
 ;;Dragon32: Rebirth includes quorn's Miner's Pick Use.
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Resources Enhanced.esp
 
 ;;Order rules for animal pacification mods
@@ -35406,56 +35502,73 @@ Resources Enhanced.esp
 ;;Dragon32: load animal pacifying mods after Rebirth
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 animalbehave.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Animal Behaviour.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Cliffracer-FIX.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Less Aggressive Critters.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Mildlife.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Neutral creatures.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Non-Homicidal Ecosystem - Morrowind.ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Non-Homicidal Ecosystem - Bloodmoon.ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Non-Homicidal Ecosystem - Tribunal.ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Non-Homicidal Ecosystem Trib. & Blood..ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Passive_Healthy_Wildlife.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Passive Wildlife Vvardenfell.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Rational Wildlife.esp
 
+;;Dragon32: Not adding DNGDR-Rebirth version to Real Wildlife Order rules due to other existing Order rules
+;;Warning: mlox_base.txt:42210: Cycle detected, not adding: "Real_Wildlife_2b_Bloodmoon.esp" -> "Creatures (lore).esp"
+;;Warning: mlox_base.txt:42215: Cycle detected, not adding: "Real_Wildlife_2b_Bloodmoon.esp" -> "Creatures (Semi).esp"
+;;Warning: mlox_base.txt:42220: Cycle detected, not adding: "Real_Wildlife_2b_Bloodmoon.esp" -> "Creatures.esp"
 [Order]
 Morrowind Rebirth <VER>.esp
 Real_wildlife_2b Complete.esp
@@ -35474,8 +35587,25 @@ Real_wildlife_2b_Tribunal.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Real_wildlife_v1.0.esp
 
+;;Dragon32: Not adding DNGDR-Rebirth version to Sabregirl's Ecology Order rules due to other existing Order rules
+;;Warning: mlox_base.txt:43665: Cycle detected, not adding: "SG-MW-ecology-BM-plugin.esp" -> "Creatures (lore).esp"
+;;Warning: mlox_base.txt:43669: Cycle detected, not adding: "SG-MW-ecology-BM-plugin.esp" -> "Creatures (Semi).esp"
+;;Warning: mlox_base.txt:43673: Cycle detected, not adding: "SG-MW-ecology-BM-plugin.esp" -> "Creatures.esp"
+;;Warning: mlox_base.txt:43677: Cycle detected, not adding: "SG-MW-ecology-WW-plugin.esp" -> "Creatures (lore).esp"
+;;Warning: mlox_base.txt:43681: Cycle detected, not adding: "SG-MW-ecology-WW-plugin.esp" -> "Creatures (Semi).esp"
+;;Warning: mlox_base.txt:43685: Cycle detected, not adding: "SG-MW-ecology-WW-plugin.esp" -> "Creatures.esp"
+;;Warning: mlox_base.txt:43689: Cycle detected, not adding: "SG-MW-ecology-carnivore-plugin.esp" -> "Creatures (lore).esp"
+;;Warning: mlox_base.txt:43693: Cycle detected, not adding: "SG-MW-ecology-carnivore-plugin.esp" -> "Creatures (Semi).esp"
+;;Warning: mlox_base.txt:43697: Cycle detected, not adding: "SG-MW-ecology-carnivore-plugin.esp" -> "Creatures.esp"
+;;Warning: mlox_base.txt:43702: Cycle detected, not adding: "SG-MW-ecology-BM-plugin.esp" -> "BTB - Settings.esp"
+;;Warning: mlox_base.txt:43706: Cycle detected, not adding: "SG-MW-ecology-BM-plugin.esp" -> "BTB - Settings (Alternate).esp"
+;;Warning: mlox_base.txt:43710: Cycle detected, not adding: "SG-MW-ecology-WW-plugin.esp" -> "BTB - Settings.esp"
+;;Warning: mlox_base.txt:43714: Cycle detected, not adding: "SG-MW-ecology-WW-plugin.esp" -> "BTB - Settings (Alternate).esp"
+;;Warning: mlox_base.txt:43718: Cycle detected, not adding: "SG-MW-ecology-carnivore-plugin.esp" -> "BTB - Settings.esp"
+;;Warning: mlox_base.txt:43722: Cycle detected, not adding: "SG-MW-ecology-carnivore-plugin.esp" -> "BTB - Settings (Alternate).esp"
 [Order]
 Morrowind Rebirth <VER>.esp
 SG-MW-ecology-BM-plugin.esp
@@ -35490,10 +35620,12 @@ SG-MW-ecology-WW-plugin.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Super-Hostile Ecosystem (Vanilla Morrowind).ESP
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 wildlife_behaviour.esp
 
 ;;Order rules for game settings-affecting mods
@@ -35501,36 +35633,57 @@ wildlife_behaviour.esp
 ;;Dragon32: load BTB's game settings plugins after Rebirth
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 BTB - Alchemy.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 BTB - Sorted Alchemy.esp ;;Revan's BTB's Sorted New Alchemy Potions
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 BTB - Character.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 BTB - Character (Alternate).esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 BTB - Equipment.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 HELLUVA Balanced BTB.esp ;;Spiffyman's HELLUVA Balanced
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 HELLLUVA Balanced BTB CS.esp ;;Spiffyman's HELLUVA Balanced
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 BTB - Unique Finery Equipment.esp ;Revan's BTB's Unique Finery Equipment
 
+;;Dragon32: Not adding DNGDR-Rebirth version to BTB Spells Order rules due to other existing Order rules
+;;Warning: mlox_base.txt:12552: Cycle detected, not adding: "Creatures (Semi).esp" -> "DN-GDRv1.esp"
+;;Warning: mlox_base.txt:20569: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv1.esp"
+;;Warning: mlox_base.txt:20573: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv<VER>_NOM.esp"
+;;Warning: mlox_base.txt:20577: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv<VER>-Rebirth.esp"
+;;Warning: mlox_base.txt:47310: Cycle detected, not adding: "LGNPC_Aldruhn.esp" -> "Stinkers.esp"
+;;Warning: mlox_base.txt:47433: Cycle detected, not adding: "Stinkers PBS for v3.esp" -> "Suran Waterfront 5.0.esp"
+;;Warning: mlox_base.txt:47437: Cycle detected, not adding: "Stinkers PBS for v3.esp" -> "Suran Waterfront V-5.1.esp"
+;;Warning: mlox_base.txt:52533: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0.esp"
+;;Warning: mlox_base.txt:52537: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank WC Compatible).esp"
+;;Warning: mlox_base.txt:52541: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank Compatible).esp"
+;;Warning: mlox_base.txt:52545: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp"
+;;Warning: mlox_base.txt:52549: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp"
 [Order]
 Morrowind Rebirth <VER>.esp
 BTB - Spells.esp
@@ -35548,6 +35701,19 @@ BTB - Spells.esp
 Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
 BTB Spells - EMS MGSO Patch.esp
 
+;;Dragon32: Not adding DNGDR-Rebirth version to BTB Settings Order rules due to other existing Order rules
+;;Warning: mlox_base.txt:12552: Cycle detected, not adding: "Creatures (Semi).esp" -> "DN-GDRv1.esp"
+;;Warning: mlox_base.txt:20569: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv1.esp"
+;;Warning: mlox_base.txt:20573: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv<VER>_NOM.esp"
+;;Warning: mlox_base.txt:20577: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv<VER>-Rebirth.esp"
+;;Warning: mlox_base.txt:47310: Cycle detected, not adding: "LGNPC_Aldruhn.esp" -> "Stinkers.esp"
+;;Warning: mlox_base.txt:47433: Cycle detected, not adding: "Stinkers PBS for v3.esp" -> "Suran Waterfront 5.0.esp"
+;;Warning: mlox_base.txt:47437: Cycle detected, not adding: "Stinkers PBS for v3.esp" -> "Suran Waterfront V-5.1.esp"
+;;Warning: mlox_base.txt:52533: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0.esp"
+;;Warning: mlox_base.txt:52537: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank WC Compatible).esp"
+;;Warning: mlox_base.txt:52541: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank Compatible).esp"
+;;Warning: mlox_base.txt:52545: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp"
+;;Warning: mlox_base.txt:52549: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp"
 [Order]
 Morrowind Rebirth <VER>.esp
 BTB - Settings.esp
@@ -35559,26 +35725,44 @@ BTB - Settings (Alternate).esp
 ;;Dragon32: load Wakim's game settings plugins after Rebirth
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Balance - Character.esp
 
+;;Dragon32: Not adding DNGDR-Rebirth version to Wakim Game Settings Order rules due to other existing Order rules
+;;Warning: mlox_base.txt:12552: Cycle detected, not adding: "Creatures (Semi).esp" -> "DN-GDRv1.esp"
+;;Warning: mlox_base.txt:20569: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv1.esp"
+;;Warning: mlox_base.txt:20573: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv<VER>_NOM.esp"
+;;Warning: mlox_base.txt:20577: Cycle detected, not adding: "Great House Dagoth.esp" -> "DN-GDRv<VER>-Rebirth.esp"
+;;Warning: mlox_base.txt:47310: Cycle detected, not adding: "LGNPC_Aldruhn.esp" -> "Stinkers.esp"
+;;Warning: mlox_base.txt:47433: Cycle detected, not adding: "Stinkers PBS for v3.esp" -> "Suran Waterfront 5.0.esp"
+;;Warning: mlox_base.txt:47437: Cycle detected, not adding: "Stinkers PBS for v3.esp" -> "Suran Waterfront V-5.1.esp"
+;;Warning: mlox_base.txt:52533: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0.esp"
+;;Warning: mlox_base.txt:52537: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank WC Compatible).esp"
+;;Warning: mlox_base.txt:52541: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank Compatible).esp"
+;;Warning: mlox_base.txt:52545: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank-BE Compatible-hill).esp"
+;;Warning: mlox_base.txt:52549: Cycle detected, not adding: "Uvirith's Legacy_<VER>.esp" -> "Illuminated Order v1.0 (IndyBank-BE Compatible-river).esp"
 [Order]
 Morrowind Rebirth <VER>.esp
 Balance - game settings.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Balance - items.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Balance - Magic Effects.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Balance - NPC Spellcasting.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Balance - spells.esp
 
 ;;Dragon32: SPEL conflict - "rally beast"
@@ -35586,12 +35770,17 @@ Balance - spells.esp
 Morrowind Rebirth <VER> - Racial Diversity <VER>*.ESP
 Balance - spells.esp
 
+;;Dragon32: Not adding DNGDR-Rebirth version to Wakim Dialogue Order rules due to other existing Order rules
+;;Warning: mlox_base.txt:55508: Cycle detected, not adding: "Gameplay - Dialogue.esp" -> "Vampire_Embrace.esp"
+;;Warning: mlox_base.txt:55538: Cycle detected, not adding: "Gameplay - Dialogue.esp" -> "LGNPC_Merged_OM.esp"
+;;Warning: mlox_base.txt:55630: Cycle detected, not adding: "Gameplay - Dialogue.esp" -> "Less_Generic_Bloodmoon.esp"
 [Order]
 Morrowind Rebirth <VER>.esp
 Gameplay - Dialogue.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Gameplay - Faction.esp
 
 [Order]
@@ -35608,6 +35797,7 @@ AprogasVampire WakimImprovements.20021210.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 NPC Magicka Regen (Wakim).esp
 
 ;; Order rules for assorted other mods
@@ -35615,24 +35805,29 @@ NPC Magicka Regen (Wakim).esp
 ;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 JAC_Jasmine.esp
 
 ;; Dragon32 - ref: http://forums.bethsoft.com/topic/1167004-relz-mlox-a-tool-for-analyzing-and-sorting-your-load-order/page__view__findpost__p__20125108
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 The Apartment.esp
 
 ;;Dragon32: Rebirth includes Animated Morrowind, duplicate its Order rules
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Animated_Morrowind - merged.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Animated_Morrowind - Expanded.esp
 
 [Order]
 Morrowind Rebirth <VER>.esp
+DN-GDRv<VER>-Rebirth.esp
 Animated Morrowind - Expanded - MCA_Patch.esp
 
 ;;Rebirth sets fMinWalkSpeed, fMaxWalkSpeed, fMaxWalkSpeedCreature
@@ -35641,6 +35836,7 @@ Animated Morrowind - Expanded - MCA_Patch.esp
 ;; http://forums.nexusmods.com/index.php?/topic/1162362-run-faster-faster-running-speed/?p=18554644
 [Order]
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
 RunFaster-Fast.ESP
 RunFaster-Faster.ESP
 RunFaster-FasterPlus.ESP
@@ -35651,6 +35847,7 @@ RunFaster-SpeedofSound.ESP
 
 [Order]
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
 Nymeria's Faster Walk.esp
 
 ;;"When using windows glow along side this I discovered windows glow must be loaded before rebirth or floating parts of structures insue."
@@ -35664,19 +35861,23 @@ Windows Glow - Raven Rock Eng.esp
 abotWindowsGlow.esp
 abotWindowsGlowTR.esp
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
 
 ;;"Haven't noticed anything wild with Better Bodies + Better Clothes being adjusted to load after Rebirth 3.0"
 ;;Ref: http://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=24325569
 [Order]
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
 Better Bodies.esp
 
 [Order]
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
 Better Clothes_v1.1.esp
 
 [Order]
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
 Better Clothes_v1.1_nac.esp
 
 ;;"Cavern Overhaul had to be above [Morrowind] Rebirth in the load order"
@@ -35684,6 +35885,86 @@ Better Clothes_v1.1_nac.esp
 [Order]
 Cavernes Overhaul -Eng.ESP
 Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+
+;;"MGSO installs PSsorticon.esp is works perfectly but once Morrowind Rebirth is installed the potion icons disappear."
+;;Dragon32 - Lost the Ref for this. Load PSsorticon.esp (and its constituent mods) after Rebirth.
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+PSsorticon.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+PotionSorter.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+Potions.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+Scrollsv1.1.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+Clean Potions.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+Clean Potions1.esp
+
+[Order]
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+Clean Scrolls.esp
+
+;;Dragon32: Landscape conflict with Brother Juniper's Twin Lamps mod, it modifies the landscape around Vivec FQ. Dunno if this Order will work.
+;;Ref: http://forums.nexusmods.com/index.php?/topic/318922-morrowind-rebirth-beta/?p=36530310
+[Order]
+Juniper's Twin Lamps (1.1 Tribunal).esp
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+
+;;"The Merchant Fendus (needs to be loaded before Rebirth)"
+;;Ref: http://www.nexusmods.com/morrowind/articles/37/?
+[Order]
+The Merchant Fendus.ESP
+Morrowind Rebirth <VER>.ESP
+DN-GDRv<VER>-Rebirth.esp
+
+;;"Load LGBM after STOTSP."
+;;Ref: http://forums.bethsoft.com/topic/1616178-less-generic-bld-compatble-with-tomb-ofthesnowprince/?p=25313272
+[Order]
+Solstheim TotSP [Rebirth].esp
+Less_Generic_Bloodmoon.esp
+
+;;Dragon32 - See also Solstheim: Tomb of the Snow Prince
+
+;;deprecated rules
+
+;;version check
+;;Dragon32 - dropping this, not downloading ~300MB from Nexus unless I have to
+;;[Note]
+;; ! There is a new version of Trancemaster_1988's "Morrowind Rebirth" available, you should upgrade!
+;; ! http://www.nexusmods.com/morrowind/mods/37795
+;;Morrowind Rebirth 1.5.esp
+;;Morrowind Rebirth 1.6.esp
+;;Morrowind Rebirth 1.7.esp
+;;Morrowind Rebirth 1.8.esp
+;;Morrowind Rebirth 1.9.esp
+;;Morrowind Rebirth 2.0.esp
+;;Morrowind Rebirth 2.1.esp
+;;Morrowind Rebirth 2.11.ESP
+;;Morrowind Rebirth 2.2.esp
+;;Morrowind Rebirth 2.3.esp
+;;Morrowind Rebirth 2.4.ESP
+;;Morrowind Rebirth 2.5.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
