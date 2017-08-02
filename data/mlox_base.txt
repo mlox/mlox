@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2017-07-23 22:35:35 (UTC)]
+[Version 2017-08-01 21:56:57 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -1453,6 +1453,23 @@ Clean Ald-Ruhn Temple Expansion <VER>.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Ald-Ruhn Temple Expansion MRM Patch [Atrayonis]
+
+[Patch]
+ Atrayonis has released "a small patch which allows Ald-Ruhn Temple Expansion and Mountaneous Red Mountain (Non-Pointy) to coextist peacefully."
+ Whilst designed for the Non-Pointy version of PirateLord's "Mountainous Red Mountain" it should work with the original too.
+ (Ref: http://www.nexusmods.com/morrowind/mods/44688/ )
+Ald-Ruhn Temple Expansion MRM patch.esp
+[ALL MRM.esm
+     Clean Ald-Ruhn Temple Expansion <VER>.ESP]
+
+;;Dragon32: TESPCD check shows LAND and PGRD conflicts
+[Order]
+Clean Ald-Ruhn Temple Expansion <VER>.ESP
+Ald-Ruhn Temple Expansion MRM patch.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ald Vendras 3.1 [Centurion]
 
 [Note]
@@ -1593,13 +1610,13 @@ Great House Dagoth.esp
 Ald-Vendras_V31.esp
 Ald-Vendras_V31-LoKKen.esp
 Ald-Vendras_V31-LoKKen-SC.esp
-DN-GDRv1.1.esp
-
-[Order]
-Ald-Vendras_V31.esp
-Ald-Vendras_V31-LoKKen.esp
-Ald-Vendras_V31-LoKKen-SC.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>.esp
+DN-GDRv<VER>_NOM.esp
+DN-GDRv<VER>-Rebirth.esp
+DN-GDRv<VER>.MRM.esp
+DN-GDRv<VER>.MRMnp.esp
+DN-GDRv1 (BTB Edit).esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2184,6 +2201,16 @@ Better Bodies.esp
  !! This plugin contains evil GMSTs. It is recommended that you clean it with TESTool.
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 6715 nikomerchant.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Amulet of Scrye 1.15 [Ivza]
+
+[Conflict]
+ "The Amulet of Scrye has conflicts with Mountainous Red Mountain in cells (2, 7), and (3, 5).  There are a couple of NPCs and activators that are buried underground."
+ (Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24217352 )
+Amulet of Scrye.esp
+MRM.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3011,6 +3038,11 @@ Area Effect Projectiles (PAR Edit).esp
 Particle Arrow Replacer.esp
 BTB - Equipment.esp
 
+;;"Load [Area Effect Projectiles (PAR Edit).esp] after BTB - Equipment"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+[Order]
+BTB - Equipment.esp
+Area Effect Projectiles (PAR Edit).esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Argonian Water Breathing [Tzing]
@@ -3789,37 +3821,122 @@ AshVampiresReplacer_GHD+TTU.ESP
 ;;"Ash Vampires Replacer should be loaded after DNGDR."
 ;;Ref: http://forums.nexusmods.com/index.php?/topic/1195204-ashvampiresreplacer/?p=25910199
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 AshVampiresReplacer.ESP
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 AshVampiresReplacer.ESP
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 AshVampiresReplacer_GHD+TTU.ESP
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 AshVampiresReplacer_GHD+TTU.ESP
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 AshVampiresReplacer_GHD.ESP
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 AshVampiresReplacer_GHD.ESP
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 AshVampiresReplacer_TTU.ESP
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 AshVampiresReplacer_TTU.ESP
 
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+AshVampiresReplacer_TTU.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+AshVampiresReplacer_TTU.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+AshVampiresReplacer_TTU.ESP
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+AshVampiresReplacer_TTU.ESP
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+AshVampiresReplacer.ESP
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+AshVampiresReplacer_GHD+TTU.ESP
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+AshVampiresReplacer_GHD.ESP
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+AshVampiresReplacer_TTU.ESP
+
+;;Dragon32: This Order rule add by (I think) Translator5. No explanation given.
+;;Dragon32: Checked Neo's Unique Creatures against all Ash Vampires Replacer plugins. No conflicts. Removed Order rule.
+;;[Order]
+;;Neo's Unique Creatures.esp
+;;AshVampiresReplacer.ESP
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ashinarba [Alex Strada]
@@ -4328,7 +4445,9 @@ Assassins Armory - Unofficial Patch 7.7.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @At Home Alchemy 1.0 [Syclonix]
 
+;;expdep
 [Requires]
+ This plugin uses the Tribunal functions explodespell and getpcsneaking, so it requires one of the expansions.
  (Ref: "Readme - At Home Alchemy.txt")
 Syc_AtHomeAlchemy.esp
 [ANY Tribunal.esm
@@ -5097,11 +5216,32 @@ Great House Dagoth.esp
 
 [Order]
 BS_1.0.1.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 BS_1.0.1.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+BS_1.0.1.esp
+DN-GDRv1_NOM (BTB Edit).esp
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6367,6 +6507,23 @@ Khajiit Night Eye Toggle.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Beauty Pack 1.2 [Gorg et al]
+
+[Order]
+Morrowind Patch *.esm
+Beauty_Pack.esm
+
+[Order]
+Morrowind Rebirth <VER> - Morrowind Patch *.esm
+Beauty_Pack.esm
+
+[Conflict]
+ "[Beauty_Pack (for modders use).esp] is the esp version of the ESM for modders use only. It can be deleted if you are not a modder."
+ (Ref: "BPreadme.txt")
+Beauty_Pack (for modders use).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @The Bedroll Shop 2 [Princess Stomper and RedwoodTreeSprite]
 
 [Note]
@@ -6478,6 +6635,25 @@ Beryl's_Head_Replacer_v1.0.esm
 [ANY Slof's Better Beasts a.esp
      Slof's Better Beasts b.esp
      Slof's Civilised Beasts.esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Better Almalexia 1.1 [Plangkye]
+
+[Conflict]
+ You should use the version of Plangkye's "Better Almalexia" modified by BTB to be compatible with his "BTB - Equipment" plugin.
+ Download "morrowind_almalexia.zip" from BTB's site - http://btb2.free.fr/morrowind.html
+ (Ref: "Readme - Almalexia Armor (BTB Edit).txt")
+BTB - Equipment.esp
+almalexia armor.esp
+
+[Conflict]
+ Only use one plugin:
+  Almalexia Armor (BTB Edit).esp - If you use "BTB - Equipment"
+  almalexia armor.esp - If you do not
+ (Ref: "Readme - Almalexia Armor (BTB Edit).txt")
+almalexia armor.esp
+Almalexia Armor (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7231,7 +7407,7 @@ BMS_UPDATE_from_1.9_to_1.9.1.esp
 
 
 [Conflict]
- "BetterMusicSystem_1.9.1.esp and its alt. esp have Timers Patch + GhostGate Fix included."
+ "BetterMusicSystem_1.9.1.esp and its alt. esp have Timers' Patch + GhostGate Fix included."
  (Ref: "BMS_readme.txt")
 [ANY BetterMusicSystem_1.9.1.esp
      BetterMusicSystem_1.9.1_alt.esp]
@@ -7248,7 +7424,7 @@ BMS_UPDATE_from_1.9_to_1.9.1.esp
      BMS_Ghostgate.ESP]
 
 [Note]
- "BMS_UPDATE_from1.7(.x)to1.9.esp and its alt. esp [do not include] the Timers Patch (it would overwrite all playlist scripts). You need to have your own Timers Patch plugin with customized playlists."
+ "BMS_UPDATE_from1.7(.x)to1.9.esp and its alt. esp [do not include] the Timers' Patch (it would overwrite all playlist scripts). You need to have your own Timer's Patch plugin with customized playlists."
  (Ref: "BMS_readme.txt")
 [ALL [ANY BMS_UPDATE_from1.7(.x)to1.9.esp
           BMS_UPDATE_from1.7(.x)to1.9_alt.esp]
@@ -7332,8 +7508,13 @@ Better Music System (BTB Edit).esp
           OfficialMods_v5.esp
           Official_2002_Mods.esp
           super_adventurers302.esp]
-     [ANY DN-GDRv1.1.esp
-          DN-GDRv1.1_NOM.esp]
+     [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>_NOM.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM (BTB Edit).esp]
      The Neverhalls.esp
      sm_ForgottenHalls.esp
      [ANY MW_Adv_Required.esp
@@ -7650,11 +7831,31 @@ Great House Dagoth.esp
 
 [Order]
 We sell houses 0.5.1.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 We sell houses 0.5.1.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+We sell houses 0.5.1.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9612,6 +9813,185 @@ IceBradyHurdyRobeReplacerPLUS (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @BTBs Game Improvements - MGSO Compatibility [Tooplex]
+
+;;Dragon32 - with some of these Order rules *may* need to add a DESC check to Tooplex's modified plugins.
+
+;;BTB - Equipment
+
+[Conflict]
+ Tooplex has created a version of the "BTB - Equipment" plugin from "BTB's Game Improvements" which merges versions of all of these plugins.
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC !/*Edited by Tooplex for MGSO Compatibility*/ BTB - Equipment.esp]
+[ALL [ANY [SIZE 34529 UniqueFinery.esp]
+          UFR_v3dot2.esp]
+     Better Weapons and Armor.esp
+     Female Armor - Complete.esp
+     UF_HortRobeF001.esp]
+
+[Conflict]
+ Tooplex's version of the "BTB - Equipment" plugin from "BTB's Game Improvements" merges versions of all of these plugins.
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Equipment.esp]
+[ANY [SIZE 34529 UniqueFinery.esp]
+     UFR_v3dot2.esp
+     Better Weapons and Armor.esp
+     Female Armor - Complete.esp
+     UF_HortRobeF001.esp]
+
+;;Dragon32: There's this Left Glove Add-on version which includes "LeftGloves_Addon_V2.esp" but the two Tooplex plugins don't have different Descriptions.
+
+[Conflict]
+ Tooplex has created a version of the "BTB - Equipment" plugin from "BTB's Game Improvements" which merges "Left Gloves Addon" by Alaisiagae.
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC !/*Edited by Tooplex for MGSO Compatibility*/ BTB - Equipment.esp]
+LeftGloves_Addon_v2.esp
+
+[Conflict]
+ Tooplex's version of the "BTB - Equipment" plugin from "BTB's Game Improvements" merges "Left Gloves Addon" by Alaisiagae.
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[ALL [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Equipment.esp]
+     [SIZE 352688 BTB - Equipment.esp]]
+LeftGloves_Addon_v2.esp
+
+;;"Spirit's MGSO Daedric Armor Fixes Load after BTB - Equipment"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+;;Dragon32: As Spirithawke's mod (q.v.) is a fix for MGSO then people using MGSO and BTB should have been directed to this mod so adding this as an Order rule
+[Order]
+BTB - Equipment.esp
+Spirit's MGSO Daedric Armor Fixes.esp
+
+;;Unique Finery order rules
+[Order]
+Better Robes.ESP
+BTB - Equipment.esp
+
+;Left Gloves Addon order rules
+;;Dragon32: Not added here as this will break BTB's mod I think.
+;;[Order]
+;;BTB - Equipment.esp
+;;Better Morrowind Armor.esp
+
+;;"Unique Jewelry And Accessories UJA No Ench Version Load Before BTB - Equipment"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+;;See also Order rules for Unique Finery in the rules for Unique Jewelry and Accessories by Tealpanda, they match this. Which is nice.
+[Order]
+Unique Jewelry and Accessories.esp
+Unique Jewelry and Accessories_no ench.esp
+BTB - Equipment.esp
+
+;;Optional MGSO Addons
+[Conflict]
+ You should use the version of "Better Clothes Complete (BTB Edit).esp" included by Tooplex in their "BTBs Game Improvements - MGSO Compatibility".
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Equipment.esp]
+[DESC !/*Edited by Tooplex for MGSO Compatibility*/ Better Clothes Complete (BTB Edit).esp]
+
+;;"Load [Better Clothes Complete (BTB Edit).esp] after BTB - Equipment"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+[Order]
+BTB - Equipment.esp
+Better Clothes Complete (BTB Edit).esp
+
+;;BTB - Settings
+
+[Conflict]
+ Tooplex has created an edited version of "Sir Luthor's Tools" compatible with the "BTB - Settings" plugin from "BTB's Game Improvements"
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC !/*Edited by Tooplex for MGSO Compatibility*/ SirLuthor-Tools.esp]
+[ANY BTB - Settings.esp
+     BTB - Settings (Alternate).esp]
+
+;;"Make sure SirLuthor-Tools.esp loads AFTER BTB - Settings.esp"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+[Order]
+BTB - Settings.esp
+SirLuthor-Tools.esp
+
+[Order]
+BTB - Settings (Alternate).esp
+SirLuthor-Tools.esp
+
+;;BTB - Spells
+
+[Conflict]
+ Tooplex has created a version of the "BTB - Spells" plugin from "BTB's Game Improvements" which merges Asiron's "Excellent Magic Sounds".
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC !/*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+ExcellentMagicSounds.esp
+
+[Conflict]
+ Tooplex's version of the "BTB - Spells" plugin from "BTB's Game Improvements" merges Asiron's "Excellent Magic Sounds".
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+ExcellentMagicSounds.esp
+
+[Conflict]
+ Tooplex's version of the "BTB - Spells" plugin from "BTB's Game Improvements" merges Asiron's "Excellent Magic Sounds", as does imanoobsowhat27's "BTB Spells - Excellent Magic Sounds Patch (MGSO) 12.2". Check which plugin matches the version of "BTB's Game Improvements" you are using.
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+BTB Spells - EMS MGSO Patch.esp
+[DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+
+;;BTB - Alchemy Syc AtHomeAlchemy
+
+[Conflict]
+ Tooplex has created an edited version of Syclonix's "At Home Alchemy" compatible with the "BTB - Alchemy" plugin from "BTB's Game Improvements"
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC !/*Edited by Tooplex*/ Syc_AtHomeAlchemy.esp]
+BTB - Alchemy.esp
+
+;;"Make sure [modified version of At Home Alchemy] loads AFTER BTB - Alchemy"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+[Order]
+BTB - Alchemy.esp
+Syc_AtHomeAlchemy.esp
+
+;;BTB - Alchemy AOF Potions Recolored
+
+[Conflict]
+ Tooplex has created a version of the "BTB - Alchemy" plugin from "BTB's Game Improvements" which merges Bycote's "AOF Potions Recolored".
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC !/**Edited by Tooplex**/ BTB - Alchemy.esp]
+AOF Potions Recolored T+B.esp
+
+[Conflict]
+ Tooplex's version of the "BTB - Alchemy" plugin from "BTB's Game Improvements" merges Bycote's "AOF Potions Recolored".
+ Download "BTBs Game Improvements - MGSO Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43522/
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC /**Edited by Tooplex**/ BTB - Alchemy.esp]
+AOF Potions Recolored T+B.esp
+
+[Note]
+ Tooplex's version of the "BTB - Alchemy" plugin needs the textures from Bycote's original "AOF Potions Recolored" installed.
+ (Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt")
+[DESC /**Edited by Tooplex**/ BTB - Alchemy.esp]
+
+;;Dragon32: If someone's using another version of AOF's mod (and hopefully a TESTool Merged Objects plugin)
+[Order]
+AOF Potions Recolored.esp
+BTB - Alchemy.esp
+
+[Order]
+AOF Potions Recolored Bloodmoon.esp
+BTB - Alchemy.esp
+
+[Order]
+AOF Potions Recolored Tribunal.esp
+BTB - Alchemy.esp
+
+;;"Do not use ["Potion/Scroll Icons and Potion Sort" by rmrfstar] if you use both BTB - Alchemy and BTB - Equipment, The conflictions are way too great"
+;;Ref: "BTBGI - MGSO Compatability V1.5-43522-1-5.rar\Readme.txt"
+;;See rules for Potion/Scroll Icons and Potion Sort by rmrfstar
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @BTB's Sorted New Alchemy Potions [Revan]
 
 [Conflict]
@@ -9954,8 +10334,8 @@ Carnithus Armamentarium Add-On I.esp
 
 ;;addon 2
 [Conflict]
- "[If you will use] a saved game that you have loaded Carnithus Armamentarium and the Add-On, and have already visited the Armamentarium in. [...] ONLY use the New Carnithus Armamentarium esp. file. Be sure that Carnithus Armamentarium and the Add-On are NOT selected."
- (Ref: "New  Carnithus Armamentarium readme.txt")
+ "[If you will use] a saved game that you have loaded Carnithus' Armamentarium and the Add-On, and have already visited the Armamentarium in. [...] ONLY use the New Carnithus' Armamentarium esp. file. Be sure that Carnithus' Armamentarium and the Add-On are NOT selected."
+ (Ref: "New  Carnithus' Armamentarium readme.txt")
 New_Carnithus'_Armamentarium.esp
 [ANY Carnithus Armamentarium.esp
      Carnithus Armamentarium Tribunal.esp
@@ -9965,7 +10345,7 @@ New_Carnithus'_Armamentarium.esp
  Use only one plugin:
   NG_New_Carnithus'_Armamentarium.esp - If you have never used Carnithus' Armamentarium before.
   New_Carnithus'_Armamentarium.esp - If you have, but ensure you read "New  Carnithus' Armamentarium readme.txt" for details on upgrading.
- (Ref: "New  Carnithus Armamentarium readme.txt")
+ (Ref: "New  Carnithus' Armamentarium readme.txt")
 NG_New_Carnithus'_Armamentarium.esp
 New_Carnithus'_Armamentarium.esp
 
@@ -12019,15 +12399,19 @@ DandrasFix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @DNGDR - Darknut's Greater Dwemer Ruins 1.1 [Darknut]
+;; @DNGDR - Darknut's Greater Dwemer Ruins 1.2 [Darknut]
 
 [Note]
- ! Darknut has released a new version of "Darknut's Greater Dwemer Ruins", 1.1
+ ! Darknut has released a new version of "Darknut's Greater Dwemer Ruins", 1.2
  ! Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43544/
 DN-GDRv1_NOM.esp
 DN-GDRv1_NOM (BTB Edit).esp
 DN-GDRv1.esp
 DN-GDRv1 (BTB Edit).esp
+DN-GDRv1.1.esp
+DN-GDRv1.1_NOM.esp
+
+;;GDR Master file
 
 [Order]
 Morrowind Patch *.esm
@@ -12040,98 +12424,210 @@ GDR_MasterFile.esm
 [Order]
 Bloodmoon.esm
 GDR_MasterFile.esm
-Creatures.esp
-Creatures (lore).esp
-Creatures (Semi).esp
-DN-GDRv1.1.esp
-DN-GDRv1.1_NOM.esp
 
 [Requires]
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
 GDR_MasterFile.esm
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;;DNGDR
+
+;;Dragon32: The NoM compatible version was dropped from 1.2. Still including the wild card in the rules here. NoM plugin-specific ones moved to end.
+
+[Conflict]
+ Only use one version of "Darknut's Greater Dwemer Ruins"
+  DN-GDRv1.2.esp - The standard version.
+  DN-GDRv1.1_NOM.esp - "Necessities of Morrowind"-compatible version
+  DN-GDRv1.2-Rebirth.esp - "Morrowind Rebirth"-compatible version
+  DN-GDRv1.2.MRM.esp - "Mountainous Red Mountain"-compatible version
+  DN-GDRv1.2.MRMnp.esp - "Non-pointy Mountainous Red Mountain"-compatible version
+  DN-GDRv1 (BTB Edit).esp - BTB's edit of version 1.0 of "Darknut's Greater Dwemer Ruins"
+  DN-GDRv1_NOM (BTB Edit).esp - BTB's edit of the NoM-compatible version 1.0 of "Darknut's Greater Dwemer Ruins"
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+DN-GDRv<VER>.esp
+DN-GDRv<VER>_NOM.esp
+DN-GDRv<VER>-Rebirth.esp
+DN-GDRv<VER>.MRM.esp
+DN-GDRv<VER>.MRMnp.esp
+DN-GDRv1 (BTB Edit).esp
+DN-GDRv1_NOM (BTB Edit).esp
+
 [Requires]
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
+ "Requirements: Tribunal and Bloodmoon are required [and] check "GDR_MasterFile.esm" in the Data Files [menu]."
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
 [ALL Bloodmoon.esm
      Tribunal.esm
      GDR_MasterFile.esm]
 
 [Conflict]
- "Only use one or the other ESP's not both"
-  DN-GDRv1.1_NOM.esp - if you use "Necessities of Morrowind"
-  DN-GDRv1.1.esp - If you do not.
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm"
-DN-GDRv1.1.esp
-DN-GDRv1.1_NOM.esp
+ Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+Clean Ghostgate.esp
 
-;;[Conflict]
-;; "If you use NOM (Necessities of Morrowind), then use "DN-GDRv1_NOM (BTB Edit).esp", otherwise, use "DN-GDRv1 (BTB Edit).esp"."
-;; (Ref: "Readme - BTB Edit.txt")
-;;DN-GDRv1 (BTB Edit).esp
-;;DN-GDRv1_NOM (BTB Edit).esp
+[Conflict]
+ Darknut's "Greater Dwemer Ruins" is not compatible with Sabregirls' "Tougher Sixth House"
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+SG-toughersixth.esp
 
+;Dragon32: From DN's original readme, but see MoonAndStar's "Great House Dagoth/Darknut's Greater Dwemer Ruins Compatibility Patch"
 ;;[Conflict]
-;; "Use one of these [...] in lieu of the original plugin(s)"
-;; (Ref: "Readme - BTB Edit.txt")
-;;[ANY DN-GDRv1.esp
-;;     DN-GDRv1_NOM.esp]
-;;[ANY DN-GDRv1 (BTB Edit).esp
-;;     DN-GDRv1_NOM (BTB Edit).esp]
+;; Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
+;; (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+;;[ANY DN-GDRv<VER>.esp
+;;     DN-GDRv<VER>_NOM.esp
+;;     DN-GDRv<VER>-Rebirth.esp
+;;     DN-GDRv<VER>.MRM.esp
+;;     DN-GDRv<VER>.MRMnp.esp]
+;;Great House Dagoth.esp
+
+[Conflict]
+ Darknut's "Greater Dwemer Ruins" includes "Dagoth Ur Voice Addon v1.0"
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+Dagoth Ur Voice Addon v1.0.esp
+
+[Conflict]
+ Darknut's "Greater Dwemer Ruins" includes "Darknut's Unique Ash Vampires"
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+DN_AshVampires.esp
+
+[Note]
+ !! If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
+[ALL [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>_NOM.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM (BTB Edit).esp]
+     Merged_Objects.esp]
+
+[Order]
+Creatures.esp
+Creatures (lore).esp
+Creatures (Semi).esp
+DN-GDRv<VER>.esp
+DN-GDRv<VER>_NOM.esp
+DN-GDRv<VER>-Rebirth.esp
+DN-GDRv<VER>.MRM.esp
+DN-GDRv<VER>.MRMnp.esp
+DN-GDRv1 (BTB Edit).esp
+DN-GDRv1_NOM (BTB Edit).esp
+
+;;Morrowind Rebirth-compatible version
+
+[Conflict]
+ Darknut has released a version combining his own "Darknut's Greater Dwemer Ruins" and Trancemaster_1988's "Morrowind Rebirth".
+ You should use the combined plugin instead.
+ Download "DNGDR1.2-Rebirth4.13" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43544
+ (Ref: "DNGDR1.2-Rebirth4.13-43544-v1-24-13.7z\DNGDR_12_Rebirth_413\readme.txt")
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+Morrowind Rebirth 4.13.ESP
+
+[Conflict]
+ You are running Darknut's combined version of "Darknut's Greater Dwemer Ruins" and Trancemaster_1988's "Morrowind Rebirth", as well as the two constituent mods.
+ (Ref: "DNGDR1.2-Rebirth4.13-43544-v1-24-13.7z\DNGDR_12_Rebirth_413\readme.txt")
+DN-GDRv<VER>-Rebirth.esp
+[ALL [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>_NOM.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM (BTB Edit).esp]
+     Morrowind Rebirth <VER>.ESP]
+
+;;Mountainous Red Mountain-compatible versions
+
+[Conflict]
+ Darknut has released a version of "Darknut's Greater Dwemer Ruins" compatible with "Mountainous Red Mountain" by Piratelord.
+ Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43544
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
+MRM.esm
+
+;;Dragon32: Note there's no way of working out if someone's using the non-pointy version of MRM or not
+[Requires]
+ You are running a version of "Darknut's Greater Dwemer Ruins" designed to be used with "Mountainous Red Mountain" by Piratelord.
+ (Ref: "DNGDR1.2MRM-43544-1-2.7z\readme.txt" and "DNGDRv1.2.MRMnp-43544-1-2.7z\readme.txt")
+[ANY DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp]
+MRM.esm
+
+;;NoM-compatible version (1.0 and 1.1 only)
 
 ;;"While it hasn't been updated for NOM 3 per se, in my experience it's still worked with NOM 3."
 ;;Ref: http://forums.nexusmods.com/index.php?/topic/2703824-darknut-greater-dwemer-ruin-version-11/?p=23745854
 [Patch]
  If you use NOM (Necessities of Morrowind), then use DN-GDRv1.1_NOM.esp
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-DN-GDRv1.1_NOM.esp
+ (Ref: "DN-GDRv1.2-43544-1-2.7z\DN-GDRv1.2\readme\readme.htm")
+[ANY DN-GDRv1.1_NOM.esp
+     DN-GDRv1_NOM (BTB Edit).esp]
 [ALL GDR_MasterFile.esm
      [ANY NOM 2.13.esp
           NoM 3.0.esp]]
 
-[Conflict]
- Darknut's "Greater Dwemer Ruins" is not compatible with Princess Stomper's "Ghostgate"
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
-Clean Ghostgate.esp
+;;BTB's versions of DNGDR v1
 
 [Conflict]
- Darknut's "Greater Dwemer Ruins" is not compatible with Sabregirls' "Tougher Sixth House"
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
-SG-toughersixth.esp
+ "If you use NOM (Necessities of Morrowind), then use "DN-GDRv1_NOM (BTB Edit).esp", otherwise, use "DN-GDRv1 (BTB Edit).esp"."
+ (Ref: "Readme - BTB Edit.txt")
+DN-GDRv1 (BTB Edit).esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 [Conflict]
- Darknut's "Greater Dwemer Ruins" is not compatible with TheMadGod's "Great House Dagoth"
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
-Great House Dagoth.esp
-
-[Conflict]
- Darknut's "Greater Dwemer Ruins" includes "Dagoth Ur Voice Addon v1.0"
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
-Dagoth Ur Voice Addon v1.0.esp
-
-[Conflict]
- Darknut's "Greater Dwemer Ruins" includes "Darknut's Unique Ash Vampires"
- (Ref: "DN-GDRv1.1.zip-43544-1-1.zip/readme/readme.htm")
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
-DN_AshVampires.esp
-
-[Note]
- !! If you use TESTOOL's "Merged_Objects.esp", it is recommended to omit this plugin from the merge.
-[ALL [ANY DN-GDRv1.1.esp
-          DN-GDRv1.1_NOM.esp]
-     Merged_Objects.esp]
+ "Use one of these [...] in lieu of the original plugin(s)"
+ (Ref: "Readme - BTB Edit.txt")
+[ANY DN-GDRv1.esp
+     DN-GDRv1_NOM.esp]
+[ANY DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12349,7 +12845,8 @@ db_attack_fixed.esp
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_DarkBrotherhood_Mods.htm )
 transportMH.esp
 [ALL db_attack_fixed.esp
-     KS_Julan_Ashlander Companion_<VER>.esp]
+     [ANY KS_Julan_Ashlander Companion_<VER>.esp
+          Julan Ashlander Companion <VER> [Rebirth].esp]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12531,6 +13028,18 @@ Dark Uvirith Exterior BuUG 1.0.esp
 [Order]
 Building Up Uvirith's Legacy1.1.ESP
 Dark Uvirith Exterior BuUG 1.0.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Darknut's Greater Dwemer Ruins and Morrowind Rebirth Compatibility Patch 0.2 [MurderousPurpose]
+
+[Note]
+ !! Darknut has released a version combining his own "Darknut's Greater Dwemer Ruins" and Trancemaster_1988's "Morrowind Rebirth".
+ !! You should use Darknut's combined plugin instead.
+ !! Download Darknut's version from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43544
+ !! (Ref: "DNGDR1.2-Rebirth4.13-43544-v1-24-13.7z\DNGDR_12_Rebirth_413\readme.txt")
+[ANY DN-GDRv1.1 Rebirth Patch.esp
+     GDR_MasterFile Rebirth Patch.esm]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12731,15 +13240,23 @@ Bloodmoon.esm
 ;; Ref: http://forums.bethsoft.com/index.php?/topic/1194471-relz-deadly-dagoths/page__view__findpost__p__17751272
 [Order]
 Deadly Dagoths.esp
-DN-GDRv1_NOM.esp
+DN-GDRv<VER>.esp
 
 [Order]
 Deadly Dagoths.esp
-DN-GDRv1_NOM (BTB Edit).esp
+DN-GDRv<VER>_NOM.esp
 
 [Order]
 Deadly Dagoths.esp
-DN-GDRv1.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+Deadly Dagoths.esp
+DN-GDRv<VER>.MRMnp.esp
 
 [Order]
 Deadly Dagoths.esp
@@ -12747,11 +13264,7 @@ DN-GDRv1 (BTB Edit).esp
 
 [Order]
 Deadly Dagoths.esp
-DN-GDRv1.1.esp
-
-[Order]
-Deadly Dagoths.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13970,7 +14483,7 @@ DreamersAwakenedv1.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Dreamers Expansion 3.0 [Aoimevelho]
+;; @Dreamers Expansion 3.8 [Aoimevelho]
 
 [Conflict]
  Aoimevelho has incorporated Petiboy's "House Dagoth Bonemold armor" into "Dreamers Expansion", there is no need to run Petiboy's original mod with Aoimevelho's.
@@ -13983,19 +14496,40 @@ PB_Dagoth_Bonemold.esp
  (Ref: "DreamersExpansion - Readme.txt")
 DreamersExpansion+DNGDR_patch.ESP
 [ALL DreamersExpansion.ESP
-     [ANY DN-GDRv1.1.esp
-          DN-GDRv1.1_NOM.esp]]
+     [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>_NOM.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM (BTB Edit).esp]]
 
 [Order]
-DreamersExpansion.ESP
+DN-GDRv<VER>.esp
 DreamersExpansion+DNGDR_patch.ESP
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>_NOM.esp
 DreamersExpansion+DNGDR_patch.ESP
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>-Rebirth.esp
+DreamersExpansion+DNGDR_patch.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+DreamersExpansion+DNGDR_patch.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+DreamersExpansion+DNGDR_patch.ESP
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+DreamersExpansion+DNGDR_patch.ESP
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 DreamersExpansion+DNGDR_patch.ESP
 
 [Patch]
@@ -14020,23 +14554,44 @@ DreamersExpansion+GHD_patch.ESP
 DreamersExpansion+DNGDR+GHD_patch.ESP
 [ALL DreamersExpansion.ESP
      Great House Dagoth.esp
-     [ANY DN-GDRv1.1.esp
-          DN-GDRv1.1_NOM.esp]]
+     [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>_NOM.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM (BTB Edit).esp]]
 
 [Order]
 DreamersExpansion.ESP
 DreamersExpansion+DNGDR+GHD_patch.ESP
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 DreamersExpansion+DNGDR+GHD_patch.ESP
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 DreamersExpansion+DNGDR+GHD_patch.ESP
 
 [Order]
-Great House Dagoth.esp
+DN-GDRv<VER>-Rebirth.esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+DreamersExpansion+DNGDR+GHD_patch.ESP
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 DreamersExpansion+DNGDR+GHD_patch.ESP
 
 
@@ -14316,11 +14871,31 @@ Bloodmoon.esm
 
 ;;Dragon32 - Needs to load after Darknut's GDR, modifies some of its LIGH records. Also Tamriel Rebuilt, but that's an ESM
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 Dwemer blinking lights.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+Dwemer blinking lights.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Dwemer blinking lights.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Dwemer blinking lights.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+Dwemer blinking lights.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+Dwemer blinking lights.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 Dwemer blinking lights.esp
 
 ;;Dragon32: Running TESPCD against the lighting mods I have shows conflicts with these mods, therefore these are ones which will be affected by the batch script and be re-named
@@ -14360,21 +14935,61 @@ Dwemer blinking lights.esp
      True_Lights_And_Darkness_1.0-NoDaylight + DBL.esp
      True_Lights_And_Darkness_1.1 + DBL.esp]
 
-;;Dragon32: Added other lighting mods to [NearEnd], q.v.
+;;Dragon32: Added other lighting mods to [NearEnd], q.v., as they modify AMBI values in interior cells
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 LBS_Full v1.4(trib) + DBL.esp
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>-Rebirth.esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+LBS_Full v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv<VER>.esp
 LBS_Lite v1.4(trib) + DBL.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+LBS_Lite v1.4(trib) + DBL.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 LBS_Lite v1.4(trib) + DBL.esp
 
 
@@ -14893,7 +15508,9 @@ Elemental Magicka II - MWSE Addon.ESP
  (Ref: http://forums.bethsoft.com/topic/1330818-wiprel-elemental-magicka-ii/?p=22989328 )
 Elemental Magicka II - Excellent Magic Sounds Patch.esp
 [ALL Elemental Magicka II.ESP
-     ExcellentMagicSounds.esp]
+     [ANY ExcellentMagicSounds.esp
+          [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+          BTB Spells - EMS MGSO Patch.esp]]
 
 [Order]
 Elemental Magicka II.ESP
@@ -14955,11 +15572,31 @@ Great House Dagoth.esp
 
 [Order]
 Clean Elynda'sWinterWear.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 Clean Elynda'sWinterWear.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+Clean Elynda'sWinterWear.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16763,11 +17400,31 @@ Great House Dagoth.esp
 
 [Order]
 MWFoeburner Fix.ESP
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 MWFoeburner Fix.ESP
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+MWFoeburner Fix.ESP
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18885,27 +19542,87 @@ GOTYFullTidyZeroMPPv2.01.esm
 ;;GOTY Script Tidy changes EndGame script
 [Order]
 GOTYFullTidySomeMPPv2.01.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 GOTYMinImpactSomeMPPv2.01.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 GOTYSTMPPPatchv1.0.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 GOTYFullTidySomeMPPv2.01.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 
 [Order]
 GOTYMinImpactSomeMPPv2.01.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 
 [Order]
 GOTYSTMPPPatchv1.0.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+GOTYFullTidySomeMPPv2.01.esp
+DN-GDRv1_NOM (BTB Edit).esp
+
+[Order]
+GOTYMinImpactSomeMPPv2.01.esp
+DN-GDRv1_NOM (BTB Edit).esp
+
+[Order]
+GOTYSTMPPPatchv1.0.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 ;;GOTY Script Tidy changes scripts also altered by Great House Dagoth
 [Order]
@@ -19340,12 +20057,18 @@ True_Lights_And_Darkness_1.1 + DBL.esp
  "Graphic Herbalism TotSP" adds Graphic Herbalism functionality to the Tomb of the Snow Prince mod.
  Download it from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43829/
  (Ref: "README - Graphic Herbalism - TotSP Addon.txt")
+ Note that if you attempt to use this patch with the "Morrowind Rebirth"-compatible version of "Solstheim: Tomb of the Snow Prince" (Solstheim TotSP [Rebirth].esp) you will see errors about a missing Master file unless you alter the patch's dependencies with Wrye Mash, TES Dependency Toolkit or a similar program.
 Graphic Herbalism TotSP.esp
 [ALL Graphic Herbalism.esp
-     wl_SolstheimOverhaul_v1.esm]
+     [ANY wl_SolstheimOverhaul_v1.esm
+          Solstheim TotSP [Rebirth].esp]]
 
 [Order]
 Graphic Herbalism.esp
+Graphic Herbalism TotSP.esp
+
+[Order]
+Solstheim TotSP [Rebirth].esp
 Graphic Herbalism TotSP.esp
 
 
@@ -19574,6 +20297,7 @@ GHE PEC Patch.ESP
 
 [Patch]
  "[Skrawafunda's "Graphic Herbalism Pearls Enhanced Patch"] is a compatibility patch for Graphic Herbalism and Pearls Enhanced. It allows you to collect all the new pearls from collops witout having to "open" them. In other words, this patch updates herbalism scripts to include the precious additions from Pearls Enhanced."
+ This patch should not be loaded with any version of "Graphic Herbalism Extra", instead use "GHE PE Patch.ESP".
  (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
  Download "Graphic Herbalism Pearls Enhanced Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
 GH PE Patch.ESP
@@ -19595,10 +20319,13 @@ GH PE Patch.ESP
 
 [Patch]
  "[Skrawafunda's "Graphic Herbalism Pearls Enhanced Patch"] is a compatibility patch for Graphic Herbalism and Pearls Enhanced. It allows you to collect all the new pearls from collops witout having to "open" them. In other words, this patch updates herbalism scripts to include the precious additions from Pearls Enhanced."
+ This patch should not be loaded with any version of "Graphic Herbalism Extra", instead use "GHE PEC Patch.ESP".
  (Ref: "Graphic Herbalism Pearls Enhanced Patch Readme.txt")
  Download "Graphic Herbalism Pearls Enhanced Patch" by Skrawafunda from Morrowind Nexus: http://www.nexusmods.com/morrowind/mods/43236/
 GH PEC Patch.ESP
 [ALL [VER >1.2 Graphic Herbalism.esp]
+     [NOT [ANY [VER >1.2 Graphic Herbalism Extra.esp]
+               Graphic Herbalism Extra (Correct UV).esp]]
      Pearls Enhanced - Colored Pearls Add-on.esp]
 
 [Patch]
@@ -19802,14 +20529,21 @@ Great House Dagoth ( Master Index Compatibility ).esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Great House Dagoth/Darknut's Greater Dwemer Ruins Compatibility Patch [MoonAndStar]
 
+;;Dragon32: Originally created for DNGDR 1.0, not sure if it works for later versions. I've assumed it does and used <VER>. May need to be specific about version though.
+
 [Patch]
  MoonAndStar's "Great House Dagoth/Darknut's Greater Dwemer Ruins Compatibility Patch" allows The Mad God's "Great House Dagoth" and Darknut's "Greater Dwemer Ruins" to be played together.
  http://mw.modhistory.com/download--7195
  (Ref: "Readme GHD-DNGDR Patch.txt")
 [ANY DNGDR-GHD Patch.esp
      DNGDR-GHD Patch OV.esp]
-[ALL [ANY DN-GDRv1.1.esp
-          DN-GDRv1.1_NOM.esp]
+[ALL [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>_NOM.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp
+          DN-GDRv1_NOM (BTB Edit).esp]
      Great House Dagoth.esp]
 
 [Conflict]
@@ -19819,6 +20553,36 @@ Great House Dagoth ( Master Index Compatibility ).esp
  (Ref: "Readme GHD-DNGDR Patch.txt")
 DNGDR-GHD Patch.esp
 DNGDR-GHD Patch OV.esp
+
+;;DNGDR esp should be loaded after Great House Dagoth. Then the patch immediately after them.
+;;https://forums.nexusmods.com/index.php?/topic/5424845-dns-geater-dwemer-ruins-the-door-to-akulakhans-chamber/?p=48234487
+[Order]
+Great House Dagoth.esp
+DN-GDRv<VER>.esp
+
+[Order]
+Great House Dagoth.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+Great House Dagoth.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+Great House Dagoth.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+Great House Dagoth.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+Great House Dagoth.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+Great House Dagoth.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 ;;Dragon32: Load order assumed and checked in TESPCD
 [Order]
@@ -19830,57 +20594,81 @@ Great House Dagoth.esp
 DNGDR-GHD Patch OV.esp
 
 [Order]
-DN-GDRv1.esp
+DN-GDRv<VER>.esp
 DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv<VER>.esp
+DNGDR-GHD Patch OV.esp
 
 [Order]
 DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch.esp
-
-[Order]
-DN-GDRv1_NOM.esp
-DNGDR-GHD Patch.esp
-
-[Order]
-DN-GDRv1_NOM (BTB Edit).esp
-DNGDR-GHD Patch.esp
-
-[Order]
-DN-GDRv1.esp
-DNGDR-GHD Patch OV.esp
 
 [Order]
 DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch OV.esp
 
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv<VER>_NOM.esp
 DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+DNGDR-GHD Patch.esp
 
 [Order]
 DN-GDRv1_NOM (BTB Edit).esp
 DNGDR-GHD Patch OV.esp
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>-Rebirth.esp
 DNGDR-GHD Patch.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
-DNGDR-GHD Patch.esp
-
-[Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>-Rebirth.esp
 DNGDR-GHD Patch OV.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>.MRM.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+DNGDR-GHD Patch OV.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+DNGDR-GHD Patch.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
 DNGDR-GHD Patch OV.esp
 
 [Conflict]
- The "DNGDR-GHD Patch.esp" plugin refers to a "DNO_dreamer guard00" that does not exist in "DN-GDRv1_NOM.esp". To make the patch compatible, you may need to edit the patch in the CS to comment out this line of the calmcorprus script: "DNO_dreamer guard00->setfight 10".
+ The "DNGDR-GHD Patch.esp" plugin refers to a "DNO_dreamer guard00" that does not exist in the NoM-compatible version of "Darknut's Greater Dwemer Ruins". To make the patch compatible, you may need to edit the patch in the CS to comment out this line of the calmcorprus script: "DNO_dreamer guard00->setfight 10".
  (Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=981265&view=findpost&p=14193898 )
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 DNGDR-GHD Patch.esp
 
 
@@ -24947,29 +25735,35 @@ Journeys_End_Wilderness_Mod_addon_140.esp
  ! http://fallingawkwardly.com/mods/Julan.html
 [VER < 2.0 KS_Julan_Ashlander Companion_<VER>.esp]
 
+;;Dragon32: "Julan Ashlander Companion <VER> [Rebirth].esp" is from Morrowind Rebirth download, no idea how likely it is someone would try and run that with the mods we have rules for here. But...
+
 [Conflict]
  "[Julan, Ashlander Companion] relies on the Main Quest! Thus, it will of course be incompatible with any mod that alters the Main Quest in a significant manner, e.g. [...] Princess Stomper's Ghostgate"
  (Ref: "Julan_Ashlander_Companion_2.0_Readme.txt")
-KS_Julan_Ashlander Companion_<VER>.esp
+[ANY KS_Julan_Ashlander Companion_<VER>.esp
+     Julan Ashlander Companion <VER> [Rebirth].esp]
 [ANY Clean Ghostgate.esp
      Clean Ghostgate COM.esp] ; [Princess Stomper]
 
 [Conflict]
  "[Julan, Ashlander Companion] relies on the Main Quest! Thus, it will of course be incompatible with any mod that alters the Main Quest in a significant manner, e.g. [...] Blake's Nerevar Say Nerevar"
  (Ref: "Julan_Ashlander_Companion_2.0_Readme.txt")
-KS_Julan_Ashlander Companion_<VER>.esp
+[ANY KS_Julan_Ashlander Companion_<VER>.esp
+     Julan Ashlander Companion <VER> [Rebirth].esp]
 Clean Nerevar Say Nerevar Again_v1.01.esp
 
 [Conflict]
  "[Julan, Ashlander Companion] conflicts with: [...] Guarded Ghostgate"
  (Ref: "Julan_Ashlander_Companion_2.0_Readme.txt")
-KS_Julan_Ashlander Companion_<VER>.esp
+[ANY KS_Julan_Ashlander Companion_<VER>.esp
+     Julan Ashlander Companion <VER> [Rebirth].esp]
 Guarded GhostGate.esp
 
 [Conflict]
  "[Julan, Ashlander Companion] conflicts with: [...] Armingers[sic] at Ghostgate"
  (Ref: "Julan_Ashlander_Companion_2.0_Readme.txt")
-KS_Julan_Ashlander Companion_<VER>.esp
+[ANY KS_Julan_Ashlander Companion_<VER>.esp
+     Julan Ashlander Companion <VER> [Rebirth].esp]
 Armingers_at_Ghostgate.esp
 
 [Patch]
@@ -24977,12 +25771,17 @@ Armingers_at_Ghostgate.esp
  http://fallingawkwardly.com/files/KS_Julan_MRM_Patch_1.0.ESP
  (Ref: http://fallingawkwardly.com/mods/JulanFAQ.html )
 KS_Julan_MRM_Patch_1.0.ESP
-[ALL KS_Julan_Ashlander Companion_2.0.esp
+[ALL [ANY KS_Julan_Ashlander Companion_<VER>.esp
+          Julan Ashlander Companion <VER> [Rebirth].esp]
      MRM.esm]
 
 ;;Dragon32: checked with TESPCD
 [Order]
-KS_Julan_Ashlander Companion_2.0.esp
+KS_Julan_Ashlander Companion_<VER>.esp
+KS_Julan_MRM_Patch_1.0.ESP
+
+[Order]
+Julan Ashlander Companion <VER> [Rebirth].esp
 KS_Julan_MRM_Patch_1.0.ESP
 
 
@@ -24994,7 +25793,8 @@ KS_Julan_MRM_Patch_1.0.ESP
  http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=59&Itemid=50&-Julan-Real-Time-Transport-Patch
  (Ref: "ab01JulanRTTpatch.txt")
 ab01JulanRTTpatch.esp
-[ALL KS_Julan_Ashlander Companion_<VER>.esp
+[ALL [ANY KS_Julan_Ashlander Companion_<VER>.esp
+          Julan Ashlander Companion <VER> [Rebirth].esp]
      [ANY abotBoats.esp
           abotBoatsTR.esp
           abotGondoliers.esp
@@ -25007,6 +25807,10 @@ ab01JulanRTTpatch.esp
 ;;Ref: "ab01JulanRTTpatch.txt"
 [Order]
 KS_Julan_Ashlander Companion_<VER>.esp
+ab01JulanRTTpatch.esp
+
+[Order]
+Julan Ashlander Companion <VER> [Rebirth].esp
 ab01JulanRTTpatch.esp
 
 
@@ -25212,12 +26016,33 @@ Keening_Reforged_v2.0.ESP
  "Keening_Reforged_v2.0_GDR.ESP" is for players of Darknut's Greater Dwemer Ruins vol I
  (Ref: http://mw.modhistory.com/download-26-13962 )
 Keening_Reforged_v2.0_GDR.ESP
-[ANY DN-GDRv1.1.esp
-     DN-GDRv1.1_NOM.esp]
+[ANY DN-GDRv<VER>.esp
+     DN-GDRv<VER>_NOM.esp
+     DN-GDRv<VER>-Rebirth.esp
+     DN-GDRv<VER>.MRM.esp
+     DN-GDRv<VER>.MRMnp.esp
+     DN-GDRv1 (BTB Edit).esp
+     DN-GDRv1_NOM (BTB Edit).esp]
 
 ;;Dragon32: Checked in TESPCD, SCPT "MrTSLorkhanHeart"
 [Order]
-DN-GDRv1_NOM.esp
+DN-GDRv<VER>.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
+DN-GDRv<VER>_NOM.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Keening_Reforged_v2.0_GDR.ESP
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
 Keening_Reforged_v2.0_GDR.ESP
 
 [Order]
@@ -25225,19 +26050,7 @@ DN-GDRv1_NOM (BTB Edit).esp
 Keening_Reforged_v2.0_GDR.ESP
 
 [Order]
-DN-GDRv1.esp
-Keening_Reforged_v2.0_GDR.ESP
-
-[Order]
 DN-GDRv1 (BTB Edit).esp
-Keening_Reforged_v2.0_GDR.ESP
-
-[Order]
-DN-GDRv1.1.esp
-Keening_Reforged_v2.0_GDR.ESP
-
-[Order]
-DN-GDRv1.1_NOM.esp
 Keening_Reforged_v2.0_GDR.ESP
 
 
@@ -26201,10 +27014,6 @@ Clean LeftGloves_TBandBM.esp
  (Ref: readme_LeftGloves Addon.txt)
 LeftGloves_Addon_v2.esp
 LeftGloves.esp
-
-[Note]
- A new version of Left Gloves Addon is available (version 2), it includes new ground meshes for Bloodmoon and Tribunal. You should upgrade.
-Clean LeftGloves_TBandBM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27928,17 +28737,23 @@ Clean The Lost Artifacts of Morrowind.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Lost Artifacts of Tamriel DN_GDRv1 Patch [latendresse76]
 
+;;Dragon32: Originally created for DNGDR 1.0, not sure if it works for later versions. I've assumed it does and used <VER>. May need to be specific about version though.
+
 [Patch]
  Darknut's "Greater Dwemer Ruins" has a minor conflict with item "Life Blood" from "Lost Artifacts of Morrowind" in the cell "Dagoth Ur, Facility Cavern", which is resolved by latendresse76's patch "LAMW_GDRv1_Patch.esp".
  http://mw.modhistory.com/download-1-6470
  (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
 LAMW_GDRv1_Patch.esp
-[ALL DN-GDRv1.1.esp
+[ALL [ANY DN-GDRv<VER>.esp
+          DN-GDRv<VER>-Rebirth.esp
+          DN-GDRv<VER>.MRM.esp
+          DN-GDRv<VER>.MRMnp.esp
+          DN-GDRv1 (BTB Edit).esp]
      [ANY Clean The Lost Artifacts of Morrowind.esm
 	  Clean The Lost Artifacts of Morrowind.esp]]
 
 [Order]
-DN-GDRv1.esp
+DN-GDRv<VER>.esp
 LAMW_GDRv1_Patch.esp
 
 [Order]
@@ -27946,7 +28761,19 @@ DN-GDRv1 (BTB Edit).esp
 LAMW_GDRv1_Patch.esp
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>-Rebirth.esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+LAMW_GDRv1_Patch.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
 LAMW_GDRv1_Patch.esp
 
 [Patch]
@@ -27954,21 +28781,18 @@ LAMW_GDRv1_Patch.esp
  http://mw.modhistory.com/download-1-6470
  (Ref: "Lost Artifacts GDRv1 Patch Readme.txt")
 LAMW_GDRv1_NOM_Patch.esp
-[ALL DN-GDRv1.1_NOM.esp
+[ALL [ANY DN-GDRv<VER>_NOM.esp
+          DN-GDRv1_NOM (BTB Edit).esp]
      [ANY Clean The Lost Artifacts of Morrowind.esm
 	  Clean The Lost Artifacts of Morrowind.esp]]
 
 [Order]
-DN-GDRv1_NOM.esp
-LAMW_GDRv1_Patch.esp
+DN-GDRv<VER>_NOM.esp
+LAMW_GDRv1_NOM_Patch.esp
 
 [Order]
 DN-GDRv1_NOM (BTB Edit).esp
-LAMW_GDRv1_Patch.esp
-
-[Order]
-DN-GDRv1.1_NOM.esp
-LAMW_GDRv1_Patch.esp
+LAMW_GDRv1_NOM_Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28589,7 +29413,9 @@ Magic Diversity <VER>.ESP
  If you wish to have the sounds from Asiron's mod and the visuals from Arkann's mod in your game then load Arkann's alternate plugin "Magic Diversity NO  SOUND.ESP" instead and ensure you create a Merged Objects plugin using TESTool.
  Download "Vanilla sounds for Magic Diversity" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
 Magic Diversity <VER>.ESP
-ExcellentMagicSounds.esp
+[ANY ExcellentMagicSounds.esp
+     [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+     BTB Spells - EMS MGSO Patch.esp]
 
 ;;Dragon32: Ensure visuals win over sounds
 [Order]
@@ -28755,7 +29581,7 @@ Clean Magical Goods v1.0Lite.esp
 Clean Magical Goods v1.0NoRobeLite.esp
 
 [Requires]
- "[These plugins from "Magical Goods 1.0" by Star Boi require] that you have both of Hurdy Gurdy and crews robe mods, and Venymoras addition of amulets to change the race of the robe."
+ "[These plugins from "Magical Goods 1.0" by Star Boi require] that you have both of Hurdy Gurdy and crew's robe mods, and Venymora's addition of amulets to change the race of the robe."
  Hurdy Gurdy's Female Robes (Set 1) by Hurdy Gurdy and Lillia - http://mw.modhistory.com/download-35-11766
  Hurdy Gurdy's Female Robes (Set 2) by Hurdy Gurdy and Lillia - http://mw.modhistory.com/download-35-11767
  Companion & Mannequin Demo for Lillia & Hurdy Gurdy's Female Robe Collection by Venymora - http://mw.modhistory.com/download-4-11912
@@ -28842,7 +29668,9 @@ Sound Enhancements.esp
  Azrael's "Magicka Based Spell Advancement" is incompatible with "Excellent Magic Sounds" by Asiron, as "Magicka Based Spell Advancement" does not check for the new spellcasting sounds.
  (Ref: http://www.mwmythicmods.com/Gluby/Gluby_Magicka_and_Spell_Effect_Mods.htm#MagicSkillGainMods )
 MWE_MagickaSpells.esp
-ExcellentMagicSounds.esp
+[ANY ExcellentMagicSounds.esp
+     [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+     BTB Spells - EMS MGSO Patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29195,10 +30023,18 @@ Morrowind Rebirth <VER>.esp
 MRM.esm
 
 [Note]
- !! "MQE_BlightedBeasties.ESP" (and so the merged "MQE_MainQuestEnhancers.ESP") uses AddToLev*/RemoveFromLev* functions to modify Bethsoft leveled lists. Using either of these plugins will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one.
+ !! "MQE_BlightedBeasties.ESP" uses AddToLev*/RemoveFromLev* functions to modify Bethesda's leveled lists. Using either of these plugins will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one.
  !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
-[ANY MQE_BlightedBeasties.ESP
-     MQE_MainQuestEnhancers.ESP]
+ !! abot has released a version of "MQE_MainQuestEnhancers.ESP" which does not use these deprecated functions, and makes some other improvements and fixes.
+ !! Download "Main Quest Enhancers 1.03" from abot's website - http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=72&Itemid=50
+MQE_BlightedBeasties.ESP
+
+[Note]
+ !! "MQE_BlightedBeasties.ESP" (and so the merged "MQE_MainQuestEnhancers.ESP") uses AddToLev*/RemoveFromLev* functions to modify Bethesda's leveled lists. Using either of these plugins will store leveled lists in your savegame that will override lists in your merged leveled lists plugin (e.g. "Mashed Lists.esp"), if you have one.
+ !! http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists
+ !! abot has released a version of "MQE_MainQuestEnhancers.ESP" which does not use these deprecated functions, and makes some other improvements and fixes.
+ !! Download "Main Quest Enhancers 1.03" from abot's website - http://abitoftaste.altervista.org/morrowind/index.php?option=downloads&task=info&id=72&Itemid=50
+[DESC !/abot/ MQE_MainQuestEnhancers.ESP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29683,7 +30519,8 @@ mel_teleportPlugin_1_3_Patches.esp
  (Ref: mel_tpp_1_3_readme.html)
 mel_teleportPlugin_1_3_JulanAddon.esp
 [ALL mel_teleportPlugin_1_3_Patches.esp
-     KS_Julan_Ashlander Companion_<VER>.esp]
+     [ANY KS_Julan_Ashlander Companion_<VER>.esp
+          Julan Ashlander Companion <VER> [Rebirth].esp]]
 
 ; (Ref: mel_tpp_1_3_readme.html)
 [Order]
@@ -31886,11 +32723,31 @@ Great House Dagoth.esp
 
 [Order]
 Adventurers Guild.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 Adventurers Guild.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+Adventurers Guild.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 [Order]
 Adventurers Guild (MGE Fix).esp
@@ -31898,11 +32755,31 @@ Great House Dagoth.esp
 
 [Order]
 Adventurers Guild (MGE Fix).esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 Adventurers Guild (MGE Fix).esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+Adventurers Guild (MGE Fix).esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32118,7 +32995,7 @@ MugFix.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @MCA (Morrowind Comes Alive) 8.1 [Neoptolemus]
+;; @MCA (Morrowind Comes Alive) 8.2 [Neoptolemus]
 
 ;;Dragon32: MCA size and version information
 ;;[SIZE 2442550 Morrowind Comes Alive.esm] = MCA 4.1
@@ -32133,6 +33010,7 @@ MugFix.esp
 ;;[SIZE 2838068 MCA.ESM] = MCA 7.1
 ;;[SIZE 2213215 MCA.ESM] = MCA 8.0
 ;;[SIZE 2218142 MCA.ESM] = MCA 8.1
+;;[SIZE 2259374 MCA.ESM] = MCA 8.2
 
 ;;Dragon32: MCA Description tests. 5.0 and 5.1 same text; 5.2 basic and The Undead-compatible same text; both versions of 6.0 and 6.1 same text
 ;;[DESC /over 1000 friendly/ MCA.ESM] = MCA 5.0
@@ -32146,6 +33024,7 @@ MugFix.esp
 ;;[DESC /Adds 1100 types of NPCs to over 550/ MCA.ESM] or [DESC /v7.1/ MCA.ESM] = MCA 7.1
 ;;[DESC /Adds 1200 types of NPCs to over 550/ MCA.ESM] or [DESC /v8.0/ MCA.ESM] = MCA 8.0
 ;;[DESC /Adds 1200 types of NPCs to over 550/ MCA.ESM] or [DESC /v8.1/ MCA.ESM] = MCA 8.1
+;;[DESC /Adds 1200 types of NPCs to over 550/ MCA.ESM] or [DESC /v8.2/ MCA.ESM] = MCA 8.2
 
 ;;**********
 ;;v8.x rules
@@ -32162,10 +33041,22 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
 MCA.ESM
 
 [Note]
- ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 8.1, you should upgrade!
+ ! The latest version of Neoptolemus' "Morrowind Comes Alive" is 8.2, you should upgrade.
  ! http://morrowind.nexusmods.com/mods/6006
 [ANY [DESC !/Adds 1200 types of NPCs to over 550/ MCA.ESM]
-     [VER < 8.1 MCA.ESM]]
+     [VER < 8.2 MCA.ESM]]
+
+[Note]
+ !! If you are running more than one MCA clothing add-on then exclude all of the MCA clothing add-ons when creating your Merged Objects file with TESTool. Otherwise:
+ !! "The clothing add-ons don't work if you merge them - you get NPCs wearing mismatched clothing."
+ !! (Ref: http://forums.bethsoft.com/topic/1494048-relz-morrowind-comes-alive-v80/?p=23915533 )
+[ALL [ANY MCA - BadKarma Clothing Vendor Addon.esp
+          MCA - BB Peasant Gowns Addon.esp
+          MCA - COV Addon.esp
+          MCA - Hilgya the Seamstress Addon.esp
+          MCA - Illy's OMG Addon.esp
+          MCA - Westly's FCOT Addon.esp]
+     Merged_Objects.esp]
 
 ;; BB Peasant Gowns addon
 
@@ -32213,21 +33104,6 @@ MCA - COV Addon.esp
 ;; [ALL MCA - COV Addon.esp
 ;;      Merged_Objects.esp]
 
-[Note]
- !! If you are running more than one MCA clothing add-on then exclude all of the MCA clothing add-ons when creating your Merged Objects file with TESTool. Otherwise:
- !! "The clothing add-ons don't work if you merge them - you get NPCs wearing mismatched clothing."
- !! (Ref: http://forums.bethsoft.com/topic/1494048-relz-morrowind-comes-alive-v80/?p=23915533 )
-[ALL [ANY [ALL MCA - BB Peasant Gowns Addon.esp
-               MCA - COV Addon.esp]
-          [ALL MCA - BB Peasant Gowns Addon.esp
-               MCA - Westly's FCOT Addon.esp]
-          [ALL MCA - COV Addon.esp
-               MCA - Westly's FCOT Addon.esp]
-          [ALL MCA - COV Addon.esp
-               MCA - Westly's FCOT Addon.esp
-               MCA - BB Peasant Gowns Addon.esp]]
-     Merged_Objects.esp]
-
 [Order]
 BB_Clothiers_of_Vvardenfell_v1.1.esp
 MCA - COV Addon.esp
@@ -32271,6 +33147,33 @@ MCA - Illy's OMG Addon.esp
 [Order]
 Illy's Oh my Goddess.ESP
 MCA - Illy's OMG Addon.esp
+
+;;BadKarma's Clothing Vendor addon
+
+[Patch]
+ "[MCA - BadKarma Clothing Vendor Addon.esp] adds the clothing from BadKarma's 'BadKarma Clothing Vendor' to the MCA NPCs. Requires 'BadKarma Clothing Vendor' by BadKarma."
+ (Ref: "MCA - Readme.txt")
+MCA - BadKarma Clothing Vendor Addon.esp
+[ALL MCA.ESM
+     Clean BadKarma Clothing Vendor.esp]
+
+[Order]
+Clean BadKarma Clothing Vendor.esp
+MCA - BadKarma Clothing Vendor Addon.esp
+
+;;Hilgya the Seamstress addon
+
+[Patch]
+ "[MCA - Hilgya the Seamstress Addon.esp] adds the clothing from Plangkye's 'Hilgya the Seamstress' to the MCA NPCs. Requires Hilgya the Seamstress + Expansion 1 by Plangkye."
+ (Ref: "MCA - Readme.txt")
+MCA - Hilgya the Seamstress Addon.esp
+[ALL MCA.ESM
+     Hilgya the Seamstress.esm
+     Hilgya the Seamstress Expansion 1.esp]
+
+[Order]
+Hilgya the Seamstress Expansion 1.esp
+MCA - Hilgya the Seamstress Addon.esp
 
 ;; Khajiit Diversity Revamped addon
 
@@ -33773,7 +34676,7 @@ MWE_Writing.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Graphics Extender [Various]
+;; @MGE (Morrowind Graphics Extender) [Various]
 
 ; Dragon32: Suggest that this section is just used for MGE & MWSE versioning Notes. Specific plugin rules should go in their own section
 ; Some of these MGE plugins (particularly Timeslip's) will work with earlier versions of MGE. However, v3.0.3 of MGE is the effective minimum version.
@@ -33819,6 +34722,7 @@ Third Person Crosshair.esp
 
 [Note]
  These mods require Morrowind Graphics Extender XE (MGE XE) v0.9.0 or later, with MWSE enabled
+Apoapse's Attack.esp
 Vampiric Hunger UI (MGE XE).esp
 
 
@@ -36413,7 +37317,7 @@ NOM3fix.esp
 ;; @Necromantic Robe 2 [MP*Canus]
 
 [Requires]
- "[CanadianIce's "Ice's Female Necromantic Robe"] REQUIRES THAT CANUS NECROMANTIC ROBE VERSION 2 BE INSTALLED"
+ "[CanadianIce's "Ice's Female Necromantic Robe"] REQUIRES THAT CANUS' NECROMANTIC ROBE VERSION 2 BE INSTALLED"
  (Ref: readme-IcesCNSFemaleNecromantic.html)
 Ice_CNS_FemaleNecromanticRobe.esp
 Clean_Necromantic_Robe_V2.esp
@@ -38675,7 +39579,7 @@ Odai-Cascade V2.5.esp
 The Sable Dragon <VER>.esp
 
 [Conflict]
- Thondur's "Dragon Falls" is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon". Do not run the constiuent mods with the merged mod.
+ Thondur's "Dragon Falls" is a merge of his "Odai Cascade" and Pluto's "The Sable Dragon". Do not run the constituent mods with the merged mod.
  (Ref: "Dragon Falls - Read me or else....txt")
 Dragon Falls V2.esp
 [ANY Odai-Cascade V2.5.esp
@@ -42856,18 +43760,25 @@ SG_Ryukaissen-M.esp
 
 ; Ref: http://www.bethsoft.com/bgsforums/index.php?s=&showtopic=997293&view=findpost&p=15129126
 
+;;Dragon32: Version 1.7 changes a script to ensure compatibility with OpenMW. No changes otherwise. This means that 1.6 and 1.7 are identical, except that if you want to test the mod with OpenMW you will need 1.7. So update Note rule for 1.6 not needed
 [Note]
  ! There is a newer version of The Sable Dragon available, 1.7
  ! Download Pluto's "The Sable Dragon" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/26870/
 The Sable Dragon.esp
 The Sable Dragon 1.5.esp
-The Sable Dragon 1.6.esp
 
 [Requires]
  (Ref: The Sable Dragon, Read Me.txt)
 The Sable Dragon <VER>.esp
 [ALL Bloodmoon.esm
      Tribunal.esm]
+
+[Conflict]
+ An NPC in Pluto's "The Sable Dragon" hides something in Skaal village. Wollibeebee's "Solstheim Tomb of Snow Prince" makes extensive changes to the landscape in that area requiring use of the TCL console command to find the hidden object.
+ (Ref: http://forums.bethsoft.com/topic/1034477-rel-the-sable-dragon/?p=25270234 )
+The Sable Dragon <VER>.esp
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
 
 ;;  (Ref: The Sable Dragon, Read Me.txt)
 [Order]
@@ -43406,10 +44317,12 @@ gr_ScriptImprovements.esm
 ;; @Scripted Spells 1.5 [Cortex]
 
 [Conflict]
- "Excellent Magic Sounds" by Asiron changes spell sound IDs. So it conflicts with any mod which works based on Getsoundplaying, such as "Scripted Spells" by Cortex.
+ "Excellent Magic Sounds" by Asiron changes spell sound IDs. So it conflicts with any mod which works based on GetSoundPlaying, such as "Scripted Spells" by Cortex.
  (Ref: http://forums.bethsoft.com/topic/1091351-alphawip-elemental-magicka/?p=16438396 )
 Scripted_Spells.esp
-ExcellentMagicSounds.esp
+[ANY ExcellentMagicSounds.esp
+     [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+     BTB Spells - EMS MGSO Patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45150,6 +46063,43 @@ DA_Sobitur_YA_Compatibility.ESP
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Solstheim Castle 1.1 [Korana]
+
+[Patch]
+ "A patch has been included for use with both Solstheim Castle and the White Wolf of LoKKen Mtn, by Emma.  PLEASE DO NOT USE THE SCASTLE_LOKKEN PATCH WITHOUT RUNNING BOTH OF THESE MODS."
+ (Ref: "Solstheim_Castle_readme_v1.1.txt")
+Clean SCastle_LoKKen_Patch.esp
+[ALL Clean Solstheim_Castle_v1.1.esp
+     [ANY BT_Whitewolf_2_0.esp
+          BT_Whitewolf_2_0.esm]]
+
+;;Dragon32: Checked with TESPCD. LAND and NPC_ entries conflict.
+[Order]
+Clean Solstheim_Castle_v1.1.esp
+Clean SCastle_LoKKen_Patch.esp
+
+[Order]
+BT_Whitewolf_2_0.esp
+Clean SCastle_LoKKen_Patch.esp
+
+[Requires]
+ "This esp (Clean_SCastle_Halvart_Beauty.esp) will update the face and hair of the male companion if used.  He will now be younger, and more attractive. REQUIRES THE BEAUTY PACK [by Gorg et al]."
+ Download Gorg et al's "Beauty Pack" from Morrowind Modding History, ensure you also download the separate v1.2 plugins - http://mw.modhistory.com/download-98-3279
+ (Ref: "Solstheim_Castle_readme_v1.1.txt")
+Clean SCastle_Halvart_Beauty.esp
+[ALL Clean Solstheim_Castle_v1.1.esp
+     Beauty_Pack.esm]
+
+;;"This esp needs to load AFTER the castle esp"
+;;Ref: "Solstheim_Castle_readme_v1.1.txt"
+[Order]
+Clean Solstheim_Castle_v1.1.esp
+Clean SCastle_Halvart_Beauty.esp
+
+;;Dragon32: See Suran Underworld for dock conflict between it and Solstheim Castle
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Solstheim: Tomb of the Snow Prince 1.2 [Wollibeebee]
 
 ;;wildcard to pick up all the iterations of the MPP
@@ -45163,42 +46113,58 @@ Morrowind Rebirth <VER> - Morrowind Patch *.esm
 wl_SolstheimOverhaul_v1.esm
 
 [Patch]
- http://www.nexusmods.com/morrowind/mods/42979/
+ "[A patch for Wollibeebee's "Solstheim: Tomb of the Snow Prince" and] The Neverhalls [is] available to download in the same places ["Solstheim: Tomb of the Snow Prince"] was."
+ Note that if you attempt to use this patch with the "Morrowind Rebirth"-compatible version of "Solstheim: Tomb of the Snow Prince" (Solstheim TotSP [Rebirth].esp) you will see errors about a missing Master file unless you alter the patch's dependencies with Wrye Mash, TES Dependency Toolkit or a similar program.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42979/ )
 wl_sol_neverhallspatch.ESP
-[ALL wl_SolstheimOverhaul_v1.esm
+[ALL [ANY wl_SolstheimOverhaul_v1.esm
+          Solstheim TotSP [Rebirth].esp]
      The Neverhalls.esp]
 
 [Order]
 The Neverhalls.esp
 wl_sol_neverhallspatch.ESP
 
+[Order]
+Solstheim TotSP [Rebirth].esp
+wl_sol_neverhallspatch.ESP
+
 [Patch]
+ Note that if you attempt to use this patch with the "Morrowind Rebirth"-compatible version of "Solstheim: Tomb of the Snow Prince" (Solstheim TotSP [Rebirth].esp) you will see errors about a missing Master file unless you alter the patch's dependencies with Wrye Mash, TES Dependency Toolkit or a similar program.
  http://www.nexusmods.com/morrowind/mods/42979/
 wl_sol_millsofmorrowindpatch.ESP
-[ALL wl_SolstheimOverhaul_v1.esm
+[ALL [ANY wl_SolstheimOverhaul_v1.esm
+          Solstheim TotSP [Rebirth].esp]
      Mills of Morrowind.esp]
 
 [Order]
 Mills of Morrowind.esp
 wl_sol_millsofmorrowindpatch.ESP
 
+[Order]
+Solstheim TotSP [Rebirth].esp
+wl_sol_millsofmorrowindpatch.ESP
+
 [Conflict]
  "Windows Glow has been completely integrated into [Wollibeebee's "Solstheim: Tomb of the Snow Prince"]. Be sure not to use any older versions of Windows Glow that affect Solstheim."
  (Ref: "STOTSP 1 2-42979-1-2.7z\Readme.rtf")
-wl_SolstheimOverhaul_v1.esm
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
 [ANY Windows Glow - Bloodmoon Eng.esp
      Windows Glow - Raven Rock Eng.esp]
 
 [Conflict]
  Landscape conflict: "If you have [Wollibeebee's "Solstheim: Tomb of the Snow Prince"] and Necessities of Morrowind 3.0, the Moldy Horker inn next to Fort Frostmoth is pretty much inaccessible and there are some land height conflicts around the fort."
  (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=16495364 )
-wl_SolstheimOverhaul_v1.esm
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
 NoM 3.0.esp
 
 [Conflict]
  Landscape conflict: "The changes to [Solstheim] are so great [by Wollibeebee's "Solstheim: Tomb of the Snow Prince"] that probably every mod that alters anything on Solstheim will be highly incompatible [...] Suran underworld [...] won't work with [Wollibeebee's "Solstheim: Tomb of the Snow Prince"]."
  (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=19428709 )
-wl_SolstheimOverhaul_v1.esm
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
 [ANY Suran_Underworld_2.5.esp
      SU_SW Comp. Patch.esp
      Suran_Underworld_v3.ESP]
@@ -45206,22 +46172,59 @@ wl_SolstheimOverhaul_v1.esm
 [Conflict]
  Landscape conflict: "The changes to [Solstheim] are so great [by Wollibeebee's "Solstheim: Tomb of the Snow Prince"] that probably every mod that alters anything on Solstheim will be highly incompatible [...] Bloodmoon landscape overhaul won't work with [Wollibeebee's "Solstheim: Tomb of the Snow Prince"]."
  (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=19428709 )
-wl_SolstheimOverhaul_v1.esm
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
 [ANY Bloodmoon Landscape Overhaul <VER>.esm
      Texture Fix - Bloodmoon <VER>.esm]
 
 [Conflict]
  Wollibeebee's "Solstheim: Tomb of the Snow Prince" changes Fort Frostmoth in such a dramatic way that it is incompatible with Talthybius' "Frostmoth Repaired"
  (Ref: http://forums.nexusmods.com/index.php?/topic/1285587-solstheiml-tomb-of-the-snow-prince/?p=20299539 )
-wl_SolstheimOverhaul_v1.esm
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
 frostmoth_repaired_v0_31.esp
 
 [Conflict]
- The readme for Wollibeebee's "Solstheim: Tomb of the Snow Prince" promises a patch for Emma's "White Wolf of Lokken" but one is not available. It is safe to conclude that the two mods conflict.
- (Ref: "STOTSP 1 2-42979-1-2.7z\Readme.rtf")
+ straub666 has released "Solstheim Tomb of the Snow Prince - White Wolf of Lokken Compatibility", a patch for Wollibeebee's "Solstheim: Tomb of the Snow Prince" and Emma's "White Wolf of Lokken". Hstraub666's mod only works with the master (BT_Whitewolf_2_0.esm) version of Emma's mod, not the plugin (BT_Whitewolf_2_0.esp) version.
+ Download "Solstheim Tomb of the Snow Prince - White Wolf of Lokken Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/44575
+ (Ref: STOTSP - White Wolf of Lokken Compatibility-44575-1-0.7z\readme.txt)
 wl_SolstheimOverhaul_v1.esm
-[ANY BT_Whitewolf_2_0.esm
-     BT_Whitewolf_2_0.esp]
+BT_Whitewolf_2_0.esp
+
+[Conflict]
+ The readme for Wollibeebee's "Solstheim: Tomb of the Snow Prince" promises a patch for Korana's "Solstheim Castle" but one is not available. It is safe to conclude that the two mods conflict.
+ (Ref: "STOTSP 1 2-42979-1-2.7z\Readme.rtf")
+Clean Solstheim_Castle_v1.1.esp
+[ANY wl_SolstheimOverhaul_v1.esm
+     Solstheim TotSP [Rebirth].esp]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Solstheim Tomb of the Snow Prince - White Wolf of Lokken Compatibility [straub666]
+
+;;Dragon32: There's an altered "BT_Whitewolf_2_0.esm" to use (only removes one Cell) but it's indistinguishable from Emma's original ESM except by filesize.
+
+;;"I found that loading BT_Whitewolf_2_0.esm AFTER wl_SolstheimOverhaul_v1.esm resolves the missing landscape issues"
+;;Ref: STOTSP - White Wolf of Lokken Compatibility-44575-1-0.7z\readme.txt
+[Order]
+wl_SolstheimOverhaul_v1.esm
+BT_Whitewolf_2_0.esm
+
+[Patch]
+ straub666's "Solstheim Tomb of the Snow Prince - White Wolf of Lokken Compatibility" resolves "major incompatibilities with White Wolf of Lokken [and "Solstheim Tomb of the Snow Prince" by Wollibeebee]  - primarily large parts of Lokken island are missing."
+ Download "Solstheim Tomb of the Snow Prince - White Wolf of Lokken Compatibility" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/44575
+ (Ref: STOTSP - White Wolf of Lokken Compatibility-44575-1-0.7z\readme.txt)
+Lokken-STOTSP Patch.ESP
+[ALL wl_SolstheimOverhaul_v1.esm
+     BT_Whitewolf_2_0.esm]
+
+[Note]
+ !!! The "Morrowind Rebirth"-compatible version of "Solstheim: Tomb of the Snow Prince" (Solstheim TotSP [Rebirth].esp) is a plugin and not a master file (.ESM) like Wollibeebee's original "Solstheim Tomb of the Snow Prince".
+ !!! Proper functioning of straub666's "Solstheim Tomb of the Snow Prince - White Wolf of Lokken Compatibility" is dependent on using the ESM version of Emma's "White Wolf of Lokken" and loading Emma's mod before "Solstheim: Tomb of the Snow Prince".
+ !!! This is impossible when the "Morrowind Rebirth"-compatible version of "Solstheim: Tomb of the Snow Prince" (Solstheim TotSP [Rebirth].esp) is a plugin.
+ !!! Providing guidance on fixing this is outside the scope of what mlox can provide.
+[ALL Lokken-STOTSP Patch.ESP
+     Solstheim TotSP [Rebirth].esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45477,11 +46480,13 @@ Spel1.1(cheat).esp
 [SIZE 13860 CastReduce-v30.esp]
 
 [Conflict]
- "Excellent Magic Sounds" by Asiron changes spell sound IDs. So it conflicts with any mod which works based on Getsoundplaying, such as "Spell Casting Cost Reduction" by Aragon.
+ "Excellent Magic Sounds" by Asiron changes spell sound IDs. So it conflicts with any mod which works based on GetSoundPlaying, such as "Spell Casting Cost Reduction" by Aragon.
  (Ref: http://forums.bethsoft.com/topic/1091351-alphawip-elemental-magicka/?p=16438396 )
 [ANY CastReduce-v30.esp
      CastReduce-v31.esp]
-ExcellentMagicSounds.esp
+[ANY ExcellentMagicSounds.esp
+     [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
+     BTB Spells - EMS MGSO Patch.esp]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47603,7 +48608,7 @@ Tamriel_Data.esm
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @TR (Tamriel Rebuilt) 16.09 [Tamriel Rebuilt team]
+;; @TR (Tamriel Rebuilt) 16.12 [Tamriel Rebuilt team]
 
 ;;Dragon32: Removed version check as nothing in Description field of 16.09
 ;[Note]
@@ -47628,7 +48633,8 @@ TR_Mainland.esm
 Morrowind Rebirth <VER> - Morrowind Patch *.esm
 TR_Mainland.esm
 
-;;Dragon32: Neatness really
+;;"The regions are defined in Tamriel_Data and if a cell has a region id that doesn't yet exist, it will produce [Unable to find Region] error."
+;;Ref: http://tamriel-rebuilt.org/comment/5821#comment-5821
 [Order]
 Tamriel_Data.esm
 TR_Mainland.esm
@@ -48427,7 +49433,7 @@ Telperion Basement Addon.esp
 ;; @Telvanni Robe Version 2 [MP*Canus]
 
 [Requires]
- "[CanadianIce's "Ice's Female Telvanni Robe V2"] REQUIRES THAT CANUS TELVANNI ROBE Version2 BE INSTALLED"
+ "[CanadianIce's "Ice's Female Telvanni Robe V2"] REQUIRES THAT CANUS' TELVANNI ROBE Version2 BE INSTALLED"
  (Ref: "readme-IcesCNSFemaleTelvanni.html")
 Ice_CNS_FemaleTelvanniRobeV2.esp
 Clean Telvanni_Robe_V2.esp
@@ -48603,6 +49609,11 @@ BT_Whitewolf_2_0.esm
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Texture Fix - Tamriel Rebuilt 2.0 [Slartibartfast]
+
+[Note]
+ !! "[Slartibartfast's "Texture Fix - Tamriel Rebuilt"] is totally deprecated, its fixes have been included into [Tamriel Rebuilt] since Sacred East [in 2013]".
+ !! (Ref: https://forums.nexusmods.com/index.php?/topic/4853520-tamriel-data/?p=45385050 )
+Texture Fix -TR -<VER>.esm
 
 [Note]
  There is a new version of Slartibartfast's "Texture Fix - Tamriel Rebuilt" available for the Sacred East release of "Tamriel Rebuilt".
@@ -51244,11 +52255,31 @@ Great House Dagoth.esp
 
 [Order]
 Uvirith Inside.esp
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 
 [Order]
 Uvirith Inside.esp
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv<VER>-Rebirth.esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv<VER>.MRM.esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv<VER>.MRMnp.esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv1 (BTB Edit).esp
+
+[Order]
+Uvirith Inside.esp
+DN-GDRv1_NOM (BTB Edit).esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -51263,7 +52294,7 @@ DN-GDRv1.1_NOM.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Uvirith's Legacy 3.32 [StuporStar]
+;; @Uvirith's Legacy 3.52 [StuporStar]
 
 ;;;;;;;;;;
 ;;Old versions
@@ -51281,7 +52312,13 @@ DN-GDRv1.1_NOM.esp
      Uvirith's Legacy_3.1.esp
      Uvirith's Legacy_3.2.esp
      Uvirith's Legacy_3.3.esp
-     Uvirith's Legacy_3.31.esp]
+     Uvirith's Legacy_3.31.esp
+     Uvirith's Legacy_3.32.esp
+     Uvirith's Legacy_3.33.esp
+     Uvirith's Legacy_3.4.esp
+     Uvirith's Legacy_3.41.esp
+     Uvirith's Legacy_3.42.esp
+     Uvirith's Legacy_3.5.esp]
 
 ;;;;;;;;;;
 ;;Add-ons
@@ -51290,7 +52327,7 @@ DN-GDRv1.1_NOM.esp
 ;;Morrowind Script Extender
 
 [Conflict]
- "UL_MWSE_patch.esp" is for versions of Stuporstar's "Uvirith's Legacy" prior to version 3.2. Version 3.32's MWSE addon is "UL_3.3_MWSE_Add-on.esp" and should be used instead.
+ "UL_MWSE_patch.esp" is for versions of Stuporstar's "Uvirith's Legacy" prior to version 3.2. Version 3.52's MWSE addon is "UL_3.5_MWSE_Add-on.esp" and should be used instead.
 [VER >3.1 Uvirith's Legacy_<VER>.esp]
 UL_MWSE_patch.esp
 
@@ -51341,7 +52378,6 @@ UL_<VER>_MWSE_Add-on.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
-
 ;;Tamriel Rebuilt
 
 [Requires]
@@ -51350,8 +52386,8 @@ UL_<VER>_MWSE_Add-on.esp
  (Ref: "Uvirith's Legacy_README.txt")
 UL_<VER>_TR_<VER>_Add-on.esp
 [ALL Uvirith's Legacy_<VER>.esp
-     TR_data.esm
-     TR_mainland.esm]
+     Tamriel_Data.esm
+     TR_Mainland.esm]
 
 [Order]
 ; Ref: "Uvirith's Legacy_README.txt"
@@ -51366,14 +52402,15 @@ UL_TLM_Ambiance.esp
      [ANY UL_3.0_TR_SE1.5_Addon.esp
           UL_3.1_TR_SE1.5_Addon.esp
           UL_3.2_TR_SE1.5_Add-on.esp
-          UL_TR_Addon.esp]]
+          UL_TR_Addon.esp
+          UL_<VER>_TR_<VER>_Add-on.esp]]
 
 ;;Rise of House Telvanni
 
 [Requires]
  "Adds RoHT books to the library book sorter.[...] Adds teleport platforms to all towers added by RoHT.[...] Adds levitation to the Telvanni Travel Slippers within the RoHT towers."
  (Ref: "Uvirith's Legacy_README.txt")
-UL_3.3_RoHT_1.52_Add-on.esp
+UL_<VER>_RoHT_1.52_Compatibility.esp
 [ALL Uvirith's Legacy_<VER>.esp
      [VER=1.52 Rise of House Telvanni.esm]]
 
@@ -51391,8 +52428,8 @@ UL_TLM_Ambiance.esp
           UL_RoHT_1.4_Compatibility.esp
           UL_RoHT_Compatibility.esp
           UL_RoHT_Compatibility_1.3.esp
-          UL_3.0_RoHT_1.52_Compatibility.esp
-          UL_3.2_RoHT_1.52_Add-on.esp]]
+          UL_3.2_RoHT_1.52_Add-on.esp
+          UL_<VER>_RoHT_1.52_Compatibility.esp]]
 
 ;;Chess Add-on
 
@@ -55960,8 +56997,9 @@ WhiteSuran2_PPOF_Patch.esp
 ;;Dragon32: MapOMods also shows a conflict with "Moska", can't find that plugin though
 
 [Note]
- ! The latest version of White Wolf of Lokken is 2.1, which includes Children of Morrowind 2.0 and the "kiss patch". You may want to upgrade:
- ! http://lovkullen.net/Emma/lokken.htm
+ ! The latest version of "White Wolf of Lokken" is 2.1, which includes Children of Morrowind support and the "kiss patch". You may want to upgrade.
+ ! mlox can only guess which version of "White Wolf of Lokken" you are running based on the mod's file size. If you have altered version 2.1 (for instance cleaned it) then you will see this message.
+ ! Download "White Wolf of Lokken" from Emma's site - http://lovkullen.net/Emma/lokken.htm
 [ANY [SIZE !3829352 BT_Whitewolf_2_0.esm]
      [SIZE !3829352 BT_Whitewolf_2_0.esp]]
 
@@ -56986,19 +58024,59 @@ Wrye Patches C1.esp
 
 ;;Dragon32: dirty ref in DN GDR for common_robe_05_c
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 Wrye Patches C.esp
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 Wrye Patches C1.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 Wrye Patches C.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+Wrye Patches C1.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Wrye Patches C1.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Wrye Patches C1.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+Wrye Patches C1.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+Wrye Patches C1.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+Wrye Patches C.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 Wrye Patches C1.esp
 
 ;;Wrye Patches G
@@ -57077,19 +58155,59 @@ Wrye Patches M1.esp
 
 ;;Dragon32: dirty ref in DN GDR for misc_dwrv_gear00
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 Wrye Patches M.esp
 
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 Wrye Patches M1.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
 Wrye Patches M.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+Wrye Patches M1.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Wrye Patches M1.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Wrye Patches M1.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+Wrye Patches M1.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+Wrye Patches M1.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
+Wrye Patches M.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 Wrye Patches M1.esp
 
 ;;Wrye Patches W
@@ -57175,11 +58293,31 @@ Wrye Patches W.esp
 
 ;;Dragon32: dirty ref in DN GDR for dwarven crossbow and bm_ebonyarrow_s
 [Order]
-DN-GDRv1.1.esp
+DN-GDRv<VER>.esp
 Wrye Patches W.esp
 
 [Order]
-DN-GDRv1.1_NOM.esp
+DN-GDRv<VER>_NOM.esp
+Wrye Patches W.esp
+
+[Order]
+DN-GDRv<VER>-Rebirth.esp
+Wrye Patches W.esp
+
+[Order]
+DN-GDRv<VER>.MRM.esp
+Wrye Patches W.esp
+
+[Order]
+DN-GDRv<VER>.MRMnp.esp
+Wrye Patches W.esp
+
+[Order]
+DN-GDRv1 (BTB Edit).esp
+Wrye Patches W.esp
+
+[Order]
+DN-GDRv1_NOM (BTB Edit).esp
 Wrye Patches W.esp
 
 
