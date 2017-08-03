@@ -109,7 +109,6 @@ NOM 2.13.esp
 NoM 3.0.esp
 GUARD-Remover.esp ; (Ref: "Advanced GUARDS IV.doc")
 MW Containers Animated exp.esp ; (Ref: "aceg_readme.txt")
-;German Text Patch.esp ; Dragon32 - removed, see "German Text Patch [Vrakyas]"
 ;;begin lighting mods
 ;;  these affect lighting in vanilla cells, so load after most other mods
 LBS_addon_hvy_v1.1.esp ; (Ref: "LBS_addon.txt")
@@ -22103,6 +22102,19 @@ Syc_HerbalismforPurists_TB.esp
 Syc_HerbalismforPurists_TB_DV.esp
 Syc_HerbalismforPurists_TB_ONLY.esp
 Syc_Herbalism ES Patch.esp
+
+;; (Ref: "Readme - Herbalism for Purists.txt")
+[Order]
+Expanded Sounds.esp
+Expanded Sounds DV.esp
+Syc_HerbalismforPurists.esp
+Syc_HerbalismforPurists_DV.esp
+Syc_HerbalismforPurists_BM.esp
+Syc_HerbalismforPurists_BM_DV.esp
+Syc_HerbalismforPurists_TB.esp
+Syc_HerbalismforPurists_TB_DV.esp
+Syc_HerbalismforPurists_TB_ONLY.esp
+Syc_Herbalism ES Patch.esp
 Syc_Herbalism ES Patch DV.esp
 
 [Order]
@@ -22148,6 +22160,7 @@ Tribunal.esm
 
 [Requires]
  (Ref: "Readme - Herbalism for Purists.txt")
+ (Ref: "Herbalism for Purists - Readme DV.txt")
 [ANY Syc_HerbalismforPurists_BM.esp
      Syc_HerbalismforPurists_BM_DV.esp]
 [ALL Bloodmoon.esm
@@ -22157,6 +22170,7 @@ Tribunal.esm
 
 [Requires]
  (Ref: "Readme - Herbalism for Purists.txt")
+ (Ref: "Herbalism for Purists - Readme DV.txt")
 [ANY Syc_HerbalismforPurists_TB.esp
      Syc_HerbalismforPurists_TB_DV.esp]
 [ALL Tribunal.esm
@@ -22242,60 +22256,6 @@ Syc_HerbalismforPurists_DV.esp
 k_weather.esp
 k_weather (louder sounds).esp
 Syc_HerbalismforPurists_TB_ONLY.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Herbalism for Purists (DV) [Syclonix; Translation: Trr Kah]
-
-[Requires]
- (Ref: "Herbalism for Purists - Readme DV.txt")
-Syc_HerbalismforPurists_TB_DV.esp
-Tribunal.esm
-
-[Requires]
- (Ref: "Herbalism for Purists - Readme DV.txt")
-Syc_HerbalismforPurists_BM_DV.esp
-Bloodmoon.esm
-
-[Patch]
- (Ref: "Syc_Herbalism ES Patch DV.esp" plugin Description)
-Syc_Herbalism ES Patch DV.esp
-[ALL [ANY Expanded Sounds.esp
-          Expanded Sounds DV.esp]
-     Syc_HerbalismforPurists_DV.esp]
-
-;;Dragon32: I *assume* Translator 5 added these to preserve German cell names. Re-structured so as not a monolithic Order list
-[Order]
-Vurt's Ashlands Overhaul.esp
-Syc_HerbalismforPurists_DV.esp
-Syc_HerbalismforPurists_BM_DV.esp
-Syc_HerbalismforPurists_TB_DV.esp
-Syc_Herbalism ES Patch DV.esp
-
-[Order]
-Vurt's BC Tree Replacer II.esp
-Syc_HerbalismforPurists_DV.esp
-Syc_HerbalismforPurists_BM_DV.esp
-Syc_HerbalismforPurists_TB_DV.esp
-Syc_Herbalism ES Patch DV.esp
-
-[Order]
-Vurt's Grazelands Unique Trees.ESP
-Syc_HerbalismforPurists_DV.esp
-Syc_HerbalismforPurists_BM_DV.esp
-Syc_HerbalismforPurists_TB_DV.esp
-Syc_Herbalism ES Patch DV.esp
-
-[Order]
-Ozzy's Grass - Ascadian Isles.esp
-Ozzy's Grass - Bitter Coast.esp
-Ozzy's Grass - Grazelands.esp
-Ozzy's Grass - Solstheim.esp
-Ozzy's Grass - West Gash.esp
-Syc_HerbalismforPurists_DV.esp
-Syc_HerbalismforPurists_BM_DV.esp
-Syc_HerbalismforPurists_TB_DV.esp
-Syc_Herbalism ES Patch DV.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -58858,145 +58818,6 @@ The Zone (Tribunal).esp
 [SIZE 3900 Zyndaar's Bows.esp]
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @German Text Patch 1.0 [Vrakyas]
-
-[Requires]
- Requires Tribunal and Bloodmoon expansion packs.
- (Ref: "german text patch readme.txt")
-German Text Patch.esp
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Better Landscapes Stonewood Pass 1.0.1 [Mag1cWind0w][Melchior Dahrk]
-;; Fix Mesh conflict
-;; Ozzys Grass West Gash and BLSP conflict, but playable!
-
-[Order]
-BIG_BALMORA.ESP
-Better Landscapes Stonewood Pass (MD Edit).esp
-
-[Note]
- "Using both cause not nice view in the Stonewood Pass!"
-[All Better Landscapes Stonewood Pass (MD Edit).esp
-	 Ozzy's Grass - West Gash.esp]
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Deutsch - Morrowind Enhanced [Emanuel]
-
-[Requires]
-Enhanced Morrowind.ESP
-[ALL Tribunal.esm
-     Bloodmoon.esm]
-
-[Requires]
-Enhanced Morrowind - NPCs.ESP
-Enhanced Morrowind.ESP
-
-[Order]
-Enhanced Morrowind.ESP
-Enhanced Morrowind - NPCs.ESP
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Pretty Kitties 1.0 [Sabregirl]
-
-[Conflict]
-sg_prettykitties.esp
-Hübsche Katzen.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Bloodmoon creatures 1.1 [Yar-Yulme]
-
-[Requires]
-Bloodmoon_Creatures.esp
-Bloodmoon.esm
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Rats Galore 1.0 [The Wanderer]
-
-[Requires]
-wl_rats_bm.esp
-[ALL wl_rats.esp
-     Bloodmoon.esm]
-
-[Requires]
-wl_rats_tr.esp
-[ALL wl_rats.esp
-     Tribunal.esm]
-
-[Order]
-wl_rats.esp
-wl_rats_bm.esp
-
-[Order]
-wl_rats.esp
-wl_rats_bm.esp
-wl_rats_tr.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Spriggans and Twiggans 1.0 [Melchior Dahrk]
-
-[Requires]
-Spriggans and Twiggans.ESP
-Bloodmoon.esm
-
-[Order]
-Bloodmoon_Creatures.esp
-Spriggans and Twiggans.ESP
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Morrowind Creatures Flying tweaks [Amenophis]
-
-[Order]
-Neo's Unique Creatures.esp
-Morrowind Creatures Flying tweaks.esp
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Sklaven Und Packtier PlugIn 1.50 (DV) [ReneMiner]
-
-[Order]
-SklavenUndPacktierPlugIn.esp
-Magic Diversity.ESP
-
-[Order]
-SklavenUndPacktierPlugIn.esp
-Magic Diversity NO  SOUND.ESP
-
-[Order]
-SklavenUndPacktierPlugIn.esp
-YAPHM.ESP
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Province_Cyrodiil [ProvinceCyrodiil]
-
-[Requires]
-PC_Stirk_v4.8.ESP
-Tamriel_Data.esm
-
-[Order]
-PC_Stirk_v4.8.ESP
-PC_Stirk_Grass.ESP
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Skyrim_Home_Of_The_Nords [SHOTN]
-
-[Requires]
-Sky_Main.esp
-Tamriel_Data.esm
-
-[Order]
-Sky_Main.esp
-Sky_Main_Grass.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Original Faces 1.3 [ARHIZ]
 
