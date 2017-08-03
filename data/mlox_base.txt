@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2017-08-02 15:53:33 (UTC)]
+[Version 2017-08-03 18:33:33 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -3932,12 +3932,6 @@ AshVampiresReplacer_GHD.ESP
 DN-GDRv1_NOM (BTB Edit).esp
 AshVampiresReplacer_TTU.ESP
 
-;;Dragon32: This Order rule add by (I think) Translator5. No explanation given.
-;;Dragon32: Checked Neo's Unique Creatures against all Ash Vampires Replacer plugins. No conflicts. Removed Order rule.
-;;[Order]
-;;Neo's Unique Creatures.esp
-;;AshVampiresReplacer.ESP
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ashinarba [Alex Strada]
@@ -6920,14 +6914,6 @@ Better Heads.esm
 Better Heads Tribunal addon.esm
 Better Heads Bloodmoon addon.esm
 
-;;Dragon32: Added by (I think) Translator5 without explanation
-;;Dragon32: Checked Better Heads.esm against both ESMs in TESPCD, no conflict. Order rule removed.
-;;Translator5: Mod have to replace faces of Tamriel Rebuild if using http://www.nexusmods.com/morrowind/mods/37001
-;;[Order]
-;;Tamriel_Data.esm
-;;TR_Mainland.esm
-;;Better Heads.esm
-
 [Requires]
 [ANY Better Heads Bloodmoon addon.esm
      Better Heads Bloodmoon addon.esp]
@@ -8491,14 +8477,6 @@ Blood and Gore Petshop add-on.esp
 Blood and Gore TEMPLATE add-on.esp
 Blood and Gore Wilderness add-on.esp
 Blood and Gore patch for GIANTS Trib.esp
-
-;;Dragon32: Added by (I think) Translator6 without explanation
-;;Dragon32: Checked the mods in TESPCD, no conflict. The way the B&G Add-ons work is by dialogue so there're no conflicts. Remoed the Order rule.
-;;[Order]
-;;[ANY Cait's Critters Unleashed 2.0.esp
-;;	 Cait's Critters Unleashed 2.0 (Tribunal).esp
-;;	 Cait's Critters Unleashed 2.0 DV.esp]
-;;	 Blood and Gore Cait Critters add-on.esp
 
 [Conflict]
  Use "Blood and Gore Morrowind alone add-on.esp" only if you do NOT have Tribunal, otherwise use "Blood and Gore Morrowind-Tribunal add-on.esp"
@@ -18224,7 +18202,7 @@ Frozen Forest Plug-in.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @German Text Patch [Vrakyas]
 
-;;Dragon32: Added by Translator 5. Who also added it to [NearEnd]. I've removed it from there
+;;Dragon32: Added by Translator5. Who also added it to [NearEnd]. I've removed it from there
 ;;This mod alters a number of DIAL, INFO, GMST, MISC and RACE records. Readme (Bing translate):
 ;;"This modification adapts some texts in the German version of Morrowind:
 ;;* Drake to gold (including the abbreviation DR g)
@@ -25767,7 +25745,8 @@ ab01JulanRTTpatch.esp
           abotGondoliers.esp
           abotGondoliersRV.esp
           abotSiltStriders.esp
-          abotSiltStridersTR.esp]]
+          abotSiltStridersTR.esp
+          abotSiltStridersTR1612.esp]]
 
 ;;Dragon32: No conflict in TESPCD with abot's travel mods or Melian's teleport mod
 ;;Only thing on load order in readme is to "load it AFTER KS_Julan_Ashlander Companion"
@@ -29351,23 +29330,27 @@ Mage Friendly Bloodmoon.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Magic Diversity 1.0 [Arkann]
+;; @Magic Diversity 1.0 [Arkann][volia27]
 
-;;Dragon32: The entries for a "1.1" version added by Translator 5. No link for the 1.1 version, Nexus still shows 1.0. Changed to <VER>
+;;Dragon32: The entries for a "1.1" version added by Translator5. No link for the 1.1 version, Nexus still shows 1.0. Changed to <VER>
+;;Translator5: (Ref. http://www.fullrest.ru/files/novaya-magiya-11 )
+;;This is just the "genius" name of the russian  translation!
 
 [Conflict]
  Use only one plugin
   "Magic Diversity 1.0.ESP" - The standard mod which modifies spell sounds.
   "Magic Diversity NO  SOUND.ESP" - Uses vanilla sounds instead.
  (Ref: http://www.nexusmods.com/morrowind/mods/43380/ )
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 [Conflict]
- Arkann's standard plugin, "Magic Diversity 1.0.ESP", changes the sound effects used by spells so it will conflict with any mod which uses Morrowind's GetSoundPlaying function to detect spells being cast.
+ Arkann's standard plugin, "Magic Diversity 1.0.ESP", changes the sound effects used by spells so it will conflict with any mod which uses Morrowind's Getsoundplaying function to detect spells being cast.
  You should use Arkann's alternate plugin "Magic Diversity NO  SOUND.ESP" instead.
- Download "Vanilla sounds for Magic Diversity" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
-Magic Diversity <VER>.ESP
+ Download "Magic Diversity NO  SOUND.ESP" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 [ANY Elemental Magicka II.ESP
      MWE_MagickaSpells.esp
      Scripted_Spells.esp
@@ -29377,49 +29360,55 @@ Magic Diversity <VER>.ESP
 [Conflict]
  Arkann's "Magic Diversity 1.0.ESP" changes the sounds and visuals of magic effects. Asiron's "Excellent Magic Sounds" also modifies magic sound effects.
  If you wish to have the sounds from Asiron's mod and the visuals from Arkann's mod in your game then load Arkann's alternate plugin "Magic Diversity NO  SOUND.ESP" instead and ensure you create a Merged Objects plugin using TESTool.
- Download "Vanilla sounds for Magic Diversity" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
-Magic Diversity <VER>.ESP
-[ANY ExcellentMagicSounds.esp
-     [DESC /*Edited by Tooplex for MGSO Compatibility*/ BTB - Spells.esp]
-     BTB Spells - EMS MGSO Patch.esp]
+ Download "Magic Diversity NO  SOUND.ESP" from Morrowind Nexus - http://www.nexusmods.com/morrowind/mods/43380/
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
+ExcellentMagicSounds.esp
 
 ;;Dragon32: Ensure visuals win over sounds
 [Order]
 ExcellentMagicSounds.esp
 BTB Spells - EMS MGSO Patch.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 ;;Dragon32: Arkann's mod will be the most apparent as it changes the visuals
 [Order]
 BTB - Spells.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 Balance - Magic Effects.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 Wakim's Game Improvement 9.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 Wakim's Game Improvements with No-glo v9.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 [Order]
 AprogasVampire WakimImprovements.20021210.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 ;;Dragon32: "Morrowind Sound Enhancements" by Leon "pancreas" Medado adds new spell casting sounds.
 [Order]
 Sound Enhancements.esp
-Magic Diversity <VER>.ESP
+[ANY Magic Diversity 1.0.ESP
+	 Magic Diversity 1.1.ESP]
 Magic Diversity NO  SOUND.ESP
 
 
@@ -34249,7 +34238,9 @@ TLM + Expanded Sounds.esp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Morrowind Creatures Flying Tweaks [Amenophis]
 
-;;Dragon32: No idea where this plugin is from. One from Translator 5.
+;;Dragon32: No idea where this plugin is from. One from Translator5.
+;;It makes every creature setted as a flying-creature to fly - so should be loaded after all mods containing flying creature!
+;;Translator5: (Ref. https://forum.openmw.org/viewtopic.php?t=4041 )
 [Order]
 Neo's Unique Creatures.esp
 Morrowind Creatures Flying tweaks.esp
@@ -37741,15 +37732,6 @@ New Khajiit Bodies - Clean.esp
 New Khajiit Bodies (Slof Textures) - Mature.esp
 New Khajiit Bodies (Slof Textures) - Clean.esp
 
-;;Dragon32: Added by Translator 5; "MK_Khajiit.esp" is from MacKom's "MacKoms Khajiit". No idea why added in here. If someone is going to load two Khajiit replacer mods then mlox isn't going to help them. That way lies madness, already wishing I hadn't done it for the Herbalism mods et al. Removed rule.
-;;[Conflict]
-;; Choose ONLY ONE of these plugins. "Mature" is for anatomically correct, "Clean" is for a more asexual look.
-;;[ANY New Khajiit Bodies - Mature.esp
-;;	 New Khajiit Bodies - Clean.esp
-;;	 New Khajiit Bodies (Slof Textures) - Mature.esp
-;;	 New Khajiit Bodies (Slof Textures) - Clean.esp]
-;;	 MK_Khajiit.esp
-
 [Conflict]
  To use this mod, you must have both Slof's "Better Beasts (reptile version)" and "New Beast Bodies" installed, however "New Beast Bodies" no longer reqires that Slof's "Better Beasts" plugins be active.
  (Ref: "new_beast_bodies-slof-tex-readme.txt")
@@ -40149,6 +40131,197 @@ Oriental weapons pack.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Original Faces 1.3 [ARHIZ]
+
+[Conflict]
+ Only use one plugin:
+  Original Faces 1.3.esp - Adds unique faces to Vvardenfell, Solshteim and Mournhold NPCs 
+  Oryginal Faces 1.3 Morrowind only.esp - Adds unique faces to Vvardenfell NPCs
+  Oryginal Faces 1.3 PL.esp - Adds unique faces to Vvardenfell, Solshteim and Mournhold NPCs. Polish version.
+  Oryginal Faces 1.3 PL Morrowind only.esp - Adds unique faces to Vvardenfell NPCs. Polish version.
+ (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
+Original Faces 1.3.esp
+Oryginal Faces 1.3 Morrowind only.esp
+Oryginal Faces 1.3 PL Morrowind only.esp
+Oryginal Faces 1.3 PL.esp
+
+;; Ref: "Original Faces by ARHIZ [...] cause a syntax error if loaded after LGNPC Gnaar Mok"
+;; https://github.com/mlox/mlox/issues/10
+;; Dragon32: Checked other LGNPC mods (and Less Generics and LGNPC Lite) in TESPCD. All show NPC_ conflicts.
+[Order]
+Original Faces 1.3.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Oryginal Faces 1.3 PL.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Oryginal Faces 1.3 Morrowind only.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Oryginal Faces 1.3 PL Morrowind only.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Original Faces 1.3.esp
+Less_Generic_Nerevarine.esp
+
+[Order]
+Original Faces 1.3.esp
+Less_Generic_Bloodmoon.esp
+
+[Order]
+Original Faces 1.3.esp
+Less_Generic_Tribunal.esp
+
+[Order]
+Oryginal Faces 1.3 PL.esp
+Less_Generic_Nerevarine.esp
+
+[Order]
+Oryginal Faces 1.3 PL.esp
+Less_Generic_Bloodmoon.esp
+
+[Order]
+Oryginal Faces 1.3 PL.esp
+Less_Generic_Tribunal.esp
+
+[Order]
+Oryginal Faces 1.3 Morrowind only.esp
+Less_Generic_Nerevarine.esp
+
+[Order]
+Oryginal Faces 1.3 PL Morrowind only.esp
+Less_Generic_Nerevarine.esp
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1518406 Oryginal Faces 1.3 Morrowind only.esp]
+
+[Note]
+ !! This plugin contains evil GMSTs.
+ !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
+[SIZE 1518496 Oryginal Faces 1.3 PL Morrowind only.esp]
+
+[Requires]
+ !! "[ARHIZ's "Original Faces"] is based on Westly's models and textures - it needs "Westly's Maste Headpack X" for proper working."
+ !! Download "Westly's Master Head Pack X" from Morrowind Modding History - http://mw.modhistory.com/download--12454
+ !! (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
+[ANY Original Faces 1.3.esp
+        Oryginal Faces 1.3 Morrowind only.esp
+        Oryginal Faces 1.3 PL Morrowind only.esp
+        Oryginal Faces 1.3 PL.esp]
+Westly's Master Headpack X.esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Our Lady's Solace 1.11 [Almalexia & green_shade]
 
 ;;"Load this mod after the MPP to overwrite with this mod's changes."
@@ -41748,6 +41921,10 @@ Tamriel_Data.esm
 [Note]
  "Do not tick the ["Province:Cyrodiil" grass plugin] in the launcher, but only use it, when generating distant lands."
  (Ref: http://www.nexusmods.com/morrowind/mods/44922/ )
+PC_Stirk_Grass.ESP
+
+[Order]
+PC_Stirk_v<VER>.ESP
 PC_Stirk_Grass.ESP
 
 
@@ -45332,7 +45509,7 @@ Creatures.esp
 Silt Strder Animator.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Silt Striders 1.16 [abot]
+;; @Silt Striders 1.18 [abot]
 
 [Conflict]
  Only use one plugin:
@@ -45342,28 +45519,18 @@ Silt Strder Animator.esp
 abotSiltStriders.esp
 abotSiltStridersTR.esp
 
-;;Dragon32: Translator 5 changed from Conflict rule to Note rule without explanation. Can't see a reason. Reverting
-;;[Note]
-;; "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
-;; (Ref: "abotSiltStriders.txt")
-;;[ALL abotSiltStriders.esp
-;;     [ANY TR_Mainland.esm
-;;          TR_Data.esm]]
-
-[Conflict]
- "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
- (Ref: "abotSiltStriders.txt")
-abotSiltStriders.esp
-TR_Mainland.esm
-		  Tamriel_Data.esm
+[Note]
+ !! "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
+ !! (Ref: "abotSiltStriders.txt")
+[All abotSiltStriders.esp
+     TR_Mainland.esm]
 
 [Requires]
  "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD [...] abotSiltStridersTR.esp"
  (Ref: "abotSiltStriders.txt")
-abotSiltStridersTR.esp
+[ANY abotSiltStridersTR.esp
+     abotSiltStridersTR1612.esp]
 TR_Mainland.esm
-     [ANY TR_Data.esm
-		  Tamriel_Data.esm]]
 
 ;; delete this following rule as soon abot updates his mod name for TR normally
 [Requires]
@@ -45372,6 +45539,16 @@ TR_Mainland.esm
 abotSiltStridersTR1612.esp
 [ALL TR_Mainland.esm
      Tamriel_Data.esm]
+
+[Conflict]
+ Only use one plugin:
+  abotSiltStridersTR1612.esp - If you use Tamriel Rebuilt 1612 or newer.
+  abotSiltStridersTR.esp - If you use an earlier version of Tamriel Rebuilt.
+  abotSiltStriders.esp  - If you do not.
+ (Ref: "abotSiltStriders.txt")
+abotSiltStriders.esp
+abotSiltStridersTR.esp
+abotSiltStridersTR1612.esp
 
 ;; expdep
 [Requires]
@@ -45385,7 +45562,8 @@ abotSiltStriders.esp
  lochnarus' "Silt Striders Are In Vvardenfell", Lingarn's "Silt Striders" and M6n6M6's "Silt Striders in the Wild" also place Silt Striders around Vvardenfell, either manually or by levelled list. You should consider whether you need to run all these mods.
  (Ref: http://forums.nexusmods.com/index.php?/topic/806063-silt-striders/?p=25238694 )
 [ANY abotSiltStriders.esp
-     abotSiltStridersTR.esp]
+     abotSiltStridersTR.esp
+     abotSiltStridersTR1612.esp]
 [ANY Silt_Striders_Are_In_Vvardenfell.esp
      LN_silt_striders.esp
      Silt Striders in the Wild.esp]
@@ -45627,6 +45805,9 @@ Tamriel_Data.esm
  (Ref: http://www.nexusmods.com/morrowind/mods/44921/ )
 Sky_Main_Grass.esp
 
+[Order]
+Sky_Main.esp
+Sky_Main_Grass.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Slashes' Argonian Water Breathing [Slashes-With-Claws]
@@ -58817,193 +58998,3 @@ The Zone (Tribunal).esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 3900 Zyndaar's Bows.esp]
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Original Faces 1.3 [ARHIZ]
-
-[Conflict]
- Only use one plugin:
-  Original Faces 1.3.esp - Adds unique faces to Vvardenfell, Solshteim and Mournhold NPCs 
-  Oryginal Faces 1.3 Morrowind only.esp - Adds unique faces to Vvardenfell NPCs
-  Oryginal Faces 1.3 PL.esp - Adds unique faces to Vvardenfell, Solshteim and Mournhold NPCs. Polish version.
-  Oryginal Faces 1.3 PL Morrowind only.esp - Adds unique faces to Vvardenfell NPCs. Polish version.
- (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
-Original Faces 1.3.esp
-Oryginal Faces 1.3 Morrowind only.esp
-Oryginal Faces 1.3 PL Morrowind only.esp
-Oryginal Faces 1.3 PL.esp
-
-;; Ref: "Original Faces by ARHIZ [...] cause a syntax error if loaded after LGNPC Gnaar Mok"
-;; https://github.com/mlox/mlox/issues/10
-;; Dragon32: Checked other LGNPC mods (and Less Generics and LGNPC Lite) in TESPCD. All show NPC_ conflicts.
-[Order]
-Original Faces 1.3.esp
-LGNPC_NoLore.esp
-LGNPC_Merged_OM.esp
-LGNPC_Merged_Lt.esp
-LGNPC_HlaOad_OM.esp
-LGNPC_Khuul_OM.esp
-LGNPC_MaarGan_OM.esp
-LGNPC_Pelagiad_OM.esp
-LGNPC_SeydaNeen_OM.esp
-LGNPC_VivecFQ_OM.esp
-LGNPC_VivecRedoran_OM.esp
-LGNPC_SeydaNeen.esp
-LGNPC_GnaarMok_v?_??.esp
-LGNPC_AldVelothi_v?_??.esp
-LGNPC_MaarGan.esp
-LGNPC_HlaOad.esp
-LGNPC_Aldruhn.esp
-LGNPC_Aldruhn_suppl.esp
-LGNPC_Pelagiad.esp
-LGNPC_TelMora_v?_??.esp
-LGNPC_Khuul_v?_??.esp
-LGNPC_VivecFQ.esp
-LGNPC_TelUvirith.esp
-LGNPC_SecretMasters_v?_??.esp
-LGNPC_IndarysManor_v?_??.esp
-LGNPC_VivecRedoran.esp
-LGNPC_PaxRedoran_v?_??.esp
-LGNPC_SoulSicknessPatch_v?_??.esp
-
-[Order]
-Oryginal Faces 1.3 PL.esp
-LGNPC_NoLore.esp
-LGNPC_Merged_OM.esp
-LGNPC_Merged_Lt.esp
-LGNPC_HlaOad_OM.esp
-LGNPC_Khuul_OM.esp
-LGNPC_MaarGan_OM.esp
-LGNPC_Pelagiad_OM.esp
-LGNPC_SeydaNeen_OM.esp
-LGNPC_VivecFQ_OM.esp
-LGNPC_VivecRedoran_OM.esp
-LGNPC_SeydaNeen.esp
-LGNPC_GnaarMok_v?_??.esp
-LGNPC_AldVelothi_v?_??.esp
-LGNPC_MaarGan.esp
-LGNPC_HlaOad.esp
-LGNPC_Aldruhn.esp
-LGNPC_Aldruhn_suppl.esp
-LGNPC_Pelagiad.esp
-LGNPC_TelMora_v?_??.esp
-LGNPC_Khuul_v?_??.esp
-LGNPC_VivecFQ.esp
-LGNPC_TelUvirith.esp
-LGNPC_SecretMasters_v?_??.esp
-LGNPC_IndarysManor_v?_??.esp
-LGNPC_VivecRedoran.esp
-LGNPC_PaxRedoran_v?_??.esp
-LGNPC_SoulSicknessPatch_v?_??.esp
-
-[Order]
-Oryginal Faces 1.3 Morrowind only.esp
-LGNPC_NoLore.esp
-LGNPC_Merged_OM.esp
-LGNPC_Merged_Lt.esp
-LGNPC_HlaOad_OM.esp
-LGNPC_Khuul_OM.esp
-LGNPC_MaarGan_OM.esp
-LGNPC_Pelagiad_OM.esp
-LGNPC_SeydaNeen_OM.esp
-LGNPC_VivecFQ_OM.esp
-LGNPC_VivecRedoran_OM.esp
-LGNPC_SeydaNeen.esp
-LGNPC_GnaarMok_v?_??.esp
-LGNPC_AldVelothi_v?_??.esp
-LGNPC_MaarGan.esp
-LGNPC_HlaOad.esp
-LGNPC_Aldruhn.esp
-LGNPC_Aldruhn_suppl.esp
-LGNPC_Pelagiad.esp
-LGNPC_TelMora_v?_??.esp
-LGNPC_Khuul_v?_??.esp
-LGNPC_VivecFQ.esp
-LGNPC_TelUvirith.esp
-LGNPC_SecretMasters_v?_??.esp
-LGNPC_IndarysManor_v?_??.esp
-LGNPC_VivecRedoran.esp
-LGNPC_PaxRedoran_v?_??.esp
-LGNPC_SoulSicknessPatch_v?_??.esp
-
-[Order]
-Oryginal Faces 1.3 PL Morrowind only.esp
-LGNPC_NoLore.esp
-LGNPC_Merged_OM.esp
-LGNPC_Merged_Lt.esp
-LGNPC_HlaOad_OM.esp
-LGNPC_Khuul_OM.esp
-LGNPC_MaarGan_OM.esp
-LGNPC_Pelagiad_OM.esp
-LGNPC_SeydaNeen_OM.esp
-LGNPC_VivecFQ_OM.esp
-LGNPC_VivecRedoran_OM.esp
-LGNPC_SeydaNeen.esp
-LGNPC_GnaarMok_v?_??.esp
-LGNPC_AldVelothi_v?_??.esp
-LGNPC_MaarGan.esp
-LGNPC_HlaOad.esp
-LGNPC_Aldruhn.esp
-LGNPC_Aldruhn_suppl.esp
-LGNPC_Pelagiad.esp
-LGNPC_TelMora_v?_??.esp
-LGNPC_Khuul_v?_??.esp
-LGNPC_VivecFQ.esp
-LGNPC_TelUvirith.esp
-LGNPC_SecretMasters_v?_??.esp
-LGNPC_IndarysManor_v?_??.esp
-LGNPC_VivecRedoran.esp
-LGNPC_PaxRedoran_v?_??.esp
-LGNPC_SoulSicknessPatch_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
-Less_Generic_Nerevarine.esp
-
-[Order]
-Original Faces 1.3.esp
-Less_Generic_Bloodmoon.esp
-
-[Order]
-Original Faces 1.3.esp
-Less_Generic_Tribunal.esp
-
-[Order]
-Oryginal Faces 1.3 PL.esp
-Less_Generic_Nerevarine.esp
-
-[Order]
-Oryginal Faces 1.3 PL.esp
-Less_Generic_Bloodmoon.esp
-
-[Order]
-Oryginal Faces 1.3 PL.esp
-Less_Generic_Tribunal.esp
-
-[Order]
-Oryginal Faces 1.3 Morrowind only.esp
-Less_Generic_Nerevarine.esp
-
-[Order]
-Oryginal Faces 1.3 PL Morrowind only.esp
-Less_Generic_Nerevarine.esp
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 1518406 Oryginal Faces 1.3 Morrowind only.esp]
-
-[Note]
- !! This plugin contains evil GMSTs.
- !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
-[SIZE 1518496 Oryginal Faces 1.3 PL Morrowind only.esp]
-
-[Requires]
- !! "[ARHIZ's "Original Faces"] is based on Westly's models and textures - it needs "Westly's Maste Headpack X" for proper working."
- !! Download "Westly's Master Head Pack X" from Morrowind Modding History - http://mw.modhistory.com/download--12454
- !! (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
-[ANY Original Faces 1.3.esp
-        Oryginal Faces 1.3 Morrowind only.esp
-        Oryginal Faces 1.3 PL Morrowind only.esp
-        Oryginal Faces 1.3 PL.esp]
-Westly's Master Headpack X.esp
