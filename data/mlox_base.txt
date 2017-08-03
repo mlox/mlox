@@ -16973,8 +16973,8 @@ F_Mage_Robe_Rep.esp
 
 [Note]
  The latest version of Fighters Guild Reanimation is beta 2.4, available at PES.
-[ANY 	!SIZE 1383432 FightersGuildReanimation.esp
-	!SIZE 1377450 FightersGuildReanimation.esP]
+[ANY 	SIZE 1383432 FightersGuildReanimation.esp
+		SIZE 1377450 FightersGuildReanimation.esP]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18956,15 +18956,15 @@ Golden Gold Patch v1.0.esp
 abotGondoliers.esp
 abotGondoliersRV.esp
 
-[Note]
+[Requires]
  "If you are using Redesigned Vivec.esp or PW_Redesigned Vivec-Vivec_Expansion.esp load abotGondoliersRV.esp"
  (Ref: "abotGondoliers.txt")
-[ALL abotGondoliers.esp
+abotGondoliersRV.esp
 	[ANY Redesigned Vivec.esp
 	 PW_Redesigned Vivec-Vivec_Expansion.esp
      Clean Redesigned Vivec - COM patch.esp
      Clean Redesigned Vivec - com_mca patch.esp
-     Clean Redesigned Vivec - MCA patch.esp]]
+     Clean Redesigned Vivec - MCA patch.esp]
 
 [Conflict]
  "If you are using Redesigned Vivec.esp or PW_Redesigned Vivec-Vivec_Expansion.esp load abotGondoliersRV.esp"
@@ -45393,18 +45393,23 @@ abotSiltStridersTR.esp
  (Ref: "abotSiltStriders.txt")
 abotSiltStriders.esp
 TR_Mainland.esm
+		  Tamriel_Data.esm
 
 [Requires]
- "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD [...] abotSiltStridersTR.esp"
+ "IF YOU HAVE TAMRIEL REBUILT INSTALLED, LOAD ONLY abotSiltStridersTR.esp"
  (Ref: "abotSiltStriders.txt")
 abotSiltStridersTR.esp
 TR_Mainland.esm
+     [ANY TR_Data.esm
+		  Tamriel_Data.esm]]
 
-[Note]
- !! "TR_Travels.esp currently sort of ruins my silt strider routes to and from Bal Oyra as it deletes the Bal Oyra silt strider port, and changes standard Bethesda / previously established travel destinations routes. [However,] you can use TR_Travels.esp [...] if you really want."
- !! (Ref: "abotSiltStriders.txt")
-[ALL abotSiltStridersTR.esp
-     TR_Travels.esp]
+;; delete this following rule as soon abot updates his mod name for TR normally
+[Requires]
+ "IF YOU HAVE TAMRIEL REBUILT 1612 or newer INSTALLED, LOAD ONLY abotSiltStridersTR1612.esp"
+ (Ref: "abotSiltStriders.txt")
+abotSiltStridersTR1612.esp
+[ALL TR_Mainland.esm
+     Tamriel_Data.esm]
 
 ;; expdep
 [Requires]
@@ -55377,7 +55382,7 @@ VioletFemme.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Vivec Expansion [Hoghead the Horrible]
+;; @Vivec Expansion 3.1 [Hoghead the Horrible]
 
 ;;Dragon32: Also conflicts with the 'Dwemer Warship' mod, can't find a download
 [Conflict]
@@ -55387,6 +55392,11 @@ VioletFemme.esp
      PW_Redesigned Vivec-Vivec_Expansion.esp] ;Pseron Wyrd's merged mod
 Japanese_House.esp
 
+[Note]
+ !! Your plugin is probably outdated, look for "Vivec Expansion TWEAKED Reworked by Hoghead the Horrible"
+ !! The File name will be still "Vivec Expansion 2.0.esp"
+[ANY [SIZE 1457393 Vivec Expansion 2.0.esp]
+	 [SIZE 1459470 Vivec Expansion.DV.esp]]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Vivec Flat 2.0 [Occam]
@@ -55472,7 +55482,7 @@ Psy_VGRParticle.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Vivec Hideout  [Thongar44]
+;; @Vivec Hideout [Thongar44]
 
 [Note]
  !! This plugin contains evil GMSTs, and other dirty references. It is recommended that you clean it with TESTool.
@@ -59005,109 +59015,121 @@ Oryginal Faces 1.3 PL.esp
 [Order]
 Original Faces 1.3.esp
 LGNPC_NoLore.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Merged_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Merged_Lt.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_HlaOad_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Khuul_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_MaarGan_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Pelagiad_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_SeydaNeen_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_VivecFQ_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_VivecRedoran_OM.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_SeydaNeen.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_GnaarMok_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_AldVelothi_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_MaarGan.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_HlaOad.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Aldruhn.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Aldruhn_suppl.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Pelagiad.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_TelMora_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_Khuul_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_VivecFQ.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_TelUvirith.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_SecretMasters_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_IndarysManor_v?_??.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_VivecRedoran.esp
-
-[Order]
-Original Faces 1.3.esp
 LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
 
 [Order]
-Original Faces 1.3.esp
+Oryginal Faces 1.3 PL.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Oryginal Faces 1.3 Morrowind only.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
+LGNPC_SoulSicknessPatch_v?_??.esp
+
+[Order]
+Oryginal Faces 1.3 PL Morrowind only.esp
+LGNPC_NoLore.esp
+LGNPC_Merged_OM.esp
+LGNPC_Merged_Lt.esp
+LGNPC_HlaOad_OM.esp
+LGNPC_Khuul_OM.esp
+LGNPC_MaarGan_OM.esp
+LGNPC_Pelagiad_OM.esp
+LGNPC_SeydaNeen_OM.esp
+LGNPC_VivecFQ_OM.esp
+LGNPC_VivecRedoran_OM.esp
+LGNPC_SeydaNeen.esp
+LGNPC_GnaarMok_v?_??.esp
+LGNPC_AldVelothi_v?_??.esp
+LGNPC_MaarGan.esp
+LGNPC_HlaOad.esp
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+LGNPC_Pelagiad.esp
+LGNPC_TelMora_v?_??.esp
+LGNPC_Khuul_v?_??.esp
+LGNPC_VivecFQ.esp
+LGNPC_TelUvirith.esp
+LGNPC_SecretMasters_v?_??.esp
+LGNPC_IndarysManor_v?_??.esp
+LGNPC_VivecRedoran.esp
+LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
 [Note]
@@ -59120,12 +59142,12 @@ LGNPC_SoulSicknessPatch_v?_??.esp
  !! (What the hell is a GMST? http://www.mwmythicmods.com/argent/tech/gmst.html )
 [SIZE 1518496 Oryginal Faces 1.3 PL Morrowind only.esp]
 
-[Note]
+[Requires]
  !! "[ARHIZ's "Original Faces"] is based on Westly's models and textures - it needs "Westly's Maste Headpack X" for proper working."
  !! Download "Westly's Master Head Pack X" from Morrowind Modding History - http://mw.modhistory.com/download--12454
  !! (Ref: http://www.nexusmods.com/morrowind/mods/42189 )
-[ALL [ANY Original Faces 1.3.esp
+[ANY Original Faces 1.3.esp
         Oryginal Faces 1.3 Morrowind only.esp
         Oryginal Faces 1.3 PL Morrowind only.esp
         Oryginal Faces 1.3 PL.esp]
-     [NOT Westly's Master Headpack X.esp]]
+Westly's Master Headpack X.esp
