@@ -114,6 +114,8 @@ class update_test(unittest.TestCase):
         self.assertTrue(os.path.isfile(self.temp_dir+'/mlox-data.7z'),term_color['red']+"Unable to download mlox-data.7z"+term_color['clear'])
         self.assertTrue(os.path.isfile(self.temp_dir+'/mlox_base.txt'),term_color['red']+"Unable to extract mlox_base.txt"+term_color['clear'])
 
+        update.update_mloxdata()
+
     def tearDown(self):
         import shutil
         shutil.rmtree(self.temp_dir)
