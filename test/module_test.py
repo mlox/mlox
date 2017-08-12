@@ -6,6 +6,7 @@
 import sys
 import os
 import logging
+import unittest
 sys.path.append( os.path.abspath('../mlox/') )
 logging.basicConfig(level=logging.DEBUG)
 
@@ -13,10 +14,6 @@ term_color ={
     'red': '\x1b[0;30;41m',
     'clear': '\x1b[0m'
 }
-
-#Updater
-import modules.update as update
-update.update_mloxdata()
 
 #File Finder
 import modules.fileFinder as fileFinder
@@ -99,3 +96,26 @@ import modules.version as version
 print term_color['red'] + "Testing Version" + term_color['clear']
 print version.Version
 print version.version_info()
+
+#Updater
+class update_test(unittest.TestCase):
+    temp_dir = ""
+
+    def setUp(self):
+        import tempfile
+        self.temp_dir = tempfile.mkdtemp()
+
+    #Make sure basic updator works
+    def testUpdater(self):
+        sys.path[0]= self.temp_dir
+        import modules.update as update
+        update.update_mloxdata()
+
+        self.assertTrue(os.path.isfile(self.temp_dir+'/mlox-data.7z'),term_color['red']+"Unable to download mlox-data.7z"+term_color['clear'])
+        self.assertTrue(os.path.isfile(self.temp_dir+'/mlox_base.txt'),term_color['red']+"Unable to extract mlox_base.txt"+term_color['clear'])
+
+    def tearDown(self):
+        import shutil
+        shutil.rmtree(self.temp_dir)
+
+unittest.main()
