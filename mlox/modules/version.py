@@ -3,7 +3,10 @@ import os
 import sys
 import re
 import locale
+import logging
 from modules.loadOrder import base_file
+
+version_logger = logging.getLogger('mlox.version')
 
 Version = "0.61"
 
@@ -21,7 +24,7 @@ def get_mlox_base_version():
     try:
         base = open(base_file, 'r')
     except IOError:
-        logging.error("Unable to get rules file version from:  {0}".format(base_file))
+        version_logger.error("Unable to get rules file version from:  {0}".format(base_file))
         return("(Not Found)")
     for line in base:
         m = re_base_version.match(line)
