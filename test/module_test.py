@@ -2,12 +2,17 @@
 
 # A test script to make sure all the modules work
 
+#Basic setup for logging
 import sys
+import os
 import logging
-
-sys.path.append('../mlox/')
-
+sys.path.append( os.path.abspath('../mlox/') )
 logging.basicConfig(level=logging.DEBUG)
+
+term_color ={
+    'red': '\x1b[0;30;41m',
+    'clear': '\x1b[0m'
+}
 
 #Updater
 import modules.update as update
@@ -31,22 +36,22 @@ handler0 = configHandler.configHandler("./userfiles/zinx.txt","Morrowind")
 handler1 = configHandler.configHandler("./userfiles/zinx.txt","Invalid")
 handler2 = configHandler.configHandler("./userfiles/zinx.txt")
 handler3 = configHandler.configHandler("./userfiles/zinx.txt","Oblivion")
-print "\x1b[0;30;41m" + "Reading handleri" + '\x1b[0m'
+print term_color['red'] + "Reading handleri" + term_color['clear']
 print handleri.read()
-print "\x1b[0;30;41m" + "Reading handler0" + '\x1b[0m'
+print term_color['red'] + "Reading handler0" + term_color['clear']
 print handler0.read()
-print "\x1b[0;30;41m" + "Reading handler1" + '\x1b[0m'
+print term_color['red'] + "Reading handler1" + term_color['clear']
 print handler1.read()
-print "\x1b[0;30;41m" + "Reading handler2" + '\x1b[0m'
+print term_color['red'] + "Reading handler2" + term_color['clear']
 print handler2.read()
-print "\x1b[0;30;41m" + "Reading handler3" + '\x1b[0m'
+print term_color['red'] + "Reading handler3" + term_color['clear']
 print handler3.read()
 
 dirHandler = configHandler.dataDirHandler("./test1.data/")
-print "\x1b[0;30;41m" + "Reading dirHandler" + '\x1b[0m'
+print term_color['red'] + "Reading dirHandler" + term_color['clear']
 plugins = dirHandler.read()
 print plugins
-print "\x1b[0;30;41m" + "Writing dirHandler" + '\x1b[0m'
+print term_color['red'] + "Writing dirHandler" + term_color['clear']
 dirHandler.write(plugins)
 
 
@@ -55,18 +60,18 @@ logging.getLogger('').setLevel(logging.INFO)
 #Parser, ang pluggraph
 import modules.ruleParser as ruleParser
 import modules.pluggraph as pluggraph
-print "\x1b[0;30;41m" + "Testing parser on dirHandler plugins" + '\x1b[0m'
+print term_color['red'] + "Testing parser on dirHandler plugins" + term_color['clear']
 graph = pluggraph.pluggraph()
 myParser = ruleParser.rule_parser(plugins,graph,"./test1.data/",sys.stdout,file_names)
 myParser.read_rules("./test1.data/mlox_base.txt")
 print graph.topo_sort()
-print "\x1b[0;30;41m" + "Testing filename version" + '\x1b[0m'
+print term_color['red'] + "Testing filename version" + term_color['clear']
 (f_ver,d_ver) = ruleParser.get_version("BB_Clothiers_of_Vvardenfell_v1.1.esp","./test1.data/")
 print (f_ver,d_ver,"BB_Clothiers_of_Vvardenfell_v1.1.esp")
 
 #Load order
 from modules.loadOrder import loadorder
-print "\x1b[0;30;41m" + "Testing loadorder 1" + '\x1b[0m'
+print term_color['red'] + "Testing loadorder 1" + term_color['clear']
 l1 = loadorder()
 l1.datadir = fileFinder.caseless_dirlist("./test1.data/")
 l1.plugin_file = "./userfiles/abot.txt"
@@ -74,12 +79,12 @@ l1.game_type = None
 l1.get_active_plugins()
 l1.update()
 print l1.listversions()
-print "\x1b[0;30;41m" + "Testing loadorder 2" + '\x1b[0m'
+print term_color['red'] + "Testing loadorder 2" + term_color['clear']
 l2 = loadorder()
 l2.datadir = fileFinder.caseless_dirlist("./test1.data/")
 l2.get_data_files()
 l2.update()
-print "\x1b[0;30;41m" + "Testing loadorder 3" + '\x1b[0m'
+print term_color['red'] + "Testing loadorder 3" + term_color['clear']
 l3 = loadorder()
 l3.read_from_file("./userfiles/abot.txt")
 l3.update()
@@ -91,6 +96,6 @@ logging.getLogger('').setLevel(logging.DEBUG)
 
 #Version
 import modules.version as version
-print "\x1b[0;30;41m" + "Testing Version" + '\x1b[0m'
+print term_color['red'] + "Testing Version" + term_color['clear']
 print version.Version
 print version.version_info()
