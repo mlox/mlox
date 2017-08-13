@@ -8,4 +8,3 @@ for f in os.listdir("."):
         mtime = random.randrange(1200000000, int(time.time()), 100)
         #print "setting mtime of %s to %f" % (f, mtime)
         os.utime(f, (-1, mtime))
-        
