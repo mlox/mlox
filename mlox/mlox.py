@@ -39,7 +39,7 @@ Opt.Profile = False
 Opt.Quiet = False
 Opt.Update = False
 Opt.WarningsOnly = False
-Opt.NoUpdate = True
+Opt.NoUpdate = False
 
 #Configure logging from python module
 class colorFormatConsole(logging.Formatter):
