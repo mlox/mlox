@@ -89,7 +89,7 @@ You should also be aware that the **`[Order]`** rule only specifies relative ord
 # Documentation
 The complete documentation for mlox can be found in the Doucmentation directory.
 
-  * [Mlox Readme](mlox/Readme.md) provides a guide to getting started and introduction to usage. **Important Reading!**
+  * [Mlox Usage Guide](mlox/Using mlox.md) provides a guide to getting started and introduction to usage. **Important Reading!**
   * [Editing Guidelines](Documentation/Editing Guidelines.md) explains the basics of mlox rules, and how they should be used.
   * [Rules Guildelines](Documentation/Rule Guidelines.md) explains the syntax of the mlox rules, and how to write them yourself if you want to customize mlox.
   * [mlox_guts.txt](Documentation/mlox_guts.txt) describes mlox's inner workings and how it does its job.

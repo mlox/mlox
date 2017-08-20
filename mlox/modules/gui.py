@@ -17,9 +17,10 @@ import modules.version as version
 from modules.loadOrder import loadorder
 
 #Resource files
-program_path = os.path.realpath(sys.path[0])
-translation_file = os.path.join(program_path,"mlox.msg")
-gif_file = os.path.join(program_path,"mlox.gif")
+program_path     = os.path.realpath(sys.path[0])
+resources_path   = os.path.join(program_path,"Resources")
+translation_file = os.path.join(resources_path,"mlox.msg")
+gif_file         = os.path.join(resources_path,"mlox.gif")
 
 clip_file = "mlox_clipboard.out"
 debug_output = "mlox_debug.out"
