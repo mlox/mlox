@@ -60,6 +60,7 @@ class configHandler_test(unittest.TestCase):
     modified_plugins = test1_plugins
     modified_plugins[163] = 'DwemerClock.esp'
     modified_plugins[164] = 'pk_TatyShirt.esp'
+    morrowind_ini = ['Morrowind.esm', 'Tribunal.esm', 'BLOODMOON.esm', 'GIANTS.esm', 'TR_Data.esm', 'TR_Map1.esm', 'TR_Map2.esm', 'Better Heads.esm', 'Better Heads Tribunal addon.esm', 'Better Heads Bloodmoon addon.esm', 'BT_Whitewolf_2_0.esm', 'The Wilderness Mod 2.0.esm', 'The Wilderness Mod 2.0 T & B.esm', 'Morrowind Comes Alive.esm', 'Morrowind Patch v1.6.5-BETA.esm', 'fem_body.esp', 'Zed.esp', 'RealSignposts.esp', 'Passive_Healthy_Wildlife.esp', 'entertainers.esp', 'AreaEffectArrows.esp', 'bcsounds.esp', 'LeFemmArmor.esp', 'adamantiumarmor.esp', 'EBQ_Artifact.esp', 'Siege at Firemoth.esp', 'A good place to stay, Teleport Addon.esp', 'A good place to stay, Ver 1,8.esp', 'No-Glo_0709.esp', 'Clean Water Nymph race.esp', 'female_cuirasses_2.0.esp', 'Weapon Wielding Mannequins.esp', 'Nerevarine Greeting tweaks.esp', 'Aduls_Artifact_Replace_(Trueflame).esp', 'GIANTS Ultimate Control file.esp', 'Blood and Gore.esp', 'Better Bodies.esp', 'Meteor.esp', 'HelioS - Giants Fix.esp', 'Silt_Striders_Are_In_Vvardenfell.esp', "Taddeus'BalancedArmors.esp", 'CET_Meteoric_Steel_Mail.esp', 'Vivec Signposts.esp', 'Amazon War Boots 1.0.esp', 'Annastia V3.3.esp', 'indybankWC.esp', 'MTT IV Master.esp', "Taddeus'BalancedObjects.esp", 'Amazon Platemail Greaves 2.0.esp', 'GIANTS_Ultimate_Official_Fixes.esp', 'Sexy Daedric Armor v1.1.esp', 'Morrowind Comes Alive Guards Patch.esp', 'MCAnames4.1lorecorrect.esp', 'Clean BB_Tshirt_and_Skirt.esp', 'Sexy Ordinator Armor 2.esp', 'Sexy Glass Armor v1.1.esp', 'Sexy Ice Armor v1.1.esp', 'Amazon Tops.esp', "Bob's Armory.esp", 'Clean Better Daedric.esp', 'Better Solsthiem Creatures.esp', 'Sexy Ebony Armor.esp', "Unofficial_Expansion_for_Louis'_BeautyShop.esp", 'BT_Whitewolf_2_0.esp', 'EarthlyDelights.esp', 'Better Clothes Beta_1.4.esp', 'ARJAN_A_Lords_Men_v2.0.esp', 'Louis_BeautyShop_v1.5.esp', 'StripForMe.esp', 'KeyNamer.esp', 'ModMan_windowlights_full_2.esp', 'Lockpick__Probe_Weight_Fix.esp', 'Wolfen Castle.esp', 'Tribun_Laura_3_0.esp', 'master_index.esp', 'Merged_Objects.esp', 'Merged_Dialogs.esp', 'Merged_Leveled_Lists.esp']
 
     #Can't use the logging check with python 2.7...
     def test_No_File(self):
@@ -68,8 +69,13 @@ class configHandler_test(unittest.TestCase):
         self.assertEqual(handleri.read(),[])
         #self.assertEqual(l.output, ['ERROR:mlox.configHandler:Unable to open config file: No File'])
 
-    def test_Morrowind(self):
+    def test_Morrowind_only(self):
+        """Test reading a file that only contains morrowind game entries"""
         self.assertEqual(self.configHandler.configHandler("./userfiles/zinx.txt","Morrowind").read(),self.zinx_txt)
+
+    def test_Morrowind_ini_reading(self):
+        """Test reading an actual morrowind.ini"""
+        self.assertEqual(self.configHandler.configHandler("./testM/Morrowind.ini","Morrowind").read(),self.morrowind_ini)
 
     #Can't use the logging check with python 2.7...
     def test_Invalid(self):
@@ -92,6 +98,20 @@ class configHandler_test(unittest.TestCase):
         dirHandler.write(self.modified_plugins)
         self.assertEqual(dirHandler.read(),self.modified_plugins)
         dirHandler.write(self.test1_plugins)
+
+    def test_morrowind_ini_clearing_writing(self):
+        """
+        Test both clearing and writing to a morrowind.ini file at the same time
+        (if read tests failed earlier, this will also fail)
+        """
+        import shutil
+        shutil.copyfile("./testM/Morrowind.ini",".tmp")
+        handlerM = self.configHandler.configHandler(".tmp","Morrowind")
+        handlerM.clear()
+        self.assertEqual(handlerM.read(),[])
+        handlerM.write(self.morrowind_ini)
+        self.assertEqual(handlerM.read(),self.morrowind_ini)
+        os.remove(".tmp")
 
 #Parser, and pluggraph
 class parser_pluggraph_test(unittest.TestCase):

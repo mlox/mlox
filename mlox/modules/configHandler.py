@@ -68,8 +68,97 @@ class configHandler():
         # Deal with duplicates
         (files, dups) = fileFinder.filter_dup_files(files)
         for f in dups:
-            logging.debug("Config File: Duplicate plugin found in config file: {0}".format(f))
+            config_logger.debug("Duplicate plugin found in config file: {0}".format(f))
         return files
+
+    #Remove all plugins from the config file
+    def clear(self):
+        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE);
+
+        config_logger.debug("Clearing config file: {0}".format(self.configFile))
+
+        #Only handling Morrowind.ini right now
+        if (self.fileType != "Morrowind"):
+            config_logger.error("Can not clear non Morrowind.ini config files.")
+            return False
+
+        #Read the file to a buffer
+        try:
+            file_handle = open(self.configFile, 'r')
+        except IOError:
+            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            return False
+        file_buffer = file_handle.read()
+        file_handle.close()
+
+        #Remove the data from '[Game Files]'
+        sections = section_re.split(file_buffer)
+        try:
+            config_index = sections.index('[Game Files]')
+        except:
+            config_logger.error("Config file does not have a '[Game Files]' section!")
+            return False
+        sections[config_index+1] = '\n'
+        file_buffer =  reduce(lambda x,y: x+y,sections)
+
+
+        #Write the buffer to the file
+        try:
+            file_handle = open(self.configFile, 'w')
+        except IOError:
+            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            return False
+        file_handle.write(file_buffer)
+        file_handle.close()
+
+        return True
+
+    #Write a plugin list to the config file
+    def write(self,files):
+        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE);
+
+        config_logger.debug("Writing config file: {0}".format(self.configFile))
+
+        #Only handling Morrowind.ini right now
+        if (self.fileType != "Morrowind"):
+            config_logger.error("Can not write non Morrowind.ini config files.")
+            return False
+
+        #Read the file to a buffer
+        try:
+            file_handle = open(self.configFile, 'r')
+        except IOError:
+            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            return False
+        file_buffer = file_handle.read()
+        file_handle.close()
+
+        #Generate the plugins string
+        out_str = "\n"
+        for i in range(0,len(files)):
+            out_str += "GameFile{index}={plugin}\n".format(index=i,plugin=files[i])
+
+        #Remove the data from '[Game Files]'
+        sections = section_re.split(file_buffer)
+        try:
+            config_index = sections.index('[Game Files]')
+        except:
+            config_logger.error("Config file does not have a '[Game Files]' section!")
+            return False
+        sections[config_index+1] = out_str
+        file_buffer =  reduce(lambda x,y: x+y,sections)
+
+
+        #Write the buffer to the file
+        try:
+            file_handle = open(self.configFile, 'w')
+        except IOError:
+            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            return False
+        file_handle.write(file_buffer)
+        file_handle.close()
+
+        return True
 
 # Handle reading and updating the load order for the plugins in the data directory
 class dataDirHandler:
