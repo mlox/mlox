@@ -1,5 +1,12 @@
 # ChangeLog
 
+Version 0.7 -
+* Completely refactored mlox code! [EmperorArthur]
+* Rewrote / Re-aranged most documentation. [EmperorArthur]
+* mlox (including updater) now works on linux, and does not crash if unable to update!! [EmperorArthur]
+* Now find game directories by looking for configuration files, not .exe (Allow for easily using mlox with OpenMW) [EmperorArthur]
+* mlox now understands OpenMW config files format, though it does not (yet) actively find them. [EmperorArthur]
+
 Version 0.61 - 2015/08/01
 * URI for checking and downloading new rule-base changed from Google Code to SourceForge [Dragon32]
 
