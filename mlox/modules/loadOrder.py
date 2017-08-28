@@ -38,7 +38,7 @@ class loadorder:
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
         self.is_sorted = False
         if self.plugin_file == None:
-            order_logger.warning("{0} config file not found!".format(self.game_type))
+            order_logger.warning("No game configuration file was found!\nAre you sure you're running mlox in or under your game directory?")
             return
 
         # Get all the plugins
@@ -202,7 +202,7 @@ class loadorder:
         self.is_sorted = False
         self.graph = pluggraph.pluggraph()
         if self.order == []:
-            order_logger.error("No plugins detected! mlox needs to run somewhere under where the game is installed.")
+            order_logger.error("No plugins detected!\nmlox needs to run somewhere under where the game is installed.")
             return
         order_logger.debug("Initial load order:")
         for p in self.get_original_order():
