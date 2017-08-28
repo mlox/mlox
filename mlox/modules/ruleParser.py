@@ -118,6 +118,8 @@ def plugin_description(plugin):
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
+    version = "Unkown"
+
     def __init__(self, active, graph, datadir,out_stream,name_converter):
         self.active = active
         self.graph = graph
@@ -602,8 +604,6 @@ class rule_parser:
         n_rules = 0
         self.rule_file = rule_file
 
-        pmsg = "Loading: %s" % rule_file
-
         parse_logger.debug("Reading rules from: \"{0}\"".format(self.rule_file))
         try:
             self.input_handle = open(self.rule_file, 'r')
@@ -618,10 +618,11 @@ class rule_parser:
             if self.buffer == "":
                 if not self.readline():
                     break
+            #Update the GUI progress bar
             if progress != None and inputsize > 0:
                 pct = int(100*self.bytesread/inputsize)
                 if pct % 3 == 0 and pct < 100:
-                    progress.Update(pct, pmsg)
+                    progress.Update(pct, "Loading: {0}".format(self.rule_file))
             self.parse_dbg_indent = ""
             self.curr_rule = ""
             new_rule = re_rule.match(self.buffer)
@@ -631,6 +632,8 @@ class rule_parser:
                 self.message = []
                 if self.curr_rule == "VERSION":
                     self.buffer = ""
+                    self.version= new_rule.group(2)
+                    parse_logger.info("\"{0}\" Version {1}".format(os.path.basename(self.rule_file),self.version))
                 elif self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
                     self.parse_ordering(self.curr_rule)
                 elif self.curr_rule in ("CONFLICT", "NOTE", "PATCH", "REQUIRES"):

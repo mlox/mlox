@@ -123,6 +123,18 @@ class parser_pluggraph_test(unittest.TestCase):
     'vampire_werewolf.esp', 'windows glow.esp', 'unboarable rieklings.esp', 'bm_s_inn.esp', 'smooth moves v1.esp', "slof's vampire faces.esp", 'vampire realism ii.esp', 'vampire realism ii - tb add-on.esp', 'vampire realism ii - bm add-on.esp', 'vampire realism ii - ve patch.esp', 'vampire realism ii - bl patch.esp', 'abotwhereareallbirdsgoing.esp', "ng_new_carnithus'_armamentarium.esp", 'scripted_spells.esp', 'nixie.esp', 'book rotate - tribunal v5.3.esp', 'book rotate - bloodmoon v5.3.esp', 'clean sexy_black_collar_dress_v.1a.esp', 'keynamer.esp', 'tribun_laura_3_0.esp', 'galsiahs character development.esp', 'gcd startscript for trib or bloodmoon.esp', 'gcd better balanced birthsigns.esp', 'gcd restore potions fix.esp', 'gcd_ss_patch.esp', 'brittlewind fix.esp', 'gcd_we_patch.esp', 'drug realism.esp', "juniper's twin lamps (1.1 tribunal).esp", 'gcd_107x_to_108_patch.esp', 'vampire_embrace.esp', 'sslave_companions.esp', 'bt_wwlokpatch1.esp', 'vampiric hunger base.esp', 'vampiric hunger extended.esp', 'vampiric hunger - su.esp', 'gcd_vh_patch2.esp', 'arjan_a_lords_men_v2.0.esp', 'book jackets - morrowind - bookrotate.esp', 'dm_db armor replacer.esp', "slof's goth shop ii.esp", 'bb_clothiers_of_vvardenfell_v1.1.esp', 'expanded sounds.esp', 'iceniolivrobereplacerall.esp', 'barons_partners30.esp', "slof's pillow book.esp", 'theubercrystalegghunt.esp',
     'better clothes_v1.1_nac.esp', 'clean tales of seyda neen.esp', 'lgnpc_indarys_manor_v1_45.esp', 'new argonian bodies - mature.esp', 'lgnpc_gnaarmok_v1_10.esp', 'lgnpc_aldvelothi_v1_20.esp', 'lgnpc_maargan_v1_10.esp', 'new khajiit bodies - mature.esp', 'lgnpc_secret_masters_v1_21.esp', 'gothic attire complete v1-1.esp', "building up uvirith's grave 1.1.esp", 'secrets of vvardenfell.esp', 'the_vvardenfell_libraries.esp', 'lgnpc_hlaoad_v1_32.esp', 'nede v1.2.esp', 'nede wgi patch.esp', 'rts_faeriesseydaneen.esp', 'rts_healingfaeries.esp', 'sris_alchemy_bm.esp', 'sri alchemy bm list patch.esp', 'creatures.esp', 'creaturesx-jms_patch.esp', 'dn-gdrv1.esp', 'syc_herbalismforpurists.esp', 'syc_herbalismforpurists_bm.esp', 'syc_herbalismforpurists_tb.esp', 'syc_herbalism es patch.esp', 'multimark.esp', 'multimark_firemothplugin.esp', 'multimark_tribunalplugin.esp', 'multimark_bloodmoonplugin.esp', 'multimark-jms_patch.esp', 'all silt strider ports.esp', 'all boat ports.esp', 'vampire_embrace-jms_patch.esp', 'dh_thriftshop-jms_patch.esp', 'k_potion_upgrade_1.2.esp', 'vampire_embrace-jms_combat_bite_patch.esp', 'syc_herbalismforpurists-jms_patch.esp', 'jms-shishi_door_fix.esp', 'moons_soulgems.esp', 'suran_underworld_2.5.esp', 'lgnpc_aldruhn_v1_13.esp', 'suran_underworld_2.5-jms_patch.esp', 'bt_whitewolf_2_0-jms_patch.esp', 'lgnpc_pelagiad_v1_13.esp', 'lgnpc_telmora_v1_11.esp', 'chargen_revamped_v14.esp', 'chargen revamped delay2.esp', 'lgnpc_khuul_v2_01.esp', 'lgnpc_vivecfq_v2_03.esp', 'tribunal-jms_patch.esp', 'lgnpc_teluvirith_v1_10.esp', 'lgnpc_vivecredoran_v1_40.esp', 'lgnpc_paxredoran_v1_11.esp', 'dx_creatureadditionsv1.0.esp', 'betterclothes_patch.esp', 'buug alchemy- bloodmoon.esp', 'buug alchemy- srikandi.esp', 'buug alchemy- tribunal.esp', 'pk_tatyshirt.esp', 'clean tales of the bitter coast.esp', 'clean tales of tel branora.esp', 'tr_map1-jms_patch.esp', 'chalk30-base.esp', 'dh_furn-jms_patch.esp', 'mtt_iv_master.esp', 'jms-springheel_boots.esp', 'morrowind-jms_patch.esp', 'dn-gdrv1-jms_patch.esp', 'lgnpc_paxredoran_v1_11-jms_patch.esp', 'vampire_embrace-jms_follow_patch.esp', 'jms-ring_of_mojo.esp', 'vampire_embrace-jms_combat_bite_patch-2.esp', 'lgnpc_aldruhn_v1_13-jms_patch.esp', 'mashed lists.esp']
 
+    def test_parser_base_version_good(self):
+        graph = self.pluggraph.pluggraph()
+        myParser = self.ruleParser.rule_parser([],graph,"",sys.stdout,self.file_names)
+        myParser.read_rules("../data/mlox_base.txt")
+        self.assertNotEqual(myParser.version,"Unkown")
+
+    def test_parser_base_version_bad(self):
+        graph = self.pluggraph.pluggraph()
+        myParser = self.ruleParser.rule_parser([],graph,"",sys.stdout,self.file_names)
+        myParser.read_rules("./test1.data/mlox_base.txt")
+        self.assertEqual(myParser.version,"Unkown")
+
     def test_parser_graph(self):
         graph = self.pluggraph.pluggraph()
         myParser = self.ruleParser.rule_parser([],graph,"./test1.data/",sys.stdout,self.file_names)
@@ -130,7 +142,7 @@ class parser_pluggraph_test(unittest.TestCase):
         self.assertEqual(graph.topo_sort(),self.test1_graph)
 
     #TODO:  d_ver doesn't seem correct
-    def test_version(self):
+    def test_plugin_version(self):
         #Multi-line check here
         (f_ver,d_ver) = self.ruleParser.get_version("BB_Clothiers_of_Vvardenfell_v1.1.esp","./test1.data/")
         self.assertEqual(f_ver,'00001.00001.00000._')
