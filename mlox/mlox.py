@@ -10,9 +10,7 @@
 # under the MIT License:
 #   https://sourceforge.net/projects/mlox/files/License.txt
 
-import os
 import sys
-import re
 from getopt import getopt, GetoptError
 import logging
 import StringIO
@@ -20,6 +18,7 @@ import modules.update as update
 import modules.version as version
 from modules.loadOrder import loadorder
 from modules.gui import _
+from modules.gui import load_translations
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -50,9 +49,9 @@ class colorFormatConsole(logging.Formatter):
         'ERROR'    : '\x1b[0;30;41m',  #Red (ish)
         'CRITICAL' : '\x1b[0;30;41m'   #Red (ish)
     }
-    def __init__(self,msg):
+    def __init__(self, msg):
         logging.Formatter.__init__(self, msg)
-    def format(self,record):
+    def format(self, record):
         return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
 
 logging.getLogger('').setLevel(logging.DEBUG)
@@ -67,7 +66,7 @@ logging.getLogger('mlox.parser').setLevel(logging.INFO)
 
 def main():
     if Opt.NoUpdate == False:
-            update.update_mloxdata()
+        update.update_mloxdata()
     if Opt.GUI == True:
         # run with gui
         from modules.gui import mlox_gui
@@ -82,7 +81,7 @@ def main():
             l = loadorder()
             l.read_from_file(fromfile)
             if Opt.Explain != None:
-                print l.explain(Opt.Explain,Opt.BaseOnly)
+                print l.explain(Opt.Explain, Opt.BaseOnly)
                 #Only expain for first input file
                 sys.exit(0)
             if Opt.Quiet:
@@ -98,13 +97,13 @@ def main():
         # run with command line arguments
         l = loadorder()
         if Opt.GetAll:
-                l.get_data_files()
+            l.get_data_files()
         else:
             l.get_active_plugins()
             if l.order == []:
                 l.get_data_files()
         if Opt.Explain != None:
-            print l.explain(Opt.Explain,Opt.BaseOnly)
+            print l.explain(Opt.Explain, Opt.BaseOnly)
             sys.exit(0)
         if Opt.Quiet:
             l.update(StringIO.StringIO())
@@ -132,7 +131,7 @@ if __name__ == "__main__":
         logging.error("This program requires at least Python version 2.5.")
         sys.exit(1)
     # process command line arguments
-    logging.debug("Command line: %s" % " ".join(sys.argv))
+    logging.debug("Command line: %s", " ".join(sys.argv))
     try:
         opts, args = getopt(sys.argv[1:], "acde:fhlnpquvw",
                             ["all", "base-only", "check", "debug", "explain=", "fromfile", "gui", "help",
@@ -185,7 +184,7 @@ if __name__ == "__main__":
         elif opt in ("-u", "--update"):
             Opt.Update = True
         elif opt in ("-v", "--version"):
-            print version_info()
+            print version.version_info()
             sys.exit(0)
         elif opt in ("-w", "--warningsonly"):
             Opt.WarningsOnly = True
