@@ -11,37 +11,19 @@
 #   https://sourceforge.net/projects/mlox/files/License.txt
 
 import sys
-from getopt import getopt, GetoptError
 import logging
 import StringIO
+import argparse
+import textwrap
+import pprint
 import modules.update as update
 import modules.version as version
 from modules.loadOrder import loadorder
 from modules.gui import _
 from modules.gui import load_translations
 
-class dynopt(dict):
-    def __getattr__(self, item):
-        return self.__getitem__(item)
-    def __setattr__(self, item, value):
-        self.__setitem__(item, value)
-
-Opt = dynopt()
-
-# command line options
-Opt.BaseOnly = False
-Opt.Explain = None
-Opt.FromFile = False
-Opt.GUI = False
-Opt.GetAll = False
-Opt.Profile = False
-Opt.Quiet = False
-Opt.Update = False
-Opt.WarningsOnly = False
-Opt.NoUpdate = False
-
-#Configure logging from python module
-class colorFormatConsole(logging.Formatter):
+class ColorFormatConsole(logging.Formatter):
+    """Color code the logging information on Unix terminals"""
     levels = {
         'DEBUG'    : '',
         'INFO'     : '',
@@ -54,151 +36,200 @@ class colorFormatConsole(logging.Formatter):
     def format(self, record):
         return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
 
-logging.getLogger('').setLevel(logging.DEBUG)
-color_formatter = colorFormatConsole('%(levelname)s (%(name)s): %(message)s')
-console_log_stream = logging.StreamHandler()
-console_log_stream.setLevel(logging.INFO)
-console_log_stream.setFormatter(color_formatter)
-logging.getLogger('').addHandler(console_log_stream)
+class ShowTranslations(argparse.Action):
+    """Dump the translation dictionary for the specified language, then exit."""
+    def __call__(self, parser, namespace, values, option_string=None):
+        print "Languages translations for: %s" % values[0]
+        for key, value in (load_translations(values[0]).items()):
+            print "%s:" % key
+            print " -> %s" % value.encode("utf-8")
+        sys.exit(0)
 
-#Disable parse debug logging unless the user asks for it (It's so much it actually slows the program down)
-logging.getLogger('mlox.parser').setLevel(logging.INFO)
+class ListVersions(argparse.Action):
+    """List the version information of the current data files, then exit"""
+    def __call__(self, parser, namespace, values, option_string=None):
+        my_loadorder = loadorder()
+        my_loadorder.get_data_files()
+        print my_loadorder.listversions()
+        sys.exit(0)
 
-def main():
-    if Opt.NoUpdate == False:
-        update.update_mloxdata()
-    if Opt.GUI == True:
-        # run with gui
-        from modules.gui import mlox_gui
-        mlox_gui().start()
-    #Running in command line mode
-    logging.info("Version: %s\t\t\t\t %s " % (version.full_version(), _["Hello!"]))
-    if Opt.FromFile:
-        if len(args) == 0:
-            print _["Error: -f specified, but no files on command line."]
-            usage(2)            # exits
-        for fromfile in args:
-            l = loadorder()
-            l.read_from_file(fromfile)
-            if Opt.Explain != None:
-                print l.explain(Opt.Explain, Opt.BaseOnly)
-                #Only expain for first input file
-                sys.exit(0)
-            if Opt.Quiet:
-                l.update(StringIO.StringIO())
-            else:
-                l.update()
-            #We never actually write anything if reading from file(s)
-            if not Opt.WarningsOnly:
-                print "[Proposed] New Load Order:\n---------------"
-            for p in l.get_new_order():
-                print p
+def command_line_mode(args):
+    """Run in command line mode.  This assumes log levels were properly set up beforehand"""
+    logging.info("%s %s", version.full_version(), _["Hello!"])
+    if args.fromfile:
+        for fromfile in args.fromfile:
+            my_loadorder = loadorder()
+            my_loadorder.read_from_file(fromfile)
+            process_load_order(my_loadorder, args.warningsonly, args.explain, args.base_only)
     else:
-        # run with command line arguments
-        l = loadorder()
-        if Opt.GetAll:
-            l.get_data_files()
+        my_loadorder = loadorder()
+        if args.all:
+            my_loadorder.get_data_files()
         else:
-            l.get_active_plugins()
-            if l.order == []:
-                l.get_data_files()
-        if Opt.Explain != None:
-            print l.explain(Opt.Explain, Opt.BaseOnly)
-            sys.exit(0)
-        if Opt.Quiet:
-            l.update(StringIO.StringIO())
+            my_loadorder.get_active_plugins()
+            if my_loadorder.order == []:
+                logging.warn("No active plugins, defaulting to all plugins in Data Files directory.")
+                my_loadorder.get_data_files()
+        process_load_order(my_loadorder, args.warningsonly, args.explain, args.base_only)
+
+def process_load_order(a_loadorder, warningsonly, write_new_load_order, explain=None, base_only=False):
+    """
+    Process a load order.
+    These are things users can do or see with a load order.
+    No matter how the list of plugins is obtained, what's done here stays the same.
+    """
+    if explain:
+        print a_loadorder.explain(explain[0], base_only)
+        sys.exit(0)
+    a_loadorder.update(load_order_output)
+    if not warningsonly:
+        print "{0:-^80}".format('[New Load Order]')
+        for plugin in a_loadorder.get_new_order():
+            print plugin
+        if write_new_load_order:
+            a_loadorder.write_new_order()
+            print "{0:-^80}".format('[LOAD ORDER SAVED]')
         else:
-            l.update()
-        if not Opt.WarningsOnly:
-            if Opt.Update:
-                print "[UPDATED] New Load Order:\n---------------"
-                l.write_new_order()
-                print "[LOAD ORDER UPDATED!]"
-            else:
-                print "[Proposed] New Load Order:\n---------------"
-        for p in l.get_new_order():
-            print p
+            print "{0:-^80}".format('[END PROPOSED LOAD ORDER]')
 
 if __name__ == "__main__":
+    #Configure logging from python module
+    logging.getLogger('').setLevel(logging.DEBUG)
+    color_formatter = ColorFormatConsole('%(levelname)s (%(name)s): %(message)s')
+    console_log_stream = logging.StreamHandler()
+    console_log_stream.setLevel(logging.INFO)
+    console_log_stream.setFormatter(color_formatter)
+    logging.getLogger('').addHandler(console_log_stream)
+    #Disable parse debug logging unless the user asks for it (It's so much it actually slows the program down)
+    logging.getLogger('mlox.parser').setLevel(logging.INFO)
+
+    ###
+    #Begin Program Arguments
+    ###
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description='mlox - the elder scrolls Mod Load Order eXpert',
+        epilog=textwrap.dedent("""
+            when invoked with no options, mlox runs in GUI mode.
+
+            mlox is intended to be run from somewhere under your game directory.
+            mlox runs under Windows or Linux.
+
+            mlox sorts your plugin load order using rules from input files
+            (mlox_base.txt and mlox_user.txt, if it exists). A copy of the
+            newly generated load order is saved in mlox_loadorder.out.
+
+            Note: if you use Wrye Mash's "lock times" feature and you want mlox to update your load order, you need to run Mash first and turn it off.
+            Otherwise, the next time you run Mash, it will undo all the changes in your load order made by mlox.
+            """))
+
+    parser.add_argument("-n", "--nodownload", help="Do not automatically download and update the mlox rules.", action="store_true")
+    parser.add_argument("-v", "--version", help="Print version and exit.", action="version", version=version.version_info())
+
+    parser.add_argument("-a", "--all",
+        help="Handle for all plugins in the Data Directory.\nDefault is to only process active plugins (plugins in the Data directory, and also in Morrowind.ini.",
+        action="store_true")
+
+    writer_group = parser.add_mutually_exclusive_group()
+    #Check mode is actually the default behavior, so setting it doesn't do anything
+    writer_group.add_argument("-c", "--check", help="Check mode, do not update the load order.  Default Behavior.", action="store_true")
+    writer_group.add_argument("-u", "--update", help="Update mode, updates the load order.", action="store_true")
+    writer_group.add_argument("-w", "--warningsonly", help="Warnings only, do not display the new load order.\nImplies --check.", action="store_true")
+
+    #The strange double add is to make the exclusive group its own section in the help text
+    verbosity_group = parser.add_argument_group('Verbosity Controls', 'Select ONLY one of these to set how much output to recieve.').add_mutually_exclusive_group()
+    verbosity_group.add_argument("-p", "--parsedebug",
+        help="Turn on debugging for the rules parser. (This can generate a fair amount of output).\nImplies --debug.",
+        action="store_true")
+    verbosity_group.add_argument("-d", "--debug", help="Turn on debug output.", action="store_true")
+    verbosity_group.add_argument("-q", "--quiet",
+        help="Run more quietly (only re-order plugins, ignoring all notes, warnings, etc).\nDo not print out anything less than warning messages.",
+        action="store_true")
+
+    parser.add_argument("-f", "--fromfile",
+        help="File processing mode.\nAt least one input file must follow on command line.\nEach file contains a list of plugins which is used instead of reading the list of plugins from the data file directory.\nFile formats accepted: Morrowind.ini, load order output of Wrye Mash, and Reorder Mods++.",
+        metavar='file',
+        nargs='+',
+        type=str)
+    parser.add_argument("-e", "--explain",
+        help="Print an explanation of the dependency graph for plugin.\nThis can help you understand why a plugin was moved in your load order.\nImplies --quiet.",
+        metavar='plugin',
+        nargs=1,
+        type=str)
+    parser.add_argument("--base-only",
+        help="Use this with the --explain option to exclude the current load order from the graph explanation.",
+        action="store_true")
+    parser.add_argument("--gui",
+        help="Run the GUI.\nDefault action if no arguments are given.",
+        action="store_true")
+
+
+    #Developer arguments.  Not useful unless you're working on mlox internals.
+    developer_group = parser.add_argument_group('Developer Options', 'Options useful only to mlox developers.')
+    developer_group.add_argument("-l", "--listversions",
+        help="Use this to list the version numbers parsed from your plugins.\nThe output is in 2 columns.\nThe first is the version from the plugin filename, if present.\nThe second is from the plugin header, if present.\nNaturally, many plugins do not use version numbers so results are spotty.\nThis information can be used to write rules using the [VER] predicate.",
+        nargs=0,
+        action=ListVersions)
+    developer_group.add_argument("--profile",
+        help="Use hotshot to profile the application.",
+        action="store_true")
+    developer_group.add_argument("--translations",
+        help="Dump the translation dictionary for the specified language, then exit.",
+        metavar='language',
+        nargs=1,
+        type=str,
+        action=ShowTranslations)
+
+    ###
+    #End Program Arguments
+    ###
+
     logging.debug("\nmlox DEBUG DUMP:\n")
-    def usage(status):
-        print _["Usage"]
-        sys.exit(status)
     # Check Python version
-    pyversion = sys.version[:3]
     logging.debug(version.version_info())
+    pyversion = sys.version[:3]
     if float(pyversion) < 2.5:
         logging.error("This program requires at least Python version 2.5.")
         sys.exit(1)
-    # process command line arguments
-    logging.debug("Command line: %s", " ".join(sys.argv))
-    try:
-        opts, args = getopt(sys.argv[1:], "acde:fhlnpquvw",
-                            ["all", "base-only", "check", "debug", "explain=", "fromfile", "gui", "help",
-                             "listversions", "nodownload", "parsedebug", "profile", "quiet", "translations=",
-                             "update", "version", "warningsonly"])
-    except GetoptError, err:
-        print str(err)
-        usage(2)                # exits
-    if len(sys.argv) == 1:
-        Opt.GUI = True
-    for opt, arg in opts:
-        if opt in   ("-a", "--all"):
-            Opt.GetAll = True
-        elif opt in ("-c", "--check"):
-            Opt.Update = False
-        elif opt in ("--base-only"):
-            Opt.BaseOnly = True
-        elif opt in ("-d", "--debug"):
-            console_log_stream.setLevel(logging.DEBUG)
-        elif opt in ("-e", "--explain"):
-            Opt.Explain = arg
-            Opt.Quiet = True
-            console_log_stream.setLevel(logging.WARNING)
-        elif opt in ("-f", "--fromfile"):
-            Opt.FromFile = True
-        elif opt in ("--gui"):
-            Opt.GUI = True
-        elif opt in ("-h", "--help"):
-            usage(0)            # exits
-        elif opt in ("-l", "--listversions"):
-            l = loadorder()
-            l.get_data_files()
-            print l.listversions()
-            sys.exit(0)
-        elif opt in ("-p", "--parsedebug"):
-            logging.getLogger('mlox.parser').setLevel(logging.DEBUG)
-            console_log_stream.setLevel(logging.DEBUG)
-        elif opt in ("--profile"):
-            Opt.Profile = True
-        elif opt in ("-q", "--quiet"):
-            Opt.Quiet = True
-            console_log_stream.setLevel(logging.WARNING)
-        elif opt in ("--translations"):
-            # dump the translation dictionary
-            print "Languages translations for: %s" % arg
-            for k, v in (load_translations(arg).items()):
-                print "%s:" % k
-                print " -> %s" % v.encode("utf-8")
-            sys.exit(0)
-        elif opt in ("-u", "--update"):
-            Opt.Update = True
-        elif opt in ("-v", "--version"):
-            print version.version_info()
-            sys.exit(0)
-        elif opt in ("-w", "--warningsonly"):
-            Opt.WarningsOnly = True
-        elif opt in ("-n", "--nodownload"):
-            Opt.NoUpdate = True
 
-    if Opt.Profile:
-        import hotshot, hotshot.stats
+    # parse command line arguments
+    logging.debug("Command line: %s", " ".join(sys.argv))
+    args = parser.parse_args()
+    logging.debug("Parsed Arguments: %s", pprint.pformat(args))
+
+    if not args.nodownload:
+        update.update_mloxdata()
+
+    #If no arguments are passed or if explicitly asked to, enable gui mode
+    noargs = True
+    for i in vars(args).values():
+        if i:
+            noargs = False
+    if args.gui or noargs:
+        from modules.gui import mlox_gui
+        mlox_gui().start()
+
+    #Handle verbosity_group
+    load_order_output = sys.stdout
+    if args.parsedebug:
+        logging.getLogger('mlox.parser').setLevel(logging.DEBUG)
+        args.debug = True
+    if args.debug:
+        console_log_stream.setLevel(logging.DEBUG)
+    if args.quiet:
+        console_log_stream.setLevel(logging.WARNING)
+        load_order_output = StringIO.StringIO()
+
+    if args.profile:
+        import hotshot
+        import hotshot.stats
         prof = hotshot.Profile("mlox.prof")
-        time = prof.runcall(main)
+        time = prof.runcall(command_line_mode, args=args)
         prof.close()
         stats = hotshot.stats.load("mlox.prof")
         stats.strip_dirs()
         stats.sort_stats('time', 'calls')
         stats.print_stats(20)
     else:
-        main()
+        command_line_mode(args)
