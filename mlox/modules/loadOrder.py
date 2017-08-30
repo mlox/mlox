@@ -6,11 +6,7 @@ import modules.fileFinder as fileFinder
 import modules.pluggraph as pluggraph
 import modules.configHandler as configHandler
 import modules.ruleParser as ruleParser
-
-#Resource files
-program_path = os.path.realpath(sys.path[0])
-base_file = os.path.join(program_path,"mlox_base.txt")
-user_file = os.path.join(program_path,"mlox_user.txt")
+from modules.resources import base_file, user_file
 
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"

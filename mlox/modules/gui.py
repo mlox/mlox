@@ -8,22 +8,18 @@ import codecs
 import traceback
 import StringIO
 import logging
-
 import wx
 import wx.richtext as rt
 import webbrowser
-webbrowser.PROCESS_CREATION_DELAY = 0
-
 import modules.version as version
+from modules.resources import gif_file, translation_file
 from modules.loadOrder import loadorder
 
+webbrowser.PROCESS_CREATION_DELAY = 0
 gui_logger = logging.getLogger('mlox.gui')
 
-#Resource files
-program_path     = os.path.realpath(sys.path[0])
-resources_path   = os.path.join(program_path,"Resources")
-translation_file = os.path.join(resources_path,"mlox.msg")
-gif_file         = os.path.join(resources_path,"mlox.gif")
+#Set this as a constant, so we can easily change it later
+MLOX_IMG = wx.Image(gif_file, wx.BITMAP_TYPE_GIF)
 
 clip_file = "mlox_clipboard.out"
 debug_output = "mlox_debug.out"
@@ -166,8 +162,7 @@ class mlox_gui():
         self.frame.SetSizeHints(800,600)
         self.frame.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         # logo doubles as a "reload" button
-        img = wx.Image(gif_file, wx.BITMAP_TYPE_GIF).ConvertToBitmap()
-        self.logo = wx.BitmapButton(self.frame, -1, img, (0,0), (img.GetWidth()+5, img.GetHeight()+5))
+        self.logo = wx.BitmapButton(self.frame, -1, MLOX_IMG.ConvertToBitmap(), (0,0), (MLOX_IMG.GetWidth()+5, MLOX_IMG.GetHeight()+5))
         self.logo.Bind(wx.EVT_BUTTON, self.on_reload)
         self.logo.SetToolTip(wx.ToolTip(_["Click to Reload"]))
         self.label_stats = wx.StaticText(self.frame, -1, _["Statistics"])
@@ -307,6 +302,7 @@ class mlox_gui():
                 self.lo.get_data_files()
         progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+        #print(self.lo.update())
         print(self.lo.update(progress), file=self.Msg)
         progress.Destroy()
         for p in self.lo.get_original_order():
