@@ -35,7 +35,7 @@ or just paste the list of plugins into the Active plugins pane of the GUI. (mlox
 **Note**: mlox does not tell you if you have missing Meshes or Textures, it is only a load order tool, and does not report problems with resources!
 
 # Downloading
-The latest stable version of mlox can be found [here](https://github.com/mlox/mlox/releases/download/v0.61/), and the source code can be found on [github][github].
+The latest stable version of mlox can be found [here](https://github.com/mlox/mlox/releases/), and the source code can be found on [github][github].
 
 Unpack the mlox application archive in your Morrowind directory. You should see an mlox directory in the same directory as Morrowind.exe.
 
