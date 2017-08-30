@@ -13,13 +13,24 @@
 import sys
 import logging
 import argparse
-import textwrap
 import pprint
+import re
 import modules.update as update
 import modules.version as version
 from modules.loadOrder import loadorder
 from modules.gui import _
 from modules.gui import load_translations
+
+def single_spaced(in_string):
+    """
+    Convert any instance of more than one space character to a single space in a string
+    Also handles tabs, and removes whitespace at the begining or end of a line
+    """
+    tmp_string = in_string
+    tmp_string = re.sub('\t', ' ', tmp_string)
+    tmp_string = re.sub(' +', ' ', tmp_string)
+    tmp_string = re.sub('\n ', '\n', tmp_string)
+    return tmp_string.strip()
 
 class ColorFormatConsole(logging.Formatter):
     """Color code the logging information on Unix terminals"""
@@ -112,7 +123,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         description='mlox - the elder scrolls Mod Load Order eXpert',
-        epilog=textwrap.dedent("""
+        epilog=single_spaced("""
             when invoked with no options, mlox runs in GUI mode.
 
             mlox is intended to be run from somewhere under your game directory.
@@ -130,14 +141,19 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--version", help="Print version and exit.", action="version", version=version.version_info())
 
     parser.add_argument("-a", "--all",
-        help="Handle for all plugins in the Data Directory.\nDefault is to only process active plugins (plugins in the Data directory, and also in Morrowind.ini.",
+        help=single_spaced("""
+            Handle for all plugins in the Data Directory.
+            Default is to only process active plugins (plugins in the Data directory, and also in Morrowind.ini.)
+            """),
         action="store_true")
 
     writer_group = parser.add_mutually_exclusive_group()
     #Check mode is actually the default behavior, so setting it doesn't do anything
     writer_group.add_argument("-c", "--check", help="Check mode, do not update the load order.  Default Behavior.", action="store_true")
     writer_group.add_argument("-u", "--update", help="Update mode, updates the load order.", action="store_true")
-    writer_group.add_argument("-w", "--warningsonly", help="Warnings only, do not display the new load order.\nImplies --check.", action="store_true")
+    writer_group.add_argument("-w", "--warningsonly",
+        help="Warnings only, do not display the new load order.\nImplies --check.",
+        action="store_true")
 
     #The strange double add is to make the exclusive group its own section in the help text
     verbosity_group = parser.add_argument_group('Verbosity Controls', 'Select ONLY one of these to set how much output to recieve.').add_mutually_exclusive_group()
@@ -146,16 +162,27 @@ if __name__ == "__main__":
         action="store_true")
     verbosity_group.add_argument("-d", "--debug", help="Turn on debug output.", action="store_true")
     verbosity_group.add_argument("-q", "--quiet",
-        help="Run more quietly (only re-order plugins, ignoring all notes, warnings, etc).\nDo not print out anything less than warning messages.",
+        help=single_spaced("""
+            Run more quietly (only re-order plugins, ignoring all notes, warnings, etc).
+            Do not print out anything less than warning messages.
+        """),
         action="store_true")
 
     parser.add_argument("-f", "--fromfile",
-        help="File processing mode.\nAt least one input file must follow on command line.\nEach file contains a list of plugins which is used instead of reading the list of plugins from the data file directory.\nFile formats accepted: Morrowind.ini, load order output of Wrye Mash, and Reorder Mods++.",
+        help=single_spaced("""File processing mode.
+            At least one input file must follow on command line.
+            Each file contains a list of plugins which is used instead of reading the list of plugins from the data file directory.
+            File formats accepted: Morrowind.ini, load order output of Wrye Mash, and Reorder Mods++.
+            """),
         metavar='file',
         nargs='+',
         type=str)
     parser.add_argument("-e", "--explain",
-        help="Print an explanation of the dependency graph for plugin.\nThis can help you understand why a plugin was moved in your load order.\nImplies --quiet.",
+        help=single_spaced("""
+            Print an explanation of the dependency graph for plugin.
+            This can help you understand why a plugin was moved in your load order.
+            Implies --quiet.
+            """),
         metavar='plugin',
         nargs=1,
         type=str)
@@ -170,7 +197,13 @@ if __name__ == "__main__":
     #Developer arguments.  Not useful unless you're working on mlox internals.
     developer_group = parser.add_argument_group('Developer Options', 'Options useful only to mlox developers.')
     developer_group.add_argument("-l", "--listversions",
-        help="Use this to list the version numbers parsed from your plugins.\nThe output is in 2 columns.\nThe first is the version from the plugin filename, if present.\nThe second is from the plugin header, if present.\nNaturally, many plugins do not use version numbers so results are spotty.\nThis information can be used to write rules using the [VER] predicate.",
+        help=single_spaced("""
+            Use this to list the version numbers parsed from your plugins.
+            The output is in 2 columns.\nThe first is the version from the plugin filename, if present.
+            The second is from the plugin header, if present.
+            Naturally, many plugins do not use version numbers so results are spotty.
+            This information can be used to write rules using the [VER] predicate.
+            """),
         nargs=0,
         action=ListVersions)
     developer_group.add_argument("--profile",
