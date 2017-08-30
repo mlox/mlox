@@ -1,4 +1,5 @@
 
+from __future__ import print_function
 import locale
 import os
 import sys
@@ -306,7 +307,7 @@ class mlox_gui():
                 self.lo.get_data_files()
         progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
-        self.lo.update(self.Msg,progress)
+        print(self.lo.update(progress), file=self.Msg)
         progress.Destroy()
         for p in self.lo.get_original_order():
             self.Old.write(p+'\n')
@@ -348,7 +349,7 @@ class mlox_gui():
             out = open(debug_output, 'w')
         except IOError:
             gui_logger.error("Unable to write to debug output file:  {0}".format(debug_output))
-        print >> out, self.Dbg.getvalue().encode("utf-8")
+        print(self.Dbg.getvalue().encode("utf-8"), file=out)
         out.close()
 
     def right_click_handler(self, e):

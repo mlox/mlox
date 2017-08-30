@@ -12,7 +12,6 @@
 
 import sys
 import logging
-import StringIO
 import argparse
 import textwrap
 import pprint
@@ -60,7 +59,7 @@ def command_line_mode(args):
         for fromfile in args.fromfile:
             my_loadorder = loadorder()
             my_loadorder.read_from_file(fromfile)
-            process_load_order(my_loadorder, args.warningsonly, args.explain, args.base_only)
+            process_load_order(my_loadorder, args)
     else:
         my_loadorder = loadorder()
         if args.all:
@@ -70,23 +69,26 @@ def command_line_mode(args):
             if my_loadorder.order == []:
                 logging.warn("No active plugins, defaulting to all plugins in Data Files directory.")
                 my_loadorder.get_data_files()
-        process_load_order(my_loadorder, args.warningsonly, args.explain, args.base_only)
+        process_load_order(my_loadorder, args)
 
-def process_load_order(a_loadorder, warningsonly, write_new_load_order, explain=None, base_only=False):
+def process_load_order(a_loadorder, args):
     """
     Process a load order.
     These are things users can do or see with a load order.
     No matter how the list of plugins is obtained, what's done here stays the same.
     """
-    if explain:
-        print a_loadorder.explain(explain[0], base_only)
+    if args.explain:
+        print a_loadorder.explain(args.explain[0], args.base_only)
         sys.exit(0)
-    a_loadorder.update(load_order_output)
-    if not warningsonly:
+    if args.quiet:
+        a_loadorder.update()
+    else:
+        print(a_loadorder.update())
+    if not args.warningsonly:
         print "{0:-^80}".format('[New Load Order]')
         for plugin in a_loadorder.get_new_order():
             print plugin
-        if write_new_load_order:
+        if args.update:
             a_loadorder.write_new_order()
             print "{0:-^80}".format('[LOAD ORDER SAVED]')
         else:
@@ -211,7 +213,6 @@ if __name__ == "__main__":
         mlox_gui().start()
 
     #Handle verbosity_group
-    load_order_output = sys.stdout
     if args.parsedebug:
         logging.getLogger('mlox.parser').setLevel(logging.DEBUG)
         args.debug = True
@@ -219,7 +220,7 @@ if __name__ == "__main__":
         console_log_stream.setLevel(logging.DEBUG)
     if args.quiet:
         console_log_stream.setLevel(logging.WARNING)
-        load_order_output = StringIO.StringIO()
+        #Not printing everything else is handled in process_load_order(...)
 
     if args.profile:
         import hotshot
