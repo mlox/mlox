@@ -15,7 +15,8 @@ import logging
 import argparse
 import pprint
 import re
-import modules.update as update
+from modules.resources import update_file, program_path, UPDATE_URL
+from modules.update import update_compressed_file
 import modules.version as version
 from modules.loadOrder import loadorder
 from modules.gui import _
@@ -233,8 +234,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     logging.debug("Parsed Arguments: %s", pprint.pformat(args))
 
+    #Download UPDATE_URL to the program's main directory, then extract its contents there
     if not args.nodownload:
-        update.update_mloxdata()
+        logging.info('Checking for database update...')
+        if update_compressed_file(update_file,UPDATE_URL,program_path):
+            logging.info('Database updated from {0}'.format(update_file))
 
     #If no arguments are passed or if explicitly asked to, enable gui mode
     noargs = True

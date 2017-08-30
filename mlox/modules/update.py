@@ -1,8 +1,5 @@
 # Update mlox_base.txt from the internet
 
-UPDATE_FILE = 'mlox-data.7z'
-UPDATE_URL = 'https://sourceforge.net/projects/mlox/files/mlox/' + UPDATE_FILE
-
 import sys
 import os
 import urllib
@@ -59,12 +56,3 @@ def update_compressed_file(file_path,url,directory):
     else:
         update_logger.info('No update necessary for file {0}'.format(file_path))
         return False
-
-#Download UPDATE_URL to the program's main directory, then extract its contents there
-def update_mloxdata():
-    program_path = os.path.realpath(sys.path[0])
-    full_update_file = os.path.join(program_path,UPDATE_FILE)
-
-    update_logger.info('Checking for database update...')
-    if update_compressed_file(full_update_file,UPDATE_URL,program_path):
-        update_logger.info('mlox_base.txt updated from {0}'.format(full_update_file))
