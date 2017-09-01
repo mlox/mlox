@@ -164,7 +164,7 @@ class rule_parser:
     def parse_error(self, what):
         """print a message about current parsing error, and blow away the
         current parse buffer so next parse starts on next input line."""
-        parse_logger("%s: Parse Error(%s), %s [Buffer=%s]" % (self.where(), self.curr_rule, what, self.buffer))
+        parse_logger.error("%s: Parse Error(%s), %s [Buffer=%s]" % (self.where(), self.curr_rule, what, self.buffer))
         self.buffer = ""
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
 
@@ -612,7 +612,6 @@ class rule_parser:
             self.input_handle = open(self.rule_file, 'r')
             inputsize = os.path.getsize(self.rule_file)
         except IOError, OSError:
-            #This can't be too important, because we try to read the user rules file, and it doesn't exist for most people (TODO:  Move file existance checking somewhere else, and change this from info to error)
             parse_logger.error("Unable to open rules file:  {0}".format(self.rule_file))
             return False
 

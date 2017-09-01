@@ -171,7 +171,7 @@ class dataDirHandler:
 
     #Get the directory name in a printable form
     def getDir(self):
-        return dataDir.dirpath()
+        return self.dataDir.dirpath()
 
     # Sort a list of plugin files by modification date
     def _sort_by_date(self, plugin_files):

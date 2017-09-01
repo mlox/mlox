@@ -1,6 +1,6 @@
-# Update mlox_base.txt from the internet
+# Update a file from the internet
+# with the option of auto extracting it
 
-import sys
 import os
 import urllib
 import subprocess
@@ -15,7 +15,7 @@ def isNewer(local_file,url):
     try:
         connection = urllib.urlopen(url)
     except:
-        update_logger.warning('Unable to connect to {0}, skipping mlox data update.'.format(url))
+        update_logger.warning('Unable to connect to {0}, skipping update.'.format(url))
         return False
 
     local_size = os.stat(local_file).st_size
