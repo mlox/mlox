@@ -28,6 +28,7 @@ def isNewer(local_file,url):
 #Extract the contents of a file to a directory (using 7za)
 def extract(file_path,directory):
     cmd = ['7za', 'e', '-aoa', '-o{0}'.format(directory), file_path]
+    update_logger.debug("Extracting via command %s",cmd)
     try:
         devnull = open(os.devnull, 'w')
         subprocess.check_call(cmd, stdout=devnull)
@@ -45,8 +46,9 @@ def update_compressed_file(file_path,url,directory):
         update_logger.info('Updating {0}'.format(file_path))
         try:
             urllib.urlretrieve(url,file_path)
-        except:
-            update_logger.error('Unable to download {0}, skipping update'.format(url))
+        except Exception as e:
+            update_logger.error('Unable to download {0}, skipping update.'.format(url))
+            update_logger.debug('Error: {0}'.format(e))
             return False
 
         update_logger.info('Downloaded {0}'.format(file_path))
