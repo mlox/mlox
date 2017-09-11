@@ -1,6 +1,6 @@
 # ChangeLog
 
-Version 0.7 -
+Version 0.62 -
 * Completely refactored mlox code! [EmperorArthur]
 * Rewrote / Re-aranged most documentation. [EmperorArthur]
 * mlox (including updater) now works on linux, and does not crash if unable to update!! [EmperorArthur]

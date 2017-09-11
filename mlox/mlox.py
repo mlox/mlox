@@ -6,9 +6,9 @@
 #    dragon32
 #    Arthur Moore
 # Distributed as part of the mlox project:
-#   http://sourceforge.net/p/mlox/
+#   https://github.com/mlox/mlox
 # under the MIT License:
-#   https://sourceforge.net/projects/mlox/files/License.txt
+#   https://github.com/mlox/mlox/blob/master/License.txt
 
 import sys
 import logging

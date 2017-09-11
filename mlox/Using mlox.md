@@ -1,8 +1,8 @@
 # mlox - the elder scrolls Mod Load Order eXpert
 
-Version: 0.61
+Version: 0.62
 
-Copyright 2014-2017 [MIT License](License.txt)
+Copyright 2014-2017 [MIT License](https://github.com/mlox/mlox/blob/master/License.txt)
 * John Moonsugar
 * Dragon32
 * Arthur Moore

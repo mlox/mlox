@@ -2,7 +2,7 @@
 import os
 import sys
 import locale
-Version = "0.61"
+Version = "0.62"
 
 def version_info():
     try:
