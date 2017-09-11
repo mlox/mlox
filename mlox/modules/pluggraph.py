@@ -128,10 +128,10 @@ class pluggraph:
         # now do the actual topological sort
         # based on http://www.bitformation.com/art/python_toposort.html
         roots.reverse()
-        sorted = []
+        sorted_items = []
         while len(roots) != 0:
             root = roots.pop()
-            sorted.append(root)
+            sorted_items.append(root)
             if not root in self.nodes:
                 continue
             for child in self.nodes[root]:
@@ -143,4 +143,4 @@ class pluggraph:
             pluggraph_logger.error("Topological Sort Failed!")
             pluggraph_logger.debug(PrettyPrinter(indent=4).pformat(self.nodes.items()))
             return None
-        return sorted
+        return sorted_items

@@ -1,8 +1,8 @@
 # mlox - the elder scrolls Mod Load Order eXpert
 
-Version: 0.61
+Version: 0.62
 
-Copyright 2014,2015,2016 [MIT License](License.txt)
+Copyright 2014-2017 [MIT License](https://github.com/mlox/mlox/blob/master/License.txt)
 * John Moonsugar
 * Dragon32
 * Arthur Moore
@@ -39,14 +39,6 @@ mlox runs under Windows or Linux.
 
 mlox sorts your plugin load order using rules from input files (`mlox_base.txt` and `mlox_user.txt`, if it exists). A copy of the newly generated load order is saved in `mlox_loadorder.out`.
 
-Here's an example command line to get an explanation of why a plugin
-has it's position in the load order:
-
-`mlox.py --explain=plugin.esp --base-only`
-
-If you want to see the effect of adding in what mlox knows about your
-current load order, then leave off the `--base-only` switch.
-
 ## The mlox GUI
 The mlox GUI displays 4 text panes.
 The top text pane shows the rules files that have been loaded and their stats.
@@ -73,6 +65,26 @@ See the Paste option above for input formats and caveats.
 
 * Debug: this will pop up a window containing a list of debugging output (and automatically copy the contents to a file: `mlox_debug.out`).
 If you run into problems with mlox, I may need you to send me this bugdump so I can figure out what happened.
+
+## Command line usage
+
+Mlox has many features that are not exposed via the GUI.
+These are mostly advanced features, that most users will not need.
+To access them, run mlox from a command line with at least one argument.
+
+### Example usage
+Obtain an explanation of why a plugin has it's position in the load order:
+`mlox.py --explain=plugin.esp --base-only`
+
+If you want to see the effect of adding in what mlox knows about your current load order, then leave off the `--base-only` switch.
+
+Check, but *do not* update your load order from the command line:
+`mlox.py -c`
+
+Check, and update your load order from the command line:
+`mlox.py -u`
+
+
 
 # Known Issues
 * Updating does not immediately refresh [mlox-base YYYY-MM-DD HH:MM:SS (UTC)] string in the top text pane, although the update is effective.

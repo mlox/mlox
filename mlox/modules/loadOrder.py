@@ -6,11 +6,7 @@ import modules.fileFinder as fileFinder
 import modules.pluggraph as pluggraph
 import modules.configHandler as configHandler
 import modules.ruleParser as ruleParser
-
-#Resource files
-program_path = os.path.realpath(sys.path[0])
-base_file = os.path.join(program_path,"mlox_base.txt")
-user_file = os.path.join(program_path,"mlox_user.txt")
+from modules.resources import base_file, user_file
 
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
@@ -36,8 +32,9 @@ class loadorder:
 
     def get_active_plugins(self):
         """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
+        self.is_sorted = False
         if self.plugin_file == None:
-            order_logger.warning("{0} config file not found!".format(self.game_type))
+            order_logger.warning("No game configuration file was found!\nAre you sure you're running mlox in or under your game directory?")
             return
 
         # Get all the plugins
@@ -58,6 +55,7 @@ class loadorder:
 
     def get_data_files(self):
         """Get the load order from the data files directory. Updates self.active and self.order."""
+        self.is_sorted = False
         self.order = configHandler.dataDirHandler(self.datadir).read()
 
         #Convert the files to lowercase, while storing them in a dict
@@ -80,6 +78,7 @@ class loadorder:
         """Get the load order by reading an input file.
         Clears self.game_type and self.datadir.
         Updates self.plugin_file, self.active, and self.order."""
+        self.is_sorted = False
         self.game_type = None
         self.datadir = None         #This tells the parser to not worry about things like [SIZE] checks, or trying to read the plugin descriptions
         self.plugin_file = fromfile
@@ -194,13 +193,17 @@ class loadorder:
         self.graph = original_graph
         return output
 
-    def update(self,parser_out_stream = sys.stdout,progress = None):
-        """Update the load order based on input rules."""
+    def update(self,progress = None):
+        """
+        Update the load order based on input rules.
+        Returns the parser's recommendations on success, or False if something went wrong.
+        """
+        parser_out_stream = StringIO.StringIO()
         self.is_sorted = False
         self.graph = pluggraph.pluggraph()
         if self.order == []:
-            order_logger.error("No plugins detected! mlox needs to run somewhere under where the game is installed.")
-            return
+            order_logger.error("No plugins detected!\nmlox needs to run somewhere under where the game is installed.")
+            return False
         order_logger.debug("Initial load order:")
         for p in self.get_original_order():
             order_logger.debug("  " + p)
@@ -214,7 +217,7 @@ class loadorder:
         if not parser.read_rules(base_file, progress):
             order_logger.error("Unable to parse 'mlox_base.txt', load order NOT sorted!")
             self.new_order = []
-            return
+            return False
 
         # now do the topological sort of all known plugins (rules + load order)
         self.add_current_order() # tertiary order "pseudo-rules" from current load order
@@ -233,9 +236,9 @@ class loadorder:
             order_logger.debug("  " + p)
 
         if len(self.new_order) != len(self.order):
-            order_logger.error("sanity check: len(self.new_order %d) != len(self.order %d)" % (len(self.new_order), len(self.order)))
+            order_logger.error("sanity check: len(self.new_order %d) != len(self.order %d)", len(self.new_order), len(self.order))
             self.new_order = []
-            return
+            return False
 
         if self.order == new_order_cname:
             order_logger.info("[Plugins already in sorted order. No sorting needed!]")
@@ -246,13 +249,20 @@ class loadorder:
             # save the load orders to file for future reference
             self.save_order(old_loadorder_output, [self.caseless.truename(p) for p in self.order], "current")
             self.save_order(new_loadorder_output, self.new_order, "mlox sorted")
-        return
+        return parser_out_stream.getvalue()
 
     def write_new_order(self):
-        if self.new_order == [] or not isinstance(self.new_order,list):
+        if not isinstance(self.new_order,list) or self.new_order == []:
+            order_logger.error("Not saving blank load order.")
+            return False
+        if isinstance(self.datadir,fileFinder.caseless_dirlist):
+            if configHandler.dataDirHandler(self.datadir).write(self.new_order):
+                self.is_sorted = True
+        if isinstance(self.plugin_file,str):
+            if configHandler.configHandler(self.plugin_file,self.game_type).write(self.new_order):
+                self.is_sorted = True
+
+        if self.is_sorted != True:
             order_logger.error("Unable to save new load order.")
-            return
-        if configHandler.dataDirHandler(self.datadir).write(self.new_order):
-            self.is_sorted = True
-        else:
-            order_logger.error("Unable to save new load order.")
+            return False
+        return True

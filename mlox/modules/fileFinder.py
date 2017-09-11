@@ -46,23 +46,23 @@ class caseless_dirlist:
         for f in [p for p in os.listdir(self.dir)]:
             self.files[f.lower()] = f
 
-    def find_file(self, file):
-        return(self.files.get(file.lower(), None))
+    def find_file(self, file_name):
+        return(self.files.get(file_name.lower(), None))
 
-    def find_path(self, file):
-        f = file.lower()
+    def find_path(self, file_name):
+        f = file_name.lower()
         if f in self.files:
             return(os.path.join(self.dir, self.files[f]))
         return(None)
 
-    def find_parent_dir(self, file):
+    def find_parent_dir(self, file_name):
         """return the caseless_dirlist of the directory that contains file,
         starting from self.dir and working back towards root."""
         path = self.dir
         prev = None
         while path != prev:
             dl = caseless_dirlist(path)
-            if dl.find_file(file):
+            if dl.find_file(file_name):
                 return(dl)
             prev = path
             path = os.path.split(path)[0]
@@ -107,8 +107,8 @@ def _find_appdata():
         regpath = regdir.find_path("system.reg")
         if regpath == None:
             return(None)
-        inp = myopen_file(regpath, 'r')
-        if inp != None:
+        try:
+            inp = open(regpath, 'r')
             for line in inp:
                 match = re_appdata.match(line)
                 if match:
@@ -119,7 +119,8 @@ def _find_appdata():
                     inp.close()
                     return(appdata)
             inp.close()
-            return(None)
+        except IOError:
+            pass
         return(None)
     # Windows
     try:

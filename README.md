@@ -3,12 +3,11 @@ mlox is a tool for analyzing and sorting your Morrowind plugin load order.
 
 Version: 0.61
 
-Copyright 2014,2015,2016,2017 [MIT License](License.txt)
+Copyright 2014-2017 [MIT License](License.txt)
 * John Moonsugar
 * Dragon32
 * Arthur Moore
 
-# Introduction
 mlox is a mini "expert system" for advising you on your set of plugins.
 Use mlox to check for plugin dependencies and conflicts, and to sort your plugins into an optimal load order.
 
@@ -21,10 +20,22 @@ mlox is designed to help people manage large collections of plugins for the popu
 The program sorts plugins based on a very simple set of ordering rules that comprise a partial order over the set of plugins using a standard topological sort.
 It also provides advice on plugin conflicts, missing pre-requisites, and general information of interest based on the user's particular set of plugins.
 
-# Downloading
-The latest stable version of mlox can be found [here](https://github.com/mlox/mlox/releases/download/v0.61/).
+# Features
+* optimally reorders your load order
+* warns about missing pre-requisites
+* warns about plugin conflicts
+* prints notes for things you might want to know about a mod, but were too lazy to read the Readme, or things discussed in forum posts you may have missed.
+* Customizable via a rules file. Just create an `mlox_user.txt` in your mlox directory, and start adding your own rules.
+* runs on Windows or Linux
+* can check someone else's load list from a file:
+        mlox.py -wf Morrowind.ini
+        mlox.py -wf someones_load_order_posting.txt
+or just paste the list of plugins into the Active plugins pane of the GUI. (mlox understands output of Wrye Mash and Reorder Mods++)
 
-The mlox source code can be found on [github][github].
+**Note**: mlox does not tell you if you have missing Meshes or Textures, it is only a load order tool, and does not report problems with resources!
+
+# Downloading
+The latest stable version of mlox can be found [here](https://github.com/mlox/mlox/releases/), and the source code can be found on [github][github].
 
 Unpack the mlox application archive in your Morrowind directory. You should see an mlox directory in the same directory as Morrowind.exe.
 
@@ -37,36 +48,32 @@ Users can instead put their own additions in `mlox_user.txt`
 # Running
 Windows users can run the program by clicking on `mlox.exe`.  Linux users can either click on `mlox.py` or type `python mlox.py` on a command line.
 
-**WARNING**:  Mlox will not run if it is stated from anywhere but its own directory!
+**WARNING**:  Mlox requires that it's directory is writable.  Otherwise database updates will fail.
 
-mlox.py has 2 modes, GUI and command line. When executed with no command line switches it starts in GUI mode, when executed with the switch `-h`, it displays command line usage help.
+mlox.py has 2 modes, GUI and command line. When executed with no command line switches it starts in GUI mode.
+For information on specific commands use `mlox -h`.
 
-Note: On Windows 7 (and maybe Vista), if you installed Morrowind in the default location "C:\Program Files\...", you may need to turn off UAC in order for mlox to recognize your activated plugins in Morrowind.ini.
+**Note**: On Windows Visa and later, if you installed Morrowind in the default location "C:\Program Files\\...", you may need to turn off UAC to get mlox to recognize your activated plugins in Morrowind.ini.
 
 
-**Note**: On Windows 7 (and maybe Vista), if you installed Morrowind in the default location "C:\Program Files\\...", you may need to turn off UAC to get mlox to recognize your activated plugins in Morrowind.ini.
+## Running mlox from source
+mlox.py is written using Python with wxWidgets, just like Wrye Mash.
+
+Both Python and wxWidgets are required.
+
+Windows versions can be found [here](https://www.python.org/downloads/release/python-2713/) for Python, and [here][wxpython] for wxWidgets.
+
+Note: There are later versions of wxPython but mlox needs the ANSI version.
+
+Please note that the version of wxWidgets necessary for mlox is slightly newer than the one recommended for Mash, but will work for both applications.
+mlox will not work with wxPython 2.8.0.1, which is the version recommended by Mash!
+
 
 # Other Recommended Software
 It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP ["Morrowind Code Patch!"](http://www.nexusmods.com/morrowind/mods/19510)
 The MCP makes it safer to change your load order in an existing savegame, amongst many other wonderful fixes it does.
 
 You are also encouraged to use [Wrye Mash](http://wryemusings.com/Wrye%20Mash.html) to manage your plugins.
-
-# Features
-* optimally reorders your load order
-* warns about missing pre-requisites
-* warns about plugin conflicts
-* prints notes for things you might want to know about a mod, but were too lazy to read the Readme, or things discussed in forum posts you may have missed.
-* Customizable via a rules file. Just create an `mlox_user.txt` in your mlox directory, and start adding your own rules.
-* runs on Windows or Linux :)
-* can also check someone else's load list from a file:
-
-        mlox.py -wf Morrowind.ini
-        mlox.py -wf someones_load_order_posting.txt
-
-or just paste the list of plugins into the Active plugins pane of the GUI. (mlox understands output of Wrye Mash and Reorder Mods++)
-
-**Note**: mlox does not tell you if you have missing Meshes or Textures, it is only a load order tool, and does not report problems with resources!
 
 # Customizing your Load Order
 
@@ -89,10 +96,19 @@ You should also be aware that the **`[Order]`** rule only specifies relative ord
 # Documentation
 The complete documentation for mlox can be found in the Doucmentation directory.
 
-  * [Mlox Readme](mlox/Readme.md) provides a guide to getting started and introduction to usage. **Important Reading!**
+  * [Mlox Usage Guide](mlox/Using mlox.md) provides a guide to getting started and introduction to usage. **Important Reading!**
   * [Editing Guidelines](Documentation/Editing Guidelines.md) explains the basics of mlox rules, and how they should be used.
   * [Rules Guildelines](Documentation/Rule Guidelines.md) explains the syntax of the mlox rules, and how to write them yourself if you want to customize mlox.
   * [mlox_guts.txt](Documentation/mlox_guts.txt) describes mlox's inner workings and how it does its job.
+
+
+# Support
+If you run into a problem with mlox, please open a support ticket [here][issues].
+
+* Usually when mlox fails it will pop up a window describing the error, please report the contents of this window when reporting a problem.
+* If mlox runs but gives unexpected results, please right-click in the "Active Plugins" pane on the left side and choose "Debug" from the popup menu.  Attaching this to the support ticket will help solve the problem.
+* Please report all Windows usability problems, as several of the Mlox developers do not use Windows.
+* If the mlox GUI disappears upon startup, and you are running from source, you may be using an incompatible version of wxPython.  Please use the version provided [here][wxpython]
 
 # Contribute to the mlox rule-base
 mlox can only succeed if you share your knowledge about plugin load order, conflicts, and pre-requisites!
@@ -112,34 +128,14 @@ So, please try to include:
     * If it's a conflict, please explain what the actual conflict is.
     * If it's a load order, it would be great to say what the order affects.
 
-# Become a rule-base Editor
+## Become a rule-base Editor
 If you have solid knowledge of load order issues, and you'd like to be able to contribute to the rule-base by editing it directly, please submit a pull request on [github][github].
 
 Editors of the rule-base should read the [Editing Guidelines](Documentation/Editing Guidelines.md), which explain how the editing process works.
 
 Glory awaits you my friend.
 
-# Running mlox from source
-mlox.py is written using Python with wxWidgets, just like Wrye Mash.
-
-Both Python and wxWidgets are required, even if you are running mlox from the command line.
-
-Windows versions can be found [here](https://www.python.org/downloads/release/python-2713/) for Python, and [here][wxpython] for wxWidgets.
-
-Note: There are later versions of wxPython but mlox needs the ANSI version.
-
-Please note that the version of wxWidgets necessary for mlox is slightly newer than the one recommended for Mash, but will work for both applications.
-mlox will not work with wxPython 2.8.0.1, which is the version recommended by Mash!
-
-# Support
-If you run into a problem with mlox, please open a support ticket [here][issues].
-
-* Usually when mlox fails it will pop up a window describing the error, please report the contents of this window when reporting a problem.
-* If mlox runs but gives unexpected results, please right-click in the "Active Plugins" pane on the left side and choose "Debug" from the popup menu.  Attaching this to the support ticket will help solve the problem.
-* Please report all Windows usability problems, as several of the Mlox developers do not use Windows.
-* If the mlox GUI disappears upon startup, and you are running from source, you may be using an incompatible version of wxPython.  Please use the version provided [here][wxpython]
-
-# Note to mod Authors
+## Note to mod Authors
 It is our hope that the users of your mod will benefit from using mlox, and also that maybe mlox will help reduce mod conflicts, and support questions for your mod due to misconfiguration.
 This is a grand goal, and there are some things we can do together to see it happen.
 
@@ -163,8 +159,6 @@ mlox can also tell the version from the filename.
 The next thing is teaching mlox about your mod.
 Please see the section about [adding rules to mlox](#Contribute to the mlox rule-base) for how to submit a rule.
 The more mlox knows, the more useful it is, and people will have fewer load order problems.
-
-
 
 
 [wxpython]: http://downloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.7.1-py25.exe

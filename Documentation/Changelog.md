@@ -1,5 +1,15 @@
 # ChangeLog
 
+Version 0.62 -
+* Completely refactored mlox code! [EmperorArthur]
+* Rewrote / Re-aranged most documentation. [EmperorArthur]
+* mlox (including updater) now works on linux, and does not crash if unable to update!! [EmperorArthur]
+* Now find game directories by looking for configuration files, not .exe (Allow for easily using mlox with OpenMW) [EmperorArthur]
+* mlox now understands OpenMW config files format, though it does not (yet) actively find them. [EmperorArthur]
+* mlox now writes new load orders to the users Morrowind.ini file.
+   Note: It still uses the Data Files as the primary source for load order information.  If the .ini file has a wrong load order, but the plugin timestamps are correct it will NOT modify the .ini
+   WARNING:  Mlox will automatically scrub any plugins not in the Data Files directory when updating Morrowind.ini  This is a feature to prevent the game from trying to load plugins that no onger exist.
+
 Version 0.61 - 2015/08/01
 * URI for checking and downloading new rule-base changed from Google Code to SourceForge [Dragon32]
 

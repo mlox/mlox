@@ -1,4 +1,5 @@
 
+from __future__ import print_function   #Use Python3 Style print
 import os         #To calculate the amount remaining to parse (os.path.getsize)
 import re
 import logging
@@ -118,6 +119,8 @@ def plugin_description(plugin):
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
+    version = "Unkown"
+
     def __init__(self, active, graph, datadir,out_stream,name_converter):
         self.active = active
         self.graph = graph
@@ -161,7 +164,7 @@ class rule_parser:
     def parse_error(self, what):
         """print a message about current parsing error, and blow away the
         current parse buffer so next parse starts on next input line."""
-        parse_logger("%s: Parse Error(%s), %s [Buffer=%s]" % (self.where(), self.curr_rule, what, self.buffer))
+        parse_logger.error("%s: Parse Error(%s), %s [Buffer=%s]" % (self.where(), self.curr_rule, what, self.buffer))
         self.buffer = ""
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
 
@@ -536,10 +539,11 @@ class rule_parser:
                 (bool, expr) = self.parse_expression()
                 parse_logger.debug("conflict parse_expr()N bool=%s bool=%s" % ("True" if bool else "False", expr))
             if len(exprs) > 1:
-                self.out_stream.write("[CONFLICT]\n")
+                print("[CONFLICT]", file=self.out_stream)
                 for e in exprs:
-                    self.out_stream.write(self.pprint(self._prune_any(e), " > ")+'\n')
-                if msg != "": self.out_stream.write(msg+'\n')
+                    print(self.pprint(self._prune_any(e), " > "), file=self.out_stream)
+                if msg != "":
+                    print(msg, file=self.out_stream)
         elif rule == "NOTE":    # takes any number of exprs
             parse_logger.debug("function NOTE: %s" % msg)
             exprs = []
@@ -549,10 +553,11 @@ class rule_parser:
                     exprs.append(expr)
                 (bool, expr) = self.parse_expression(prune=True)
             if len(exprs) > 0:
-                self.out_stream.write("[NOTE]\n")
+                print("[NOTE]", file=self.out_stream)
                 for e in exprs:
-                    self.out_stream.write(self.pprint(e, " > ")+'\n')
-                if msg != "": self.out_stream.write(msg+'\n')
+                    print(self.pprint(e, " > "), file=self.out_stream)
+                if msg != "":
+                    print(msg, file=self.out_stream)
         elif rule == "PATCH":   # takes 2 exprs
             (bool1, expr1) = self.parse_expression()
             if bool1 == None:
@@ -566,14 +571,14 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 # case where the patch is present but the thing to be patched is missing
-                self.out_stream.write("[PATCH]\n%s is missing some pre-requisites:\n%s\n" %
-                        (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
-                if msg != "": self.out_stream.write(msg+'\n')
+                print("[PATCH]\n%s is missing some pre-requisites:\n%s\n" % (self.pprint(expr1, " !!"), self.pprint(expr2, " ")), file=self.out_stream)
+                if msg != "":
+                    print(msg, file=self.out_stream)
             if bool2 and not bool1:
                 # case where the patch is missing for the thing to be patched
-                self.out_stream.write("[PATCH]\n%s for:\n%s\n" %
-                        (self.pprint(expr1, " !!"), self.pprint(expr2, " ")))
-                if msg != "": self.out_stream.write(msg+'\n')
+                print("[PATCH]\n%s for:\n%s\n" % (self.pprint(expr1, " !!"), self.pprint(expr2, " ")), file=self.out_stream)
+                if msg != "":
+                    print(msg, file=self.out_stream)
         elif rule == "REQUIRES": # takes 2 exprs
             (bool1, expr1) = self.parse_expression(prune=True)
             if bool1 == None:
@@ -587,12 +592,12 @@ class rule_parser:
                 return
             if bool1 and not bool2:
                 expr2_str = self.pprint(expr2, " > ")
-                self.out_stream.write("[REQUIRES]\n%s Requires:\n%s\n" %
-                        (self.pprint(expr1, " !!!"), expr2_str))
-                if msg != "": self.out_stream.write(msg+'\n')
+                print("[REQUIRES]\n%s Requires:\n%s\n" % (self.pprint(expr1, " !!!"), expr2_str), file=self.out_stream)
+                if msg != "":
+                    print(msg, file=self.out_stream)
                 match = re_filename_version.search(expr2_str)
                 if match:
-                    self.out_stream.write(" | [Note that you may see this message if you have an older version of one\n | of the pre-requisites. In that case, it is suggested that you upgrade\n | to the newer version].\n")
+                    print(" | [Note that you may see this message if you have an older version of one of the pre-requisites. In that case, it is suggested that you upgrade to the newer version].", file=self.out_stream)
         self.parse_dbg_indent = self.parse_dbg_indent[:-2]
         parse_logger.debug("parse_statement RETURNING")
 
@@ -602,14 +607,11 @@ class rule_parser:
         n_rules = 0
         self.rule_file = rule_file
 
-        pmsg = "Loading: %s" % rule_file
-
         parse_logger.debug("Reading rules from: \"{0}\"".format(self.rule_file))
         try:
             self.input_handle = open(self.rule_file, 'r')
             inputsize = os.path.getsize(self.rule_file)
         except IOError, OSError:
-            #This can't be too important, because we try to read the user rules file, and it doesn't exist for most people (TODO:  Move file existance checking somewhere else, and change this from info to error)
             parse_logger.error("Unable to open rules file:  {0}".format(self.rule_file))
             return False
 
@@ -618,10 +620,11 @@ class rule_parser:
             if self.buffer == "":
                 if not self.readline():
                     break
+            #Update the GUI progress bar
             if progress != None and inputsize > 0:
                 pct = int(100*self.bytesread/inputsize)
                 if pct % 3 == 0 and pct < 100:
-                    progress.Update(pct, pmsg)
+                    progress.Update(pct, "Loading: {0}".format(self.rule_file))
             self.parse_dbg_indent = ""
             self.curr_rule = ""
             new_rule = re_rule.match(self.buffer)
@@ -631,6 +634,8 @@ class rule_parser:
                 self.message = []
                 if self.curr_rule == "VERSION":
                     self.buffer = ""
+                    self.version= new_rule.group(2)
+                    parse_logger.info("\"{0}\" Version {1}".format(os.path.basename(self.rule_file),self.version))
                 elif self.curr_rule in ("ORDER", "NEAREND", "NEARSTART"):
                     self.parse_ordering(self.curr_rule)
                 elif self.curr_rule in ("CONFLICT", "NOTE", "PATCH", "REQUIRES"):
