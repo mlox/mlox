@@ -22,4 +22,4 @@ user_file        = os.path.join(program_path,"mlox_user.txt")
 #For the updater
 UPDATE_BASE      = "mlox-data.7z"
 update_file      = os.path.join(program_path,UPDATE_BASE)
-UPDATE_URL       = 'https://sourceforge.net/projects/mlox/files/mlox/' + UPDATE_BASE
+UPDATE_URL       = 'https://svn.code.sf.net/p/mlox/code/trunk/downloads/' + UPDATE_BASE
