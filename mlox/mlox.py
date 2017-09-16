@@ -10,6 +10,7 @@
 # under the MIT License:
 #   https://github.com/mlox/mlox/blob/master/License.txt
 
+from __future__ import print_function
 import sys
 import logging
 import argparse
@@ -50,10 +51,10 @@ class ColorFormatConsole(logging.Formatter):
 class ShowTranslations(argparse.Action):
     """Dump the translation dictionary for the specified language, then exit."""
     def __call__(self, parser, namespace, values, option_string=None):
-        print "Languages translations for: %s" % values[0]
+        print("Languages translations for: %s" % values[0])
         for key, value in (load_translations(values[0]).items()):
-            print "%s:" % key
-            print " -> %s" % value.encode("utf-8")
+            print("%s:" % key)
+            print(" -> %s" % value.encode("utf-8"))
         sys.exit(0)
 
 class ListVersions(argparse.Action):
@@ -61,7 +62,7 @@ class ListVersions(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         my_loadorder = loadorder()
         my_loadorder.get_data_files()
-        print my_loadorder.listversions()
+        print(my_loadorder.listversions())
         sys.exit(0)
 
 def command_line_mode(args):
@@ -90,21 +91,21 @@ def process_load_order(a_loadorder, args):
     No matter how the list of plugins is obtained, what's done here stays the same.
     """
     if args.explain:
-        print a_loadorder.explain(args.explain[0], args.base_only)
+        print(a_loadorder.explain(args.explain[0], args.base_only))
         sys.exit(0)
     if args.quiet:
         a_loadorder.update()
     else:
         print(a_loadorder.update())
     if not args.warningsonly:
-        print "{0:-^80}".format('[New Load Order]')
+        print("{0:-^80}".format('[New Load Order]'))
         for plugin in a_loadorder.get_new_order():
-            print plugin
+            print(plugin)
         if args.update:
             a_loadorder.write_new_order()
-            print "{0:-^80}".format('[LOAD ORDER SAVED]')
+            print("{0:-^80}".format('[LOAD ORDER SAVED]'))
         else:
-            print "{0:-^80}".format('[END PROPOSED LOAD ORDER]')
+            print("{0:-^80}".format('[END PROPOSED LOAD ORDER]'))
 
 if __name__ == "__main__":
     #Configure logging from python module
@@ -248,7 +249,7 @@ if __name__ == "__main__":
     #Download UPDATE_URL to the program's main directory, then extract its contents there
     if not args.nodownload:
         logging.info('Checking for database update...')
-        if update_compressed_file(update_file,UPDATE_URL,program_path):
+        if update_compressed_file(update_file, UPDATE_URL, program_path):
             logging.info('Database updated from {0}'.format(update_file))
 
     #If no arguments are passed or if explicitly asked to, run the GUI
