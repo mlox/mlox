@@ -221,35 +221,13 @@ if __name__ == "__main__":
     #End Program Arguments
     ###
 
-    logging.debug("\nmlox DEBUG DUMP:\n")
-    # Check Python version
-    logging.debug(version.version_info())
-    pyversion = sys.version[:3]
-    if float(pyversion) < 2.5:
-        logging.error("This program requires at least Python version 2.5.")
-        sys.exit(1)
-
     # parse command line arguments
     logging.debug("Command line: %s", " ".join(sys.argv))
     args = parser.parse_args()
     logging.debug("Parsed Arguments: %s", pprint.pformat(args))
 
-    #Download UPDATE_URL to the program's main directory, then extract its contents there
-    if not args.nodownload:
-        logging.info('Checking for database update...')
-        if update_compressed_file(update_file,UPDATE_URL,program_path):
-            logging.info('Database updated from {0}'.format(update_file))
-
-    #If no arguments are passed or if explicitly asked to, enable gui mode
-    noargs = True
-    for i in vars(args).values():
-        if i:
-            noargs = False
-    if args.gui or noargs:
-        from modules.gui import mlox_gui
-        mlox_gui().start()
-
     #Handle verbosity_group
+    # Want to do this as early as possible so nothing is missed.
     if args.parsedebug:
         logging.getLogger('mlox.parser').setLevel(logging.DEBUG)
         args.debug = True
@@ -258,6 +236,29 @@ if __name__ == "__main__":
     if args.quiet:
         console_log_stream.setLevel(logging.WARNING)
         #Not printing everything else is handled in process_load_order(...)
+
+    # Check Python version
+    logging.debug(version.version_info())
+    pyversion = sys.version[:3]
+    if float(pyversion) < 2.5:
+        logging.error("This program requires at least Python version 2.5.")
+        sys.exit(1)
+
+
+    #Download UPDATE_URL to the program's main directory, then extract its contents there
+    if not args.nodownload:
+        logging.info('Checking for database update...')
+        if update_compressed_file(update_file,UPDATE_URL,program_path):
+            logging.info('Database updated from {0}'.format(update_file))
+
+    #If no arguments are passed or if explicitly asked to, run the GUI
+    noargs = True
+    for i in vars(args).values():
+        if i:
+            noargs = False
+    if args.gui or noargs:
+        from modules.gui import mlox_gui
+        mlox_gui().start()
 
     if args.profile:
         import hotshot
