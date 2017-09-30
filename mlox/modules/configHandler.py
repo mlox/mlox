@@ -2,8 +2,8 @@
 
 import logging
 import re
-import fileFinder
 import os
+import modules.fileFinder as fileFinder
 
 config_logger = logging.getLogger('mlox.configHandler')
 
