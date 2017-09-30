@@ -20,8 +20,7 @@ from modules.resources import update_file, program_path, UPDATE_URL
 from modules.update import update_compressed_file
 import modules.version as version
 from modules.loadOrder import loadorder
-from modules.gui import _
-from modules.gui import load_translations
+from modules.translations import load_translations, _
 
 def single_spaced(in_string):
     """

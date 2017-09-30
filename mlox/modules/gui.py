@@ -1,10 +1,8 @@
 
 from __future__ import print_function
-import locale
 import os
 import sys
 import re
-import codecs
 import traceback
 import StringIO
 import logging
@@ -12,8 +10,9 @@ import wx
 import wx.richtext as rt
 import webbrowser
 import modules.version as version
-from modules.resources import gif_file, translation_file
+from modules.resources import gif_file
 from modules.loadOrder import loadorder
+from modules.translations import _
 
 webbrowser.PROCESS_CREATION_DELAY = 0
 gui_logger = logging.getLogger('mlox.gui')
@@ -23,27 +22,6 @@ MLOX_IMG = wx.Image(gif_file, wx.BITMAP_TYPE_GIF)
 
 clip_file = "mlox_clipboard.out"
 debug_output = "mlox_debug.out"
-
-# Utility functions
-Lang = locale.getdefaultlocale()[0]
-Lang = "en" if Lang == None or len(Lang) < 2 else Lang[0:2]
-Encoding = locale.getpreferredencoding()
-
-class dyndict(dict):
-    """if item is in dict, return value, otherwise return item. for soft failure when looking up translations."""
-    def __getitem__(self, item):
-        return(super(dyndict, self).__getitem__(item) if item in self else item)
-def load_translations(lang):
-    """double-de-bungify the translation dictionary."""
-    def splitter(x):
-        s = x.split("]]")
-        (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
-        trans = dict(map(lambda y: y.split('`'), val.split("\n`"))[1:])
-        return(key, trans[lang].rstrip() if lang in trans else key)
-    return(dyndict(map(splitter, codecs.open(translation_file, 'r', "utf-8").read().split("\n[["))[1:]))
-
-_ = load_translations(Lang)
-
 
 def unify(s):
     """For GUI text areas that may contain filenames, we guess at the encoding."""
