@@ -34,6 +34,7 @@ Currently, the list is (mostly) unsorted.
 - Clean up test code
 
 - Migrate to Python3
+    - Use Python3's str.casefold instead of str.lower for caseless matching
 
 - Fully support OpenMW
 

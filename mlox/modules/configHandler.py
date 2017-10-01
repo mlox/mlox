@@ -7,6 +7,24 @@ import modules.fileFinder as fileFinder
 
 config_logger = logging.getLogger('mlox.configHandler')
 
+def caseless_uniq(un_uniqed_files):
+    """
+    Given a list, return a list of unique strings, and a list of duplicates.
+    This is a caseless comparison, so 'Test' and 'test' are considered duplicates.
+    """
+    lower_files = []    # Use this to allow for easy use of the 'in' keyword
+    unique_files = []   # Guaranteed case insensitive unique
+    filtered = []       # any duplicates from the input
+
+    for aFile in un_uniqed_files:
+        if aFile.lower() in lower_files:
+            filtered.append(aFile)
+        else:
+            unique_files.append(aFile)
+            lower_files.append(aFile.lower())
+    return(unique_files, filtered)
+
+
 def partition_esps_and_esms(filelist):
     """Split filelist into separate lists for esms and esps, retaining order."""
     esm_files = []
@@ -66,7 +84,7 @@ class configHandler():
                 files.append(f)
         file_handle.close()
         # Deal with duplicates
-        (files, dups) = fileFinder.filter_dup_files(files)
+        (files, dups) = caseless_uniq(files)
         for f in dups:
             config_logger.debug("Duplicate plugin found in config file: {0}".format(f))
         return files
@@ -163,15 +181,17 @@ class configHandler():
 # Handle reading and updating the load order for the plugins in the data directory
 class dataDirHandler:
     dataDir = None
+    path = None
     def __init__(self,dataDir):
         if isinstance(dataDir,fileFinder.caseless_dirlist):
             self.dataDir = dataDir
         else:
             self.dataDir = fileFinder.caseless_dirlist(dataDir)
+        self.path = self.dataDir.dirpath()
 
     #Get the directory name in a printable form
     def getDir(self):
-        return self.dataDir.dirpath()
+        return self.path
 
     # Sort a list of plugin files by modification date
     def _sort_by_date(self, plugin_files):
@@ -181,8 +201,8 @@ class dataDirHandler:
 
     #Get all config files from the data directory
     def read(self):
-        files = [f for f in self.dataDir.filelist() if os.path.isfile(self.dataDir.find_path(f))]
-        (files, dups) = fileFinder.filter_dup_files(files)
+        files = [f for f in os.listdir(self.path) if os.path.isfile(os.path.join(self.path,f))]
+        (files, dups) = caseless_uniq(files)
         # Deal with duplicates
         for f in dups:
             logging.warn("Duplicate plugin found in data directory: {0}".format(f))

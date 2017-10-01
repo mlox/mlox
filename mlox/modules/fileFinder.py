@@ -74,23 +74,6 @@ class caseless_dirlist:
     def filelist(self):
         return(self.files.values())
 
-
-# given a list of files, return a new list without dups (caseless), plus a list of any dups
-def filter_dup_files(files):
-    tmpfiles = []               # new list
-    filtered = []               # any filtered dups from original list
-    seen = {}
-    C = caseless_filenames()
-    for f in files:
-        c = C.cname(f)
-        if c in seen:
-            filtered.append(f)
-        else:
-            tmpfiles.append(f)
-        seen[c] = True
-    return(tmpfiles, filtered)
-
-
 def _find_appdata():
     """a somewhat hacky function for finding where Oblivion's Application Data lives.
     Hopefully works under Windows, Wine, and native Linux."""
