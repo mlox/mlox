@@ -195,7 +195,7 @@ class dataDirHandler:
 
     # Sort a list of plugin files by modification date
     def _sort_by_date(self, plugin_files):
-        dated_plugins = [(os.path.getmtime(self.dataDir.find_path(aPlugin)), aPlugin) for aPlugin in plugin_files]
+        dated_plugins = [(os.path.getmtime(os.path.join(self.path,aPlugin)), aPlugin) for aPlugin in plugin_files]
         dated_plugins.sort()
         return([x[1] for x in dated_plugins])
 
@@ -234,7 +234,7 @@ class dataDirHandler:
                     os.utime(self.dataDir.find_path("bloodmoon.bsa"), (-1, mtime))
                 else:
                     mtime = mtime + 5 # fraction of standard 1 minute Mash step
-                os.utime(self.dataDir.find_path(p), (-1, mtime))
+                os.utime(os.path.join(self.path,p), (-1, mtime))
         except TypeError:
             config_logger.error("Could not update load order!  Are you sure you have \"morrowind.bsa\", \"tribunal.bsa\", and/or \"bloodmoon.bsa\" in your data file directory?")
             return False
