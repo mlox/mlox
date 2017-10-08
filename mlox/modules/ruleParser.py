@@ -611,7 +611,7 @@ class rule_parser:
         try:
             self.input_handle = open(self.rule_file, 'r')
             inputsize = os.path.getsize(self.rule_file)
-        except IOError, OSError:
+        except IOError as OSError:
             parse_logger.error("Unable to open rules file:  {0}".format(self.rule_file))
             return False
 
