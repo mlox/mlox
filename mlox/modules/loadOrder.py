@@ -39,7 +39,7 @@ class loadorder:
 
         # Get all the plugins
         configFiles = configHandler.configHandler(self.plugin_file,self.game_type).read()
-        dirFiles = configHandler.dataDirHandler(self.datadir).read()
+        dirFiles = configHandler.dataDirHandler(self.datadir.dirpath()).read()
 
         # Remove plugins not in the data directory (and correct capitalization)
         configFiles = map(str.lower, configFiles)
@@ -56,7 +56,7 @@ class loadorder:
     def get_data_files(self):
         """Get the load order from the data files directory. Updates self.active and self.order."""
         self.is_sorted = False
-        self.order = configHandler.dataDirHandler(self.datadir).read()
+        self.order = configHandler.dataDirHandler(self.datadir.dirpath()).read()
 
         #Convert the files to lowercase, while storing them in a dict
         self.order = map(self.caseless.cname,self.order)
@@ -256,7 +256,7 @@ class loadorder:
             order_logger.error("Not saving blank load order.")
             return False
         if isinstance(self.datadir,fileFinder.caseless_dirlist):
-            if configHandler.dataDirHandler(self.datadir).write(self.new_order):
+            if configHandler.dataDirHandler(self.datadir.dirpath()).write(self.new_order):
                 self.is_sorted = True
         if isinstance(self.plugin_file,str):
             if configHandler.configHandler(self.plugin_file,self.game_type).write(self.new_order):

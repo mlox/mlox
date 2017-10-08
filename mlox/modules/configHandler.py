@@ -3,7 +3,6 @@
 import logging
 import re
 import os
-import modules.fileFinder as fileFinder
 
 config_logger = logging.getLogger('mlox.configHandler')
 
@@ -180,28 +179,28 @@ class configHandler():
 
 # Handle reading and updating the load order for the plugins in the data directory
 class dataDirHandler:
-    dataDir = None
     path = None
-    def __init__(self,dataDir):
-        if isinstance(dataDir,fileFinder.caseless_dirlist):
-            self.dataDir = dataDir
-        else:
-            self.dataDir = fileFinder.caseless_dirlist(dataDir)
-        self.path = self.dataDir.dirpath()
+
+    def __init__(self, data_files_path):
+        self.path = data_files_path
 
     #Get the directory name in a printable form
     def getDir(self):
         return self.path
 
+    def _full_path(self,a_file):
+        """Convenience function to return the full path to a file."""
+        return os.path.join(self.path,a_file)
+
     # Sort a list of plugin files by modification date
     def _sort_by_date(self, plugin_files):
-        dated_plugins = [(os.path.getmtime(os.path.join(self.path,aPlugin)), aPlugin) for aPlugin in plugin_files]
+        dated_plugins = [(os.path.getmtime(self._full_path(aPlugin)), aPlugin) for aPlugin in plugin_files]
         dated_plugins.sort()
         return([x[1] for x in dated_plugins])
 
     #Get all config files from the data directory
     def read(self):
-        files = [f for f in os.listdir(self.path) if os.path.isfile(os.path.join(self.path,f))]
+        files = [f for f in os.listdir(self.path) if os.path.isfile(self._full_path(f))]
         (files, dups) = caseless_uniq(files)
         # Deal with duplicates
         for f in dups:
@@ -225,17 +224,21 @@ class dataDirHandler:
             for p in files:
                 if p.lower() == "morrowind.esm":
                     mtime = tes3cmd_resetdates_morrowind_mtime
-                    os.utime(self.dataDir.find_path("morrowind.bsa"), (-1, mtime))
+                    os.utime(self._full_path("Morrowind.bsa"), (-1, mtime))
                 elif p.lower() == "tribunal.esm":
                     mtime = tes3cmd_resetdates_tribunal_mtime
-                    os.utime(self.dataDir.find_path("tribunal.bsa"), (-1, mtime))
+                    os.utime(self._full_path("Tribunal.bsa"), (-1, mtime))
                 elif p.lower() == "bloodmoon.esm":
                     mtime = tes3cmd_resetdates_bloodmoon_mtime
-                    os.utime(self.dataDir.find_path("bloodmoon.bsa"), (-1, mtime))
+                    os.utime(self._full_path("Bloodmoon.bsa"), (-1, mtime))
                 else:
-                    mtime = mtime + 5 # fraction of standard 1 minute Mash step
-                os.utime(os.path.join(self.path,p), (-1, mtime))
+                    mtime += 60 # standard 1 minute Mash step
+                os.utime(self._full_path(p), (-1, mtime))
         except TypeError:
-            config_logger.error("Could not update load order!  Are you sure you have \"morrowind.bsa\", \"tribunal.bsa\", and/or \"bloodmoon.bsa\" in your data file directory?")
+            config_logger.error(
+                """
+                Could not update load order!
+                Are you sure you have \"Morrowind.bsa\", \"Tribunal.bsa\", and/or \"Bloodmoon.bsa\" in your data file directory?
+                """)
             return False
         return True
