@@ -308,10 +308,13 @@ class MloxGui():
 
     def on_reload(self, e):
         self.can_update = True
+        # TODO:  Properly handle reloading from a file
         self.analyze_loadorder(None)
 
     def on_update(self, e):
         if not self.can_update:
+            gui_logger.error("Attempted an update, when no update is possible/needed.")
+            self.display()
             return
         self.lo.write_new_order()
         gui_logger.info("[LOAD ORDER UPDATED!]")

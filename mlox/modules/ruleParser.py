@@ -142,7 +142,7 @@ class rule_parser:
             return(False)
         try:
             while True:
-                line = self.input_handle.next()
+                line = next(self.input_handle)
                 self.bytesread += len(line)
                 self.line_num += 1
                 line = re_comment.sub('', line) # remove comments

@@ -17,8 +17,8 @@ def load_translations(lang):
     def splitter(x):
         s = x.split("]]")
         (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
-        trans = dict(map(lambda y: y.split('`'), val.split("\n`"))[1:])
+        trans = dict(list(map(lambda y: y.split('`'), val.split("\n`")))[1:])
         return(key, trans[lang].rstrip() if lang in trans else key)
-    return(dyndict(map(splitter, codecs.open(translation_file, 'r', "utf-8").read().split("\n[["))[1:]))
+    return(dyndict(list(map(splitter, codecs.open(translation_file, 'r', "utf-8").read().split("\n[[")))[1:]))
 
 _ = load_translations(Lang)

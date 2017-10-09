@@ -1,3 +1,4 @@
+from __future__ import print_function   #Use Python3 Style print
 import os
 import sys
 import StringIO
@@ -42,11 +43,11 @@ class loadorder:
         dirFiles = configHandler.dataDirHandler(self.datadir.dirpath()).read()
 
         # Remove plugins not in the data directory (and correct capitalization)
-        configFiles = map(str.lower, configFiles)
+        configFiles = list(map(str.lower, configFiles))
         self.order = filter(lambda x: x.lower() in configFiles, dirFiles)
 
         #Convert the files to lowercase, while storing them in a dict
-        self.order = map(self.caseless.cname,self.order)
+        self.order = list(map(self.caseless.cname,self.order))
 
         order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
@@ -59,7 +60,7 @@ class loadorder:
         self.order = configHandler.dataDirHandler(self.datadir.dirpath()).read()
 
         #Convert the files to lowercase, while storing them in a dict
-        self.order = map(self.caseless.cname,self.order)
+        self.order = list(map(self.caseless.cname,self.order))
 
         order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
         for p in self.order:
@@ -88,7 +89,7 @@ class loadorder:
             order_logger.warning("No plugins detected.\nmlox understands lists of plugins in the format used by Morrowind.ini or Wrye Mash.\nIs that what you used for input?")
 
         #Convert the files to lowercase, while storing them in a dict
-        self.order = map(self.caseless.cname,self.order)
+        self.order = list(map(self.caseless.cname,self.order))
 
         order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.plugin_file))
         for p in self.order:
@@ -140,13 +141,13 @@ class loadorder:
 
     def save_order(self, filename, order, what):
         try:
-            out = open(filename, 'w')
+            out_file = open(filename, 'w')
         except IOError:
             order_logger.error("Unable to write to {0} file:  {1}".format(what,filename))
             return
         for p in order:
-            print >> out, p
-        out.close()
+            print(p, file=out_file)
+        out_file.close()
         order_logger.info("%s saved to: %s" % (what, filename))
 
     def get_original_order(self):
