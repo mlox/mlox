@@ -257,8 +257,8 @@ if __name__ == "__main__":
         if i:
             noargs = False
     if args.gui or noargs:
-        from modules.gui import mlox_gui
-        mlox_gui().start()
+        from modules.gui import MloxGui
+        MloxGui().start()
 
     if args.profile:
         import hotshot

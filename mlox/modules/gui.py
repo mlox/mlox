@@ -92,7 +92,7 @@ def display_colored_text(in_text, out_RichTextCtrl):
     for where in hidden:
         out_RichTextCtrl.SetStyle(where, hide)
 
-class mlox_gui():
+class MloxGui():
     lo = None     #Load order
 
     def __init__(self):
