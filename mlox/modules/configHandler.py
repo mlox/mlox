@@ -3,6 +3,7 @@
 import logging
 import re
 import os
+from functools import reduce
 
 config_logger = logging.getLogger('mlox.configHandler')
 
