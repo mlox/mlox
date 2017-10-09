@@ -96,11 +96,11 @@ class MloxGui():
     lo = None     #Load order
 
     def __init__(self):
-        self.Dbg = StringIO.StringIO()     # debug output
-        self.New = StringIO.StringIO()     # new sorted loadorder
-        self.Old = StringIO.StringIO()     # old original loadorder
-        self.Stats = StringIO.StringIO()   # stats output
-        self.Msg = StringIO.StringIO()     # messages output
+        self.Dbg   = StringIO.StringIO()    # debug output
+        self.Stats = StringIO.StringIO()    # stats output
+        self.New = ""                       # new sorted loadorder
+        self.Old = ""                       # old original loadorder
+        self.Msg = ""                       # messages output
 
         #Set up logging
         dbg_formatter = logging.Formatter('%(levelname)s (%(name)s): %(message)s')
@@ -257,18 +257,18 @@ class MloxGui():
         else:
             self.btn_update.Disable()
         display_colored_text(self.Stats.getvalue(),self.txt_stats)
-        display_colored_text(self.Msg.getvalue(),self.txt_msg)
-        display_colored_text(self.New.getvalue(),self.txt_new)
-        self.txt_cur.SetValue(self.Old.getvalue())
+        display_colored_text(self.Msg,self.txt_msg)
+        display_colored_text(self.New,self.txt_new)
+        self.txt_cur.SetValue(self.Old)
         self.label_cur.SetLabel(self.lo.origin)
         self.cur_vbox.Layout()
 
     def analyze_loadorder(self, fromfile):
         #Clear all the outputs (except Dbg)
-        self.New.truncate(0)
-        self.Old.truncate(0)
         self.Stats.truncate(0)
-        self.Msg.truncate(0)
+        self.New = ""
+        self.Old = ""
+        self.Msg = ""
 
         gui_logger.info("Version: %s\t\t\t\t %s " % (version.full_version(), _["Hello!"]))
         self.lo = loadorder()
@@ -281,12 +281,15 @@ class MloxGui():
         progress = wx.ProgressDialog("Progress", "", 100, None,
                                          wx.PD_AUTO_HIDE|wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
         #print(self.lo.update())
-        print(self.lo.update(progress), file=self.Msg)
+        self.Msg = self.lo.update(progress)
+        # TODO: Have update always return as string, so this isn't needed
+        if not self.Msg:
+            self.Msg = ""
         progress.Destroy()
         for p in self.lo.get_original_order():
-            self.Old.write(p+'\n')
+            self.Old += p + '\n'
         for p in self.lo.get_new_order():
-            self.New.write(p+'\n')
+            self.New += p + '\n'
         if self.lo.is_sorted:
             self.can_update = False
 
