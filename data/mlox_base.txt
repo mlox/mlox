@@ -6,7 +6,7 @@
 ;; mlox_readme.txt for safe testing procedures.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[Version 2017-00-09 20:16:28 (UTC)]
+[Version 2017-15-10 11:11:11 (UTC)]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Morrowind mlox_base.txt
@@ -90,6 +90,8 @@ Clean UMPP-fixes-BTB-v2.esp
 Clean UMPP-fixes-v2.esp
 ;;Midgetalien's Bloodmoon Patch 0.5.1 [Midgetalien], q.v.
 Clean_bloodmoonpatch_05.esp
+;;General Fixes Mod by Fritz
+GFM_6.3.2_1C.esp
 
 [Order]
 Morrowind.esm
@@ -988,11 +990,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -1742,11 +1746,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -2686,18 +2692,20 @@ NoM 3.0.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Antares' Big Mod 7.4 [Arcimaestro Antares]
+;; @Antares' Big Mod 7.63 [Arcimaestro Antares]
 
 ;;Dragon32 - Can't do a version check as no Description information
 [Note]
- ! The latest version of "Antares' Big Mod" is 7.4, check if you need to upgrade:
+ ! The latest version of "Antares' Big Mod" is 7.63, check if you need to upgrade:
  ! http://arcimaestroantares.webs.com/antaresbigmod.htm
 Antares' Big Mod <VER>.esp
+Antares Big Mod <VER>.esp
 
 [Conflict]
  Antares' Big Mod includes these other mods. You should not run them at the same time.
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892 )
-Antares' Big Mod <VER>.esp
+[ANY Antares' Big Mod <VER>.esp
+     Antares Big Mod <VER>.esp]
 [ANY Agent's Services.esp
      Alchemist's Services.esp
      Apothecary' s Services.esp
@@ -2718,10 +2726,16 @@ Antares' Big Mod <VER>.esp
 Antares' Big Mod <VER>.esp
 Bloodmoon.esm
 
+[Requires]
+ Uses Bloodmoon function: placeatme.
+Antares Big Mod <VER>.esp
+Bloodmoon.esm
+
 [Conflict]
  "[There is] a quest-breaking conflict between ["Antares' Big Mod"] (the Temple Patriarch section) and the ["The Lost Artifacts of Morrowind" by Rogue Shadow, Sterling, Case, Palinurus and Oriphier] - the changes ["Antares' Big Mod"] makes to the Ministry of Truth conflict with one of ["The Lost Artifacts of Morrowind"]'s quests that place an item and a character there."
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892 )
-Antares' Big Mod <VER>.esp
+[ANY Antares' Big Mod <VER>.esp
+     Antares Big Mod <VER>.esp]
 [ANY Clean The Lost Artifacts of Morrowind.esm
      Clean The Lost Artifacts of Morrowind.esp]
 
@@ -2957,11 +2971,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -3388,6 +3404,7 @@ bm_wolf_greaves_fix.esp
      AIM_MW_1dot0.esp
      AIM_MW_BM_1dot0.esp]
 [ANY LeftGloves.esp
+     LeftGloves_1C.esp
      LeftGloves_Addon_v2.esp
      Clean LeftGloves_TBandBM.esp]
 
@@ -6896,6 +6913,12 @@ Clean Better Caldera.esp
 Better Clothes_v1.1.esp
 Better Clothes_v1.1_nac.esp
 
+[Conflict]
+ Use only one of these mods. NAC stands for "non-Argonian Change"
+ (Ref: betterclothes.txt)
+Better Clothes.esp
+Better Clothes nac.esp
+
 [Note]
  ! Better Clothes 1.0 is updated by Better Clothes 1.1, you should upgrade!
  ! http://mw.modhistory.com/download-21-14097
@@ -6911,7 +6934,9 @@ Better Clothes Beta_1.4.esp
  "Better Clothes" requires version 2.1 or 2.2 of Psychodog Studios' "Better Bodies"
  (Ref: betterclothes.txt)
 [ANY Better Clothes_v1.1.esp
-     Better Clothes_v1.1_nac.esp]
+     Better Clothes_v1.1_nac.esp
+     Better Clothes.esp
+     Better Clothes nac.esp]
 Better Bodies.esp
 
 
@@ -6921,6 +6946,8 @@ Better Bodies.esp
 [Order]
 Better Clothes_v1.1.esp
 Better Clothes_v1.1_nac.esp
+Better Clothes.esp
+Better Clothes nac.esp
 BetterClothes_Patch.esp
 
 [Requires]
@@ -6929,6 +6956,8 @@ BetterClothes_Patch.esp
 BetterClothes_Patch.esp
 [ANY Better Clothes_v1.1.esp
      Better Clothes_v1.1_nac.esp
+     Better Clothes.esp
+     Better Clothes nac.esp
      Better Clothes Complete (BTB Edit).esp]
 
 [Note]
@@ -6951,7 +6980,9 @@ BetterClothes_Patch.esp
  (Ref: "BetterClothesBloodmoon1.4.txt")
 BetterClothesBloodmoonPlus<VER>.esp
 [ALL [ANY [ALL [ANY Better Clothes_v1.1.esp
-                    Better Clothes_v1.1_nac.esp]
+                    Better Clothes_v1.1_nac.esp
+                    Better Clothes.esp
+                    Better Clothes nac.esp]
                More Better Clothes.esp]
           Better Clothes Complete (BTB Edit).esp]
      BetterClothesForTB.esp]
@@ -6960,10 +6991,12 @@ BetterClothesBloodmoonPlus<VER>.esp
 ;;Ref: http://forums.bethsoft.com/topic/1446772-rel-better-clothes-bloodmoon-plus/?p=22874566
 [Order]
 Better Clothes_v1.1.esp
+Better Clothes.esp
 BetterClothesBloodmoonPlus<VER>.esp
 
 [Order]
 Better Clothes_v1.1_nac.esp
+Better Clothes nac.esp
 BetterClothesBloodmoonPlus<VER>.esp
 
 [Order]
@@ -7211,8 +7244,12 @@ Vurt's Groundcover - BC, AI, WG, GL (Stonewood Pass Patched).esp
                      and Tribunal installed.
  "BLLDV_ALL.esp"     Use this plugin ONLY if you have Morrowind, Tribunal.
                      AND Bloodmoon installed.
+ "_BLLDV_ALL.esp"    Use this plugin ONLY if you have Morrowind, Tribunal.
+                     AND Bloodmoon using Russian version installed.
  (Ref: "BLLDV_README.txt")
+ (Ref: "ReadmeRU.txt")
 BLLDV_ALL.esp
+_BLLDV_ALL.esp
 BLLDV_MW_ONLY.esp
 BLLDV_MW_TR.esp
 
@@ -7221,6 +7258,7 @@ BLLDV_MW_TR.esp
 [Order]
 NOM 2.13.esp
 BLLDV_ALL.esp
+_BLLDV_ALL.esp
 BLLDV_MW_ONLY.esp
 BLLDV_MW_TR.esp
 
@@ -7334,6 +7372,11 @@ Better Morrowind Armor.esp
 
 [Order]
 LeftGloves.esp
+Better Morrowind Armor.esp
+
+;;Translator5: Mods with pre- oder suffing of 1C are mostly improved, merged or just translated russian versions
+[Order]
+LeftGloves_1C.esp
 Better Morrowind Armor.esp
 
 ;;Dragon32: To ensure Moranar's changes are included, load after Adamantium Armor
@@ -7694,7 +7737,9 @@ Better Robes.ESP
 [DESC /This version is compatible with Better Robes and Better Clothes./ UFR_v3dot2.esp]
 [ALL Better Bodies.esp
      [ANY Better Clothes_v1.1.esp
-          Better Clothes_v1.1_nac.esp]]
+          Better Clothes_v1.1_nac.esp
+          Better Clothes.esp
+          Better Clothes nac.esp]]
 
 ;;"[Moranar's] Better Robes should load before Unique Finery"
 ;;Ref: http://forums.bethsoft.com/topic/1509142-relz-mlox-analyze-and-sort-your-load-order/?p=24092866
@@ -7781,10 +7826,31 @@ Better_Sounds.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
+;;ReadMe.htm - 
+;;Translator5: Version 1.1.0.1 is named without "_" included fixes & translation by FullRest-Team
+[Requires]
+ This plugin uses Startup scripts
+Better Sounds.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
 [Conflict]
  "If you have "Bitter Coast Sounds Plugin" (bcsounds.esp), don't use it"
  (Ref: "BetterSounds-9967.zip\ReadMe_ENG.txt")
 Better_Sounds.esp
+[ANY bcsounds.esp
+     BitterCoastSounds.esp
+     CleanBitterCoastSounds.esp
+     [Official]Bitter Coast Sounds.esp
+     Clean Official Plugins v1.1.esp
+     OfficialMods_v5.esp
+     Official_2002_Mods.esp
+     super_adventurers302.esp]
+     
+[Conflict]
+ "If you have "Bitter Coast Sounds Plugin" (bcsounds.esp), don't use it"
+ (Ref: "BetterSounds-9967.zip\ReadMe_ENG.txt")
+Better Sounds.esp
 [ANY bcsounds.esp
      BitterCoastSounds.esp
      CleanBitterCoastSounds.esp
@@ -7836,8 +7902,17 @@ Better_Sounds.esp
 BS_BM_WeatherChange.esp
 Better_Sounds.esp
 
+[Requires]
+ "BS_BM_WeatherChange.esp" adds atmospheric sounds from the main "Better Sounds" mod to Solstheim.
+BS_BM_WeatherChange.esp
+Better Sounds.esp
+
 [Order]
 Better_Sounds.esp
+BS_BM_WeatherChange.esp
+
+[Order]
+Better Sounds.esp
 BS_BM_WeatherChange.esp
 
 ;;Dragon32: BetterSounds-9967.zip\ReadMe_ENG.txt - "This plugins includes the official «Bitter Coast Sounds Plugin», which was significantly improved."
@@ -7849,6 +7924,10 @@ Better_Sounds.esp
 [Order]
 Clean Official Plugins v1.1.esp
 Better_Sounds.esp
+
+[Order]
+Official_plugins_1C.esp
+Better Sounds.esp
 
 [Order]
 super_adventurers302.esp
@@ -9338,6 +9417,7 @@ Bloodmoon.esm
  (Ref: BookRotate5.3.txt)
 Book Rotate - Morrowind v1.1.esp
 [ANY Book Rotate.esm
+     Book Rotate - Morrowind.esp
      Book Rotate - Tribunal v5.3.esp
      Book Rotate - Bloodmoon v5.3.esp]
 
@@ -9865,7 +9945,9 @@ DM_DB Armor Replacer-ExpDDBA (BTB Edit).esp
  (Ref: "morrowind_btb.zip\Readme.txt")
 BTB - Equipment.esp
 [ANY [ANY Better Clothes_v1.1.esp
-          Better Clothes_v1.1_Nac.esp]
+          Better Clothes_v1.1_Nac.esp
+          Better Clothes.esp
+          Better Clothes nac.esp]
       More Better Clothes.esp]
 
 [Conflict]
@@ -10154,7 +10236,9 @@ BTB - Unique Finery Equipment.esp
  (Ref: "morrowind_btb.zip\Readme.txt")
 BTB - Unique Finery Equipment.esp
 [ANY [ANY Better Clothes_v1.1.esp
-          Better Clothes_v1.1_Nac.esp]
+          Better Clothes_v1.1_Nac.esp
+          Better Clothes.esp
+          Better Clothes nac.esp]
       More Better Clothes.esp]
 
 [Conflict]
@@ -11057,6 +11141,22 @@ Christmas At Lokken.esp
      Tribunal.esm
      BT_Whitewolf_2_0.esm]
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Cities of Life [Sotha Anter}
+
+[Requires]
+ (Ref: Readme.txt)
+[ANY Cities of Life (Tribunal).ESP
+     Cities of Life (T).ESP]
+[ALL Tribunal.esm
+     [ANY Cities of Life.esp
+          Cities of Life (M).esp]]
+
+[Note]
+ ! This modification adds around 500 unique NPC's - this will affect your productivity at bigger populated locations.
+[ANY Cities of Life.esp
+     Cities of Life (M).esp]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @City of Black Light  [Rodan]
@@ -12407,15 +12507,17 @@ Daedric Tweaks.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Daggerfall Book Collection [Michael Damon, aka Launcelot]
+;; @Daggerfall Book Collection [Michael Damon, aka Launcelot][Deathruler]
 
 [Conflict]
  Use only one:
   Daggerfall Collection Ver 1.0.esp - If you only have Morrowind
   Daggerfall Collection Ver 1.1.esp - If you have both expansions.
+  DaggerfallBooks.esp - If you use russian version of Morrowind only.
  (Ref: readme_DaggerfallBookCollection.doc)
 Daggerfall Collection Ver 1.1.esp
 Daggerfall Collection Ver 1.0.esp
+DaggerfallBooks.esp
 
 [Requires]
  (Ref: readme_DaggerfallBookCollection.doc)
@@ -12828,6 +12930,10 @@ DM_DB Armor Replacer-ExpRanksDDBA.esp
 
 [Order]
 Better Morrowind Armor DeFemm(a).ESP
+DM_DB Armor Replacer-ExpRanksDDBA.esp
+
+[Order]
+LeftGloves_1C.esp
 DM_DB Armor Replacer-ExpRanksDDBA.esp
 
 
@@ -14198,11 +14304,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -14471,11 +14579,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -15395,6 +15505,7 @@ DynamicMagickaRegeneration-2.1-Tribunal.esp
  (Ref: http://forums.nexusmods.com/index.php?/topic/977575-the-east-empire-company-expansion/?p=12720703 )
 EEC Expansion.ESP
 [ANY Antares' Big Mod <VER>.esp
+     Antares Big Mod <VER>.esp
      Appropriate Greetings M - <VER>.esp
      Appropriate Greetings M - T - <VER>.esp]
 
@@ -16021,6 +16132,9 @@ Farmer Mod v4.3.esp
 Epic_aldruhn.esp
 Ald-ruhn Expansion <VER>.esp
 
+[Order]
+Hold it.esp
+Epic_Aldruhn.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Epic Balmora 1.4 [Mikeandike]
@@ -16038,6 +16152,9 @@ BIG_BALMORA.ESP
 [ANY MW_Domehome1.esp
      Trib_Domehome1.esp]
 
+[Order]
+BIG_BALMORA.ESP
+DH_Homes.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Erengard Mines-MC Compatible [Graphite and Denina]
@@ -17406,7 +17523,8 @@ Magical Missions.ESP
  Both "LGNPC Pelagiad" and Locklear93's "Fletcher Mod" change the merchant Mebestian Ence in Pelegiad. If "Fletcher Mod" loads first then Mebestian Ence will not have a fletching kit for sale, if "LGNPC Pelagiad" loads first then his LGNPC quests will not function.
  You can create an Order rule in mlox_user.txt to specify the relative load order of these two mods to meet your wishes.
  (Ref: http://escf.rethan-manor.net/index.php?topic=2065.msg21592#msg21592 )
-LGNPC_Pelagiad.esp
+[ANY LGNPC_Pelagiad.esp
+     LGNPC_Pelagiad_v<VER>.esp]
 fletcher.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17614,11 +17732,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -18375,6 +18495,19 @@ German Text Patch.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @General Fixes Mod [Fritz]
+;; Russian massive bug fixing mod Ref: fullrest.ru/forum/topic/32217-gfm-632/
+;; used as alternative to Unofficial Morrowinds Patches
+
+[Requires]
+ Requires Tribunal and Bloodmoon expansion packs.
+ (Ref: "fgex.ru/files/Morrowind/Readme_6.3.2.txt")
+GFM_6.3.2_1C.esp
+[ALL Tribunal.esm
+     Bloodmoon.esm]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Ghostgate v1.3 [Princess Stomper]
 
 [Note]
@@ -18848,11 +18981,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -19534,7 +19669,8 @@ MW_Public_Library.esp
   "Head right up the stairs and a clean, inviting bed awaits you.""
  Install3 ("GOTYMinImpactSomeMPPv2.01.esm" or "GOTYMinImpactSomeMPPv2.01.esp") does not change the name of the local variable 'rent' in the official publican script. Other versions of GOTY Script Tidy are likely to break any mod that uses 'rent' as a dialogue filter or otherwise attempts to write to the variable.
  (Ref: http://forums.bethsoft.com/topic/1374445-problem-with-renting-beds/?p=20784637 and "GOTYST_01 ReadMe.txt")
-LGNPC_Pelagiad.esp
+[ANY LGNPC_Pelagiad.esp
+     LGNPC_Pelagiad_v<VER>.esp]
 [ANY GOTYFullTidySomeMPPv2.01.esm
      GOTYFullTidySomeMPPv2.01.esp
      GOTYFullTidyZeroMPPv2.01.esm]
@@ -19571,11 +19707,13 @@ LGNPC_NoLore.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -21184,6 +21322,7 @@ STA_guides_replacer_NoScript.esp
  http://mw.modhistory.com/download--3101
 STA_guides_replacer.esp
 [ANY Book Rotate - Morrowind v1.1.esp
+     Book Rotate - Morrowind.esp
      Book Rotate.esm]
 
 
@@ -21709,7 +21848,8 @@ BTB - Equipment.esp
      HELLUVA Balanced BTB.esp
      HELLUVA Balanced BTB CS.esp]
 [ANY LeftGloves_Addon_v2.esp
-     LeftGloves.esp]
+     LeftGloves.esp
+     LeftGloves_1C.esp]
 
 [Conflict]
  "The BTB version[s of HELLUVA Balanced] include Alisiagae's Unique Finery mod."
@@ -23274,6 +23414,7 @@ Hold it - Dreamers.ESP
 [Order]
 Less Lore.esp
 LGNPC_NoLore.esp
+Hold it.esp
 Hold it - replacer.esp
 LGNPC_Merged_OM.esp
 LGNPC_Merged_Lt.esp
@@ -23287,11 +23428,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -23345,6 +23488,10 @@ hollaajith's Armor Overhaul.ESP
 ;;Dragon32: hollaajith's mod doesn't include gloves, so someone would still need a Left Gloves mod for those
 [Order]
 LeftGloves.esp
+hollaajith's Armor Overhaul - Lefty.ESP
+
+[Order]
+LeftGloves_1C.esp
 hollaajith's Armor Overhaul - Lefty.ESP
 
 [Order]
@@ -23813,11 +23960,13 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -24451,6 +24600,7 @@ ASE Extras Expansion.esp
  (Ref: "Dirty Books Guide.txt")
 Illy's Dirty Books.ESP
 [ALL [ANY Book Rotate.esm
+          Book Rotate - Morrowind.esp
           Book Rotate - Morrowind v1.1.esp]
      [NOT Merged_Objects.esp]]
 
@@ -24476,6 +24626,7 @@ Bloodmoon.esm
 ;;Dragon32: SO, hopefully, loading this after LGNPC should be OK
 [Order]
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 Illy's Oh my Goddess.ESP
 
 
@@ -25693,6 +25844,7 @@ Josie's Entertainers.esp
      LGNPC_Aldruhn.esp
      LGNPC_MaarGan.esp
      LGNPC_Pelagiad.esp
+     LGNPC_Pelagiad_v<VER>.esp
      LGNPC_TelMora_v<VER>.esp]
 
 ;;Dragon32: confirmed with TESPCD
@@ -25935,21 +26087,24 @@ JEB_wraithguard.esp
  For consistency you should use Alaisiagae's "JWR_Dark_L_Lefty.esp" instead of "JWR_Dark_L.esp". In "JWR_Dark_L_Lefty.esp" the ground mesh and icon have been rotated to be compatible with Lurlock's "Left Gloves" and Alaisiagae's "Left Gloves Addon" mods
  (Ref: readme_JWR_Dark_L_Lefty.txt)
 [ALL [ANY LeftGloves_Addon_v2.esp
-          LeftGloves.esp]
+          LeftGloves.esp
+          LeftGloves_1C.esp]
      JWR_Dark_L.esp]
 
 [Note]
  For consistency you should use Alaisiagae's "JWR_Dwemer_L_Lefty.esp" instead of "JWR_Dwemer_L.esp". In "JWR_Dwemer_L_Lefty.esp" the ground mesh and icon have been rotated to be compatible with Lurlock's "Left Gloves" and Alaisiagae's "Left Gloves Addon" mods
  (Ref: readme_JWR_Dwemer_L_Lefty.txt)
 [ALL [ANY LeftGloves_Addon_v2.esp
-          LeftGloves.esp]
+          LeftGloves.esp
+          LeftGloves_1C.esp]
      JWR_Dwemer_L.esp]
 
 [Note]
  For consistency you should use Alaisiagae's "JWR_Dark_L_Lefty_AIM1dot0.esp" instead of "JWR_Dark_L_AIM1dot0.esp". In "JWR_Dark_L_Lefty_AIM1dot0.esp" the ground mesh and icon have been rotated to be compatible with Lurlock's "Left Gloves" and Alaisiagae's "Left Gloves Addon" mods
  (Ref: readme_JWR_Dark_L_Lefty.txt)
 [ALL [ANY LeftGloves_Addon_v2.esp
-          LeftGloves.esp]
+          LeftGloves.esp
+          LeftGloves_1C.esp]
      JWR_Dark_L_AIM1dot0.esp]
 
 [Note]
@@ -27087,6 +27242,16 @@ Clean LeftGloves_TBandBM.esp
 LeftGloves_Addon_v2.esp
 LeftGloves.esp
 
+[Conflict]
+ Do NOT have "Lurlock's Left Gloves" and "Left Gloves Addon" running at the same time.
+ (Ref: readme_LeftGloves Addon.txt)
+LeftGloves_Addon_v2.esp
+LeftGloves_1C.esp
+
+[Order]
+Official_plugins_1C.esp
+LeftGloves_1C.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Leggings for The Ultimate Knight Shop [Letrune]
@@ -27302,11 +27467,13 @@ LGNPC_NoLore.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
 LGNPC_Aldruhn_suppl.esp
 LGNPC_Pelagiad.esp
+LGNPC_Pelagiad_v<VER>.esp
 LGNPC_TelMora_v?_??.esp
 LGNPC_Khuul_v?_??.esp
 LGNPC_VivecFQ.esp
@@ -27329,6 +27496,7 @@ LGNPC_SoulSicknessPatch_v?_??.esp
           LGNPC_MaarGan.esp
           LGNPC_PaxRedoran_v?_??.esp
           LGNPC_Pelagiad.esp
+          LGNPC_Pelagiad_v<VER>.esp
           LGNPC_SecretMasters_v?_??.esp
           LGNPC_SeydaNeen.esp
           LGNPC_TelUvirith.esp
@@ -27344,11 +27512,13 @@ LGNPC_SoulSicknessPatch_v?_??.esp
           LGNPC_SeydaNeen.esp
           LGNPC_GnaarMok_v?_??.esp
           LGNPC_AldVelothi_v?_??.esp
+          LGNPC_AldVelothi_rus_v?_??.esp
           LGNPC_MaarGan.esp
           LGNPC_HlaOad.esp
           LGNPC_Aldruhn.esp
           LGNPC_Aldruhn_suppl.esp
           LGNPC_Pelagiad.esp
+          LGNPC_Pelagiad_v<VER>.esp
           LGNPC_TelMora_v?_??.esp
           LGNPC_Khuul_v?_??.esp
           LGNPC_VivecFQ.esp
@@ -27512,6 +27682,13 @@ LGNPC_PaxRedoran_v?_??.esp
 [Requires]
  This plugin uses the Tribunal function: hasitemequipped
 LGNPC_Pelagiad.esp
+[ANY Tribunal.esm
+     Bloodmoon.esm]
+
+;;expdep
+[Requires]
+ This plugin uses the Tribunal function: hasitemequipped
+LGNPC_Pelagiad_v<VER>.esp
 [ANY Tribunal.esm
      Bloodmoon.esm]
 
@@ -27793,6 +27970,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -28757,6 +28935,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -30045,7 +30224,8 @@ Archmage's Privileges <VER>.esp
 [Conflict]
  "Antares' Big Mod" includes Arcimaestro Antares' "Archmage Privilege", "MMGR - Archmage's Privileges.esp" is a renamed copy of version 2.1 of "Archmage Privilege".
  (Ref: http://planetelderscrolls.gamespy.com/View.php?view=Mods.Detail&id=5892 )
-Antares' Big Mod <VER>.esp
+[ANY Antares' Big Mod <VER>.esp
+     Antares Big Mod <VER>.esp]
 MMGR - Archmage's Privileges.esp
 
 ;;"Oddly, this conflicts with Tamriel Rebuilt. I get a bunch of warnings when I'm near Mehir."
@@ -31704,6 +31884,14 @@ More Better Clothes.esp
 Better Clothes_v1.1_nac.esp
 More Better Clothes.esp
 
+[Order]
+Better Clothes.esp
+More Better Clothes.esp
+
+[Order]
+Better Clothes nac.esp
+More Better Clothes.esp
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @More Detailed Places [Ragox & Zaldir]
@@ -33043,7 +33231,8 @@ Kn-PowerToThePeople.esp
  ! "Makes Argonian females prefer to wear male versions of armour and clothing. To avoid looking like a mammal.
  ! This is a convenience such that mods don't have to individually account for Argonian-specific versions of their items."
  ! Enabling this option removes the need for the complicated sewing kits added by this version of "Better Clothes", you should enable this MCP option and use "Better Clothes_v1.1_nac.esp" instead.
-Better Clothes_v1.1.esp
+[ANY Better Clothes_v1.1.esp
+     Better Clothes.esp]
 
 [Note]
  !!! The highly recommended "Morrowind Code Patch" by Hrnchamd also fixes the problem of the red sun damage ring remaining when entering an interior from an exterior.
@@ -35407,7 +35596,8 @@ Vampire Realism II.esp
  (Ref: http://forums.nexusmods.com/index.php?/topic/2672199-rr-mod-series-holamayan-monastery-replacer/?p=29470707 )
 [ANY Morrowind Rebirth <VER>.ESP
      DN-GDRv<VER>-Rebirth.esp]
-RR_Holamayan_Eng.esp
+[ANY RR_Holamayan_Eng.esp
+     RR_Holamayan_1C.esp]
 
 [Conflict]
  Trancemaster_1988 has merged these mods into his "Morrowind Rebirth", there is no need to run the plugins separately.
@@ -37027,6 +37217,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -39073,6 +39264,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -39424,6 +39616,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -39754,7 +39947,8 @@ OB_Style Quivers And Bows_CAJ.esp
           HELLUVA Balanced BTB.esp
           HELLUVA Balanced BTB CS.esp
           LeftGloves_Addon_v2.esp
-          LeftGloves.esp]
+          LeftGloves.esp
+          LeftGloves_1C.esp]
      [NOT Merged_Objects.esp]]
 
 ;;Dragon32: OB Style Quivers and Sheathing Bows for Morrowind affects adamantium armour
@@ -40095,6 +40289,56 @@ Clean Official Plugins v1.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Official Plugins [Fritz 2011]
+
+[Conflict]
+ Fritz's "Official_plugins_1C.esp" is a compilation of all the official Bethesda mods translated by 1C to Russian. You should deactivate the individual mods it includes.
+ (Ref. "Readme.txt")
+Official_plugins_1C.esp
+[ANY AdamantiumArmor.esp
+     Adamantium_Armor.esp
+     ImprovedAdamantiumArmor.esp
+     [Official]Adamantium Armor.esp
+     AreaEffectArrows.esp
+     Area Effect Arrows.esp
+     AreaEffectArrows XB Edition.esp
+     Area Effect Projectiles.esp
+     Area Effect Projectiles (PAR Edit).esp
+     CleanAreaEffectArrows.esp
+     [Official]Area Effect Arrows.esp
+     BCSounds.esp
+     BCSounds 1.2.esp
+     BitterCoastSounds.esp
+     CleanBitterCoastSounds.esp
+     [Official]Bitter Coast Sounds.esp
+     EBQ_Artifact.esp
+     CleanHelmOfTohan.esp
+     HelmOfTohan.esp
+     [Official]Helm of Tohan.esp
+     entertainers.esp
+     CleanEntertainers.esp
+     [Official]Entertainers.esp
+     [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
+     [Official]LeFemm Armor.esp
+     LeFemmArmor.esp
+     Master_Index.esp
+     Master_Index_Upgarded.esp
+     CleanMasterIndex.esp
+     MasterIndex.esp
+     [Official]Master Index.esp
+     Siege at Firemoth.esp
+     SiegeAtFiremoth.esp
+     [Official]Siege at Firemoth.esp]
+
+[Order]
+Official_plugins_1C.esp
+Weapon Sheaths Ultimate_1C.esp
+
+[Order]
+Official_plugins_1C.esp
+Better Heads.esp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Old Dwemer Books [Yar-Yulme]
 
 [Conflict]
@@ -40111,6 +40355,12 @@ Old_dwemer_books_Better_typography.esp
 Book Rotate - Tribunal v5.3.esp
 Old_dwemer_books.esp
 
+;;"Old Dwemer Books needs to load after the Tribunal BookRotate .esp, even if you've used BR Patcher on it."
+;;Ref: http://forums.nexusmods.com/index.php?/topic/1314413-mlox/?p=25695194
+[Order]
+Book Rotate - Tribunal.esp
+Old_dwemer_books.esp
+
 [Order]
 Librarian with Jackets BM Trib.esp
 Old_dwemer_books.esp
@@ -40121,6 +40371,10 @@ Old_dwemer_books.esp
 
 [Order]
 Book Rotate - Tribunal v5.3.esp
+Old_dwemer_books_Better_typography.esp
+
+[Order]
+Book Rotate - Tribunal.esp
 Old_dwemer_books_Better_typography.esp
 
 [Order]
@@ -40287,6 +40541,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -40317,6 +40572,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -40347,6 +40603,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -40377,6 +40634,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -40924,6 +41182,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -41085,7 +41344,9 @@ PTE - BC Patch.esp
 PTE - BC Patch.esp
 [ALL Piratelords Trade Enhancements.esp
      [ANY Better Clothes_v1.1.esp
-	  Better Clothes_v1.1_nac.esp]]
+	  Better Clothes_v1.1_nac.esp
+	  Better Clothes.esp
+	  Better Clothes nac.esp]]
 
 [Note]
  When using Merged Objects with PTE, you should edit Merged_Objects.esp and remove all the NPCs modified by PTE. "Leaving the NPCs in has been known to cause crashes with PTE due to their adjusted inventories and negative items."
@@ -42019,6 +42280,8 @@ propylons1.1.esp
 Prosey_female_pants_replace.esp
 [ANY Better Clothes_v1.1.esp
      Better Clothes_v1.1_nac.esp
+     Better Clothes.esp
+     Better Clothes nac.esp
      Better Clothes Complete (BTB Edit).esp]
 
 
@@ -44041,15 +44304,21 @@ Helseth_Shield_notAdded.esp
 [Conflict]
  "[RR Mod Series - Holamayan Monastery Replacer] conflicts with Holidays Across Tamriel - Vvardenfell [which] adds many mini statues and scripted candles and prayer offerings to the original Holamayan interior which now are all completely out of place and floating around."
  (Ref: http://forums.nexusmods.com/index.php?/topic/2672199-rr-mod-series-holamayan-monastery-replacer/?p=23525454 )
-RR_Holamayan_Eng.esp
+[ANY RR_Holamayan_Eng.esp
+     RR_Holamayan_1C.esp]
 Holidays Across Tamriel - Vvardenfell.esp
 
 [Conflict]
  "RR Mod Series - Holamayan Monastery Replacer" includes Sonoko/Aoimevelho's "Reclamations In Holamayan".
  (Ref: http://www.nexusmods.com/morrowind/mods/43524/ )
-RR_Holamayan_Eng.esp
+[ANY RR_Holamayan_Eng.esp
+     RR_Holamayan_1C.esp]
 ReclamationsInHolamayan.ESP
 
+[Order]
+Hold It.esp
+RR_Holamayan_Eng.esp
+RR_Holamayan_1C.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @RTS BB2 Argonian Mods 1 - Female Replacers and New Races [redwoodtreesprite]
@@ -46212,6 +46481,7 @@ Slof's Goth Shop II.esp
  Download the plugin from Kir's webpage - http://www.angelfire.com/rpg2/mad_weather/smallimp.htm
 [ALL [SIZE 1815 Slof's Pillow Book.esp]
      [ANY Book Rotate.esm
+          Book Rotate - Morrowind.esp
           Book Rotate - Morrowind v1.1.esp]]
 
 [Conflict]
@@ -46220,6 +46490,7 @@ Slof's Goth Shop II.esp
   Slof's Pillow Book.esp - If you do not
  (Ref: "PillowBookReadme.txt")
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Requires]
@@ -46230,37 +46501,47 @@ Book Rotate.esm
 [Order]
 Librarian with Jackets & Rotate BM Trib.esp
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Order]
 Librarian with Jackets BM Trib.esp
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Order]
 Book Jackets - Morrowind - BookRotate.esp
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Order]
 Book Jackets - Morrowind.esp
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Order]
 Jac_Passing time while reading -  BRBJ patch.esp
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Order]
 Jac_Passing time while reading - BR patch.esp
 Slof's Pillow Book.esp
+Slof's Pillow Book_1C.esp
 Slof's Pillow Book_BR.esp
 
 [Order]
 Book Rotate - Morrowind v1.1.esp
 Slof's Pillow Book.esp
 Slof's Pillow Book_BR.esp
+
+[Order]
+Book Rotate - Morrowind.esp
+Slof's Pillow Book_1C.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47379,6 +47660,7 @@ LGNPC Gowns.esp
      LGNPC_SeydaNeen.esp
      LGNPC_GnaarMok_v?_??.esp
      LGNPC_AldVelothi_v?_??.esp
+     LGNPC_AldVelothi_rus_v?_??.esp
      LGNPC_MaarGan.esp
      LGNPC_HlaOad.esp
      LGNPC_Aldruhn.esp
@@ -49710,6 +49992,16 @@ Teleportation Spells.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; @Teleporter Mod Revised Tribunal 1.0 [Nordic][Ultimate Teleporter]
+
+;; Ring is placed in smal chest, disapears if false loadorder
+[Order]
+MW Containers Animated.esp
+Teleporter Mod Revised Tribunal.esp
+Teleporter Mod Revised Tribunal (Русская версия).esp
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @Teleport Ring 3.3.5 [Tealpanda, Eidolon, Dubious]
 
 [Conflict]
@@ -50283,7 +50575,14 @@ Better_Sounds.esp
 SNR_ThievesStep_BS.esp
 
 [Order]
+Better Sounds.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
 Expanded Sounds.esp
+SNR_ThievesStep_BS.esp
+
+[Order]
 Expanded Sounds DV.esp
 SNR_ThievesStep_BS.esp
 
@@ -51965,7 +52264,9 @@ Undead arise from death <VER>.esp
  (Ref: "Undead arise from death 3.5- README.txt")
 [ALL Undead arise from death <VER>.esp
      [NOT [ANY Better Clothes_v1.1.esp
-               Better Clothes_v1.1_nac.esp]]]
+               Better Clothes_v1.1_nac.esp
+               Better Clothes.esp
+               Better Clothes nac.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -52330,7 +52631,9 @@ Tribunal.esm
 [ALL [ANY Unique Ghosts - M - T.esp
           Unique Ghosts - M.esp]
      [NOT [ANY Better Clothes_v1.1.esp
-               Better Clothes_v1.1_nac.esp]]]
+               Better Clothes_v1.1_nac.esp
+               Better Clothes.esp
+               Better Clothes nac.esp]]]
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -56207,6 +56510,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -56238,6 +56542,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -56269,6 +56574,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -57218,6 +57524,7 @@ LGNPC_VivecRedoran_OM.esp
 LGNPC_SeydaNeen.esp
 LGNPC_GnaarMok_v?_??.esp
 LGNPC_AldVelothi_v?_??.esp
+LGNPC_AldVelothi_rus_v?_??.esp
 LGNPC_MaarGan.esp
 LGNPC_HlaOad.esp
 LGNPC_Aldruhn.esp
@@ -57747,6 +58054,7 @@ AtmosphericSoundEffects-3.0-Tribunal.esp
 AtmosphericSoundEffects-3.0-TBM.esp
 ASE Complete (BTB Edit).esp
 Better_Sounds.esp
+Better Sounds.esp
 Expanded Sounds.esp
 Expanded Sounds DV.esp
 Sound Enhancements.esp
@@ -58407,6 +58715,8 @@ Wrye Patches C1.esp
      Wrye Patches C1.esp]
 [ALL [ANY Better Clothes_v1.1.esp
           Better Clothes_v1.1_nac.esp
+          Better Clothes.esp
+          Better Clothes nac.esp
           Better Clothes Complete (BTB Edit).esp
           BetterClothes_Patch.esp
           BetterClothesBloodmoonPlus1.5.esp
@@ -58428,6 +58738,7 @@ Wrye Patches C1.esp
           IceNioLivRobeReplacerPLUS (BTB Edit).esp
           IceNioLivRobeReplacerTB.esp
           LeftGloves.esp
+          LeftGloves_1C.esp
           LeftGloves_Addon_v2.esp
           More Better Clothes.ESP
           UF_HortRobeF001.esp
