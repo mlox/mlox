@@ -117,6 +117,7 @@ ApplicationWindow {
             Layout.columnSpan: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
+            onLinkActivated: Qt.openUrlExternally(link)
         }
 
         Text {

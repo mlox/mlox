@@ -4,6 +4,7 @@ import io
 import logging
 import traceback
 import tempfile
+import re
 from PyQt5.QtGui import QClipboard
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit
@@ -15,16 +16,41 @@ import modules.version as version
 gui_logger = logging.getLogger('mlox.gui')
 
 
-def colorize_text(in_text):
+def colorize_text(text):
     """
     Some things are better in color.
     This function takes normal text, and applies html style tags where appropriate.
     """
-    # TODO Actually colorize text
-    return in_text.replace('\n', '<br>\n')
+    bg_colors = {
+        "low":      "<span style='background-color: rgb(125,220,240);'>\g<0></span>",
+        "medium":   "<span style='background-color: rgb(255,255,180);'>\g<0></span>",
+        "high":     "<span style='background-color: rgb(255,180,180);'>\g<0></span>",
+        "green":    "<span style='background-color: green;'>\g<0></span>",
+        "yellow":   "<span style='background-color: yellow;'>\g<0></span>",
+        "red":      "<span style='background-color: red;'>\g<0></span>"
+    }
+
+    highlighters = [
+        (re.compile(r'<hide>(.*)</hide>'),"<span style='color: black; background-color: black;'>\g<1></span>"),         # Spoilers require Highlighting
+        (re.compile(r'^(\[CONFLICT\])', re.MULTILINE), bg_colors["red"]),
+        (re.compile(r'(https?://[^\s]*)', re.IGNORECASE), "<a href='\g<0>'>\g<0></a>"),                                 # URLs
+        (re.compile(r"^(\s*\|?\s*!{1}[^!].*)$", re.MULTILINE), bg_colors["low"]),                                       # '!' in mlox_base.txt
+        (re.compile(r"^(\s*\|?\s*!{2}.*)$", re.MULTILINE), bg_colors["medium"]),                                        # '!!' in mlox_base.txt
+        (re.compile(r"^(\s*\|?\s*!{3}.*)$", re.MULTILINE), bg_colors["high"]),                                          # '!!!' in mlox_base.txt
+        (re.compile(r'^(WARNING:.*)', re.MULTILINE),bg_colors["yellow"]),
+        (re.compile(r'^(ERROR:.*)', re.MULTILINE),bg_colors["red"]),
+        (re.compile(r'(\[Plugins already in sorted order. No sorting needed!\])', re.IGNORECASE), bg_colors["green"]),
+        (re.compile(r'^(\*\d+\*\s\S*\.es[mp])', re.MULTILINE), bg_colors["yellow"])                                     # Changed mod order
+    ]
+    for (regex,replacement_string) in highlighters:
+        text = regex.sub(replacement_string, text)
+
+    text = text.replace('\n', '<br>\n')
+    return text
 
 
 class ScrollableDialog(QDialog):
+    "A dialog box that contains scrollable text."
     def __init__(self):
         QDialog.__init__(self)
         self.setModal(False)
