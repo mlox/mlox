@@ -1,5 +1,4 @@
 
-from __future__ import print_function   #Use Python3 Style print
 import os         #To calculate the amount remaining to parse (os.path.getsize)
 import re
 import logging

@@ -1,10 +1,9 @@
 
-from __future__ import print_function
 import os
 import sys
 import re
 import traceback
-import StringIO
+import io as StringIO
 import logging
 import wx
 import wx.richtext as rt
