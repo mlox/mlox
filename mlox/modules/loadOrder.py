@@ -72,7 +72,7 @@ class loadorder:
         out = "{0:20} {1:20} {2}\n".format("Name", "Description", "Plugin Name")
         for p in self.order:
             (file_ver, desc_ver) = ruleParser.get_version(p,self.datadir)
-            out += "{0:20} {1:20} {2}\n".format(file_ver, desc_ver, self.caseless.truename(p))
+            out += "{0:20} {1:20} {2}\n".format(str(file_ver), str(desc_ver), self.caseless.truename(p))
         return out
 
     def read_from_file(self, fromfile):

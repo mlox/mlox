@@ -31,8 +31,8 @@ def extract(file_path,directory):
     cmd = ['7za', 'e', '-aoa', '-o{0}'.format(directory), file_path]
     update_logger.debug("Extracting via command %s",cmd)
     try:
-        devnull = open(os.devnull, 'w')
-        subprocess.check_call(cmd, stdout=devnull)
+        with open(os.devnull, 'w') as devnull:
+            subprocess.check_call(cmd, stdout=devnull)
     except Exception as e:
         update_logger.error('Error while extracting from {0}'.format(file_path))
         update_logger.debug('Exception {0} while trying to execute command:  {0}'.format(str(e),cmd))

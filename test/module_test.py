@@ -2,7 +2,7 @@
 
 # A test script to make sure all the modules work
 
-#Basic setup for logging
+from __future__ import print_function
 import sys
 import os
 import subprocess
@@ -40,7 +40,7 @@ class fileFinder_test(unittest.TestCase):
         self.assertEqual(c.dirpath(),os.path.abspath('..'))
 
         #TODO:  Actually test these two (seperately)
-        #print fileFinder.filter_dup_files(dir_list.filelist())
+        #print(fileFinder.filter_dup_files(dir_list.filelist()))
 
 #Config Handler
 class configHandler_test(unittest.TestCase):
@@ -49,7 +49,7 @@ class configHandler_test(unittest.TestCase):
 
     # Get  list of plugins (in order from the correct directory)
     test1_plugins_raw = subprocess.check_output('cd test1.data; ( ls -rt *.esm ; ls -rt *.esp ) | col', shell=True)
-    test1_plugins= test1_plugins_raw.split('\n')[:-1]
+    test1_plugins= test1_plugins_raw.decode().split('\n')[:-1]
 
     modified_plugins = list(test1_plugins)
     modified_plugins[-2] = test1_plugins[-1]
@@ -83,7 +83,7 @@ class configHandler_test(unittest.TestCase):
 
     def test_Oblivion(self):
         #TODO: Actually test this one (Using an oblivion file)
-        #print self.configHandler.configHandler("./userfiles/zinx.txt","Oblivion").read()
+        #print(self.configHandler.configHandler("./userfiles/zinx.txt","Oblivion").read())
         pass
 
     def test_dirHandler(self):
@@ -156,7 +156,7 @@ class loadOrder_test(unittest.TestCase):
         l1.game_type = None
         l1.get_active_plugins()
         l1.update()
-        print l1.listversions()
+        print(l1.listversions())
 
     def test_Dir(self):
         l2 = self.loadorder()
@@ -168,8 +168,8 @@ class loadOrder_test(unittest.TestCase):
         l3 = self.loadorder()
         l3.read_from_file("./userfiles/abot.txt")
         l3.update()
-        print l3.explain("Morrowind.esm")
-        print l3.explain("Morrowind.esm",True)
+        print(l3.explain("Morrowind.esm"))
+        print(l3.explain("Morrowind.esm", True))
 
 #Version
 class version_test(unittest.TestCase):
@@ -210,10 +210,12 @@ class update_test(unittest.TestCase):
         # Make a 7z file to test with, and get the hash
         z_file = os.path.join(self.temp_dir, 'module_test.7z')
         subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
-        hash = hashlib.sha256(open('module_test.py', 'rb').read()).hexdigest()
+        with open('module_test.py', 'rb') as test_file:
+            file_hash = hashlib.sha256(test_file.read()).hexdigest()
 
         self.update.extract(z_file,self.temp_dir)
-        self.assertTrue(hash == hashlib.sha256(open(os.path.join(self.temp_dir, 'module_test.py'), 'rb').read()).hexdigest())
+        with open(os.path.join(self.temp_dir, 'module_test.py'), 'rb') as test_file:
+            self.assertTrue(file_hash == hashlib.sha256(test_file.read()).hexdigest())
 
     def test_download(self):
         self.update.download_file(self.local_file, self.test_url)
