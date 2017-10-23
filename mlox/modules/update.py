@@ -39,19 +39,23 @@ def extract(file_path,directory):
         return False
     return True
 
+# Download a file from the internet
+def download_file(local_file,url):
+    try:
+        urllib.urlretrieve(url, local_file)
+    except Exception as e:
+        update_logger.error('Unable to download {0}, skipping update.'.format(url))
+        update_logger.debug('Error: {0}'.format(e))
+        return False
+    return True
+
 #Check if a compressed file needs updating.
 #If it does, download it, and extract it to a directory
 def update_compressed_file(file_path,url,directory):
-    update_needed = isNewer(file_path,url)
-    if update_needed:
+    if isNewer(file_path,url):
         update_logger.info('Updating {0}'.format(file_path))
-        try:
-            urllib.urlretrieve(url,file_path)
-        except Exception as e:
-            update_logger.error('Unable to download {0}, skipping update.'.format(url))
-            update_logger.debug('Error: {0}'.format(e))
+        if not download_file(file_path, url):
             return False
-
         update_logger.info('Downloaded {0}'.format(file_path))
         if not extract(file_path,directory):
             return False

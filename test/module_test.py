@@ -185,13 +185,13 @@ class version_test(unittest.TestCase):
 class update_test(unittest.TestCase):
     import modules.update as update
     temp_dir = ""
-    local_file = "test100k.db"
+    file_name = "test100k.db"
     test_url = "http://speedtest.ftp.otenet.gr/files/test100k.db"
 
     def setUp(self):
         import tempfile
         self.temp_dir = tempfile.mkdtemp()
-        self.local_file = os.path.join(self.temp_dir, self.local_file)
+        self.local_file = os.path.join(self.temp_dir, self.file_name)
 
     def test_isNewer(self):
         # Make sure the file doesn't exist
@@ -215,10 +215,9 @@ class update_test(unittest.TestCase):
         self.update.extract(z_file,self.temp_dir)
         self.assertTrue(hash == hashlib.sha256(open(os.path.join(self.temp_dir, 'module_test.py'), 'rb').read()).hexdigest())
 
-
-    def test_update_compressed_file(self):
-        # TODO:  Implement this
-        pass
+    def test_download(self):
+        self.update.download_file(self.local_file, self.test_url)
+        self.assertTrue(os.path.getsize(self.local_file) == 102400)
 
     def tearDown(self):
         import shutil
