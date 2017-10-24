@@ -7,6 +7,7 @@ from functools import reduce
 
 config_logger = logging.getLogger('mlox.configHandler')
 
+
 def caseless_uniq(un_uniqed_files):
     """
     Given a list, return a list of unique strings, and a list of duplicates.
@@ -37,8 +38,16 @@ def partition_esps_and_esms(filelist):
             esm_files.append(filename)
     return(esm_files, esp_files)
 
-# Handle reading and writing plugin configurations
+
 class configHandler():
+    """
+    A class for handling plugin configuration files.
+
+    A configuration file is a text file containing an ordered list of plugins.
+    For example 'Morrowind.ini' is a configuration File.
+    This allows for reading and writing to those files.
+    """
+
     # pattern matching a plugin in Morrowind.ini
     re_gamefile = re.compile(r'(?:GameFile\d+=)(.*)', re.IGNORECASE)
     # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
@@ -61,24 +70,27 @@ class configHandler():
     def __init__(self,configFile,fileType = None):
         self.configFile = configFile
         try:
-            self.read_regexes[fileType]
+            self.read_regexes[fileType] # Note:  This might not seem to do anything, but it serves as a runtime check that fileType is an accepted value.
             self.fileType = fileType
         except:
-            config_logger.warn("\"{0}\" is not a recognized file type!".format(fileType))
+            config_logger.warning("\"{0}\" is not a recognized file type!".format(fileType))
 
-    #Returns a list of plugins in a config file
+
     def read(self):
+        """
+        Read a configuration file
+
+        :return: An ordered list of plugins
+        """
         files = []
         regex = self.read_regexes[self.fileType]
         try:
             file_handle = open(self.configFile, 'r')
         except IOError:
-            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            config_logger.error("Unable to open configuration file: {0}".format(self.configFile))
             return []
         for line in file_handle:
-            line.strip()
-            line.strip('\r\n')
-            gamefile = regex.match(line)
+            gamefile = regex.match(line.strip())
             if gamefile:
                 f = gamefile.group(1).strip()
                 files.append(f)
@@ -89,9 +101,15 @@ class configHandler():
             config_logger.debug("Duplicate plugin found in config file: {0}".format(f))
         return files
 
-    #Remove all plugins from the config file
     def clear(self):
-        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE);
+        """
+        Remove all the plugin lines from a configuration file.
+
+        This leaves everything else untouched.
+
+        :return: True on success, or False on failure
+        """
+        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE)
 
         config_logger.debug("Clearing config file: {0}".format(self.configFile))
 
@@ -131,9 +149,13 @@ class configHandler():
 
         return True
 
-    #Write a plugin list to the config file
-    def write(self,files):
-        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE);
+    def write(self, list_of_plugins):
+        """
+        Write a list of plugins to a configuration file
+
+        :return: True on success, or False on failure
+        """
+        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE)
 
         config_logger.debug("Writing config file: {0}".format(self.configFile))
 
@@ -153,8 +175,8 @@ class configHandler():
 
         #Generate the plugins string
         out_str = "\n"
-        for i in range(0,len(files)):
-            out_str += "GameFile{index}={plugin}\n".format(index=i,plugin=files[i])
+        for i in range(0, len(list_of_plugins)):
+            out_str += "GameFile{index}={plugin}\n".format(index=i, plugin=list_of_plugins[i])
 
         #Remove the data from '[Game Files]'
         sections = section_re.split(file_buffer)
@@ -178,8 +200,15 @@ class configHandler():
 
         return True
 
-# Handle reading and updating the load order for the plugins in the data directory
+
 class dataDirHandler:
+    """
+    A class for handling a directory containing plugin files.
+
+    Plugin files are loaded by Morrowind.exe in the order of their modification timestamp.
+    With the oldest being loaded first.
+    This allows for reading and setting the plugin order using the same interface as configHandler.
+    """
     path = None
 
     def __init__(self, data_files_path):
@@ -193,48 +222,57 @@ class dataDirHandler:
         """Convenience function to return the full path to a file."""
         return os.path.join(self.path,a_file)
 
-    # Sort a list of plugin files by modification date
-    def _sort_by_date(self, plugin_files):
-        dated_plugins = [(os.path.getmtime(self._full_path(aPlugin)), aPlugin) for aPlugin in plugin_files]
+    def _sort_by_date(self, list_of_plugins):
+        """Sort a list of plugin files by modification date"""
+        dated_plugins = [(os.path.getmtime(self._full_path(a_plugin)), a_plugin) for a_plugin in list_of_plugins]
         dated_plugins.sort()
         return([x[1] for x in dated_plugins])
 
-    #Get all config files from the data directory
     def read(self):
+        """
+        Obtain an ordered list of plugins from a directory.
+
+        Note:  Unlike configHandler.read(), ESM files will always be at the front of the returned list.
+        :return: An ordered list of plugins
+        """
         files = [f for f in os.listdir(self.path) if os.path.isfile(self._full_path(f))]
         (files, dups) = caseless_uniq(files)
         # Deal with duplicates
         for f in dups:
-            logging.warn("Duplicate plugin found in data directory: {0}".format(f))
+            logging.warning("Duplicate plugin found in data directory: {0}".format(f))
         # sort the plugins into load order by modification date (esm's first)
         (esm_files, esp_files) = partition_esps_and_esms(files)
-        files =  self._sort_by_date(esm_files)
+        files  = self._sort_by_date(esm_files)
         files += self._sort_by_date(esp_files)
         return files
 
-    def write(self,files):
-        """Change the modification times of files to be in order of file list, oldest to newest
-           There are six files with fixed times, the bsa files depend on the esm files being present.
-           These files are fixed to be compatible with tes3cmd resetdates"""
+    def write(self, list_of_plugins):
+        """
+        Change the modification times of plugin files to be in order of file list, oldest to newest
+
+        There are six files with fixed times, the bsa files depend on the esm files being present.
+        These files are fixed to be compatible with `tes3cmd resetdates`.
+        :return: True on success, or False on failure
+        """
         tes3cmd_resetdates_morrowind_mtime = 1024695106 # Fri Jun 21 17:31:46 2002
         tes3cmd_resetdates_tribunal_mtime  = 1035940926 # Tue Oct 29 20:22:06 2002
         tes3cmd_resetdates_bloodmoon_mtime = 1051807050 # Thu May  1 12:37:30 2003
 
         mtime = tes3cmd_resetdates_morrowind_mtime
         try:
-            for p in files:
-                if p.lower() == "morrowind.esm":
+            for a_plugin in list_of_plugins:
+                if a_plugin.lower() == "morrowind.esm":
                     mtime = tes3cmd_resetdates_morrowind_mtime
                     os.utime(self._full_path("Morrowind.bsa"), (-1, mtime))
-                elif p.lower() == "tribunal.esm":
+                elif a_plugin.lower() == "tribunal.esm":
                     mtime = tes3cmd_resetdates_tribunal_mtime
                     os.utime(self._full_path("Tribunal.bsa"), (-1, mtime))
-                elif p.lower() == "bloodmoon.esm":
+                elif a_plugin.lower() == "bloodmoon.esm":
                     mtime = tes3cmd_resetdates_bloodmoon_mtime
                     os.utime(self._full_path("Bloodmoon.bsa"), (-1, mtime))
                 else:
                     mtime += 60 # standard 1 minute Mash step
-                os.utime(self._full_path(p), (-1, mtime))
+                os.utime(self._full_path(a_plugin), (-1, mtime))
         except TypeError:
             config_logger.error(
                 """

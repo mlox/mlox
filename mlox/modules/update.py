@@ -1,5 +1,6 @@
-# Update a file from the internet
-# with the option of auto extracting it
+"""
+Provides everything needed to preform auto updates of one or more files.
+"""
 
 import os
 import urllib.request
@@ -8,8 +9,12 @@ import logging
 
 update_logger = logging.getLogger('mlox.update')
 
-#Check if a file has changed (size) compared to local version
-def isNewer(local_file,url):
+
+def remote_file_changed(local_file, url):
+    """
+    Check if the local copy of a file has changed compared to a remote version.
+    This currently cheats and just compares file sizes.
+    """
     if not os.path.isfile(local_file):
         return True
     try:
@@ -26,21 +31,27 @@ def isNewer(local_file,url):
 
     return int(url_size) != int(local_size)
 
-#Extract the contents of a file to a directory (using 7za)
-def extract(file_path,directory):
+
+def extract_file(file_path, directory):
+    """
+    Extract the contents of a file to a directory.
+    Currently uses 7za to do so.
+    WARNING:  This can and will silently overwrite files in the target directory.
+    """
     cmd = ['7za', 'e', '-aoa', '-o{0}'.format(directory), file_path]
-    update_logger.debug("Extracting via command %s",cmd)
+    update_logger.debug("Extracting via command %s", cmd)
     try:
         with open(os.devnull, 'w') as devnull:
             subprocess.check_call(cmd, stdout=devnull)
     except Exception as e:
         update_logger.error('Error while extracting from {0}'.format(file_path))
-        update_logger.debug('Exception {0} while trying to execute command:  {0}'.format(str(e),cmd))
+        update_logger.debug('Exception {0} while trying to execute command:  {0}'.format(str(e), cmd))
         return False
     return True
 
-# Download a file from the internet
-def download_file(local_file,url):
+
+def download_file(local_file, url):
+    """Download a file from the internet"""
     try:
         urllib.request.urlretrieve(url, local_file)
     except Exception as e:
@@ -49,15 +60,18 @@ def download_file(local_file,url):
         return False
     return True
 
-#Check if a compressed file needs updating.
-#If it does, download it, and extract it to a directory
-def update_compressed_file(file_path,url,directory):
-    if isNewer(file_path,url):
+
+def update_compressed_file(file_path, url, directory):
+    """
+    Check if a compressed file needs updating.
+    If it does, download it, and extract it to a directory
+    """
+    if remote_file_changed(file_path, url):
         update_logger.info('Updating {0}'.format(file_path))
         if not download_file(file_path, url):
             return False
         update_logger.info('Downloaded {0}'.format(file_path))
-        if not extract(file_path,directory):
+        if not extract_file(file_path, directory):
             return False
         return True
     else:
