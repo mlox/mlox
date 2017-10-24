@@ -310,4 +310,6 @@ class update_test(unittest.TestCase):
         import shutil
         shutil.rmtree(self.temp_dir)
 
-unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()

@@ -48,6 +48,8 @@ class configHandler():
     This allows for reading and writing to those files.
     """
 
+    # A section of a configuration file
+    section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE)
     # pattern matching a plugin in Morrowind.ini
     re_gamefile = re.compile(r'(?:GameFile\d+=)(.*)', re.IGNORECASE)
     # pattern to match plugins in FromFile (somewhat looser than re_gamefile)
@@ -105,49 +107,10 @@ class configHandler():
         """
         Remove all the plugin lines from a configuration file.
 
-        This leaves everything else untouched.
-
         :return: True on success, or False on failure
         """
-        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE)
-
-        config_logger.debug("Clearing config file: {0}".format(self.configFile))
-
-        #Only handling Morrowind.ini right now
-        if (self.fileType != "Morrowind"):
-            config_logger.error("Can not clear non Morrowind.ini config files.")
-            return False
-
-        #Read the file to a buffer
-        try:
-            file_handle = open(self.configFile, 'r')
-        except IOError:
-            config_logger.error("Unable to open config file: {0}".format(self.configFile))
-            return False
-        file_buffer = file_handle.read()
-        file_handle.close()
-
-        #Remove the data from '[Game Files]'
-        sections = section_re.split(file_buffer)
-        try:
-            config_index = sections.index('[Game Files]')
-        except:
-            config_logger.error("Config file does not have a '[Game Files]' section!")
-            return False
-        sections[config_index+1] = '\n'
-        file_buffer =  reduce(lambda x,y: x+y,sections)
-
-
-        #Write the buffer to the file
-        try:
-            file_handle = open(self.configFile, 'w')
-        except IOError:
-            config_logger.error("Unable to open config file: {0}".format(self.configFile))
-            return False
-        file_handle.write(file_buffer)
-        file_handle.close()
-
-        return True
+        config_logger.debug("Clearing configuration file: {0}".format(self.configFile))
+        return self.write([])
 
     def write(self, list_of_plugins):
         """
@@ -155,45 +118,42 @@ class configHandler():
 
         :return: True on success, or False on failure
         """
-        section_re = re.compile("^(\[.*\])\s*$", re.MULTILINE)
-
-        config_logger.debug("Writing config file: {0}".format(self.configFile))
+        config_logger.debug("Writing configuration file: {0}".format(self.configFile))
 
         #Only handling Morrowind.ini right now
         if (self.fileType != "Morrowind"):
-            config_logger.error("Can not write non Morrowind.ini config files.")
+            config_logger.error("Can not write non Morrowind.ini configuration files.")
             return False
 
-        #Read the file to a buffer
-        try:
-            file_handle = open(self.configFile, 'r')
-        except IOError:
-            config_logger.error("Unable to open config file: {0}".format(self.configFile))
-            return False
-        file_buffer = file_handle.read()
-        file_handle.close()
-
-        #Generate the plugins string
+        # Generate the plugins string
         out_str = "\n"
         for i in range(0, len(list_of_plugins)):
             out_str += "GameFile{index}={plugin}\n".format(index=i, plugin=list_of_plugins[i])
 
-        #Remove the data from '[Game Files]'
-        sections = section_re.split(file_buffer)
+        # Open and read a configuration file, splitting the result into multiple sections.
+        try:
+            file_handle = open(self.configFile, 'r')
+        except IOError:
+            config_logger.error("Unable to open configuration file: {0}".format(self.configFile))
+            return False
+        file_buffer = file_handle.read()
+        file_handle.close()
+        sections = self.section_re.split(file_buffer)
+
+        # Replace the data in the '[Game Files]' section with the generated plugins string
         try:
             config_index = sections.index('[Game Files]')
-        except:
-            config_logger.error("Config file does not have a '[Game Files]' section!")
+        except IndexError:
+            config_logger.error("Configuration file does not have a '[Game Files]' section!")
             return False
         sections[config_index+1] = out_str
-        file_buffer =  reduce(lambda x,y: x+y,sections)
+        file_buffer = reduce(lambda x,y: x+y,sections)
 
-
-        #Write the buffer to the file
+        # Write the modified buffer to the configuration file
         try:
             file_handle = open(self.configFile, 'w')
         except IOError:
-            config_logger.error("Unable to open config file: {0}".format(self.configFile))
+            config_logger.error("Unable to open configuration file: {0}".format(self.configFile))
             return False
         file_handle.write(file_buffer)
         file_handle.close()
