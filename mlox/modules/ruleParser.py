@@ -136,7 +136,12 @@ class rule_parser:
         self.name_converter = name_converter
 
     def readline(self):
-        """reads a line into the current parsing buffer"""
+        """
+        Obtain the next line from the rules file.
+
+        This skips blank lines, and lines that are only comments.
+        It also strips comments.
+        """
         if self.input_handle == None:
             return(False)
         try:
