@@ -31,7 +31,12 @@ class loadorder:
         self.game_type, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
     def get_active_plugins(self):
-        """Get the active list of plugins from the game configuration. Updates self.active and self.order."""
+        """
+        Get the active list of plugins from the game configuration.
+
+        "Active Plugins" are plugins that are both in the Data Files directory and in Morrowind.ini
+        Updates self.active and self.order
+        """
         self.is_sorted = False
         if self.plugin_file == None:
             order_logger.warning("No game configuration file was found!\nAre you sure you're running mlox in or under your game directory?")
@@ -54,7 +59,11 @@ class loadorder:
         self.origin = "Active Plugins"
 
     def get_data_files(self):
-        """Get the load order from the data files directory. Updates self.active and self.order."""
+        """
+        Get the load order from the data files directory.
+
+        Updates self.active and self.order
+        """
         self.is_sorted = False
         self.order = configHandler.dataDirHandler(self.datadir.dirpath()).read()
 
@@ -75,9 +84,12 @@ class loadorder:
         return out
 
     def read_from_file(self, fromfile):
-        """Get the load order by reading an input file.
+        """
+        Get the load order by reading an input file.
+
         Clears self.game_type and self.datadir.
-        Updates self.plugin_file, self.active, and self.order."""
+        Updates self.plugin_file, self.active, and self.order
+        """
         self.is_sorted = False
         self.game_type = None
         self.datadir = None         #This tells the parser to not worry about things like [SIZE] checks, or trying to read the plugin descriptions
@@ -177,7 +189,7 @@ class loadorder:
         return formatted
 
     def explain(self,plugin_name,base_only = False):
-        """Expalin why a mod is in it's current position"""
+        """Explain why a mod is in it's current position"""
         original_graph = self.graph
         self.graph = pluggraph.pluggraph()
 

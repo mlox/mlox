@@ -93,13 +93,13 @@ def plugin_description(plugin):
     try:
         inp = open(plugin, 'rb')
     except IOError:
-        parse_logger.warn("Unable to open plugin file:  {0}".format(plugin))
+        parse_logger.warning("Unable to open plugin file:  {0}".format(plugin))
         return("")
     block = inp.read(4096)
     inp.close()
     if block[0:4] == "TES3":    # Morrowind
         if len(block) < tes3_min_plugin_size:
-            parse_logger.warn("Cannot read plugin description(%s): file too short, returning NULL string" % plugin)
+            parse_logger.warning("Cannot read plugin description(%s): file too short, returning NULL string", plugin)
             return("")
         desc = block[64:block.find("\x00", 64)]
         return(desc)
