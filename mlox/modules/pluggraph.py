@@ -82,7 +82,6 @@ class pluggraph:
         buffer += "}\n"
         return buffer
 
-
     def explain(self, what, active):
         seen = {}
         output = ""
