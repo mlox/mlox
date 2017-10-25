@@ -1,6 +1,4 @@
 import os
-import sys
-import io
 import logging
 import modules.fileFinder as fileFinder
 import modules.pluggraph as pluggraph
@@ -193,7 +191,7 @@ class loadorder:
         original_graph = self.graph
         self.graph = pluggraph.pluggraph()
 
-        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,io.StringIO(),self.caseless)
+        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
@@ -210,7 +208,6 @@ class loadorder:
         Update the load order based on input rules.
         Returns the parser's recommendations on success, or False if something went wrong.
         """
-        parser_out_stream = io.StringIO()
         self.is_sorted = False
         self.graph = pluggraph.pluggraph()
         if self.order == []:
@@ -223,7 +220,7 @@ class loadorder:
 
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,parser_out_stream,self.caseless)
+        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
@@ -261,7 +258,7 @@ class loadorder:
             # save the load orders to file for future reference
             self.save_order(old_loadorder_output, [self.caseless.truename(p) for p in self.order], "current")
             self.save_order(new_loadorder_output, self.new_order, "mlox sorted")
-        return parser_out_stream.getvalue()
+        return parser.get_messages()
 
     def write_new_order(self):
         if not isinstance(self.new_order,list) or self.new_order == []:
