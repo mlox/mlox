@@ -121,8 +121,8 @@ class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
     version = "Unkown"
 
-    def __init__(self, active, graph, datadir, name_converter):
-        self.active = active
+    def __init__(self, plugin_list, graph, datadir, name_converter):
+        self.plugin_list = plugin_list
         self.graph = graph
         self.datadir = datadir
         self.line_num = 0
@@ -195,11 +195,11 @@ class rule_parser:
             pat = re_plugin_metaver.sub(plugin_version, pat)
             subbed = True
         if not subbed:        # no expansions made
-            return([plugin] if plugin.lower() in self.active else [])
+            return([plugin] if plugin.lower() in self.plugin_list else [])
         parse_logger.debug("expand_filename new RE pat: %s" % pat)
         matches = []
         re_namepat = re.compile(pat, re.IGNORECASE)
-        for p in self.active:
+        for p in self.plugin_list:
             if re_namepat.match(p):
                 matches.append(p)
                 parse_logger.debug("expand_filename: %s expands to: %s" % (plugin, p))
