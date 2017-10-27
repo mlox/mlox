@@ -180,8 +180,6 @@ class MloxGui(QObject):
             self.lo.read_from_file(fromfile)
         else:
             self.lo.get_active_plugins()
-            if self.lo.order == []:
-                self.lo.get_data_files()
         progress = CustomProgressDialog()
         self.Msg = self.lo.update(progress)
         # self.Msg = self.lo.update()

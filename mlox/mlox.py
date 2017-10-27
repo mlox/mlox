@@ -77,9 +77,6 @@ def command_line_mode(args):
             my_loadorder.get_data_files()
         else:
             my_loadorder.get_active_plugins()
-            if my_loadorder.order == []:
-                logging.warn("No active plugins, defaulting to all plugins in Data Files directory.")
-                my_loadorder.get_data_files()
         process_load_order(my_loadorder, args)
 
 def process_load_order(a_loadorder, args):
