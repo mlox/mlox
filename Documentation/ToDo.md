@@ -16,8 +16,6 @@ Currently, the list is (mostly) unsorted.
 
 +Added by Dragon32:
 
-- internationalisation bug (cope with plugin names containing non-standard characters like £)
-
 - program preferences (including the download location for mlox-data.7z)
 
 - mlox community rule editing website
@@ -33,8 +31,7 @@ Currently, the list is (mostly) unsorted.
 
 - Clean up test code
 
-- Migrate to Python3
-    - Use Python3's str.casefold instead of str.lower for caseless matching
+- Use Python3's str.casefold instead of str.lower for caseless matching
 
 - Fully support OpenMW
 
