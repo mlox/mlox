@@ -1,7 +1,6 @@
-from __future__ import print_function   #Use Python3 Style print
 import os
 import sys
-import StringIO
+import io
 import logging
 import modules.fileFinder as fileFinder
 import modules.pluggraph as pluggraph
@@ -182,7 +181,7 @@ class loadorder:
         original_graph = self.graph
         self.graph = pluggraph.pluggraph()
 
-        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,StringIO.StringIO(),self.caseless)
+        parser = ruleParser.rule_parser(self.active, self.graph, self.datadir,io.StringIO(),self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
@@ -199,7 +198,7 @@ class loadorder:
         Update the load order based on input rules.
         Returns the parser's recommendations on success, or False if something went wrong.
         """
-        parser_out_stream = StringIO.StringIO()
+        parser_out_stream = io.StringIO()
         self.is_sorted = False
         self.graph = pluggraph.pluggraph()
         if self.order == []:

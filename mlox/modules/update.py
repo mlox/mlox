@@ -2,7 +2,7 @@
 # with the option of auto extracting it
 
 import os
-import urllib
+import urllib.request
 import subprocess
 import logging
 
@@ -13,7 +13,7 @@ def isNewer(local_file,url):
     if not os.path.isfile(local_file):
         return True
     try:
-        connection = urllib.urlopen(url)
+        connection = urllib.request.urlopen(url)
     except Exception as e:
         update_logger.warning('Unable to connect to {0}, skipping update.'.format(url))
         update_logger.debug('Exception {0}.'.format(str(e)))
@@ -42,7 +42,7 @@ def extract(file_path,directory):
 # Download a file from the internet
 def download_file(local_file,url):
     try:
-        urllib.urlretrieve(url, local_file)
+        urllib.request.urlretrieve(url, local_file)
     except Exception as e:
         update_logger.error('Unable to download {0}, skipping update.'.format(url))
         update_logger.debug('Error: {0}'.format(e))

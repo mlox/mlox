@@ -7,10 +7,10 @@ Version = "0.62"
 def version_info():
     "Returns a human readable multi-line string containting the program's version information"
     try:
-        import wx.__version__ as wx_version
-        gui_version = "wxPython Version: {0}".format(wx_version)
+        from PyQt5.QtCore import QT_VERSION_STR
+        gui_version = "PyQt5 Version: {0}".format(QT_VERSION_STR)
     except:
-        gui_version = "wxPython Not Installed!"
+        gui_version = "PyQt5 Not Installed!"
     return "{program} ({locale}/{encoding})\nPython Version: {python_version}\n{gui_version}\n".format(
         program=full_version(),
         locale=locale.getdefaultlocale()[0],

@@ -1,8 +1,7 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 
 # A test script to make sure all the modules work
 
-from __future__ import print_function
 import sys
 import os
 import subprocess

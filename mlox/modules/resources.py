@@ -16,6 +16,7 @@ program_path     = os.path.realpath(sys.path[0])
 resources_path   = os.path.join(program_path,"Resources")
 translation_file = os.path.join(resources_path,"mlox.msg")
 gif_file         = os.path.join(resources_path,"mlox.gif")
+qml_file         = os.path.join(resources_path,"window.qml")
 base_file        = os.path.join(program_path,"mlox_base.txt")
 user_file        = os.path.join(program_path,"mlox_user.txt")
 

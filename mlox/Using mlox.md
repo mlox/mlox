@@ -87,7 +87,6 @@ Check, and update your load order from the command line:
 
 
 # Known Issues
-* Updating does not immediately refresh [mlox-base YYYY-MM-DD HH:MM:SS (UTC)] string in the top text pane, although the update is effective.
 
 * There appear to be compatiblity issues with Yacoby's Wrye Mash Standalone.
 If you are using Yacoby's mash.exe avoid using these options:

@@ -57,17 +57,13 @@ For information on specific commands use `mlox -h`.
 
 
 ## Running mlox from source
-mlox.py is written using Python with wxWidgets, just like Wrye Mash.
 
-Both Python and wxWidgets are required.
+Mlox is written using Python3, using a PyQt5 graphial interface.
+As such, both Python and PyQt5 are required.
 
-Windows versions can be found [here](https://www.python.org/downloads/release/python-2713/) for Python, and [here][wxpython] for wxWidgets.
-
-Note: There are later versions of wxPython but mlox needs the ANSI version.
-
-Please note that the version of wxWidgets necessary for mlox is slightly newer than the one recommended for Mash, but will work for both applications.
-mlox will not work with wxPython 2.8.0.1, which is the version recommended by Mash!
-
+* Python3 Download link:  https://www.python.org/downloads/
+* Once Python 3 is installed, run `pip3 install PyQt5`
+* Run mlox by typing `python3 mlox.py`
 
 # Other Recommended Software
 It is STRONGLY RECOMMENDED that you install Hrnchamd's MCP ["Morrowind Code Patch!"](http://www.nexusmods.com/morrowind/mods/19510)

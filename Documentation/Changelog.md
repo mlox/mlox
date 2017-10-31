@@ -1,5 +1,11 @@
 # ChangeLog
 
+Version 0.63 -
+* Support unicode file names [EmperorArthur]
+* Switch to python3 [EmperorArthur]
+* Move from a wxWidgets GUI to a PyQt5 based GUI
+
+
 Version 0.62 -
 * Completely refactored mlox code! [EmperorArthur]
 * Rewrote / Re-aranged most documentation. [EmperorArthur]

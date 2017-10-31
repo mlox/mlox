@@ -1,5 +1,4 @@
 
-from __future__ import print_function   #Use Python3 Style print
 import os         #To calculate the amount remaining to parse (os.path.getsize)
 import re
 import logging
@@ -623,7 +622,7 @@ class rule_parser:
             #Update the GUI progress bar
             if progress != None and inputsize > 0:
                 pct = int(100*self.bytesread/inputsize)
-                if pct % 3 == 0 and pct < 100:
+                if pct < 100:
                     progress.Update(pct, "Loading: {0}".format(self.rule_file))
             self.parse_dbg_indent = ""
             self.curr_rule = ""

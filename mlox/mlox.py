@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- mode: python -*-
 # mlox - the elder scrolls Mod Load Order eXpert
 #Copyright (c) 2009-2017
@@ -10,7 +10,6 @@
 # under the MIT License:
 #   https://github.com/mlox/mlox/blob/master/License.txt
 
-from __future__ import print_function
 import sys
 import logging
 import argparse
@@ -257,7 +256,7 @@ if __name__ == "__main__":
         if i:
             noargs = False
     if args.gui or noargs:
-        from modules.gui import MloxGui
+        from modules.qtGui import MloxGui
         MloxGui().start()
 
     if args.profile:
