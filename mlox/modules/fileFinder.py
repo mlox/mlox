@@ -18,6 +18,7 @@ import logging
 
 file_logger = logging.getLogger('mlox.fileFinder')
 
+
 class caseless_filenames:
 
     def __init__(self):

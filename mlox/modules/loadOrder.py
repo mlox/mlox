@@ -9,7 +9,7 @@ from .resources import base_file, user_file
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
 
-order_logger = logging.getLogger('mlox.loadorder')
+order_logger = logging.getLogger('mlox.loadOrder')
 
 class loadorder:
     """Class for reading plugin mod times (load order), and updating them based on rules"""
@@ -213,7 +213,6 @@ class loadorder:
         for p in self.get_original_order():
             order_logger.debug("  " + p)
 
-
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
@@ -268,7 +267,7 @@ class loadorder:
             if configHandler.configHandler(self.plugin_file,self.game_type).write(self.new_order):
                 self.is_sorted = True
 
-        if self.is_sorted != True:
+        if not self.is_sorted:
             order_logger.error("Unable to save new load order.")
             return False
         return True
