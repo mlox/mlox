@@ -192,12 +192,12 @@ class loadorder:
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
-        graph = parser.get_graph()
+        plugin_graph = parser.get_graph()
 
         if not base_only:
-            self.add_current_order(graph) # tertiary order "pseudo-rules" from current load order
+            self.add_current_order(plugin_graph) # tertiary order "pseudo-rules" from current load order
 
-        output = graph.explain(plugin_name, self.order)
+        output = plugin_graph.explain(plugin_name, self.order)
         return output
 
     def update(self,progress = None):
