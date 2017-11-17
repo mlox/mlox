@@ -182,12 +182,12 @@ class loadorder:
     def explain(self,plugin_name,base_only = False):
         """Explain why a mod is in it's current position"""
         original_graph = self.graph
-        self.graph = pluggraph.pluggraph()
 
-        parser = ruleParser.rule_parser(self.order, self.graph, self.datadir,self.caseless)
+        parser = ruleParser.rule_parser(self.order, self.datadir,self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
+        self.graph = parser.get_graph()
 
         if not base_only:
             self.add_current_order() # tertiary order "pseudo-rules" from current load order
@@ -202,7 +202,6 @@ class loadorder:
         Returns the parser's recommendations on success, or False if something went wrong.
         """
         self.is_sorted = False
-        self.graph = pluggraph.pluggraph()
         if self.order == []:
             order_logger.error("No plugins detected!\nmlox needs to run somewhere under where the game is installed.")
             return False
@@ -213,7 +212,7 @@ class loadorder:
 
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        parser = ruleParser.rule_parser(self.order, self.graph, self.datadir,self.caseless)
+        parser = ruleParser.rule_parser(self.order, self.datadir,self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
@@ -222,7 +221,8 @@ class loadorder:
             return False
 
         # now do the topological sort of all known plugins (rules + load order)
-        self.add_current_order() # tertiary order "pseudo-rules" from current load order
+        self.graph = parser.get_graph()
+        self.add_current_order()    # tertiary order "pseudo-rules" from current load order
         sorted = self.graph.topo_sort()
 
         # the "sorted" list will be a superset of all known plugin files,

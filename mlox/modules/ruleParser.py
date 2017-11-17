@@ -121,9 +121,9 @@ class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
     version = "Unkown"
 
-    def __init__(self, plugin_list, graph, datadir, name_converter):
+    def __init__(self, plugin_list, datadir, name_converter):
         self.plugin_list = plugin_list
-        self.graph = graph
+        self.graph = pluggraph.pluggraph()
         self.datadir = datadir
         self.line_num = 0
         self.rule_file = None
@@ -661,3 +661,11 @@ class rule_parser:
         This includes everything from mild notes, to major warnings.
         """
         return self.out_stream.getvalue()
+
+    def get_graph(self):
+        """
+        Get the generated load order graph.
+
+        NOTE:  This graph DOES NOT take the original load order into consideration.
+        """
+        return self.graph
