@@ -17,13 +17,13 @@ class loadorder:
         # order is the list of plugins in Data Files, ordered by mtime
         self.order = []                    # the load order
         self.new_order = []                # the new load order
-        self.datadir = None                # where plugins live
-        self.plugin_file = None            # Path to the file containing the plugin list
         self.graph = pluggraph.pluggraph()
         self.is_sorted = False
-        self.game_type = None              # 'Morrowind', 'Oblivion', or None for unknown
         self.caseless = fileFinder.caseless_filenames()
 
+        # self.datadir = None                # where plugins live
+        # self.plugin_file = None            # Path to the file containing the plugin list
+        # self.game_type = None              # 'Morrowind', 'Oblivion', or None for unknown
         self.game_type, self.plugin_file, self.datadir = fileFinder.find_game_dirs()
 
     def get_active_plugins(self):
