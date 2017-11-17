@@ -82,7 +82,10 @@ class pluggraph:
         buffer += "}\n"
         return buffer
 
-    def explain(self, what, active):
+    def explain(self, what, active_plugins):
+        """
+        Tell the user all the plugins mlox thinks should follow <what>
+        """
         seen = {}
         output = ""
         output += "This is a picture of all the plugins mlox thinks should follow {0}\n".format(what)
@@ -96,7 +99,7 @@ class pluggraph:
             seen[n] = True
             if n in self.nodes:
                 for child in self.nodes[n]:
-                    prefix = indent.replace(" ", "+") if child in active else indent.replace(" ", "=")
+                    prefix = indent.replace(" ", "+") if child in active_plugins else indent.replace(" ", "=")
                     output += "%s%s\n" % (prefix, child)
                     explain_rec(" " + indent, child)
             return output
