@@ -95,27 +95,30 @@ def plugin_description(plugin):
         inp = open(plugin, 'rb')
     except IOError:
         parse_logger.warning("Unable to open plugin file:  {0}".format(plugin))
-        return("")
+        return ""
     block = inp.read(4096)
     inp.close()
-    if block[0:4] == "TES3":    # Morrowind
+    if block[0:4] == b"TES3":    # Morrowind
         if len(block) < tes3_min_plugin_size:
             parse_logger.warning("Cannot read plugin description(%s): file too short, returning NULL string", plugin)
-            return("")
-        desc = block[64:block.find("\x00", 64)]
-        return(desc)
-    elif block[0:4] == "TES4":  # Oblivion
+            return ""
+        desc = block[64:block.find(b"\x00", 64)]
+        return str(desc)
+    elif block[0:4] == b"TES4":  # Oblivion
         # This is very cheesy.
-        pos = block.find("SNAM", 0)
-        if pos == -1: return("")
-        desc_start = block.find("\x00", pos) + 1
-        if desc_start == -1: return("")
-        desc_end = block.find("\x00", desc_start)
-        if desc_end == -1: return("")
+        pos = block.find(b"SNAM", 0)
+        if pos == -1:
+            return ""
+        desc_start = block.find(b"\x00", pos) + 1
+        if desc_start == -1:
+            return ""
+        desc_end = block.find(b"\x00", desc_start)
+        if desc_end == -1:
+            return ""
         desc = block[desc_start:desc_end]
-        return(desc)
+        return str(desc)
     else:
-        return("")
+        return ""
 
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
