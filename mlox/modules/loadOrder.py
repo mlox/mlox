@@ -17,7 +17,6 @@ class loadorder:
         # order is the list of plugins in Data Files, ordered by mtime
         self.order = []                    # the load order
         self.new_order = []                # the new load order
-        self.graph = pluggraph.pluggraph()
         self.is_sorted = False
         self.caseless = fileFinder.caseless_filenames()
 
@@ -225,15 +224,14 @@ class loadorder:
             self.new_order = []
             return False
 
-        # now do the topological sort of all known plugins (rules + load order)
-        self.graph = parser.get_graph()
-        self.add_current_order(self.graph)    # tertiary order "pseudo-rules" from current load order
-        sorted = self.graph.topo_sort()
+        # Convert the graph into a sorted list of all plugins (rules + load order)
+        plugin_graph = parser.get_graph()
+        self.add_current_order(plugin_graph)    # tertiary order "pseudo-rules" from current load order
+        sorted_plugins = plugin_graph.topo_sort()
 
-        # the "sorted" list will be a superset of all known plugin files,
-        # including those in our Data Files directory.
-        # but we only want to update plugins that are in our current "Data Files"
-        sorted_datafiles = [f for f in sorted if f in self.order]
+        # The "sorted" list will be a superset of all known plugin files,
+        # but we only care about active plugins.
+        sorted_datafiles = [f for f in sorted_plugins if f in self.order]
         (esm_files, esp_files) = configHandler.partition_esps_and_esms(sorted_datafiles)
         new_order_cname = [p for p in esm_files + esp_files]
         self.new_order = [self.caseless.truename(p) for p in new_order_cname]
