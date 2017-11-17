@@ -57,8 +57,13 @@ tes3_min_plugin_size = 362
 
 parse_logger = logging.getLogger('mlox.parser')
 
-#Get the version information from a plugin
+
 def get_version(plugin,data_dir = None):
+    """
+    Get the version information from a plugin
+
+    :return: A tuple containing the version extracted from the file name, and the version from the plugin's description.
+    """
     match = re_filename_version.search(plugin)
     file_ver = match.group(1) if match else None
     desc_ver = None
@@ -88,6 +93,7 @@ def format_version(ver):
     while len(v) < 3:
         v.append(0)
     return("%05d.%05d.%05d.%s" % (v[0], v[1], v[2], alpha))
+
 
 def plugin_description(plugin):
     """Read the description field of a TES3/TES4 plugin file header"""
@@ -120,9 +126,10 @@ def plugin_description(plugin):
     else:
         return ""
 
+
 class rule_parser:
     """A simple recursive descent rule parser, for evaluating rule statements containing nested boolean expressions."""
-    version = "Unkown"
+    version = "Unknown"
 
     def __init__(self, plugin_list, datadir, name_converter):
         self.plugin_list = plugin_list
