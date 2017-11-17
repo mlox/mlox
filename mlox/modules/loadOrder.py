@@ -98,9 +98,14 @@ class loadorder:
             out += "{0:20} {1:20} {2}\n".format(str(file_ver), str(desc_ver), self.caseless.truename(p))
         return out
 
+    def add_current_order(self, graph):
+        """
+        Add the current load order as a pseudo rule set.
 
-    def add_current_order(self):
-        """We treat the current load order as a sort of preferred order in
+        This lets us maintain the original ordering in the case where the rules say it doesn't matter.
+        It also means we don't exclude any plugins that aren't in the rules.
+
+        We treat the current load order as a sort of preferred order in
         the case where there are no rules. However, we have to be careful
         when there exists a [NEARSTART] or [NEAREND] rule for a plugin,
         that we do not introduce a new edge, we only add the node itself.
@@ -111,33 +116,36 @@ class loadorder:
         if len(self.order) < 2:
             return
         order_logger.debug("adding edges from CURRENT ORDER")
+
         # make ordering pseudo-rules for esms to follow official .esms
         if self.game_type == "Morrowind":
-            self.graph.add_edge("", "morrowind.esm", "tribunal.esm")
-            self.graph.add_edge("", "tribunal.esm", "bloodmoon.esm")
-            for p in self.order: # foreach of the user's .esms
+            graph.add_edge("", "morrowind.esm", "tribunal.esm")
+            graph.add_edge("", "tribunal.esm", "bloodmoon.esm")
+            # Make all user's .esm files depend on bloodmoon.esm
+            for p in self.order:
                 if p[-4:] == ".esm":
                     if p not in ("morrowind.esm", "tribunal.esm", "bloodmoon.esm"):
-                        self.graph.add_edge("", "bloodmoon.esm", p)
+                        graph.add_edge("", "bloodmoon.esm", p)
+
         # make ordering pseudo-rules from nearend info
-        kingyo_fun = [x for x in self.graph.nearend if x in self.order]
+        kingyo_fun = [x for x in graph.nearend if x in self.order]
         for p_end in kingyo_fun:
             for p in [x for x in self.order if x != p_end]:
-                self.graph.add_edge("", p, p_end)
+                graph.add_edge("", p, p_end)
         # make ordering pseudo-rules from current load order.
         prev_i = 0
-        self.graph.nodes.setdefault(self.order[prev_i], [])
+        graph.nodes.setdefault(self.order[prev_i], [])
         for curr_i in range(1, len(self.order)):
-            self.graph.nodes.setdefault(self.order[curr_i], [])
-            if (self.order[curr_i] not in self.graph.nearstart and
-                self.order[curr_i] not in self.graph.nearend):
+            graph.nodes.setdefault(self.order[curr_i], [])
+            if (self.order[curr_i] not in graph.nearstart and
+                self.order[curr_i] not in graph.nearend):
                 # add an edge, on any failure due to cycle detection, we try
                 # to make an edge between the current plugin and the first
                 # previous ancestor we can succesfully link and edge from.
                 for i in range(prev_i, 0, -1):
-                    if (self.order[i] not in self.graph.nearstart and
-                        self.order[i] not in self.graph.nearend):
-                        if self.graph.add_edge("", self.order[i], self.order[curr_i]):
+                    if (self.order[i] not in graph.nearstart and
+                        self.order[i] not in graph.nearend):
+                        if graph.add_edge("", self.order[i], self.order[curr_i]):
                             break
             prev_i = curr_i
 
@@ -181,19 +189,16 @@ class loadorder:
 
     def explain(self,plugin_name,base_only = False):
         """Explain why a mod is in it's current position"""
-        original_graph = self.graph
-
         parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
-        self.graph = parser.get_graph()
+        graph = parser.get_graph()
 
         if not base_only:
-            self.add_current_order() # tertiary order "pseudo-rules" from current load order
-        output = self.graph.explain(plugin_name, self.order)
+            self.add_current_order(graph) # tertiary order "pseudo-rules" from current load order
 
-        self.graph = original_graph
+        output = graph.explain(plugin_name, self.order)
         return output
 
     def update(self,progress = None):
@@ -222,7 +227,7 @@ class loadorder:
 
         # now do the topological sort of all known plugins (rules + load order)
         self.graph = parser.get_graph()
-        self.add_current_order()    # tertiary order "pseudo-rules" from current load order
+        self.add_current_order(self.graph)    # tertiary order "pseudo-rules" from current load order
         sorted = self.graph.topo_sort()
 
         # the "sorted" list will be a superset of all known plugin files,
