@@ -257,6 +257,7 @@ class loadorder:
         return parser.get_messages()
 
     def write_new_order(self):
+        """Write/save the new order to the directory and config file."""
         if not isinstance(self.new_order,list) or self.new_order == []:
             order_logger.error("Not saving blank load order.")
             return False
