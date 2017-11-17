@@ -126,8 +126,12 @@ class rule_parser:
 
     def __init__(self, plugin_list, datadir, name_converter):
         self.plugin_list = plugin_list
+        if datadir:
+            self.datadir = fileFinder.caseless_dirlist(datadir)
+        else:
+            self.datadir = None
+        self.name_converter = name_converter
         self.graph = pluggraph.pluggraph()
-        self.datadir = datadir
         self.line_num = 0
         self.rule_file = None
         self.bytesread = 0
@@ -137,7 +141,6 @@ class rule_parser:
         self.curr_rule = ""     # name of the current rule we are parsing
         self.parse_dbg_indent = ""
         self.out_stream = io.StringIO()
-        self.name_converter = name_converter
 
     def _readline(self):
         """

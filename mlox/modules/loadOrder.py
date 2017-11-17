@@ -183,7 +183,7 @@ class loadorder:
         """Explain why a mod is in it's current position"""
         original_graph = self.graph
 
-        parser = ruleParser.rule_parser(self.order, fileFinder.caseless_dirlist(self.datadir), self.caseless)
+        parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
@@ -212,7 +212,7 @@ class loadorder:
 
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        parser = ruleParser.rule_parser(self.order, fileFinder.caseless_dirlist(self.datadir), self.caseless)
+        parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
