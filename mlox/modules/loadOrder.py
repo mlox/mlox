@@ -233,8 +233,8 @@ class loadorder:
         # but we only care about active plugins.
         sorted_datafiles = [f for f in sorted_plugins if f in self.order]
         (esm_files, esp_files) = configHandler.partition_esps_and_esms(sorted_datafiles)
-        new_order_cname = [p for p in esm_files + esp_files]
-        self.new_order = [self.caseless.truename(p) for p in new_order_cname]
+        new_order_cname = esm_files + esp_files
+        self.new_order = list(map(self.caseless.truename, new_order_cname))
 
         order_logger.debug("New load order:")
         for p in self.get_new_order():
@@ -252,7 +252,7 @@ class loadorder:
         if self.datadir != None:
             # these are things we do not want to do if just testing a load order from a file
             # save the load orders to file for future reference
-            self.save_order(old_loadorder_output, [self.caseless.truename(p) for p in self.order], "current")
+            self.save_order(old_loadorder_output, list(map(self.caseless.truename, self.order)), "current")
             self.save_order(new_loadorder_output, self.new_order, "mlox sorted")
         return parser.get_messages()
 
