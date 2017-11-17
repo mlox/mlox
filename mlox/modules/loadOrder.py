@@ -40,7 +40,7 @@ class loadorder:
 
         # Get all the plugins
         configFiles = configHandler.configHandler(self.plugin_file,self.game_type).read()
-        dirFiles = configHandler.dataDirHandler(self.datadir.dirpath()).read()
+        dirFiles = configHandler.dataDirHandler(self.datadir).read()
 
         # Remove plugins not in the data directory (and correct capitalization)
         configFiles = list(map(str.lower, configFiles))
@@ -61,12 +61,12 @@ class loadorder:
         Updates self.order
         """
         self.is_sorted = False
-        self.order = configHandler.dataDirHandler(self.datadir.dirpath()).read()
+        self.order = configHandler.dataDirHandler(self.datadir).read()
 
         #Convert the files to lowercase, while storing them in a dict
         self.order = list(map(self.caseless.cname,self.order))
 
-        order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir.dirpath()))
+        order_logger.info("Found {0} plugins in: \"{1}\"".format(len(self.order), self.datadir))
 
     def read_from_file(self, fromfile):
         """
@@ -94,7 +94,7 @@ class loadorder:
         """List the versions of all plugins in the current load order"""
         out = "{0:20} {1:20} {2}\n".format("Name", "Description", "Plugin Name")
         for p in self.order:
-            (file_ver, desc_ver) = ruleParser.get_version(p,self.datadir)
+            (file_ver, desc_ver) = ruleParser.get_version(p, self.datadir)
             out += "{0:20} {1:20} {2}\n".format(str(file_ver), str(desc_ver), self.caseless.truename(p))
         return out
 
@@ -183,7 +183,7 @@ class loadorder:
         """Explain why a mod is in it's current position"""
         original_graph = self.graph
 
-        parser = ruleParser.rule_parser(self.order, self.datadir,self.caseless)
+        parser = ruleParser.rule_parser(self.order, fileFinder.caseless_dirlist(self.datadir), self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file)
         parser.read_rules(base_file)
@@ -212,7 +212,7 @@ class loadorder:
 
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        parser = ruleParser.rule_parser(self.order, self.datadir,self.caseless)
+        parser = ruleParser.rule_parser(self.order, fileFinder.caseless_dirlist(self.datadir), self.caseless)
         if os.path.exists(user_file):
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
@@ -257,8 +257,8 @@ class loadorder:
         if not isinstance(self.new_order,list) or self.new_order == []:
             order_logger.error("Not saving blank load order.")
             return False
-        if isinstance(self.datadir,fileFinder.caseless_dirlist):
-            if configHandler.dataDirHandler(self.datadir.dirpath()).write(self.new_order):
+        if self.datadir:
+            if configHandler.dataDirHandler(self.datadir).write(self.new_order):
                 self.is_sorted = True
         if isinstance(self.plugin_file,str):
             if configHandler.configHandler(self.plugin_file,self.game_type).write(self.new_order):

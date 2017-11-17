@@ -141,18 +141,18 @@ def find_game_dirs():
     if gamedir != None:
         game = "Morrowind"
         list_file = gamedir.find_path("Morrowind.ini")
-        datadir = caseless_dirlist(gamedir.find_path("Data Files"))
+        datadir = gamedir.find_path("Data Files")
     else:
         gamedir = cwd.find_parent_dir("Oblivion.ini")
         if gamedir != None:
             game = "Oblivion"
             list_file = _get_Oblivion_plugins_file()
-            datadir = caseless_dirlist(gamedir.find_path("Data"))
+            datadir = gamedir.find_path("Data")
         else:
             # Not running under a game directory, so we're probably testing
             # assume plugins live in current directory.
-            datadir = caseless_dirlist("..")
+            datadir = os.path.abspath("..")
     file_logger.debug("Found Game:  {0}".format(game))
     file_logger.debug("Plugins file at:  {0}".format(list_file))
-    file_logger.debug("Data Files at: {0}".format(datadir.dirpath()))
+    file_logger.debug("Data Files at: {0}".format(datadir))
     return (game,list_file,datadir)
