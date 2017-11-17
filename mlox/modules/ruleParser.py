@@ -1,11 +1,11 @@
 
-import os         #To calculate the amount remaining to parse (os.path.getsize)
+import os
 import re
 import io
 import logging
 from pprint import PrettyPrinter
-import modules.pluggraph as pluggraph
-import modules.fileFinder as fileFinder
+from . import pluggraph
+from . import fileFinder
 
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')

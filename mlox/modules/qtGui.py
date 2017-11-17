@@ -9,9 +9,9 @@ from PyQt5.QtGui import QClipboard
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit
 from PyQt5.QtQml import QQmlApplicationEngine
-from modules.resources import qml_file
-from modules.loadOrder import loadorder
-import modules.version as version
+from .resources import qml_file
+from .loadOrder import loadorder
+from . import version
 
 gui_logger = logging.getLogger('mlox.gui')
 
