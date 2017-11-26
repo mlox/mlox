@@ -59,10 +59,11 @@ For information on specific commands use `mlox -h`.
 ## Running mlox from source
 
 Mlox is written using Python3, using a PyQt5 graphial interface.
-As such, both Python and PyQt5 are required.
+As such, both Python3 and PyQt5 are required.
 
 * Python3 Download link:  https://www.python.org/downloads/
 * Once Python 3 is installed, run `pip3 install PyQt5`
+* Next run `pip3 install libarchive-c`, or make sure `7za` is installed
 * Run mlox by typing `python3 mlox.py`
 
 # Other Recommended Software

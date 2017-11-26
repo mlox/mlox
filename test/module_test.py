@@ -262,7 +262,18 @@ class version_test(unittest.TestCase):
     def test_internal_version(self):
         self.assertEqual(self.version.Version,'0.62')
 
-#Updater
+
+############################################################
+# update.py
+
+
+def hash_file(file_path):
+    """Get the hash of a file"""
+    import hashlib
+    with open(file_path, 'rb') as test_file:
+        return hashlib.sha256(test_file.read()).hexdigest()
+
+
 class update_test(unittest.TestCase):
     import modules.update as update
     temp_dir = ""
@@ -287,16 +298,34 @@ class update_test(unittest.TestCase):
         self.assertTrue(self.update.remote_file_changed(self.local_file,self.test_url))
 
     def test_extract_file(self):
-        import hashlib
         # Make a 7z file to test with, and get the hash
         z_file = os.path.join(self.temp_dir, 'module_test.7z')
         subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
-        with open('module_test.py', 'rb') as test_file:
-            file_hash = hashlib.sha256(test_file.read()).hexdigest()
+        file_hash = hash_file('module_test.py')
 
         self.update.extract_file(z_file,self.temp_dir)
-        with open(os.path.join(self.temp_dir, 'module_test.py'), 'rb') as test_file:
-            self.assertTrue(file_hash == hashlib.sha256(test_file.read()).hexdigest())
+        new_file_hash = hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(file_hash == new_file_hash)
+
+    def test_extract_file_7za(self):
+        # Make a 7z file to test with, and get the hash
+        z_file = os.path.join(self.temp_dir, 'module_test.7z')
+        subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
+        file_hash = hash_file('module_test.py')
+
+        self.update.extract_via_7za(z_file, self.temp_dir)
+        new_file_hash = hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(file_hash == new_file_hash)
+
+    def test_extract_file_libarchive(self):
+        # Make a 7z file to test with, and get the hash
+        z_file = os.path.join(self.temp_dir, 'module_test.7z')
+        subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
+        file_hash = hash_file('module_test.py')
+
+        self.update.extract_via_libarchive(z_file, self.temp_dir)
+        new_file_hash = hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(file_hash == new_file_hash)
 
     def test_download(self):
         self.update.download_file(self.local_file, self.test_url)
