@@ -12,6 +12,8 @@ class dyndict(dict):
     """if item is in dict, return value, otherwise return item. for soft failure when looking up translations."""
     def __getitem__(self, item):
         return(super(dyndict, self).__getitem__(item) if item in self else item)
+
+
 def load_translations(lang):
     """double-de-bungify the translation dictionary."""
     def splitter(x):
@@ -22,3 +24,11 @@ def load_translations(lang):
     return(dyndict(list(map(splitter, codecs.open(translation_file, 'r', "utf-8").read().split("\n[[")))[1:]))
 
 _ = load_translations(Lang)
+
+
+def dump_translations(languages):
+    """Dump the entire translation dictionary to stdout"""
+    print("Languages translations for: %s" % languages[0])
+    for key, value in (load_translations(languages[0]).items()):
+        print("%s:" % key)
+        print(" -> %s" % value.encode("utf-8"))

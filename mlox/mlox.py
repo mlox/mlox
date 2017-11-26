@@ -19,7 +19,7 @@ from modules.resources import user_path, update_file, UPDATE_URL
 from modules.update import update_compressed_file
 import modules.version as version
 from modules.loadOrder import loadorder
-from modules.translations import load_translations, _
+from modules.translations import dump_translations, _
 
 def single_spaced(in_string):
     """
@@ -46,14 +46,13 @@ class ColorFormatConsole(logging.Formatter):
     def format(self, record):
         return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
 
+
 class ShowTranslations(argparse.Action):
     """Dump the translation dictionary for the specified language, then exit."""
     def __call__(self, parser, namespace, values, option_string=None):
-        print("Languages translations for: %s" % values[0])
-        for key, value in (load_translations(values[0]).items()):
-            print("%s:" % key)
-            print(" -> %s" % value.encode("utf-8"))
+        dump_translations(values)
         sys.exit(0)
+
 
 class ListVersions(argparse.Action):
     """List the version information of the current data files, then exit"""
