@@ -82,8 +82,19 @@ class CustomProgressDialog(QProgressDialog):
         self.setValue(percent)
 
 
+def error_handler(self, type, value, tb):
+    """
+    Since a command line is not normally available to a GUI application, we need to display errors to the user.
+    These are only errors that would cause the program to crash, so have the program exit when the dialog box is closed.
+    """
+    error_box = ScrollableDialog()
+    error_box.setText(version.version_info() + "\n" + "".join(traceback.format_exception(type, value, tb)))
+    error_box.exec_()
+    sys.exit(1)
+
+
 class MloxGui(QObject):
-    """Mlox's GUI (Using PyQt5"""
+    """Mlox's GUI (Using PyQt5)"""
 
     lo = None  # Load order
 
@@ -131,7 +142,7 @@ class MloxGui(QObject):
         """Display the GUI"""
         myApp = QApplication(sys.argv)
         myEngine = QQmlApplicationEngine()
-        sys.excepthook = lambda typ, val, tb: self.error_handler(typ, val, tb)
+        sys.excepthook = lambda typ, val, tb: error_handler(typ, val, tb)
         myEngine.rootContext().setContextProperty("python", self)  # Need to set this before loading
         myEngine.load(QUrl(qml_file))
         # These two are hacks, because getting them in the __init__ and RAII working isn't
@@ -141,16 +152,6 @@ class MloxGui(QObject):
         self.analyze_loadorder(None)
 
         sys.exit(myApp.exec_())
-
-    def error_handler(self, type, value, tb):
-        """
-        Since a command line is not normally available to a GUI application, we need to display errors to the user.
-        These are only errors that would cause the program to crash, so have the program exit when the dialog box is closed.
-        """
-        error_box = ScrollableDialog()
-        error_box.setText(version.version_info() + "\n" + "".join(traceback.format_exception(type, value, tb)))
-        error_box.exec_()
-        sys.exit(1)
 
     def display(self):
         "Update the GUI after an operation"
@@ -245,6 +246,3 @@ class MloxGui(QObject):
         about_box = ScrollableDialog()
         about_box.setText(version.about())
         about_box.exec_()
-
-
-MloxGui().start()
