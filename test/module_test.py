@@ -34,9 +34,9 @@ class fileFinder_test(unittest.TestCase):
 
         #Multi-line check here
         (a,b,c) = fileFinder.find_game_dirs()
-        self.assertTrue(a == None)
-        self.assertTrue(b == None)
-        self.assertEqual(c.dirpath(),os.path.abspath('..'))
+        self.assertTrue(a is None)
+        self.assertTrue(b is None)
+        self.assertEqual(c, os.path.abspath('..'))
 
         #TODO:  Actually test these two (seperately)
         #print(fileFinder.filter_dup_files(dir_list.filelist()))
@@ -207,21 +207,19 @@ class parser_pluggraph_test(unittest.TestCase):
                    'lgnpc_aldruhn_v1_13-jms_patch.esp', 'mashed lists.esp']
 
     def test_parser_base_version_good(self):
-        graph = self.pluggraph.pluggraph()
-        myParser = self.ruleParser.rule_parser([],graph,"",sys.stdout,self.file_names)
+        myParser = self.ruleParser.rule_parser([],"",self.file_names)
         myParser.read_rules("../data/mlox_base.txt")
-        self.assertNotEqual(myParser.version,"Unkown")
+        self.assertNotEqual(myParser.version,"Unknown")
 
     def test_parser_base_version_bad(self):
-        graph = self.pluggraph.pluggraph()
-        myParser = self.ruleParser.rule_parser([],graph,"",sys.stdout,self.file_names)
+        myParser = self.ruleParser.rule_parser([],"",self.file_names)
         myParser.read_rules("./test1.data/mlox_base.txt")
-        self.assertEqual(myParser.version,"Unkown")
+        self.assertEqual(myParser.version,"Unknown")
 
     def test_parser_graph(self):
-        graph = self.pluggraph.pluggraph()
-        myParser = self.ruleParser.rule_parser([],graph,"./test1.data/",sys.stdout,self.file_names)
+        myParser = self.ruleParser.rule_parser([],"./test1.data/",self.file_names)
         myParser.read_rules("./test1.data/mlox_base.txt")
+        graph=myParser.get_graph()
         self.assertEqual(graph.topo_sort(),self.test1_graph)
 
     #TODO:  d_ver doesn't seem correct
@@ -239,7 +237,7 @@ class loadOrder_test(unittest.TestCase):
 
     def test_File_and_Dir(self):
         l1 = self.loadorder()
-        l1.datadir = self.fileFinder.caseless_dirlist("./test1.data/")
+        l1.datadir = "./test1.data/"
         l1.plugin_file = "./userfiles/abot.txt"
         l1.game_type = None
         l1.get_active_plugins()
@@ -248,7 +246,7 @@ class loadOrder_test(unittest.TestCase):
 
     def test_Dir(self):
         l2 = self.loadorder()
-        l2.datadir = self.fileFinder.caseless_dirlist("./test1.data/")
+        l2.datadir = "./test1.data/"
         l2.get_data_files()
         l2.update()
 
