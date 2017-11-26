@@ -15,7 +15,7 @@ import logging
 import argparse
 import pprint
 import re
-from modules.resources import update_file, program_path, UPDATE_URL
+from modules.resources import user_path, update_file, UPDATE_URL
 from modules.update import update_compressed_file
 import modules.version as version
 from modules.loadOrder import loadorder
@@ -235,16 +235,16 @@ if __name__ == "__main__":
 
     # Check Python version
     logging.debug(version.version_info())
+    logging.debug("Database Directory: %s", user_path)
     pyversion = sys.version[:3]
     if float(pyversion) < 3:
         logging.error("This program requires at least Python version 3.")
         sys.exit(1)
 
-
-    #Download UPDATE_URL to the program's main directory, then extract its contents there
+    # Download UPDATE_URL to user_path, then extract its contents there
     if not args.nodownload:
         logging.info('Checking for database update...')
-        if update_compressed_file(update_file, UPDATE_URL, program_path):
+        if update_compressed_file(update_file, UPDATE_URL, user_path):
             logging.info('Database updated from {0}'.format(update_file))
 
     #If no arguments are passed or if explicitly asked to, run the GUI
