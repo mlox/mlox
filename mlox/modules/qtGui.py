@@ -237,5 +237,14 @@ class MloxGui(QObject):
         self.can_update = False
         self.display()
 
+    @pyqtSlot()
+    def about_handler(self):
+        """
+        Show information about mlox
+        """
+        about_box = ScrollableDialog()
+        about_box.setText(version.about())
+        about_box.exec_()
+
 
 MloxGui().start()

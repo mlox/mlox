@@ -32,6 +32,10 @@ ApplicationWindow {
             MenuItem { text: "Copy Proposed Load Order";        onTriggered: {newText.selectAll(); newText.copy()} }
             MenuItem { text: "Paste a load order to analyze";   onTriggered: python.paste_handler() }
         }
+        Menu {
+            title: "Help"
+            MenuItem { text: "About"; onTriggered: python.about_handler() }
+        }
     }
 
     GridLayout {
