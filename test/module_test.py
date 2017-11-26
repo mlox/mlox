@@ -92,13 +92,12 @@ class configHandler_test(unittest.TestCase):
                      'Lockpick__Probe_Weight_Fix.esp', 'Wolfen Castle.esp', 'Tribun_Laura_3_0.esp', 'master_index.esp',
                      'Merged_Objects.esp', 'Merged_Dialogs.esp', 'Merged_Leveled_Lists.esp']
 
-    #Can't use the logging check with python 2.7...
     def test_No_File(self):
         """Test reading a file that does not exist"""
-        #with self.assertLogs('mlox.configHandler',level='Error') as l:
-        handleri = self.configHandler.configHandler("No File")
-        self.assertEqual(handleri.read(),[])
-        #self.assertEqual(l.output, ['ERROR:mlox.configHandler:Unable to open config file: No File'])
+        with self.assertLogs('mlox.configHandler',level='ERROR') as l:
+            handleri = self.configHandler.configHandler("No File")
+            self.assertEqual(handleri.read(),[])
+            self.assertEqual(l.output, ['ERROR:mlox.configHandler:Unable to open configuration file: No File'])
 
     def test_Morrowind_only(self):
         """Test reading a file that only contains morrowind game entries"""
@@ -108,11 +107,10 @@ class configHandler_test(unittest.TestCase):
         """Test reading an actual morrowind.ini"""
         self.assertEqual(self.configHandler.configHandler("./testM/Morrowind.ini","Morrowind").read(),self.morrowind_ini)
 
-    #Can't use the logging check with python 2.7...
     def test_Invalid(self):
-        #with self.assertLogs('mlox.configHandler',level='Error') as l:
-        self.assertEqual(self.configHandler.configHandler("./userfiles/zinx.txt","Invalid").read(),self.zinx_txt)
-        #self.assertEqual(l.output, ['WARNING:mlox.configHandler:"Invalid" is not a recognized file type!'])
+        with self.assertLogs('mlox.configHandler',level='WARNING') as l:
+            self.assertEqual(self.configHandler.configHandler("./userfiles/zinx.txt","Invalid").read(),self.zinx_txt)
+            self.assertEqual(l.output, ['WARNING:mlox.configHandler:"Invalid" is not a recognized file type!'])
 
     def test_Default(self):
         self.assertEqual(self.configHandler.configHandler("./userfiles/zinx.txt").read(),self.zinx_txt)
