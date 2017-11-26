@@ -4,6 +4,19 @@ import sys
 import locale
 Version = "0.62"
 
+
+def about():
+    """
+    :return: a nice statement about the program
+    """
+    output  = "mlox - the elder scrolls Mod Load Order eXpert\n"
+    output += "Copyright (c) 2009-2017\n John Moonsugar, an alias\n Dragon32\n Arthur Moore\n"
+    output += "Distributed as part of the mlox project:\n https://github.com/mlox/mlox\n"
+    output += "under the MIT License:\n https://github.com/mlox/mlox/blob/master/License.txt\n"
+    output += "\n" + version_info()
+    return output
+
+
 def version_info():
     """
     :return: a human readable multi-line string containing the program's version information

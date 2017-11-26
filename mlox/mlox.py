@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 # -*- mode: python -*-
 # mlox - the elder scrolls Mod Load Order eXpert
-#Copyright (c) 2009-2017
+# Copyright (c) 2009-2017
 #    John Moonsugar, an alias
-#    dragon32
+#    Dragon32
 #    Arthur Moore
 # Distributed as part of the mlox project:
 #   https://github.com/mlox/mlox
@@ -135,7 +135,7 @@ if __name__ == "__main__":
             """))
 
     parser.add_argument("-n", "--nodownload", help="Do not automatically download and update the mlox rules.", action="store_true")
-    parser.add_argument("-v", "--version", help="Print version and exit.", action="version", version=version.version_info())
+    parser.add_argument("-v", "--version", help="Print version and exit.", action="version", version=version.about())
 
     parser.add_argument("-a", "--all",
         help=single_spaced("""
