@@ -236,8 +236,8 @@ if __name__ == "__main__":
     # Check Python version
     logging.debug(version.version_info())
     pyversion = sys.version[:3]
-    if float(pyversion) < 2.5:
-        logging.error("This program requires at least Python version 2.5.")
+    if float(pyversion) < 3:
+        logging.error("This program requires at least Python version 3.")
         sys.exit(1)
 
 
