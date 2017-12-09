@@ -149,7 +149,7 @@ class MloxGui(QObject):
         self.debug_window = ScrollableDialog()
         self.clipboard = myApp.clipboard()
 
-        self.analyze_loadorder(None)
+        self.analyze_loadorder()
 
         sys.exit(myApp.exec_())
 
@@ -162,7 +162,7 @@ class MloxGui(QObject):
         self.set_new.emit(colorize_text(self.New))
         self.set_old.emit(colorize_text(self.Old))
 
-    def analyze_loadorder(self, fromfile):
+    def analyze_loadorder(self, fromfile = None):
         """
         This is where the magic happens
         If fromfile is None, then it operates out of the current directory.
@@ -183,7 +183,6 @@ class MloxGui(QObject):
             self.lo.get_active_plugins()
         progress = CustomProgressDialog()
         self.Msg = self.lo.update(progress)
-        # self.Msg = self.lo.update()
         # TODO: Have update always return as string, so this isn't needed
         if not self.Msg:
             self.Msg = ""
@@ -224,7 +223,7 @@ class MloxGui(QObject):
     def reload(self):
         self.can_update = True
         # TODO:  Properly handle reloading from a file
-        self.analyze_loadorder(None)
+        self.analyze_loadorder()
 
     @pyqtSlot()
     def commit(self):
