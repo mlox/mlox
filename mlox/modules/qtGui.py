@@ -7,7 +7,7 @@ import tempfile
 import re
 from PyQt5.QtGui import QClipboard
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot
-from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit
+from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit, QMessageBox
 from PyQt5.QtQml import QQmlApplicationEngine
 from .resources import qml_file
 from .loadOrder import loadorder
@@ -243,6 +243,6 @@ class MloxGui(QObject):
         """
         Show information about mlox
         """
-        about_box = ScrollableDialog()
+        about_box = QMessageBox()
         about_box.setText(version.about())
         about_box.exec_()
