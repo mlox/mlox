@@ -12,7 +12,7 @@ ApplicationWindow {
 
     FileDialog {
         id: openFileDialog
-        nameFilters: ["Text files (*.txt)", "INI files (*.ini)"]
+        nameFilters: ["INI files (*.ini)", "Text files (*.txt)", "All files (*)"]
         onAccepted: {
             python.open_file(fileUrl)
         }
