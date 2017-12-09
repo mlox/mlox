@@ -40,7 +40,7 @@ def colorize_text(text):
         (re.compile(r'^(WARNING:.*)', re.MULTILINE),bg_colors["yellow"]),
         (re.compile(r'^(ERROR:.*)', re.MULTILINE),bg_colors["red"]),
         (re.compile(r'(\[Plugins already in sorted order. No sorting needed!\])', re.IGNORECASE), bg_colors["green"]),
-        (re.compile(r'^(\*\d+\*\s\S*\.es[mp])', re.MULTILINE), bg_colors["yellow"])                                     # Changed mod order
+        (re.compile(r'^(\*\d+\*\s.*\.es[mp])', re.MULTILINE), bg_colors["yellow"])                                     # Changed mod order
     ]
     for (regex,replacement_string) in highlighters:
         text = regex.sub(replacement_string, text)
