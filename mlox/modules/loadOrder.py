@@ -148,17 +148,6 @@ class loadorder:
                             break
             prev_i = curr_i
 
-    def save_order(self, filename, order, what):
-        try:
-            out_file = open(filename, 'w')
-        except IOError:
-            order_logger.error("Unable to write to {0} file:  {1}".format(what,filename))
-            return
-        for p in order:
-            print(p, file=out_file)
-        out_file.close()
-        order_logger.info("%s saved to: %s" % (what, filename))
-
     def get_original_order(self):
         """Get the original plugin order in a nice printable format"""
         formatted = []
@@ -248,11 +237,11 @@ class loadorder:
             order_logger.info("[Plugins already in sorted order. No sorting needed!]")
             self.is_sorted = True
 
-        if self.datadir != None:
+        if self.datadir:
             # these are things we do not want to do if just testing a load order from a file
             # save the load orders to file for future reference
-            self.save_order(old_loadorder_output, list(map(self.caseless.truename, self.order)), "current")
-            self.save_order(new_loadorder_output, self.new_order, "mlox sorted")
+            configHandler.configHandler(old_loadorder_output, "raw").write(self.order)
+            configHandler.configHandler(new_loadorder_output, "raw").write(self.new_order)
         return parser.get_messages()
 
     def write_new_order(self):

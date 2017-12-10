@@ -62,6 +62,7 @@ class configHandler():
     read_regexes = {
         "Morrowind" : re_gamefile,
         "Oblivion"  : re_plugin,
+        "raw"       : re_plugin,
         None        : re_sloppy_plugin
     }
     #The path to the configuration file
@@ -69,7 +70,7 @@ class configHandler():
     #The type of config file (Is it a 'Morrowind.ini', raw, or something else?)
     fileType = None
 
-    def __init__(self,configFile,fileType = None):
+    def __init__(self, configFile, fileType = None):
         self.configFile = configFile
         try:
             self.read_regexes[fileType] # Note:  This might not seem to do anything, but it serves as a runtime check that fileType is an accepted value.
@@ -120,11 +121,21 @@ class configHandler():
         """
         config_logger.debug("Writing configuration file: {0}".format(self.configFile))
 
-        #Only handling Morrowind.ini right now
-        if (self.fileType != "Morrowind"):
-            config_logger.error("Can not write non Morrowind.ini configuration files.")
-            return False
+        if self.fileType == "Morrowind":
+            return self._write_morrowind(list_of_plugins)
 
+        if self.fileType == "raw":
+            return self._write_raw(list_of_plugins)
+
+        config_logger.error("Can not write to %s configuration files.",self.fileType)
+        return False
+
+    def _write_morrowind(self, list_of_plugins):
+        """
+        Write a list of plugins to a Morrowind.ini file
+
+        :return: True on success, or False on failure
+        """
         # Generate the plugins string
         out_str = "\n"
         for i in range(0, len(list_of_plugins)):
@@ -156,6 +167,26 @@ class configHandler():
             config_logger.error("Unable to open configuration file: {0}".format(self.configFile))
             return False
         file_handle.write(file_buffer)
+        file_handle.close()
+
+        return True
+
+    def _write_raw(self, list_of_plugins):
+        """
+        Write a list of plugins to a raw file
+
+        That is a file containing nothing but plugins.  One per line
+
+        :return: True on success, or False on failure
+        """
+        try:
+            file_handle = open(self.configFile, 'w')
+        except IOError:
+            config_logger.error("Unable to open configuration file: {0}".format(self.configFile))
+            return False
+
+        for a_plugin in list_of_plugins:
+            print(a_plugin, file=file_handle)
         file_handle.close()
 
         return True
