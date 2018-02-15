@@ -89,15 +89,18 @@ class configHandler():
         regex = self.read_regexes[self.fileType]
         try:
             file_handle = open(self.configFile, 'r')
+            for line in file_handle:
+                gamefile = regex.match(line.strip())
+                if gamefile:
+                    f = gamefile.group(1).strip()
+                    files.append(f)
+            file_handle.close()
         except IOError:
             config_logger.error("Unable to open configuration file: {0}".format(self.configFile))
             return []
-        for line in file_handle:
-            gamefile = regex.match(line.strip())
-            if gamefile:
-                f = gamefile.group(1).strip()
-                files.append(f)
-        file_handle.close()
+        except UnicodeDecodeError:
+            config_logger.error("Bad Characters in configuration file: {0}".format(self.configFile))
+            return []
         # Deal with duplicates
         (files, dups) = caseless_uniq(files)
         for f in dups:
@@ -133,6 +136,8 @@ class configHandler():
     def _write_morrowind(self, list_of_plugins):
         """
         Write a list of plugins to a Morrowind.ini file
+
+        We don't just use `configparser` because it breaks on reading Morrowind.ini files :/
 
         :return: True on success, or False on failure
         """
