@@ -23,9 +23,10 @@ re_plugin_meta = re.compile(r'([*?])')
 re_plugin_metaver = re.compile(r'(<VER>)', re.IGNORECASE)
 re_escape_meta = re.compile(r'([()+.])')
 # for recognizing our functions:
-re_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER|SIZE)\s*', re.IGNORECASE)
+re_fun = re.compile(r'^\[(ALL|ANY|NOT|DESC|VER|SIZE|MWSE-LUA)\s*', re.IGNORECASE)
 re_end_fun = re.compile(r'^\]\s*')
 re_desc_fun = re.compile(r'\[DESC\s*(!?)/([^/]+)/\s+([^\]]+)\]', re.IGNORECASE)
+re_mwselua_fun = re.compile(r'\[MWSE-LUA\s*(!?)/([^/]+)/\s+([^\]]+)\]', re.IGNORECASE)
 # for parsing a size predicate
 re_size_fun = re.compile(r'\[SIZE\s*(!?)(\d+)\s+(\S.*?\.es[mp]\b)\s*\]', re.IGNORECASE)
 
@@ -426,6 +427,48 @@ class rule_parser:
         self._parse_error("Invalid [SIZE] function")
         return(None, None)
 
+    def _parse_mwselua(self):
+        """match patterns against the description string in the plugin header."""
+        self.parse_dbg_indent += "  "
+        match = re_mwselua_fun.match(self.buffer)
+        if match:
+            p = match.span(0)[1]
+            self.buffer = self.buffer[p:]
+            parse_logger.debug("parse_mwselua new buffer = %s" % self.buffer)
+            bang = match.group(1) # means to invert the meaning of the match
+            pat = match.group(2)
+            plugin_name = match.group(3)
+            expr = "[MWSE-LUA %s/%s/ %s]" % (bang, pat, plugin_name)
+            parse_logger.debug("parse_mwselua, expr=%s" % expr)
+            expanded = self._expand_filename(plugin_name)
+            if len(expanded) == 1:
+                expr = "[MWSE-LUA %s/%s/ %s]" % (bang, pat, expanded[0])
+            elif expanded == []:
+                parse_logger.debug("parse_mwselua [MWSE-LUA] \"%s\" not active" % plugin_name)
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return(False, expr) # file does not exist
+            if self.datadir == None:
+                # this case is reached when doing fromfile checks,
+                # which do not have access to the actual plugin, so we
+                # always assume the test is merely for file existence,
+                # to err on the side of caution
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return(True, expr)
+            for xp in expanded:
+                plugin = self.name_converter.cname(xp)
+                plugin_t = self.name_converter.truename(plugin)
+                bool = os.path.exists("%s\\MWSE\\mods\\%s\\main.lua" % (self.datadir.dir, pat))
+                if bang == "!": bool = not bool
+                parse_logger.debug("parse_mwselua [MWSE-LUA] returning: (%s, %s)" % (bool, expr))
+                if bool:
+                    self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                    return(True, "[MWSE-LUA %s/%s/ %s]" % (bang, pat, plugin_t))
+            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+            return(False, expr)
+        self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+        self._parse_error("Invalid [MWSE-LUA] function")
+        return(None, None)
+
     def _parse_expression(self, prune=False):
         self.parse_dbg_indent += "  "
         self.buffer = self.buffer.strip()
@@ -456,6 +499,10 @@ class rule_parser:
                 parse_logger.debug("parse_expression calling parse_size()")
                 self.parse_dbg_indent = self.parse_dbg_indent[:-2]
                 return(self._parse_size())
+            if fun == "MWSE-LUA":
+                parse_logger.debug("parse_expression calling parse_mwselua()")
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return(self._parse_mwselua())
             # otherwise it's a boolean function ...
             parse_logger.debug("parse_expression parsing expression: \"%s\"" % self.buffer)
             p = match.span(0)[1]
