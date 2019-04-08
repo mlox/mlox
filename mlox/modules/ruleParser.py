@@ -628,7 +628,7 @@ class rule_parser:
 
         parse_logger.debug("Reading rules from: \"{0}\"".format(self.rule_file))
         try:
-            self.input_handle = open(self.rule_file, 'r')
+            self.input_handle = open(self.rule_file, 'r', encoding="utf-8")
             inputsize = os.path.getsize(self.rule_file)
         except IOError as OSError:
             parse_logger.error("Unable to open rules file:  {0}".format(self.rule_file))
