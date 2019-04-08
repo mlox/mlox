@@ -36719,7 +36719,6 @@ Visceral Discernment.esp
 [Note]
  These mods require Morrowind Script Extender (MWSE) v0.9.3 or later, or MGE v3.5.6 or later.
 Avenge Your Death!.esp
-Pursuit Enhanced.esp
 Werewolf ReEquip.esp
 
 ;;Dragon32: As I understand things MGE 3.5.6 added the functions from MWSE v0.9.4. *However* there remains one MWSE function that could not be implemented in MGE. At the time of writing there is only one mod that makes use of that function (MCA_Companions_Enhanced.esp). According to the MWSE v0.9.4a release notes "contains no new features over 0.9.4. However, one bug [...] has been fixed."
@@ -42697,19 +42696,26 @@ Suran Waterfront V-5.1.esp
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; @Pursuit Enhanced 1.2.4 [Yacoby]
+;; @MWSE 2.1 Pursuit Revisited [Yacoby]
 
 [Note]
- ! The latest version of "Pursuit Enhanced" is 1.2.4, you should upgrade.
- ! http://mw.modhistory.com/download-90-6153
-[VER < 1.2.4 Pursuit Enhanced.esp]
+ ! The latest version of "Pursuit Enhanced" is 2.1, you should upgrade.
+ ! https://www.nexusmods.com/morrowind/mods/45904/
+Pursuit Enhanced*.esp
 
 [Conflict]
  !! With version 1.2.4 of "Pursuit Enhanced" the Go To Jail patch is no longer required.
  !! (Ref. Readme - Pursuit Enhanced.htm)
 Pursuit Enhanced -Go To Jail Patch.esp
-[VER=1.2.4 Pursuit Enhanced.esp]
+[ANY *Pursuit_Revisited*.esp
+	[VER=1.2.4 Pursuit Enhanced.esp]]
 
+[Conflict]
+ !!! You are running an older version of "Pursuit Enhanced" with a newer version of
+ !!! "Pursuit Revisited", remove the old version and make sure revisited is up to date:
+ !!! https://www.nexusmods.com/morrowind/mods/45904/
+Pursuit Enhanced*.esp
+*Pursuit_Revisited*.esp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; @PW_Redesigned Vivec-Vivec_Expansion.esp [Pseron Wyrd]
