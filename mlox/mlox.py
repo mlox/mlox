@@ -15,6 +15,8 @@ import logging
 import argparse
 import pprint
 import re
+import colorama
+from colorama import Fore, Style
 from modules.resources import user_path, update_file, UPDATE_URL
 from modules.update import update_compressed_file
 import modules.version as version
@@ -24,7 +26,7 @@ from modules.translations import dump_translations, _
 def single_spaced(in_string):
     """
     Convert any instance of more than one space character to a single space in a string
-    Also handles tabs, and removes whitespace at the begining or end of a line
+    Also handles tabs, and removes whitespace at the beginning or end of a line
     """
     tmp_string = in_string
     tmp_string = re.sub('\t', ' ', tmp_string)
@@ -32,19 +34,23 @@ def single_spaced(in_string):
     tmp_string = re.sub('\n ', '\n', tmp_string)
     return tmp_string.strip()
 
+
 class ColorFormatConsole(logging.Formatter):
     """Color code the logging information on Unix terminals"""
     levels = {
-        'DEBUG'    : '',
-        'INFO'     : '',
-        'WARNING'  : '\x1b[0;30;43m',  #Yellow (ish)
-        'ERROR'    : '\x1b[0;30;41m',  #Red (ish)
-        'CRITICAL' : '\x1b[0;30;41m'   #Red (ish)
+        'DEBUG':    '',
+        'INFO':     '',
+        'WARNING':  Fore.YELLOW,
+        'ERROR':    Fore.RED,
+        'CRITICAL': Fore.RED
     }
+
     def __init__(self, msg):
+        colorama.init()
         logging.Formatter.__init__(self, msg)
+
     def format(self, record):
-        return self.levels[record.levelname] + logging.Formatter.format(self, record) +'\x1b[0m'
+        return self.levels[record.levelname] + logging.Formatter.format(self, record) + Style.RESET_ALL
 
 
 class ShowTranslations(argparse.Action):
