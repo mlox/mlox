@@ -82,7 +82,7 @@ class CustomProgressDialog(QProgressDialog):
         self.setValue(percent)
 
 
-def error_handler(self, type, value, tb):
+def error_handler(type, value, tb):
     """
     Since a command line is not normally available to a GUI application, we need to display errors to the user.
     These are only errors that would cause the program to crash, so have the program exit when the dialog box is closed.
@@ -141,17 +141,18 @@ class MloxGui(QObject):
     def start(self):
         """Display the GUI"""
         myApp = QApplication(sys.argv)
-        myEngine = QQmlApplicationEngine()
         sys.excepthook = lambda typ, val, tb: error_handler(typ, val, tb)
+
+        myEngine = QQmlApplicationEngine(qml_file)
         myEngine.rootContext().setContextProperty("python", self)  # Need to set this before loading
-        myEngine.load(QUrl(qml_file))
+
         # These two are hacks, because getting them in the __init__ and RAII working isn't
         self.debug_window = ScrollableDialog()
         self.clipboard = myApp.clipboard()
 
         self.analyze_loadorder()
 
-        sys.exit(myApp.exec_())
+        sys.exit(myApp.exec())
 
     def display(self):
         "Update the GUI after an operation"
