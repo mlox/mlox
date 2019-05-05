@@ -143,8 +143,9 @@ class MloxGui(QObject):
         myApp = QApplication(sys.argv)
         sys.excepthook = lambda typ, val, tb: error_handler(typ, val, tb)
 
-        myEngine = QQmlApplicationEngine(qml_file)
+        myEngine = QQmlApplicationEngine()
         myEngine.rootContext().setContextProperty("python", self)  # Need to set this before loading
+        myEngine.load(qml_file)
 
         # These two are hacks, because getting them in the __init__ and RAII working isn't
         self.debug_window = ScrollableDialog()
