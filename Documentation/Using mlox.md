@@ -1,15 +1,3 @@
-# mlox - the elder scrolls Mod Load Order eXpert
-
-Version: 0.62
-
-Copyright 2014-2017 [MIT License](https://github.com/mlox/mlox/blob/master/License.txt)
-* John Moonsugar
-* Dragon32
-* Arthur Moore
-
-This file gives basic information on what mlox is and how to use it.
-
-For a full readme please see [here](https://github.com/mlox/mlox/blob/master/README.md).
 
 # Backup Your Load Order Before Using!
 Before you start testing how mlox works on your load order, I recommend using Wrye Mash to save your current load order, so that you can revert back to it later should you decide that you do not like the results you get from mlox.

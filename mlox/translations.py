@@ -1,7 +1,7 @@
 
 import locale
 import codecs
-from .resources import translation_file
+from mlox.resources import translation_file
 
 # Utility functions
 Lang = locale.getdefaultlocale()[0]

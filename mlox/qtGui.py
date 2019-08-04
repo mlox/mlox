@@ -5,13 +5,12 @@ import logging
 import traceback
 import tempfile
 import re
-from PyQt5.QtGui import QClipboard
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit, QMessageBox
 from PyQt5.QtQml import QQmlApplicationEngine
-from .resources import qml_file
-from .loadOrder import loadorder
-from . import version
+from mlox.resources import qml_file
+from mlox.loadOrder import loadorder
+from mlox import version
 
 gui_logger = logging.getLogger('mlox.gui')
 

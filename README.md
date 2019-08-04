@@ -1,7 +1,7 @@
 # mlox - the elder scrolls Mod Load Order eXpert
 mlox is a tool for analyzing and sorting your Morrowind plugin load order.
 
-Version: 0.61
+Version: 0.62
 
 Copyright 2014-2017 [MIT License](License.txt)
 * John Moonsugar
@@ -93,7 +93,7 @@ You should also be aware that the **`[Order]`** rule only specifies relative ord
 # Documentation
 The complete documentation for mlox can be found in the Doucmentation directory.
 
-  * [Mlox Usage Guide](mlox/Using mlox.md) provides a guide to getting started and introduction to usage. **Important Reading!**
+  * [Mlox Usage Guide](Documentation/Using mlox.md) provides a guide to getting started and introduction to usage. **Important Reading!**
   * [Editing Guidelines](Documentation/Editing Guidelines.md) explains the basics of mlox rules, and how they should be used.
   * [Rules Guildelines](Documentation/Rule Guidelines.md) explains the syntax of the mlox rules, and how to write them yourself if you want to customize mlox.
   * [mlox_guts.txt](Documentation/mlox_guts.txt) describes mlox's inner workings and how it does its job.

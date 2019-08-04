@@ -4,8 +4,7 @@ import re
 import io
 import logging
 from pprint import PrettyPrinter
-from . import pluggraph
-from . import fileFinder
+from mlox import fileFinder, pluggraph
 
 # comments start with ';'
 re_comment = re.compile(r'(?:^|\s);.*$')
@@ -70,7 +69,7 @@ def get_version(plugin,data_dir = None):
     desc_ver = None
     if isinstance(data_dir,str):
         data_dir = fileFinder.caseless_dirlist(data_dir)
-    if isinstance(data_dir,fileFinder.caseless_dirlist) != False:
+    if isinstance(data_dir, fileFinder.caseless_dirlist) != False:
         desc = plugin_description(data_dir.find_path(plugin))
         if desc != None:
             match = re_header_version.search(desc)

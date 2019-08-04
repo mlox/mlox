@@ -17,11 +17,11 @@ import pprint
 import re
 import colorama
 from colorama import Fore, Style
-from modules.resources import user_path, update_file, UPDATE_URL
-from modules.update import update_compressed_file
-import modules.version as version
-from modules.loadOrder import loadorder
-from modules.translations import dump_translations, _
+from mlox.resources import user_path, update_file, UPDATE_URL
+from mlox.update import update_compressed_file
+import mlox.version as version
+from mlox.loadOrder import loadorder
+from mlox.translations import dump_translations, _
 
 def single_spaced(in_string):
     """
@@ -258,7 +258,7 @@ if __name__ == "__main__":
         if i:
             noargs = False
     if args.gui or noargs:
-        from modules.qtGui import MloxGui
+        from mlox.qtGui import MloxGui
         MloxGui().start()
 
     if args.profile:

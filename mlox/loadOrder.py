@@ -1,9 +1,6 @@
 import os
 import logging
-from . import fileFinder
-from . import pluggraph
-from . import ruleParser
-from . import configHandler
+from mlox import configHandler, ruleParser, fileFinder
 from .resources import base_file, user_file
 
 old_loadorder_output = "current_loadorder.out"
@@ -38,7 +35,7 @@ class loadorder:
             return
 
         # Get all the plugins
-        configFiles = configHandler.configHandler(self.plugin_file,self.game_type).read()
+        configFiles = configHandler.configHandler(self.plugin_file, self.game_type).read()
         dirFiles = configHandler.dataDirHandler(self.datadir).read()
 
         # Remove plugins not in the data directory (and correct capitalization)
@@ -253,7 +250,7 @@ class loadorder:
             if configHandler.dataDirHandler(self.datadir).write(self.new_order):
                 self.is_sorted = True
         if isinstance(self.plugin_file,str):
-            if configHandler.configHandler(self.plugin_file,self.game_type).write(self.new_order):
+            if configHandler.configHandler(self.plugin_file, self.game_type).write(self.new_order):
                 self.is_sorted = True
 
         if not self.is_sorted:
