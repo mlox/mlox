@@ -42,7 +42,7 @@ def version_info():
     try:
         import libarchive
         output += "libarchive Installed.\n"
-    except ImportError:
+    except (ImportError, TypeError):
         output += "libarchive Not Installed!\n"
 
     return output
