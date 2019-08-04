@@ -7,7 +7,7 @@ import urllib.request
 import subprocess
 import logging
 
-from .version import requirement_status
+from mlox.version import requirement_status
 
 update_logger = logging.getLogger('mlox.update')
 

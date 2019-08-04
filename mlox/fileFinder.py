@@ -1,5 +1,3 @@
-
-
 # Utility classes For doing caseless filename processing:
 # caseless_filename uses a dictionary that stores the truename of a
 # plugin by its canonical lowercased form (cname). We only use the

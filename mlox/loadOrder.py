@@ -1,7 +1,7 @@
 import os
 import logging
 from mlox import configHandler, ruleParser, fileFinder
-from .resources import base_file, user_file
+from mlox.resources import base_file, user_file
 
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"

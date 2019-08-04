@@ -20,7 +20,7 @@ from colorama import Fore, Style
 
 from mlox.resources import user_path, update_file, UPDATE_URL
 from mlox.update import update_compressed_file
-import mlox.version as version
+from mlox import version
 from mlox.loadOrder import loadorder
 from mlox.translations import dump_translations, _
 
