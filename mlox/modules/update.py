@@ -7,6 +7,8 @@ import urllib.request
 import subprocess
 import logging
 
+from .version import requirement_status
+
 update_logger = logging.getLogger('mlox.update')
 
 
@@ -75,10 +77,12 @@ def extract_file(file_path, directory):
     Uses 7za or libarchive depending on what's available
     WARNING:  This can and will silently overwrite files in the target directory.
     """
-    try:
+    requirements = requirement_status()
+    if requirements["libarchive"]:
         return extract_via_libarchive(file_path, directory)
-    except ImportError:
+    if requirements["7-Zip"]:
         return extract_via_7za(file_path, directory)
+    raise Exception("No usable file extractors found.  Try installing 7-Zip.")
 
 
 def download_file(local_file, url):
