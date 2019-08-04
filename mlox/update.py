@@ -12,7 +12,7 @@ from .version import requirement_status
 update_logger = logging.getLogger('mlox.update')
 
 
-def remote_file_changed(local_file, url):
+def remote_file_changed(local_file, url) -> bool:
     """
     Check if the local copy of a file has changed compared to a remote version.
     This currently cheats and just compares file sizes.
@@ -34,7 +34,7 @@ def remote_file_changed(local_file, url):
     return int(url_size) != int(local_size)
 
 
-def extract_via_7za(file_path, directory):
+def extract_via_7za(file_path, directory) -> bool:
     """
     Extract the contents of a file to a directory, using 7za.
     WARNING:  This can and will silently overwrite files in the target directory.
@@ -51,7 +51,7 @@ def extract_via_7za(file_path, directory):
     return True
 
 
-def extract_via_libarchive(file_path, directory):
+def extract_via_libarchive(file_path, directory) -> bool:
     """
     Extract the contents of a file to a directory, using libarchive
     WARNING:  This can and will silently overwrite files in the target directory.
@@ -71,7 +71,7 @@ def extract_via_libarchive(file_path, directory):
     return True
 
 
-def extract_file(file_path, directory):
+def extract_file(file_path, directory) -> bool:
     """
     Extract the contents of a file to a directory.
     Uses 7za or libarchive depending on what's available
@@ -82,10 +82,11 @@ def extract_file(file_path, directory):
         return extract_via_libarchive(file_path, directory)
     if requirements["7-Zip"]:
         return extract_via_7za(file_path, directory)
-    raise Exception("No usable file extractors found.  Try installing 7-Zip.")
+    update_logger.warning("No usable file extractors found.  Try installing 7-Zip.")
+    return False
 
 
-def download_file(local_file, url):
+def download_file(local_file, url) -> bool:
     """Download a file from the internet"""
     try:
         urllib.request.urlretrieve(url, local_file)
@@ -96,19 +97,22 @@ def download_file(local_file, url):
     return True
 
 
-def update_compressed_file(file_path, url, directory):
+def update_compressed_file(file_path, url, directory) -> bool:
     """
     Check if a compressed file needs updating.
     If it does, download it, and extract it to a directory
     """
-    if remote_file_changed(file_path, url):
-        update_logger.info('Updating {0}'.format(file_path))
-        if not download_file(file_path, url):
-            return False
-        update_logger.info('Downloaded {0}'.format(file_path))
-        if not extract_file(file_path, directory):
-            return False
-        return True
-    else:
+    if not remote_file_changed(file_path, url):
         update_logger.info('No update necessary for file {0}'.format(file_path))
         return False
+    update_logger.info('Updating {0}'.format(file_path))
+    if not download_file(file_path, url):
+        update_logger.error('Download failed for {0}'.format(file_path))
+        return False
+    update_logger.info('Downloaded {0}'.format(file_path))
+    if not extract_file(file_path, directory):
+        update_logger.error('Extraction failed for {0}'.format(file_path))
+        # Needed, so the updater properly runs in the future
+        os.remove(file_path)
+        return False
+    return True
