@@ -137,6 +137,63 @@ def add_developer_options(parser):
         pass
 
 
+def build_parser() -> argparse.ArgumentParser:
+    """ Build an argparse parser for the application """
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description='mlox - A tool for analyzing and sorting your Morrowind plugin load order',
+        epilog=single_spaced("""
+                When invoked with no options, mlox runs in GUI mode.
+
+                mlox is intended to be run from somewhere under your game directory.
+
+                mlox sorts your plugin load order using rules from input files
+                (mlox_base.txt and mlox_user.txt, if it exists). A copy of the
+                newly generated load order is saved in mlox_loadorder.out.
+
+                Note: if you use Wrye Mash's "lock times" feature and you want mlox to update your load order, you need to run Mash first and turn it off.
+                Otherwise, the next time you run Mash, it will undo all the changes in your load order made by mlox.
+                """))
+
+    parser.add_argument("-n", "--nodownload", help="Do not automatically download and update the mlox rules.",
+                        action="store_true")
+    parser.add_argument("-v", "--version", help="Print version and exit.", action="version", version=version.about())
+    parser.add_argument("-a", "--all",
+                        help=single_spaced("""
+                            Handle for all plugins in the Data Directory.
+                            Default is to only process active plugins (plugins in the Data directory, and also in Morrowind.ini.)
+                            """),
+                        action="store_true")
+    parser.add_argument("-f", "--fromfile",
+                        help=single_spaced("""File processing mode.
+                            At least one input file must follow on command line.
+                            Each file contains a list of plugins which is used instead of reading the list of plugins from the data file directory.
+                            File formats accepted: Morrowind.ini, load order output of Wrye Mash, and Reorder Mods++.
+                            """),
+                        metavar='file',
+                        nargs='+',
+                        type=str)
+    parser.add_argument("-e", "--explain",
+                        help=single_spaced("""
+                Print an explanation of the dependency graph for plugin.
+                This can help you understand why a plugin was moved in your load order.
+                Implies --quiet.
+                """),
+                        metavar='plugin',
+                        nargs=1,
+                        type=str)
+    parser.add_argument("--base-only",
+                        help="Use this with the --explain option to exclude the current load order from the graph explanation.",
+                        action="store_true")
+    parser.add_argument("--gui",
+                        help="Run the GUI.\nDefault action if no arguments are given.",
+                        action="store_true")
+    add_writer_group(parser)
+    add_verbosity_group(parser)
+    add_developer_options(parser)
+    return parser
+
+
 def command_line_mode(args):
     """Run in command line mode.  This assumes log levels were properly set up beforehand"""
     logging.info("%s %s", version.full_version(), _["Hello!"])
@@ -190,66 +247,7 @@ def main():
     # Disable parse debug logging unless the user asks for it (It's so much it actually slows the program down)
     logging.getLogger('mlox.parser').setLevel(logging.INFO)
 
-    ###
-    # Begin Program Arguments
-    ###
-
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter,
-        description='mlox - A tool for analyzing and sorting your Morrowind plugin load order',
-        epilog=single_spaced("""
-            When invoked with no options, mlox runs in GUI mode.
-
-            mlox is intended to be run from somewhere under your game directory.
-
-            mlox sorts your plugin load order using rules from input files
-            (mlox_base.txt and mlox_user.txt, if it exists). A copy of the
-            newly generated load order is saved in mlox_loadorder.out.
-
-            Note: if you use Wrye Mash's "lock times" feature and you want mlox to update your load order, you need to run Mash first and turn it off.
-            Otherwise, the next time you run Mash, it will undo all the changes in your load order made by mlox.
-            """))
-
-    parser.add_argument("-n", "--nodownload", help="Do not automatically download and update the mlox rules.",
-                        action="store_true")
-    parser.add_argument("-v", "--version", help="Print version and exit.", action="version", version=version.about())
-    parser.add_argument("-a", "--all",
-                        help=single_spaced("""
-                        Handle for all plugins in the Data Directory.
-                        Default is to only process active plugins (plugins in the Data directory, and also in Morrowind.ini.)
-                        """),
-                        action="store_true")
-    parser.add_argument("-f", "--fromfile",
-                        help=single_spaced("""File processing mode.
-                        At least one input file must follow on command line.
-                        Each file contains a list of plugins which is used instead of reading the list of plugins from the data file directory.
-                        File formats accepted: Morrowind.ini, load order output of Wrye Mash, and Reorder Mods++.
-                        """),
-                        metavar='file',
-                        nargs='+',
-                        type=str)
-    parser.add_argument("-e", "--explain",
-                        help=single_spaced("""
-            Print an explanation of the dependency graph for plugin.
-            This can help you understand why a plugin was moved in your load order.
-            Implies --quiet.
-            """),
-                        metavar='plugin',
-                        nargs=1,
-                        type=str)
-    parser.add_argument("--base-only",
-                        help="Use this with the --explain option to exclude the current load order from the graph explanation.",
-                        action="store_true")
-    parser.add_argument("--gui",
-                        help="Run the GUI.\nDefault action if no arguments are given.",
-                        action="store_true")
-    add_writer_group(parser)
-    add_verbosity_group(parser)
-    add_developer_options(parser)
-
-    ###
-    # End Program Arguments
-    ###
+    parser = build_parser()
 
     # parse command line arguments
     logging.debug("Command line: %s", " ".join(sys.argv))
