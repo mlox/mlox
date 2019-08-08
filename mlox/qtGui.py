@@ -5,10 +5,12 @@ import logging
 import traceback
 import tempfile
 import re
-from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot, Qt, QSize
+from PyQt5.QtGui import QImage
+from PyQt5.QtQuick import QQuickImageProvider
 from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit, QMessageBox
 from PyQt5.QtQml import QQmlApplicationEngine
-from mlox.resources import qml_file
+from mlox.resources import resource_manager
 from mlox.loadOrder import loadorder
 from mlox import version
 
@@ -46,6 +48,23 @@ def colorize_text(text):
 
     text = text.replace('\n', '<br>\n')
     return text
+
+
+class PkgResourcesImageProvider(QQuickImageProvider):
+    """
+    Load an appropriate image from mlox.static
+
+    Props to https://stackoverflow.com/a/47504480/11521987
+    """
+    #
+    def __init__(self):
+        super().__init__(QQuickImageProvider.Image)
+
+    def requestImage(self, p_str, size: QSize):
+        image_data: bytes = resource_manager.resource_string("mlox.static", p_str)
+        image = QImage()
+        image.loadFromData(image_data)
+        return image, image.size()
 
 
 class ScrollableDialog(QDialog):
@@ -143,8 +162,12 @@ class MloxGui(QObject):
         sys.excepthook = lambda typ, val, tb: error_handler(typ, val, tb)
 
         myEngine = QQmlApplicationEngine()
-        myEngine.rootContext().setContextProperty("python", self)  # Need to set this before loading
-        myEngine.load(qml_file)
+        # Need to set these before loading
+        myEngine.rootContext().setContextProperty("python", self)
+        myEngine.addImageProvider('static', PkgResourcesImageProvider())
+
+        qml: bytes = resource_manager.resource_string("mlox.static", "window.qml")
+        myEngine.loadData(qml)
 
         # These two are hacks, because getting them in the __init__ and RAII working isn't
         self.debug_window = ScrollableDialog()

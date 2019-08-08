@@ -90,7 +90,7 @@ ApplicationWindow {
                     fillMode: Image.PreserveAspectFit
                     transformOrigin: Item.Center
                     visible: true
-                    source: "mlox.gif"
+                    source: "image://static/mlox.gif"
                 }
             }
 
