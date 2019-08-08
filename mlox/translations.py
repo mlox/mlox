@@ -1,7 +1,7 @@
 
 import locale
 import codecs
-from mlox.resources import translation_file
+from mlox.resources import resource_manager
 
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
@@ -21,7 +21,10 @@ def load_translations(lang):
         (key, val) = (s[0] if len(s) > 0 else "", s[1] if len(s) > 1 else "")
         trans = dict(list(map(lambda y: y.split('`'), val.split("\n`")))[1:])
         return(key, trans[lang].rstrip() if lang in trans else key)
-    return(dyndict(list(map(splitter, codecs.open(translation_file, 'r', "utf-8").read().split("\n[[")))[1:]))
+
+    translations: bytes = resource_manager.resource_string("mlox.static", "mlox.msg")
+    return dyndict(list(map(splitter, translations.decode("utf-8").split("\n[[")))[1:])
+
 
 _ = load_translations(Lang)
 
