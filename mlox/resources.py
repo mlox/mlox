@@ -14,7 +14,7 @@ def unpack_resource(data):
 
 # Paths to resource files
 program_path     = os.path.realpath(sys.path[0])
-resources_path   = os.path.join(program_path,"Resources")
+resources_path   = os.path.join(program_path,"mlox/static")
 try:
     import appdirs
     user_path = appdirs.user_data_dir('mlox', 'mlox')
