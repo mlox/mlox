@@ -6,7 +6,7 @@ import traceback
 import tempfile
 import re
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot, Qt, QSize
-from PyQt5.QtGui import QImage
+from PyQt5.QtGui import QImage, QIcon, QPixmap
 from PyQt5.QtQuick import QQuickImageProvider
 from PyQt5.QtWidgets import QApplication, QDialog, QProgressDialog, QPlainTextEdit, QMessageBox
 from PyQt5.QtQml import QQmlApplicationEngine
@@ -160,6 +160,16 @@ class MloxGui(QObject):
         """Display the GUI"""
         myApp = QApplication(sys.argv)
         sys.excepthook = lambda typ, val, tb: error_handler(typ, val, tb)
+
+        myApp.setOrganizationDomain('mlox')
+        myApp.setOrganizationName('mlox')
+
+        icon_data: bytes = resource_manager.resource_string("mlox.static", "mlox.ico")
+        icon = QIcon()
+        pixmap = QPixmap()
+        pixmap.loadFromData(icon_data)
+        icon.addPixmap(pixmap)
+        myApp.setWindowIcon(icon)
 
         myEngine = QQmlApplicationEngine()
         # Need to set these before loading
