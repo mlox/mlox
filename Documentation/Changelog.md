@@ -1,6 +1,6 @@
 # ChangeLog
 
-Version 0.63 -
+Version 1.0 2019/08/11
 * Support unicode file names [EmperorArthur]
 * Switch to python3 [EmperorArthur]
 * Move from a wxWidgets GUI to a PyQt5 based GUI
@@ -11,7 +11,7 @@ Version 0.63 -
 * Add multiple file extractor fallbacks, including a python only one.  
   This means 7zip no longer has to be installed.
 
-Version 0.62 -
+Version 0.62 2017/09/16
 * Completely refactored mlox code! [EmperorArthur]
 * Rewrote / Re-aranged most documentation. [EmperorArthur]
 * mlox (including updater) now works on linux, and does not crash if unable to update!! [EmperorArthur]

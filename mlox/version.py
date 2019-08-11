@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 import locale
-Version = "0.62"
+Version = "1.0"
 
 
 def about():
