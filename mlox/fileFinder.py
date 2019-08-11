@@ -13,6 +13,7 @@
 import os
 import re
 import logging
+from typing import Optional
 
 file_logger = logging.getLogger('mlox.fileFinder')
 
@@ -36,27 +37,39 @@ class caseless_dirlist:
 
     def __init__(self, dir=os.getcwd()):
         self.files = {}
-        if dir == None:
+        if dir is None:
             return
-        if isinstance(dir,caseless_dirlist):
+        if isinstance(dir, caseless_dirlist):
             self.dir = dir.dirpath()
         else:
             self.dir = os.path.normpath(os.path.abspath(dir))
         for f in [p for p in os.listdir(self.dir)]:
             self.files[f.lower()] = f
 
-    def find_file(self, file_name):
-        return(self.files.get(file_name.lower(), None))
+    def find_file(self, file_name) -> Optional[str]:
+        """
+        Get a case sensitive file name
+        :param file_name: A case insensitive file name
+        :returns: A case sensitive file name, or None
+        """
+        return self.files.get(file_name.lower(), None)
 
-    def find_path(self, file_name):
+    def find_path(self, file_name) -> Optional[str]:
+        """
+        Get the path to a file
+        :param file_name: A case insensitive file name
+        :returns: A case sensitive path, or None
+        """
         f = file_name.lower()
         if f in self.files:
-            return(os.path.join(self.dir, self.files[f]))
-        return(None)
+            return os.path.join(self.dir, self.files[f])
+        return None
 
     def find_parent_dir(self, file_name):
-        """return the caseless_dirlist of the directory that contains file,
-        starting from self.dir and working back towards root."""
+        """
+        :returns: The caseless_dirlist of the directory that contains file, starting from self.dir and working back
+        towards root.
+        """
         path = self.dir
         prev = None
         while path != prev:
@@ -65,13 +78,13 @@ class caseless_dirlist:
                 return(dl)
             prev = path
             path = os.path.split(path)[0]
-        return(None)
+        return None
 
     def dirpath(self):
-        return(self.dir)
+        return self.dir
 
     def filelist(self):
-        return(self.files.values())
+        return self.files.values()
 
 def _find_appdata():
     """a somewhat hacky function for finding where Oblivion's Application Data lives.
@@ -128,9 +141,12 @@ def _get_Oblivion_plugins_file():
         return(None)
     return os.path.join(appdata, "Oblivion", "Plugins.txt")
 
-# Attempt to find the plugin file and directory for Morrowind and Oblivion
-# This will attempt to find Morrowind's files first
+
 def find_game_dirs():
+    """
+    Attempt to find the plugin file and directory for Morrowind and Oblivion
+    This will attempt to find Morrowind's files first
+    """
     game = None
     datadir = None
     list_file = None
