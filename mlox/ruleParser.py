@@ -218,6 +218,13 @@ class rule_parser:
         """
         parse_logger.debug("expand_filename, plugin=%s" % plugin)
         pat = self._filename_to_regex(plugin)
+        # Optimization to avoid performing regex checks if no expansions made
+        # TODO: Without this optimization, parsing breaks.
+        #  This is because there are unsupported lines in mlox_base.txt Like:
+        #    [ANY [DESC /LeFemm(TM) armor/ LeFemmArmor.esp]
+        #      [Official]LeFemm Armor.esp]
+        if "^%s$" % re_escape_meta.sub(r'\\\1', plugin) == pat:
+            return [plugin] if plugin.lower() in self.plugin_list else []
         matches = []
         re_namepat = re.compile(pat, re.IGNORECASE)
         for p in self.plugin_list:
