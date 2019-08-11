@@ -36,7 +36,9 @@ def requirement_status() -> dict:
     try:
         import libarchive
         output["libarchive"] = "Installed"
-    except (ImportError, TypeError):
+    except (ImportError, TypeError, OSError):
+        # TypeError happens when libarchive-c can't find the library.
+        # OSError is the base of PyInstallerImportError, which is what a compiled exe throws
         output["libarchive"] = None
     try:
         with open(os.devnull, 'w') as devnull:
