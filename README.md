@@ -11,8 +11,6 @@ Copyright 2014-2017 [MIT License](License.txt)
 mlox is a mini "expert system" for advising you on your set of plugins.
 Use mlox to check for plugin dependencies and conflicts, and to sort your plugins into an optimal load order.
 
-# Obligatory Screen Shot
-
 ![mlox interface](https://sourceforge.net/p/mlox/screenshot/mlox_screen.png)
 
 # About
@@ -21,16 +19,16 @@ The program sorts plugins based on a very simple set of ordering rules that comp
 It also provides advice on plugin conflicts, missing pre-requisites, and general information of interest based on the user's particular set of plugins.
 
 # Features
-* optimally reorders your load order
-* warns about missing pre-requisites
-* warns about plugin conflicts
-* prints notes for things you might want to know about a mod, but were too lazy to read the Readme, or things discussed in forum posts you may have missed.
-* Customizable via a rules file. Just create an `mlox_user.txt` in your mlox directory, and start adding your own rules.
+* Creates an optimal load order.
+* Warns about missing pre-requisites.
+* Warns about plugin conflicts.
+* Gives useful, but often overlooked information about installed mods.
+* Customizable via a rules file.
 * runs on Windows or Linux
-* can check someone else's load list from a file:
-        mlox.py -wf Morrowind.ini
-        mlox.py -wf someones_load_order_posting.txt
-or just paste the list of plugins into the Active plugins pane of the GUI. (mlox understands output of Wrye Mash and Reorder Mods++)
+* can check someone else's load list from a file:  
+        `mlox.py -wf Morrowind.ini`  
+        `mlox.py -wf someones_load_order_posting.txt`  
+    or just paste the list of plugins into the Active plugins pane of the GUI. (mlox understands output of Wrye Mash and Reorder Mods++)
 
 **Note**: mlox does not tell you if you have missing Meshes or Textures, it is only a load order tool, and does not report problems with resources!
 
@@ -63,7 +61,7 @@ As such, both Python3 and PyQt5 are required.
 Several other small libraries are also needed for full functionality.
 
 * Python3 Download link:  https://www.python.org/downloads/
-* Once Python 3 is installed, run `pip3 install PyQt5 libarchive-c appdirs`
+* Once Python 3 is installed, run `pip install pipenv && pipenv install --system`
 * Run mlox by typing `python3 mlox.py`
 
 # Other Recommended Software
@@ -74,7 +72,7 @@ You are also encouraged to use [Wrye Mash](http://wryemusings.com/Wrye%20Mash.ht
 
 # Customizing your Load Order
 
-mlox allows you to customize your load order by adding your own sorting rules to a file called `mlox_user.txt`, in your mlox directory.
+mlox allows you to customize your load order by adding your own sorting rules to a file called `mlox_user.txt`, Just create an `mlox_user.txt` in `C:\Users\<your user name>\AppData\Local\mlox\mlox`.
 Then, all you need to do to get your load order re-sorted correctly is press the update button in mlox.
 
 You can add any of mlox's rules to `mlox_user.txt`, but for people that want to customize their load order, the **`[Order]`** rule is probably all that is needed.
@@ -130,8 +128,6 @@ If you have solid knowledge of load order issues, and you'd like to be able to c
 
 Editors of the rule-base should read the [Editing Guidelines](Documentation/Editing Guidelines.md), which explain how the editing process works.
 
-Glory awaits you my friend.
-
 ## Note to mod Authors
 It is our hope that the users of your mod will benefit from using mlox, and also that maybe mlox will help reduce mod conflicts, and support questions for your mod due to misconfiguration.
 This is a grand goal, and there are some things we can do together to see it happen.
@@ -141,13 +137,11 @@ If mlox can tell what version of your mod the user is using, it can give more ac
 mlox can get the version of a plugin from its header description field (preferred), or from the plugin filename.
 
 So, if the filename stays the same from version to version, then if the description field of the plugin contains a version string on a line by itself mlox will be able to use it.
-Wrye Mash can report that version too, so it's just a generally useful thing to have in the description
+Wrye Mash can report that version too, so it's just a generally useful thing to have in the description.
 
 > Example version string:
 >
 > Version: 0.57
-
-mlox can also tell the version from the filename.
 
 > Example verioned file name:
 >

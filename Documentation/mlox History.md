@@ -59,3 +59,16 @@ For example, the BOSS rule-base is trivial to understand, while the mlox rule-ba
 So you can't really say one approach is better than the other.
 I just prefer to be able to write rules to customize my load order, and to be able to express dependencies and conflicts, and these are things that really need a little rule-based engine.
 So that's why I wrote mlox.
+
+# More recent (ish) history
+
+Mlox started in 2008 as a single python file.
+It stayed that way until 2017 when it was broken up into a python module.
+However, it wasn't until 2019 that mlox actually supported standard module rules.
+
+At the same time, Mlox was a python 2 program using WX as its graphical interface until 2017.
+It was then transitioned to Python 3.  During the transition, I found it difficult to get WX to install/run correctly on Windows, so moved the UI to using Qt.
+In many ways, this is a more flexible approach since it allows for basic HTML based rendering of text, and separates code from layout.
+
+Many small changes were and are being made to bring the program up to modern standards.
+However, the one thing that has remained mostly untouched is the rules file format.

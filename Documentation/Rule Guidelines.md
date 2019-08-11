@@ -82,13 +82,13 @@ First, there are 2 special metacharacters that are treated in the canonical fash
  * ? matches any single character
  * \* matches any number of characters
 
-There is also a special construct: <VER     which matches something that looks like a Version number in the filename. This will match the same version number forms used in the [VER] predicate, refer to the documentation of that predicate for more.
+There is also a special construct: <VER> which matches something that looks like a Version number in the filename. This will match the same version number forms used in the [VER] predicate, refer to the documentation of that predicate for more.
 
 Examples:
 
     plugin-?.esp matches: plugin-A.esp, plugin-3.esp, and so on.
     plugin-*.esp matches: plugin-one.esp plugin-Banana.esp, and so on.
-    plugin-<VER    .esp matches: plugin-1.0.esp, plugin-3.3g.esp, and so on.
+    plugin-<VER>.esp matches: plugin-1.0.esp, plugin-3.3g.esp, and so on.
 
 Note: expanding filenames in rules can be rather CPU intensive, so while they are convenient, it is suggested that filename expansions be used sparingly.
 
