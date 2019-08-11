@@ -8,6 +8,8 @@ Version 0.63 -
 * Add support for PyInstaller
 * Fix an incompatibility with Python 3.6 and newer
 * Use `pipenv` or `setup.py` to install Python dependencies
+* Add multiple file extractor fallbacks, including a python only one.  
+  This means 7zip no longer has to be installed.
 
 Version 0.62 -
 * Completely refactored mlox code! [EmperorArthur]

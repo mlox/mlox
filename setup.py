@@ -36,7 +36,7 @@ setup(
     ]},
     include_package_data=True,
     python_requires='>=3.5',
-    install_requires=['colorama', 'appdirs', 'pyqt5'],
+    install_requires=['colorama', 'appdirs', 'pyqt5', 'py7zr'],
     entry_points={
         'console_scripts': [
             'mlox=mlox.__main__:main',

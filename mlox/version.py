@@ -34,6 +34,11 @@ def requirement_status() -> dict:
     except ImportError:
         output["appdirs"] = None
     try:
+        import py7zr
+        output["py7zr"] = "Installed"
+    except ImportError:
+        output["py7zr"] = None
+    try:
         import libarchive
         output["libarchive"] = "Installed"
     except (ImportError, TypeError, OSError):

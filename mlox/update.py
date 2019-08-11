@@ -56,6 +56,7 @@ def extract_via_libarchive(file_path, directory) -> bool:
     Extract the contents of a file to a directory, using libarchive
     WARNING:  This can and will silently overwrite files in the target directory.
     """
+    update_logger.debug("Extracting via libarchive.")
     import libarchive
     abs_file_path = os.path.abspath(file_path)
     current_dir = os.path.abspath(os.getcwd())
@@ -71,6 +72,22 @@ def extract_via_libarchive(file_path, directory) -> bool:
     return True
 
 
+def extract_via_py7zr(file_path, directory) -> bool:
+    """
+    Extract the contents of a file to a directory, using py7zr
+    WARNING:  This can and will silently overwrite files in the target directory.
+    """
+    update_logger.debug("Extracting via py7zr.")
+    import py7zr
+    try:
+        py7zr.unpack_7zarchive(file_path, directory)
+    except Exception as e:
+        update_logger.error('Error while extracting from {0}'.format(file_path))
+        update_logger.debug('Exception {0}'.format(str(e)))
+        return False
+    return True
+
+
 def extract_file(file_path, directory) -> bool:
     """
     Extract the contents of a file to a directory.
@@ -78,6 +95,10 @@ def extract_file(file_path, directory) -> bool:
     WARNING:  This can and will silently overwrite files in the target directory.
     """
     requirements = requirement_status()
+    if requirements["py7zr"]:
+        import py7zr
+        if py7zr.is_7zfile(file_path):
+            return extract_via_py7zr(file_path, directory)
     if requirements["libarchive"]:
         return extract_via_libarchive(file_path, directory)
     if requirements["7-Zip"]:
