@@ -8,6 +8,8 @@ import subprocess
 import logging
 import unittest
 
+from pytest import mark
+
 sys.path.append( os.path.abspath('../mlox/') )
 logging.basicConfig(level=logging.INFO)
 
@@ -16,34 +18,36 @@ term_color ={
     'clear': '\x1b[0m'
 }
 
-#File Finder
-class fileFinder_test(unittest.TestCase):
+
+class FileFinderTests(unittest.TestCase):
+    """ Test mlox.fileFinder """
+    @mark.skip("TODO:  Actually test this")
     def test_file_names(self):
-        import modules.fileFinder as fileFinder
+        import mlox.fileFinder as fileFinder
         file_names = fileFinder.caseless_filenames()
-        #TODO:  Actually test this
 
     def test_dir_list(self):
-        import modules.fileFinder as fileFinder
+        import mlox.fileFinder as fileFinder
         dir_list = fileFinder.caseless_dirlist()
         self.assertTrue(isinstance(fileFinder.caseless_dirlist(dir_list),fileFinder.caseless_dirlist))     #Make sure copy constructor works
         self.assertEqual(dir_list.dirpath(),os.path.abspath('.'))
         self.assertEqual(dir_list.find_file("module_TEST.PY"),'module_test.py')
-        self.assertEqual(dir_list.find_path("module_TEST.PY"),os.path.abspath('.')+'/module_test.py')
-        self.assertEqual(dir_list.find_parent_dir("reaDme.mD").dirpath(),os.path.abspath('..'))
+        self.assertEqual(dir_list.find_path("module_TEST.PY"), os.path.join(os.path.abspath('.'), 'module_test.py'))
+        self.assertEqual(dir_list.find_parent_dir("reaDme.mD").dirpath(), os.path.abspath('..'))
 
-        #Multi-line check here
+        # Multi-line check here
         (a,b,c) = fileFinder.find_game_dirs()
         self.assertTrue(a is None)
         self.assertTrue(b is None)
         self.assertEqual(c, os.path.abspath('..'))
 
-        #TODO:  Actually test these two (seperately)
-        #print(fileFinder.filter_dup_files(dir_list.filelist()))
+        # TODO:  Actually test these two (seperately)
+        # print(fileFinder.filter_dup_files(dir_list.filelist()))
 
-#Config Handler
-class configHandler_test(unittest.TestCase):
-    import modules.configHandler as configHandler
+
+class ConfigHandlerTest(unittest.TestCase):
+    """ Test mlox.configHandler """
+    import mlox.configHandler as configHandler
     zinx_txt = ['Better Heads Bloodmoon addon.esm', 'Better Heads Tribunal addon.esm', 'Better Heads.esm',
                 'Bloodmoon.esm', 'MCA.esm', 'Morrowind.esm', 'Tribunal.esm', 'ACE_Subtitles.esp',
                 'Balmora Expansion - LITE 1.0.esp', 'Balmora Expansion v1.4.esp', 'BAR_DarkshroudKeep_v1.2.esp',
@@ -60,13 +64,6 @@ class configHandler_test(unittest.TestCase):
                 'Vampire_Werewolf.esp', "Wakim's Game Improvement 9.esp", 'werewolfrealism-moononly.esp',
                 'Werewolf_Evolution.esp']
 
-    # Get  list of plugins (in order from the correct directory)
-    test1_plugins_raw = subprocess.check_output('cd test1.data; ( ls -rt *.esm ; ls -rt *.esp ) | col', shell=True)
-    test1_plugins= test1_plugins_raw.decode().split('\n')[:-1]
-
-    modified_plugins = list(test1_plugins)
-    modified_plugins[-2] = test1_plugins[-1]
-    modified_plugins[-1] = test1_plugins[-2]
     morrowind_ini = ['Morrowind.esm', 'Tribunal.esm', 'BLOODMOON.esm', 'GIANTS.esm', 'TR_Data.esm', 'TR_Map1.esm',
                      'TR_Map2.esm', 'Better Heads.esm', 'Better Heads Tribunal addon.esm',
                      'Better Heads Bloodmoon addon.esm', 'BT_Whitewolf_2_0.esm', 'The Wilderness Mod 2.0.esm',
@@ -115,13 +112,19 @@ class configHandler_test(unittest.TestCase):
     def test_Default(self):
         self.assertEqual(self.configHandler.configHandler("./userfiles/zinx.txt").read(),self.zinx_txt)
 
+    @mark.skip('TODO: Actually test this one (Using an oblivion file)')
     def test_Oblivion(self):
-        #TODO: Actually test this one (Using an oblivion file)
-        #print(self.configHandler.configHandler("./userfiles/zinx.txt","Oblivion").read())
-        pass
+        print(self.configHandler.configHandler("./userfiles/zinx.txt","Oblivion").read())
 
     def test_dirHandler(self):
         """read, check, modify, check modifications, then restore to original"""
+        # Get  list of plugins (in order from the correct directory)
+        test1_plugins_raw = subprocess.check_output('cd test1.data; ( ls -rt *.esm ; ls -rt *.esp ) | col', shell=True)
+        test1_plugins = test1_plugins_raw.decode().split('\n')[:-1]
+        modified_plugins = list(test1_plugins)
+        modified_plugins[-2] = test1_plugins[-1]
+        modified_plugins[-1] = test1_plugins[-2]
+
         dirHandler = self.configHandler.dataDirHandler("./test1.data/")
         self.assertEqual(dirHandler.read(),self.test1_plugins)
         dirHandler.write(self.modified_plugins)
@@ -142,11 +145,16 @@ class configHandler_test(unittest.TestCase):
         self.assertEqual(handlerM.read(),self.morrowind_ini)
         os.remove(".tmp")
 
-#Parser, and pluggraph
-class parser_pluggraph_test(unittest.TestCase):
-    import modules.ruleParser as ruleParser
-    import modules.pluggraph as pluggraph
-    import modules.fileFinder as fileFinder
+
+class ParserAndPluggraphTest(unittest.TestCase):
+    """
+    Test mlox.ruleParser and mlox.pluggraph
+
+    Depends on  mlox.fileFinder
+    """
+    import mlox.ruleParser as ruleParser
+    import mlox.pluggraph as pluggraph
+    import mlox.fileFinder as fileFinder
     file_names = fileFinder.caseless_filenames()
     test1_graph = ['morrowind.esm', 'tribunal.esm', 'bloodmoon.esm', 'morrowind patch v1.6.4 (wip).esm',
                    'rf - furniture shop.esm', 'metalqueenboutique.esm', 'book rotate.esm', 'gdr_masterfile.esm',
@@ -220,19 +228,23 @@ class parser_pluggraph_test(unittest.TestCase):
         graph=myParser.get_graph()
         self.assertEqual(graph.topo_sort(),self.test1_graph)
 
-    #TODO:  d_ver doesn't seem correct
+    # TODO:  d_ver doesn't seem correct
     def test_plugin_version(self):
-        #Multi-line check here
+        # Multi-line check here
         (f_ver,d_ver) = self.ruleParser.get_version("BB_Clothiers_of_Vvardenfell_v1.1.esp","./test1.data/")
         self.assertEqual(f_ver,'00001.00001.00000._')
         self.assertEqual(d_ver,None)
 
-#Load order
-#TODO: Actually test anything here
-class loadOrder_test(unittest.TestCase):
-    from modules.loadOrder import loadorder
-    import modules.fileFinder as fileFinder
 
+class LoadOrderTest(unittest.TestCase):
+    """
+    Test mlox mlox.loadOrder
+    TODO: Actually test anything here
+    """
+    from mlox.loadOrder import loadorder
+    import mlox.fileFinder as fileFinder
+
+    @mark.skip('Unimplemented')
     def test_File_and_Dir(self):
         l1 = self.loadorder()
         l1.datadir = "./test1.data/"
@@ -242,12 +254,14 @@ class loadOrder_test(unittest.TestCase):
         l1.update()
         print(l1.listversions())
 
+    @mark.skip('Unimplemented')
     def test_Dir(self):
         l2 = self.loadorder()
         l2.datadir = "./test1.data/"
         l2.get_data_files()
         l2.update()
 
+    @mark.skip('Unimplemented')
     def test_File(self):
         l3 = self.loadorder()
         l3.read_from_file("./userfiles/abot.txt")
@@ -255,35 +269,37 @@ class loadOrder_test(unittest.TestCase):
         print(l3.explain("Morrowind.esm"))
         print(l3.explain("Morrowind.esm", True))
 
-#Version
-class version_test(unittest.TestCase):
-    import modules.version as version
+
+class VersionTest(unittest.TestCase):
+    import mlox.version as version
 
     def test_internal_version(self):
-        self.assertEqual(self.version.Version,'0.62')
+        with open ('../VERSION') as version_file:
+            self.assertEqual(self.version.Version, version_file.readline())
 
 
-############################################################
-# update.py
-
-
-def hash_file(file_path):
-    """Get the hash of a file"""
-    import hashlib
-    with open(file_path, 'rb') as test_file:
-        return hashlib.sha256(test_file.read()).hexdigest()
-
-
-class update_test(unittest.TestCase):
-    import modules.update as update
+class UpdateTest(unittest.TestCase):
+    """ Test mlox.update """
+    import mlox.update as update
     temp_dir = ""
     file_name = "test100k.db"
     test_url = "http://speedtest.ftp.otenet.gr/files/test100k.db"
+
+    @staticmethod
+    def hash_file(file_path):
+        """Get the hash of a file"""
+        import hashlib
+        with open(file_path, 'rb') as test_file:
+            return hashlib.sha256(test_file.read()).hexdigest()
 
     def setUp(self):
         import tempfile
         self.temp_dir = tempfile.mkdtemp()
         self.local_file = os.path.join(self.temp_dir, self.file_name)
+        # A compressed file to test against, containing one file, with a known hash
+        self.z_file = os.path.join(self.temp_dir, 'module_test.7z')
+        subprocess.check_call(['7za', 'a', self.z_file, 'module_test.py'])
+        self.file_hash = self.hash_file('module_test.py')
 
     def test_remote_file_changed(self):
         # Make sure the file doesn't exist
@@ -298,34 +314,28 @@ class update_test(unittest.TestCase):
         self.assertTrue(self.update.remote_file_changed(self.local_file,self.test_url))
 
     def test_extract_file(self):
-        # Make a 7z file to test with, and get the hash
-        z_file = os.path.join(self.temp_dir, 'module_test.7z')
-        subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
-        file_hash = hash_file('module_test.py')
-
-        self.update.extract_file(z_file,self.temp_dir)
-        new_file_hash = hash_file(os.path.join(self.temp_dir, 'module_test.py'))
-        self.assertTrue(file_hash == new_file_hash)
+        """
+        Test the overall function that calls the subfunctions
+        Any of the subfunctions may not be installed in production but this one must succeed
+        """
+        self.update.extract_file(self.z_file,self.temp_dir)
+        new_file_hash = self.hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(self.file_hash == new_file_hash)
 
     def test_extract_file_7za(self):
-        # Make a 7z file to test with, and get the hash
-        z_file = os.path.join(self.temp_dir, 'module_test.7z')
-        subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
-        file_hash = hash_file('module_test.py')
-
-        self.update.extract_via_7za(z_file, self.temp_dir)
-        new_file_hash = hash_file(os.path.join(self.temp_dir, 'module_test.py'))
-        self.assertTrue(file_hash == new_file_hash)
+        self.update.extract_via_7za(self.z_file, self.temp_dir)
+        new_file_hash = self.hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(self.file_hash == new_file_hash)
 
     def test_extract_file_libarchive(self):
-        # Make a 7z file to test with, and get the hash
-        z_file = os.path.join(self.temp_dir, 'module_test.7z')
-        subprocess.check_call(['7za', 'a', z_file, 'module_test.py'])
-        file_hash = hash_file('module_test.py')
+        self.update.extract_via_libarchive(self.z_file, self.temp_dir)
+        new_file_hash = self.hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(self.file_hash == new_file_hash)
 
-        self.update.extract_via_libarchive(z_file, self.temp_dir)
-        new_file_hash = hash_file(os.path.join(self.temp_dir, 'module_test.py'))
-        self.assertTrue(file_hash == new_file_hash)
+    def test_extract_file_py7zr(self):
+        self.update.extract_via_py7zr(self.z_file, self.temp_dir)
+        new_file_hash = self.hash_file(os.path.join(self.temp_dir, 'module_test.py'))
+        self.assertTrue(self.file_hash == new_file_hash)
 
     def test_download(self):
         self.update.download_file(self.local_file, self.test_url)
