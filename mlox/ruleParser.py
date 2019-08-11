@@ -194,29 +194,37 @@ class rule_parser:
             else:
                 return
 
-    def _expand_filename(self, plugin):
+    @staticmethod
+    def _filename_to_regex(plugin: str):
+        """
+        Expand a filename in mlox_base.txt to a regex string.
+        This is because mlox supports the following three special options:
+
+        ? matches any single character
+        * matches any number of characters
+        <ver> matches a version string
+        """
+        parse_logger.debug("Converting {} to a regular expression".format(plugin))
+        pat = "^%s$" % re_escape_meta.sub(r'\\\1', plugin)  # Start constructing the regex, but can't just use re.escape
+        pat = re_plugin_meta.sub(r'.\1', pat)  # handle * and ? expansion
+        # handle <ver> expansion
+        pat = re_plugin_metaver.sub('<VER>', pat) # Make sure anything like <ver> is replaced by <VER>
+        pat = pat.replace('<VER>', plugin_version)  # Work around for parsing not liking '\d' in replacement since 3.6
+        return pat
+
+    def _expand_filename(self, plugin: str):
+        """
+        Find all the files in self.plugin_list that match plugin.
+        """
         parse_logger.debug("expand_filename, plugin=%s" % plugin)
-        pat = "^%s$" % re_escape_meta.sub(r'\\\1', plugin)
-        # if the plugin name contains metacharacters, do filename expansion
-        subbed = False
-        if re_plugin_meta.search(plugin) != None:
-            parse_logger.debug("expand_filename name has META: %s" % pat)
-            pat = re_plugin_meta.sub(r'.\1', pat)
-            subbed = True
-        if re_plugin_metaver.search(plugin) != None:
-            parse_logger.debug("expand_filename name has METAVER: %s" % pat)
-            pat = re_plugin_metaver.sub(plugin_version, pat)
-            subbed = True
-        if not subbed:        # no expansions made
-            return([plugin] if plugin.lower() in self.plugin_list else [])
-        parse_logger.debug("expand_filename new RE pat: %s" % pat)
+        pat = self._filename_to_regex(plugin)
         matches = []
         re_namepat = re.compile(pat, re.IGNORECASE)
         for p in self.plugin_list:
             if re_namepat.match(p):
                 matches.append(p)
                 parse_logger.debug("expand_filename: %s expands to: %s" % (plugin, p))
-        return(matches)
+        return matches
 
     def _parse_plugin_name(self):
         self.parse_dbg_indent += "  "
