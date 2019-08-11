@@ -39,7 +39,7 @@ setup(
     install_requires=['colorama', 'appdirs', 'pyqt5'],
     entry_points={
         'console_scripts': [
-            'mlox=mlox.app:main',
+            'mlox=mlox.__main__:main',
         ],
     },
 )

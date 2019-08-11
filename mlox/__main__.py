@@ -303,3 +303,7 @@ def main():
         return
 
     command_line_mode(args)
+
+
+if __name__ == "__main__":
+    main()
