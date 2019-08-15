@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['mlox.py'],
+a = Analysis(['mlox/__main__.py'],
              pathex=['mlox'],
              binaries=[],
              datas=[
