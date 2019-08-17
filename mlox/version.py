@@ -49,7 +49,7 @@ def requirement_status() -> dict:
         with open(os.devnull, 'w') as devnull:
             subprocess.check_call('7za', stdout=devnull)
             output["7-Zip"] = "Installed"
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         output["7-Zip"] = None
     return output
 
