@@ -41,7 +41,7 @@ def requirement_status() -> dict:
     try:
         import libarchive
         output["libarchive"] = "Installed"
-    except (ImportError, TypeError, OSError, AttributeError):
+    except (ImportError, TypeError, OSError, AttributeError, Exception):
         # TypeError happens when libarchive-c can't find the library.
         # OSError is the base of PyInstallerImportError, which is what a compiled exe throws
         # AttributeError is thrown when the exe is run via Mod Organizer 2,
