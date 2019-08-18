@@ -1,7 +1,7 @@
 # mlox - the elder scrolls Mod Load Order eXpert
 mlox is a tool for analyzing and sorting your Morrowind plugin load order.
 
-Version: 0.62
+Version: 1.0
 
 Copyright 2014-2017 [MIT License](License.txt)
 * John Moonsugar

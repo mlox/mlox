@@ -4,6 +4,8 @@
 from setuptools import setup, find_packages
 from os import path
 
+from mlox.version import VERSION
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -12,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='mlox',
-    version='1.0',
+    version=VERSION,
     description='A tool for analyzing and sorting your Morrowind plugin load order.',
     long_description=long_description,
     long_description_content_type='text/markdown',

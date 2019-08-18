@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 import locale
-Version = "1.0"
+VERSION = "1.0.3"
 
 
 def about():
@@ -74,4 +74,4 @@ def version_info():
 
 
 def full_version():
-    return "{0} {1}".format(os.path.basename(sys.argv[0]), Version)
+    return "{0} {1}".format(os.path.basename(sys.argv[0]), VERSION)

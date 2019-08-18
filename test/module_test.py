@@ -273,10 +273,10 @@ class LoadOrderTest(unittest.TestCase):
 class VersionTest(unittest.TestCase):
     import mlox.version as version
 
-    def test_internal_version(self):
-        with open ('../VERSION') as version_file:
-            self.assertEqual(self.version.Version, version_file.readline())
-
+    @mark.skip("TODO:  Find a way to mock random exceptions on module import")
+    def test_requirement_status(self):
+        """ IMPORTANT:  This is what caused many issues on user's systems """
+        pass
 
 class UpdateTest(unittest.TestCase):
     """ Test mlox.update """
