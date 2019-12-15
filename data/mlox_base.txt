@@ -1080,6 +1080,35 @@ LGNPC_VivecRedoran.esp
 LGNPC_PaxRedoran_v?_??.esp
 LGNPC_SoulSicknessPatch_v?_??.esp
 
+;; Jim Carroll - There's a conflict between LGNPC Aldruhn and "The Publicans" that seems to be resolved when
+;;   moving "The Publican's" before LGNPC.
+;; https://forums.nexusmods.com/index.php?/topic/6293356-the-publicans/page-7#entry75676348
+;;   The mod author, Half11, has produced a compatible version that needs to appear after the
+;;   LGNPC_Aldrhun mods and is a complete replacement for the original.
+[Order]
+LGNPC_Aldruhn.esp
+LGNPC_Aldruhn_suppl.esp
+The Publicans (LGNPC compatible version).ESP
+
+[Conflict]
+ "The Publicans (LGNPC compatible version).ESP" is a comlete replacement for "The Publicans.ESP" and
+ shouldn't be used together with it. (Ref: nexus mod page file description
+ https://www.nexusmods.com/morrowind/mods/45410?tab=files)
+The Publicans.ESP
+The Publicans (LGNPC compatible version).ESP
+
+[Conflict]
+ "The Publicans.ESP" conflicts with "LGNPC_Aldruhn.esp" but the mod author of "The Publicans.ESP" has
+ produced a compatible version. See https://www.nexusmods.com/morrowind/mods/45410?tab=files
+The Publicans.ESP
+LGNPC_Aldruhn.esp
+
+[Requires]
+ "The Publicans (LGNPC compatible version).ESP" is meant to be used with "LGNPC_Aldruhn.esp". If you're
+ not using LGNPC you should use the default version of "The Publicans.ESP"
+The Publicans (LGNPC compatible version).ESP
+LGNPC_Aldruhn.esp
+
 ;; Dragon32: General rule of thumb of loading generic dialogue-affecting mods before the specifics of the LGNPC series. Duplicating that with the unofficial Less Generic mods by Ostar
 [Order]
 Advanced Persuasion.esp
