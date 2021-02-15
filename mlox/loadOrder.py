@@ -1,7 +1,7 @@
 import os
 import logging
 from mlox import configHandler, ruleParser, fileFinder
-from mlox.resources import base_file, user_file
+from mlox.resources import base_file, user_files
 
 old_loadorder_output = "current_loadorder.out"
 new_loadorder_output = "mlox_new_loadorder.out"
@@ -175,7 +175,7 @@ class loadorder:
     def explain(self,plugin_name,base_only = False):
         """Explain why a mod is in it's current position"""
         parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
-        if os.path.exists(user_file):
+        for user_file in user_files:
             parser.read_rules(user_file)
         parser.read_rules(base_file)
         plugin_graph = parser.get_graph()
@@ -202,7 +202,7 @@ class loadorder:
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
         parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
-        if os.path.exists(user_file):
+        for user_file in user_files:
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
             order_logger.error("Unable to parse 'mlox_base.txt', load order NOT sorted!")
