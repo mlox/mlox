@@ -192,7 +192,7 @@ class MloxGui(QObject):
         gui_info_stream.addFilter(filterInfo())
         logging.getLogger("").addHandler(gui_info_stream)
 
-    def start(self):
+    def start(self, loadorder):
         """Display the GUI"""
         myApp = QApplication(sys.argv)
         sys.excepthook = lambda typ, val, tb: error_handler(typ, val, tb)
@@ -219,7 +219,7 @@ class MloxGui(QObject):
         self.debug_window = ScrollableDialog()
         self.clipboard = myApp.clipboard()
 
-        self.analyze_loadorder()
+        self.analyze_loadorder(lo=loadorder)
 
         sys.exit(myApp.exec())
 
@@ -232,7 +232,7 @@ class MloxGui(QObject):
         self.set_new.emit(colorize_text(self.New))
         self.set_old.emit(colorize_text(self.Old))
 
-    def analyze_loadorder(self, fromfile=None):
+    def analyze_loadorder(self, lo=None, fromfile=None):
         """
         This is where the magic happens
         If fromfile is None, then it operates out of the current directory.
@@ -246,7 +246,7 @@ class MloxGui(QObject):
         self.Msg = ""
 
         gui_logger.info("Version: %s\t\t\t\t %s " % (version.full_version(), "Hello!"))
-        self.lo = loadorder()
+        self.lo = loadorder() if lo is None else lo
         if fromfile != None:
             self.lo.read_from_file(fromfile)
         else:
@@ -281,7 +281,7 @@ class MloxGui(QObject):
         file_handle = tempfile.NamedTemporaryFile()
         file_handle.write(self.clipboard.text().encode("utf8"))
         file_handle.seek(0)
-        self.analyze_loadorder(file_handle.name)
+        self.analyze_loadorder(fromfile=file_handle.name)
 
     @pyqtSlot(str)
     def open_file(self, file_path):
@@ -289,7 +289,7 @@ class MloxGui(QObject):
         file_path = QUrl(
             file_path
         ).path()  # Adjust from a file:// format to a regular path
-        self.analyze_loadorder(file_path)
+        self.analyze_loadorder(fromfile=file_path)
 
     @pyqtSlot()
     def reload(self):

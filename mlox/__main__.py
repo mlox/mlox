@@ -264,6 +264,19 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
     )
     parser.add_argument(
+        "--pluginless",
+        help=single_spaced(
+            """Specify a list of mods that mlox will consider to be installed, even if they have no associated ESP
+               file. This can be useful if you would like to ignore rules that have both plugin and pluginless versions
+               (e.g. Robert's Bodies). Using this option may fail to report load order problems, if the pluginless mod
+               is installed incorrectly, or doesn't provide some functionality given by the plugin.
+               """
+        ),
+        metavar="plugin",
+        nargs="+",
+        type=str,
+    )
+    parser.add_argument(
         "--base-only",
         help="Use this with the --explain option to exclude the current load order from the graph explanation.",
         action="store_true",
@@ -284,11 +297,11 @@ def command_line_mode(args):
     logging.info("%s %s", version.full_version(), _["Hello!"])
     if args.fromfile:
         for fromfile in args.fromfile:
-            my_loadorder = loadorder()
+            my_loadorder = loadorder(args.pluginless)
             my_loadorder.read_from_file(fromfile)
             process_load_order(my_loadorder, args)
         return
-    my_loadorder = loadorder()
+    my_loadorder = loadorder(args.pluginless)
     if args.all:
         my_loadorder.get_data_files()
     else:
@@ -373,7 +386,7 @@ def main():
     if args.gui or noargs:
         from mlox.qtGui import MloxGui
 
-        MloxGui().start()
+        MloxGui().start(loadorder(args.pluginless))
         return
 
     if vars(args).get("profile", False):

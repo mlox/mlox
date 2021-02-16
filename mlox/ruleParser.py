@@ -142,8 +142,9 @@ class rule_parser:
 
     version = "Unknown"
 
-    def __init__(self, plugin_list, datadir, name_converter):
+    def __init__(self, plugin_list, pluginless_set, datadir, name_converter):
         self.plugin_list = plugin_list
+        self.pluginless_set = pluginless_set
         if datadir:
             self.datadir = fileFinder.caseless_dirlist(datadir)
         else:
@@ -609,22 +610,24 @@ class rule_parser:
                 # should not be reached due to match on re_fun
                 self._parse_error("Expected Boolean function (ALL, ANY, NOT)")
                 return (None, None)
-            parse_logger.debug("parse_expression NOTREACHED")
         else:
+            parse_logger.debug('parse_expression parsing plugin: "%s"' % self.buffer)
             if re_fun.match(self.buffer):
                 self._parse_error("Invalid function expression")
                 return (None, None)
-            parse_logger.debug('parse_expression parsing plugin: "%s"' % self.buffer)
+
             (exists, p) = self._parse_plugin_name()
-            if exists != None and p != None:
-                p = (
-                    self.name_converter.truename(p)
-                    if exists
-                    else ("MISSING(%s)" % self.name_converter.truename(p))
-                )
-            self.parse_dbg_indent = self.parse_dbg_indent[:-2]
-            return (exists, p)
-        parse_logger.debug("parse_expression NOTREACHED(2)")
+            if p in self.pluginless_set:
+                return True, p
+            else:
+                if exists != None and p != None:
+                    p = (
+                        self.name_converter.truename(p)
+                        if exists
+                        else ("MISSING(%s)" % self.name_converter.truename(p))
+                    )
+                self.parse_dbg_indent = self.parse_dbg_indent[:-2]
+                return (exists, p)
 
     def _pprint(self, expr, prefix):
         """pretty printer for parsed expressions"""

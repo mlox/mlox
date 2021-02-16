@@ -12,7 +12,11 @@ order_logger = logging.getLogger("mlox.loadOrder")
 class loadorder:
     """Class for reading plugin mod times (load order), and updating them based on rules"""
 
-    def __init__(self):
+    def __init__(self, pluginless=None):
+        if pluginless is None:
+            self.pluginless = []
+        else:
+            self.pluginless = {p.lower() for p in pluginless}
         # order is the list of plugins in Data Files, ordered by mtime
         self.order = []  # the load order
         self.new_order = []  # the new load order
@@ -203,7 +207,7 @@ class loadorder:
 
     def explain(self, plugin_name, base_only=False):
         """Explain why a mod is in it's current position"""
-        parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
+        parser = ruleParser.rule_parser(self.order, self.pluginless, self.datadir, self.caseless)
         for user_file in user_files:
             parser.read_rules(user_file)
         parser.read_rules(base_file)
@@ -234,7 +238,7 @@ class loadorder:
 
         # read rules from various sources, and add orderings to graph
         # if any subsequent rule causes a cycle in the current graph, it is discarded
-        parser = ruleParser.rule_parser(self.order, self.datadir, self.caseless)
+        parser = ruleParser.rule_parser(self.order, self.pluginless, self.datadir, self.caseless)
         for user_file in user_files:
             parser.read_rules(user_file, progress)
         if not parser.read_rules(base_file, progress):
