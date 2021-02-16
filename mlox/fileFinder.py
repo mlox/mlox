@@ -15,11 +15,10 @@ import re
 import logging
 from typing import Optional
 
-file_logger = logging.getLogger('mlox.fileFinder')
+file_logger = logging.getLogger("mlox.fileFinder")
 
 
 class caseless_filenames:
-
     def __init__(self):
         self.truenames = {}
 
@@ -27,14 +26,13 @@ class caseless_filenames:
         the_cname = truename.lower()
         if not the_cname in self.truenames:
             self.truenames[the_cname] = truename
-        return(the_cname)
+        return the_cname
 
     def truename(self, cname):
-        return(self.truenames[cname])
+        return self.truenames[cname]
 
 
 class caseless_dirlist:
-
     def __init__(self, dir=os.getcwd()):
         self.files = {}
         if dir is None:
@@ -75,7 +73,7 @@ class caseless_dirlist:
         while path != prev:
             dl = caseless_dirlist(path)
             if dl.find_file(file_name):
-                return(dl)
+                return dl
             prev = path
             path = os.path.split(path)[0]
         return None
@@ -85,6 +83,7 @@ class caseless_dirlist:
 
     def filelist(self):
         return self.files.values()
+
 
 def _find_appdata():
     """a somewhat hacky function for finding where Oblivion's Application Data lives.
@@ -98,47 +97,51 @@ def _find_appdata():
         re_appdata = re.compile(r'"LOCALAPPDATA"="([^"]+)"', re.IGNORECASE)
         regdir = caseless_dirlist().find_parent_dir("system.reg")
         if regdir == None:
-            return(None)
+            return None
         regpath = regdir.find_path("system.reg")
         if regpath == None:
-            return(None)
+            return None
         try:
-            inp = open(regpath, 'r')
+            inp = open(regpath, "r")
             for line in inp:
                 match = re_appdata.match(line)
                 if match:
                     path = match.group(1)
-                    path = path.split(r'\\')
+                    path = path.split(r"\\")
                     drive = "drive_" + path.pop(0).lower()[0]
                     appdata = "/".join([regdir.dirpath(), drive, "/".join(path)])
                     inp.close()
-                    return(appdata)
+                    return appdata
             inp.close()
         except IOError:
             pass
-        return(None)
+        return None
     # Windows
     try:
         import winreg
+
         try:
-            key = winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
-                                  r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders')
-            vals = winreg.QueryValueEx(key, 'Local AppData')
+            key = winreg.OpenKey(
+                _winreg.HKEY_CURRENT_USER,
+                r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders",
+            )
+            vals = winreg.QueryValueEx(key, "Local AppData")
         except WindowsError:
             return None
         else:
             key.Close()
-        re_env = re.compile(r'%([^|<>=^%]+)%')
+        re_env = re.compile(r"%([^|<>=^%]+)%")
         appdata = re_env.sub(lambda m: os.environ.get(m.group(1), m.group(0)), vals[0])
-        return(os.path.expandvars(appdata))
+        return os.path.expandvars(appdata)
     except ImportError:
         return None
+
 
 def _get_Oblivion_plugins_file():
     appdata = _find_appdata()
     if appdata == None:
         file_logger.warn("Application data directory not found")
-        return(None)
+        return None
     return os.path.join(appdata, "Oblivion", "Plugins.txt")
 
 
@@ -151,7 +154,7 @@ def find_game_dirs():
     datadir = None
     list_file = None
 
-    cwd = caseless_dirlist() # start our search in our current directory
+    cwd = caseless_dirlist()  # start our search in our current directory
     gamedir = cwd.find_parent_dir("Morrowind.ini")
     if gamedir != None:
         game = "Morrowind"
@@ -170,4 +173,4 @@ def find_game_dirs():
     file_logger.debug("Found Game:  {0}".format(game))
     file_logger.debug("Plugins file at:  {0}".format(list_file))
     file_logger.debug("Data Files at: {0}".format(datadir))
-    return (game,list_file,datadir)
+    return (game, list_file, datadir)
