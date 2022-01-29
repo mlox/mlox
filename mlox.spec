@@ -8,7 +8,7 @@ a = Analysis(['mlox/__main__.py'],
              binaries=[],
              datas=[
                  ('mlox/static/', 'mlox/static'),  # For static files
-                 (HOMEPATH + '\\PyQt5\\Qt\\bin\\*', 'PyQt5\\Qt\\bin')  # Fixes a bug with Qt
+                 (HOMEPATH + '\\PyQt5\\Qt5\\bin\\*', 'PyQt5\\Qt5\\bin')  # Fixes a bug with Qt
              ],
              hiddenimports=['mlox.static', 'libarchive', 'appdirs', 'PyQt5'],
              hookspath=[],
