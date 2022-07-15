@@ -1,3 +1,7 @@
+# mlox - version whith the fix for FAT32 filesystem
+
+This version is a fork to fix the issue with FAT32 filesystem with the original version. You can download this compiled version for Windows [here](https://github.com/cpassuel/mlox/releases/tag/v1.04).
+
 # mlox - the elder scrolls Mod Load Order eXpert
 mlox is a tool for analyzing and sorting your Morrowind plugin load order.
 
