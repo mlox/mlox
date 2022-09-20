@@ -5,6 +5,7 @@ from functools import reduce
 
 config_logger = logging.getLogger('mlox.configHandler')
 
+MIN_SAFE_TIMESTAMP = 315529200  # safe file timestamp for both NTFS and FAT32 fs
 
 def caseless_uniq(un_uniqed_files):
     """
@@ -257,16 +258,16 @@ class dataDirHandler:
             for a_plugin in list_of_plugins:
                 if a_plugin.lower() == "morrowind.esm":
                     mtime = tes3cmd_resetdates_morrowind_mtime
-                    os.utime(self._full_path("Morrowind.bsa"), (-1, mtime))
+                    os.utime(self._full_path("Morrowind.bsa"), (MIN_SAFE_TIMESTAMP, mtime))
                 elif a_plugin.lower() == "tribunal.esm":
                     mtime = tes3cmd_resetdates_tribunal_mtime
-                    os.utime(self._full_path("Tribunal.bsa"), (-1, mtime))
+                    os.utime(self._full_path("Tribunal.bsa"), (MIN_SAFE_TIMESTAMP, mtime))
                 elif a_plugin.lower() == "bloodmoon.esm":
                     mtime = tes3cmd_resetdates_bloodmoon_mtime
-                    os.utime(self._full_path("Bloodmoon.bsa"), (-1, mtime))
+                    os.utime(self._full_path("Bloodmoon.bsa"), (MIN_SAFE_TIMESTAMP, mtime))
                 else:
                     mtime += 60 # standard 1 minute Mash step
-                os.utime(self._full_path(a_plugin), (-1, mtime))
+                os.utime(self._full_path(a_plugin), (MIN_SAFE_TIMESTAMP, mtime))
         except TypeError:
             config_logger.error(
                 """
