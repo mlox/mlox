@@ -1,3 +1,14 @@
+> [!WARNING]
+> ⚠️ **MLOX HAS MOVED ON!**
+>
+> Looking for the successor projects?
+>
+> 🟡 **Continuation:** [rfuzzo/mlox](https://github.com/rfuzzo/mlox)
+>
+> 🟡 **Latest successor – PLOX:** [rfuzzo/plox](https://github.com/rfuzzo/plox)
+>
+> **PLOX** is the more recent Rust-based successor to the original MLOX project.
+
 # mlox - the elder scrolls Mod Load Order eXpert
 mlox is a tool for analyzing and sorting your Morrowind plugin load order.
 
